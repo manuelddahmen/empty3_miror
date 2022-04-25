@@ -1,0 +1,2 @@
+#Mon Mar 28 09:20:34 CEST 2022
+class=one.empty3.testscopy.tests.tests2.modeleStl.TestStl

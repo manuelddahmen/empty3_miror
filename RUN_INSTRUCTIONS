@@ -1,0 +1,6 @@
+# Install locally
+mvn install -Dskip.sign -Dgpg.ascDirectory=c:\users\manue
+# Run test (edit pom mojo argument configuration for TestRun(TestObjet)
+mvn exec:java
+# Deploy to Centrall
+mvn deploy

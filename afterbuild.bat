@@ -1,0 +1,1 @@
+copy .\target\*.jar ..\e3gui\lib\

@@ -1,0 +1,791 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Debug (Launch) - Current File",
+      "request": "launch",
+      "mainClass": "${file}"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-ColoredMap<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "atlasgen.ColoredMap",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-ColoredMaps<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "atlasgen.ColoredMaps",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-Earth3D<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "atlasgen.Earth3D",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-SimpleMap<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "atlasgen.SimpleMap",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-TestEarth<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "atlasgen.TestEarth",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-TestSoS<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "atlasgen.TestSoS",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-PanelGraphics<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "one.empty3.apps.opad.PanelGraphics",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-TestTimer<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "one.empty3.apps.pad.TestTimer",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-Example<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "one.empty3.apps.pad.objloader.Example",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-AVIInfo<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "one.empty3.library.AVIInfo",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-AudioPlay<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "one.empty3.library.AudioPlay",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-Main2<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "one.empty3.library.Main2",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-TestWebCam<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "one.empty3.library.TestWebCam",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-TourDeRevolution<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "one.empty3.library.TourDeRevolution",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-Nurbs<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "one.empty3.library.core.nurbs.Nurbs",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-NurbsRewrite<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "one.empty3.library.core.nurbs.NurbsRewrite",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-TestNurbs1<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "one.empty3.library.core.nurbs.TestNurbs1",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-TestNurbs2<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "one.empty3.library.core.nurbs.TestNurbs2",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-TestNurbsComplexe1<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "one.empty3.library.core.nurbs.TestNurbsComplexe1",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-TestNurbsComplexeMy<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "one.empty3.library.core.nurbs.TestNurbsComplexeMy",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-TestNurbsSimple<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "one.empty3.library.core.nurbs.TestNurbsSimple",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-TestNurbsSimple1<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "one.empty3.library.core.nurbs.TestNurbsSimple1",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-TestRayTracerMain<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "one.empty3.library.core.raytracer.TestRayTracerMain",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-TestObjet<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "one.empty3.library.core.testing.TestObjet",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-TestObjetStub<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "one.empty3.library.core.testing.TestObjetStub",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-TestObjetSub<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "one.empty3.library.core.testing.TestObjetSub",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-AnalyseurEquationJep<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "one.empty3.library.core.tribase.equationeditor.AnalyseurEquationJep",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-EquationEditor<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "one.empty3.library.core.tribase.equationeditor.EquationEditor",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-VisualiserObjet<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "one.empty3.library.core.tribase.simpleapps.VisualiserObjet",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-VisualiserObjetJF<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "one.empty3.library.core.tribase.simpleapps.VisualiserObjetJF",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-E3Example<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "one.empty3.library.objloader.E3Example",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-Example<empty3-library-3d>(1)",
+      "request": "launch",
+      "mainClass": "one.empty3.library.objloader.Example",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-Bras<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "test3.Bras",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-QuadratureCercle<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "test3.QuadratureCercle",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-App<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "tests2.App",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-TestAxes<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "tests2.TestAxes",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-TestAxesAnim<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "tests2.TestAxesAnim",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-TestSphere<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "tests2.TestSphere.TestSphere",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-TestSpheres<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "tests2.TestSpheres",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-TestThierryJaspart<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "tests2.TestThierryJaspart",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-TriTest<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "tests2.TriTest",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-BalleDeformee<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "tests2.aaa.BalleDeformee",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-CadrePhoto<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "tests2.aaa.CadrePhoto",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-TestAnneau<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "tests2.anneaux.TestAnneau",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-TestCircles<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "tests2.anneaux.TestCircles",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-TestCitron<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "tests2.anneaux.TestCitron",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-TestSpheres<empty3-library-3d>(1)",
+      "request": "launch",
+      "mainClass": "tests2.anneaux.TestSpheres",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-TestBalleClous<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "tests2.balleclou.TestBalleClous",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-TestBalleClous1<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "tests2.balleclou.TestBalleClous1",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-TestBalleClous111<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "tests2.balleclou.TestBalleClous111",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-TestBalleClous1111<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "tests2.balleclou.TestBalleClous1111",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-TestBalleCouleur001<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "tests2.ballecouleur.TestBalleCouleur001",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-TestBezierTextImage<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "tests2.beziers.TestBezierTextImage",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-TestBezierTextVideo<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "tests2.beziers.TestBezierTextVideo",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-TestBorromeanRings<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "tests2.borromeanRings.TestBorromeanRings",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-SphereCube<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "tests2.cadeau.SphereCube",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-SphereCube1<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "tests2.cadeau.SphereCube1",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-SphereCube11<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "tests2.cadeau.SphereCube11",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-SphereCube12<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "tests2.cadeau.SphereCube12",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-TestCoeur<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "tests2.coeur.TestCoeur",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-TestCoeur1<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "tests2.coeur.TestCoeur1",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-TestBezierN<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "tests2.courbes_bsplines.TestBezierN",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-TestCParamBSpline<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "tests2.courbes_bsplines.TestCParamBSpline",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-TestGDXBSpline1<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "tests2.courbes_bsplines.TestGDXBSpline1",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-TestCubes<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "tests2.cubes.TestCubes",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-TestCubes<empty3-library-3d>(1)",
+      "request": "launch",
+      "mainClass": "tests2.cubes.ensemble.TestCubes",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-TestDossier<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "tests2.dossierimages.TestDossier",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-TestFeu<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "tests2.feudartifice.TestFeu",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-AnneauDeSpheresQuiTournent<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "tests2.film_1.AnneauDeSpheresQuiTournent",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-Scene1<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "tests2.film_1.Scene1",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-TestEllipsoide<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "tests2.formesbase.TestEllipsoide",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-Horloge<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "tests2.horloge.Horloge",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-Language<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "tests2.library.Language",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-MainTest<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "tests2.library.MainTest",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-Options<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "tests2.library.Options",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-TestSeins<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "tests2.mammaires.TestSeins",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-TestStl<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "tests2.modeleStl.TestStl",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-TestStl2<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "tests2.modeleStl.TestStl2",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-SurfaceBezier<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "tests2.nurbs.SurfaceBezier",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-TestSpheres<empty3-library-3d>(2)",
+      "request": "launch",
+      "mainClass": "tests2.paintingActs.TestSpheres",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-TestPieuvre<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "tests2.pieuvre.TestPieuvre",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-TestPortrait<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "tests2.portrait.TestPortrait",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-TestPortrait1<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "tests2.portrait.TestPortrait1",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-TestTRISphere<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "tests2.position.TestTRISphere",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-TRITRINuage<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "tests2.repereAssocieAUneCourbeEX.TRITRINuage",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-TestCameraEnMouvement<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "tests2.repereAssocieAUneCourbeEX.TestCameraEnMouvement",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-TestCameraEnMouvementCylindre<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "tests2.repereAssocieAUneCourbeEX.TestCameraEnMouvementCylindre",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-TestCameraEnMouvementRandomTriangles<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "tests2.repereAssocieAUneCourbeEX.TestCameraEnMouvementRandomTriangles",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-TestRotationsObjets<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "tests2.rotation.TestRotationsObjets",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-TestSablier<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "tests2.sablier.TestSablier",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-TestGravity2<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "tests2.simula.TestGravity2",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-TestSphereManuelDahmen<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "tests2.sphererotation.TestSphereManuelDahmen",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-TestSphereRotation<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "tests2.spheres.TestSphereRotation",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-Spheres<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "tests2.spherestexturees.Spheres",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-TestSpheresTournent<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "tests2.spherestournent.TestSpheresTournent",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-Spirale<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "tests2.spirale.Spirale",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-TestTitle<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "tests2.sw.TestTitle",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-PlansVideo<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "tests2.texturevideo.PlansVideo",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-TestTihange<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "tests2.tihange_reac_cendar.TestTihange",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-TestTransparence<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "tests2.transparence.TestTransparence",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-SiPiKi3D<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "tests2.triangles.SiPiKi3D",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-TestTriangles<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "tests2.triangles.TestTriangles",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-TestPH<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "tests2.trigenerateurabstract.paraboloidehyperbolique.TestPH",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-TestPH1<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "tests2.trigenerateurabstract.paraboloidehyperbolique.TestPH1",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-TestArc<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "tests2.trigenerateurabstract.triextrusiongeneralisee.TestArc",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-TestCylindre<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "tests2.trigenerateurabstract.triextrusiongeneralisee.TestCylindre",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-TestTore<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "tests2.trigenerateurabstract.triextrusiongeneralisee.TestTore",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-TestTriHole<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "tests2.trihole.TestTriHole",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-Serpentin<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "tests2.ver.Serpentin",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-Serpentins<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "tests2.ver.Serpentins",
+      "projectName": "empty3-library-3d"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-Serpentins2<empty3-library-3d>",
+      "request": "launch",
+      "mainClass": "tests2.ver.Serpentins2",
+      "projectName": "empty3-library-3d"
+    }
+  ]
+}

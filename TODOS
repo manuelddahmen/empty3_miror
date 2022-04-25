@@ -1,0 +1,7 @@
+Manipulation sur les textures.
+- Changement d'orientation, sections, superposition
+- Modélisation des types de textures, aspetcs
+Modélisation du système d'éclairage
+Déplacement dans l'espace 3D
+Etendre tous les objets dans le temps adapter la scene enregistrer
+les éléments qui bougent dans un registre ou quoi pour t++

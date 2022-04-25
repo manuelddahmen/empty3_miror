@@ -1,0 +1,2 @@
+Manifest-Version: 1.0
+Class-Path: ./lib/jai_core.jar ./lib/jmf.jar ./lib/montemedia-0.7.7.jar ./lib/xuggle-xuggler-5.4.jar 
