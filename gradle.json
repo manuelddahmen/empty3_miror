@@ -1,3 +1,4 @@
+/*
 dependencies {
 	compile "junit:junit:4.13.1"
 	compile "org.slf4j:slf4j-simple:1.5.3"
@@ -25,3 +26,4 @@ dependencies {
 	compile "com.github.zakgof:velvet-video:0.5.0"
 	compile "com.github.zakgof:velvet-video-natives:0.2.6.full"
 }
+*/

@@ -5,6 +5,7 @@
 package one.empty3.gui;
 
 import net.miginfocom.swing.MigLayout;
+import one.empty3.gui.Tubulaire4map;
 import one.empty3.library.*;
 import one.empty3.library.core.export.STLExport;
 import one.empty3.library.core.nurbs.CourbeParametriquePolynomialeBezier;
@@ -21,7 +22,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-/**
+/*
  * @author Manuel Dahmen
  * cr 2021
  */
@@ -31,7 +32,7 @@ public class ModelingInterface extends JFrame {
     private static final int PAINT_GRAD = 4;
     private final int RES_Y = 2000;
     private final int RES_X = 2000;
-    private Tubulaire4map tubulaire4;
+    private one.empty3.gui.Tubulaire4map tubulaire4;
     private Camera camera;
     private BufferedImage image;
     private Color paintColor = Color.WHITE;
@@ -96,10 +97,10 @@ public class ModelingInterface extends JFrame {
         tubulaire4 = new Tubulaire4map();
         tubulaire4.declareProperties();
         tubulaire4.getSoulCurve().setElem(new CourbeParametriquePolynomialeBezier());
-        tubulaire4.getSoulCurve().getElem().getCoefficients().setElem(new Point3D(0.25, 0., 10.),    0);
-        tubulaire4.getSoulCurve().getElem().getCoefficients().setElem(new Point3D(0., 0., 2.5),      1);
-        tubulaire4.getSoulCurve().getElem().getCoefficients().setElem(new Point3D(0., 0., -2.5),     2);
-        tubulaire4.getSoulCurve().getElem().getCoefficients().setElem(new Point3D(0., 0.25, -10.),   3);
+        tubulaire4.getSoulCurve().getElem().getCoefficients().setElem(new Point3D(0.25, 0., 10.), 0);
+        tubulaire4.getSoulCurve().getElem().getCoefficients().setElem(new Point3D(0., 0., 2.5), 1);
+        tubulaire4.getSoulCurve().getElem().getCoefficients().setElem(new Point3D(0., 0., -2.5), 2);
+        tubulaire4.getSoulCurve().getElem().getCoefficients().setElem(new Point3D(0., 0.25, -10.), 3);
         tubulaire4.getDiameterFunction().setElem(new FctXY());
         tubulaire4.getDiameterFunction().getElem().setFormulaX("20.0");
         try {
@@ -144,7 +145,7 @@ public class ModelingInterface extends JFrame {
                 graphics.drawImage(ecBufferedImage, 0, 0, panel3.getWidth(), panel3.getHeight(), null);
                 graphics = panel4.getGraphics();
                 graphics.drawImage(image, 0, 0, panel4.getWidth(), panel4.getHeight(), null);
-                System.out.println("Nano time ellapsed: " + (System.nanoTime()-nanos)/1000000000d);
+                System.out.println("Nano time ellapsed: " + (System.nanoTime() - nanos) / 1000000000d);
                 runningViewDisplay = false;
             }).start();
     }
@@ -191,7 +192,7 @@ public class ModelingInterface extends JFrame {
                         (int) (p1.getY() / panel4.getHeight() * image.getHeight()),
 
                         (int) (p2.getX() / panel4.getWidth() * image.getWidth())
-                        -(int) (p1.getX() / panel4.getWidth() * image.getWidth()),
+                                - (int) (p1.getX() / panel4.getWidth() * image.getWidth()),
 
                         (int) (p2.getY() / panel4.getHeight() * image.getHeight())
                                 - (int) (p1.getY() / panel4.getHeight() * image.getHeight()));
@@ -199,12 +200,12 @@ public class ModelingInterface extends JFrame {
                 break;
             case PAINT_GRAD:
                 double s;
-                if(p1.getX()>p2.getX()) {
+                if (p1.getX() > p2.getX()) {
                     s = p1.getX();
                     p1.setLocation(p2.getX(), p1.getY());
                     p2.setLocation(s, p1.getY());
                 }
-                if(p1.getY()>p2.getY()) {
+                if (p1.getY() > p2.getY()) {
                     s = p1.getY();
                     p1.setLocation(p1.getX(), p2.getY());
                     p2.setLocation(p1.getX(), s);
@@ -214,17 +215,17 @@ public class ModelingInterface extends JFrame {
                 double[] doubles1 = Lumiere.getDoubles(paintColor.getRGB());
                 for (double i = p1.getX(); i < p2.getX(); i++) {
                     for (double j = p1.getY(); j < p2.getY(); j++) {
-                        int ix = (int)( i / panel4.getWidth()  * image.getWidth() );
+                        int ix = (int) (i / panel4.getWidth() * image.getWidth());
                         int iy = (int) (j / panel4.getHeight() * image.getHeight());
-                        double[] doubles = Lumiere.getDoubles(image.getRGB(ix,iy));
+                        double[] doubles = Lumiere.getDoubles(image.getRGB(ix, iy));
 
-                        double k = pc/100.*pc/100.;
+                        double k = pc / 100. * pc / 100.;
                         double k2 = 1.0;
-                        double exp = Math.exp(- (ix * ix + iy * iy) * k);
+                        double exp = Math.exp(-(ix * ix + iy * iy) * k);
 
                         for (int comp = 0; comp < doubles.length; comp++) {
                             double l = k2 * (doubles1[comp] - doubles[comp]);
-                            doubles[comp] = doubles[comp]+l*exp;
+                            doubles[comp] = doubles[comp] + l * exp;
                         }
                         int anInt = Lumiere.getInt(doubles);
                         image.setRGB(ix, iy, anInt);
@@ -264,7 +265,7 @@ public class ModelingInterface extends JFrame {
             ioException.printStackTrace();
         }
         try {
-            ImageIO.write(((TextureImg)tubulaire4.texture()).getImage(), "jpg",
+            ImageIO.write(((TextureImg) tubulaire4.texture()).getImage(), "jpg",
                     new File(file.getAbsolutePath() + "_text.jpg"));
         } catch (IOException ioException) {
             ioException.printStackTrace();
@@ -284,11 +285,11 @@ public class ModelingInterface extends JFrame {
         zBuffer.draw();
         ECBufferedImage ecBufferedImage = zBuffer.image2();
         try {
-            ImageIO.write(ecBufferedImage, "jpg", new File(file.getAbsolutePath()+"-renderedImage.jpg"));
+            ImageIO.write(ecBufferedImage, "jpg", new File(file.getAbsolutePath() + "-renderedImage.jpg"));
         } catch (IOException ioException) {
             ioException.printStackTrace();
         }
-        System.out.println("Nano time ellapsed (save): " + (System.nanoTime()-nanos)/1000000000d);
+        System.out.println("Nano time ellapsed (save): " + (System.nanoTime() - nanos) / 1000000000d);
     }
 
     private void menuItemGradPCActionPerformed(ActionEvent e) {
@@ -335,17 +336,17 @@ public class ModelingInterface extends JFrame {
         //======== this ========
         Container contentPane = getContentPane();
         contentPane.setLayout(new MigLayout(
-            "hidemode 3",
-            // columns
-            "[fill]" +
-            "[fill]",
-            // rows
-            "[]" +
-            "[]" +
-            "[]" +
-            "[]" +
-            "[]" +
-            "[]"));
+                "hidemode 3",
+                // columns
+                "[fill]" +
+                        "[fill]",
+                // rows
+                "[]" +
+                        "[]" +
+                        "[]" +
+                        "[]" +
+                        "[]" +
+                        "[]"));
         setJMenuBar(menuBar3);
 
         //======== splitPane1 ========
@@ -359,14 +360,14 @@ public class ModelingInterface extends JFrame {
                 //======== panel2 ========
                 {
                     panel2.setLayout(new MigLayout(
-                        "fill,hidemode 3",
-                        // columns
-                        "[fill]" +
-                        "[fill]",
-                        // rows
-                        "[]" +
-                        "[]" +
-                        "[]"));
+                            "fill,hidemode 3",
+                            // columns
+                            "[fill]" +
+                                    "[fill]",
+                            // rows
+                            "[]" +
+                                    "[]" +
+                                    "[]"));
 
                     //======== menuBar1 ========
                     {
@@ -386,14 +387,14 @@ public class ModelingInterface extends JFrame {
                     //======== panel3 ========
                     {
                         panel3.setLayout(new MigLayout(
-                            "hidemode 3",
-                            // columns
-                            "[fill]" +
-                            "[fill]",
-                            // rows
-                            "[]" +
-                            "[]" +
-                            "[]"));
+                                "hidemode 3",
+                                // columns
+                                "[fill]" +
+                                        "[fill]",
+                                // rows
+                                "[]" +
+                                        "[]" +
+                                        "[]"));
                     }
                     panel2.add(panel3, "cell 0 1 2 2,dock center");
                 }
@@ -407,14 +408,14 @@ public class ModelingInterface extends JFrame {
                 //======== panel1 ========
                 {
                     panel1.setLayout(new MigLayout(
-                        "fill,hidemode 3",
-                        // columns
-                        "[fill]" +
-                        "[fill]",
-                        // rows
-                        "[]" +
-                        "[]" +
-                        "[]"));
+                            "fill,hidemode 3",
+                            // columns
+                            "[fill]" +
+                                    "[fill]",
+                            // rows
+                            "[]" +
+                                    "[]" +
+                                    "[]"));
 
                     //======== menuBar2 ========
                     {
@@ -485,9 +486,9 @@ public class ModelingInterface extends JFrame {
                         menuItem3.setText("Color");
                         menuItem3.setHorizontalAlignment(SwingConstants.LEFT);
                         menuItem3.addActionListener(e -> {
-			menuItemChooseColorActionPerformed(e);
-			menuItem3ActionPerformed(e);
-		});
+                            menuItemChooseColorActionPerformed(e);
+                            menuItem3ActionPerformed(e);
+                        });
                         menuBar2.add(menuItem3);
 
                         //======== menu3 ========
@@ -532,10 +533,12 @@ public class ModelingInterface extends JFrame {
                             public void mouseClicked(MouseEvent e) {
                                 panel4MouseClicked(e);
                             }
+
                             @Override
                             public void mousePressed(MouseEvent e) {
                                 panel4MousePressed(e);
                             }
+
                             @Override
                             public void mouseReleased(MouseEvent e) {
                                 panel4MouseReleased(e);
@@ -543,14 +546,14 @@ public class ModelingInterface extends JFrame {
                             }
                         });
                         panel4.setLayout(new MigLayout(
-                            "hidemode 3",
-                            // columns
-                            "[fill]" +
-                            "[fill]",
-                            // rows
-                            "[]" +
-                            "[]" +
-                            "[]"));
+                                "hidemode 3",
+                                // columns
+                                "[fill]" +
+                                        "[fill]",
+                                // rows
+                                "[]" +
+                                        "[]" +
+                                        "[]"));
                     }
                     panel1.add(panel4, "cell 0 1 2 2,dock center");
                 }
