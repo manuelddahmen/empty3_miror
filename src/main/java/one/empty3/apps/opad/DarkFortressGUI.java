@@ -68,7 +68,8 @@ public final class DarkFortressGUI extends JFrame {
         this.drawerType = clazz;
         Title = "Dark Fortress ";
         setTitle(Title);
-
+        setExtendedState(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
     public void setLevel(Class<Terrain> sol, Player player) {
