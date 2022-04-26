@@ -1,6 +1,16 @@
+import org.apache.tools.ant.filters.*
+
 plugins {
+    application // enabling the plugin here
     id("java")
+    kotlin("jvm") version "1.6.0"
 }
+// Other configuration here
+
+java {
+    withSourcesJar()
+}
+
 
 group = "one.empty3"
 version = "generic-1.0"
@@ -49,4 +59,28 @@ dependencies {
 
 tasks.getByName<Test>("test") {
     useJUnitPlatform()
+}
+
+sourceSets {
+    main {
+        java {
+            setSrcDirs(listOf("src/main/java"))
+        }
+        resources {
+            setSrcDirs(listOf("src/main/java"))
+        }
+    }
+    test {
+        java.srcDir("src/test/java")
+    }
+}
+// Workaround for MPP plugin bug that doesn't put resources in classpath
+// https://youtrack.jetbrains.com/issue/KT-24463
+tasks.getByName("processResources") {
+    val copySpec1: CopySpec = copySpec {
+        include("**/*.properties")
+        from("src/main/java")
+        into("build/classes/main/java")
+    }
+    copySpec1.duplicatesStrategy = org.gradle.api.file.DuplicatesStrategy.EXCLUDE
 }
