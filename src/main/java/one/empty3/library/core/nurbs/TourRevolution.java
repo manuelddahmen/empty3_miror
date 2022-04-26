@@ -45,8 +45,8 @@ public class TourRevolution extends ParametricSurface {
         baseCurveXy.getElem().getCoefficients().setElem(new Point3D(10., 10., 1.), 1);
         rotationBase.add(0, new Matrix33());
         positionBase.add(0, new Point3D());
-        scaleXradius.add(0, new Double(1.0));
-        scaleYheight.add(0, new Double(1.0));
+        scaleXradius.add(0, 1.0);
+        scaleYheight.add(0, 1.0);
     }
 
     @Override

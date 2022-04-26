@@ -178,7 +178,7 @@ public class RPropertyDetailsRow implements TableModel {
                 try {
                     Class<? extends Representable> r = objectDescription.getR();
                     if(r!=null)
-                        value = r.getConstructor(null).newInstance();
+                        value = r.getConstructor().newInstance();
                     else
                         System.out.println("Class R is null");
                 } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {

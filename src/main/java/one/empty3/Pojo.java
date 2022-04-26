@@ -24,7 +24,7 @@ public class Pojo {
             +"\t"+o
             +"\t"+propName+"\t"+value);
         try {
-            i = new Integer(value);
+            i = Integer.parseInt(value);
 System.out.println("int value: "+i);
             setProperty(o, propName, i, int.class);
 System.out.println("property "+propName+" is set to "+i);
