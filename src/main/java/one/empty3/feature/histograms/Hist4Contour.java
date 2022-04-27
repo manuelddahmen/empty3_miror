@@ -94,26 +94,28 @@ public class Hist4Contour extends ProcessFile {
             e.printStackTrace();
             return false;
         }
+
+
+        Double max = 0.0;
         PixM outP = new PixM(inP.getColumns(), inP.getLines());
         PixM outP0 = new PixM(inP.getColumns(), inP.getLines());
         double maxR = Math.min(inP.getLines(), inP.getColumns()) * fractMax;
-        for (int k = 3; k < maxR; k += this.kMax) {
+        for (int k = 1; k < maxR; k += 1) {
             for (int i = 0; i < inP.getColumns(); i++) {
                 for (int j = 0; j < inP.getLines(); j++) {
-                    if (k == 0) {
-                        Hist4Contour.Circle c = getLevel(new Hist4Contour.Circle(i, j, k), inP);
+                    if (k == 1) {
+                        Circle c = getLevel(new Circle(i, j, k), inP);
                         outP0.setP(i, j, new Point3D(c.i, c.r, 0.0));
-                    }
-                    double maxIJ = 0.0;
-                    int rIJ = 3;
-                    Hist4Contour.Circle cc = null;
-                    if (!outP0.getP(i, j).equals(Point3D.O0)) {
-                        Hist4Contour.Circle c = getLevel(new Hist4Contour.Circle(i, j, k), inP);
-                        outP0.setP(i, j, new Point3D(c.i, c.r, 0.0));
-                        if (outP0.getP(i, j).get(0) > 0) {
-                            outP0.setP(i, j, Point3D.O0);
-                        }else {
-                            outP.setP(i, j, new Point3D(c.r, c.i, 1.));
+                    } else {
+                        Circle c = null;
+                        if (!outP0.getP(i, j).equals(Point3D.O0)) {
+                            c = getLevel(new Circle(i, j, k), inP);
+                            if (outP.getP(i, j).get(0) > 0) {
+                                outP0.setP(i, j, outP.getP(i, j));
+                            } else {
+                                outP.setP(i, j, new Point3D(0.0, c.r, 0.0));
+                                 max = outP.getP(i, j).get(1) > max ? outP.getP(i, j).get(1) : max;
+                            }
                         }
                     }
                 }
@@ -123,8 +125,8 @@ public class Hist4Contour extends ProcessFile {
 // Colorier en fonction des pixels voisins
 //        Circle c2 = getLevel(cc, inP, cc.r/2);
         try {
-            ImageIO.write(outP.normalize(0, 1).getImage(), "jpg", out);
-            ImageIO.write(outP0.normalize(0, 1).getImage(), "jpg", out);
+            ImageIO.write(outP0.normalize(1, max, 0, 1).getImage(), "jpg", out);
+            //ImageIO.write(outP0.normalize(0, 1).getImage(), "jpg", out);
             return true;
         } catch (IOException e) {
             e.printStackTrace();
