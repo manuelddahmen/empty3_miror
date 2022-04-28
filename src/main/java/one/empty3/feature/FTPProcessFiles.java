@@ -238,7 +238,7 @@ public class FTPProcessFiles {
                     currentDirin[index] = currentDirout;
 
 
-                currentDirout = "" + directoryOut + "-" + index + "-" + classname + "/";
+                currentDirout = "" + directoryOut + "-" + i + "-" + classname + "/";
                 Logger.getLogger(FTPProcessFiles.class.getName()).info("Process class name read " + classname);
                 System.out.println(classname);
                 Class classs = Class.forName(
