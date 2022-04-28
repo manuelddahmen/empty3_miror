@@ -90,7 +90,7 @@ public class Histogram extends ProcessFile {
             return false;
         }
         PixM outP = inP.copy();
-        double maxR = Math.min(inP.getLines(), inP.getColumns());
+        double maxR = Math.min(inP.getLines(), inP.getColumns())/5.;
         for (int i = 0; i < inP.getColumns(); i++) {
             for (int j = 0; j < inP.getLines(); j++) {
                 double maxIJ = 0.0;

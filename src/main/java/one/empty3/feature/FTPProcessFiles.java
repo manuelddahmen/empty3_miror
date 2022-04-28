@@ -36,7 +36,8 @@ public class FTPProcessFiles {
     private static File tempDir;
     private static File ffmpegExe;
     private static ArrayList<File> movies = new ArrayList<>();
-    private static Integer i;
+    private static int stepIndex;
+    private static int index;
 
     public static String getDirname(String s) {
         if (s.contains("/"))
@@ -111,12 +112,12 @@ public class FTPProcessFiles {
                 defaultProcess();
             }
         } else {
-            int i = 0;
+                int j = 0;
             String[] sets = new File("sets").list();
-            while (i < Objects.requireNonNull(sets).length) {
-                settingsPropertiesPath = "sets/" + sets[i];
+            while (j < Objects.requireNonNull(sets).length) {
+                settingsPropertiesPath = "sets/" + sets[j];
                 defaultProcess();
-                i++;
+                j++;
             }
 
         }
@@ -129,11 +130,11 @@ public class FTPProcessFiles {
 
     public static void parseAndSet(ProcessFile processInstance, List<Object> argCl) {
         if (argCl.size() % 3 == 0) {
-            for (int i = 0; i < argCl.size(); i += 3) {
-                //Class param = Class.forName(argCl.get(i));
-                String param = (String) argCl.get(i);
-                String propertyName = (String) argCl.get(i + 1);
-                String argValue = (String) argCl.get(i + 2);
+            for (int j = 0; j < argCl.size(); j += 3) {
+                //Class param = Class.forName(argCl.get(j));
+                String param = (String) argCl.get(j);
+                String propertyName = (String) argCl.get(j + 1);
+                String argValue = (String) argCl.get(j + 2);
                 try {
                     Method m = processInstance.getClass().getMethod("set" + propertyName, argValue.getClass());
                     m.invoke(processInstance, "set" + propertyName, argValue);
@@ -216,7 +217,7 @@ public class FTPProcessFiles {
 
         //directoryOut = tempDir;
         String sep = "";
-        int i = 0;
+        stepIndex = 0;
         //currentDirin = "";
         if (class0 == null || class0.equals("")) {
             sep = "";
@@ -230,15 +231,15 @@ public class FTPProcessFiles {
         String[] classnamesArr = classnames.split(",");
 
 //        for(String inputDir : currentDirin) {
-        int index = 0;
+        index = 0;
         for (String classname2 : classnamesArr) {
             try {
                 classname = classname2;
-                if (i > 0)
+                if (stepIndex > 0)
                     currentDirin[index] = currentDirout;
 
 
-                currentDirout = "" + directoryOut + "-" + i + "-" + classname + "/";
+                currentDirout = "" + directoryOut + "-" + stepIndex + "-" + classname + "/";
                 Logger.getLogger(FTPProcessFiles.class.getName()).info("Process class name read " + classname);
                 System.out.println(classname);
                 Class classs = Class.forName(
@@ -272,7 +273,7 @@ public class FTPProcessFiles {
 
                 processInstance.setOutputDirectory(new File(directoryOut + File.separator + "outputFiles"));
 
-                if (i == 0) {
+                if (stepIndex == 0) {
 
 
                     if (server.startsWith("ftp")) {
@@ -340,13 +341,14 @@ public class FTPProcessFiles {
                     System.out.println("I>0 classes de traitement\nClasse : " + classs.toString() + " : " + currentDirin[index]);
 
                     File file = new File(currentDirin[index]);
-                    if (file.exists()) printFileDetails(Objects.requireNonNull(file.list()), currentDirin[index]);
-                    else if (i > 0)
+                    if (file.exists() && file.isDirectory())
+                        printFileDetails(Objects.requireNonNull(file.list()), currentDirin[index]);
+                    else if (stepIndex > 0)
                         continue;
                 }
 
 
-                i++;
+                stepIndex++;
                 //                  index++;
  /*
             // uses simpler methods
@@ -381,9 +383,9 @@ public class FTPProcessFiles {
             FFMpeg ffMpeg2 = null;
             for (File file : outputFolderList) {
                 ffMpeg2 = new FFMpeg("", file);
-                for (i = 0; i < classnamesArr.length; i++) {
+                for (stepIndex = 0; stepIndex < classnamesArr.length; stepIndex++) {
                     try {
-                        processInstance = (ProcessFile) Class.forName(classnamesArr[i]).newInstance();
+                        processInstance = (ProcessFile) Class.forName(classnamesArr[stepIndex]).newInstance();
                         assert maxRes != null;
                         processInstance.setMaxRes(Integer.parseInt(maxRes));
                         System.out.printf("%s Process STARTS\n", processInstance.getClass().getName());
@@ -464,7 +466,7 @@ public class FTPProcessFiles {
 
 
             File fi = object;
-            File fo = new File(currentDirout + "/" + object.getName());
+            File fo = new File(currentDirout + "/"+ stepIndex +"-"+index+"-"+ object.getName());
 
 
             //new File(getDirname(fi.getAbsolutePath())).getParentFile().mkdirs();
