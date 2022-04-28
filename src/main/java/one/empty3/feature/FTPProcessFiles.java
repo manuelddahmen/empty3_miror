@@ -37,7 +37,7 @@ public class FTPProcessFiles {
     private static File ffmpegExe;
     private static ArrayList<File> movies = new ArrayList<>();
     private static int stepIndex;
-    private static int index;
+    private static int inDirectoryIndex;
 
     public static String getDirname(String s) {
         if (s.contains("/"))
@@ -231,25 +231,23 @@ public class FTPProcessFiles {
         String[] classnamesArr = classnames.split(",");
 
 //        for(String inputDir : currentDirin) {
-        index = 0;
+        inDirectoryIndex = 0;
         for (String classname2 : classnamesArr) {
             try {
                 classname = classname2;
                 if (stepIndex > 0)
-                    currentDirin[index] = currentDirout;
+                    currentDirin[inDirectoryIndex] = currentDirout;
 
 
                 currentDirout = "" + directoryOut + "-" + stepIndex + "-" + classname + "/";
                 Logger.getLogger(FTPProcessFiles.class.getName()).info("Process class name read " + classname);
-                System.out.println(classname);
-                Class classs = Class.forName(
-                        classname
-                );
+                Logger.getLogger(FTPProcessFiles.class.getName()).info("Directory out: " + currentDirout);
+                Class clazz = Class.forName(classname);
 
 
                 Logger.getLogger(FTPProcessFiles.class.getName()).info("Process Dir" + classname2);
 
-                Object o = classs.newInstance();
+                Object o = clazz.newInstance();
 
                 if (o instanceof ProcessFile)
 
@@ -338,13 +336,12 @@ public class FTPProcessFiles {
 
                     System.out.println("effect" + processInstance.toString());
 
-                    System.out.println("I>0 classes de traitement\nClasse : " + classs.toString() + " : " + currentDirin[index]);
+                    System.out.println("I>0 classes de traitement\nClasse : " + clazz.toString() + " : " + currentDirin[inDirectoryIndex]);
 
-                    File file = new File(currentDirin[index]);
+                    File file = new File(currentDirin[inDirectoryIndex]);
                     if (file.exists() && file.isDirectory())
-                        printFileDetails(Objects.requireNonNull(file.list()), currentDirin[index]);
-                    else if (stepIndex > 0)
-                        continue;
+                        printFileDetails(Objects.requireNonNull(file.list()), currentDirin[inDirectoryIndex]);
+
                 }
 
 
@@ -466,7 +463,7 @@ public class FTPProcessFiles {
 
 
             File fi = object;
-            File fo = new File(currentDirout + "/"+ stepIndex +"-"+index+"-"+ object.getName());
+            File fo = new File(currentDirout + "/"+ stepIndex +"-"+ inDirectoryIndex +"-"+ object.getName());
 
 
             //new File(getDirname(fi.getAbsolutePath())).getParentFile().mkdirs();
