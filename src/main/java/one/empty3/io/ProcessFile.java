@@ -10,10 +10,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 public class ProcessFile {
     public ProcessBean bean;
@@ -108,4 +105,11 @@ public class ProcessFile {
     public void addSource(File fo) {
         imagesStack.add(fo);
     }
+
+
+    protected static boolean isImage(File in) {
+        return in!=null && (in.getAbsolutePath().toLowerCase().endsWith(".jpg")
+            || in.getAbsolutePath().toLowerCase().endsWith(".png"));
+    }
+
 }
