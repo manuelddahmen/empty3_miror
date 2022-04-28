@@ -11,9 +11,9 @@ import java.io.IOException;
 public class Hist4Contour extends ProcessFile {
 
     private int kMax = 3;
-    private double fractMax = 0.2;
+    private double fractMax = 0.05;
 
-    public class Circle {
+    public static class Circle {
         public double x = 0.0, y = 0.0, r = 0.0;
         public double i = 0.0;
         public Point3D maxColor = Point3D.O0;
@@ -104,36 +104,41 @@ public class Hist4Contour extends ProcessFile {
         PixM outP0 = new PixM(inP.getColumns(), inP.getLines());
         double maxR = Math.min(inP.getLines(), inP.getColumns()) * fractMax;
         Circle c = null;
+        Point3D maxP = Point3D.O0.mult(1);
         for (int i = 0; i < inP.getColumns(); i++) {
             for (int j = 0; j < inP.getLines(); j++) {
                 for (int k = 1; k < maxR; k += 1) {
-                     if (outP.getP(i, j).equals(Point3D.O0)) {
-                         c = getLevel(new Circle(i, j, k), inP);
-                         if (c.i > 0.0) {
-                            outP.setP(i, j, new Point3D(c.i, c.r, c.count));
-                         }
-//                        else {
-//                            outP.setP(i, j, Point3D.O0);
-//                        }
+                    if (outP.getP(i, j).equals(Point3D.O0)) {
+                        c = getLevel(new Circle(i, j, k), inP);
+                        if (c.i > 0.0) {
+                            Point3D n = new Point3D(c.i, c.r, c.count);
+                            outP.setP(i, j, n);
+                        }
+                    }
+                }
+                Point3D n = outP.getP(i, j);
+                if(!n.equals(Point3D.O0)) {
+                    for (int l = 0; l < 3; l++) {
+                        if (maxP.get(l) < n.get(l)) {
+                            maxP.set(l, n.get(l));
+                        }
                     }
                 }
             }
         }
         for (int i = 0; i < inP.getColumns(); i++) {
             for (int j = 0; j < inP.getLines(); j++) {
-                if (!outP.getP(i, j).equals(Point3D.O0)) {
-                    outP0.setP(i, j, Point3D.O0);
-                } else {
-                    outP0.setP(i, j, Point3D.n(1, 1, 1));
+                for (int l = 0; l < 3; l++) {
+                    outP.setCompNo(l);
+                    outP.set(i, j, outP.get(i, j) / maxP.get(l));
                 }
             }
-
         }
-
         // Colorier en fonction des pixels voisins
         //        Circle c2 = getLevel(cc, inP, cc.r/2);
         try {
-            ImageIO.write(outP0.normalize(1, max, 0, 1).getImage(), "jpg", out);
+            //ImageIO.write(outP.normalize(0, 1).getImage(), "jpg", out);
+            ImageIO.write(outP.getImage(), "jpg", out);
             //ImageIO.write(outP0.normalize(0, 1).getImage(), "jpg", out);
             return true;
         } catch (IOException e) {
