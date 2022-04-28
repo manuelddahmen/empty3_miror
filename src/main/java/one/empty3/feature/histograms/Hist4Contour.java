@@ -14,10 +14,10 @@ public class Hist4Contour extends ProcessFile {
     private double fractMax = 0.2;
 
     public class Circle {
-        public double x, y, r;
-        public double i;
-        public Point3D maxColor;
-        public double count;
+        public double x = 0.0, y = 0.0, r = 0.0;
+        public double i = 0.0;
+        public Point3D maxColor = Point3D.O0;
+        public double count = 0.0;
 
         public Circle(double x, double y, double r) {
             this.x = x;
@@ -60,7 +60,7 @@ public class Hist4Contour extends ProcessFile {
         for (double i = c.x - c.r; i <= c.x + c.r; i++) {
             for (double j = c.y - c.r; j <= c.y + c.r; j++) {
                 if (c.x - c.r >= 0 && c.y - c.r >= 0 && c.x + c.r < m.getColumns() && c.x + c.r < m.getLines()
-                && (i==c.x-c.r || j==c.y-c.r ||i==c.x+c.r || j==c.y+c.r  )) {
+                        && (i == c.x - c.r || j == c.y - c.r || i == c.x + c.r || j == c.y + c.r)) {
                     intensity += m.getIntensity((int) i, (int) j);
                     count++;
                     Point3D p = m.getP((int) i, (int) j);
@@ -74,10 +74,10 @@ public class Hist4Contour extends ProcessFile {
         c.maxColor = c.maxColor.mult(1 / (sum + 1));
         if (count > 0) {
             c.i = intensity;
-            c.count = c.i;
-        }else {
+            c.count = count;
+        } else {
             c.i = 0.0;
-            c.r = 1;
+            // c.r = 1;
         }
 
 
@@ -87,7 +87,7 @@ public class Hist4Contour extends ProcessFile {
 
     @Override
     public boolean process(File in, File out) {
-        if(!isImage(in)) {
+        if (!isImage(in)) {
             return false;
         }
         PixM inP;
@@ -99,35 +99,39 @@ public class Hist4Contour extends ProcessFile {
         }
 
 
-        Double max = 0.0;
+        double max = 0.0;
         PixM outP = new PixM(inP.getColumns(), inP.getLines());
         PixM outP0 = new PixM(inP.getColumns(), inP.getLines());
         double maxR = Math.min(inP.getLines(), inP.getColumns()) * fractMax;
-            for (int i = 0; i < inP.getColumns(); i++) {
-                for (int j = 0; j < inP.getLines(); j++) {
-                    Circle c = null;
-                    for (int k = 1; k < maxR; k += 1) {
-                    if (k == 1) {
-                        c = getLevel(new Circle(i, j, k), inP);
-                        outP0.setP(i, j, new Point3D(c.i, c.r, 0.0));
-                    } else {
-                        if (outP0.getP(i, j).get(0) != 0) {
-                            c = getLevel(new Circle(i, j, k), inP);
-                            if (outP.getP(i, j).get(0) > 0) {
-                                outP0.setP(i, j, outP.getP(i, j));
-                            } else {
-                                outP.setP(i, j, new Point3D(0.0, c.r, 0.0));
-                                 max = outP.getP(i, j).get(1) > max ? outP.getP(i, j).get(1) : max;
-                            }
-                        }
+        Circle c = null;
+        for (int i = 0; i < inP.getColumns(); i++) {
+            for (int j = 0; j < inP.getLines(); j++) {
+                for (int k = 1; k < maxR; k += 1) {
+                     if (outP.getP(i, j).equals(Point3D.O0)) {
+                         c = getLevel(new Circle(i, j, k), inP);
+                         if (c.i > 0.0) {
+                            outP.setP(i, j, new Point3D(c.i, c.r, c.count));
+                         }
+//                        else {
+//                            outP.setP(i, j, Point3D.O0);
+//                        }
                     }
                 }
-                    outP0.setP(i, j, new Point3D(c.r, c.r, c.r));
-
             }
         }
-// Colorier en fonction des pixels voisins
-//        Circle c2 = getLevel(cc, inP, cc.r/2);
+        for (int i = 0; i < inP.getColumns(); i++) {
+            for (int j = 0; j < inP.getLines(); j++) {
+                if (!outP.getP(i, j).equals(Point3D.O0)) {
+                    outP0.setP(i, j, Point3D.O0);
+                } else {
+                    outP0.setP(i, j, Point3D.n(1, 1, 1));
+                }
+            }
+
+        }
+
+        // Colorier en fonction des pixels voisins
+        //        Circle c2 = getLevel(cc, inP, cc.r/2);
         try {
             ImageIO.write(outP0.normalize(1, max, 0, 1).getImage(), "jpg", out);
             //ImageIO.write(outP0.normalize(0, 1).getImage(), "jpg", out);
