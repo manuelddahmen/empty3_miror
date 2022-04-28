@@ -100,15 +100,15 @@ public class Hist4Contour extends ProcessFile {
         PixM outP = new PixM(inP.getColumns(), inP.getLines());
         PixM outP0 = new PixM(inP.getColumns(), inP.getLines());
         double maxR = Math.min(inP.getLines(), inP.getColumns()) * fractMax;
-        for (int k = 1; k < maxR; k += 1) {
             for (int i = 0; i < inP.getColumns(); i++) {
                 for (int j = 0; j < inP.getLines(); j++) {
+                    Circle c = null;
+                    for (int k = 1; k < maxR; k += 1) {
                     if (k == 1) {
-                        Circle c = getLevel(new Circle(i, j, k), inP);
+                        c = getLevel(new Circle(i, j, k), inP);
                         outP0.setP(i, j, new Point3D(c.i, c.r, 0.0));
                     } else {
-                        Circle c = null;
-                        if (!outP0.getP(i, j).equals(Point3D.O0)) {
+                        if (outP0.getP(i, j).get(0) != 0) {
                             c = getLevel(new Circle(i, j, k), inP);
                             if (outP.getP(i, j).get(0) > 0) {
                                 outP0.setP(i, j, outP.getP(i, j));
@@ -119,6 +119,7 @@ public class Hist4Contour extends ProcessFile {
                         }
                     }
                 }
+                    outP0.setP(i, j, new Point3D(c.r, c.r, c.r));
 
             }
         }
