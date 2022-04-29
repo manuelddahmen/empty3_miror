@@ -1,0 +1,13 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="empty3-library-generic-generic-1.0.jar gui Hist4Contour2" type="JarApplication" singleton="false">
+    <option name="JAR_PATH" value="$PROJECT_DIR$/build/libs/empty3-library-generic-generic-1.0.jar" />
+    <option name="VM_PARAMETERS" value="-cp $Classpath$;build/libs/empty3-library-generic-generic-1.0.jar  --add-exports java.base/java.lang=ALL-UNNAMED --add-exports java.desktop/sun.awt=ALL-UNNAMED --add-exports java.desktop/sun.java2d=ALL-UNNAMED -Dfile.encoding=UTF-8 one.empty3.feature.Run" />
+    <option name="PROGRAM_PARAMETERS" value="hist4Contour2" />
+    <option name="WORKING_DIRECTORY" value="C:\Users\manue\IdeaProjects\empty3-kibrary-generic" />
+    <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+    <option name="ALTERNATIVE_JRE_PATH" value="17" />
+    <method v="2">
+      <option name="Gradle.BeforeRunTask" enabled="false" tasks="jar" externalProjectPath="$PROJECT_DIR$" vmOptions="" scriptParameters="" />
+    </method>
+  </configuration>
+</component>
