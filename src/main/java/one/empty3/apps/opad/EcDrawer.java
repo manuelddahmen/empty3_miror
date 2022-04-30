@@ -128,6 +128,7 @@ public class EcDrawer extends Drawer implements Runnable {
                 scene.cameraActive().declareProperties();
             }
             try {
+                z.idzpp();
                 z.scene(scene);
                 z.draw(scene);
             } catch (Exception ex) {

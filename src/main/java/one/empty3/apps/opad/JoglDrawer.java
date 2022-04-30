@@ -37,6 +37,7 @@ import com.jogamp.opengl.*;
 import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.util.Animator;
+import com.jogamp.opengl.util.FPSAnimator;
 import com.jogamp.opengl.util.awt.TextRenderer;
 import com.jogamp.opengl.util.awt.TextureRenderer;
 import one.empty3.apps.opad.help.PiloteAuto;
@@ -134,6 +135,7 @@ public class JoglDrawer extends Drawer implements GLEventListener {
 
         ((JFrame)component).getContentPane().removeAll();
         ((JFrame)component).getContentPane().add(glCanvas);
+
     }
 
     @Override
@@ -859,11 +861,6 @@ public class JoglDrawer extends Drawer implements GLEventListener {
         return animator;
     }
 
-    public void start() {
-        while(isRunning()) {
-            display(glCanvas);
-        }
-    }
 
     private boolean isRunning() {
         return true;

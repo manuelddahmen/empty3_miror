@@ -223,7 +223,7 @@ public class PositionUpdateImpl implements PositionUpdate, Runnable, ActionListe
     int numAxe = 2;
     @Override
     public void rotationGauche(long timeNano) {
-        angle = positionMobile.getAngleVisee().get(numAxe) + tourSec * timeNano * 1E-9;
+        angle = positionMobile.getAngleVisee().get(numAxe) - tourSec * timeNano * 1E-9;
         positionMobile.getAngleVisee().set(numAxe, angle);
         if (isPositionOk(getPositionMobile().getPositionSol(), false)) {
             ;
@@ -232,7 +232,7 @@ public class PositionUpdateImpl implements PositionUpdate, Runnable, ActionListe
 
     @Override
     public void rotationDroite(long timeNano) {
-        angle = positionMobile.getAngleVisee().get(numAxe) - tourSec * timeNano * 1E-9;
+        angle = positionMobile.getAngleVisee().get(numAxe) + tourSec * timeNano * 1E-9;
         positionMobile.getAngleVisee().set(numAxe, angle);
         if (isPositionOk(getPositionMobile().getPositionSol(), false)) {
             ;
