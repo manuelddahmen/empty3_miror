@@ -53,6 +53,7 @@ public class EcDrawer extends Drawer implements Runnable {
     public void resize() {
         z = ZBufferFactory.instance(w, h);
         z.couleurDeFond(new ColorTexture(Color.black));
+        ((ZBufferImpl)z).setDisplayType(ZBufferImpl.SURFACE_DISPLAY_COL_TRI);
 
         ah = h;
         aw = w;
@@ -94,22 +95,43 @@ public class EcDrawer extends Drawer implements Runnable {
         //z.couleurDeFond(new TColor(Color.BLACK));
         if (g != null && component.getWidth() > 0 && component.getHeight() > 0) {
 
-            z.scene(new Scene());
+            Scene scene = new Scene();
 
             if (mover != null) {
-                z.scene().add(mover.getCircuit());
-                z.scene().add(terrain);
-                z.scene().add(bonus);
-                z.scene().add(vaisseau.getObject());
-                z.scene().cameraActive(new Camera(
-                        mover.calcCposition(),
-                        mover.calcDirection()
-                ));
+                scene.add(mover.getCircuit());
+                scene.add(terrain);
+                scene.add(bonus);
+                scene.add(vaisseau.getObject());
+
+
+
+                Camera camera;
+                if (mover.getPlotter3D()!=null&&mover.getPlotter3D().isActive())
+                    camera = mover.getPositionMobile().calcCameraMobile();
+                else
+                    camera = mover.getPositionMobile().calcCamera();
+
+                Point3D pos = camera.getEye();
+                Point3D dir = camera.getLookat().moins(pos).norme1();
+                Point3D diff = dir.moins(pos).norme1();
+                Point3D up = camera.getVerticale().getElem();
+
+                Point3D posCam = pos;//.moins(dir.norme1());
+                Point3D vertical = camera.getVerticale().getElem().norme1();
+                Point3D vert2 = vertical.prodVect(dir).mult(-1);
+                Point3D positionCamRear = posCam
+                        .plus(camera.getLookat().moins(posCam).mult(-0.05));
+
+                posCam = positionCamRear;
+
+                scene.cameraActive(new Camera(posCam, dir, up));
+                scene.cameraActive().declareProperties();
             }
             try {
-                z.draw();
+                z.scene(scene);
+                z.draw(scene);
             } catch (Exception ex) {
-                System.err.println("Ex");
+                System.err.println(ex);
             }
             ECBufferedImage ri = z.image();
 
