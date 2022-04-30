@@ -47,6 +47,7 @@ import one.empty3.library.core.nurbs.CourbeParametriquePolynomiale;
 import one.empty3.library.core.nurbs.ParametricCurve;
 import one.empty3.library.core.nurbs.ParametricSurface;
 import one.empty3.library.core.tribase.TRIObjetGenerateur;
+import one.empty3.library.core.tribase.TubulaireN2;
 
 import javax.swing.*;
 import java.awt.*;
@@ -186,19 +187,7 @@ public class JoglDrawer extends Drawer implements GLEventListener {
         diff = dir.moins(pos).norme1();
         Point3D up = camera.getVerticale().getElem();
 
-        /*
-        if(del0!=null) {
-            if (del.moins(del0).norme() > 0)
-                diff = del.moins(del0).prodVect(del).norme1();
-            if (diff.norme() == 0)
-                diff = Point3D.Y;
-            if (diff.prodScalaire(normale0) < 0)
-                diff = diff.mult(-1);
-        }
-        */
 
-        //Point3D normale = /*dir.prodVect(pos);*/getTerrain()
-        //        .calcNormale(pos.getX(), pos.getY()).norme1();
         Point3D posCam = pos;//.moins(dir.norme1());
         Point3D vertical = camera.getVerticale().getElem().norme1();
         Point3D vert2 = vertical.prodVect(dir).mult(-1);
@@ -210,11 +199,11 @@ public class JoglDrawer extends Drawer implements GLEventListener {
         glu.gluLookAt(posCam.get(0), posCam.get(1), posCam.get(2),
                         dir.get(0), dir.get(1), dir.get(2),
                 up.get(0), up.get(1), up.get(2));
-        /*if(circuit==null)
+        if(circuit==null)
          circuit = mover.getCircuit();
          if(circuit!=null)
          draw((TRIConteneur)circuit, glu, gl);
-        */
+
 
         if (toggleMenu == null)
             return;
@@ -227,19 +216,6 @@ public class JoglDrawer extends Drawer implements GLEventListener {
         }
         if (toggleMenu.isDisplaySky())
             draw(new Ciel().getBleu(), glu, gl);
-
-//        if (mover.getPath().size() >= 2) {
-//            path = new TubulaireN2<Lines>();
-//            mover.setPath(new Path());
-//            Lines lines = new Lines(getMover().getPath());
-//            path.curve(lines);
-//            path.nbrAnneaux(100);
-//            path.nbrRotations(4);
-//            path.diam(0.01);
-//            path.generate();
-//
-//            // TODO draw2(path, glu, gl);
-//        }
 
         if (toggleMenu.isDisplayGroundGrid())
           draw(terrain, glu, gl);
