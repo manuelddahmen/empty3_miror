@@ -88,9 +88,6 @@ public class JoglDrawer extends Drawer implements GLEventListener {
         Plasma.t_factor = 0.000001;
     }
 
-    {
-    }
-
     public JoglDrawer(DarkFortressGUI darkFortressGUI) {
 
         //getting the capabilities object of GL2 profile
@@ -202,9 +199,9 @@ public class JoglDrawer extends Drawer implements GLEventListener {
 
 
         if(circuit==null)
-         circuit = mover.getCircuit();
+            circuit = mover.getCircuit();
          if(circuit!=null)
-         draw((TRIConteneur)circuit, glu, gl);
+            draw((TRIConteneur)circuit, glu, gl);
 
 
         if (toggleMenu == null)
@@ -235,13 +232,6 @@ public class JoglDrawer extends Drawer implements GLEventListener {
             draw(object, glu, gl);
             if (getPlotter3D()!=null&&getPlotter3D().isActive()) {
                 CourbeParametriquePolynomiale courbeParametriquePolynomiale = null;
-//                TubulaireN2<CourbeParametriquePolynomiale> segmentDroiteTubulaireN2 = new TubulaireN2<>();
-//                segmentDroiteTubulaireN2.diam(0.01);
-//                segmentDroiteTubulaireN2.curve(courbeParametriquePolynomiale = new CourbeParametriquePolynomiale(new Point3D[]{getMover().getPositionMobile().calcPosition2D(),
-//                        getMover().getPositionMobile().calcDirection2D()}));
-//                segmentDroiteTubulaireN2.generate();
-//                draw(courbeParametriquePolynomiale, glu, gl);
-            } else {
             }
         }
 
