@@ -39,19 +39,20 @@ import one.empty3.library.HeightMapSurface;
 import one.empty3.library.Point2D;
 import one.empty3.library.Point3D;
 import one.empty3.library.Sphere;
+import one.empty3.library.core.nurbs.ParametricSurface;
 
 import java.util.ArrayList;
 
 /*__
  * @author Se7en
  */
-public class BalleClous extends HeightMapSurface{
+public class BalleClous extends Sphere {
 
     private ArrayList<Point2D> points = new ArrayList<Point2D>();
     private double d;
 
     public BalleClous(Point3D c, double r) {
-        super(new Sphere(c, r), null);
+        super(c, r);
     }
 
     public void addPoint(Point2D p) {
@@ -86,14 +87,8 @@ public class BalleClous extends HeightMapSurface{
         return points;
     }
 
-
     public Point3D calculerPoint3D(double u, double v)
     {
-        throw new UnsupportedOperationException("Calculer point de la sphere + bitmap ou fonction");
-//        return super.calculerPoint3D(u, v);
-    }
-
-    public Point3D height(double u, double v) {
         Point2D p0 = new Point2D(u, v);
 
         double mult = 1.0;
@@ -104,7 +99,7 @@ public class BalleClous extends HeightMapSurface{
 
         }
 
-        return surface.data0d.calculerPoint3D(u, v).mult(mult / points.size());
+        return super.calculerPoint3D(u, v).mult(mult / points.size());
 
     }
 }

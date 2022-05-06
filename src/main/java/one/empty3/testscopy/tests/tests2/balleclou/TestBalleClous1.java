@@ -15,8 +15,6 @@ import java.util.logging.Logger;
  * @author Se7en
  */
 public class TestBalleClous1 extends TestObjetSub {
-
-    public int MAXFRAMES = 2000;
     public int N = 21;
     private ITexture tc = new TextureCol(Color.red);
     private BalleClous ballec;
@@ -30,19 +28,21 @@ public class TestBalleClous1 extends TestObjetSub {
 
         th.loop(true);
 
-        th.setResx(1920);
+        th.setResx(1600);
 
-        th.setResy(480);
+        th.setResy(1200);
 
-        th.MAXFRAMES = 4000;
+        th.setMaxFrames(2000);
 
-        th.setGenerate(GENERATE_IMAGE);
+        th.setGenerate(GENERATE_IMAGE|GENERATE_MOVIE);
 
-        th.run();
+        new Thread(th).start();
     }
 
     @Override
     public void ginit() {
+        z().setDisplayType(ZBufferImpl.SURFACE_DISPLAY_COL_TRI);
+
         s = new Point3D[N];
         v = new Point3D[N];
         for (int i = 0; i < N; i++) {
@@ -67,6 +67,8 @@ public class TestBalleClous1 extends TestObjetSub {
 
         ballec = new BalleClous(Point3D.O0, 50);
 
+        ballec.setIncrU(.005);
+        ballec.setIncrV(.005);
 
         //ballec.setMaxX(65);
 
@@ -85,7 +87,7 @@ public class TestBalleClous1 extends TestObjetSub {
 
 
         Camera camera;
-        camera = new Camera(new Point3D(0d, 0d, -1700d),
+        camera = new Camera(new Point3D(0d, 0d, -2400d),
                 new Point3D(0d, 0d, 0d));
 
         scene().cameraActive(camera);

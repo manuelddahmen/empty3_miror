@@ -33,3 +33,6 @@ MoveCollection: actions (to walk, to run, to sit, to smoke)
 Move: individual member move. 
 ie. tubulaire3.soulCurve.coefficients[0] from current
 position to vec3 moveVector in 3 sec.
+
+En fait, celui-là, il a juste été copié "Et ma vérité toute grosse dans la bouche. Tout moi."
+Allez vous faire foutre.
