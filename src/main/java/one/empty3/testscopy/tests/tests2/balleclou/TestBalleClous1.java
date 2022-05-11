@@ -28,9 +28,9 @@ public class TestBalleClous1 extends TestObjetSub {
 
         th.loop(true);
 
-        th.setResx(1600);
+        th.setResx(600);
 
-        th.setResy(1200);
+        th.setResy(400);
 
         th.setMaxFrames(2000);
 

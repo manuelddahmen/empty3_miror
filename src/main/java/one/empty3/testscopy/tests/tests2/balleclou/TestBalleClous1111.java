@@ -26,17 +26,10 @@ public class TestBalleClous1111 extends TestObjetSub {
 
     public static void main(String[] args) {
         TestBalleClous1111 th = new TestBalleClous1111();
-
+        th.setResolution(800, 600);
         th.loop(true);
-
-        //th.setResx(640);
-        //th.setResy(480);
-
         th.setMaxFrames(th.MAXFRAMES);
-
-        th.setGenerate(GENERATE_IMAGE | GENERATE_MOVIE);
-
-        th.run();
+        new Thread(th).start();
     }
 
     @Override

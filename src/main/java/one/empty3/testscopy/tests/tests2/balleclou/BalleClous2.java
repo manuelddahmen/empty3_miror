@@ -84,7 +84,7 @@ public class BalleClous2 extends Sphere {
 
         }
 
-        return p.moins(getCircle().getCenter()).mult(mult / points.size()).plus(getCircle().getCenter());
+        return getCircle().getCenter().plus(p.moins(getCircle().getCenter()).mult(mult / points.size()).plus(getCircle().getCenter()));
 
     }
 

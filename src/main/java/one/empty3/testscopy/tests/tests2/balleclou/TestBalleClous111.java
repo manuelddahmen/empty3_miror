@@ -26,19 +26,20 @@ public class TestBalleClous111 extends TestObjetSub {
 
         th.loop(true);
 
-        th.setResx(1920);
+        th.setResx(1920/4);
 
-        th.setResy(1080);
+        th.setResy(1080/4);
 
         th.MAXFRAMES = 4000;
 
-        th.setGenerate(GENERATE_IMAGE);
-
-        th.run();
+        new Thread(th).start();
     }
 
     @Override
     public void ginit() {
+        z().setFORCE_POSITIVE_NORMALS(true);
+        z().setDisplayType(Representable.SURFACE_DISPLAY_COL_TRI);
+
         LumierePonctuelle lumierePonctuelle = new LumierePonctuelle(Point3D.X, Color.RED);
         lumierePonctuelle.setR0(1);
 
