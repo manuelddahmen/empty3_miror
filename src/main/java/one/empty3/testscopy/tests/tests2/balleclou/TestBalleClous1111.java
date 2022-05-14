@@ -11,8 +11,6 @@ import java.awt.*;
  */
 public class TestBalleClous1111 extends TestObjetSub {
 
-    public int MAXFRAMES = 2000;
-
     public int N = 1;
     private ITexture tc = new TextureCol(Color.red);
     private BalleClous2 ballec;
@@ -28,13 +26,15 @@ public class TestBalleClous1111 extends TestObjetSub {
         TestBalleClous1111 th = new TestBalleClous1111();
         th.setResolution(800, 600);
         th.loop(true);
-        th.setMaxFrames(th.MAXFRAMES);
+        th.setMaxFrames(2000);
         new Thread(th).start();
     }
 
     @Override
     public void ginit() {
-        LumierePonctuelle lumierePonctuelle = new LumierePonctuelle(Point3D.X, Color.RED);
+        z().setFORCE_POSITIVE_NORMALS(true);
+        z().setDisplayType(ZBufferImpl.SURFACE_DISPLAY_TEXT_TRI);
+        LumierePonctuelle lumierePonctuelle = new LumierePonctuelle(Point3D.X, Color.GREEN);
         lumierePonctuelle.setR0(1);
 
         scene().lumieres().add(lumierePonctuelle);
@@ -43,7 +43,9 @@ public class TestBalleClous1111 extends TestObjetSub {
         lumierePonctuelle.setR0(1);
 
         scene().lumieres().add(lumierePonctuelle);
+
         scene().lumieres().add(new LumierePonctuelle(Point3D.O0, Colors.random()));
+
 
         s = new Point3D[nBalles][N];
         v = new Point3D[nBalles][N];
@@ -52,7 +54,7 @@ public class TestBalleClous1111 extends TestObjetSub {
             for (int i = 0; i < N; i++) {
                 s[b][i] = new Point3D(Point3D.O0);
 
-                s[b][i].texture(new TextureCol(Colors.random()));
+                s[b][i].texture(tc);
 
                 v[b][i] = new Point3D(Math.random() * (V / 2 - V), Math.random() * (V / 2 - V), Math.random() * (V / 2 - V));
 
@@ -69,6 +71,9 @@ public class TestBalleClous1111 extends TestObjetSub {
 
             ballec = new BalleClous2(Point3D.O0, 1);
 
+            ballec.setIncrU(0.01);
+            ballec.setIncrV(0.01);
+
             balles[i] = ballec;
             ballec.texture(new TextureCol(Colors.random()));
             //textureMov = new TextureMov("C:\\Emptycanvas\\Resources\\BigFloEtOlie.mp4");
@@ -79,7 +84,7 @@ public class TestBalleClous1111 extends TestObjetSub {
 
         }
         Camera camera;
-        camera = new Camera(new Point3D(-5d, 0d, 0d),
+        camera = new Camera(new Point3D(-0d, 0d, -5d),
                 new Point3D(0d, 0d, 0d));
 
         scene().cameraActive(camera);
