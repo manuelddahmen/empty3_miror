@@ -75,10 +75,6 @@ tasks.getByName("processResources") {
 }
 
 
-signing {
-    sign publishing.publications.mavenJava
-}
-
 
 javadoc {
     if(JavaVersion.current().isJava9Compatible()) {
@@ -92,13 +88,7 @@ java {
 }
 
 publishing {
-    repositories {
-        maven {
-            def releasesRepoUrl = layout.buildDirectory.dir("repos/releases")
-            def snapshotsRepoUrl = layout.buildDirectory.dir("repos/snapshots")
-            url = uri((version.toString().endsWith("SNAPSHOT")) ? snapshotsRepoUrl : releasesRepoUrl)
-        }
-    }
+
     publications {
         mavenJava(MavenPublication) {
             artifactId("empty-library-generic")
@@ -134,6 +124,14 @@ publishing {
                     url.set("https://empty3.one/")
                 }
             }
+        }
+    }
+
+    repositories {
+        maven {
+            def releasesRepoUrl = layout.buildDirectory.dir("repos/releases")
+            def snapshotsRepoUrl = layout.buildDirectory.dir("repos/snapshots")
+            url = uri((version.toString().endsWith("SNAPSHOT")) ? snapshotsRepoUrl : releasesRepoUrl)
         }
     }
 }
