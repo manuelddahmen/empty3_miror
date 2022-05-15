@@ -13,7 +13,7 @@ import java.util.Objects;
 public class DetectorTestOnMyImages {
     @Test
     public void testDetector() throws IOException {
-        for (File img : Objects.requireNonNull(new File("c:/users/manue/ideaProjects/images/").listFiles())) {
+/*        for (File img : Objects.requireNonNull(new File("c:/users/manue/ideaProjects/images/").listFiles())) {
             if (img.getName().endsWith("jpg") || img.getName().endsWith("png")) {
                 try {
                     InputStream haarXml = Detector.class.getResourceAsStream("/haarcascade_frontalface_alt2.xml");
@@ -38,6 +38,6 @@ public class DetectorTestOnMyImages {
 
             }
         }
-
+*/
     }
 }
