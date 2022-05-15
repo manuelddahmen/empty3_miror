@@ -18,7 +18,6 @@ public class FeatureDescriptor {
 
     /***
      * Feature descriptor, subimage as : comp{red=0,green=1,blue=2}*(columns*lineNo+columnNo) // TODO Verify.
-     * @return descriptor array.
      */
     public FeatureDescriptor(int resX, int resY) {
         fd = new double[resX * resY * comps];

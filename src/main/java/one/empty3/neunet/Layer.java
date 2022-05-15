@@ -92,7 +92,7 @@ public class Layer implements Comparable {
 
     /***
      * Not implemented yet
-     * @return
+     * @return error double
      */
     public double error() {
         double e = 0.0;
@@ -105,7 +105,7 @@ public class Layer implements Comparable {
 
     /***
      * Not implemented yet
-     * @return
+     * @return error double
      */
     public double error(double[] w) {
         double e = 0.0;
@@ -118,7 +118,6 @@ public class Layer implements Comparable {
 
     /***
      * Not implemented yet
-     * @return
      */
     public void updateW() {
         double e = error();
