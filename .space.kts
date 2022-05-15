@@ -1,7 +1,7 @@
 /**
 * JetBrains Space Automation
 * This Kotlin-script file lets you automate build activities
-* For more info, refer to https:/*/
+* For more info, refer to https:*/
 
 plugins {
     `java-library`
