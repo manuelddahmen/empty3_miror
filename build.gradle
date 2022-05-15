@@ -1,8 +1,10 @@
 plugins {
     id("application") // enabling the plugin here
     id("java")
+    id 'java-library'
     //kotlin  ("jvm") version "1.6.0"
     id 'maven-publish'
+    id 'signing'
 }
 // Other configuration here
 
@@ -72,10 +74,39 @@ tasks.getByName("processResources") {
     copySpec1.duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
+
+signing {
+    sign publishing.publications.mavenJava
+}
+
+
+javadoc {
+    if(JavaVersion.current().isJava9Compatible()) {
+        options.addBooleanOption('html5', true)
+    }
+}
+
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
 publishing {
+    repositories {
+        maven {
+            def releasesRepoUrl = layout.buildDirectory.dir("repos/releases")
+            def snapshotsRepoUrl = layout.buildDirectory.dir("repos/snapshots")
+            url = uri((version.toString().endsWith("SNAPSHOT")) ? snapshotsRepoUrl : releasesRepoUrl)
+        }
+    }
     publications {
         mavenJava(MavenPublication) {
             artifactId("empty-library-generic")
+            groupId = 'one.empty3'
+            version = '0.9'
+            from components.java
+
+
             pom {
                 name.set("Empty3 graphics libraries")
                 description.set("Graphics libraries")
@@ -103,13 +134,6 @@ publishing {
                     url.set("https://empty3.one/")
                 }
             }
-        }
-    }
-    repositories {
-        maven {
-            def releasesRepoUrl = layout.buildDirectory.dir("repos/releases")
-            def snapshotsRepoUrl = layout.buildDirectory.dir("repos/snapshots")
-            url = uri((version.toString().endsWith("SNAPSHOT")) ? snapshotsRepoUrl : releasesRepoUrl)
         }
     }
 }
