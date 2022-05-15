@@ -87,56 +87,6 @@ java {
     withSourcesJar()
 }
 
-publishing {
-
-    publications {
-        mavenJava(MavenPublication) {
-            artifactId("empty-library-generic")
-            groupId = 'one.empty3'
-            version = '0.9'
-            from components.java
-
-
-            pom {
-                name.set("Empty3 graphics libraries")
-                description.set("Graphics libraries")
-                url.set("https://www.empty3.one")
-                properties.set(mapOf(
-//                        "myProp" : "value",
-//                        "prop.with.dots" : "anotherValue"
-                ))
-                licenses {
-                    license {
-                        name.set("The Apache License, Version 2.0")
-                        url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
-                    }
-                }
-                developers {
-                    developer {
-                        id.set("manuelddahmen")
-                        name.set("Manuel Dahmen")
-                        email.set("dathewolf@gmail.com")
-                    }
-                }
-                scm {
-                    connection.set("scm:git:git://github.com/manuelddahmen/empty3.git")
-                    developerConnection.set("scm:git:ssh://github.com/manuelddahmen/empty3.git")
-                    url.set("https://empty3.one/")
-                }
-            }
-        }
-    }
-
-    repositories {
-        maven {
-            def releasesRepoUrl = layout.buildDirectory.dir("repos/releases")
-            def snapshotsRepoUrl = layout.buildDirectory.dir("repos/snapshots")
-            url = uri((version.toString().endsWith("SNAPSHOT")) ? snapshotsRepoUrl : releasesRepoUrl)
-        }
-    }
-}
-
-
 signing {
     sign publishing.publications.mavenJava
 }
@@ -145,5 +95,24 @@ signing {
 javadoc {
     if(JavaVersion.current().isJava9Compatible()) {
         options.addBooleanOption('html5', true)
+    }
+}
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = "one.empty3"
+            artifactId = "libraries-k"
+            version = "0.9-SNAPSHOT"
+            from components.java
+        }
+    }
+    repositories {
+        maven {
+            url "https://maven.pkg.jetbrains.space/empty3/p/empty3/maven"
+            credentials {
+                username = spaceUsername
+                password = spacePassword
+            }
+        }
     }
 }
