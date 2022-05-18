@@ -66,22 +66,26 @@ tasks.getByName("test") {
 
 // Workaround for MPP plugin bug that doesn't put resources in classpath
 // https://youtrack.jetbrains.com/issue/KT-24463
-tasks.getByName("processResources") {
-    CopySpec copySpec1 = copySpec {
-        include("**/*.properties")
-        from("src/main/java")
-        into("build/classes/main/java")
-    }
-    copySpec1.duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+//tasks.getByName("processResources") {
+//    CopySpec copySpec1 = copySpec {
+//        include("**/*.properties")
+//        include("**/*.txt")
+//        from("src/main/java")
+//        into("build/classes/main/java")
+//    }
+//    copySpec1.duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+//}
+task copyTask(type: Copy) {
+    from 'src/main/java/.'
+    into 'build/classes/java/main'
 }
-
-
-
 javadoc {
     if(JavaVersion.current().isJava9Compatible()) {
         options.addBooleanOption('html5', true)
     }
 }
+
+
 
 java {
     withJavadocJar()
