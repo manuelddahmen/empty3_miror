@@ -14,7 +14,7 @@ java {
 
 
 group = "one.empty3"
-version = "generic-1.0"
+version = "1.0"
 
 repositories {
     google()
