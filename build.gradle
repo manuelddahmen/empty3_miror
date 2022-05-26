@@ -62,43 +62,50 @@ dependencies {
 tasks.getByName("test") {
     useJUnitPlatform()
 }
+test {
+    // show standard out and standard error of the test JVM(s) on the console
+    testLogging.showStandardStreams = true
+}
+task sourceJar(type: Jar) {
+    classifier "sources"
+    from sourceSets.main.allJava
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier "javadoc"
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives jar
+    archives sourceJar
+    archives javadocJar
+}
 
 
-// Workaround for MPP plugin bug that doesn't put resources in classpath
-// https://youtrack.jetbrains.com/issue/KT-24463
-//tasks.getByName("processResources") {
-//    CopySpec copySpec1 = copySpec {
-//        include("**/*.properties")
-//        include("**/*.txt")
-//        from("src/main/java")
-//        into("build/classes/main/java")
-//    }
-//    copySpec1.duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-//}
 task copyTask(type: Copy) {
     from 'src/main/java/.'
     into 'build/classes/java/main'
 }
 javadoc {
-    if(JavaVersion.current().isJava9Compatible()) {
+    if (JavaVersion.current().isJava9Compatible()) {
         options.addBooleanOption('html5', true)
     }
 }
-
 
 
 java {
     withJavadocJar()
     withSourcesJar()
 }
-/*
+
 signing {
-    sign publishing.publications.maven
+    sign configurations.archives
 }
-*/
+
 
 javadoc {
-    if(JavaVersion.current().isJava9Compatible()) {
+    if (JavaVersion.current().isJava9Compatible()) {
         options.addBooleanOption('html5', true)
     }
 }
@@ -109,6 +116,35 @@ publishing {
             artifactId = "libraries-k"
             version = "1.0"
             from components.java
+// create the sign pom artifact
+            pom.withXml {
+                def pomFile = file("${project.buildDir}/generated-pom.xml")
+                writeTo(pomFile)
+                def pomAscFile = signing.sign(pomFile).signatureFiles[0]
+                artifact(pomAscFile) {
+                    classifier = null
+                    extension = 'pom.asc'
+                }
+            }
+// create the signed artifacts
+            project.tasks.signArchives.signatureFiles.each {
+                artifact(it) {
+                    def matcher = it.file =~ /-(sources|javadoc)\.jar\.asc$/
+                    if (matcher.find()) {
+                        classifier = matcher.group(1)
+                    } else {
+                        classifier = null
+                    }
+                    extension = 'jar.asc'
+                }
+            }
+            artifact(sourceJar) {
+                classifier = 'sources'
+            }
+            artifact(javadocJar) {
+                classifier = 'javadoc'
+            }
+
         }
     }
     repositories {
@@ -119,5 +155,77 @@ publishing {
                 password = spacePassword
             }
         }
+        mavenCentral {
+            repositories {
+                maven {
+                    url "https://oss.sonatype.org/service/local/staging/deploy/maven2"
+                    credentials {
+                        username = mavenCentralUsername
+                        password = mavenCentralPassword
+                    }
+                }
+            }
+
+
+        }
     }
 }
+
+def customizePom(pom) {
+    pom.withXml {
+        def root = asNode()
+
+        // eliminate test-scoped dependencies (no need in maven central POMs)
+        root.dependencies.removeAll { dep ->
+            dep.scope == "test"
+        }
+
+        // add all items necessary for maven central publication
+        root.children().last() + {
+            resolveStrategy = Closure.DELEGATE_FIRST
+
+            description 'Renders and models 3D objects'
+            name 'Empty3 libraries'
+            url 'https://github.com/manuelddahmen/empty3'
+            organization {
+                name 'com.github.manuelddahmen'
+                url 'https://github.com/manuelddahmen'
+            }
+            issueManagement {
+                system 'GitHub'
+                url 'https://github.com/manuelddahmen/empty3/issues'
+            }
+            licenses {
+                license {
+                    name 'Apache License 2.0'
+                    url 'https://github.com/manuelddahmen/empty3/blob/master/LICENSE'
+                    distribution 'repo'
+                }
+            }
+            scm {
+                url 'https://github.com/manuelldahmen/empty3'
+                connection 'scm:git:git://github.com/manuelddahmen/empty3.git'
+                developerConnection 'scm:git:ssh://git@github.com:manuelddahmen/empty3.git'
+            }
+            developers {
+                developer {
+                    name 'manuelddahmen'
+                }
+            }
+        }
+    }
+}
+/*
+
+model {
+    tasks.generatePomFileForMavenJavaPublication() {
+        destination = file("$buildDir/generated-pom.xml")
+    }
+    tasks.publishMavenJavaPublicationToMavenLocal() {
+        dependsOn project.tasks.signArchives
+    }
+    tasks.publishMavenJavaPublicationToMavenRepository() {
+        dependsOn project.tasks.signArchives
+    }
+}
+*/

@@ -51,7 +51,7 @@ import java.util.ResourceBundle;
  *
  * @author Manuel Dahmen _manuel.dahmen@gmx.com_
  */
-class Vaisseau {
+public class Vaisseau {
     private final ResourceBundle bundle;
     private final double mlc;
 

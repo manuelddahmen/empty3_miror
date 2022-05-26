@@ -58,7 +58,9 @@ public class Polyhedron extends Representable implements TRIConteneur {
     public Polyhedron() {
         this.points = new ArrayList<Point3D>();
     }
-
+    public void clean() {
+        this.tris.clear();
+    }
     public Polyhedron(ArrayList<Point3D> points) {
 
         this.points = points;
@@ -68,7 +70,7 @@ public class Polyhedron extends Representable implements TRIConteneur {
 
     }
 
-    private void steps() {
+    public void steps() {
         step1();
         //step2();
         //step1();

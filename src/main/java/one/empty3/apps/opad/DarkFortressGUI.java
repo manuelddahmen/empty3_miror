@@ -48,7 +48,7 @@ import java.util.logging.Logger;
 public final class DarkFortressGUI extends JFrame {
     private final Class<? extends Drawer> clazz;
     public PositionUpdateImpl positionUpdate;
-    protected PositionUpdate mover;
+    public PositionUpdate mover;
     //Plotter3D plotter3D;
     Drawer drawer;
     private Class<? extends Drawer> drawerType;

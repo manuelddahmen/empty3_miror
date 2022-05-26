@@ -40,7 +40,7 @@ import one.empty3.library.core.tribase.TRISphere;
 /*__
  * Created by manuel on 19-05-17.
  */
-class TRISphere2<T extends BonusClass> extends Sphere {
+public class TRISphere2<T extends BonusClass> extends Sphere {
 
     private Point3D coords;
     private Bonus bonus;

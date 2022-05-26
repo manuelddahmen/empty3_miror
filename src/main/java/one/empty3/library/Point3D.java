@@ -238,6 +238,17 @@ public class Point3D extends Representable {
         return new Point3D(((Math.random() - 0.5) * 2 * d), ((Math.random() - 0.5) * 2 * d), ((Math.random() - 0.5) * 2 * d));
     }
 
+    public static double[] toArray1d(Point3D norme1, double [] arr) {
+        double[] d = arr;
+
+        if(arr.length<3)
+            d = new double[3];
+
+        arr [0] = norme1.coordArr.getElem(0);arr[1]=norme1.coordArr.getElem(1);arr[2]=norme1.coordArr.getElem(2);
+
+        return arr;
+    }
+
     @Override
     public Object clone() {
         return new Point3D(coordArr);
