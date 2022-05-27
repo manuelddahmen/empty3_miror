@@ -109,7 +109,7 @@ publishing {
             credentials {
                 // Automation has a special account for authentication in Space
                 // account credentials are accessible via env vars
-                username = spaceUsername"
+                username = spaceUsername
                 password = spacePassword
             }
 
