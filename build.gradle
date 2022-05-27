@@ -4,7 +4,7 @@ plugins {
     id 'java-library'
     //kotlin  ("jvm") version "1.6.0"
     id 'maven-publish'
-    id 'signing'
+    //id 'signing'
 }
 // Other configuration here
 
@@ -142,10 +142,10 @@ publishing {
         }
     }
 }
-
+/*
 signing {
     sign configurations.archives
-}
+}*/
 artifacts {
     archives javadocJar, sourcesJar
 }

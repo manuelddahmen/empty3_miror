@@ -52,7 +52,7 @@ import java.util.function.Consumer;
 public class Polyhedron extends Representable implements TRIConteneur {
 
     private TRIObject tris = new TRIObject();
-    private ArrayList<Point3D> points;
+    public ArrayList<Point3D> points;
     private Object co;
 
     public Polyhedron() {
