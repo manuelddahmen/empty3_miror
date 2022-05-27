@@ -80,9 +80,9 @@ public class ResolutionCharacter {
                             new CourbeParametriquePolynomialeBezier(
                                     new Point3D[]{
                                             FeatureLine.getFeatLine(
-                                                    randomLine(), 0).multDot(Point3D.n(dim, dim, 0)),
+                                                    randomLine(), 0).multDot(Point3D.n(i+step/2, j+step/2, 0)),
                                             FeatureLine.getFeatLine(
-                                                    randomLine(), 1)}));
+                                                    randomLine(), 1).multDot(Point3D.n(i+step/2, j+step/2, 0))}));
 
 
                 }
@@ -144,9 +144,9 @@ public class ResolutionCharacter {
                 new CourbeParametriquePolynomialeBezier(
                     new Point3D[]{
                             FeatureLine.getFeatLine(
-                                    randomLine(), 0).multDot(Point3D.n(dim, dim, 0)),
+                                    randomLine(), 0).multDot(Point3D.n(state.step, state.step, 0)).multDot(state.xyz),
                             FeatureLine.getFeatLine(
-                                    randomLine(), 1)}));
+                                    randomLine(), 1).multDot(Point3D.n(state.step, state.step, 0)).multDot(state.xyz)}));
 
 
                 break;
