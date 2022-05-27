@@ -1,5 +1,6 @@
 package one.empty3.feature.tryocr;
 
+import one.empty3.feature.CurveFitting;
 import one.empty3.feature.Linear;
 import one.empty3.feature.PixM;
 import one.empty3.feature.app.replace.javax.imageio.ImageIO;
@@ -14,6 +15,9 @@ import java.util.ArrayList;
 
 public class ResolutionCharacter {
 
+    private static final int ADD_POINT_TO_RANDOM_CURVE = 0;
+    private static final int ADD_RANDOM_CURVE = 1;
+    private static final int DEL_RANDOM_CURVE = 2;
     private static int SHAKE_SIZE = 100;
     private double dim = 14;
     private int shakeTimes;
@@ -54,18 +58,18 @@ public class ResolutionCharacter {
     }
 
     public void run(String[] args) {
-        int epochs = 2000;
+        int epochs = 100;
         int e = 1;
         BufferedImage read = ImageIO.read(new File("C:\\Users\\manue\\EmptyCanvasTest\\ocr\\AC_AC4part1dos2AC1fr3img1.jpg"));
 
-        pixM = new PixM(read);
+        pixM = PixM.getPixM(read, 1000);
 
         int step = 3;
 
         while (e < epochs) {
             double error0 = 0;
             totalError = 0;
-            State states[][] = new State[pixM.getColumns()][pixM.getLines()];
+            State[][] states = new State[pixM.getColumns()][pixM.getLines()];
             for (int i = 0; i < pixM.getColumns() - step; i += step)
                 for (int j = 0; j < pixM.getLines() - step; j += step) {
                     states[i][j] = new State(pixM, i, j, step);
@@ -76,7 +80,7 @@ public class ResolutionCharacter {
                             new CourbeParametriquePolynomialeBezier(
                                     new Point3D[]{
                                             FeatureLine.getFeatLine(
-                                                    randomLine(), 0).multDot(Point3D.n(pixM.getColumns(), pixM.getLines(), 0)),
+                                                    randomLine(), 0).multDot(Point3D.n(dim, dim, 0)),
                                             FeatureLine.getFeatLine(
                                                     randomLine(), 1)}));
 
@@ -89,6 +93,8 @@ public class ResolutionCharacter {
                     states[i][j] = state;
 
                     double currentError = states[i][j].computeError();
+
+
 
                     for (int s = 0; s < SHAKE_SIZE; s++)
                         shakeCurves(states[i][j]);
@@ -105,6 +111,12 @@ public class ResolutionCharacter {
                             SHAKE_SIZE = 2;
                     }
                 }
+
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            }
             System.out.println(totalError - error0);
             error0 = totalError;
             e++;
@@ -112,19 +124,43 @@ public class ResolutionCharacter {
     }
 
     private void shakeCurves(State state) {
+        switch((int)Math.random()*3){
+            case ADD_POINT_TO_RANDOM_CURVE:
+            if (state.currentCurves.size() == 0)
+                state.currentCurves.add(new CourbeParametriquePolynomialeBezier());
+            int i = (int) (Math.random() * state.currentCurves.size());
 
-        if (state.currentCurves.size() == 0)
-            state.currentCurves.add(new CourbeParametriquePolynomialeBezier());
-        int i = (int) (Math.random() * state.currentCurves.size());
+            int j = 0;
+            if (state.currentCurves.get(i).getCoefficients().data1d.size() == 0) {
+                state.currentCurves.get(i).getCoefficients().setElem(Point3D.random(state.step).plus(state.xyz), 0);
+                j = 0;
+            } else {
+                j = (int) (state.currentCurves.get(i).getCoefficients().data1d.size() * Math.random());
+                state.currentCurves.get(i).getCoefficients().setElem(Point3D.random(1.0).multDot(state.currentCurves.get(i).getCoefficients().getElem(j)), j);
+            }
+            break;
+            case ADD_RANDOM_CURVE:
+                state.currentCurves.add(
+                new CourbeParametriquePolynomialeBezier(
+                    new Point3D[]{
+                            FeatureLine.getFeatLine(
+                                    randomLine(), 0).multDot(Point3D.n(dim, dim, 0)),
+                            FeatureLine.getFeatLine(
+                                    randomLine(), 1)}));
 
-        int j = 0;
-        if (state.currentCurves.get(i).getCoefficients().data1d.size() == 0) {
-            state.currentCurves.get(i).getCoefficients().setElem(Point3D.random(state.step).plus(state.xyz), 0);
-            j = 0;
-        } else {
-            j = (int) (state.currentCurves.get(i).getCoefficients().data1d.size() * Math.random());
-            state.currentCurves.get(i).getCoefficients().setElem(Point3D.random(1.0).multDot(state.currentCurves.get(i).getCoefficients().getElem(j)), j);
+
+                break;
+            case DEL_RANDOM_CURVE:
+                if(state.currentCurves.size()>1)
+                //state.currentCurves.remove((int)(Math.random()*state.currentCurves.size()));
+                if(state.currentCurves.get(0).getCoefficients().data1d.size()>0)
+                    state.currentCurves.get(0).getCoefficients().delete(0);
+                else
+                    state.currentCurves.remove(0);
+
+                break;
         }
+
     }
 
     class StateAction {
@@ -166,9 +202,11 @@ public class ResolutionCharacter {
                     }
             );
             PixM copy = pError.copy();
-            Linear linear = new Linear(pixM, pError, copy);
+            Linear linear = new Linear(input, pError, copy);
             linear.op2d2d(new char[]{'-'}, new int[][]{{0, 1}}, new int[]{2});
-            return copy.mean(0, 0, copy.getColumns(), copy.getLines());
+            PixM diff = linear.getImages()[2];
+            return diff.mean(0, 0, diff.getColumns(), diff.getLines());
+
         }
     }
 
