@@ -92,7 +92,7 @@ public class ResolutionCharacter {
                     state.previousState = states[i][j];
                     states[i][j] = state;
 
-                    double currentError = states[i][j].computeError();
+                    double currentError = states[i][j].computeError(states[i][j]);
 
 
 
@@ -194,15 +194,16 @@ public class ResolutionCharacter {
             this.step = step;
         }
 
-        public double computeError() {
+        public double computeError(State state) {
             PixM pError = backgroudImage;
-            previousState.currentCurves.forEach(courbeParametriquePolynomialeBezier ->
+            PixM inputCopy = input.copy();
+            state.currentCurves.forEach(courbeParametriquePolynomialeBezier ->
                     {
-                        pixM.plotCurve(courbeParametriquePolynomialeBezier, new TextureCol(Color.WHITE));
+                        pError.plotCurve(courbeParametriquePolynomialeBezier, new TextureCol(Color.WHITE));
                     }
             );
             PixM copy = pError.copy();
-            Linear linear = new Linear(input, pError, copy);
+            Linear linear = new Linear(inputCopy, pError, new PixM(input.getColumns(), input.getLines()));
             linear.op2d2d(new char[]{'-'}, new int[][]{{0, 1}}, new int[]{2});
             PixM diff = linear.getImages()[2];
             return diff.mean(0, 0, diff.getColumns(), diff.getLines());
