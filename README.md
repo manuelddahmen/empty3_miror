@@ -1,5 +1,4 @@
 # empty3
-[![Download empty3](https://a.fsdn.com/con/app/sf-download-button)](https://sourceforge.net/projects/empty3/files/latest/download)
 empty3.one
 Rendering engine. Shapes: surfaces, math-related
 Drawings, curves, textures with pictures, movies
