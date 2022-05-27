@@ -104,13 +104,13 @@ publishing {
         maven(MavenPublication) {
             groupId = "one.empty3"
             artifactId = "libraries-k"
-            version = "1.0-SNAPSHOT"
+            version = "1.1-SNAPSHOT"
             from components.java
         }
         mavenCentral(MavenPublication) {
             groupId = "one.empty3"
             artifactId = "libraries-k"
-            version = "1.0-SNAPSHOT"
+            version = "1.1-SNAPSHOT"
             from components.java
         }
     }
@@ -142,50 +142,7 @@ publishing {
         }
     }
 }
-def customizePom(pom) {
-    pom.withXml {
-        def root = asNode()
 
-        // eliminate test-scoped dependencies (no need in maven central POMs)
-        root.dependencies.removeAll { dep ->
-            dep.scope == "test"
-        }
-
-        // add all items necessary for maven central publication
-        root.children().last() + {
-            resolveStrategy = Closure.DELEGATE_FIRST
-
-            description 'Renders and models 3D objects'
-            name 'Empty3 libraries'
-            url 'https://github.com/manuelddahmen/empty3'
-            organization {
-                name 'com.github.manuelddahmen'
-                url 'https://github.com/manuelddahmen'
-            }
-            issueManagement {
-                system 'GitHub'
-                url 'https://github.com/manuelddahmen/empty3/issues'
-            }
-            licenses {
-                license {
-                    name 'Apache License 2.0'
-                    url 'https://github.com/manuelddahmen/empty3/blob/master/LICENSE'
-                    distribution 'repo'
-                }
-            }
-            scm {
-                url 'https://github.com/manuelldahmen/empty3'
-                connection 'scm:git:git://github.com/manuelddahmen/empty3.git'
-                developerConnection 'scm:git:ssh://git@github.com:manuelddahmen/empty3.git'
-            }
-            developers {
-                developer {
-                    name 'manuelddahmen'
-                }
-            }
-        }
-    }
-}
 signing {
     sign configurations.archives
 }
