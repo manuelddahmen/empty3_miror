@@ -109,11 +109,11 @@ publishing {
             credentials {
                 // Automation has a special account for authentication in Space
                 // account credentials are accessible via env vars
-                username = "$System.env.JB_SPACE_CLIENT_ID"
-                password = "$System.env.JB_SPACE_CLIENT_SECRET"
+                username = spaceUsername"
+                password = spacePassword
             }
 
-            url = "https://maven.pkg.jetbrains.space/mycompany/p/projectkey/my-maven-repo"
+            url = "https://maven.pkg.jetbrains.space/empty4/p/empty3/empty3-library-generic"
         }
     }
 }
