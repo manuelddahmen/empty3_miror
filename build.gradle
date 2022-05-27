@@ -2,9 +2,7 @@ plugins {
     id("application") // enabling the plugin here
     id("java")
     id 'java-library'
-    //kotlin  ("jvm") version "1.6.0"
     id 'maven-publish'
-    //id 'signing'
 }
 // Other configuration here
 
@@ -12,9 +10,6 @@ java {
     withSourcesJar()
 }
 
-
-group = "one.empty3"
-version = "1.1"
 
 repositories {
     google()
@@ -62,10 +57,12 @@ dependencies {
 tasks.getByName("test") {
     useJUnitPlatform()
 }
+
 test {
     // show standard out and standard error of the test JVM(s) on the console
     testLogging.showStandardStreams = true
 }
+
 task sourceJar(type: Jar) {
     classifier "sources"
     from sourceSets.main.allJava
@@ -108,6 +105,7 @@ publishing {
             from components.java
         }
     }
+
     repositories {
         maven {
             url "https://maven.pkg.jetbrains.space/empty3/p/empty3/maven"
@@ -116,14 +114,9 @@ publishing {
                 password = spacePassword
             }
         }
-        mavenCentral {
+/*        mavenCentral {
             repositories {
                 maven {
-                    /*
-                    Repository URL for snapshot deployment and download access:
-*/
-
-                    //Repository URL for release deployment, no download access! :
                     url = 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
                     credentials {
                         username = mavenCentralUsername
@@ -132,7 +125,7 @@ publishing {
                 }
             }
 
-
+*/
         }
     }
 }
