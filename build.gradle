@@ -86,23 +86,34 @@ java {
 }
 
 
+
 publishing {
     publications {
         maven(MavenPublication) {
-            groupId = "one.empty3"
-            artifactId = "libraries-k"
+            groupId = 'one.empty3'
+            artifactId = 'libraries-k'
             version = "1.1"
             from components.java
+
+            pom {
+                name = 'My  Empty3 Graphics Library'
+                description = 'Graphics, image processing '
+
+            }
         }
     }
+//In the publishing section, in repositories, specify the repository URL and credentials using the environment variables:
 
     repositories {
         maven {
-            url "https://maven.pkg.jetbrains.space/empty3/p/empty3/maven"
             credentials {
-                username = spaceUsername
-                password = spacePassword
+                // Automation has a special account for authentication in Space
+                // account credentials are accessible via env vars
+                username = "$System.env.JB_SPACE_CLIENT_ID"
+                password = "$System.env.JB_SPACE_CLIENT_SECRET"
             }
+
+            url = "https://maven.pkg.jetbrains.space/mycompany/p/projectkey/my-maven-repo"
         }
     }
 }
