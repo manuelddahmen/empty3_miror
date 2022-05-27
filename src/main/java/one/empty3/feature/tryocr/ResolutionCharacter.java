@@ -1,9 +1,9 @@
 package one.empty3.feature.tryocr;
 
-import one.empty3.feature.CurveFitting;
 import one.empty3.feature.Linear;
 import one.empty3.feature.PixM;
 import one.empty3.feature.app.replace.javax.imageio.ImageIO;
+import one.empty3.library.Lumiere;
 import one.empty3.library.Point3D;
 import one.empty3.library.TextureCol;
 import one.empty3.library.core.nurbs.CourbeParametriquePolynomialeBezier;
@@ -12,6 +12,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class ResolutionCharacter {
 
@@ -57,6 +58,31 @@ public class ResolutionCharacter {
         return (int) (Math.random() * length);
     }
 
+    public void chanfrein(PixM input, PixM output, State state, Color traceColor) {
+        for (int i = 0; i < input.getColumns(); i++)
+            for (int j = 0; j < input.getLines(); j++) {
+                if (Arrays.equals(input.getValues(i, j),
+                        (Lumiere.getRgb(traceColor)))) {
+                    output.setValues(i, j, traceColor.getRed(), traceColor.getGreen(), traceColor.getBlue());
+
+                } else {
+                    int neighbors = 0;
+                    boolean cont = true;
+                    for (int n = 1; n < state.dim && !cont; n++) {
+                        for (int ii = 0; ii < n && !cont; ii++)
+                            for (int jj = 0; jj < n && !cont; jj++) {
+                                double[] values = input.getValues(i + ii, j + jj);
+                                if (Arrays.equals(input.getValues(i, j),
+                                        (Lumiere.getRgb(traceColor)))) {
+                                    output.setValues(i, j, 1f*traceColor.getRed() / n, 1f*traceColor.getGreen() / n, 1f*traceColor.getBlue() / n);
+                                    cont = true;
+                                }
+                            }
+                    }
+                }
+            }
+    }
+
     public void run(String[] args) {
         int epochs = 100;
         int e = 1;
@@ -80,9 +106,9 @@ public class ResolutionCharacter {
                             new CourbeParametriquePolynomialeBezier(
                                     new Point3D[]{
                                             FeatureLine.getFeatLine(
-                                                    randomLine(), 0).multDot(Point3D.n(i+step/2, j+step/2, 0)),
+                                                    randomLine(), 0).multDot(Point3D.n(i + step / 2, j + step / 2, 0)),
                                             FeatureLine.getFeatLine(
-                                                    randomLine(), 1).multDot(Point3D.n(i+step/2, j+step/2, 0))}));
+                                                    randomLine(), 1).multDot(Point3D.n(i + step / 2, j + step / 2, 0))}));
 
 
                 }
@@ -93,7 +119,6 @@ public class ResolutionCharacter {
                     states[i][j] = state;
 
                     double currentError = states[i][j].computeError(states[i][j]);
-
 
 
                     for (int s = 0; s < SHAKE_SIZE; s++)
@@ -124,43 +149,43 @@ public class ResolutionCharacter {
     }
 
     private void shakeCurves(State state) {
-        switch((int)Math.random()*3){
+        switch ((int) Math.random() * 3) {
             case ADD_POINT_TO_RANDOM_CURVE:
-            if (state.currentCurves.size() == 0)
-                state.currentCurves.add(new CourbeParametriquePolynomialeBezier());
-            int i = (int) (Math.random() * state.currentCurves.size());
+                if (state.currentCurves.size() == 0)
+                    state.currentCurves.add(new CourbeParametriquePolynomialeBezier());
+                int i = (int) (Math.random() * state.currentCurves.size());
 
-            int j = 0;
-            if (state.currentCurves.get(i).getCoefficients().data1d.size() == 0) {
-                state.currentCurves.get(i).getCoefficients().setElem(Point3D.random(state.step).plus(state.xyz), 0);
-                j = 0;
-            } else {
-                j = (int) (state.currentCurves.get(i).getCoefficients().data1d.size() * Math.random());
-                state.currentCurves.get(i).getCoefficients().setElem(Point3D.random(1.0).multDot(state.currentCurves.get(i).getCoefficients().getElem(j)), j);
-            }
-            break;
+                int j = 0;
+                if (state.currentCurves.get(i).getCoefficients().data1d.size() == 0) {
+                    state.currentCurves.get(i).getCoefficients().setElem(Point3D.random(state.step).plus(state.xyz), 0);
+                    j = 0;
+                } else {
+                    j = (int) (state.currentCurves.get(i).getCoefficients().data1d.size() * Math.random());
+                    state.currentCurves.get(i).getCoefficients().setElem(Point3D.random(1.0).multDot(state.currentCurves.get(i).getCoefficients().getElem(j)), j);
+                }
+                break;
             case ADD_RANDOM_CURVE:
-                if(Math.random()<0.1)
+                if (Math.random() < 0.1)
                     return;
                 state.currentCurves.add(
-                new CourbeParametriquePolynomialeBezier(
-                    new Point3D[]{
-                            FeatureLine.getFeatLine(
-                                    randomLine(), 0).multDot(Point3D.n(state.step, state.step, 0)).multDot(state.xyz),
-                            FeatureLine.getFeatLine(
-                                    randomLine(), 1).multDot(Point3D.n(state.step, state.step, 0)).multDot(state.xyz)}));
+                        new CourbeParametriquePolynomialeBezier(
+                                new Point3D[]{
+                                        FeatureLine.getFeatLine(
+                                                randomLine(), 0).multDot(Point3D.n(state.step, state.step, 0)).multDot(state.xyz),
+                                        FeatureLine.getFeatLine(
+                                                randomLine(), 1).multDot(Point3D.n(state.step, state.step, 0)).multDot(state.xyz)}));
 
 
                 break;
             case DEL_RANDOM_CURVE:
-                if(Math.random()<0.1)
+                if (Math.random() < 0.1)
                     return;
-                if(state.currentCurves.size()>1)
-                //state.currentCurves.remove((int)(Math.random()*state.currentCurves.size()));
-                if(state.currentCurves.get(0).getCoefficients().data1d.size()>0)
-                    state.currentCurves.get(0).getCoefficients().delete(0);
-                else
-                    state.currentCurves.remove(0);
+                if (state.currentCurves.size() > 1)
+                    //state.currentCurves.remove((int)(Math.random()*state.currentCurves.size()));
+                    if (state.currentCurves.get(0).getCoefficients().data1d.size() > 0)
+                        state.currentCurves.get(0).getCoefficients().delete(0);
+                    else
+                        state.currentCurves.remove(0);
 
                 break;
         }
@@ -188,6 +213,7 @@ public class ResolutionCharacter {
         PixM backgroudImage;
         Color textColor = Color.BLACK;
         int dim;
+
         public State(PixM image, int i, int j, int step) {
             input = image.subImage(i, j, step, step);
             backgroudImage = image.subImage(
