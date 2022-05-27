@@ -62,7 +62,7 @@ public class ResolutionCharacter {
         int e = 1;
         BufferedImage read = ImageIO.read(new File("C:\\Users\\manue\\EmptyCanvasTest\\ocr\\AC_AC4part1dos2AC1fr3img1.jpg"));
 
-        pixM = PixM.getPixM(read, 1000);
+        pixM = PixM.getPixM(read, 300);
 
         int step = 3;
 
@@ -140,6 +140,8 @@ public class ResolutionCharacter {
             }
             break;
             case ADD_RANDOM_CURVE:
+                if(Math.random()<0.1)
+                    return;
                 state.currentCurves.add(
                 new CourbeParametriquePolynomialeBezier(
                     new Point3D[]{
@@ -151,6 +153,8 @@ public class ResolutionCharacter {
 
                 break;
             case DEL_RANDOM_CURVE:
+                if(Math.random()<0.1)
+                    return;
                 if(state.currentCurves.size()>1)
                 //state.currentCurves.remove((int)(Math.random()*state.currentCurves.size()));
                 if(state.currentCurves.get(0).getCoefficients().data1d.size()>0)
