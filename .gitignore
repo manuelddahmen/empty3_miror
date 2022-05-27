@@ -65,3 +65,4 @@ $RECYCLE.BIN/
 /.settings/.idea/misc.xml
 gpg/*
 settings.xml
+/.gradle/
