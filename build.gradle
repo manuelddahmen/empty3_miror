@@ -4,12 +4,6 @@ plugins {
     id 'java-library'
     id 'maven-publish'
 }
-// Other configuration here
-
-java {
-    withSourcesJar()
-}
-
 
 repositories {
     google()
@@ -91,11 +85,7 @@ java {
     withSourcesJar()
 }
 
-javadoc {
-    if (JavaVersion.current().isJava9Compatible()) {
-        options.addBooleanOption('html5', true)
-    }
-}
+
 publishing {
     publications {
         maven(MavenPublication) {
@@ -114,26 +104,5 @@ publishing {
                 password = spacePassword
             }
         }
-/*        mavenCentral {
-            repositories {
-                maven {
-                    url = 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
-                    credentials {
-                        username = mavenCentralUsername
-                        password = mavenCentralPassword
-                    }
-                }
-            }
-
-*/
-        }
     }
 }
-/*
-signing {
-    sign configurations.archives
-}*/
-artifacts {
-    archives javadocJar, sourcesJar
-}
-
