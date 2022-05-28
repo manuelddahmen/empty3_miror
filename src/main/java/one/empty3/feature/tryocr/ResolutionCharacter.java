@@ -15,17 +15,16 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.function.Consumer;
 
 public class ResolutionCharacter {
 
     private static final int ADD_POINT_TO_RANDOM_CURVE = 0;
-    private static final int ADD_RANDOM_CURVE = 1;
-    private static final int DEL_RANDOM_CURVE = 2;
-    private static final int ADD_CURVES = 3;
-    private static final int MAX_ERRORS_ADD_CURVES = 4;
-    private static final int MOVE_POINTS = 0;
-    private static int SHAKE_SIZE = 100;
+    private static final int ADD_RANDOM_CURVE = 2;
+    private static final int DEL_RANDOM_CURVE = 3;
+    private static final int ADD_CURVES = 4;
+    private static final int MAX_ERRORS_ADD_CURVES = 5;
+    private static final int MOVE_POINTS = 1;
+    private static int SHAKE_SIZE = 20;
     private double dim = 14;
     private int shakeTimes;
     private PixM pixM;
@@ -93,18 +92,24 @@ public class ResolutionCharacter {
     }
 
     public void run(String[] args) {
-        int epochs = 10000;
+        final int epochs = 100;
         int e = 1;
         BufferedImage read = ImageIO.read(new File("C:\\Users\\manue\\EmptyCanvasTest\\ocr\\AC_AC4part1dos2AC1fr3img1.jpg"));
 
-        pixM = PixM.getPixM(read, 600);
-
-        int step = 24;
+        pixM = PixM.getPixM(read, 250);
+        final PixM bgAll = pixM.copy().replaceColor(new double[]{0, 0, 0}, new double[]{1, 1, 1});
+        int step = 14;// Searched Characters size.
 
         State[][] states = new State[pixM.getColumns()][pixM.getLines()];
         for (int i = 0; i < pixM.getColumns() - step; i += step)
             for (int j = 0; j < pixM.getLines() - step; j += step) {
-                states[i][j] = new State(pixM, i, j, step);
+                PixM inputIJ = pixM.subImage(i, j, step, step);
+                PixM backgroundImageIJ = bgAll.subImage(//????
+                        (int) (Math.random() * pixM.getColumns()),
+                        (int) (Math.random() * pixM.getLines()),
+                        step, step);
+
+                states[i][j] = new State(inputIJ, backgroundImageIJ, i, j, step);
             }
 
         for (int i = 0; i < pixM.getColumns() - step; i += step)
@@ -120,46 +125,42 @@ public class ResolutionCharacter {
 
             }
 
+        double error0 = 0;
+        totalError = 0;
+        double erreurMoyenne = 1.0;
         while (e < epochs) {
-            double error0 = 0;
             totalError = 0;
             numCurves = 0;
-            double currentError = 0;
+            errorDiff=0;
             for (int i = 0; i < pixM.getColumns() - step; i += step)
                 for (int j = 0; j < pixM.getLines() - step; j += step) {
-             /*       State state = new State(pixM, i, j, step);
-                    state.previousState = states[i][j];
-                    states[i][j] = state;
-*/
-
-
-//                    if (states[i][j].lastErrors[ADD_CURVES] > MAX_ERRORS_ADD_CURVES
-//                            && states[i][j].currentCurves.size() > 0) {
-                    states[i][j].lastError = states[i][j].currentError;
-
-                    //states[i][j].currentCurves.remove(states[i][j].currentCurves.get(0));
+                    double cE = 0.0;
+                    SHAKE_SIZE = 50;
+                    double currentError = states[i][j].computeError();
+                    states[i][j].currentError = states[i][j].computeError();
                     for (int s = 0; s < SHAKE_SIZE; s++) {
-                        State states1 = states[i][j].copy();
-                        shakeCurves(states1, MOVE_POINTS);
-                        if ((currentError=states1.computeError()) < states[i][j].computeError()) {
-                            states[i][j] = states1;
+                        if (erreurMoyenne < states[i][j].currentError) {
+                            State states1 = states[i][j].copy();
+                            int operation = (int) (Math.random() * 4);
+                            shakeCurves(states1, operation);
+                            if (states1.computeError() < states[i][j].computeError()) {
+                                State tmp = states[i][j];
+                                states1.previousState = tmp;
+                                states[i][j] = states1;
+                            } else {
+                                // NO MODIFICATION OR WORSE MODIFICATION
+                            }
                         }
-
                     }
-                    if (currentError > states[i][j].currentError) {
-                        /// Errerur grandit
-                        states[i][j] = states[i][j].previousState==null?new State(pixM, i, j, step):
-                                states[i][j].previousState;
-                    } else {
-                        SHAKE_SIZE = SHAKE_SIZE / 2;
-                        if (SHAKE_SIZE == 0)
-                            SHAKE_SIZE = 2;
-                    }
+                    double newCurrentError = states[i][j].computeError();
+                    cE = currentError;
 
-                    currentError += (states[i][j].currentError = states[i][j].computeError());
+                    numCurves += states[i][j].currentCurves.size();
+                    states[i][j].lastError = states[i][j].currentError;
+                    states[i][j].currentError = currentError;
+
                     totalError += currentError;
-
-
+                    errorDiff += (newCurrentError-currentError);
                 }
 
             try {
@@ -167,24 +168,26 @@ public class ResolutionCharacter {
             } catch (InterruptedException ex) {
                 throw new RuntimeException(ex);
             }
+            System.out.println("Epoch : " + e + "/" + epochs);
             System.out.println("Taile de la trame :" + states.length + " , " + states[0].length);
-            System.out.println("Erreur totale :" + (totalError - error0));
-            errorDiff = totalError - error0;
+            System.out.println("Différence d'erreur epoch :" + errorDiff);
+            System.out.println("Erreur totale :" + totalError);
             System.out.println("Nombre de courbes :" + numCurves);
             numCurves = 0;
             error0 = totalError;
+            erreurMoyenne = errorDiff;
             e++;
         }
-            PixM globalOutput = pixM.copy();
+        PixM globalOutput = pixM.copy();
         ColorTexture texture = new ColorTexture(Color.BLACK);
         for (int i = 0; i < pixM.getColumns() - step; i += step)
-                for (int j = 0; j < pixM.getLines() - step; j += step) {
-                    if(states[i][j]!=null) {
-                        states[i][j].currentCurves.forEach(courbeParametriquePolynomialeBezier -> {
-                            globalOutput.plotCurve(courbeParametriquePolynomialeBezier, texture);
-                        });
-                    }
+            for (int j = 0; j < pixM.getLines() - step; j += step) {
+                if (states[i][j] != null) {
+                    states[i][j].currentCurves.forEach(courbeParametriquePolynomialeBezier -> {
+                        globalOutput.plotCurve(courbeParametriquePolynomialeBezier, texture);
+                    });
                 }
+            }
         try {
             ImageIO.write(globalOutput.getImage(), "jpg", new File("Output.test.jpg"));
         } catch (IOException ex) {
@@ -201,18 +204,31 @@ public class ResolutionCharacter {
 
                 int j = 0;
                 if (state.currentCurves.get(i).getCoefficients().data1d.size() == 0) {
-                    state.currentCurves.get(i).getCoefficients().setElem(Point3D.random(state.step).plus(state.xyz), 0);
+                    state.currentCurves.get(i).getCoefficients().setElem(Point3D.random(state.step).plus(state.xyz).to2DwoZ().get3D(), 0);
                     j = 0;
                 } else {
                     j = (int) (state.currentCurves.get(i).getCoefficients().data1d.size() * Math.random());
                     if (j < 4)
-                        state.currentCurves.get(i).getCoefficients().data1d.set(j, Point3D.random(state.step).plus(state.xyz) );
+                        state.currentCurves.get(i).getCoefficients().data1d.set(j, Point3D.random(state.step).plus(state.xyz).to2DwoZ().get3D());
+                }
+                break;
+            case MOVE_POINTS:
+                if (state.currentCurves.size() == 0)
+                    state.currentCurves.add(new CourbeParametriquePolynomialeBezier());
+                i = (int) (Math.random() * state.currentCurves.size());
+
+                j = 0;
+                if (state.currentCurves.get(i).getCoefficients().data1d.size() == 0) {
+                    state.currentCurves.get(i).getCoefficients().setElem(Point3D.random(state.step).plus(state.xyz).to2DwoZ().get3D(), 0);
+                    j = 0;
+                } else {
+                    j = (int) (state.currentCurves.get(i).getCoefficients().data1d.size() * Math.random());
+                    if (j < 4)
+                        state.currentCurves.get(i).getCoefficients().data1d.add(Point3D.random(state.step).plus(state.xyz).to2DwoZ().get3D());
                 }
                 break;
             case ADD_RANDOM_CURVE:
-                //if (Math.random() < 0.1)
-                //    return;
-                if (state.currentCurves.size() > 5)
+                if (state.currentCurves.size() > 8)
                     return;
                 state.currentCurves.add(
                         new CourbeParametriquePolynomialeBezier(
@@ -225,14 +241,12 @@ public class ResolutionCharacter {
 
                 break;
             case DEL_RANDOM_CURVE:
-                //if (Math.random() > 0.1)
-                //    return;
-                if (state.currentCurves.size() > 1)
-                    //state.currentCurves.remove((int)(Math.random()*state.currentCurves.size()));
-                    if (state.currentCurves.get(0).getCoefficients().data1d.size() > 0)
-                        state.currentCurves.get(0).getCoefficients().delete(0);
-                    else
-                        state.currentCurves.remove(0);
+                if (state.currentCurves.size() < 9)
+                    return;
+                if (state.currentCurves.get(0).getCoefficients().data1d.size() > 0)
+                    state.currentCurves.get(0).getCoefficients().delete(0);
+                else
+                    state.currentCurves.remove(0);
 
                 break;
         }
@@ -259,23 +273,20 @@ public class ResolutionCharacter {
         double lastError = Double.NaN;
         State previousState;
         PixM input;
-        PixM backgroudImage;
+        PixM backgroundImage;
         Color textColor = Color.BLACK;
         int dim;
 
-        public State(PixM image, int i, int j, int step) {
-            input = image.subImage(i, j, step, step);
-            backgroudImage = image.subImage(
-                    (int) (Math.random() * image.getColumns()),
-                    (int) (Math.random() * image.getColumns()),
-                    step, step);
+        public State(PixM image, PixM backgroundImage, int i, int j, int step) {
+            this.input = image;
+            this.backgroundImage = backgroundImage;
             xyz = Point3D.n(i + step / 2., j + step / 2., 0.);
             this.step = step;
         }
 
         public double computeError() {
             State state = this;
-            PixM pError = state.backgroudImage;
+            PixM pError = state.backgroundImage;
             PixM inputCopy = input.copy();
             state.currentCurves.forEach(courbeParametriquePolynomialeBezier ->
                     {
@@ -287,20 +298,19 @@ public class ResolutionCharacter {
             Linear linear = new Linear(inputCopy, pError, new PixM(input.getColumns(), input.getLines()));
             linear.op2d2d(new char[]{'-'}, new int[][]{{1, 0}}, new int[]{2});
             PixM diff = linear.getImages()[2];
-            return diff.mean(0, 0, diff.getColumns(), diff.getLines())
-                    / diff.getLines() / diff.getLines();
+            return diff.mean(0, 0, diff.getColumns(), diff.getLines());
 
         }
 
         public State copy() {
-            State copy = new State(this.input, (int)(double)this.xyz.get(0),
-                    (int)(double)this.xyz.get(1), (int)(double)this.step);
+            State copy = new State(this.input, backgroundImage, (int) (double) this.xyz.get(0),
+                    (int) (double) this.xyz.get(1), (int) (double) this.step);
             copy.currentError = currentError;
             copy.currentCurves = (ArrayList<CourbeParametriquePolynomialeBezier>) this.currentCurves.clone();
             copy.lastError = lastError;
             copy.step = step;
             copy.xyz = xyz;
-            copy.backgroudImage = backgroudImage;
+            copy.backgroundImage = backgroundImage;
             copy.input = input;
             copy.dim = dim;
             copy.lastErrors = lastErrors;
@@ -310,6 +320,5 @@ public class ResolutionCharacter {
             return copy;
         }
     }
-
 
 }

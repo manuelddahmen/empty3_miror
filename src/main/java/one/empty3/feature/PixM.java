@@ -628,4 +628,15 @@ public class PixM extends M {
                 }
 
     }
+
+    public PixM replaceColor(double[] doubles, double[] doubles1) {
+        for (int i = 0; i < getColumns(); i++)
+            for (int j = 0; j < getLines(); j++) {
+                if(doubles.equals(getValues(i, j)))
+                    setValues(i, j, doubles1);
+            }
+
+
+        return this;
+    }
 }

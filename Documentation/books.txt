@@ -1,3 +1,11 @@
-THe Nurbs Book
-Open The Blue and Red Book
-DirectX
+Introduction au traitement d'image, Diane Lingrant
+
+Introduction aux algorithmes pour la synthèse d'images ??
+
+Computer Vision, Richard Zveliski + cours en ligne de l'University of Washington 2010.
+
+Nombreux tutoriels et exemples de code. Code pour fichiers OBJ, quelques images téléchargées sur Google et
+quelques modèles gratuits.
+
+Thinking in Java, et de nombreux autres livres (d'époque oui, le temps passe vite, les écritures
+et les codes changent aussi vite).
