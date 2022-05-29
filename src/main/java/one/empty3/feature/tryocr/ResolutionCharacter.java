@@ -75,13 +75,13 @@ public class ResolutionCharacter {
                 } else {
                     int neighbors = 0;
                     boolean cont = true;
+                    double [] cl = Lumiere.getRgb(traceColor);
                     double distMax = (Math.max(input.getColumns(), input.getLines()));
                     for (int n = 1; n < distMax && cont; n++) {
                         for (int ii = 0; ii < n && cont; ii++)
                             for (int jj = 0; jj < n && cont; jj++) {
                                 double[] values = input.getValues(i + ii, j + jj);
-                                if (Arrays.equals(input.getValues(i, j),
-                                        (Lumiere.getRgb(traceColor)))) {
+                                if (Arrays.equals(input.getValues(i, j), cl)) {
                                     output.setValues(i, j, 1f * traceColor.getRed() / n, 1f * traceColor.getGreen() / n, 1f * traceColor.getBlue() / n);
                                     cont = true;
                                 }
@@ -96,7 +96,7 @@ public class ResolutionCharacter {
         int e = 1;
         BufferedImage read = ImageIO.read(new File("C:\\Users\\manue\\EmptyCanvasTest\\ocr\\AC_AC4part1dos2AC1fr3img1.jpg"));
 
-        pixM = PixM.getPixM(read, 250);
+        pixM = PixM.getPixM(read, 750);
         final PixM bgAll = pixM.copy().replaceColor(new double[]{0, 0, 0}, new double[]{1, 1, 1});
         int step = 14;// Searched Characters size.
 
@@ -228,7 +228,7 @@ public class ResolutionCharacter {
                 }
                 break;
             case ADD_RANDOM_CURVE:
-                if (state.currentCurves.size() > 8)
+                if (state.currentCurves.size() <= 8)
                     return;
                 state.currentCurves.add(
                         new CourbeParametriquePolynomialeBezier(
@@ -241,7 +241,7 @@ public class ResolutionCharacter {
 
                 break;
             case DEL_RANDOM_CURVE:
-                if (state.currentCurves.size() < 9)
+                if (state.currentCurves.size() > 9)
                     return;
                 if (state.currentCurves.get(0).getCoefficients().data1d.size() > 0)
                     state.currentCurves.get(0).getCoefficients().delete(0);
