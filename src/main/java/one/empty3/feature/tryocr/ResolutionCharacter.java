@@ -1,13 +1,13 @@
 package one.empty3.feature.tryocr;
 
+import android.util.Log;
 import one.empty3.feature.Linear;
 import one.empty3.feature.PixM;
 import one.empty3.feature.app.replace.javax.imageio.ImageIO;
-import one.empty3.library.ColorTexture;
-import one.empty3.library.Lumiere;
-import one.empty3.library.Point3D;
-import one.empty3.library.TextureCol;
+import one.empty3.feature.shape.Rectangle;
+import one.empty3.library.*;
 import one.empty3.library.core.nurbs.CourbeParametriquePolynomialeBezier;
+import org.jcodec.common.logging.Logger;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -28,10 +28,18 @@ public class ResolutionCharacter {
     private double dim = 14;
     private int shakeTimes;
     private PixM pixM;
+    private PixM bgAll;
     private double totalError;
     private int numCurves;
     private double errorDiff = 0.0;
-
+    private PixM globalInputBgAl;
+    private PixM input;
+    private int stepMax = 60;
+    private int charMinWidth = 7;
+    public static final int XPLUS = 0;
+    public static final int YPLUS = 1;
+    public static final int XINVE = 2;
+    public static final int YINVE = 3;
     public static void main(String[] args) {
         new ResolutionCharacter().run(args);
     }
@@ -75,7 +83,7 @@ public class ResolutionCharacter {
                 } else {
                     int neighbors = 0;
                     boolean cont = true;
-                    double [] cl = Lumiere.getRgb(traceColor);
+                    double[] cl = Lumiere.getRgb(traceColor);
                     double distMax = (Math.max(input.getColumns(), input.getLines()));
                     for (int n = 1; n < distMax && cont; n++) {
                         for (int ii = 0; ii < n && cont; ii++)
@@ -96,18 +104,19 @@ public class ResolutionCharacter {
         int e = 1;
         BufferedImage read = ImageIO.read(new File("C:\\Users\\manue\\EmptyCanvasTest\\ocr\\AC_AC4part1dos2AC1fr3img1.jpg"));
 
-        pixM = PixM.getPixM(read, 750);
-        final PixM bgAll = pixM.copy().replaceColor(new double[]{0, 0, 0}, new double[]{1, 1, 1});
+        pixM = input = new PixM(read);//PixM.getPixM(read, 750);
+        globalInputBgAl = pixM.copy().replaceColor(new double[]{0, 0, 0}, new double[]{1, 1, 1}, 0.7);
+        bgAll = globalInputBgAl;
         int step = 14;// Searched Characters size.
+
+
+        System.out.println(input.getCompCount());
 
         State[][] states = new State[pixM.getColumns()][pixM.getLines()];
         for (int i = 0; i < pixM.getColumns() - step; i += step)
             for (int j = 0; j < pixM.getLines() - step; j += step) {
                 PixM inputIJ = pixM.subImage(i, j, step, step);
-                PixM backgroundImageIJ = bgAll.subImage(//????
-                        (int) (Math.random() * pixM.getColumns()),
-                        (int) (Math.random() * pixM.getLines()),
-                        step, step);
+                PixM backgroundImageIJ = bgAll.subImage(i, j, step, step);
 
                 states[i][j] = new State(inputIJ, backgroundImageIJ, i, j, step);
             }
@@ -125,16 +134,19 @@ public class ResolutionCharacter {
 
             }
 
+        PixM globalOutputOrig = input.copy();
+        PixM globalOutputBgAl = globalInputBgAl.copy();
+        ITexture texture = new TextureCol(Color.BLACK);
         double error0 = 0;
         totalError = 0;
         double erreurMoyenne = 1.0;
         while (e < epochs) {
             totalError = 0;
             numCurves = 0;
-            errorDiff=0;
-            for (int i = 0; i < pixM.getColumns() - step; i += step)
+            errorDiff = 0;
+            for (int i = 0; i < pixM.getColumns() - step; i += step) {
                 for (int j = 0; j < pixM.getLines() - step; j += step) {
-                    double cE = 0.0;
+                   /* double cE = 0.0;
                     SHAKE_SIZE = 50;
                     double currentError = states[i][j].computeError();
                     states[i][j].currentError = states[i][j].computeError();
@@ -161,38 +173,130 @@ public class ResolutionCharacter {
 
                     totalError += currentError;
                     errorDiff += (newCurrentError-currentError);
-                }
+                */
+                    if (Arrays.equals(input.getValues(i, j), new double[]{1, 1, 1})) {
+                        int w, h, ii, ij;
+                        ii = i;
+                        ij = j;
+                        w = 2;
+                        h = 2;
+                        boolean wB = false;
+                        boolean hB = false;
+                        boolean fail = false;
+                        boolean hBout = false;
+                        boolean wBout = false;
+                        while (!fail && ii + w < input.getColumns() && ij + h < input.getLines()
+                                && (!(w > stepMax || h > stepMax)) && !(hBout&&wBout)) {
+                            boolean[] v = testRectIs(input, ii, ij, w, h, new double[]{1, 1, 1});
+                            if (!v[XPLUS]) {
+                                fail = true;
 
-            try {
-                Thread.sleep(10);
-            } catch (InterruptedException ex) {
-                throw new RuntimeException(ex);
-            }
-            System.out.println("Epoch : " + e + "/" + epochs);
-            System.out.println("Taile de la trame :" + states.length + " , " + states[0].length);
-            System.out.println("Différence d'erreur epoch :" + errorDiff);
-            System.out.println("Erreur totale :" + totalError);
-            System.out.println("Nombre de courbes :" + numCurves);
-            numCurves = 0;
-            error0 = totalError;
-            erreurMoyenne = errorDiff;
-            e++;
+                            }
+                             if(!v[YINVE]) {
+                                 fail = true;
+                             }
+                             if(v[YPLUS] && hB) {
+                                hBout = true;
+                            }else if (!v[YPLUS] && hB) {
+                                h++;
+                            } else if (!v[YPLUS] && !hB) {
+                                h++;
+                                hB = true;
+                            } else h++;
+                            if(v[XINVE] && wB) {
+                                wBout = true;
+                            } else if (!v[XINVE] && wB) {
+                                w++;
+                            }else if (!v[XINVE] && !wB) {
+                                w++;
+                                wB = true;
+                            } else w++;
+                            if(hBout && !wBout)
+                                w++;
+                            if(wBout && !hBout)
+                                h++;
+                        }
+                        boolean succeded = false;
+                        if(fail) {
+                            if(Arrays.equals(testRectIs(input, ii, ij, w - 1, h, new double[]{1, 1, 1}), new boolean[]{true, true, true, true})) {
+                                w=w-1;
+                                succeded = true;
+                            }
+                            if(Arrays.equals(testRectIs(input, ii, ij, w, h - 1, new double[]{1, 1, 1}), new boolean[]{true, true, true, true})) {
+                                h=h-1;
+                                succeded = true;
+                            }
+                        }
+
+                        succeded = (hBout && wBout) || succeded;
+                        if ( Arrays.equals(testRectIs(input, ii, ij, w , h, new double[]{1, 1, 1}),
+                                new boolean[]{true, true, true, true}) || succeded) {
+                            System.err.println("// Le test a passé");
+                            System.err.printf("ResolutionCharacter occurence of rect %d,%d,%d,%d",i, j, w, h);
+                            Rectangle rectangle = new Rectangle(i, j, w, h);
+                            rectangle.texture(texture);
+                            globalOutputBgAl.plotCurveRaw(rectangle, texture);
+
+                        }
+                    }
+                }
         }
-        PixM globalOutput = pixM.copy();
-        ColorTexture texture = new ColorTexture(Color.BLACK);
+//            System.out.println("Epoch : " + e + "/" + epochs);
+//            System.out.println("Taile de la trame :" + states.length + " , " + states[0].length);
+//            System.out.println("Différence d'erreur epoch :" + errorDiff);
+//            System.out.println("Erreur totale :" + totalError);
+//            System.out.println("Nombre de courbes :" + numCurves);
+//            numCurves = 0;
+//            error0 = totalError;
+//            erreurMoyenne = errorDiff;
+//
+//
+//            e++;
+            break;
+        }
         for (int i = 0; i < pixM.getColumns() - step; i += step)
             for (int j = 0; j < pixM.getLines() - step; j += step) {
                 if (states[i][j] != null) {
                     states[i][j].currentCurves.forEach(courbeParametriquePolynomialeBezier -> {
-                        globalOutput.plotCurve(courbeParametriquePolynomialeBezier, texture);
+                        globalOutputBgAl.plotCurveRaw(courbeParametriquePolynomialeBezier, texture);
                     });
                 }
             }
+        Rectangle rectangle = new Rectangle(10, 10,
+                globalOutputBgAl.getColumns() - 20, globalOutputBgAl.getLines() - 20);
+    rectangle.texture(texture);
+    rectangle.setIncrU(1./globalOutputBgAl.getColumns()/globalOutputBgAl.getLines());
+        globalOutputBgAl.plotCurveRaw(rectangle, texture);
         try {
-            ImageIO.write(globalOutput.getImage(), "jpg", new File("Output.test.jpg"));
+            ImageIO.write(input.getImage(), "jpg", new File("1Input.backgroundTextCleared.jpg"));
+            ImageIO.write(globalInputBgAl.getImage(), "jpg", new File("2Input.backgroundTextCleared.jpg"));
+            ImageIO.write(globalOutputOrig.getImage(), "jpg", new File("3Output.original.jpg"));
+            ImageIO.write(globalOutputBgAl.getImage(), "jpg", new File("4Output.backgroundTextCleared.jpg"));
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
+    }
+
+    private boolean[] testRectIs(PixM input, int x, int y, int w, int h, double[] color) {
+        boolean[] w0h1w2h3 = new boolean[4];
+
+        w0h1w2h3[0] = true;
+        for (int i = x; i <= x + w; i++)
+            if (!Arrays.equals(input.getValues(i, y), color))
+                w0h1w2h3[0] = false;
+        w0h1w2h3[1] = true;
+        for (int j = y; j <= y + h; j++)
+            if (!Arrays.equals(input.getValues(x, j), color))
+                w0h1w2h3[0] = false;
+        w0h1w2h3[2] = true;
+        for (int i = x + w; i >= x; i--)
+            if (!Arrays.equals(input.getValues(i, y), color))
+                w0h1w2h3[2] = false;
+        w0h1w2h3[3] = true;
+        for (int j = y + h; j >= y; j--)
+            if (!Arrays.equals(input.getValues(x, j), color))
+                w0h1w2h3[3] = false;
+        return w0h1w2h3;
     }
 
     private void shakeCurves(State state, int choice) {
@@ -320,5 +424,6 @@ public class ResolutionCharacter {
             return copy;
         }
     }
+
 
 }

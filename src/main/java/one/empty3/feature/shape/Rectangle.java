@@ -14,11 +14,17 @@ public class Rectangle extends ParametricCurve {
         this.y = y;
         this.width = width;
         this.height = height;
+        setIncrU(4*width*height);
     }
 
     public Point3D calculerPoint3D(double t) {
-        return new Point3D(t >= 0 && t < 0.25 ? x : t >= 0.5 && t < 0.75 ? x + width : 0.0,
-                t >= 0.25 && t < 0.5 ? y : t >= 0.75 && t < 1 ? y + height : 0.0, 0.0,
-                texture());
+        return new Point3D(
+                t >= 0 && t < 0.25 ? x+t*width*4 : t >= 0.25 && t < 0.50 ? x + width : (t>=0.50&&t<0.75
+                ?x+width+(t-0.50)*width*4:t>=0.75&&t<1?x:Double.NaN),
+
+                    t>=0 &&t < 0.25 ? y :t>=0.25&&t< 0.5 ? y+height*(t-0.25)*4 : t >= 0.5 && t < 0.75 ? y:
+                        t>=0.75&&t<1?y+height*(0.75-t)*4:Double.NaN,
+                    0.0
+        );
     }
 }

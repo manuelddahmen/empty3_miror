@@ -182,7 +182,7 @@ public class PixM extends M {
 
         float[] rgba = new float[getCompCount()];
         for (double t = 0; t < 1.0; t += INCR_T) {
-            rgba = new Color(curve.texture().getColorAt(t, 0.)).getColorComponents(rgba);
+            rgba = new Color(curve.texture().getColorAt(t, 0.5)).getColorComponents(rgba);
             Point3D p = curve.calculerPoint3D(t);
             Point3D p1 = curve.calculerPoint3D(t + INCR_T);
             //LineSegment lineSegment = new LineSegment(p, p1, texture);
@@ -208,20 +208,10 @@ public class PixM extends M {
         float[] rgba = new float[getCompCount()];
         Point3D p0 = null;
         for (double t = 0; t < 1.0; t += INCR_T) {
-            rgba = new Color(curve.texture().getColorAt(t, 0.)).getColorComponents(rgba);
+            rgba = new Color(curve.texture().getColorAt(t, 0.5)).getColorComponents(rgba);
             Point3D p = curve.calculerPoint3D(t);
-            if (p0 != null && Point3D.distance(p0, p) < (this.columns + this.lines) / 2) {
-                LineSegment line = new LineSegment(p, p0);
-                line.setIncrU(1.0 / line.getLength() / 3);
-                if (!(curve instanceof LineSegment))
-                    plotCurveRaw(line, texture);
-
-
-                for (int c = 0; c < 3; c++) {
-                    setCompNo(c);
-                    set((int) (double) p.getX(), (int) (double) p.getY(), rgba[c]);
-                }
-                p0 = p;
+            if (p0 != null) {
+                Point3D.distance(p0, p);
             }
         }
     }
@@ -629,11 +619,19 @@ public class PixM extends M {
 
     }
 
-    public PixM replaceColor(double[] doubles, double[] doubles1) {
+    public PixM replaceColor(double[] doubles, double[] doubles1, double delta) {
         for (int i = 0; i < getColumns(); i++)
             for (int j = 0; j < getLines(); j++) {
-                if(doubles.equals(getValues(i, j)))
+                double[] values = getValues(i, j);
+                int k=0;
+                for(int c=0; c<3; c++) {
+                    if (doubles[c] - delta < values[c] && doubles[c] + delta > values[c])
+                        k++;
+                }
+
+                if(k==3)
                     setValues(i, j, doubles1);
+
             }
 
 
