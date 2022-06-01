@@ -235,7 +235,7 @@ public class ResolutionCharacter {
                             System.err.printf("ResolutionCharacter occurence of rect %d,%d,%d,%d",i, j, w, h);
                             Rectangle rectangle = new Rectangle(i, j, w, h);
                             rectangle.texture(texture);
-                            globalOutputBgAl.plotCurveRaw(rectangle, texture);
+                            globalOutputBgAl.plotCurve(rectangle, texture);
 
                         }
                     }
@@ -258,7 +258,7 @@ public class ResolutionCharacter {
             for (int j = 0; j < pixM.getLines() - step; j += step) {
                 if (states[i][j] != null) {
                     states[i][j].currentCurves.forEach(courbeParametriquePolynomialeBezier -> {
-                        globalOutputBgAl.plotCurveRaw(courbeParametriquePolynomialeBezier, texture);
+                        globalOutputBgAl.plotCurve(courbeParametriquePolynomialeBezier, texture);
                     });
                 }
             }
@@ -266,7 +266,7 @@ public class ResolutionCharacter {
                 globalOutputBgAl.getColumns() - 20, globalOutputBgAl.getLines() - 20);
     rectangle.texture(texture);
     rectangle.setIncrU(1./globalOutputBgAl.getColumns()/globalOutputBgAl.getLines());
-        globalOutputBgAl.plotCurveRaw(rectangle, texture);
+        globalOutputBgAl.plotCurve(rectangle, texture);
         try {
             ImageIO.write(input.getImage(), "jpg", new File("1Input.backgroundTextCleared.jpg"));
             ImageIO.write(globalInputBgAl.getImage(), "jpg", new File("2Input.backgroundTextCleared.jpg"));

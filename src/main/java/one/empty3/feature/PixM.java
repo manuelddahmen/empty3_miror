@@ -184,21 +184,12 @@ public class PixM extends M {
         for (double t = 0; t < 1.0; t += INCR_T) {
             rgba = new Color(curve.texture().getColorAt(t, 0.5)).getColorComponents(rgba);
             Point3D p = curve.calculerPoint3D(t);
-            Point3D p1 = curve.calculerPoint3D(t + INCR_T);
-            //LineSegment lineSegment = new LineSegment(p, p1, texture);
-            //lineSegment.setIncrU(1. / lineSegment.getLength());
-            //plotCurve(lineSegment, texture);
-            Point3D pp2 = p;
-            Point3D pp = p;
-            for (double t1 = t; t1 < t + INCR_T; t1 += 1 / Point3D.distance(p, p1)) {
-                pp = curve.calculerPoint3D(t1);
-                for (int c = 0; c < 3; c++) {
-                    setCompNo(c);
-                    set((int) (double) pp.getX(), (int) (double) pp.getY(), rgba[c]);
-                }
-                pp2 = pp;
+            for (int c = 0; c < 3; c++) {
+                setCompNo(c);
+                set((int) (double) p.getX(), (int) (double) p.getY(), rgba[c]);
             }
         }
+
     }
 
     double INCR_T = 0.0001;
@@ -210,11 +201,13 @@ public class PixM extends M {
         for (double t = 0; t < 1.0; t += INCR_T) {
             rgba = new Color(curve.texture().getColorAt(t, 0.5)).getColorComponents(rgba);
             Point3D p = curve.calculerPoint3D(t);
-            if (p0 != null) {
-                Point3D.distance(p0, p);
+            for (int c = 0; c < 3; c++) {
+                setCompNo(c);
+                set((int) (double) p.getX(), (int) (double) p.getY(), rgba[c]);
+            }
             }
         }
-    }
+
 /*
 
     public void plotCurve(ParametricCurve curve, Color color, int x, int y) {
