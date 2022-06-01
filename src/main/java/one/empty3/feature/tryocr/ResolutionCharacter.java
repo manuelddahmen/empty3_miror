@@ -235,6 +235,7 @@ public class ResolutionCharacter {
                             System.err.printf("ResolutionCharacter occurence of rect %d,%d,%d,%d",i, j, w, h);
                             Rectangle rectangle = new Rectangle(i, j, w, h);
                             rectangle.texture(texture);
+                            rectangle.setIncrU(1./(2*w+2*h));
                             globalOutputBgAl.plotCurve(rectangle, texture);
 
                         }
