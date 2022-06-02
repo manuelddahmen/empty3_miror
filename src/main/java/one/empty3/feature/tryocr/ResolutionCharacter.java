@@ -245,6 +245,7 @@ public class ResolutionCharacter {
                             //rectangle.setIncrU(1. / (2 * w + 2 * h));
                             //globalOutputOrig.plotCurve(rectangle, texture);
                             List<Character> candidates = recognize(globalOutputOrig, i, j, w, h);
+                            System.out.printf("Rectangle = (%d,%d,%d,%d) ", i, j, w, h);
                             candidates.forEach(System.out::print);
                             System.out.println();
                         }
@@ -417,19 +418,17 @@ public class ResolutionCharacter {
     public List<Character> recognize(PixM mat, int x, int y, int w, int h) {
         List<Character> retained = new ArrayList<>();
         Map<Character, Integer[]> patternsHorizon = patterns();
-        Map<Character, Integer> okChars = new HashMap<>();
-        patternsHorizon.forEach((character, integers) -> okChars.put(character, 0));
+        Integer[] lines = new Integer[w];
         boolean firstLine = true;
-        Integer[] lines = new Integer[h / 2];
         int idx = 0;
         int count0 = 0;
-        for (int j = x; j <= y + h; j++) {
+        for (int j = y; j <= y + h; j++) {
             var ref = new Object() {
                 int countOnLineI = 0;
             };
             int current = BLANK;
             for (int i = x; i <= x + w; i++) {
-                if (Arrays.equals(mat.getValues(i, j), new double[]{0, 0, 0})) {
+                if (mat.luminance(i, j) < 0.3) {
                     if (current == BLANK) {
                         if (firstLine) {
                             firstLine = false;
@@ -442,90 +441,87 @@ public class ResolutionCharacter {
                     current = BLANK;
                 }
             }
-            if (firstLine)
-                continue;
-
             if (ref.countOnLineI != count0) {
-                lines[idx++] = ref.countOnLineI;
+                lines[idx] = ref.countOnLineI;
+                idx++;
             }
 
             count0 = ref.countOnLineI;
 
+
         }
-
-
         lines = Arrays.copyOf(lines, idx);
         Integer[] finalLines = lines;
+
         patternsHorizon.forEach((character, integers) -> {
-                if(Arrays.equals(finalLines, integers))
-                    retained.add(character);
+            if (Arrays.equals(finalLines, integers))
+                retained.add(character);
         });
 
         return retained;
     }
 
 
-
-class StateAction {
-    ArrayList<FeatureLine> beginWith;
-    CourbeParametriquePolynomialeBezier curve;
-    ArrayList<Point3D> moveXY;
-    ArrayList<Point3D> added;
-    ArrayList<Point3D> deleted;
-}
-
-class State {
-    public Point3D xyz;
-    public double step;
-    public double currentError = 0.0;
-    public int[] lastErrors = new int[3];
-    ArrayList<CourbeParametriquePolynomialeBezier> resolvedCurved = new ArrayList<>();
-    ArrayList<CourbeParametriquePolynomialeBezier> currentCurves = new ArrayList<>();
-    double lastError = Double.NaN;
-    State previousState;
-    PixM input;
-    PixM backgroundImage;
-    Color textColor = Color.BLACK;
-    int dim;
-
-    public State(PixM image, PixM backgroundImage, int i, int j, int step) {
-        this.input = image;
-        this.backgroundImage = backgroundImage;
-        xyz = Point3D.n(i + step / 2., j + step / 2., 0.);
-        this.step = step;
+    class StateAction {
+        ArrayList<FeatureLine> beginWith;
+        CourbeParametriquePolynomialeBezier curve;
+        ArrayList<Point3D> moveXY;
+        ArrayList<Point3D> added;
+        ArrayList<Point3D> deleted;
     }
 
-    public double computeError() {
-        State state = this;
-        PixM pError = state.backgroundImage;
-        PixM inputCopy = input.copy();
-        state.currentCurves.forEach(courbeParametriquePolynomialeBezier -> {
-            pError.plotCurve(courbeParametriquePolynomialeBezier, new TextureCol(Color.BLACK));
-            numCurves++;
-        });
-        PixM copy = pError.copy();
-        Linear linear = new Linear(inputCopy, pError, new PixM(input.getColumns(), input.getLines()));
-        linear.op2d2d(new char[]{'-'}, new int[][]{{1, 0}}, new int[]{2});
-        PixM diff = linear.getImages()[2];
-        return diff.mean(0, 0, diff.getColumns(), diff.getLines());
+    class State {
+        public Point3D xyz;
+        public double step;
+        public double currentError = 0.0;
+        public int[] lastErrors = new int[3];
+        ArrayList<CourbeParametriquePolynomialeBezier> resolvedCurved = new ArrayList<>();
+        ArrayList<CourbeParametriquePolynomialeBezier> currentCurves = new ArrayList<>();
+        double lastError = Double.NaN;
+        State previousState;
+        PixM input;
+        PixM backgroundImage;
+        Color textColor = Color.BLACK;
+        int dim;
 
+        public State(PixM image, PixM backgroundImage, int i, int j, int step) {
+            this.input = image;
+            this.backgroundImage = backgroundImage;
+            xyz = Point3D.n(i + step / 2., j + step / 2., 0.);
+            this.step = step;
+        }
+
+        public double computeError() {
+            State state = this;
+            PixM pError = state.backgroundImage;
+            PixM inputCopy = input.copy();
+            state.currentCurves.forEach(courbeParametriquePolynomialeBezier -> {
+                pError.plotCurve(courbeParametriquePolynomialeBezier, new TextureCol(Color.BLACK));
+                numCurves++;
+            });
+            PixM copy = pError.copy();
+            Linear linear = new Linear(inputCopy, pError, new PixM(input.getColumns(), input.getLines()));
+            linear.op2d2d(new char[]{'-'}, new int[][]{{1, 0}}, new int[]{2});
+            PixM diff = linear.getImages()[2];
+            return diff.mean(0, 0, diff.getColumns(), diff.getLines());
+
+        }
+
+        public State copy() {
+            State copy = new State(this.input, backgroundImage, (int) (double) this.xyz.get(0), (int) (double) this.xyz.get(1), (int) (double) this.step);
+            copy.currentError = currentError;
+            copy.currentCurves = (ArrayList<CourbeParametriquePolynomialeBezier>) this.currentCurves.clone();
+            copy.lastError = lastError;
+            copy.step = step;
+            copy.xyz = xyz;
+            copy.backgroundImage = backgroundImage;
+            copy.input = input;
+            copy.dim = dim;
+            copy.lastErrors = lastErrors;
+            copy.textColor = textColor;
+            copy.previousState = this;
+
+            return copy;
+        }
     }
-
-    public State copy() {
-        State copy = new State(this.input, backgroundImage, (int) (double) this.xyz.get(0), (int) (double) this.xyz.get(1), (int) (double) this.step);
-        copy.currentError = currentError;
-        copy.currentCurves = (ArrayList<CourbeParametriquePolynomialeBezier>) this.currentCurves.clone();
-        copy.lastError = lastError;
-        copy.step = step;
-        copy.xyz = xyz;
-        copy.backgroundImage = backgroundImage;
-        copy.input = input;
-        copy.dim = dim;
-        copy.lastErrors = lastErrors;
-        copy.textColor = textColor;
-        copy.previousState = this;
-
-        return copy;
-    }
-}
 }
