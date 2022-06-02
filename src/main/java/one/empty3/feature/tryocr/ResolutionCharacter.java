@@ -55,7 +55,6 @@ public class ResolutionCharacter extends Thread {
         this.read = read;
         this.name = name;
         this.dirOut = new File("testsResults");
-        dirOut.mkdir();
 
     }
 
@@ -71,10 +70,11 @@ public class ResolutionCharacter extends Thread {
         File dir = new File("C:\\Users\\manue\\EmptyCanvasTest\\ocr");
         File dirOut = new File("TestsOutput");
         if(dir.exists()&&dir.isDirectory()) {
-            for(File file : dir.listFiles()) {
+            for(File file : Objects.requireNonNull(dir.listFiles())) {
                 BufferedImage read = ImageIO.read(file);
                 String name = file.getName();
                 ResolutionCharacter resolutionCharacter = new ResolutionCharacter(read, name, dirOut);
+
                 resolutionCharacter.start();
                 System.gc();
             }
@@ -137,6 +137,9 @@ public class ResolutionCharacter extends Thread {
     }
 
     public void run() {
+        if(!dirOut.exists()||!dirOut.isDirectory())
+            dirOut.mkdirs();
+
         int e = 1;
 
         assert read != null;
@@ -146,7 +149,7 @@ public class ResolutionCharacter extends Thread {
 
 
         System.out.println(input.getCompCount());
-
+/*
         State[][] states = new State[pixM.getColumns()][pixM.getLines()];
         for (int i = 0; i < pixM.getColumns() - step; i += step)
             for (int j = 0; j < pixM.getLines() - step; j += step) {
@@ -156,7 +159,7 @@ public class ResolutionCharacter extends Thread {
                 states[i][j] = new State(inputIJ, backgroundImageIJ, i, j, step);
             }
 
-        /*for (int i = 0; i < pixM.getColumns() - step; i += step)
+        for (int i = 0; i < pixM.getColumns() - step; i += step)
             for (int j = 0; j < pixM.getLines() - step; j += step) {
                 states[i][j].currentCurves.add(
                         new CourbeParametriquePolynomialeBezier(
@@ -267,8 +270,8 @@ public class ResolutionCharacter extends Thread {
                         }
 
                         succeded = (hBout && wBout) || succeded;
-                        if (h>=charMinWidth && w>=charMinWidth &&
-                                Arrays.equals(testRectIs(input, ii, ij, w, h, new double[]{1, 1, 1}), new boolean[]{true, true, true, true}) || succeded) {
+                        if (succeded && h>=charMinWidth && w>=charMinWidth &&
+                                Arrays.equals(testRectIs(input, ii, ij, w, h, new double[]{1, 1, 1}), new boolean[]{true, true, true, true})) {
                             //System.err.println("// Le test a passé");
                             //System.err.printf("ResolutionCharacter occurrence of rect %d,%d,%d,%d", i, j, w, h);
                             Rectangle rectangle = new Rectangle(ii, ij, w, h);
@@ -300,7 +303,7 @@ public class ResolutionCharacter extends Thread {
 //            e++;
             break;
         }
-        for (int i = 0; i < pixM.getColumns() - step; i += step)
+/*        for (int i = 0; i < pixM.getColumns() - step; i += step)
             for (int j = 0; j < pixM.getLines() - step; j += step) {
                 if (states[i][j] != null) {
                     states[i][j].currentCurves.forEach(courbeParametriquePolynomialeBezier -> {
@@ -308,21 +311,22 @@ public class ResolutionCharacter extends Thread {
                     });
                 }
             }
+  */
         Rectangle rectangle = new Rectangle(10, 10, globalOutputBgAl.getColumns() - 20, globalOutputBgAl.getLines() - 20);
         rectangle.texture(texture);
         rectangle.setIncrU(1. / globalOutputBgAl.getColumns() / globalOutputBgAl.getLines());
         globalOutputOrig.plotCurve(rectangle, texture);
         try {
-            ImageIO.write(input.getImage(), "jpg", new File("testsResults/"+name+"1Input.backgroundTextCleared.jpg"));
-            ImageIO.write(globalInputBgAl.getImage(), "jpg", new File("testsResults/"+name+"2Input.backgroundTextCleared.jpg"));
-            ImageIO.write(globalOutputOrig.getImage(), "jpg", new File("testsResults/"+name+"3Output.original.jpg"));
-            ImageIO.write(globalOutputBgAl.getImage(), "jpg", new File("testsResults/"+name+"4Output.backgroundTextCleared.jpg"));
+            ImageIO.write(input.getImage(), "jpg", new File(dirOut+File.separator+name.replace(' ', '_')+"1INPUT.jpg"));
+            ImageIO.write(globalOutputOrig.getImage(), "jpg", new File(dirOut+File.separator+name.replace(' ', '_')+"2OUTPUT.jpg"));
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
     }
 
     private List<Character> recognize(PixM globalOutputOrig, int i, int j, int w, int h) {
+        if(System.currentTimeMillis()%100==0)
+            System.gc();
         List<Character> ch = recognizeH(globalOutputOrig, i, j, w, h);
         List<Character> cv = recognizeV(globalOutputOrig, i, j, w, h);
 
@@ -530,7 +534,7 @@ public class ResolutionCharacter extends Thread {
     public List<Character> recognizeV(PixM mat, int x, int y, int w, int h) {
 
         List<Character> retained = new ArrayList<>();
-        Map<Character, Integer[]> patternsVertical = patternsH();
+        Map<Character, Integer[]> patternsVertical = patternsV();
 
 
 
@@ -583,7 +587,7 @@ public class ResolutionCharacter extends Thread {
     public List<Character> recognizeH(PixM mat, int x, int y, int w, int h) {
 
         List<Character> retained = new ArrayList<>();
-        Map<Character, Integer[]> patternsHorizon = patternsV();
+        Map<Character, Integer[]> patternsHorizon = patternsH();
 
 
 
