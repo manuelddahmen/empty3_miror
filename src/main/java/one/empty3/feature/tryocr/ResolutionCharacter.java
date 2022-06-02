@@ -435,5 +435,9 @@ public class ResolutionCharacter {
         }
     }
 
-
+/***
+ * OCR: combien on voit d'inversion.
+ * A (0,1) (1,2)+ (2, 1) (3,2)
+ * a (0,2) (1,2)+ (2,1) (3,2)
+ */
 }
