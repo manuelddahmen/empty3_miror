@@ -16,6 +16,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ResolutionCharacter {
 
@@ -440,4 +442,69 @@ public class ResolutionCharacter {
  * A (0,1) (1,2)+ (2, 1) (3,2)
  * a (0,2) (1,2)+ (2,1) (3,2)
  */
+public Map<Character, Integer[]> patterns() {
+    Map<Character, Integer[]> mapcharsAlphabetLines = new HashMap<>();
+    mapcharsAlphabetLines.put('A', new Integer[] {1, 2, 1, 2});
+    mapcharsAlphabetLines.put('a', new Integer[] {2, 2, 1, 2});
+    mapcharsAlphabetLines.put('B', new Integer[] {1, 2, 1, 2, 1});
+    mapcharsAlphabetLines.put('b', new Integer[] {1, 2, 2, 1});
+    mapcharsAlphabetLines.put('C', new Integer[] {1, 2, 1, 2, 1});
+    mapcharsAlphabetLines.put('c', new Integer[] {1, 2, 1, 2, 1});
+    mapcharsAlphabetLines.put('D', new Integer[] {1, 2, 1});
+    mapcharsAlphabetLines.put('d', new Integer[] {1, 2, 1, 2});
+    mapcharsAlphabetLines.put('E', new Integer[] {1});
+    mapcharsAlphabetLines.put('e', new Integer[] {1, 2, 1, 2});
+    mapcharsAlphabetLines.put('F', new Integer[] {1});
+    mapcharsAlphabetLines.put('f', new Integer[] {1});
+    mapcharsAlphabetLines.put('G', new Integer[] {1, 2, 1, 2, 1});
+    mapcharsAlphabetLines.put('g', new Integer[] {1, 2, 1, 1, 2, 1});
+    mapcharsAlphabetLines.put('H', new Integer[] {2, 1, 2});
+    mapcharsAlphabetLines.put('h', new Integer[] {1, 2, 1, 2});
+    mapcharsAlphabetLines.put('I', new Integer[] {1});
+    mapcharsAlphabetLines.put('i', new Integer[] {1, 0, 1});
+    mapcharsAlphabetLines.put('J', new Integer[] {1, 2, 1});
+    mapcharsAlphabetLines.put('j', new Integer[] {1, 0, 1, 2, 1});
+    mapcharsAlphabetLines.put('K', new Integer[] {2, 1, 2});
+    mapcharsAlphabetLines.put('k', new Integer[] {2, 1, 2});
+    mapcharsAlphabetLines.put('L', new Integer[] {1});
+    mapcharsAlphabetLines.put('l', new Integer[] {1});
+    mapcharsAlphabetLines.put('M', new Integer[] {2, 3, 2});
+    mapcharsAlphabetLines.put('m', new Integer[] {2, 3});
+    mapcharsAlphabetLines.put('N', new Integer[] {2});
+    mapcharsAlphabetLines.put('n', new Integer[] {2, 1, 2});
+    mapcharsAlphabetLines.put('O', new Integer[] {1, 2, 1});
+    mapcharsAlphabetLines.put('o', new Integer[] {1, 2, 1});
+    mapcharsAlphabetLines.put('P', new Integer[] {1, 2, 1});
+    mapcharsAlphabetLines.put('p', new Integer[] {2, 1, 2, 1});
+    mapcharsAlphabetLines.put('Q', new Integer[] {1, 2, 1});
+    mapcharsAlphabetLines.put('q', new Integer[] {2, 1, 2, 1});
+    mapcharsAlphabetLines.put('R', new Integer[] {1, 2, 1, 2});
+    mapcharsAlphabetLines.put('r', new Integer[] {2, 1, 2, 1});
+    mapcharsAlphabetLines.put('S', new Integer[] {1, 2, 1, 2, 1});
+    mapcharsAlphabetLines.put('s', new Integer[] {1, 2, 1, 2, 1});
+    mapcharsAlphabetLines.put('T', new Integer[] {1});
+    mapcharsAlphabetLines.put('t', new Integer[] {1});
+    mapcharsAlphabetLines.put('U', new Integer[] {2, 1});
+    mapcharsAlphabetLines.put('u', new Integer[] {2, 1});
+    mapcharsAlphabetLines.put('V', new Integer[] {2, 1});
+    mapcharsAlphabetLines.put('v', new Integer[] {2, 1});
+    mapcharsAlphabetLines.put('W', new Integer[] {3, 4, 2});
+    mapcharsAlphabetLines.put('w', new Integer[] {3, 4, 2});
+    mapcharsAlphabetLines.put('X', new Integer[] {2, 1, 2});
+    mapcharsAlphabetLines.put('x', new Integer[] {2, 1, 2});
+    mapcharsAlphabetLines.put('Y', new Integer[] {2, 1});
+    mapcharsAlphabetLines.put('y', new Integer[] {2, 1});
+    mapcharsAlphabetLines.put('Z', new Integer[] {1});
+    mapcharsAlphabetLines.put('z', new Integer[] {1});
+
+    return mapcharsAlphabetLines;
+}
+    public String recognize(PixM mat, int x, int y, int w, int h) {
+        Map<Character, Integer[]> patternsHorizon = patterns();
+        for(int i=x; i<=x+w; i++)
+            for(int j=x; j<=y+h; j++) {
+            }
+        return "";
+    }
+
 }
