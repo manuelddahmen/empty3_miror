@@ -1,5 +1,6 @@
 package one.empty3.feature.tryocr;
 
+import com.android.tools.r8.internal.C;
 import one.empty3.feature.Linear;
 import one.empty3.feature.PixM;
 import one.empty3.feature.app.replace.javax.imageio.ImageIO;
@@ -16,6 +17,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.*;
+import java.util.function.Consumer;
 
 public class ResolutionCharacter {
 
@@ -243,12 +245,13 @@ public class ResolutionCharacter {
 
                             rectangle.texture(texture);
                             rectangle.setIncrU(1. / (2 * w + 2 * h));
-                            globalOutputOrig.plotCurve(rectangle, texture);
+                            //globalOutputOrig.plotCurve(rectangle, texture);
                             List<Character> candidates = recognize(globalOutputOrig, i, j, w, h);
                             if(candidates.size()>0) {
                                 System.out.printf("Rectangle = (%d,%d,%d,%d) \t\tCandidates: ", i, j, w, h);
                                 candidates.forEach(System.out::print);
                                 System.out.println();
+                                globalOutputOrig.plotCurve(rectangle, texture);
                             }
                         }
                     }
@@ -287,6 +290,21 @@ public class ResolutionCharacter {
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
+    }
+
+    private List<Character> recognize(PixM globalOutputOrig, int i, int j, int w, int h) {
+        List<Character> ch = recognizeH(globalOutputOrig, i, j, w, h);
+        List<Character> cv = recognizeV(globalOutputOrig, i, j, w, h);
+
+        List<Character> allCharPossible = new ArrayList<>();
+
+        allCharPossible.addAll(ch);
+        allCharPossible.forEach(character -> {
+            if(!ch.contains(character))
+                allCharPossible.add(character);
+        });
+
+        return allCharPossible;
     }
 
     private boolean[] testRectIs(PixM input, int x, int y, int w, int h, double[] color) {
@@ -359,7 +377,7 @@ public class ResolutionCharacter {
      * A (0,1) (1,2)+ (2, 1) (3,2)
      * a (0,2) (1,2)+ (2,1) (3,2)
      */
-    public Map<Character, Integer[]> patterns() {
+    public Map<Character, Integer[]> patternsV() {
         Map<Character, Integer[]> mapcharsAlphabetLines = new HashMap<>();
         mapcharsAlphabetLines.put('A', new Integer[]{1, 2, 1, 2});
         mapcharsAlphabetLines.put('a', new Integer[]{2, 2, 1, 2});
@@ -416,10 +434,129 @@ public class ResolutionCharacter {
 
         return mapcharsAlphabetLines;
     }
+    /***
+     * OCR: combien on voit d'inversion.
+     * A (0,1) (1,2)+ (2, 1) (3,2)
+     * a (0,2) (1,2)+ (2,1) (3,2)
+     */
+    public Map<Character, Integer[]> patternsH() {
+        Map<Character, Integer[]> mapcharsAlphabetLines = new HashMap<>();
+        mapcharsAlphabetLines.put('A', new Integer[]{1, 2, 1});
+        mapcharsAlphabetLines.put('a', new Integer[]{2, 3, 1});
+        mapcharsAlphabetLines.put('B', new Integer[]{1, 3, 1, 2});
+        mapcharsAlphabetLines.put('b', new Integer[]{1, 2, 1});
+        mapcharsAlphabetLines.put('C', new Integer[]{1, 2});
+        mapcharsAlphabetLines.put('c', new Integer[]{1, 2});
+        mapcharsAlphabetLines.put('D', new Integer[]{1, 2, 1});
+        mapcharsAlphabetLines.put('d', new Integer[]{1, 2, 1});
+        mapcharsAlphabetLines.put('E', new Integer[]{1, 3});
+        mapcharsAlphabetLines.put('e', new Integer[]{1, 3, 2});
+        mapcharsAlphabetLines.put('F', new Integer[]{1, 2});
+        mapcharsAlphabetLines.put('f', new Integer[]{1, 2});
+        mapcharsAlphabetLines.put('G', new Integer[]{1, 2, 3, 2});
+        mapcharsAlphabetLines.put('g', new Integer[]{1, 3, 1});
+        mapcharsAlphabetLines.put('H', new Integer[]{1});
+        mapcharsAlphabetLines.put('h', new Integer[]{1});
+        mapcharsAlphabetLines.put('I', new Integer[]{2, 1, 2});
+        mapcharsAlphabetLines.put('i', new Integer[]{1, 2, 1});
+        mapcharsAlphabetLines.put('J', new Integer[]{1, 2, 1});
+        mapcharsAlphabetLines.put('j', new Integer[]{1, 2});
+        mapcharsAlphabetLines.put('K', new Integer[]{1, 2});
+        mapcharsAlphabetLines.put('k', new Integer[]{1, 2});
+        mapcharsAlphabetLines.put('L', new Integer[]{1});
+        mapcharsAlphabetLines.put('l', new Integer[]{1});
+        mapcharsAlphabetLines.put('M', new Integer[]{1});
+        mapcharsAlphabetLines.put('m', new Integer[]{1});
+        mapcharsAlphabetLines.put('N', new Integer[]{1});
+        mapcharsAlphabetLines.put('n', new Integer[]{1});
+        mapcharsAlphabetLines.put('O', new Integer[]{1, 2, 1});
+        mapcharsAlphabetLines.put('o', new Integer[]{1, 2, 1});
+        mapcharsAlphabetLines.put('P', new Integer[]{1, 2, 1});
+        mapcharsAlphabetLines.put('p', new Integer[]{2, 1, 2, 1});
+        mapcharsAlphabetLines.put('Q', new Integer[]{1, 2, 3});
+        mapcharsAlphabetLines.put('q', new Integer[]{2, 1, 1});
+        mapcharsAlphabetLines.put('R', new Integer[]{1, 2, 3, 2});
+        mapcharsAlphabetLines.put('r', new Integer[]{1});
+        mapcharsAlphabetLines.put('S', new Integer[]{2, 3, 2});
+        mapcharsAlphabetLines.put('s', new Integer[]{2, 3, 2});
+        mapcharsAlphabetLines.put('T', new Integer[]{1});
+        mapcharsAlphabetLines.put('t', new Integer[]{1, 2});
+        mapcharsAlphabetLines.put('U', new Integer[]{1});
+        mapcharsAlphabetLines.put('u', new Integer[]{1});
+        mapcharsAlphabetLines.put('V', new Integer[]{1});
+        mapcharsAlphabetLines.put('v', new Integer[]{1});
+        mapcharsAlphabetLines.put('W', new Integer[]{1});
+        mapcharsAlphabetLines.put('w', new Integer[]{1});
+        mapcharsAlphabetLines.put('X', new Integer[]{2, 1, 2});
+        mapcharsAlphabetLines.put('x', new Integer[]{2, 1, 2});
+        mapcharsAlphabetLines.put('Y', new Integer[]{1});
+        mapcharsAlphabetLines.put('y', new Integer[]{1});
+        mapcharsAlphabetLines.put('Z', new Integer[]{2, 3, 2});
+        mapcharsAlphabetLines.put('z', new Integer[]{2, 3, 2});
 
-    public List<Character> recognize(PixM mat, int x, int y, int w, int h) {
+        return mapcharsAlphabetLines;
+    }
+
+    public List<Character> recognizeV(PixM mat, int x, int y, int w, int h) {
+
         List<Character> retained = new ArrayList<>();
-        Map<Character, Integer[]> patternsHorizon = patterns();
+        Map<Character, Integer[]> patternsVertical = patternsH();
+
+
+
+        Integer[] columns = new Integer[w+h+1];
+        boolean firstColumn = true;
+        int idx = 0;
+        int count0 = 0;
+        for (int j = x; j <= x + w; j++) {
+            var ref = new Object() {
+                int countOnColumnI = 0;
+            };
+            int current = BLANK;
+            for (int i = y; i <= y + h; i++) {
+                if (mat.luminance(i, j) < 0.3) {
+                    if (current == BLANK) {
+                        if (firstColumn) {
+                            firstColumn = false;
+                        }
+                        ref.countOnColumnI++;
+                        current = CHARS;
+
+                    }
+                } else if (current == CHARS) {
+                    current = BLANK;
+                }
+            }
+            if (ref.countOnColumnI != count0) {
+                columns[idx] = ref.countOnColumnI;
+                idx++;
+            }
+
+            count0 = ref.countOnColumnI;
+
+
+        }
+        columns = Arrays.copyOf(columns, idx);
+        Integer[] finalColumns = columns;
+
+        patternsVertical.forEach((character, integers) -> {
+            if (Arrays.equals(finalColumns, integers))
+                retained.add(character);
+        });
+
+        return retained;
+
+
+    }
+
+
+    public List<Character> recognizeH(PixM mat, int x, int y, int w, int h) {
+
+        List<Character> retained = new ArrayList<>();
+        Map<Character, Integer[]> patternsHorizon = patternsV();
+
+
+
         Integer[] lines = new Integer[w+h+1];
         boolean firstLine = true;
         int idx = 0;
@@ -461,8 +598,9 @@ public class ResolutionCharacter {
         });
 
         return retained;
-    }
 
+
+    }
 
     class StateAction {
         ArrayList<FeatureLine> beginWith;
