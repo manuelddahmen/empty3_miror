@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.*;
 import java.util.function.Consumer;
 
-public class ResolutionCharacter {
+public class ResolutionCharacter extends Thread {
 
     public static final int XPLUS = 0;
     public static final int YPLUS = 1;
@@ -35,6 +35,9 @@ public class ResolutionCharacter {
     private static final int CHARS = 1;
     private static int SHAKE_SIZE = 20;
     final int epochs = 100;
+    private final BufferedImage read;
+    private final String name;
+    private final File dirOut;
     int step = 1;// Searched Characters size.
     private double dim = 14;
     private int shakeTimes;
@@ -48,8 +51,35 @@ public class ResolutionCharacter {
     private int stepMax = 60;
     private int charMinWidth = 7;
 
+    public ResolutionCharacter(BufferedImage read, String name) {
+        this.read = read;
+        this.name = name;
+        this.dirOut = new File("testsResults");
+        dirOut.mkdir();
+
+    }
+
+    public ResolutionCharacter(BufferedImage read, String name, File dirOut) {
+        this.read = read;
+        this.name = name;
+        this.dirOut = dirOut;
+    }
+
     public static void main(String[] args) {
-        new ResolutionCharacter().run(args);
+
+
+        File dir = new File("C:\\Users\\manue\\EmptyCanvasTest\\ocr");
+        File dirOut = new File("TestsOutput");
+        if(dir.exists()&&dir.isDirectory()) {
+            for(File file : dir.listFiles()) {
+                BufferedImage read = ImageIO.read(file);
+                String name = file.getName();
+                ResolutionCharacter resolutionCharacter = new ResolutionCharacter(read, name, dirOut);
+                resolutionCharacter.start();
+                System.gc();
+            }
+        }
+
     }
 
     public void addRandomCurves(State state) {
@@ -106,9 +136,8 @@ public class ResolutionCharacter {
             }
     }
 
-    public void run(String[] args) {
+    public void run() {
         int e = 1;
-        BufferedImage read = ImageIO.read(new File("C:\\Users\\manue\\EmptyCanvasTest\\ocr\\AC_AC4part1dos2AC1fr3img1.jpg"));
 
         assert read != null;
         pixM = input = new PixM(read);//PixM.getPixM(read, 750);
@@ -247,7 +276,7 @@ public class ResolutionCharacter {
                             rectangle.texture(texture);
                             rectangle.setIncrU(1. / (2 * w + 2 * h));
                             //globalOutputOrig.plotCurve(rectangle, texture);
-                            List<Character> candidates = recognize(globalOutputOrig, ii, ij, w, h);
+                            List<Character> candidates = recognize(input, ii, ij, w, h);
                             if(candidates.size()>0) {
                                 System.out.printf("Rectangle = (%d,%d,%d,%d) \t\tCandidates: ", ii, ij, w, h);
                                 candidates.forEach(System.out::print);
@@ -284,10 +313,10 @@ public class ResolutionCharacter {
         rectangle.setIncrU(1. / globalOutputBgAl.getColumns() / globalOutputBgAl.getLines());
         globalOutputOrig.plotCurve(rectangle, texture);
         try {
-            ImageIO.write(input.getImage(), "jpg", new File("1Input.backgroundTextCleared.jpg"));
-            ImageIO.write(globalInputBgAl.getImage(), "jpg", new File("2Input.backgroundTextCleared.jpg"));
-            ImageIO.write(globalOutputOrig.getImage(), "jpg", new File("3Output.original.jpg"));
-            ImageIO.write(globalOutputBgAl.getImage(), "jpg", new File("4Output.backgroundTextCleared.jpg"));
+            ImageIO.write(input.getImage(), "jpg", new File("testsResults/"+name+"1Input.backgroundTextCleared.jpg"));
+            ImageIO.write(globalInputBgAl.getImage(), "jpg", new File("testsResults/"+name+"2Input.backgroundTextCleared.jpg"));
+            ImageIO.write(globalOutputOrig.getImage(), "jpg", new File("testsResults/"+name+"3Output.original.jpg"));
+            ImageIO.write(globalOutputBgAl.getImage(), "jpg", new File("testsResults/"+name+"4Output.backgroundTextCleared.jpg"));
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
