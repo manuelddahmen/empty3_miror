@@ -239,15 +239,17 @@ public class ResolutionCharacter {
                         if (Arrays.equals(testRectIs(input, ii, ij, w, h, new double[]{1, 1, 1}), new boolean[]{true, true, true, true}) || succeded) {
                             //System.err.println("// Le test a passé");
                             //System.err.printf("ResolutionCharacter occurrence of rect %d,%d,%d,%d", i, j, w, h);
-                            //Rectangle rectangle = new Rectangle(i, j, w, h);
+                            Rectangle rectangle = new Rectangle(i, j, w, h);
 
-                            //rectangle.texture(texture);
-                            //rectangle.setIncrU(1. / (2 * w + 2 * h));
-                            //globalOutputOrig.plotCurve(rectangle, texture);
+                            rectangle.texture(texture);
+                            rectangle.setIncrU(1. / (2 * w + 2 * h));
+                            globalOutputOrig.plotCurve(rectangle, texture);
                             List<Character> candidates = recognize(globalOutputOrig, i, j, w, h);
-                            System.out.printf("Rectangle = (%d,%d,%d,%d) ", i, j, w, h);
-                            candidates.forEach(System.out::print);
-                            System.out.println();
+                            if(candidates.size()>0) {
+                                System.out.printf("Rectangle = (%d,%d,%d,%d) \t\tCandidates: ", i, j, w, h);
+                                candidates.forEach(System.out::print);
+                                System.out.println();
+                            }
                         }
                     }
                 }
@@ -418,7 +420,7 @@ public class ResolutionCharacter {
     public List<Character> recognize(PixM mat, int x, int y, int w, int h) {
         List<Character> retained = new ArrayList<>();
         Map<Character, Integer[]> patternsHorizon = patterns();
-        Integer[] lines = new Integer[w];
+        Integer[] lines = new Integer[w+h+1];
         boolean firstLine = true;
         int idx = 0;
         int count0 = 0;
