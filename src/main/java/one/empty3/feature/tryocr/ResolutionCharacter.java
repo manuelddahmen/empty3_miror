@@ -180,7 +180,7 @@ public class ResolutionCharacter {
                     totalError += currentError;
                     errorDiff += (newCurrentError-currentError);
                 */
-                    if (Arrays.equals(input.getValues(i, j), new double[]{1, 1, 1})) {
+                    if (input.luminance(i, j)>0.7) {
                         int w, h, ii, ij;
                         ii = i;
                         ij = j;
@@ -238,17 +238,18 @@ public class ResolutionCharacter {
                         }
 
                         succeded = (hBout && wBout) || succeded;
-                        if (Arrays.equals(testRectIs(input, ii, ij, w, h, new double[]{1, 1, 1}), new boolean[]{true, true, true, true}) || succeded) {
+                        if (h>=charMinWidth && w>=charMinWidth &&
+                                Arrays.equals(testRectIs(input, ii, ij, w, h, new double[]{1, 1, 1}), new boolean[]{true, true, true, true}) || succeded) {
                             //System.err.println("// Le test a passé");
                             //System.err.printf("ResolutionCharacter occurrence of rect %d,%d,%d,%d", i, j, w, h);
-                            Rectangle rectangle = new Rectangle(i, j, w, h);
+                            Rectangle rectangle = new Rectangle(ii, ij, w, h);
 
                             rectangle.texture(texture);
                             rectangle.setIncrU(1. / (2 * w + 2 * h));
                             //globalOutputOrig.plotCurve(rectangle, texture);
-                            List<Character> candidates = recognize(globalOutputOrig, i, j, w, h);
+                            List<Character> candidates = recognize(globalOutputOrig, ii, ij, w, h);
                             if(candidates.size()>0) {
-                                System.out.printf("Rectangle = (%d,%d,%d,%d) \t\tCandidates: ", i, j, w, h);
+                                System.out.printf("Rectangle = (%d,%d,%d,%d) \t\tCandidates: ", ii, ij, w, h);
                                 candidates.forEach(System.out::print);
                                 System.out.println();
                                 globalOutputOrig.plotCurve(rectangle, texture);
@@ -312,16 +313,16 @@ public class ResolutionCharacter {
 
         w0h1w2h3[0] = true;
         for (int i = x; i <= x + w; i++)
-            if (!Arrays.equals(input.getValues(i, y), color)) w0h1w2h3[0] = false;
+            if (input.getP(i, y).moins(new Point3D(color)).norme()<0.4) w0h1w2h3[0] = false;
         w0h1w2h3[1] = true;
         for (int j = y; j <= y + h; j++)
-            if (!Arrays.equals(input.getValues(x, j), color)) w0h1w2h3[1] = false;
+            if (input.getP(x, j).moins(new Point3D(color)).norme()<0.4) w0h1w2h3[1] = false;
         w0h1w2h3[2] = true;
         for (int i = x + w; i >= x; i--)
-            if (!Arrays.equals(input.getValues(i, y), color)) w0h1w2h3[2] = false;
+            if (input.getP(i, y).moins(new Point3D(color)).norme()<0.4) w0h1w2h3[2] = false;
         w0h1w2h3[3] = true;
         for (int j = y + h; j >= y; j--)
-            if (!Arrays.equals(input.getValues(x, j), color)) w0h1w2h3[3] = false;
+            if (input.getP(x, j).moins(new Point3D(color)).norme()<0.4) w0h1w2h3[3] = false;
         return w0h1w2h3;
     }
 
