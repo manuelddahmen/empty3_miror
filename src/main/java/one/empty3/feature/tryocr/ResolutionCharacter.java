@@ -457,8 +457,13 @@ public class ResolutionCharacter {
                 Integer[] integers = patternsHorizon.get(character);
                 if (ref.countOnLineI == integers[integer]) {
                 } else if (integers.length > integer + 1 && integers[integer] == ref.countOnLineI) {
-                    okChars.put(character, integer + 1);
-                }else okChars.remove(character);
+                    synchronized (okChars) {
+                        Objects.requireNonNull(okChars.put(character, integer + 1));
+                    }
+                } else
+                    synchronized(okChars) {
+                    okChars.remove(character);
+                }
             });
         }
         return okChars.keySet();
