@@ -237,15 +237,16 @@ public class ResolutionCharacter {
 
                         succeded = (hBout && wBout) || succeded;
                         if (Arrays.equals(testRectIs(input, ii, ij, w, h, new double[]{1, 1, 1}), new boolean[]{true, true, true, true}) || succeded) {
-                            System.err.println("// Le test a passé");
-                            System.err.printf("ResolutionCharacter occurrence of rect %d,%d,%d,%d", i, j, w, h);
-                            Rectangle rectangle = new Rectangle(i, j, w, h);
+                            //System.err.println("// Le test a passé");
+                            //System.err.printf("ResolutionCharacter occurrence of rect %d,%d,%d,%d", i, j, w, h);
+                            //Rectangle rectangle = new Rectangle(i, j, w, h);
 
-                            rectangle.texture(texture);
-                            rectangle.setIncrU(1. / (2 * w + 2 * h));
-                            globalOutputOrig.plotCurve(rectangle, texture);
-                            recognize(globalOutputOrig, i, j, w, h).forEach(System.out::println);
-
+                            //rectangle.texture(texture);
+                            //rectangle.setIncrU(1. / (2 * w + 2 * h));
+                            //globalOutputOrig.plotCurve(rectangle, texture);
+                            List<Character> candidates = recognize(globalOutputOrig, i, j, w, h);
+                            candidates.forEach(System.out::print);
+                            System.out.println();
                         }
                     }
                 }
@@ -413,43 +414,57 @@ public class ResolutionCharacter {
         return mapcharsAlphabetLines;
     }
 
-    public Set<Character> recognize(PixM mat, int x, int y, int w, int h) {
+    public List<Character> recognize(PixM mat, int x, int y, int w, int h) {
+        List<Character> retained = new ArrayList<>();
         Map<Character, Integer[]> patternsHorizon = patterns();
-        Map<Character, Integer> okChars = new HashMap();
+        Map<Character, Integer> okChars = new HashMap<>();
         patternsHorizon.forEach((character, integers) -> okChars.put(character, 0));
+        boolean firstLine = true;
+        Integer[] lines = new Integer[h / 2];
+        int idx = 0;
+        int count0 = 0;
         for (int j = x; j <= y + h; j++) {
             var ref = new Object() {
                 int countOnLineI = 0;
             };
             int current = BLANK;
-
             for (int i = x; i <= x + w; i++) {
-                if (mat.getValues(i, j).equals(new double[]{0, 0, 0})) {
+                if (Arrays.equals(mat.getValues(i, j), new double[]{0, 0, 0})) {
                     if (current == BLANK) {
+                        if (firstLine) {
+                            firstLine = false;
+                        }
                         ref.countOnLineI++;
                         current = CHARS;
+
                     }
-                } else {
+                } else if (current == CHARS) {
                     current = BLANK;
                 }
             }
-            List<Character> del = new ArrayList();
-            Map<Character, Integer> put = new HashMap();
-            okChars.forEach((character, integer) -> {
-                Integer[] integers = patternsHorizon.get(character);
-                if (ref.countOnLineI == integers[integer]) {
-                } else if (integers.length > integer + 1 && integers[integer] == ref.countOnLineI) {
-                    put.put(character, integer + 1);
+            if (firstLine)
+                continue;
 
-                } else del.add(character);
+            if (ref.countOnLineI != count0) {
+                lines[idx++] = ref.countOnLineI;
+            }
 
-            });
-            del.forEach(okChars::remove);
-            okChars.putAll(put);
+            count0 = ref.countOnLineI;
+
         }
 
-        return okChars.keySet();
+
+        lines = Arrays.copyOf(lines, idx);
+        Integer[] finalLines = lines;
+        patternsHorizon.forEach((character, integers) -> {
+                if(Arrays.equals(finalLines, integers))
+                    retained.add(character);
+        });
+
+        return retained;
     }
+
+
 
 class StateAction {
     ArrayList<FeatureLine> beginWith;
