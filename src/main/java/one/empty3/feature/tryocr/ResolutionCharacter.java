@@ -1,6 +1,5 @@
 package one.empty3.feature.tryocr;
 
-import com.android.tools.r8.internal.C;
 import one.empty3.feature.Linear;
 import one.empty3.feature.PixM;
 import one.empty3.feature.app.replace.javax.imageio.ImageIO;
@@ -17,7 +16,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.*;
-import java.util.function.Consumer;
 
 public class ResolutionCharacter extends Thread {
 
@@ -49,7 +47,7 @@ public class ResolutionCharacter extends Thread {
     private PixM globalInputBgAl;
     private PixM input;
     private int stepMax = 60;
-    private int charMinWidth = 7;
+    private int charMinWidth = 5;
 
     public ResolutionCharacter(BufferedImage read, String name) {
         this.read = read;
@@ -69,8 +67,8 @@ public class ResolutionCharacter extends Thread {
 
         File dir = new File("C:\\Users\\manue\\EmptyCanvasTest\\ocr");
         File dirOut = new File("TestsOutput");
-        if(dir.exists()&&dir.isDirectory()) {
-            for(File file : Objects.requireNonNull(dir.listFiles())) {
+        if (dir.exists() && dir.isDirectory()) {
+            for (File file : Objects.requireNonNull(dir.listFiles())) {
                 BufferedImage read = ImageIO.read(file);
                 String name = file.getName();
                 ResolutionCharacter resolutionCharacter = new ResolutionCharacter(read, name, dirOut);
@@ -137,7 +135,7 @@ public class ResolutionCharacter extends Thread {
     }
 
     public void run() {
-        if(!dirOut.exists()||!dirOut.isDirectory())
+        if (!dirOut.exists() || !dirOut.isDirectory())
             dirOut.mkdirs();
 
         int e = 1;
@@ -173,17 +171,15 @@ public class ResolutionCharacter extends Thread {
             }
 */
         PixM globalOutputOrig = input.copy();
-        PixM globalOutputBgAl = globalInputBgAl.copy();
         ITexture texture = new TextureCol(Color.BLACK);
         double error0 = 0;
         totalError = 0;
         double erreurMoyenne = 1.0;
-        while (e < epochs) {
-            totalError = 0;
-            numCurves = 0;
-            errorDiff = 0;
-            for (int i = 0; i < pixM.getColumns() - step; i += step) {
-                for (int j = 0; j < pixM.getLines() - step; j += step) {
+        totalError = 0;
+        numCurves = 0;
+        errorDiff = 0;
+        for (int i = 0; i < pixM.getColumns() - step; i += step) {
+            for (int j = 0; j < pixM.getLines() - step; j += step) {
                    /* double cE = 0.0;
                     SHAKE_SIZE = 50;
                     double currentError = states[i][j].computeError();
@@ -212,43 +208,43 @@ public class ResolutionCharacter extends Thread {
                     totalError += currentError;
                     errorDiff += (newCurrentError-currentError);
                 */
-                    if (input.luminance(i, j)>0.7) {
-                        int w, h, ii, ij;
-                        ii = i;
-                        ij = j;
-                        w = 2;
-                        h = 2;
-                        boolean wB = false;
-                        boolean hB = false;
-                        boolean fail = false;
-                        boolean hBout = false;
-                        boolean wBout = false;
-                        while (!fail && ii + w < input.getColumns() && ij + h < input.getLines() && (!(w > stepMax || h > stepMax)) && (!hBout || !wBout)) {
-                            boolean[] v = testRectIs(input, ii, ij, w, h, new double[]{1, 1, 1});
-                            if (!v[XPLUS]) {
-                                fail = true;
+                if (input.luminance(i, j) > 0.7) {
+                    int w, h, ii, ij;
+                    ii = i;
+                    ij = j;
+                    w = 1;
+                    h = 1;
+                    boolean wB = false;
+                    boolean hB = false;
+                    boolean fail = false;
+                    boolean hBout = false;
+                    boolean wBout = false;
+                    while (!fail && ii + w < input.getColumns() && ij + h < input.getLines() && (!(w > stepMax || h > stepMax)) && (!hBout || !wBout)) {
+                        boolean[] v = testRectIs(input, ii, ij, w, h, new double[]{1, 1, 1});
+                        if (!v[XPLUS]) {
+                            fail = true;
 
-                            }
-                            if (!v[YINVE]) {
-                                fail = true;
-                            }
+                        }
+                        if (!v[YINVE]) {
+                            fail = true;
+                        }
 
 
-                            if (v[YPLUS] && hB) {
-                                hBout = true;
-                            } else if (!v[YPLUS] && hB) {
-                                h++;
-                            } else if (!v[YPLUS] && !hB) {
-                                hB = true;
-                            } else if (v[YPLUS] && !hB) h++;
+                        if (v[YPLUS] && hB) {
+                            hBout = true;
+                        } else if (!v[YPLUS] && hB) {
+                            h++;
+                        } else if (!v[YPLUS] && !hB) {
+                            hB = true;
+                        } else if (v[YPLUS] && !hB) h++;
 
-                            if (v[XINVE] && wB) {
-                                wBout = true;
-                            } else if (!v[XINVE] && wB) {
-                                w++;
-                            } else if (!v[XINVE] && !wB) {
-                                wB = true;
-                            } else if (v[XINVE] && !wB) w++;
+                        if (v[XINVE] && wB) {
+                            wBout = true;
+                        } else if (!v[XINVE] && wB) {
+                            w++;
+                        } else if (!v[XINVE] && !wB) {
+                            wB = true;
+                        } else if (v[XINVE] && !wB) w++;
 
                             /*if (hBout && !wBout)
                                 w++;
@@ -256,76 +252,49 @@ public class ResolutionCharacter extends Thread {
                                 h++;
 
                              */
+                    }
+                    boolean succeded = false;
+                    if (fail) {
+                        if (Arrays.equals(testRectIs(input, ii, ij, w - 1, h, new double[]{1, 1, 1}), new boolean[]{true, true, true, true})) {
+                            w = w - 1;
+                            succeded = true;
                         }
-                        boolean succeded = false;
-                        if (fail) {
-                            if (Arrays.equals(testRectIs(input, ii, ij, w - 1, h, new double[]{1, 1, 1}), new boolean[]{true, true, true, true})) {
-                                w = w - 1;
-                                succeded = true;
-                            }
-                            if (Arrays.equals(testRectIs(input, ii, ij, w, h - 1, new double[]{1, 1, 1}), new boolean[]{true, true, true, true})) {
-                                h = h - 1;
-                                succeded = true;
-                            }
+                        if (Arrays.equals(testRectIs(input, ii, ij, w, h - 1, new double[]{1, 1, 1}), new boolean[]{true, true, true, true})) {
+                            h = h - 1;
+                            succeded = true;
                         }
+                    }
 
-                        succeded = (hBout && wBout) || succeded;
-                        if (succeded && h>=charMinWidth && w>=charMinWidth &&
-                                Arrays.equals(testRectIs(input, ii, ij, w, h, new double[]{1, 1, 1}), new boolean[]{true, true, true, true})) {
-                            //System.err.println("// Le test a passé");
-                            //System.err.printf("ResolutionCharacter occurrence of rect %d,%d,%d,%d", i, j, w, h);
-                            Rectangle rectangle = new Rectangle(ii, ij, w, h);
-
-                            rectangle.texture(texture);
-                            rectangle.setIncrU(1. / (2 * w + 2 * h));
-                            //globalOutputOrig.plotCurve(rectangle, texture);
-                            List<Character> candidates = recognize(input, ii, ij, w, h);
-                            if(candidates.size()>0) {
-                                System.out.printf("Rectangle = (%d,%d,%d,%d) \t\tCandidates: ", ii, ij, w, h);
-                                candidates.forEach(System.out::print);
-                                System.out.println();
-                                globalOutputOrig.plotCurve(rectangle, texture);
-                            }
+                    succeded = (hBout && wBout) || succeded;
+                    if (succeded && h >= charMinWidth && w >= charMinWidth &&
+                            Arrays.equals(testRectIs(input, ii, ij, w, h, new double[]{1, 1, 1}), new boolean[]{true, true, true, true})) {
+                        Rectangle rectangle = new Rectangle(ii, ij, w, h);
+                        rectangle.texture(texture);
+                        rectangle.setIncrU(1. / (2 * w + 2 * h));
+                        List<Character> candidates = recognize(input, i, j, w, h);
+                        if (candidates.size() > 0) {
+                            System.out.printf("In %s, Rectangle = (%d,%d,%d,%d) \t\tCandidates: ", name, i, j, w, h);
+                            candidates.forEach(System.out::print);
+                            System.out.println();
+                            globalOutputOrig.plotCurve(rectangle, texture);
                         }
                     }
                 }
             }
-//            System.out.println("Epoch : " + e + "/" + epochs);
-//            System.out.println("Taile de la trame :" + states.length + " , " + states[0].length);
-//            System.out.println("Différence d'erreur epoch :" + errorDiff);
-//            System.out.println("Erreur totale :" + totalError);
-//            System.out.println("Nombre de courbes :" + numCurves);
-//            numCurves = 0;
-//            error0 = totalError;
-//            erreurMoyenne = errorDiff;
-//
-//
-//            e++;
-            break;
         }
-/*        for (int i = 0; i < pixM.getColumns() - step; i += step)
-            for (int j = 0; j < pixM.getLines() - step; j += step) {
-                if (states[i][j] != null) {
-                    states[i][j].currentCurves.forEach(courbeParametriquePolynomialeBezier -> {
-                        globalOutputBgAl.plotCurve(courbeParametriquePolynomialeBezier, texture);
-                    });
-                }
-            }
-  */
-        Rectangle rectangle = new Rectangle(10, 10, globalOutputBgAl.getColumns() - 20, globalOutputBgAl.getLines() - 20);
-        rectangle.texture(texture);
-        rectangle.setIncrU(1. / globalOutputBgAl.getColumns() / globalOutputBgAl.getLines());
-        globalOutputOrig.plotCurve(rectangle, texture);
+
         try {
-            ImageIO.write(input.getImage(), "jpg", new File(dirOut+File.separator+name.replace(' ', '_')+"1INPUT.jpg"));
-            ImageIO.write(globalOutputOrig.getImage(), "jpg", new File(dirOut+File.separator+name.replace(' ', '_')+"2OUTPUT.jpg"));
+            ImageIO.write(input.getImage(), "jpg",
+                    new File(dirOut + File.separator + name.replace(' ', '_').replace(".jpg", "INPUT.jpg")));
+            ImageIO.write(globalOutputOrig.getImage(), "jpg",
+                    new File(dirOut + File.separator + name.replace(' ', '_').replace(".jpg", "OUTPUT.jpg")));
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
     }
 
     private List<Character> recognize(PixM globalOutputOrig, int i, int j, int w, int h) {
-        if(System.currentTimeMillis()%100==0)
+        if (System.currentTimeMillis() % 100 == 0)
             System.gc();
         List<Character> ch = recognizeH(globalOutputOrig, i, j, w, h);
         List<Character> cv = recognizeV(globalOutputOrig, i, j, w, h);
@@ -334,7 +303,7 @@ public class ResolutionCharacter extends Thread {
 
         allCharPossible.addAll(ch);
         allCharPossible.forEach(character -> {
-            if(!ch.contains(character))
+            if (!ch.contains(character))
                 allCharPossible.add(character);
         });
 
@@ -343,19 +312,19 @@ public class ResolutionCharacter extends Thread {
 
     private boolean[] testRectIs(PixM input, int x, int y, int w, int h, double[] color) {
         boolean[] w0h1w2h3 = new boolean[4];
-
+        int i, j;
         w0h1w2h3[0] = true;
-        for (int i = x; i <= x + w; i++)
-            if (input.getP(i, y).moins(new Point3D(color)).norme()<0.4) w0h1w2h3[0] = false;
+        for (i = x; i <= x + w; i++)
+            if (input.getP(i, y).moins(new Point3D(color)).norme() < 0.4) w0h1w2h3[0] = false;
         w0h1w2h3[1] = true;
-        for (int j = y; j <= y + h; j++)
-            if (input.getP(x, j).moins(new Point3D(color)).norme()<0.4) w0h1w2h3[1] = false;
+        for (j = y; j <= y + h; j++)
+            if (input.getP(x, j).moins(new Point3D(color)).norme() < 0.4) w0h1w2h3[1] = false;
         w0h1w2h3[2] = true;
-        for (int i = x + w; i >= x; i--)
-            if (input.getP(i, y).moins(new Point3D(color)).norme()<0.4) w0h1w2h3[2] = false;
+        for (i = x + w; i >= x; i--)
+            if (input.getP(i, y + h).moins(new Point3D(color)).norme() < 0.4) w0h1w2h3[2] = false;
         w0h1w2h3[3] = true;
-        for (int j = y + h; j >= y; j--)
-            if (input.getP(x, j).moins(new Point3D(color)).norme()<0.4) w0h1w2h3[3] = false;
+        for (j = y + h; j >= y; j--)
+            if (input.getP(x + w, j).moins(new Point3D(color)).norme() < 0.4) w0h1w2h3[3] = false;
         return w0h1w2h3;
     }
 
@@ -468,6 +437,7 @@ public class ResolutionCharacter extends Thread {
 
         return mapcharsAlphabetLines;
     }
+
     /***
      * OCR: combien on voit d'inversion.
      * A (0,1) (1,2)+ (2, 1) (3,2)
@@ -537,8 +507,7 @@ public class ResolutionCharacter extends Thread {
         Map<Character, Integer[]> patternsVertical = patternsV();
 
 
-
-        Integer[] columns = new Integer[w+h+1];
+        Integer[] columns = new Integer[w + h + 1];
         boolean firstColumn = true;
         int idx = 0;
         int count0 = 0;
@@ -590,8 +559,7 @@ public class ResolutionCharacter extends Thread {
         Map<Character, Integer[]> patternsHorizon = patternsH();
 
 
-
-        Integer[] lines = new Integer[w+h+1];
+        Integer[] lines = new Integer[w + h + 1];
         boolean firstLine = true;
         int idx = 0;
         int count0 = 0;
