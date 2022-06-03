@@ -175,7 +175,6 @@ public class ResolutionCharacter implements Runnable {
 
                         firstPass = false;
 
-                        v = testRectIs(input, i, j, w, h, WHITE_DOUBLES);
 
                         if (!v[XPLUS]) {
                             fail = true;
@@ -189,31 +188,27 @@ public class ResolutionCharacter implements Runnable {
                         if (v[YPLUS] && hB) {
                             hBout = true;
                         } else if (!v[YPLUS] && hB) {
-                            h++;
+                            hBout = false;
                         } else if (!v[YPLUS]) {
                             hB = true;
-                            h++;
-                        } else h++;
+                        }
+                        h++;
 
 
                         if (v[XINVE] && wB) {
                             wBout = true;
                         } else if (!v[XINVE] && wB) {
-                            w++;
+                            wBout = false;
                         } else if (!v[XINVE]) {
                             wB = true;
-                            h++;
-                        } else
-                            w++;
-
-                        if (hBout && !wBout)
-                            w++;
-                        if (wBout && !hBout)
-                            h++;
+                        }
+                        w++;
 
                         if (h > stepMax || w > stepMax) {
                             fail = true;
                         }
+
+                        v = testRectIs(input, i, j, w, h, WHITE_DOUBLES);
                     }
                     boolean succeded = false;
                     if (fail) {
@@ -228,7 +223,7 @@ public class ResolutionCharacter implements Runnable {
                     }
 
                     succeded = (hBout && wBout) || succeded;
-                    if (succeded && h >= charMinWidth && w >= charMinWidth &&
+                    if (succeded && h >= charMinWidth && w >= charMinWidth && h<stepMax && w<stepMax &&
                             Arrays.equals(testRectIs(input, i, j, w, h, WHITE_DOUBLES), new boolean[]{true, true, true, true})) {
                         Rectangle rectangle = new Rectangle(i, j, w, h);
                         List<Character> candidates = recognize(input, i, j, w, h);
