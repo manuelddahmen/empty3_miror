@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.*;
+import java.util.function.Consumer;
 
 public class ResolutionCharacter extends Thread {
 
@@ -39,15 +40,12 @@ public class ResolutionCharacter extends Thread {
     int step = 1;// Searched Characters size.
     private double dim = 14;
     private int shakeTimes;
-    private PixM pixM;
-    private PixM bgAll;
     private double totalError;
     private int numCurves;
     private double errorDiff = 0.0;
-    private PixM globalInputBgAl;
     private PixM input;
-    private int stepMax = 60;
-    private int charMinWidth = 5;
+    private final int stepMax = 60;
+    private final int charMinWidth = 5;
 
     public ResolutionCharacter(BufferedImage read, String name) {
         this.read = read;
@@ -66,15 +64,18 @@ public class ResolutionCharacter extends Thread {
 
 
         File dir = new File("C:\\Users\\manue\\EmptyCanvasTest\\ocr");
-        File dirOut = new File("TestsOutput");
+        File dirOut = new File("C:\\Users\\manue\\EmptyCanvasTest\\ocr\\TestsOutput");
         if (dir.exists() && dir.isDirectory()) {
             for (File file : Objects.requireNonNull(dir.listFiles())) {
-                BufferedImage read = ImageIO.read(file);
-                String name = file.getName();
-                ResolutionCharacter resolutionCharacter = new ResolutionCharacter(read, name, dirOut);
+                if (!file.isDirectory() && file.isFile() && file.getName().toLowerCase(Locale.ROOT).endsWith(".jpg")) {
+                    BufferedImage read = ImageIO.read(file);
 
-                resolutionCharacter.start();
-                System.gc();
+                    String name = file.getName();
+                    ResolutionCharacter resolutionCharacter = new ResolutionCharacter(read, name, dirOut);
+
+                    resolutionCharacter.start();
+                    System.gc();
+                }
             }
         }
 
@@ -138,35 +139,7 @@ public class ResolutionCharacter extends Thread {
         if (!dirOut.exists() || !dirOut.isDirectory())
             dirOut.mkdirs();
 
-        int e = 1;
-
-        assert read != null;
-        pixM = input = new PixM(read);//PixM.getPixM(read, 750);
-        globalInputBgAl = pixM.copy().replaceColor(new double[]{0, 0, 0}, new double[]{1, 1, 1}, 0.7);
-        bgAll = globalInputBgAl;
-        /*
-        State[][] states = new State[pixM.getColumns()][pixM.getLines()];
-        for (int i = 0; i < pixM.getColumns() - step; i += step)
-            for (int j = 0; j < pixM.getLines() - step; j += step) {
-                PixM inputIJ = pixM.subImage(i, j, step, step);
-                PixM backgroundImageIJ = bgAll.subImage(i, j, step, step);
-
-                states[i][j] = new State(inputIJ, backgroundImageIJ, i, j, step);
-            }
-
-        for (int i = 0; i < pixM.getColumns() - step; i += step)
-            for (int j = 0; j < pixM.getLines() - step; j += step) {
-                states[i][j].currentCurves.add(
-                        new CourbeParametriquePolynomialeBezier(
-                                new Point3D[]{
-                                        FeatureLine.getFeatLine(
-                                                randomLine(), 0).multDot(Point3D.n(i + step / 2, j + step / 2, 0)),
-                                        FeatureLine.getFeatLine(
-                                                randomLine(), 1).multDot(Point3D.n(i + step / 2, j + step / 2, 0))}));
-
-
-            }
-*/
+        input = new PixM(read);
         PixM output = input.copy();
         final ITexture texture = new TextureCol(Color.BLACK);
         double error0 = 0;
@@ -175,8 +148,8 @@ public class ResolutionCharacter extends Thread {
         totalError = 0;
         numCurves = 0;
         errorDiff = 0;
-        for (int i = 0; i < pixM.getColumns() - step; i += step) {
-            for (int j = 0; j < pixM.getLines() - step; j += step) {
+        for (int i = 0; i < input.getColumns() - step; i += step) {
+            for (int j = 0; j < input.getLines() - step; j += step) {
                    /* double cE = 0.0;
                     SHAKE_SIZE = 50;
                     double currentError = states[i][j].computeError();
@@ -219,7 +192,7 @@ public class ResolutionCharacter extends Thread {
                     boolean firstPass = true;
                     boolean[] v = testRectIs(input, ii, ij, w, h, new double[]{1, 1, 1});
                     while (!fail && ii + w < input.getColumns() && ij + h < input.getLines() && (!(w > stepMax || h > stepMax)) && (!hBout || !wBout)
-                            && (v[YPLUS] &&v[XINVE] && !((hB && hBout))||(wB && wBout)) || firstPass) {
+                            && (v[YPLUS] && v[XINVE] && !((hB && hBout)) || (wB && wBout)) || firstPass) {
 
                         firstPass = false;
 
@@ -288,7 +261,7 @@ public class ResolutionCharacter extends Thread {
         }
 
 
-        output.plotCurve(new Rectangle(10, 10, output.getColumns()-20, output.getLines()-20), texture);
+        output.plotCurve(new Rectangle(10, 10, output.getColumns() - 20, output.getLines() - 20), texture);
 
         try {
             ImageIO.write(input.getImage(), "jpg",
@@ -308,10 +281,12 @@ public class ResolutionCharacter extends Thread {
 
         List<Character> allCharPossible = new ArrayList<>();
 
-        allCharPossible.addAll(ch);
-        allCharPossible.forEach(character -> {
-            if (!ch.contains(character))
-                allCharPossible.add(character);
+        cv.forEach(new Consumer<Character>() {
+            @Override
+            public void accept(Character character) {
+                if(ch.contains(character))
+                    allCharPossible.add(character);
+            }
         });
 
         return allCharPossible;

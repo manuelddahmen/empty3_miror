@@ -14,7 +14,7 @@ public class Rectangle extends ParametricCurve {
         this.y = y;
         this.width = width;
         this.height = height;
-        setIncrU(1/(4*width*height));
+        setIncrU(1./(4*width*height));
     }
 
     public Point3D calculerPoint3D(double t) {
