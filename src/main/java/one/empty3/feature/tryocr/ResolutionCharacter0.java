@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.*;
 import java.util.function.Consumer;
 
-public class ResolutionCharacter implements Runnable {
+public class ResolutionCharacter0 implements Runnable {
 
     public static final int XPLUS = 0;
     public static final int YPLUS = 1;
@@ -48,11 +48,11 @@ public class ResolutionCharacter implements Runnable {
     private PixM input;
     private PixM output;
 
-    public ResolutionCharacter(BufferedImage read, String name) {
+    public ResolutionCharacter0(BufferedImage read, String name) {
         this(read, name, new File("testsResults"));
     }
 
-    public ResolutionCharacter(BufferedImage read, String name, File dirOut) {
+    public ResolutionCharacter0(BufferedImage read, String name, File dirOut) {
         this.read = read;
         this.name = name;
         this.dirOut = dirOut;
@@ -171,19 +171,17 @@ public class ResolutionCharacter implements Runnable {
                     boolean wBout = false;
                     boolean firstPass = true;
                     boolean[] v = testRectIs(input, i, j, w, h, WHITE_DOUBLES);
-                    while (!fail && (i + w < input.getColumns() && j + h < input.getLines() &&
-                            (!(hBout && wBout))) || (w <= charMinWidth || h <= charMinWidth)) {
+                    while ((!fail && i + w < input.getColumns() && j + h < input.getLines() && !(hBout && wBout))) {
 
                         firstPass = false;
 
 
                         if (!v[XPLUS]) {
                             fail = true;
-                            continue;
+
                         }
                         if (!v[YINVE]) {
                             fail = true;
-                            continue;
                         }
 
 
@@ -191,24 +189,20 @@ public class ResolutionCharacter implements Runnable {
                             hBout = true;
                         } else if (!v[YPLUS] && hB) {
                             hBout = false;
-                            h++;
                         } else if (!v[YPLUS]) {
                             hB = true;
-                            h++;
-                        } else h++;
+                        }
+                        h++;
 
 
                         if (v[XINVE] && wB) {
                             wBout = true;
                         } else if (!v[XINVE] && wB) {
                             wBout = false;
-                            w++;
                         } else if (!v[XINVE]) {
                             wB = true;
-                            w++;
-                        } else
-                            w++;
-
+                        }
+                        w++;
 
                         if (h > stepMax || w > stepMax) {
                             fail = true;
@@ -229,7 +223,7 @@ public class ResolutionCharacter implements Runnable {
                     }
 
                     succeded = (hBout && wBout) || succeded;
-                    if (succeded && h >= charMinWidth && w >= charMinWidth && h < stepMax && w < stepMax &&
+                    if (succeded && h >= charMinWidth && w >= charMinWidth && h<stepMax && w<stepMax &&
                             Arrays.equals(testRectIs(input, i, j, w, h, WHITE_DOUBLES), new boolean[]{true, true, true, true})) {
                         Rectangle rectangle = new Rectangle(i, j, w, h);
                         List<Character> candidates = recognize(input, i, j, w, h);
@@ -292,7 +286,7 @@ public class ResolutionCharacter implements Runnable {
             if (arrayDiff(input.getValues(i, y + h), color) > DIFF) w0h1w2h3[2] = false;
         w0h1w2h3[3] = true;
         for (j = y + h; j >= y; j--)
-            if (arrayDiff(input.getValues(x, j), color) > DIFF) w0h1w2h3[3] = false;
+            if (arrayDiff(input.getValues(x + w, j), color) > DIFF) w0h1w2h3[3] = false;
         return w0h1w2h3;
     }
 
