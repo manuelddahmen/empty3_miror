@@ -34,8 +34,8 @@ public class ResolutionCharacter extends Thread {
     private static final int CHARS = 1;
     private static int SHAKE_SIZE = 20;
     final int epochs = 100;
-    private final BufferedImage read;
-    private final String name;
+    private BufferedImage read;
+    private String name;
     private final File dirOut;
     int step = 1;// Searched Characters size.
     private double dim = 14;
@@ -48,10 +48,7 @@ public class ResolutionCharacter extends Thread {
     private final int charMinWidth = 5;
 
     public ResolutionCharacter(BufferedImage read, String name) {
-        this.read = read;
-        this.name = name;
-        this.dirOut = new File("testsResults");
-
+        this(read, name, new File("testsResults"));
     }
 
     public ResolutionCharacter(BufferedImage read, String name, File dirOut) {
@@ -71,9 +68,20 @@ public class ResolutionCharacter extends Thread {
                     BufferedImage read = ImageIO.read(file);
 
                     String name = file.getName();
+
+
+                    System.out.println("ResolutionCharacter : " + name);
                     ResolutionCharacter resolutionCharacter = new ResolutionCharacter(read, name, dirOut);
 
                     resolutionCharacter.start();
+
+                    try {
+                        resolutionCharacter.join();
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+
+
                     System.gc();
                 }
             }
@@ -137,47 +145,16 @@ public class ResolutionCharacter extends Thread {
 
     public void run() {
         if (!dirOut.exists() || !dirOut.isDirectory())
-            dirOut.mkdirs();
+            dirOut.mkdir();
 
         input = new PixM(read);
         PixM output = input.copy();
+
+        System.out.println("Image size: "+output.getColumns()+", "+ output.getLines());
+
         final ITexture texture = new TextureCol(Color.BLACK);
-        double error0 = 0;
-        totalError = 0;
-        double erreurMoyenne = 1.0;
-        totalError = 0;
-        numCurves = 0;
-        errorDiff = 0;
         for (int i = 0; i < input.getColumns() - step; i += step) {
             for (int j = 0; j < input.getLines() - step; j += step) {
-                   /* double cE = 0.0;
-                    SHAKE_SIZE = 50;
-                    double currentError = states[i][j].computeError();
-                    states[i][j].currentError = states[i][j].computeError();
-                    for (int s = 0; s < SHAKE_SIZE; s++) {
-                        if (erreurMoyenne < states[i][j].currentError) {
-                            State states1 = states[i][j].copy();
-                            int operation = (int) (Math.random() * 4);
-                            shakeCurves(states1, operation);
-                            if (states1.computeError() < states[i][j].computeError()) {
-                                State tmp = states[i][j];
-                                states1.previousState = tmp;
-                                states[i][j] = states1;
-                            } else {
-                                // NO MODIFICATION OR WORSE MODIFICATION
-                            }
-                        }
-                    }
-                    double newCurrentError = states[i][j].computeError();
-                    cE = currentError;
-
-                    numCurves += states[i][j].currentCurves.size();
-                    states[i][j].lastError = states[i][j].currentError;
-                    states[i][j].currentError = currentError;
-
-                    totalError += currentError;
-                    errorDiff += (newCurrentError-currentError);
-                */
                 if (input.luminance(i, j) > 0.7) {
                     int w, h, ii, ij;
                     ii = i;
@@ -261,7 +238,7 @@ public class ResolutionCharacter extends Thread {
         }
 
 
-        output.plotCurve(new Rectangle(10, 10, output.getColumns() - 20, output.getLines() - 20), texture);
+        //output.plotCurve(new Rectangle(10, 10, output.getColumns() - 20, output.getLines() - 20), texture);
 
         try {
             ImageIO.write(input.getImage(), "jpg",
@@ -281,6 +258,8 @@ public class ResolutionCharacter extends Thread {
 
         List<Character> allCharPossible = new ArrayList<>();
 
+
+        allCharPossible.add('*');
         cv.forEach(new Consumer<Character>() {
             @Override
             public void accept(Character character) {
@@ -358,7 +337,7 @@ public class ResolutionCharacter extends Thread {
     }
 
     /***
-     * OCR: combien on voit d'inversion.
+     * OCR: combien on voit d'inversion, de changements.
      * A (0,1) (1,2)+ (2, 1) (3,2)
      * a (0,2) (1,2)+ (2,1) (3,2)
      */
