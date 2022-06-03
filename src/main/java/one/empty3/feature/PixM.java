@@ -182,7 +182,7 @@ public class PixM extends M {
 
         float[] rgba = new float[getCompCount()];
         for (double t = 0; t < 1.0; t += INCR_T) {
-            rgba = new Color(curve.texture().getColorAt(t, 0.5)).getColorComponents(rgba);
+            rgba = new Color((texture!=null?texture:curve.texture()).getColorAt(t, 0.5)).getColorComponents(rgba);
             Point3D p = curve.calculerPoint3D(t);
             for (int c = 0; c < 3; c++) {
                 setCompNo(c);

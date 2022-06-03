@@ -144,10 +144,7 @@ public class ResolutionCharacter extends Thread {
         pixM = input = new PixM(read);//PixM.getPixM(read, 750);
         globalInputBgAl = pixM.copy().replaceColor(new double[]{0, 0, 0}, new double[]{1, 1, 1}, 0.7);
         bgAll = globalInputBgAl;
-
-
-        System.out.println(input.getCompCount());
-/*
+        /*
         State[][] states = new State[pixM.getColumns()][pixM.getLines()];
         for (int i = 0; i < pixM.getColumns() - step; i += step)
             for (int j = 0; j < pixM.getLines() - step; j += step) {
@@ -170,8 +167,8 @@ public class ResolutionCharacter extends Thread {
 
             }
 */
-        PixM globalOutputOrig = input.copy();
-        ITexture texture = new TextureCol(Color.BLACK);
+        PixM output = input.copy();
+        final ITexture texture = new TextureCol(Color.BLACK);
         double error0 = 0;
         totalError = 0;
         double erreurMoyenne = 1.0;
@@ -219,8 +216,15 @@ public class ResolutionCharacter extends Thread {
                     boolean fail = false;
                     boolean hBout = false;
                     boolean wBout = false;
-                    while (!fail && ii + w < input.getColumns() && ij + h < input.getLines() && (!(w > stepMax || h > stepMax)) && (!hBout || !wBout)) {
-                        boolean[] v = testRectIs(input, ii, ij, w, h, new double[]{1, 1, 1});
+                    boolean firstPass = true;
+                    boolean[] v = testRectIs(input, ii, ij, w, h, new double[]{1, 1, 1});
+                    while (!fail && ii + w < input.getColumns() && ij + h < input.getLines() && (!(w > stepMax || h > stepMax)) && (!hBout || !wBout)
+                            && (v[YPLUS] &&v[XINVE] && !((hB && hBout))||(wB && wBout)) || firstPass) {
+
+                        firstPass = false;
+
+                        v = testRectIs(input, ii, ij, w, h, new double[]{1, 1, 1});
+
                         if (!v[XPLUS]) {
                             fail = true;
 
@@ -236,7 +240,8 @@ public class ResolutionCharacter extends Thread {
                             h++;
                         } else if (!v[YPLUS] && !hB) {
                             hB = true;
-                        } else if (v[YPLUS] && !hB) h++;
+                        } else
+                            h++;
 
                         if (v[XINVE] && wB) {
                             wBout = true;
@@ -244,7 +249,8 @@ public class ResolutionCharacter extends Thread {
                             w++;
                         } else if (!v[XINVE] && !wB) {
                             wB = true;
-                        } else if (v[XINVE] && !wB) w++;
+                        } else
+                            w++;
 
                             /*if (hBout && !wBout)
                                 w++;
@@ -269,35 +275,36 @@ public class ResolutionCharacter extends Thread {
                     if (succeded && h >= charMinWidth && w >= charMinWidth &&
                             Arrays.equals(testRectIs(input, ii, ij, w, h, new double[]{1, 1, 1}), new boolean[]{true, true, true, true})) {
                         Rectangle rectangle = new Rectangle(ii, ij, w, h);
-                        rectangle.texture(texture);
-                        rectangle.setIncrU(1. / (2 * w + 2 * h));
                         List<Character> candidates = recognize(input, i, j, w, h);
                         if (candidates.size() > 0) {
-                            System.out.printf("In %s, Rectangle = (%d,%d,%d,%d) \t\tCandidates: ", name, i, j, w, h);
+                            System.out.printf("In %s, Rectangle = (%d,%d,%d,%d) \t\tCandidates: ", name, ii, ij, w, h);
                             candidates.forEach(System.out::print);
                             System.out.println();
-                            globalOutputOrig.plotCurve(rectangle, texture);
+                            output.plotCurve(rectangle, texture);
                         }
                     }
                 }
             }
         }
 
+
+        output.plotCurve(new Rectangle(10, 10, output.getColumns()-20, output.getLines()-20), texture);
+
         try {
             ImageIO.write(input.getImage(), "jpg",
                     new File(dirOut + File.separator + name.replace(' ', '_').replace(".jpg", "INPUT.jpg")));
-            ImageIO.write(globalOutputOrig.getImage(), "jpg",
+            ImageIO.write(output.getImage(), "jpg",
                     new File(dirOut + File.separator + name.replace(' ', '_').replace(".jpg", "OUTPUT.jpg")));
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
     }
 
-    private List<Character> recognize(PixM globalOutputOrig, int i, int j, int w, int h) {
+    private List<Character> recognize(PixM input, int i, int j, int w, int h) {
         if (System.currentTimeMillis() % 100 == 0)
             System.gc();
-        List<Character> ch = recognizeH(globalOutputOrig, i, j, w, h);
-        List<Character> cv = recognizeV(globalOutputOrig, i, j, w, h);
+        List<Character> ch = recognizeH(input, i, j, w, h);
+        List<Character> cv = recognizeV(input, i, j, w, h);
 
         List<Character> allCharPossible = new ArrayList<>();
 
@@ -381,61 +388,61 @@ public class ResolutionCharacter extends Thread {
      * a (0,2) (1,2)+ (2,1) (3,2)
      */
     public Map<Character, Integer[]> patternsV() {
-        Map<Character, Integer[]> mapcharsAlphabetLines = new HashMap<>();
-        mapcharsAlphabetLines.put('A', new Integer[]{1, 2, 1, 2});
-        mapcharsAlphabetLines.put('a', new Integer[]{2, 2, 1, 2});
-        mapcharsAlphabetLines.put('B', new Integer[]{1, 2, 1, 2, 1});
-        mapcharsAlphabetLines.put('b', new Integer[]{1, 2, 2, 1});
-        mapcharsAlphabetLines.put('C', new Integer[]{1, 2, 1, 2, 1});
-        mapcharsAlphabetLines.put('c', new Integer[]{1, 2, 1, 2, 1});
-        mapcharsAlphabetLines.put('D', new Integer[]{1, 2, 1});
-        mapcharsAlphabetLines.put('d', new Integer[]{1, 2, 1, 2});
-        mapcharsAlphabetLines.put('E', new Integer[]{1});
-        mapcharsAlphabetLines.put('e', new Integer[]{1, 2, 1, 2});
-        mapcharsAlphabetLines.put('F', new Integer[]{1});
-        mapcharsAlphabetLines.put('f', new Integer[]{1});
-        mapcharsAlphabetLines.put('G', new Integer[]{1, 2, 1, 2, 1});
-        mapcharsAlphabetLines.put('g', new Integer[]{1, 2, 1, 1, 2, 1});
-        mapcharsAlphabetLines.put('H', new Integer[]{2, 1, 2});
-        mapcharsAlphabetLines.put('h', new Integer[]{1, 2, 1, 2});
-        mapcharsAlphabetLines.put('I', new Integer[]{1});
-        mapcharsAlphabetLines.put('i', new Integer[]{1, 0, 1});
-        mapcharsAlphabetLines.put('J', new Integer[]{1, 2, 1});
-        mapcharsAlphabetLines.put('j', new Integer[]{1, 0, 1, 2, 1});
-        mapcharsAlphabetLines.put('K', new Integer[]{2, 1, 2});
-        mapcharsAlphabetLines.put('k', new Integer[]{2, 1, 2});
-        mapcharsAlphabetLines.put('L', new Integer[]{1});
-        mapcharsAlphabetLines.put('l', new Integer[]{1});
-        mapcharsAlphabetLines.put('M', new Integer[]{2, 3, 2});
-        mapcharsAlphabetLines.put('m', new Integer[]{2, 3});
-        mapcharsAlphabetLines.put('N', new Integer[]{2});
-        mapcharsAlphabetLines.put('n', new Integer[]{2, 1, 2});
-        mapcharsAlphabetLines.put('O', new Integer[]{1, 2, 1});
-        mapcharsAlphabetLines.put('o', new Integer[]{1, 2, 1});
-        mapcharsAlphabetLines.put('P', new Integer[]{1, 2, 1});
-        mapcharsAlphabetLines.put('p', new Integer[]{2, 1, 2, 1});
-        mapcharsAlphabetLines.put('Q', new Integer[]{1, 2, 1});
-        mapcharsAlphabetLines.put('q', new Integer[]{2, 1, 2, 1});
-        mapcharsAlphabetLines.put('R', new Integer[]{1, 2, 1, 2});
-        mapcharsAlphabetLines.put('r', new Integer[]{2, 1, 2, 1});
-        mapcharsAlphabetLines.put('S', new Integer[]{1, 2, 1, 2, 1});
-        mapcharsAlphabetLines.put('s', new Integer[]{1, 2, 1, 2, 1});
-        mapcharsAlphabetLines.put('T', new Integer[]{1});
-        mapcharsAlphabetLines.put('t', new Integer[]{1});
-        mapcharsAlphabetLines.put('U', new Integer[]{2, 1});
-        mapcharsAlphabetLines.put('u', new Integer[]{2, 1});
-        mapcharsAlphabetLines.put('V', new Integer[]{2, 1});
-        mapcharsAlphabetLines.put('v', new Integer[]{2, 1});
-        mapcharsAlphabetLines.put('W', new Integer[]{3, 4, 2});
-        mapcharsAlphabetLines.put('w', new Integer[]{3, 4, 2});
-        mapcharsAlphabetLines.put('X', new Integer[]{2, 1, 2});
-        mapcharsAlphabetLines.put('x', new Integer[]{2, 1, 2});
-        mapcharsAlphabetLines.put('Y', new Integer[]{2, 1});
-        mapcharsAlphabetLines.put('y', new Integer[]{2, 1});
-        mapcharsAlphabetLines.put('Z', new Integer[]{1});
-        mapcharsAlphabetLines.put('z', new Integer[]{1});
+        Map<Character, Integer[]> mapCharsAlphabetLines = new HashMap<>();
+        mapCharsAlphabetLines.put('A', new Integer[]{1, 2, 1, 2});
+        mapCharsAlphabetLines.put('a', new Integer[]{2, 2, 1, 2});
+        mapCharsAlphabetLines.put('B', new Integer[]{1, 2, 1, 2, 1});
+        mapCharsAlphabetLines.put('b', new Integer[]{1, 2, 2, 1});
+        mapCharsAlphabetLines.put('C', new Integer[]{1, 2, 1, 2, 1});
+        mapCharsAlphabetLines.put('c', new Integer[]{1, 2, 1, 2, 1});
+        mapCharsAlphabetLines.put('D', new Integer[]{1, 2, 1});
+        mapCharsAlphabetLines.put('d', new Integer[]{1, 2, 1, 2});
+        mapCharsAlphabetLines.put('E', new Integer[]{1});
+        mapCharsAlphabetLines.put('e', new Integer[]{1, 2, 1, 2});
+        mapCharsAlphabetLines.put('F', new Integer[]{1});
+        mapCharsAlphabetLines.put('f', new Integer[]{1});
+        mapCharsAlphabetLines.put('G', new Integer[]{1, 2, 1, 2, 1});
+        mapCharsAlphabetLines.put('g', new Integer[]{1, 2, 1, 1, 2, 1});
+        mapCharsAlphabetLines.put('H', new Integer[]{2, 1, 2});
+        mapCharsAlphabetLines.put('h', new Integer[]{1, 2, 1, 2});
+        mapCharsAlphabetLines.put('I', new Integer[]{1});
+        mapCharsAlphabetLines.put('i', new Integer[]{1, 0, 1});
+        mapCharsAlphabetLines.put('J', new Integer[]{1, 2, 1});
+        mapCharsAlphabetLines.put('j', new Integer[]{1, 0, 1, 2, 1});
+        mapCharsAlphabetLines.put('K', new Integer[]{2, 1, 2});
+        mapCharsAlphabetLines.put('k', new Integer[]{2, 1, 2});
+        mapCharsAlphabetLines.put('L', new Integer[]{1});
+        mapCharsAlphabetLines.put('l', new Integer[]{1});
+        mapCharsAlphabetLines.put('M', new Integer[]{2, 3, 2});
+        mapCharsAlphabetLines.put('m', new Integer[]{2, 3});
+        mapCharsAlphabetLines.put('N', new Integer[]{2});
+        mapCharsAlphabetLines.put('n', new Integer[]{2, 1, 2});
+        mapCharsAlphabetLines.put('O', new Integer[]{1, 2, 1});
+        mapCharsAlphabetLines.put('o', new Integer[]{1, 2, 1});
+        mapCharsAlphabetLines.put('P', new Integer[]{1, 2, 1});
+        mapCharsAlphabetLines.put('p', new Integer[]{2, 1, 2, 1});
+        mapCharsAlphabetLines.put('Q', new Integer[]{1, 2, 1});
+        mapCharsAlphabetLines.put('q', new Integer[]{2, 1, 2, 1});
+        mapCharsAlphabetLines.put('R', new Integer[]{1, 2, 1, 2});
+        mapCharsAlphabetLines.put('r', new Integer[]{2, 1, 2, 1});
+        mapCharsAlphabetLines.put('S', new Integer[]{1, 2, 1, 2, 1});
+        mapCharsAlphabetLines.put('s', new Integer[]{1, 2, 1, 2, 1});
+        mapCharsAlphabetLines.put('T', new Integer[]{1});
+        mapCharsAlphabetLines.put('t', new Integer[]{1});
+        mapCharsAlphabetLines.put('U', new Integer[]{2, 1});
+        mapCharsAlphabetLines.put('u', new Integer[]{2, 1});
+        mapCharsAlphabetLines.put('V', new Integer[]{2, 1});
+        mapCharsAlphabetLines.put('v', new Integer[]{2, 1});
+        mapCharsAlphabetLines.put('W', new Integer[]{3, 4, 2});
+        mapCharsAlphabetLines.put('w', new Integer[]{3, 4, 2});
+        mapCharsAlphabetLines.put('X', new Integer[]{2, 1, 2});
+        mapCharsAlphabetLines.put('x', new Integer[]{2, 1, 2});
+        mapCharsAlphabetLines.put('Y', new Integer[]{2, 1});
+        mapCharsAlphabetLines.put('y', new Integer[]{2, 1});
+        mapCharsAlphabetLines.put('Z', new Integer[]{1});
+        mapCharsAlphabetLines.put('z', new Integer[]{1});
 
-        return mapcharsAlphabetLines;
+        return mapCharsAlphabetLines;
     }
 
     /***
@@ -444,61 +451,61 @@ public class ResolutionCharacter extends Thread {
      * a (0,2) (1,2)+ (2,1) (3,2)
      */
     public Map<Character, Integer[]> patternsH() {
-        Map<Character, Integer[]> mapcharsAlphabetLines = new HashMap<>();
-        mapcharsAlphabetLines.put('A', new Integer[]{1, 2, 1});
-        mapcharsAlphabetLines.put('a', new Integer[]{2, 3, 1});
-        mapcharsAlphabetLines.put('B', new Integer[]{1, 3, 1, 2});
-        mapcharsAlphabetLines.put('b', new Integer[]{1, 2, 1});
-        mapcharsAlphabetLines.put('C', new Integer[]{1, 2});
-        mapcharsAlphabetLines.put('c', new Integer[]{1, 2});
-        mapcharsAlphabetLines.put('D', new Integer[]{1, 2, 1});
-        mapcharsAlphabetLines.put('d', new Integer[]{1, 2, 1});
-        mapcharsAlphabetLines.put('E', new Integer[]{1, 3});
-        mapcharsAlphabetLines.put('e', new Integer[]{1, 3, 2});
-        mapcharsAlphabetLines.put('F', new Integer[]{1, 2});
-        mapcharsAlphabetLines.put('f', new Integer[]{1, 2});
-        mapcharsAlphabetLines.put('G', new Integer[]{1, 2, 3, 2});
-        mapcharsAlphabetLines.put('g', new Integer[]{1, 3, 1});
-        mapcharsAlphabetLines.put('H', new Integer[]{1});
-        mapcharsAlphabetLines.put('h', new Integer[]{1});
-        mapcharsAlphabetLines.put('I', new Integer[]{2, 1, 2});
-        mapcharsAlphabetLines.put('i', new Integer[]{1, 2, 1});
-        mapcharsAlphabetLines.put('J', new Integer[]{1, 2, 1});
-        mapcharsAlphabetLines.put('j', new Integer[]{1, 2});
-        mapcharsAlphabetLines.put('K', new Integer[]{1, 2});
-        mapcharsAlphabetLines.put('k', new Integer[]{1, 2});
-        mapcharsAlphabetLines.put('L', new Integer[]{1});
-        mapcharsAlphabetLines.put('l', new Integer[]{1});
-        mapcharsAlphabetLines.put('M', new Integer[]{1});
-        mapcharsAlphabetLines.put('m', new Integer[]{1});
-        mapcharsAlphabetLines.put('N', new Integer[]{1});
-        mapcharsAlphabetLines.put('n', new Integer[]{1});
-        mapcharsAlphabetLines.put('O', new Integer[]{1, 2, 1});
-        mapcharsAlphabetLines.put('o', new Integer[]{1, 2, 1});
-        mapcharsAlphabetLines.put('P', new Integer[]{1, 2, 1});
-        mapcharsAlphabetLines.put('p', new Integer[]{2, 1, 2, 1});
-        mapcharsAlphabetLines.put('Q', new Integer[]{1, 2, 3});
-        mapcharsAlphabetLines.put('q', new Integer[]{2, 1, 1});
-        mapcharsAlphabetLines.put('R', new Integer[]{1, 2, 3, 2});
-        mapcharsAlphabetLines.put('r', new Integer[]{1});
-        mapcharsAlphabetLines.put('S', new Integer[]{2, 3, 2});
-        mapcharsAlphabetLines.put('s', new Integer[]{2, 3, 2});
-        mapcharsAlphabetLines.put('T', new Integer[]{1});
-        mapcharsAlphabetLines.put('t', new Integer[]{1, 2});
-        mapcharsAlphabetLines.put('U', new Integer[]{1});
-        mapcharsAlphabetLines.put('u', new Integer[]{1});
-        mapcharsAlphabetLines.put('V', new Integer[]{1});
-        mapcharsAlphabetLines.put('v', new Integer[]{1});
-        mapcharsAlphabetLines.put('W', new Integer[]{1});
-        mapcharsAlphabetLines.put('w', new Integer[]{1});
-        mapcharsAlphabetLines.put('X', new Integer[]{2, 1, 2});
-        mapcharsAlphabetLines.put('x', new Integer[]{2, 1, 2});
-        mapcharsAlphabetLines.put('Y', new Integer[]{1});
-        mapcharsAlphabetLines.put('y', new Integer[]{1});
-        mapcharsAlphabetLines.put('Z', new Integer[]{2, 3, 2});
-        mapcharsAlphabetLines.put('z', new Integer[]{2, 3, 2});
+        Map<Character, Integer[]> mapCharsAlphabetLines = new HashMap<>();
+        mapCharsAlphabetLines.put('A', new Integer[]{1, 2, 1});
+        mapCharsAlphabetLines.put('a', new Integer[]{2, 3, 1});
+        mapCharsAlphabetLines.put('B', new Integer[]{1, 3, 1, 2});
+        mapCharsAlphabetLines.put('b', new Integer[]{1, 2, 1});
+        mapCharsAlphabetLines.put('C', new Integer[]{1, 2});
+        mapCharsAlphabetLines.put('c', new Integer[]{1, 2});
+        mapCharsAlphabetLines.put('D', new Integer[]{1, 2, 1});
+        mapCharsAlphabetLines.put('d', new Integer[]{1, 2, 1});
+        mapCharsAlphabetLines.put('E', new Integer[]{1, 3});
+        mapCharsAlphabetLines.put('e', new Integer[]{1, 3, 2});
+        mapCharsAlphabetLines.put('F', new Integer[]{1, 2});
+        mapCharsAlphabetLines.put('f', new Integer[]{1, 2});
+        mapCharsAlphabetLines.put('G', new Integer[]{1, 2, 3, 2});
+        mapCharsAlphabetLines.put('g', new Integer[]{1, 3, 1});
+        mapCharsAlphabetLines.put('H', new Integer[]{1});
+        mapCharsAlphabetLines.put('h', new Integer[]{1});
+        mapCharsAlphabetLines.put('I', new Integer[]{2, 1, 2});
+        mapCharsAlphabetLines.put('i', new Integer[]{1, 2, 1});
+        mapCharsAlphabetLines.put('J', new Integer[]{1, 2, 1});
+        mapCharsAlphabetLines.put('j', new Integer[]{1, 2});
+        mapCharsAlphabetLines.put('K', new Integer[]{1, 2});
+        mapCharsAlphabetLines.put('k', new Integer[]{1, 2});
+        mapCharsAlphabetLines.put('L', new Integer[]{1});
+        mapCharsAlphabetLines.put('l', new Integer[]{1});
+        mapCharsAlphabetLines.put('M', new Integer[]{1});
+        mapCharsAlphabetLines.put('m', new Integer[]{1});
+        mapCharsAlphabetLines.put('N', new Integer[]{1});
+        mapCharsAlphabetLines.put('n', new Integer[]{1});
+        mapCharsAlphabetLines.put('O', new Integer[]{1, 2, 1});
+        mapCharsAlphabetLines.put('o', new Integer[]{1, 2, 1});
+        mapCharsAlphabetLines.put('P', new Integer[]{1, 2, 1});
+        mapCharsAlphabetLines.put('p', new Integer[]{2, 1, 2, 1});
+        mapCharsAlphabetLines.put('Q', new Integer[]{1, 2, 3});
+        mapCharsAlphabetLines.put('q', new Integer[]{2, 1, 1});
+        mapCharsAlphabetLines.put('R', new Integer[]{1, 2, 3, 2});
+        mapCharsAlphabetLines.put('r', new Integer[]{1});
+        mapCharsAlphabetLines.put('S', new Integer[]{2, 3, 2});
+        mapCharsAlphabetLines.put('s', new Integer[]{2, 3, 2});
+        mapCharsAlphabetLines.put('T', new Integer[]{1});
+        mapCharsAlphabetLines.put('t', new Integer[]{1, 2});
+        mapCharsAlphabetLines.put('U', new Integer[]{1});
+        mapCharsAlphabetLines.put('u', new Integer[]{1});
+        mapCharsAlphabetLines.put('V', new Integer[]{1});
+        mapCharsAlphabetLines.put('v', new Integer[]{1});
+        mapCharsAlphabetLines.put('W', new Integer[]{1});
+        mapCharsAlphabetLines.put('w', new Integer[]{1});
+        mapCharsAlphabetLines.put('X', new Integer[]{2, 1, 2});
+        mapCharsAlphabetLines.put('x', new Integer[]{2, 1, 2});
+        mapCharsAlphabetLines.put('Y', new Integer[]{1});
+        mapCharsAlphabetLines.put('y', new Integer[]{1});
+        mapCharsAlphabetLines.put('Z', new Integer[]{2, 3, 2});
+        mapCharsAlphabetLines.put('z', new Integer[]{2, 3, 2});
 
-        return mapcharsAlphabetLines;
+        return mapCharsAlphabetLines;
     }
 
     public List<Character> recognizeV(PixM mat, int x, int y, int w, int h) {
