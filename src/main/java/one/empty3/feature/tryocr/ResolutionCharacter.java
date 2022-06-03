@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.*;
 import java.util.function.Consumer;
 
-public class ResolutionCharacter extends Thread {
+public class ResolutionCharacter implements Runnable {
 
     public static final int XPLUS = 0;
     public static final int YPLUS = 1;
@@ -33,9 +33,10 @@ public class ResolutionCharacter extends Thread {
     private static final int BLANK = 0;
     private static final int CHARS = 1;
     private static int SHAKE_SIZE = 20;
+    private double [] WHITE_DOUBLES = new double[] {1,1,1};
     final int epochs = 100;
     private final File dirOut;
-    private final int stepMax = 60;
+    private final int stepMax = 120;
     private final int charMinWidth = 5;
     int step = 1;// Searched Characters size.
     private BufferedImage read;
@@ -45,6 +46,7 @@ public class ResolutionCharacter extends Thread {
     private int numCurves;
     private double errorDiff = 0.0;
     private PixM input;
+    private PixM output;
 
     public ResolutionCharacter(BufferedImage read, String name) {
         this(read, name, new File("testsResults"));
@@ -70,12 +72,14 @@ public class ResolutionCharacter extends Thread {
 
 
                     System.out.println("ResolutionCharacter : " + name);
+
                     ResolutionCharacter resolutionCharacter = new ResolutionCharacter(read, name, dirOut);
 
-                    resolutionCharacter.start();
+                    Thread thread = new Thread(resolutionCharacter);
+                    thread.start();
 
                     try {
-                        resolutionCharacter.join();
+                        thread.join();
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
@@ -147,32 +151,31 @@ public class ResolutionCharacter extends Thread {
             dirOut.mkdir();
 
         input = new PixM(read);
-        PixM output = input.copy();
+        output = input.copy();
 
         System.out.println("Image size: " + output.getColumns() + ", " + output.getLines());
 
         final ITexture texture = new TextureCol(Color.BLACK);
-        for (int i = 0; i < input.getColumns() - step; i += step) {
-            for (int j = 0; j < input.getLines() - step; j += step) {
+
+        for (int j = 0; j < input.getLines() - step; j += step) {
+            if (j % (input.getLines() / 10) == 0)
+                System.out.printf("%f, Image %s\n", 1.0 * j / input.getLines(),  name);
+            for (int i = 0; i < input.getColumns() - step; i += step) {
                 if (input.luminance(i, j) > 0.7) {
-                    int w, h, ii, ij;
-                    ii = i;
-                    ij = j;
-                    w = charMinWidth;
-                    h = charMinWidth;
+                    int w = charMinWidth;
+                    int h = charMinWidth;
                     boolean wB = false;
                     boolean hB = false;
                     boolean fail = false;
                     boolean hBout = false;
                     boolean wBout = false;
                     boolean firstPass = true;
-                    boolean[] v = testRectIs(input, ii, ij, w, h, new double[]{1, 1, 1});
-                    while ((!fail && ii + w < input.getColumns() && ij + h < input.getLines() && !((hB && hBout) && wB && wBout))
-                            || firstPass) {
+                    boolean[] v = testRectIs(input, i, j, w, h, WHITE_DOUBLES);
+                    while ((!fail && i + w < input.getColumns() && j + h < input.getLines() && !(hBout && wBout))) {
 
                         firstPass = false;
 
-                        v = testRectIs(input, ii, ij, w, h, new double[]{1, 1, 1});
+                        v = testRectIs(input, i, j, w, h, WHITE_DOUBLES);
 
                         if (!v[XPLUS]) {
                             fail = true;
@@ -190,7 +193,7 @@ public class ResolutionCharacter extends Thread {
                         } else if (!v[YPLUS]) {
                             hB = true;
                             h++;
-                        }else  h++;
+                        } else h++;
 
 
                         if (v[XINVE] && wB) {
@@ -200,7 +203,7 @@ public class ResolutionCharacter extends Thread {
                         } else if (!v[XINVE]) {
                             wB = true;
                             h++;
-                        }else
+                        } else
                             w++;
 
                         if (hBout && !wBout)
@@ -214,11 +217,11 @@ public class ResolutionCharacter extends Thread {
                     }
                     boolean succeded = false;
                     if (fail) {
-                        if (Arrays.equals(testRectIs(input, ii, ij, w - 1, h, new double[]{1, 1, 1}), new boolean[]{true, true, true, true})) {
+                        if (Arrays.equals(testRectIs(input, i, j, w - 1, h, WHITE_DOUBLES), new boolean[]{true, true, true, true})) {
                             w = w - 1;
                             succeded = true;
                         }
-                        if (Arrays.equals(testRectIs(input, ii, ij, w, h - 1, new double[]{1, 1, 1}), new boolean[]{true, true, true, true})) {
+                        if (Arrays.equals(testRectIs(input, i, j, w, h - 1, WHITE_DOUBLES), new boolean[]{true, true, true, true})) {
                             h = h - 1;
                             succeded = true;
                         }
@@ -226,11 +229,11 @@ public class ResolutionCharacter extends Thread {
 
                     succeded = (hBout && wBout) || succeded;
                     if (succeded && h >= charMinWidth && w >= charMinWidth &&
-                            Arrays.equals(testRectIs(input, ii, ij, w, h, new double[]{1, 1, 1}), new boolean[]{true, true, true, true})) {
-                        Rectangle rectangle = new Rectangle(ii, ij, w, h);
+                            Arrays.equals(testRectIs(input, i, j, w, h, WHITE_DOUBLES), new boolean[]{true, true, true, true})) {
+                        Rectangle rectangle = new Rectangle(i, j, w, h);
                         List<Character> candidates = recognize(input, i, j, w, h);
                         if (candidates.size() > 0) {
-                            System.out.printf("In %s, Rectangle = (%d,%d,%d,%d) \t\tCandidates: ", name, ii, ij, w, h);
+                            System.out.printf("In %s, Rectangle = (%d,%d,%d,%d) \t\tCandidates: ", name, i, j, w, h);
                             candidates.forEach(System.out::print);
                             System.out.println();
                             output.plotCurve(rectangle, texture);
@@ -239,9 +242,7 @@ public class ResolutionCharacter extends Thread {
                 }
             }
         }
-
-
-        //output.plotCurve(new Rectangle(10, 10, output.getColumns() - 20, output.getLines() - 20), texture);
+        output.plotCurve(new Rectangle(10, 10, output.getColumns() - 20, output.getLines() - 20), texture);
 
         try {
             ImageIO.write(input.getImage(), "jpg",
@@ -276,23 +277,29 @@ public class ResolutionCharacter extends Thread {
     }
 
     private boolean[] testRectIs(PixM input, int x, int y, int w, int h, double[] color) {
+        double DIFF = 0.4;
         boolean[] w0h1w2h3 = new boolean[4];
         int i, j;
         w0h1w2h3[0] = true;
         for (i = x; i <= x + w; i++)
-            if (input.getP(i, y).moins(new Point3D(color)).norme() < 0.4) w0h1w2h3[0] = false;
+            if (arrayDiff(input.getValues(i, y),color) < DIFF) w0h1w2h3[0] = false;
         w0h1w2h3[1] = true;
         for (j = y; j <= y + h; j++)
-            if (input.getP(x, j).moins(new Point3D(color)).norme() < 0.4) w0h1w2h3[1] = false;
+            if (arrayDiff(input.getValues(x, j),color) < DIFF) w0h1w2h3[1] = false;
         w0h1w2h3[2] = true;
         for (i = x + w; i >= x; i--)
-            if (input.getP(i, y + h).moins(new Point3D(color)).norme() < 0.4) w0h1w2h3[2] = false;
+            if (arrayDiff(input.getValues(i, y+h),color) < DIFF) w0h1w2h3[2] = false;
         w0h1w2h3[3] = true;
         for (j = y + h; j >= y; j--)
-            if (input.getP(x + w, j).moins(new Point3D(color)).norme() < 0.4) w0h1w2h3[3] = false;
+            if (arrayDiff(input.getValues(x+w, j),color) < DIFF) w0h1w2h3[3] = false;
         return w0h1w2h3;
     }
-
+    public double arrayDiff(double[] values, double [] color) {
+        double v = 0.0;
+        for(int i = 0; i<3; i++)
+            v +=(values[i]-color[i])*(values[i]-color[i]);
+        return Math.sqrt(v);
+    }
     private void shakeCurves(State state, int choice) {
         switch (choice) {
             case ADD_POINT_TO_RANDOM_CURVE:
