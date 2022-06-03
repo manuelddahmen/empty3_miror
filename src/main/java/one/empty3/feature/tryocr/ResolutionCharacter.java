@@ -171,6 +171,20 @@ public class ResolutionCharacter implements Runnable {
                     boolean wBout = false;
                     boolean firstPass = true;
                     boolean[] v = testRectIs(input, i, j, w, h, WHITE_DOUBLES);
+                    // La condition doit s'arrêter après les points quand les bords droits
+                    // et bas ont augmenté de manière à ce que le caractère cherché soit mis en
+                    // évidence.
+                    // Bord haut et gauche restent blancs (pas toujours vrai dans les polices)
+                    // Balai vers la droite rencontrent une chose (points noirs) puis s'arrête
+                    // à blanc.
+                    // Balai vers le bas rencontre une chose aussi (points noirs puis s'arrête
+                    // à blanc.
+                    // Peut-il y avoir une cnfusion en passant 2 balais (peignes) perpendiculaires?
+                    // Sans doute que oui, ils n'avancent pas au même pas. Quand le blanc est rencontré
+                    // après le noir, il y a ARRET du balai H (par exemple) donc le balai V continue
+                    // jusqu'au blanc. Là le balai H a-t-il rencontré quelque chose qui annule la
+                    // recherche croisée? Si le balai H est en-dessous des caractères il ne rencontre
+                    // plus rien jusqu'à ce que le balai V ait fini.
                     while (!fail && (i + w < input.getColumns() && j + h < input.getLines() &&
                             (!(hBout && wBout))) || (w <= charMinWidth || h <= charMinWidth)) {
 
@@ -190,6 +204,7 @@ public class ResolutionCharacter implements Runnable {
                         if (v[YPLUS] && hB) {
                             hBout = true;
                         } else if (!v[YPLUS] && hB) {
+                            hB = false;
                             hBout = false;
                             h++;
                         } else if (!v[YPLUS]) {
@@ -201,6 +216,7 @@ public class ResolutionCharacter implements Runnable {
                         if (v[XINVE] && wB) {
                             wBout = true;
                         } else if (!v[XINVE] && wB) {
+                            wB = false;
                             wBout = false;
                             w++;
                         } else if (!v[XINVE]) {
@@ -212,6 +228,7 @@ public class ResolutionCharacter implements Runnable {
 
                         if (h > stepMax || w > stepMax) {
                             fail = true;
+                            break;
                         }
 
                         v = testRectIs(input, i, j, w, h, WHITE_DOUBLES);
@@ -229,8 +246,7 @@ public class ResolutionCharacter implements Runnable {
                     }
 
                     succeded = (hBout && wBout) || succeded;
-                    if (succeded && h >= charMinWidth && w >= charMinWidth && h < stepMax && w < stepMax &&
-                            Arrays.equals(testRectIs(input, i, j, w, h, WHITE_DOUBLES), new boolean[]{true, true, true, true})) {
+                    if (succeded && h < stepMax && w < stepMax && Arrays.equals(testRectIs(input, i, j, w, h, WHITE_DOUBLES), new boolean[]{true, true, true, true})) {
                         Rectangle rectangle = new Rectangle(i, j, w, h);
                         List<Character> candidates = recognize(input, i, j, w, h);
                         if (candidates.size() > 0) {
