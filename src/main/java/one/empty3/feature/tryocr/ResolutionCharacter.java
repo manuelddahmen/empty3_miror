@@ -34,18 +34,17 @@ public class ResolutionCharacter extends Thread {
     private static final int CHARS = 1;
     private static int SHAKE_SIZE = 20;
     final int epochs = 100;
+    private final File dirOut;
+    private final int stepMax = 60;
+    private final int charMinWidth = 5;
+    int step = 1;// Searched Characters size.
     private BufferedImage read;
     private String name;
-    private final File dirOut;
-    int step = 1;// Searched Characters size.
-    private double dim = 14;
     private int shakeTimes;
     private double totalError;
     private int numCurves;
     private double errorDiff = 0.0;
     private PixM input;
-    private final int stepMax = 60;
-    private final int charMinWidth = 5;
 
     public ResolutionCharacter(BufferedImage read, String name) {
         this(read, name, new File("testsResults"));
@@ -150,7 +149,7 @@ public class ResolutionCharacter extends Thread {
         input = new PixM(read);
         PixM output = input.copy();
 
-        System.out.println("Image size: "+output.getColumns()+", "+ output.getLines());
+        System.out.println("Image size: " + output.getColumns() + ", " + output.getLines());
 
         final ITexture texture = new TextureCol(Color.BLACK);
         for (int i = 0; i < input.getColumns() - step; i += step) {
@@ -159,8 +158,8 @@ public class ResolutionCharacter extends Thread {
                     int w, h, ii, ij;
                     ii = i;
                     ij = j;
-                    w = 1;
-                    h = 1;
+                    w = charMinWidth;
+                    h = charMinWidth;
                     boolean wB = false;
                     boolean hB = false;
                     boolean fail = false;
@@ -168,8 +167,8 @@ public class ResolutionCharacter extends Thread {
                     boolean wBout = false;
                     boolean firstPass = true;
                     boolean[] v = testRectIs(input, ii, ij, w, h, new double[]{1, 1, 1});
-                    while (!fail && ii + w < input.getColumns() && ij + h < input.getLines() && (!(w > stepMax || h > stepMax)) && (!hBout || !wBout)
-                            && (v[YPLUS] && v[XINVE] && !((hB && hBout)) || (wB && wBout)) || firstPass) {
+                    while ((!fail && ii + w < input.getColumns() && ij + h < input.getLines() && !((hB && hBout) && wB && wBout))
+                            || firstPass) {
 
                         firstPass = false;
 
@@ -188,26 +187,30 @@ public class ResolutionCharacter extends Thread {
                             hBout = true;
                         } else if (!v[YPLUS] && hB) {
                             h++;
-                        } else if (!v[YPLUS] && !hB) {
+                        } else if (!v[YPLUS]) {
                             hB = true;
-                        } else
                             h++;
+                        }else  h++;
+
 
                         if (v[XINVE] && wB) {
                             wBout = true;
                         } else if (!v[XINVE] && wB) {
                             w++;
-                        } else if (!v[XINVE] && !wB) {
+                        } else if (!v[XINVE]) {
                             wB = true;
-                        } else
+                            h++;
+                        }else
                             w++;
 
-                            /*if (hBout && !wBout)
-                                w++;
-                            if (wBout && !hBout)
-                                h++;
+                        if (hBout && !wBout)
+                            w++;
+                        if (wBout && !hBout)
+                            h++;
 
-                             */
+                        if (h > stepMax || w > stepMax) {
+                            fail = true;
+                        }
                     }
                     boolean succeded = false;
                     if (fail) {
@@ -259,14 +262,15 @@ public class ResolutionCharacter extends Thread {
         List<Character> allCharPossible = new ArrayList<>();
 
 
-        allCharPossible.add('*');
         cv.forEach(new Consumer<Character>() {
             @Override
             public void accept(Character character) {
-                if(ch.contains(character))
+                if (ch.contains(character))
                     allCharPossible.add(character);
             }
         });
+        if (allCharPossible.size() == 0)
+            allCharPossible.add('-');
 
         return allCharPossible;
     }
