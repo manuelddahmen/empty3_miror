@@ -33,12 +33,12 @@ public class ResolutionCharacter implements Runnable {
     private static final int BLANK = 0;
     private static final int CHARS = 1;
     private static int SHAKE_SIZE = 20;
-    private double [] WHITE_DOUBLES = new double[] {1,1,1};
     final int epochs = 100;
     private final File dirOut;
     private final int stepMax = 120;
     private final int charMinWidth = 5;
     int step = 1;// Searched Characters size.
+    private double[] WHITE_DOUBLES = new double[]{1, 1, 1};
     private BufferedImage read;
     private String name;
     private int shakeTimes;
@@ -159,7 +159,7 @@ public class ResolutionCharacter implements Runnable {
 
         for (int j = 0; j < input.getLines() - step; j += step) {
             if (j % (input.getLines() / 10) == 0)
-                System.out.printf("%f, Image %s\n", 1.0 * j / input.getLines(),  name);
+                System.out.printf("%f, Image %s\n", 1.0 * j / input.getLines(), name);
             for (int i = 0; i < input.getColumns() - step; i += step) {
                 if (input.luminance(i, j) > 0.7) {
                     int w = charMinWidth;
@@ -282,24 +282,26 @@ public class ResolutionCharacter implements Runnable {
         int i, j;
         w0h1w2h3[0] = true;
         for (i = x; i <= x + w; i++)
-            if (arrayDiff(input.getValues(i, y),color) < DIFF) w0h1w2h3[0] = false;
+            if (arrayDiff(input.getValues(i, y), color) > DIFF) w0h1w2h3[0] = false;
         w0h1w2h3[1] = true;
         for (j = y; j <= y + h; j++)
-            if (arrayDiff(input.getValues(x, j),color) < DIFF) w0h1w2h3[1] = false;
+            if (arrayDiff(input.getValues(x, j), color) > DIFF) w0h1w2h3[1] = false;
         w0h1w2h3[2] = true;
         for (i = x + w; i >= x; i--)
-            if (arrayDiff(input.getValues(i, y+h),color) < DIFF) w0h1w2h3[2] = false;
+            if (arrayDiff(input.getValues(i, y + h), color) > DIFF) w0h1w2h3[2] = false;
         w0h1w2h3[3] = true;
         for (j = y + h; j >= y; j--)
-            if (arrayDiff(input.getValues(x+w, j),color) < DIFF) w0h1w2h3[3] = false;
+            if (arrayDiff(input.getValues(x + w, j), color) > DIFF) w0h1w2h3[3] = false;
         return w0h1w2h3;
     }
-    public double arrayDiff(double[] values, double [] color) {
+
+    public double arrayDiff(double[] values, double[] color) {
         double v = 0.0;
-        for(int i = 0; i<3; i++)
-            v +=(values[i]-color[i])*(values[i]-color[i]);
+        for (int i = 0; i < 3; i++)
+            v += (values[i] - color[i]) * (values[i] - color[i]);
         return Math.sqrt(v);
     }
+
     private void shakeCurves(State state, int choice) {
         switch (choice) {
             case ADD_POINT_TO_RANDOM_CURVE:
