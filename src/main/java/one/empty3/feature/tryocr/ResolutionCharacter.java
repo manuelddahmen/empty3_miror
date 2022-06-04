@@ -161,7 +161,7 @@ public class ResolutionCharacter implements Runnable {
             if (j % (input.getLines() / 10) == 0)
                 System.out.printf("%f, Image %s\n", 1.0 * j / input.getLines(), name);
             for (int i = 0; i < input.getColumns() - step; i += step) {
-                if (input.luminance(i, j) > 0.7) {
+                if (input.getP(i, j).norme() > Math.sqrt(3) - 0.3) {
                     int w = charMinWidth;
                     int h = charMinWidth;
                     boolean wB = false;
@@ -185,11 +185,10 @@ public class ResolutionCharacter implements Runnable {
                     // jusqu'au blanc. Là le balai H a-t-il rencontré quelque chose qui annule la
                     // recherche croisée? Si le balai H est en-dessous des caractères il ne rencontre
                     // plus rien jusqu'à ce que le balai V ait fini.
-                    while (!fail && (i + w < input.getColumns() && j + h < input.getLines() &&
-                            (!(hBout && wBout))) || (w <= charMinWidth || h <= charMinWidth)) {
-
-                        firstPass = false;
-
+                    int heightBlackHistory = 0;
+                    int widthBlackHistory = 0;
+                    while (!fail && (i + w < input.getColumns() && j + h < input.getLines() && h < stepMax && w < stepMax &&
+                            ((heightBlackHistory < 2 || widthBlackHistory < 2)))) {
 
                         if (!v[XPLUS]) {
                             fail = true;
@@ -200,30 +199,27 @@ public class ResolutionCharacter implements Runnable {
                             continue;
                         }
 
-
-                        if (v[YPLUS] && hB) {
-                            hBout = true;
-                        } else if (!v[YPLUS] && hB) {
-                            hB = false;
-                            hBout = false;
+                        if (!v[XINVE] && heightBlackHistory == 0) {
+                            heightBlackHistory = 1;
+                        } else if (v[XINVE] && heightBlackHistory == 1) {
+                            heightBlackHistory = 2;
+                        }
+                        if (!v[YPLUS] && widthBlackHistory == 0) {
+                            widthBlackHistory = 1;
+                        } else if (v[YPLUS] && widthBlackHistory == 1) {
+                            widthBlackHistory = 2;
+                        }
+                        if (heightBlackHistory == 0) {
                             h++;
-                        } else if (!v[YPLUS]) {
-                            hB = true;
+                        } else if (heightBlackHistory == 1 && widthBlackHistory != 1) {
                             h++;
-                        } else h++;
+                        }
 
-
-                        if (v[XINVE] && wB) {
-                            wBout = true;
-                        } else if (!v[XINVE] && wB) {
-                            wB = false;
-                            wBout = false;
+                        if (widthBlackHistory == 0) {
                             w++;
-                        } else if (!v[XINVE]) {
-                            wB = true;
+                        } else if (widthBlackHistory == 1 && heightBlackHistory != 1) {
                             w++;
-                        } else
-                            w++;
+                        }
 
 
                         if (h > stepMax || w > stepMax) {
@@ -232,6 +228,7 @@ public class ResolutionCharacter implements Runnable {
                         }
 
                         v = testRectIs(input, i, j, w, h, WHITE_DOUBLES);
+
                     }
                     boolean succeded = false;
                     if (fail) {
@@ -245,7 +242,7 @@ public class ResolutionCharacter implements Runnable {
                         }
                     }
 
-                    succeded = (hBout && wBout) || succeded;
+                    succeded = (heightBlackHistory == 2 && widthBlackHistory == 2) || succeded;
                     if (succeded && h < stepMax && w < stepMax && Arrays.equals(testRectIs(input, i, j, w, h, WHITE_DOUBLES), new boolean[]{true, true, true, true})) {
                         Rectangle rectangle = new Rectangle(i, j, w, h);
                         List<Character> candidates = recognize(input, i, j, w, h);
@@ -508,7 +505,7 @@ public class ResolutionCharacter implements Runnable {
             };
             int current = BLANK;
             for (int i = y; i <= y + h; i++) {
-                if (mat.luminance(i, j) < 0.3) {
+                if (mat.luminance(i, j) < 0.2) {
                     if (current == BLANK) {
                         if (firstColumn) {
                             firstColumn = false;
