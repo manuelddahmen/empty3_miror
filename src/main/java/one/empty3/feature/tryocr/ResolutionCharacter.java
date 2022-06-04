@@ -204,11 +204,10 @@ public class ResolutionCharacter implements Runnable {
                             continue;
                         }
 
-                        if (v[XINVE] && widthBlackHistory == 0)
-                            w++;
-
-                        if (v[YPLUS] && heightBlackHistory == 0)
+                        if (v[XINVE] && widthBlackHistory == 0 && v[YPLUS] && heightBlackHistory == 0) {
                             h++;
+                            w++;
+                        }
 
                         if (!v[XINVE] && widthBlackHistory == 0) {
                             widthBlackHistory = 1;
@@ -220,11 +219,11 @@ public class ResolutionCharacter implements Runnable {
                         } else if (v[YPLUS] && heightBlackHistory == 1) {
                             heightBlackHistory = 2;
                         }
-                        if (heightBlackHistory == 0 || (heightBlackHistory == 0 && widthBlackHistory == 2)) {
+                        if (heightBlackHistory == 1 || (heightBlackHistory == 0 && widthBlackHistory == 2)) {
                             h++;
                         }
 
-                        if (widthBlackHistory == 0 || (widthBlackHistory == 0 && heightBlackHistory == 2)) {
+                        if (widthBlackHistory == 1 || (widthBlackHistory == 0 && heightBlackHistory == 2)) {
                             w++;
                         }
 
