@@ -1,5 +1,9 @@
 package one.empty3.feature.tryocr;
 
+import atlasgen.Action;
+import atlasgen.CsvLine;
+import atlasgen.CsvReader;
+import atlasgen.CsvWriter;
 import one.empty3.feature.Linear;
 import one.empty3.feature.PixM;
 import one.empty3.feature.app.replace.javax.imageio.ImageIO;
@@ -16,6 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.*;
+import java.util.function.Consumer;
 
 public class ResolutionCharacter implements Runnable {
 
@@ -33,6 +38,7 @@ public class ResolutionCharacter implements Runnable {
     private static final int CHARS = 1;
     private static final boolean[] WHITE_BOOLEANS = new boolean[]{true, true, true, true};
     private static int SHAKE_SIZE = 20;
+    private static CsvWriter writer;
     final int epochs = 100;
     private final File dirOut;
     private final int stepMax = 120;
@@ -60,10 +66,14 @@ public class ResolutionCharacter implements Runnable {
 
     public static void main(String[] args) {
 
-
         File dir = new File("C:\\Users\\manue\\EmptyCanvasTest\\ocr");
         File dirOut = new File("C:\\Users\\manue\\EmptyCanvasTest\\ocr\\TestsOutput");
         if (dir.exists() && dir.isDirectory()) {
+
+            writer = new CsvWriter( "\n", "\t");
+            writer.openFile(new File(dirOut.getAbsolutePath()+File.separator+"output.csv"));
+            writer.writeLine(new String[] {"filename", "x", "y", "w", "h", "chars"});
+
             for (File file : Objects.requireNonNull(dir.listFiles())) {
                 if (!file.isDirectory() && file.isFile() && file.getName().toLowerCase(Locale.ROOT).endsWith(".jpg")) {
                     BufferedImage read = ImageIO.read(file);
@@ -90,6 +100,8 @@ public class ResolutionCharacter implements Runnable {
                     System.gc();
                 }
             }
+
+            writer.closeFile();
         }
 
     }
@@ -211,11 +223,11 @@ public class ResolutionCharacter implements Runnable {
                             } else if (v[YPLUS] && heightBlackHistory == 1) {
                                 heightBlackHistory = 2;
                             }
-                            if ((heightBlackHistory == 1 || (heightBlackHistory == 0 && widthBlackHistory == 2)) {
+                            if (heightBlackHistory == 1 || (heightBlackHistory == 0 && widthBlackHistory == 2)) {
                                 h++;
                             }
 
-                            if ((widthBlackHistory == 1 || (widthBlackHistory == 0 && heightBlackHistory == 2)) {
+                            if (widthBlackHistory == 1 || (widthBlackHistory == 0 && heightBlackHistory == 2)) {
                                 w++;
                             }
 
@@ -241,8 +253,9 @@ public class ResolutionCharacter implements Runnable {
                         }
                     }
 
-                    succeded = (heightBlackHistory == 2 && widthBlackHistory == 2) || succeded;
-                    if (succeded && h < stepMax && w < stepMax && Arrays.equals(testRectIs(input, i, j, w, h, WHITE_DOUBLES), WHITE_BOOLEANS)) {
+                    succeded = (heightBlackHistory == 2 && widthBlackHistory == 2) &&(Arrays.equals(testRectIs(input, i, j, w, h, WHITE_DOUBLES), WHITE_BOOLEANS)
+                            || succeded)&& h <= stepMax && w <= stepMax && h>=charMinWidth &&w>=charMinWidth;
+                    if (succeded)  {
                         Rectangle rectangle = new Rectangle(i, j, w, h);
                         List<Character> candidates = recognize(input, i, j, w, h);
                         if (candidates.size() > 0) {
@@ -250,6 +263,10 @@ public class ResolutionCharacter implements Runnable {
                             candidates.forEach(System.out::print);
                             System.out.println();
                             output.plotCurve(rectangle, texture);
+                            final String[] s = {""};
+                            candidates.forEach(character -> s[0] +=character);
+                            writer.writeLine(new String[] {name, ""+i, ""+j, ""+w, ""+h, s[0]});
+
                         }
                     }
                 }
