@@ -17,6 +17,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.*;
+import java.util.function.Predicate;
 
 public class ResolutionCharacter implements Runnable {
     public static final float MIN_DIFF = 0.4f;
@@ -192,51 +193,51 @@ public class ResolutionCharacter implements Runnable {
                     // plus rien jusqu'à ce que le balai V ait fini.
                     int heightBlackHistory = 0;
                     int widthBlackHistory = 0;
-                    while (!(Arrays.equals(v = testRectIs(input, i, j, w, h, WHITE_DOUBLES), WHITE_BOOLEANS) && heightBlackHistory == 2 && widthBlackHistory == 2)
-                            && !fail && i + w < input.getColumns() && j + h < input.getLines()) {
+                    int heightWhiteContinuity = 1;
+                    int widthWhiteContinuity = 1;
+                    v = testRectIs(input, i, j, w, h, WHITE_DOUBLES);
+                    while (!(heightBlackHistory == 2 && widthBlackHistory == 2)
+                            && i + w < input.getColumns() && j + h < input.getLines()) {
+                        v = testRectIs(input, i, j, w, h, WHITE_DOUBLES);
+                        if (!v[XPLUS] && w>=1 && widthBlackHistory<2)  {
+                            w--;
+                            widthBlackHistory = 2;
+                        } else if (!v[YINVE] && h>=1 && heightBlackHistory<2) {
+                            h--;
+                            heightBlackHistory = 2;
+                        }
+                        if (!v[XINVE] && heightWhiteContinuity > -1)
+                            heightWhiteContinuity = -1;
+                        if (!v[YPLUS] && widthWhiteContinuity > -1)
+                            widthWhiteContinuity = -1;
 
-                        if (!v[XPLUS]) {
-                            fail = true;
-                            continue;
-                        }
-                        if (!v[YINVE]) {
-                            fail = true;
-                            continue;
-                        }
 
                         if (v[XINVE] && widthBlackHistory == 0 && v[YPLUS] && heightBlackHistory == 0) {
+                            heightWhiteContinuity += heightWhiteContinuity > 0 ? 1 : 0;
+                            widthWhiteContinuity += widthWhiteContinuity > 0 ? 1 : 0;
                             h++;
                             w++;
+                        } else if (!v[XINVE] && widthBlackHistory == 0) {
+                            widthBlackHistory = 1;
+                        } else if (v[XINVE] && widthBlackHistory == 1) {
+                            widthBlackHistory = 2;
+                        } else if (!v[YPLUS] && heightBlackHistory == 0) {
+                            heightBlackHistory = 1;
+                        } else if (v[YPLUS] && heightBlackHistory == 1) {
+                            heightBlackHistory = 2;
                         } else if (heightBlackHistory == 1 || (heightBlackHistory == 0 && widthBlackHistory == 2)) {
                             h++;
                         } else if (widthBlackHistory == 1 || (widthBlackHistory == 0 && heightBlackHistory == 2)) {
                             w++;
                         }
-
-                        if (!v[XINVE] && widthBlackHistory == 0) {
-                            widthBlackHistory = 1;
-                            continue;
-                        } else if (v[XINVE] && widthBlackHistory == 1) {
-                            widthBlackHistory = 2;
-                            continue;
-                        }
-                        if (!v[YPLUS] && heightBlackHistory == 0) {
-                            heightBlackHistory = 1;
-                            continue;
-                        } else if (v[YPLUS] && heightBlackHistory == 1) {
-                            heightBlackHistory = 2;
-                            continue;
-                        }
-
-
                         if (h > stepMax || w > stepMax) {
                             fail = true;
                             break;
                         }
                     }
-
+                    v = testRectIs(input, i, j, w, h, WHITE_DOUBLES);
                     boolean succeded = false;
-                    if (fail) {
+                    if (heightBlackHistory == 2 && widthBlackHistory == 2) {
                         if (Arrays.equals(testRectIs(input, i, j, w - 1, h, WHITE_DOUBLES), WHITE_BOOLEANS)) {
                             w = w - 1;
                             succeded = true;
@@ -247,8 +248,8 @@ public class ResolutionCharacter implements Runnable {
                         }
                     }
 
-                    succeded = succeded ||(heightBlackHistory == 2 && widthBlackHistory == 2 && Arrays.equals(testRectIs(input, i, j, w, h, WHITE_DOUBLES), WHITE_BOOLEANS)
-                             && h <= stepMax && w <= stepMax && h >= charMinWidth && w >= charMinWidth);
+                    succeded = succeded && heightBlackHistory == 2 && widthBlackHistory == 2 && Arrays.equals(testRectIs(input, i, j, w, h, WHITE_DOUBLES), WHITE_BOOLEANS)
+                             && h <= stepMax && w <= stepMax && h >= charMinWidth && w >= charMinWidth;
                     if (succeded) {
                         Rectangle rectangle = new Rectangle(i, j, w, h);
                         List<Character> candidates = recognize(input, i, j, w, h);
@@ -284,17 +285,18 @@ public class ResolutionCharacter implements Runnable {
         List<Character> ch = recognizeH(input, i, j, w, h);
         List<Character> cv = recognizeV(input, i, j, w, h);
 
-        List<Character> allCharPossible = new ArrayList<>();
+        List<Character> allCharsPossible = new ArrayList<>();
 
 
+        // Intersect
         cv.forEach(character -> {
-            if (ch.contains(character))
-                allCharPossible.add(character);
+            if(ch.stream().anyMatch(character::equals))
+                allCharsPossible.add(character);
         });
-        if (allCharPossible.size() == 0)
-            allCharPossible.add('-');
+        if (allCharsPossible.size() == 0)
+            allCharsPossible.add('-');
 
-        return allCharPossible;
+        return allCharsPossible;
     }
 
     private boolean[] testRectIs(PixM input, int x, int y, int w, int h, double[] color) {
