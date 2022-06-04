@@ -184,8 +184,8 @@ public class ResolutionCharacter implements Runnable {
                     // plus rien jusqu'à ce que le balai V ait fini.
                     int heightBlackHistory = 0;
                     int widthBlackHistory = 0;
-                    while (!fail && (i + w < input.getColumns() && j + h < input.getLines() && h < stepMax && w < stepMax &&
-                            ((heightBlackHistory < 2 || widthBlackHistory < 2 || !Arrays.equals(v, WHITE_BOOLEANS))))) {
+                    while (!fail && i + w < input.getColumns() && j + h < input.getLines() && h < stepMax && w < stepMax &&
+                            ((heightBlackHistory < 2 || widthBlackHistory < 2 || !Arrays.equals(v, WHITE_BOOLEANS)))) {
 
                         if (!v[XPLUS]) {
                             fail = true;
@@ -211,11 +211,11 @@ public class ResolutionCharacter implements Runnable {
                             } else if (v[YPLUS] && heightBlackHistory == 1) {
                                 heightBlackHistory = 2;
                             }
-                            if ((heightBlackHistory == 1 /*|| (heightBlackHistory == 0*/ && widthBlackHistory == 2)) {
+                            if ((heightBlackHistory == 1 || (heightBlackHistory == 0 && widthBlackHistory == 2)) {
                                 h++;
                             }
 
-                            if ((widthBlackHistory == 1 /*|| (widthBlackHistory == 0*/ && heightBlackHistory == 2)) {
+                            if ((widthBlackHistory == 1 || (widthBlackHistory == 0 && heightBlackHistory == 2)) {
                                 w++;
                             }
 
