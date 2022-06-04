@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.*;
 
 public class ResolutionCharacter implements Runnable {
-
+    public static final float MIN_DIFF = 0.4f;
     public static final int XPLUS = 0;
     public static final int YPLUS = 1;
     public static final int XINVE = 2;
@@ -171,11 +171,11 @@ public class ResolutionCharacter implements Runnable {
             if (j % (input.getLines() / 10) == 0)
                 System.out.printf("%f, Image %s\n", 1.0 * j / input.getLines(), name);
             for (int i = 0; i < input.getColumns() - step; i += step) {
-                if (input.getP(i, j).norme() > Math.sqrt(3) - 0.3) {
+                if (arrayDiff(input.getValues(i, j), WHITE_DOUBLES) < MIN_DIFF) {
                     int w = 0;
                     int h = 0;
                     boolean fail = false;
-                    boolean[] v = testRectIs(input, i, j, w, h, WHITE_DOUBLES);
+                    boolean[] v;
                     // La condition doit s'arrêter après les points quand les bords droits
                     // et bas ont augmenté de manière à ce que le caractère cherché soit mis en
                     // évidence.
@@ -192,8 +192,8 @@ public class ResolutionCharacter implements Runnable {
                     // plus rien jusqu'à ce que le balai V ait fini.
                     int heightBlackHistory = 0;
                     int widthBlackHistory = 0;
-                    while (!fail && i + w < input.getColumns() && j + h < input.getLines() && h < stepMax && w < stepMax &&
-                            ((heightBlackHistory < 2 || widthBlackHistory < 2 || !Arrays.equals(v, WHITE_BOOLEANS)))) {
+                    while (!(Arrays.equals(v = testRectIs(input, i, j, w, h, WHITE_DOUBLES), WHITE_BOOLEANS) && heightBlackHistory == 2 && widthBlackHistory == 2)
+                            && !fail && i + w < input.getColumns() && j + h < input.getLines()) {
 
                         if (!v[XPLUS]) {
                             fail = true;
@@ -207,24 +207,25 @@ public class ResolutionCharacter implements Runnable {
                         if (v[XINVE] && widthBlackHistory == 0 && v[YPLUS] && heightBlackHistory == 0) {
                             h++;
                             w++;
+                        } else if (heightBlackHistory == 1 || (heightBlackHistory == 0 && widthBlackHistory == 2)) {
+                            h++;
+                        } else if (widthBlackHistory == 1 || (widthBlackHistory == 0 && heightBlackHistory == 2)) {
+                            w++;
                         }
 
                         if (!v[XINVE] && widthBlackHistory == 0) {
                             widthBlackHistory = 1;
+                            continue;
                         } else if (v[XINVE] && widthBlackHistory == 1) {
                             widthBlackHistory = 2;
+                            continue;
                         }
                         if (!v[YPLUS] && heightBlackHistory == 0) {
                             heightBlackHistory = 1;
+                            continue;
                         } else if (v[YPLUS] && heightBlackHistory == 1) {
                             heightBlackHistory = 2;
-                        }
-                        if (heightBlackHistory == 1 || (heightBlackHistory == 0 && widthBlackHistory == 2)) {
-                            h++;
-                        }
-
-                        if (widthBlackHistory == 1 || (widthBlackHistory == 0 && heightBlackHistory == 2)) {
-                            w++;
+                            continue;
                         }
 
 
@@ -232,10 +233,8 @@ public class ResolutionCharacter implements Runnable {
                             fail = true;
                             break;
                         }
-
-                        v = testRectIs(input, i, j, w, h, WHITE_DOUBLES);
-
                     }
+
                     boolean succeded = false;
                     if (fail) {
                         if (Arrays.equals(testRectIs(input, i, j, w - 1, h, WHITE_DOUBLES), WHITE_BOOLEANS)) {
@@ -248,8 +247,8 @@ public class ResolutionCharacter implements Runnable {
                         }
                     }
 
-                    succeded = (heightBlackHistory == 2 && widthBlackHistory == 2) && (Arrays.equals(testRectIs(input, i, j, w, h, WHITE_DOUBLES), WHITE_BOOLEANS)
-                            || succeded) && h <= stepMax && w <= stepMax && h >= charMinWidth && w >= charMinWidth;
+                    succeded = succeded ||(heightBlackHistory == 2 && widthBlackHistory == 2 && Arrays.equals(testRectIs(input, i, j, w, h, WHITE_DOUBLES), WHITE_BOOLEANS)
+                             && h <= stepMax && w <= stepMax && h >= charMinWidth && w >= charMinWidth);
                     if (succeded) {
                         Rectangle rectangle = new Rectangle(i, j, w, h);
                         List<Character> candidates = recognize(input, i, j, w, h);
@@ -299,21 +298,20 @@ public class ResolutionCharacter implements Runnable {
     }
 
     private boolean[] testRectIs(PixM input, int x, int y, int w, int h, double[] color) {
-        double DIFF = 0.3;
         boolean[] w0h1w2h3 = new boolean[4];
         int i, j;
         w0h1w2h3[0] = true;
         for (i = x; i <= x + w; i++)
-            if (arrayDiff(input.getValues(i, y), color) > DIFF) w0h1w2h3[0] = false;
+            if (arrayDiff(input.getValues(i, y), color) > MIN_DIFF) w0h1w2h3[0] = false;
         w0h1w2h3[1] = true;
         for (j = y; j <= y + h; j++)
-            if (arrayDiff(input.getValues(x, j), color) > DIFF) w0h1w2h3[1] = false;
+            if (arrayDiff(input.getValues(x, j), color) > MIN_DIFF) w0h1w2h3[1] = false;
         w0h1w2h3[2] = true;
         for (i = x + w; i >= x; i--)
-            if (arrayDiff(input.getValues(i, y + h), color) > DIFF) w0h1w2h3[2] = false;
+            if (arrayDiff(input.getValues(i, y + h), color) > MIN_DIFF) w0h1w2h3[2] = false;
         w0h1w2h3[3] = true;
         for (j = y + h; j >= y; j--)
-            if (arrayDiff(input.getValues(x, j), color) > DIFF) w0h1w2h3[3] = false;
+            if (arrayDiff(input.getValues(x, j), color) > MIN_DIFF) w0h1w2h3[3] = false;
         return w0h1w2h3;
     }
 
