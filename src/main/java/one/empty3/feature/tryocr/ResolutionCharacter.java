@@ -16,7 +16,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.*;
-import java.util.function.Consumer;
 
 public class ResolutionCharacter implements Runnable {
 
@@ -32,7 +31,7 @@ public class ResolutionCharacter implements Runnable {
     private static final int MOVE_POINTS = 1;
     private static final int BLANK = 0;
     private static final int CHARS = 1;
-    private static final boolean[] WHITE_BOOLEANS = new boolean[] {true, true, true, true};
+    private static final boolean[] WHITE_BOOLEANS = new boolean[]{true, true, true, true};
     private static int SHAKE_SIZE = 20;
     final int epochs = 100;
     private final File dirOut;
@@ -74,7 +73,9 @@ public class ResolutionCharacter implements Runnable {
 
                     System.out.println("ResolutionCharacter : " + name);
 
-                    ResolutionCharacter0 resolutionCharacter = new ResolutionCharacter0(read, name, dirOut);
+                    ResolutionCharacter resolutionCharacter = new ResolutionCharacter(read, name, dirOut);
+
+                    System.out.printf("%s", resolutionCharacter.getClass().getSimpleName());
 
                     Thread thread = new Thread(resolutionCharacter);
                     thread.start();
@@ -184,7 +185,7 @@ public class ResolutionCharacter implements Runnable {
                     int heightBlackHistory = 0;
                     int widthBlackHistory = 0;
                     while (!fail && (i + w < input.getColumns() && j + h < input.getLines() && h < stepMax && w < stepMax &&
-                            (heightBlackHistory < 2 || widthBlackHistory < 2))) {
+                            ((heightBlackHistory < 2 || widthBlackHistory < 2 || !Arrays.equals(v, WHITE_BOOLEANS))))) {
 
                         if (!v[XPLUS]) {
                             fail = true;
@@ -195,7 +196,7 @@ public class ResolutionCharacter implements Runnable {
                             continue;
                         }
 
-                        if(Arrays.equals(v, WHITE_BOOLEANS) && widthBlackHistory==0 && heightBlackHistory==0) {
+                        if (Arrays.equals(v, WHITE_BOOLEANS) && widthBlackHistory == 0 && heightBlackHistory == 0) {
                             w++;
                             h++;
                         } else {
@@ -275,12 +276,9 @@ public class ResolutionCharacter implements Runnable {
         List<Character> allCharPossible = new ArrayList<>();
 
 
-        cv.forEach(new Consumer<Character>() {
-            @Override
-            public void accept(Character character) {
-                if (ch.contains(character))
-                    allCharPossible.add(character);
-            }
+        cv.forEach(character -> {
+            if (ch.contains(character))
+                allCharPossible.add(character);
         });
         if (allCharPossible.size() == 0)
             allCharPossible.add('-');
@@ -289,7 +287,7 @@ public class ResolutionCharacter implements Runnable {
     }
 
     private boolean[] testRectIs(PixM input, int x, int y, int w, int h, double[] color) {
-        double DIFF = 0.4;
+        double DIFF = 0.7;
         boolean[] w0h1w2h3 = new boolean[4];
         int i, j;
         w0h1w2h3[0] = true;
