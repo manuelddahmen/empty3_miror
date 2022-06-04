@@ -1,8 +1,5 @@
 package one.empty3.feature.tryocr;
 
-import atlasgen.Action;
-import atlasgen.CsvLine;
-import atlasgen.CsvReader;
 import atlasgen.CsvWriter;
 import one.empty3.feature.Linear;
 import one.empty3.feature.PixM;
@@ -20,7 +17,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.*;
-import java.util.function.Consumer;
 
 public class ResolutionCharacter implements Runnable {
 
@@ -70,9 +66,9 @@ public class ResolutionCharacter implements Runnable {
         File dirOut = new File("C:\\Users\\manue\\EmptyCanvasTest\\ocr\\TestsOutput");
         if (dir.exists() && dir.isDirectory()) {
 
-            writer = new CsvWriter( "\n", "\t");
-            writer.openFile(new File(dirOut.getAbsolutePath()+File.separator+"output.csv"));
-            writer.writeLine(new String[] {"filename", "x", "y", "w", "h", "chars"});
+            writer = new CsvWriter("\n", "\t");
+            writer.openFile(new File(dirOut.getAbsolutePath() + File.separator + "output.csv"));
+            writer.writeLine(new String[]{"filename", "x", "y", "w", "h", "chars"});
 
             for (File file : Objects.requireNonNull(dir.listFiles())) {
                 if (!file.isDirectory() && file.isFile() && file.getName().toLowerCase(Locale.ROOT).endsWith(".jpg")) {
@@ -188,11 +184,11 @@ public class ResolutionCharacter implements Runnable {
                     // à blanc.
                     // Balai vers le bas rencontre une chose aussi (points noirs puis s'arrête
                     // à blanc.
-                    // Peut-il y avoir une cnfusion en passant 2 balais (peignes) perpendiculaires?
+                    // Peut-il y avoir une confusion en passant 2 balais (peignes) perpendiculaires ?
                     // Sans doute que oui, ils n'avancent pas au même pas. Quand le blanc est rencontré
-                    // après le noir, il y a ARRET du balai H (par exemple) donc le balai V continue
+                    // après le noir, il y a arrêt du balai H (par exemple) donc le balai V continue
                     // jusqu'au blanc. Là le balai H a-t-il rencontré quelque chose qui annule la
-                    // recherche croisée? Si le balai H est en-dessous des caractères il ne rencontre
+                    // recherche croisée ? Si le balai H est en dessous des caractères il ne rencontre
                     // plus rien jusqu'à ce que le balai V ait fini.
                     int heightBlackHistory = 0;
                     int widthBlackHistory = 0;
@@ -208,30 +204,30 @@ public class ResolutionCharacter implements Runnable {
                             continue;
                         }
 
-                        if (Arrays.equals(v, WHITE_BOOLEANS) && widthBlackHistory == 0 && heightBlackHistory == 0) {
+                        if (v[XINVE] && widthBlackHistory == 0)
                             w++;
+
+                        if (v[YPLUS] && heightBlackHistory == 0)
                             h++;
-                        } else {
 
-                            if (!v[XINVE] && widthBlackHistory == 0) {
-                                widthBlackHistory = 1;
-                            } else if (v[XINVE] && widthBlackHistory == 1) {
-                                widthBlackHistory = 2;
-                            }
-                            if (!v[YPLUS] && heightBlackHistory == 0) {
-                                heightBlackHistory = 1;
-                            } else if (v[YPLUS] && heightBlackHistory == 1) {
-                                heightBlackHistory = 2;
-                            }
-                            if (heightBlackHistory == 1 || (heightBlackHistory == 0 && widthBlackHistory == 2)) {
-                                h++;
-                            }
-
-                            if (widthBlackHistory == 1 || (widthBlackHistory == 0 && heightBlackHistory == 2)) {
-                                w++;
-                            }
-
+                        if (!v[XINVE] && widthBlackHistory == 0) {
+                            widthBlackHistory = 1;
+                        } else if (v[XINVE] && widthBlackHistory == 1) {
+                            widthBlackHistory = 2;
                         }
+                        if (!v[YPLUS] && heightBlackHistory == 0) {
+                            heightBlackHistory = 1;
+                        } else if (v[YPLUS] && heightBlackHistory == 1) {
+                            heightBlackHistory = 2;
+                        }
+                        if (heightBlackHistory == 0 || (heightBlackHistory == 0 && widthBlackHistory == 2)) {
+                            h++;
+                        }
+
+                        if (widthBlackHistory == 0 || (widthBlackHistory == 0 && heightBlackHistory == 2)) {
+                            w++;
+                        }
+
 
                         if (h > stepMax || w > stepMax) {
                             fail = true;
@@ -253,9 +249,9 @@ public class ResolutionCharacter implements Runnable {
                         }
                     }
 
-                    succeded = (heightBlackHistory == 2 && widthBlackHistory == 2) &&(Arrays.equals(testRectIs(input, i, j, w, h, WHITE_DOUBLES), WHITE_BOOLEANS)
-                            || succeded)&& h <= stepMax && w <= stepMax && h>=charMinWidth &&w>=charMinWidth;
-                    if (succeded)  {
+                    succeded = (heightBlackHistory == 2 && widthBlackHistory == 2) && (Arrays.equals(testRectIs(input, i, j, w, h, WHITE_DOUBLES), WHITE_BOOLEANS)
+                            || succeded) && h <= stepMax && w <= stepMax && h >= charMinWidth && w >= charMinWidth;
+                    if (succeded) {
                         Rectangle rectangle = new Rectangle(i, j, w, h);
                         List<Character> candidates = recognize(input, i, j, w, h);
                         if (candidates.size() > 0) {
@@ -264,8 +260,8 @@ public class ResolutionCharacter implements Runnable {
                             System.out.println();
                             output.plotCurve(rectangle, texture);
                             final String[] s = {""};
-                            candidates.forEach(character -> s[0] +=character);
-                            writer.writeLine(new String[] {name, ""+i, ""+j, ""+w, ""+h, s[0]});
+                            candidates.forEach(character -> s[0] += character);
+                            writer.writeLine(new String[]{name, "" + i, "" + j, "" + w, "" + h, s[0]});
 
                         }
                     }
