@@ -287,7 +287,7 @@ public class ResolutionCharacter implements Runnable {
     }
 
     private boolean[] testRectIs(PixM input, int x, int y, int w, int h, double[] color) {
-        double DIFF = 0.7;
+        double DIFF = 0.3;
         boolean[] w0h1w2h3 = new boolean[4];
         int i, j;
         w0h1w2h3[0] = true;
