@@ -67,8 +67,8 @@ public class ResolutionCharacter implements Runnable {
         File dirOut = new File("C:\\Users\\manue\\EmptyCanvasTest\\ocr\\TestsOutput");
         if (dir.exists() && dir.isDirectory()) {
 
-            writer = new CsvWriter("\n", "\t");
-            writer.openFile(new File(dirOut.getAbsolutePath() + File.separator + "output.csv"));
+            writer = new CsvWriter("\n", ",");
+            writer.openFile(new File(dir.getAbsolutePath() + File.separator + "output.csv"));
             writer.writeLine(new String[]{"filename", "x", "y", "w", "h", "chars"});
 
             for (File file : Objects.requireNonNull(dir.listFiles())) {
@@ -199,10 +199,11 @@ public class ResolutionCharacter implements Runnable {
                     while (!(heightBlackHistory == 2 && widthBlackHistory == 2)
                             && i + w < input.getColumns() && j + h < input.getLines()) {
                         v = testRectIs(input, i, j, w, h, WHITE_DOUBLES);
-                        if (!v[XPLUS] && w>=1 && widthBlackHistory<2)  {
+                        if (!v[XPLUS] && w >= 1 && (widthBlackHistory < 2 || heightBlackHistory >= 1)) {
                             w--;
                             widthBlackHistory = 2;
-                        } else if (!v[YINVE] && h>=1 && heightBlackHistory<2) {
+                        }
+                        if ((!v[YINVE] && (h>=1)) && (heightBlackHistory<2 ||widthBlackHistory>=1)) {
                             h--;
                             heightBlackHistory = 2;
                         }
@@ -257,11 +258,12 @@ public class ResolutionCharacter implements Runnable {
                             System.out.printf("In %s, Rectangle = (%d,%d,%d,%d) \t\tCandidates: ", name, i, j, w, h);
                             candidates.forEach(System.out::print);
                             System.out.println();
-                            output.plotCurve(rectangle, texture);
                             final String[] s = {""};
                             candidates.forEach(character -> s[0] += character);
-                            writer.writeLine(new String[]{name, "" + i, "" + j, "" + w, "" + h, s[0]});
-
+                            if(!s[0].equals("-") || s[0].length()>0) {
+                                writer.writeLine(new String[]{name, "" + i, "" + j, "" + w, "" + h, s[0]});
+                                output.plotCurve(rectangle, texture);
+                            }
                         }
                     }
                 }

@@ -4,6 +4,7 @@
     <option name="VM_PARAMETERS" value="-cp $Classpath$;build/libs/empty3-library-generic-generic-1.0.jar  --add-exports java.base/java.lang=ALL-UNNAMED --add-exports java.desktop/sun.awt=ALL-UNNAMED --add-exports java.desktop/sun.java2d=ALL-UNNAMED -Dfile.encoding=UTF-8 one.empty3.apps.opad.PanelGraphics" />
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
     <option name="ALTERNATIVE_JRE_PATH" value="17" />
+    <module name="empty3-library-generic" />
     <method v="2" />
   </configuration>
 </component>

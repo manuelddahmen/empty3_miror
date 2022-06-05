@@ -63,8 +63,7 @@ public class CsvWriter {
     }
 
     public int writeLine(String[] lineArray) {
-        byte[] bytes;
-        StringBuilder sb = new StringBuilder(100);
+        StringBuilder sb = new StringBuilder();
         int i = 0;
         for (String column : lineArray) {
             sb.append(column);

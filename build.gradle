@@ -75,7 +75,7 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 
 
 task copyTask(type: Copy) {
-    from 'src/main/java/.'
+    from 'src/main/java/'
     into 'build/classes/java/main'
 }
 javadoc {
