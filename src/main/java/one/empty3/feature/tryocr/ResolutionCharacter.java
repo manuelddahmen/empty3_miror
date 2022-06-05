@@ -17,10 +17,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.*;
-import java.util.function.Predicate;
 
 public class ResolutionCharacter implements Runnable {
-    public static final float MIN_DIFF = 0.4f;
+    public static final float MIN_DIFF = 0.6f;
     public static final int XPLUS = 0;
     public static final int YPLUS = 1;
     public static final int XINVE = 2;
@@ -33,7 +32,7 @@ public class ResolutionCharacter implements Runnable {
     private static final int MOVE_POINTS = 1;
     private static final int BLANK = 0;
     private static final int CHARS = 1;
-    private static final boolean[] WHITE_BOOLEANS = new boolean[]{true, true, true, true};
+    private static final boolean[] TRUE_BOOLEANS = new boolean[]{true, true, true, true};
     private static int SHAKE_SIZE = 20;
     private static CsvWriter writer;
     final int epochs = 100;
@@ -41,7 +40,7 @@ public class ResolutionCharacter implements Runnable {
     private final int stepMax = 120;
     private final int charMinWidth = 5;
     int step = 1;// Searched Characters size.
-    private double[] WHITE_DOUBLES = new double[]{1, 1, 1};
+    private final double[] WHITE_DOUBLES = new double[]{1, 1, 1};
     private BufferedImage read;
     private String name;
     private int shakeTimes;
@@ -170,7 +169,7 @@ public class ResolutionCharacter implements Runnable {
 
         for (int j = 0; j < input.getLines() - step; j += step) {
             if (j % (input.getLines() / 10) == 0)
-                System.out.printf("%f, Image %s\n", 1.0 * j / input.getLines(), name);
+                System.out.printf("%d %%, Image %s\n", (int)(100.0 * j / input.getLines()), name);
             for (int i = 0; i < input.getColumns() - step; i += step) {
                 if (arrayDiff(input.getValues(i, j), WHITE_DOUBLES) < MIN_DIFF) {
                     int w = 0;
@@ -196,16 +195,28 @@ public class ResolutionCharacter implements Runnable {
                     int heightWhiteContinuity = 1;
                     int widthWhiteContinuity = 1;
                     v = testRectIs(input, i, j, w, h, WHITE_DOUBLES);
-                    while (!(heightBlackHistory == 2 && widthBlackHistory == 2)
+                    boolean firstPass = true;
+                    while ((firstPass && Arrays.equals(v, TRUE_BOOLEANS))||!(heightBlackHistory >= 2 && widthBlackHistory >= 2)
                             && i + w < input.getColumns() && j + h < input.getLines()) {
+                        firstPass = false;
                         v = testRectIs(input, i, j, w, h, WHITE_DOUBLES);
+                        if(Arrays.equals(v, TRUE_BOOLEANS) && widthBlackHistory ==2 && heightBlackHistory==2)
+                            break;
                         if (!v[XPLUS] && w >= 1 && (widthBlackHistory < 2 || heightBlackHistory >= 1)) {
                             w--;
-                            widthBlackHistory = 2;
+                            v = testRectIs(input, i, j, w, h, WHITE_DOUBLES);
+                            if(v[XPLUS]) {
+                                widthBlackHistory = 2;
+                            }else
+                                widthBlackHistory = 3;
                         }
                         if ((!v[YINVE] && (h>=1)) && (heightBlackHistory<2 ||widthBlackHistory>=1)) {
                             h--;
-                            heightBlackHistory = 2;
+                            v = testRectIs(input, i, j, w, h, WHITE_DOUBLES);
+                            if(v[YINVE]) {
+                                heightBlackHistory = 2;
+                            } else
+                                heightBlackHistory =3;
                         }
                         if (!v[XINVE] && heightWhiteContinuity > -1)
                             heightWhiteContinuity = -1;
@@ -218,15 +229,18 @@ public class ResolutionCharacter implements Runnable {
                             widthWhiteContinuity += widthWhiteContinuity > 0 ? 1 : 0;
                             h++;
                             w++;
-                        } else if (!v[XINVE] && widthBlackHistory == 0) {
+                        }
+                        if (!v[XINVE] && widthBlackHistory == 0) {
                             widthBlackHistory = 1;
                         } else if (v[XINVE] && widthBlackHistory == 1) {
                             widthBlackHistory = 2;
-                        } else if (!v[YPLUS] && heightBlackHistory == 0) {
+                        }
+                        if (!v[YPLUS] && heightBlackHistory == 0) {
                             heightBlackHistory = 1;
                         } else if (v[YPLUS] && heightBlackHistory == 1) {
                             heightBlackHistory = 2;
-                        } else if (heightBlackHistory == 1 || (heightBlackHistory == 0 && widthBlackHistory == 2)) {
+                        }
+                        if (heightBlackHistory == 1 || (heightBlackHistory == 0 && widthBlackHistory == 2)) {
                             h++;
                         } else if (widthBlackHistory == 1 || (widthBlackHistory == 0 && heightBlackHistory == 2)) {
                             w++;
@@ -239,22 +253,22 @@ public class ResolutionCharacter implements Runnable {
                     v = testRectIs(input, i, j, w, h, WHITE_DOUBLES);
                     boolean succeded = false;
                     if (heightBlackHistory == 2 && widthBlackHistory == 2) {
-                        if (Arrays.equals(testRectIs(input, i, j, w - 1, h, WHITE_DOUBLES), WHITE_BOOLEANS)) {
+                        if (Arrays.equals(testRectIs(input, i, j, w - 1, h, WHITE_DOUBLES), TRUE_BOOLEANS)) {
                             w = w - 1;
                             succeded = true;
                         }
-                        if (Arrays.equals(testRectIs(input, i, j, w, h - 1, WHITE_DOUBLES), WHITE_BOOLEANS)) {
+                        if (Arrays.equals(testRectIs(input, i, j, w, h - 1, WHITE_DOUBLES), TRUE_BOOLEANS)) {
                             h = h - 1;
                             succeded = true;
                         }
                     }
 
-                    succeded = succeded && heightBlackHistory == 2 && widthBlackHistory == 2 && Arrays.equals(testRectIs(input, i, j, w, h, WHITE_DOUBLES), WHITE_BOOLEANS)
+                    succeded = succeded && heightBlackHistory == 2 && widthBlackHistory == 2 && Arrays.equals(testRectIs(input, i, j, w, h, WHITE_DOUBLES), TRUE_BOOLEANS)
                              && h <= stepMax && w <= stepMax && h >= charMinWidth && w >= charMinWidth;
                     if (succeded) {
                         Rectangle rectangle = new Rectangle(i, j, w, h);
                         List<Character> candidates = recognize(input, i, j, w, h);
-                        if (candidates.size() > 0) {
+                        if (candidates.size() > 1) {
                             System.out.printf("In %s, Rectangle = (%d,%d,%d,%d) \t\tCandidates: ", name, i, j, w, h);
                             candidates.forEach(System.out::print);
                             System.out.println();
@@ -291,10 +305,12 @@ public class ResolutionCharacter implements Runnable {
 
 
         // Intersect
-        cv.forEach(character -> {
+        /*cv.forEach(character -> {
             if(ch.stream().anyMatch(character::equals))
                 allCharsPossible.add(character);
-        });
+        });*/
+        allCharsPossible.addAll(ch);
+        allCharsPossible.addAll(cv);
         if (allCharsPossible.size() == 0)
             allCharsPossible.add('-');
 
