@@ -1,5 +1,6 @@
 package one.empty3.feature.tryocr;
 
+import atlasgen.CsvWriter;
 import one.empty3.feature.Linear;
 import one.empty3.feature.PixM;
 import one.empty3.feature.app.replace.javax.imageio.ImageIO;
@@ -8,6 +9,7 @@ import one.empty3.library.ITexture;
 import one.empty3.library.Lumiere;
 import one.empty3.library.Point3D;
 import one.empty3.library.TextureCol;
+import one.empty3.library.core.lighting.Colors;
 import one.empty3.library.core.nurbs.CourbeParametriquePolynomialeBezier;
 
 import java.awt.*;
@@ -16,10 +18,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.*;
-import java.util.function.Consumer;
 
-public class ResolutionCharacter0 implements Runnable {
-
+public class ResolutionCharacter1 implements Runnable {
+    public static final float MIN_DIFF = 0.6f;
     public static final int XPLUS = 0;
     public static final int YPLUS = 1;
     public static final int XINVE = 2;
@@ -32,13 +33,16 @@ public class ResolutionCharacter0 implements Runnable {
     private static final int MOVE_POINTS = 1;
     private static final int BLANK = 0;
     private static final int CHARS = 1;
+    private static final boolean[] TRUE_BOOLEANS = new boolean[]{true, true, true, true};
     private static int SHAKE_SIZE = 20;
+    private static CsvWriter writer;
     final int epochs = 100;
     private final File dirOut;
     private final int stepMax = 120;
     private final int charMinWidth = 5;
+    private final double[] WHITE_DOUBLES = new double[]{1, 1, 1};
+    private final double[] BLACK_DOUBLES = new double[]{0, 0, 0};
     int step = 1;// Searched Characters size.
-    private double[] WHITE_DOUBLES = new double[]{1, 1, 1};
     private BufferedImage read;
     private String name;
     private int shakeTimes;
@@ -48,11 +52,11 @@ public class ResolutionCharacter0 implements Runnable {
     private PixM input;
     private PixM output;
 
-    public ResolutionCharacter0(BufferedImage read, String name) {
+    public ResolutionCharacter1(BufferedImage read, String name) {
         this(read, name, new File("testsResults"));
     }
 
-    public ResolutionCharacter0(BufferedImage read, String name, File dirOut) {
+    public ResolutionCharacter1(BufferedImage read, String name, File dirOut) {
         this.read = read;
         this.name = name;
         this.dirOut = dirOut;
@@ -60,10 +64,14 @@ public class ResolutionCharacter0 implements Runnable {
 
     public static void main(String[] args) {
 
-
         File dir = new File("C:\\Users\\manue\\EmptyCanvasTest\\ocr");
         File dirOut = new File("C:\\Users\\manue\\EmptyCanvasTest\\ocr\\TestsOutput");
         if (dir.exists() && dir.isDirectory()) {
+
+            writer = new CsvWriter("\n", ",");
+            writer.openFile(new File(dir.getAbsolutePath() + File.separator + "output.csv"));
+            writer.writeLine(new String[]{"filename", "x", "y", "w", "h", "chars"});
+
             for (File file : Objects.requireNonNull(dir.listFiles())) {
                 if (!file.isDirectory() && file.isFile() && file.getName().toLowerCase(Locale.ROOT).endsWith(".jpg")) {
                     BufferedImage read = ImageIO.read(file);
@@ -73,7 +81,9 @@ public class ResolutionCharacter0 implements Runnable {
 
                     System.out.println("ResolutionCharacter : " + name);
 
-                    ResolutionCharacter0 resolutionCharacter = new ResolutionCharacter0(read, name, dirOut);
+                    ResolutionCharacter1 resolutionCharacter = new ResolutionCharacter1(read, name, dirOut);
+
+                    System.out.printf("%s", resolutionCharacter.getClass().getSimpleName());
 
                     Thread thread = new Thread(resolutionCharacter);
                     thread.start();
@@ -88,8 +98,23 @@ public class ResolutionCharacter0 implements Runnable {
                     System.gc();
                 }
             }
+
+            writer.closeFile();
         }
 
+    }
+
+    static void exec(ITexture texture, PixM output, PixM input, File dirOut, String name) {
+        output.plotCurve(new Rectangle(10, 10, output.getColumns() - 20, output.getLines() - 20), texture);
+
+        try {
+            ImageIO.write(input.getImage(), "jpg",
+                    new File(dirOut + File.separator + name.replace(' ', '_').replace(".jpg", "INPUT.jpg")));
+            ImageIO.write(output.getImage(), "jpg",
+                    new File(dirOut + File.separator + name.replace(' ', '_').replace(".jpg", "OUTPUT.jpg")));
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     public void addRandomCurves(State state) {
@@ -159,85 +184,119 @@ public class ResolutionCharacter0 implements Runnable {
 
         for (int j = 0; j < input.getLines() - step; j += step) {
             if (j % (input.getLines() / 10) == 0)
-                System.out.printf("%f, Image %s\n", 1.0 * j / input.getLines(), name);
+                System.out.printf("%d %%, Image %s\n", (int) (100.0 * j / input.getLines()), name);
             for (int i = 0; i < input.getColumns() - step; i += step) {
-                if (input.luminance(i, j) > 0.7) {
-                    int w = charMinWidth;
-                    int h = charMinWidth;
-                    boolean wB = false;
-                    boolean hB = false;
+                if (arrayDiff(input.getValues(i, j), WHITE_DOUBLES) < MIN_DIFF) {
+                    int w = 0;
+                    int h = 0;
                     boolean fail = false;
-                    boolean hBout = false;
-                    boolean wBout = false;
+                    boolean[] v;
+                    // La condition doit s'arrêter après les points quand les bords droits
+                    // et bas ont augmenté de manière à ce que le caractère cherché soit mis en
+                    // évidence.
+                    // Bord haut et gauche restent blancs (pas toujours vrai dans les polices)
+                    // Balai vers la droite rencontrent une chose (points noirs) puis s'arrête
+                    // à blanc.
+                    // Balai vers le bas rencontre une chose aussi (points noirs puis s'arrête
+                    // à blanc.
+                    // Peut-il y avoir une confusion en passant 2 balais (peignes) perpendiculaires ?
+                    // Sans doute que oui, ils n'avancent pas au même pas. Quand le blanc est rencontré
+                    // après le noir, il y a arrêt du balai H (par exemple) donc le balai V continue
+                    // jusqu'au blanc. Là le balai H a-t-il rencontré quelque chose qui annule la
+                    // recherche croisée ? Si le balai H est en dessous des caractères il ne rencontre
+                    // plus rien jusqu'à ce que le balai V ait fini.
+                    int heightBlackHistory = 0;
+                    int widthBlackHistory = 0;
+                    int heightWhiteContinuity = 1;
+                    int widthWhiteContinuity = 1;
+                    v = testRectIs(input, i, j, w, h, WHITE_DOUBLES);
                     boolean firstPass = true;
-                    boolean[] v = testRectIs(input, i, j, w, h, WHITE_DOUBLES);
-                    while ((!fail && i + w < input.getColumns() && j + h < input.getLines() && !(hBout && wBout))) {
-
+                    while ((firstPass && Arrays.equals(v, TRUE_BOOLEANS)) || !(heightBlackHistory >= 2 && widthBlackHistory >= 2)
+                            && i + w < input.getColumns() && j + h < input.getLines() && w<stepMax&&h<stepMax) {
                         firstPass = false;
-
-
-                        if (!v[XPLUS]) {
-                            fail = true;
-
+                        v = testRectIs(input, i, j, w, h, WHITE_DOUBLES);
+                        if (Arrays.equals(v, TRUE_BOOLEANS) && widthBlackHistory == 2 && heightBlackHistory == 2)
+                            break;
+                        if (!v[XPLUS] && w >= 1 && (widthBlackHistory < 2 || heightBlackHistory >= 1)) {
+                            w--;
+                            v = testRectIs(input, i, j, w, h, WHITE_DOUBLES);
+                            if (v[XPLUS]) {
+                                widthBlackHistory = 2;
+                            }/*else {
+                                widthBlackHistory = 3;
+                            }*/
                         }
-                        if (!v[YINVE]) {
-                            fail = true;
+                        if ((!v[YINVE] && (h >= 1)) && (heightBlackHistory < 2 || widthBlackHistory >= 1)) {
+                            h--;
+                            v = testRectIs(input, i, j, w, h, WHITE_DOUBLES);
+                            if (v[YINVE]) {
+                                heightBlackHistory = 2;
+                            }/* else {
+                                heightBlackHistory = 3;
+                            }*/
                         }
 
-
-                        if (v[YPLUS] && hB) {
-                            hBout = true;
-                        } else if (!v[YPLUS] && hB) {
-                            hBout = false;
-                        } else if (!v[YPLUS]) {
-                            hB = true;
+                        if (v[XINVE] && widthBlackHistory == 0 && v[YPLUS] && heightBlackHistory == 0) {
+                            h++;
+                            w++;
                         }
-                        h++;
-
-
-                        if (v[XINVE] && wB) {
-                            wBout = true;
-                        } else if (!v[XINVE] && wB) {
-                            wBout = false;
-                        } else if (!v[XINVE]) {
-                            wB = true;
+                        if (!v[XINVE] && widthBlackHistory == 0) {
+                            widthBlackHistory = 1;
+                        } else if(!v[XINVE] && widthBlackHistory==1) {
+                            w++;
+                        } else if (v[XINVE] && widthBlackHistory == 1) {
+                            widthBlackHistory = 2;
                         }
-                        w++;
-
+                        if (!v[YPLUS] && heightBlackHistory == 0) {
+                            heightBlackHistory = 1;
+                        } else if(!v[YPLUS] && heightBlackHistory==1) {
+                            h++;
+                        } else if (v[YPLUS] && heightBlackHistory == 1) {
+                            heightBlackHistory = 2;
+                        }
+                        /*if (heightBlackHistory == 1 || heightBlackHistory == 0 && widthBlackHistory == 2) {
+                            h++;
+                        } else if (widthBlackHistory == 1 || widthBlackHistory == 0 && heightBlackHistory == 2) {
+                            w++;
+                        }*/
                         if (h > stepMax || w > stepMax) {
                             fail = true;
+                            break;
                         }
-
-                        v = testRectIs(input, i, j, w, h, WHITE_DOUBLES);
                     }
+                    v = testRectIs(input, i, j, w, h, WHITE_DOUBLES);
                     boolean succeded = false;
-                    if (fail) {
-                        if (Arrays.equals(testRectIs(input, i, j, w - 1, h, WHITE_DOUBLES), new boolean[]{true, true, true, true})) {
+                    if (heightBlackHistory == 2 && widthBlackHistory == 2) {
+                        if (Arrays.equals(testRectIs(input, i, j, w - 1, h, WHITE_DOUBLES), TRUE_BOOLEANS)) {
                             w = w - 1;
                             succeded = true;
                         }
-                        if (Arrays.equals(testRectIs(input, i, j, w, h - 1, WHITE_DOUBLES), new boolean[]{true, true, true, true})) {
+                        if (Arrays.equals(testRectIs(input, i, j, w, h - 1, WHITE_DOUBLES), TRUE_BOOLEANS)) {
                             h = h - 1;
                             succeded = true;
                         }
                     }
 
-                    succeded = (hBout && wBout) || succeded;
-                    if (succeded && h >= charMinWidth && w >= charMinWidth && h<stepMax && w<stepMax &&
-                            Arrays.equals(testRectIs(input, i, j, w, h, WHITE_DOUBLES), new boolean[]{true, true, true, true})) {
+                    succeded = succeded && (heightBlackHistory == 2) && (widthBlackHistory == 2) && Arrays.equals(testRectIs(input, i, j, w, h, WHITE_DOUBLES), TRUE_BOOLEANS)
+                            && (h <= stepMax) && (w <= stepMax) && (h >= charMinWidth) && (w >= charMinWidth);
+                    if (succeded) {
                         Rectangle rectangle = new Rectangle(i, j, w, h);
                         List<Character> candidates = recognize(input, i, j, w, h);
                         if (candidates.size() > 0) {
                             System.out.printf("In %s, Rectangle = (%d,%d,%d,%d) \t\tCandidates: ", name, i, j, w, h);
                             candidates.forEach(System.out::print);
                             System.out.println();
-                            output.plotCurve(rectangle, texture);
+                            final String[] s = {""};
+                            candidates.forEach(character -> s[0] += character);
+                            writer.writeLine(new String[]{name, "" + i, "" + j, "" + w, "" + h, s[0]});
+                            Color random = Colors.random();
+                            output.plotCurve(rectangle, new TextureCol(random));
                         }
                     }
                 }
             }
         }
-        ResolutionCharacter.exec(texture, output, input, dirOut, name);
+        exec(texture, output, input, dirOut, name);
     }
 
     private List<Character> recognize(PixM input, int i, int j, int w, int h) {
@@ -246,38 +305,37 @@ public class ResolutionCharacter0 implements Runnable {
         List<Character> ch = recognizeH(input, i, j, w, h);
         List<Character> cv = recognizeV(input, i, j, w, h);
 
-        List<Character> allCharPossible = new ArrayList<>();
+        List<Character> allCharsPossible = new ArrayList<>();
 
 
-        cv.forEach(new Consumer<Character>() {
-            @Override
-            public void accept(Character character) {
-                if (ch.contains(character))
-                    allCharPossible.add(character);
-            }
-        });
-        if (allCharPossible.size() == 0)
-            allCharPossible.add('-');
+        // Intersect
+        /*cv.forEach(character -> {
+            if(ch.stream().anyMatch(character::equals))
+                allCharsPossible.add(character);
+        });*/
+        allCharsPossible.addAll(ch);
+        allCharsPossible.addAll(cv);
+        if (allCharsPossible.size() == 0)
+            allCharsPossible.add('-');
 
-        return allCharPossible;
+        return allCharsPossible;
     }
 
     private boolean[] testRectIs(PixM input, int x, int y, int w, int h, double[] color) {
-        double DIFF = 0.4;
         boolean[] w0h1w2h3 = new boolean[4];
         int i, j;
         w0h1w2h3[0] = true;
         for (i = x; i <= x + w; i++)
-            if (arrayDiff(input.getValues(i, y), color) > DIFF) w0h1w2h3[0] = false;
+            if (arrayDiff(input.getValues(i, y), color) > MIN_DIFF) w0h1w2h3[0] = false;
         w0h1w2h3[1] = true;
         for (j = y; j <= y + h; j++)
-            if (arrayDiff(input.getValues(x, j), color) > DIFF) w0h1w2h3[1] = false;
+            if (arrayDiff(input.getValues(x, j), color) > MIN_DIFF) w0h1w2h3[1] = false;
         w0h1w2h3[2] = true;
         for (i = x + w; i >= x; i--)
-            if (arrayDiff(input.getValues(i, y + h), color) > DIFF) w0h1w2h3[2] = false;
+            if (arrayDiff(input.getValues(i, y + h), color) > MIN_DIFF) w0h1w2h3[2] = false;
         w0h1w2h3[3] = true;
         for (j = y + h; j >= y; j--)
-            if (arrayDiff(input.getValues(x + w, j), color) > DIFF) w0h1w2h3[3] = false;
+            if (arrayDiff(input.getValues(x, j), color) > MIN_DIFF) w0h1w2h3[3] = false;
         return w0h1w2h3;
     }
 
@@ -477,7 +535,7 @@ public class ResolutionCharacter0 implements Runnable {
             };
             int current = BLANK;
             for (int i = y; i <= y + h; i++) {
-                if (mat.luminance(i, j) < 0.3) {
+                if (mat.luminance(i, j) < 0.2) {
                     if (current == BLANK) {
                         if (firstColumn) {
                             firstColumn = false;

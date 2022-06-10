@@ -9,6 +9,7 @@ import one.empty3.library.ITexture;
 import one.empty3.library.Lumiere;
 import one.empty3.library.Point3D;
 import one.empty3.library.TextureCol;
+import one.empty3.library.core.lighting.Colors;
 import one.empty3.library.core.nurbs.CourbeParametriquePolynomialeBezier;
 
 import java.awt.*;
@@ -39,8 +40,9 @@ public class ResolutionCharacter implements Runnable {
     private final File dirOut;
     private final int stepMax = 120;
     private final int charMinWidth = 5;
-    int step = 1;// Searched Characters size.
     private final double[] WHITE_DOUBLES = new double[]{1, 1, 1};
+    private final double[] BLACK_DOUBLES = new double[]{0, 0, 0};
+    int step = 1;// Searched Characters size.
     private BufferedImage read;
     private String name;
     private int shakeTimes;
@@ -100,6 +102,19 @@ public class ResolutionCharacter implements Runnable {
             writer.closeFile();
         }
 
+    }
+
+    static void exec(ITexture texture, PixM output, PixM input, File dirOut, String name) {
+        output.plotCurve(new Rectangle(10, 10, output.getColumns() - 20, output.getLines() - 20), texture);
+
+        try {
+            ImageIO.write(input.getImage(), "jpg",
+                    new File(dirOut + File.separator + name.replace(' ', '_').replace(".jpg", "INPUT.jpg")));
+            ImageIO.write(output.getImage(), "jpg",
+                    new File(dirOut + File.separator + name.replace(' ', '_').replace(".jpg", "OUTPUT.jpg")));
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     public void addRandomCurves(State state) {
@@ -169,7 +184,7 @@ public class ResolutionCharacter implements Runnable {
 
         for (int j = 0; j < input.getLines() - step; j += step) {
             if (j % (input.getLines() / 10) == 0)
-                System.out.printf("%d %%, Image %s\n", (int)(100.0 * j / input.getLines()), name);
+                System.out.printf("%d %%, Image %s\n", (int) (100.0 * j / input.getLines()), name);
             for (int i = 0; i < input.getColumns() - step; i += step) {
                 if (arrayDiff(input.getValues(i, j), WHITE_DOUBLES) < MIN_DIFF) {
                     int w = 0;
@@ -196,37 +211,32 @@ public class ResolutionCharacter implements Runnable {
                     int widthWhiteContinuity = 1;
                     v = testRectIs(input, i, j, w, h, WHITE_DOUBLES);
                     boolean firstPass = true;
-                    while ((firstPass && Arrays.equals(v, TRUE_BOOLEANS))||!(heightBlackHistory >= 2 && widthBlackHistory >= 2)
+                    while ((firstPass && Arrays.equals(v, TRUE_BOOLEANS)) || !(heightBlackHistory >= 2 && widthBlackHistory >= 2)
                             && i + w < input.getColumns() && j + h < input.getLines()) {
                         firstPass = false;
                         v = testRectIs(input, i, j, w, h, WHITE_DOUBLES);
-                        if(Arrays.equals(v, TRUE_BOOLEANS) && widthBlackHistory ==2 && heightBlackHistory==2)
+                        if (Arrays.equals(v, TRUE_BOOLEANS) && widthBlackHistory == 2 && heightBlackHistory == 2)
                             break;
                         if (!v[XPLUS] && w >= 1 && (widthBlackHistory < 2 || heightBlackHistory >= 1)) {
                             w--;
                             v = testRectIs(input, i, j, w, h, WHITE_DOUBLES);
-                            if(v[XPLUS]) {
+                            if (v[XPLUS]) {
                                 widthBlackHistory = 2;
-                            }else
+                            }/*else {
                                 widthBlackHistory = 3;
+                            }*/
                         }
-                        if ((!v[YINVE] && (h>=1)) && (heightBlackHistory<2 ||widthBlackHistory>=1)) {
+                        if ((!v[YINVE] && (h >= 1)) && (heightBlackHistory < 2 || widthBlackHistory >= 1)) {
                             h--;
                             v = testRectIs(input, i, j, w, h, WHITE_DOUBLES);
-                            if(v[YINVE]) {
+                            if (v[YINVE]) {
                                 heightBlackHistory = 2;
-                            } else
-                                heightBlackHistory =3;
+                            }/* else {
+                                heightBlackHistory = 3;
+                            }*/
                         }
-                        if (!v[XINVE] && heightWhiteContinuity > -1)
-                            heightWhiteContinuity = -1;
-                        if (!v[YPLUS] && widthWhiteContinuity > -1)
-                            widthWhiteContinuity = -1;
-
 
                         if (v[XINVE] && widthBlackHistory == 0 && v[YPLUS] && heightBlackHistory == 0) {
-                            heightWhiteContinuity += heightWhiteContinuity > 0 ? 1 : 0;
-                            widthWhiteContinuity += widthWhiteContinuity > 0 ? 1 : 0;
                             h++;
                             w++;
                         }
@@ -240,9 +250,9 @@ public class ResolutionCharacter implements Runnable {
                         } else if (v[YPLUS] && heightBlackHistory == 1) {
                             heightBlackHistory = 2;
                         }
-                        if (heightBlackHistory == 1 || (heightBlackHistory == 0 && widthBlackHistory == 2)) {
+                        if (heightBlackHistory == 1 || heightBlackHistory == 0 && widthBlackHistory == 2) {
                             h++;
-                        } else if (widthBlackHistory == 1 || (widthBlackHistory == 0 && heightBlackHistory == 2)) {
+                        } else if (widthBlackHistory == 1 || widthBlackHistory == 0 && heightBlackHistory == 2) {
                             w++;
                         }
                         if (h > stepMax || w > stepMax) {
@@ -263,36 +273,26 @@ public class ResolutionCharacter implements Runnable {
                         }
                     }
 
-                    succeded = succeded && heightBlackHistory == 2 && widthBlackHistory == 2 && Arrays.equals(testRectIs(input, i, j, w, h, WHITE_DOUBLES), TRUE_BOOLEANS)
-                             && h <= stepMax && w <= stepMax && h >= charMinWidth && w >= charMinWidth;
+                    succeded = succeded && (heightBlackHistory == 2) && (widthBlackHistory == 2) && Arrays.equals(testRectIs(input, i, j, w, h, WHITE_DOUBLES), TRUE_BOOLEANS)
+                            && (h <= stepMax) && (w <= stepMax) && (h >= charMinWidth) && (w >= charMinWidth);
                     if (succeded) {
                         Rectangle rectangle = new Rectangle(i, j, w, h);
                         List<Character> candidates = recognize(input, i, j, w, h);
-                        if (candidates.size() > 1) {
+                        if (candidates.size() > 0) {
                             System.out.printf("In %s, Rectangle = (%d,%d,%d,%d) \t\tCandidates: ", name, i, j, w, h);
                             candidates.forEach(System.out::print);
                             System.out.println();
                             final String[] s = {""};
                             candidates.forEach(character -> s[0] += character);
-                            if(!s[0].equals("-") || s[0].length()>0) {
-                                writer.writeLine(new String[]{name, "" + i, "" + j, "" + w, "" + h, s[0]});
-                                output.plotCurve(rectangle, texture);
-                            }
+                            writer.writeLine(new String[]{name, "" + i, "" + j, "" + w, "" + h, s[0]});
+                            Color random = Colors.random();
+                            output.plotCurve(rectangle, new TextureCol(random));
                         }
                     }
                 }
             }
         }
-        output.plotCurve(new Rectangle(10, 10, output.getColumns() - 20, output.getLines() - 20), texture);
-
-        try {
-            ImageIO.write(input.getImage(), "jpg",
-                    new File(dirOut + File.separator + name.replace(' ', '_').replace(".jpg", "INPUT.jpg")));
-            ImageIO.write(output.getImage(), "jpg",
-                    new File(dirOut + File.separator + name.replace(' ', '_').replace(".jpg", "OUTPUT.jpg")));
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        }
+        exec(texture, output, input, dirOut, name);
     }
 
     private List<Character> recognize(PixM input, int i, int j, int w, int h) {
