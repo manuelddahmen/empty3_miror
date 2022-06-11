@@ -522,7 +522,7 @@ public class PixM extends M {
                 }
     }
 
-    public PixM subImage(int x, int y, int w, int h) {
+    public PixM pasteSubImage(int x, int y, int w, int h) {
         PixM p2 = new PixM(w, h);
         for (int i = x; i < x + w; i++)
             for (int j = y; j < y + h; j++)
@@ -531,6 +531,18 @@ public class PixM extends M {
                     p2.setCompNo(c);
                     double v = get(i, j);
                     set(i - x, j - y, v);
+                }
+        return p2;
+    }
+    public PixM copySubImage(int x, int y, int w, int h) {
+        PixM p2 = new PixM(w, h);
+        for (int i = x; i < x + w; i++)
+            for (int j = y; j < y + h; j++)
+                for (int c = 0; c < getCompCount(); c++) {
+                    setCompNo(c);
+                    p2.setCompNo(c);
+                    double v = get(i, j);
+                    p2.set(i - x, j - y, v);
                 }
         return p2;
     }

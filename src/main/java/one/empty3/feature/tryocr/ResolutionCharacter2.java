@@ -36,6 +36,8 @@ public class ResolutionCharacter2 implements Runnable {
     private static final boolean[] TRUE_BOOLEANS = new boolean[]{true, true, true, true};
     private static int SHAKE_SIZE = 20;
     private static CsvWriter writer;
+    private static boolean exporting = true ;
+    private static String dirOutChars;
     final int epochs = 100;
     final boolean[] testedRectangleBorder = new boolean[4];
     private final File dirOut;
@@ -54,6 +56,7 @@ public class ResolutionCharacter2 implements Runnable {
     private PixM output;
     private Map<Character, Integer[]> characterMapH;
     private Map<Character, Integer[]> characterMapV;
+    private int countRects = 0;
 
     public ResolutionCharacter2(BufferedImage read, String name) {
         this(read, name, new File("testsResults"));
@@ -63,12 +66,16 @@ public class ResolutionCharacter2 implements Runnable {
         this.read = read;
         this.name = name;
         this.dirOut = dirOut;
+        countRects = 0;
     }
 
     public static void main(String[] args) {
 
         File dir = new File("C:\\Users\\manue\\EmptyCanvasTest\\ocr");
         File dirOut = new File("C:\\Users\\manue\\EmptyCanvasTest\\ocr\\TestsOutput");
+        if(isExporting()) {
+
+        }
         if (dir.exists() && dir.isDirectory()) {
 
             writer = new CsvWriter("\n", ",");
@@ -82,13 +89,19 @@ public class ResolutionCharacter2 implements Runnable {
                     String name = file.getName();
 
 
+
+
                     System.out.println("ResolutionCharacter2 : " + name);
 
                     ResolutionCharacter2 resolutionCharacter2 = new ResolutionCharacter2(read, name, dirOut);
+                    dirOutChars =dirOut.getAbsolutePath()+File.separator+name+File.separator+"char";
 
                     System.out.printf("%s", resolutionCharacter2.getClass().getSimpleName());
 
                     Thread thread = new Thread(resolutionCharacter2);
+
+
+
                     thread.start();
 
                     try {
@@ -191,7 +204,8 @@ public class ResolutionCharacter2 implements Runnable {
 
         for (int j = 0; j < input.getLines() - step; j += step) {
             if (j % (input.getLines() / 100) == 0)
-                System.out.printf("%d %%, Image %s\n", (int) (100.0 * j / input.getLines()), name);
+                System.out.printf("%d %%, Image %s, Count Rects : %d\n", (int) (100.0 * j / input.getLines()), name, countRects);
+
             for (int i = 0; i < input.getColumns() - step; i += step) {
                 exec2(i, j);
             }
@@ -404,14 +418,28 @@ public class ResolutionCharacter2 implements Runnable {
                 Rectangle rectangle = new Rectangle(i, j, w, h);
                 List<Character> candidates = recognize(input, i, j, w, h);
                 if (candidates.size() > 0) {
-                    System.out.printf("In %s, Rectangle = (%d,%d,%d,%d) \t\tCandidates: ", name, i, j, w, h);
-                    candidates.forEach(System.out::print);
-                    System.out.println();
+                    ///System.out.printf("In %s, Rectangle = (%d,%d,%d,%d) \t\tCandidates: ", name, i, j, w, h);
+                    //candidates.forEach(System.out::print);
+                    //System.out.println();
                     final String[] s = {""};
                     candidates.forEach(character -> s[0] += character);
-                    writer.writeLine(new String[]{name, "" + i, "" + j, "" + w, "" + h, s[0]});
+                    //writer.writeLine(new String[]{name, "" + i, "" + j, "" + w, "" + h, s[0]});
                     Color random = Colors.random();
                     output.plotCurve(rectangle, new TextureCol(random));
+                    countRects ++;
+                    if(isExporting()) {
+                        File file = new File(dirOutChars + "-" + i + "-" + j + "-" + w + "-" + h+".jpg");
+                        PixM outChar = input.copySubImage(i, j, w, h);
+                        if(!file.getParentFile().exists() || file.getParentFile().isDirectory()) {
+                            file.getParentFile().mkdirs();
+                            try {
+                                ImageIO.write(outChar.getImage(), "jpg", file);
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
+
+                    }
                 }
             }
         }
@@ -801,4 +829,8 @@ public class ResolutionCharacter2 implements Runnable {
             return copy;
         }
     }
+    private static boolean isExporting() {
+        return exporting;
+    }
 }
+
