@@ -340,12 +340,16 @@ public class ResolutionCharacter2 implements Runnable {
                 int h0 = h;
                 testRectIs(input, i, j, w, h, testedRectangleBorder, WHITE_DOUBLES);
 
-                if (widthBlackHistory == 0 && Arrays.equals(testedRectangleBorder, TRUE_BOOLEANS) && heightBlackHistory == 0) {
+                if (widthBlackHistory == 0 && Arrays.equals(testedRectangleBorder, TRUE_BOOLEANS)
+                        && heightBlackHistory == 0) {
                     h++;
                     w++;
-                } else if (widthBlackHistory == 1 && !Arrays.equals(testedRectangleBorder, TRUE_BOOLEANS) && heightBlackHistory == 1) {
+                    continue;
+                } else if (widthBlackHistory == 1 && !Arrays.equals(testedRectangleBorder, TRUE_BOOLEANS)
+                        && heightBlackHistory == 1) {
                     h++;
                     w++;
+                    continue;
                 }
                 if (!testedRectangleBorder[XINVE] && widthBlackHistory == 0) {
                     widthBlackHistory = 1;
@@ -379,6 +383,7 @@ public class ResolutionCharacter2 implements Runnable {
                 if ((h>stepMax || w > stepMax) || ((h0 == h) && (w0 == w))) {
                     break;
                 }
+
             }
             testRectIs(input, i, j, w, h, testedRectangleBorder, WHITE_DOUBLES);
             boolean succeded = false;
