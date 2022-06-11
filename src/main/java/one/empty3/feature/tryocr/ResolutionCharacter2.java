@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.*;
 
-public class ResolutionCharacter1 implements Runnable {
+public class ResolutionCharacter2 implements Runnable {
     public static final float MIN_DIFF = 0.6f;
     public static final int XPLUS = 0;
     public static final int YPLUS = 1;
@@ -55,11 +55,11 @@ public class ResolutionCharacter1 implements Runnable {
     private Map<Character, Integer[]> characterMapH;
     private Map<Character, Integer[]> characterMapV;
 
-    public ResolutionCharacter1(BufferedImage read, String name) {
+    public ResolutionCharacter2(BufferedImage read, String name) {
         this(read, name, new File("testsResults"));
     }
 
-    public ResolutionCharacter1(BufferedImage read, String name, File dirOut) {
+    public ResolutionCharacter2(BufferedImage read, String name, File dirOut) {
         this.read = read;
         this.name = name;
         this.dirOut = dirOut;
@@ -82,13 +82,13 @@ public class ResolutionCharacter1 implements Runnable {
                     String name = file.getName();
 
 
-                    System.out.println("ResolutionCharacter1 : " + name);
+                    System.out.println("ResolutionCharacter2 : " + name);
 
-                    ResolutionCharacter1 resolutionCharacter1 = new ResolutionCharacter1(read, name, dirOut);
+                    ResolutionCharacter2 resolutionCharacter2 = new ResolutionCharacter2(read, name, dirOut);
 
-                    System.out.printf("%s", resolutionCharacter1.getClass().getSimpleName());
+                    System.out.printf("%s", resolutionCharacter2.getClass().getSimpleName());
 
-                    Thread thread = new Thread(resolutionCharacter1);
+                    Thread thread = new Thread(resolutionCharacter2);
                     thread.start();
 
                     try {
