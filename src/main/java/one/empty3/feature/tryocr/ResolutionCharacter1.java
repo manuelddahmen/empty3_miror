@@ -1,7 +1,6 @@
 package one.empty3.feature.tryocr;
 
 import atlasgen.CsvWriter;
-import com.android.tools.r8.graph.T;
 import one.empty3.feature.Linear;
 import one.empty3.feature.PixM;
 import one.empty3.feature.app.replace.javax.imageio.ImageIO;
@@ -315,7 +314,7 @@ public class ResolutionCharacter1 implements Runnable {
             int h = 0;
             boolean fail = false;
             // La condition doit s'arrêter après les points quand les bords droits
-            // et bas ont augmenté de manière à ce que le caractère cherché soit mis en
+            // et bas ont augmenté de manière que le caractère cherché soit mis en
             // évidence.
             // Bord haut et gauche restent blancs (pas toujours vrai dans les polices)
             // Balai vers la droite rencontrent une chose (points noirs) puis s'arrête
@@ -332,13 +331,16 @@ public class ResolutionCharacter1 implements Runnable {
             int widthBlackHistory = 0;
             testRectIs(input, i, j, w, h, testedRectangleBorder, WHITE_DOUBLES);
             boolean firstPass = true;
-            while ((firstPass && Arrays.equals(testedRectangleBorder, TRUE_BOOLEANS)) || !(heightBlackHistory >= 2 && widthBlackHistory >= 2
-                    && testedRectangleBorder.equals(TRUE_BOOLEANS)) && i + w < input.getColumns() && j + h < input.getLines() && !fail && h >= 0 && w >= 0) {
-                fail = false;
+            while (firstPass && Arrays.equals(testedRectangleBorder, TRUE_BOOLEANS) ||
+                    !(heightBlackHistory >= 2 && widthBlackHistory >= 2)
+                            && i + w < input.getColumns() && j + h < input.getLines() && h >= 0 && w >= 0 && w < stepMax && h < stepMax) {
                 firstPass = false;
                 testRectIs(input, i, j, w, h, testedRectangleBorder, WHITE_DOUBLES);
 
-                if (testedRectangleBorder[XINVE] && widthBlackHistory == 0 && testedRectangleBorder[YPLUS] && heightBlackHistory == 0) {
+                if (widthBlackHistory == 0 && Arrays.equals(testedRectangleBorder, TRUE_BOOLEANS) && heightBlackHistory == 0) {
+                    h++;
+                    w++;
+                } else if (widthBlackHistory == 1 && !Arrays.equals(testedRectangleBorder, TRUE_BOOLEANS) && heightBlackHistory == 1) {
                     h++;
                     w++;
                 }
@@ -349,10 +351,12 @@ public class ResolutionCharacter1 implements Runnable {
                     w++;
                 } else if (testedRectangleBorder[XINVE] && widthBlackHistory == 1) {
                     widthBlackHistory = 2;
-                } else                 // Case '>'
-                    if (heightBlackHistory == 2 && widthBlackHistory == 2 && !testedRectangleBorder[XINVE]) {
-                        h++;
-                    }
+                }
+                // Case "L"
+                if (widthBlackHistory == 2 && !testedRectangleBorder[YPLUS]) {
+                    h++;
+                    heightBlackHistory = 1;
+                }
 
                 if (!testedRectangleBorder[YPLUS] && heightBlackHistory == 0) {
                     heightBlackHistory = 1;
@@ -361,10 +365,12 @@ public class ResolutionCharacter1 implements Runnable {
                     h++;
                 } else if (testedRectangleBorder[YPLUS] && heightBlackHistory == 1) {
                     heightBlackHistory = 2;
-                } else// Case "L"
-                    if (widthBlackHistory == 2 && heightBlackHistory == 2 && !testedRectangleBorder[YPLUS]) {
-                        w++;
-                    }
+                }
+                // Case '>'
+                if (heightBlackHistory == 2 && !testedRectangleBorder[XINVE]) {
+                    w++;
+                    widthBlackHistory = 1;
+                }
 
 
                 if (h > stepMax || w > stepMax) {
