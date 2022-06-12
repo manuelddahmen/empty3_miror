@@ -3,10 +3,7 @@ package one.empty3.neunet.of;
 import atlasgen.Action;
 import atlasgen.CsvLine;
 import atlasgen.CsvReader;
-import one.empty3.neunet.HiddenLayer;
-import one.empty3.neunet.InputLayer;
-import one.empty3.neunet.Net;
-import one.empty3.neunet.OutputLayer;
+import one.empty3.neunet.*;
 
 import java.io.File;
 import java.util.HashMap;
@@ -14,6 +11,19 @@ import java.util.Objects;
 
 public class RunPerceptronAndCharacterClassifiers {
     private static HashMap<String, String> options;
+
+    public static double and(double x1, double x2) {
+        Neuron l = new Neuron(2, 0);
+        l.setInput(new double[] {0, 1});
+        l.setW(new double[] {0.5, 0.5});
+        double b = 0.5;
+        double z = l.function();
+        z+=b;
+        double a = z > 0?1.0:0.0;
+
+        System.out.printf("A:"+ a);
+        return a;
+    }
 
     public static void main(String[] args) throws Exception {
         int res = 14;
@@ -30,18 +40,38 @@ public class RunPerceptronAndCharacterClassifiers {
                 }
             }
         }
+        if(args.length==0) {
+            Neuron l = new Neuron(2, 0);
+            l.setInput(new double[] {0, 1});
+            l.setW(new double[] {0.5, 0.5});
+            l.setBias(-1);
+            double b = 0.5;
+            double z = l.function();
+            z+=b;
+            double a = z > 0?1.0:0.0;
+
+            System.out.printf("A:"+ a);
+
+            for (int i = 0; i <4; i++) {
+                double x1 = i/2;
+                double x2 = i%2;
+                double output = and(x1, x2);
+
+                System.out.printf("%d%d\t%d", x1, x2, output);
+            }
+        }
         if (options.get("directory") != null) {
             File directory = new File(options.get("directory"));
             if (directory.exists() && directory.isDirectory()) {
                 System.out.println("New network");
                 Net net = new Net();
-                net.setInputLayer(new InputLayer(res, res));
-                net.getHiddenLayerList().add(new HiddenLayer(res, res));
-                net.getHiddenLayerList().add(new HiddenLayer(res, res));
-                net.getHiddenLayerList().add(new HiddenLayer(res, res));
-                net.getHiddenLayerList().add(new HiddenLayer(res, res));
-                net.getHiddenLayerList().add(new HiddenLayer(res, res));
-                net.getOutputLayerList().add(new OutputLayer(res, res));
+                net.setInputLayer(new InputNeuron(res, res));
+                net.getHiddenLayerList().add(new HiddenNeuron(res, res));
+                net.getHiddenLayerList().add(new HiddenNeuron(res, res));
+                net.getHiddenLayerList().add(new HiddenNeuron(res, res));
+                net.getHiddenLayerList().add(new HiddenNeuron(res, res));
+                net.getHiddenLayerList().add(new HiddenNeuron(res, res));
+                net.getOutputLayerList().add(new OutputNeuron(res, res));
                 for (File image : Objects.requireNonNull(directory.listFiles())) {
                     if (net.getInputLayer().loadData(image)) {
 
@@ -63,13 +93,13 @@ public class RunPerceptronAndCharacterClassifiers {
                 if (directory.exists() && directory.isFile()) {
                     System.out.println("New network");
                     Net net = new Net();
-                    net.setInputLayer(new InputLayer(res, res));
-                    net.getHiddenLayerList().add(new HiddenLayer(res, res));
-                    net.getHiddenLayerList().add(new HiddenLayer(res, res));
-                    net.getHiddenLayerList().add(new HiddenLayer(res, res));
-                    net.getHiddenLayerList().add(new HiddenLayer(res, res));
-                    net.getHiddenLayerList().add(new HiddenLayer(res, res));
-                    net.getOutputLayerList().add(new OutputLayer(res, res));
+                    net.setInputLayer(new InputNeuron(res, res));
+                    net.getHiddenLayerList().add(new HiddenNeuron(res, res));
+                    net.getHiddenLayerList().add(new HiddenNeuron(res, res));
+                    net.getHiddenLayerList().add(new HiddenNeuron(res, res));
+                    net.getHiddenLayerList().add(new HiddenNeuron(res, res));
+                    net.getHiddenLayerList().add(new HiddenNeuron(res, res));
+                    net.getOutputLayerList().add(new OutputNeuron(res, res));
                     reader.setAction(new Action() {
                         @Override
                         public void init() {
@@ -100,4 +130,5 @@ public class RunPerceptronAndCharacterClassifiers {
         }
 
     }
+
 }

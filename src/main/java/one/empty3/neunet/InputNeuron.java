@@ -8,10 +8,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 
-public class InputLayer extends Layer {
+public class InputNeuron extends Neuron {
     private File uri;
 
-    public InputLayer(int sizeX, int sizeY) {
+    public InputNeuron(int sizeX, int sizeY) {
         super(sizeX, sizeY);
     }
 

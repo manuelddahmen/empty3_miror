@@ -1,9 +1,9 @@
 package one.empty3.neunet;
 
-public class HiddenLayer extends Layer {
+public class HiddenNeuron extends Neuron {
     private Dimension dimensionZ;
 
-    public HiddenLayer(int sizeX, int sizeY) {
+    public HiddenNeuron(int sizeX, int sizeY) {
         super(sizeX, sizeY);
     }
 

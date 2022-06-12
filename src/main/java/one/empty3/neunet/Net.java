@@ -12,42 +12,42 @@ import java.util.TreeMap;
 public class Net {
     private static double RESOLUTION = 14;
     private List<File> trainSet;
-    private InputLayer inputLayer;
-    private List<HiddenLayer> hiddenLayerList;
-    private List<OutputLayer> outputLayerList;
+    private InputNeuron inputLayer;
+    private List<HiddenNeuron> hiddenNeuronList;
+    private List<OutputNeuron> outputNeuronList;
     private PredictedResult predictedResult;
-    private TreeMap<Layer, Layer> layersOrder;
+    private TreeMap<Neuron, Neuron> layersOrder;
 
     public Net() {
         layersOrder = new TreeMap<>();
-        outputLayerList = new ArrayList<>();
-        hiddenLayerList = new ArrayList<>();
+        outputNeuronList = new ArrayList<>();
+        hiddenNeuronList = new ArrayList<>();
         trainSet = new ArrayList<>();
         RESOLUTION = 14;
     }
 
-    public InputLayer getInputLayer() {
+    public InputNeuron getInputLayer() {
         return inputLayer;
     }
 
-    public void setInputLayer(InputLayer inputLayer) {
+    public void setInputLayer(InputNeuron inputLayer) {
         this.inputLayer = inputLayer;
     }
 
-    public List<HiddenLayer> getHiddenLayerList() {
-        return hiddenLayerList;
+    public List<HiddenNeuron> getHiddenLayerList() {
+        return hiddenNeuronList;
     }
 
-    public void setHiddenLayerList(List<HiddenLayer> hiddenLayerList) {
-        this.hiddenLayerList = hiddenLayerList;
+    public void setHiddenLayerList(List<HiddenNeuron> hiddenNeuronList) {
+        this.hiddenNeuronList = hiddenNeuronList;
     }
 
-    public List<OutputLayer> getOutputLayerList() {
-        return outputLayerList;
+    public List<OutputNeuron> getOutputLayerList() {
+        return outputNeuronList;
     }
 
-    public void setOutputLayerList(List<OutputLayer> outputLayerList) {
-        this.outputLayerList = outputLayerList;
+    public void setOutputLayerList(List<OutputNeuron> outputNeuronList) {
+        this.outputNeuronList = outputNeuronList;
     }
 
     public List<File> getTrainSet() {
@@ -74,11 +74,11 @@ public class Net {
         Net.RESOLUTION = RESOLUTION;
     }
 
-    public TreeMap<Layer, Layer> getLayersOrder() {
+    public TreeMap<Neuron, Neuron> getLayersOrder() {
         return layersOrder;
     }
 
-    public void setLayersOrder(TreeMap<Layer, Layer> layersOrder) {
+    public void setLayersOrder(TreeMap<Neuron, Neuron> layersOrder) {
         this.layersOrder = layersOrder;
     }
 
@@ -102,28 +102,28 @@ public class Net {
                     error += inputLayer.error();
                     inputLayer.updateW();
                     for (int i = 0; i < inputLayer.getSizeX(); i++) {
-                        for (int h = 0; h < hiddenLayerList.get(0).getSizeX(); h++) {
-                            hiddenLayerList.get(0).getInput()[h] += function; // ??? et le
+                        for (int h = 0; h < hiddenNeuronList.get(0).getSizeX(); h++) {
+                            hiddenNeuronList.get(0).getInput()[h] += function; // ??? et le
                         }
                     }
-                    error += hiddenLayerList.get(0).error();
-                    hiddenLayerList.get(0).updateW();
-                    for (int i = 1; i < hiddenLayerList.size() - 1; i++) {
-                        function = hiddenLayerList.get(i).function();
-                        for (int h = 0; h < hiddenLayerList.get(h).getSizeX(); h++) {
-                            hiddenLayerList.get(i + 1).getInput()[h] += function;
+                    error += hiddenNeuronList.get(0).error();
+                    hiddenNeuronList.get(0).updateW();
+                    for (int i = 1; i < hiddenNeuronList.size() - 1; i++) {
+                        function = hiddenNeuronList.get(i).function();
+                        for (int h = 0; h < hiddenNeuronList.get(h).getSizeX(); h++) {
+                            hiddenNeuronList.get(i + 1).getInput()[h] += function;
                         }
-                        error += hiddenLayerList.get(i).error();
-                        hiddenLayerList.get(i).updateW();
+                        error += hiddenNeuronList.get(i).error();
+                        hiddenNeuronList.get(i).updateW();
                     }
 
-                    HiddenLayer hiddenLayerOut = hiddenLayerList.get(hiddenLayerList.size() - 1);
-                    OutputLayer outputLayer = outputLayerList.get(0);
-                    function = hiddenLayerOut.function();
-                    error += outputLayerList.get(0).error();
-                    hiddenLayerList.get(0).updateW();
-                    for (int h = 1; h < hiddenLayerList.get(h).getSizeX(); h++) {
-                        outputLayer.getInput()[h] += function;
+                    HiddenNeuron hiddenNeuronOut = hiddenNeuronList.get(hiddenNeuronList.size() - 1);
+                    OutputNeuron outputNeuron = outputNeuronList.get(0);
+                    function = hiddenNeuronOut.function();
+                    error += outputNeuronList.get(0).error();
+                    hiddenNeuronList.get(0).updateW();
+                    for (int h = 1; h < hiddenNeuronList.get(h).getSizeX(); h++) {
+                        outputNeuron.getInput()[h] += function;
                     }
 
                 }
@@ -139,13 +139,13 @@ public class Net {
         for (int i = 0; i < RESOLUTION * RESOLUTION * 3; i++) {
             s.append("\t");
             s.append("").append(inputLayer.getW()[i]);
-            for (HiddenLayer hiddenLayer : hiddenLayerList) {
+            for (HiddenNeuron hiddenNeuron : hiddenNeuronList) {
                 s.append("\t");
-                s.append("").append(hiddenLayer.getW()[i]);
+                s.append("").append(hiddenNeuron.getW()[i]);
             }
-            for (OutputLayer outputLayer : outputLayerList) {
+            for (OutputNeuron outputNeuron : outputNeuronList) {
                 s.append("\t");
-                s.append("").append(outputLayer.getW()[i]);
+                s.append("").append(outputNeuron.getW()[i]);
             }
             s.append("\n");
         }

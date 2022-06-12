@@ -37,13 +37,13 @@ public class FeatureDescriptor {
         this.fd = fd;
     }
 
-    public double match(Layer layer) {
+    public double match(Neuron neuron) {
         double highScore = -1.0;
         double score = 0.0;
         int wd = resX;
         int hd = resY;
-        int wi = layer.getSizeX();
-        int hi = layer.getSizeY();
+        int wi = neuron.getSizeX();
+        int hi = neuron.getSizeY();
 
         Resolution dimD = new Resolution(wd, hd);
         Resolution dimI = new Resolution(wi, hi);
@@ -75,10 +75,10 @@ public class FeatureDescriptor {
         double xRes = 0, yRes = 0;
         double xCurr = 0, yCurr = 0;
         while (xRes < max.x && yRes < max.y) {
-            for (xCurr = 0; xCurr <= layer.getSizeX() - resX; xCurr += 1) {
-                for (yCurr = 0; yCurr <= layer.getSizeY() - resY; yCurr += 1) {
+            for (xCurr = 0; xCurr <= neuron.getSizeX() - resX; xCurr += 1) {
+                for (yCurr = 0; yCurr <= neuron.getSizeY() - resY; yCurr += 1) {
                     Rectangle rectangle = new Rectangle((int) (xCurr), (int) (yCurr),
-                            layer.getSizeX(), layer.getSizeY());
+                            neuron.getSizeX(), neuron.getSizeY());
 
                     // Match feature of size rectangle.wh in rectangle
                     // According to colors variations.
@@ -86,7 +86,7 @@ public class FeatureDescriptor {
                     int colorComp = 0;
                     for (int i = 0; i < rectangle.x - rectangle.width; i++)
                         for (int j = 0; j < rectangle.y - rectangle.height; j++) {
-                            Point3D color1 = layer.getPixelColorComponents(i, j);
+                            Point3D color1 = neuron.getPixelColorComponents(i, j);
                             Point3D colorDescription1 = new Point3D(
                                     fd[ordPix(i, j, 0, dimD.x(), dimD.y(), 3)],
                                     fd[ordPix(i, j, 1, dimD.x(), dimD.y(), 3)],
