@@ -23,6 +23,7 @@ public class InputNeuron extends Neuron {
         this.uri = uri;
     }
 
+
     public boolean loadData(File file) throws Exception {
         PixM p = null;
         try {
@@ -49,14 +50,5 @@ public class InputNeuron extends Neuron {
             e.printStackTrace();
         }
         return false;
-    }
-
-    public void setInputImage(PixM pixM, TrainDatasetImage data) {
-        for (int x = 0; x < Config.RES; x++)
-            for (int y = 0; y < Config.RES; y++)
-                for (int c = 0; c < pixM.getCompCount(); c++) {
-                    pixM.setCompNo(c);
-                    input[(x + y * pixM.getColumns() * pixM.compCount) + c] = pixM.get(x, y);
-                }
     }
 }

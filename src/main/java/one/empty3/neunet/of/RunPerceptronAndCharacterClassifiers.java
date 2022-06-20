@@ -65,7 +65,7 @@ public class RunPerceptronAndCharacterClassifiers {
             if (directory.exists() && directory.isDirectory()) {
                 System.out.println("New network");
                 Net net = new Net();
-                net.setInputLayer(new InputNeuron(res, res));
+                //net.setInputLayer(new InputNeuron(res, res));
                 net.getHiddenLayerList().add(new HiddenNeuron(res, res));
                 net.getHiddenLayerList().add(new HiddenNeuron(res, res));
                 net.getHiddenLayerList().add(new HiddenNeuron(res, res));
@@ -73,11 +73,11 @@ public class RunPerceptronAndCharacterClassifiers {
                 net.getHiddenLayerList().add(new HiddenNeuron(res, res));
                 net.getOutputLayerList().add(new OutputNeuron(res, res));
                 for (File image : Objects.requireNonNull(directory.listFiles())) {
-                    if (net.getInputLayer().loadData(image)) {
+                    //if (net.getInputLayer().loadData(image)) {
 
                         System.out.println("Train network");
                         net.train();
-                    }
+                    //}
                 }
                 System.out.println("Result: net");
 
@@ -93,7 +93,7 @@ public class RunPerceptronAndCharacterClassifiers {
                 if (directory.exists() && directory.isFile()) {
                     System.out.println("New network");
                     Net net = new Net();
-                    net.setInputLayer(new InputNeuron(res, res));
+                    //net.setInputLayer(new InputNeuron(res, res));
                     net.getHiddenLayerList().add(new HiddenNeuron(res, res));
                     net.getHiddenLayerList().add(new HiddenNeuron(res, res));
                     net.getHiddenLayerList().add(new HiddenNeuron(res, res));
@@ -108,6 +108,7 @@ public class RunPerceptronAndCharacterClassifiers {
 
                         @Override
                         public void processLine(CsvLine csvLine) {
+                            /*
                             try {
                                 if (net.getInputLayer().loadData(new File(csvLine.getValue()[1]))) {
 
@@ -117,6 +118,7 @@ public class RunPerceptronAndCharacterClassifiers {
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
+                            */
                         }
                     });
                     System.out.println("Result: net");

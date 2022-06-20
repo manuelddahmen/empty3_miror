@@ -1,5 +1,6 @@
 package one.empty3.neunet;
 
+import one.empty3.feature.PixM;
 import one.empty3.library.Point3D;
 
 public class Neuron implements Comparable {
@@ -9,7 +10,7 @@ public class Neuron implements Comparable {
     private int comps;
     private double[] w;
     protected double[] input;
-    protected double[] output;
+    protected double output;
     protected double bias;
     public Neuron(int sizeX, int sizeY) {
         comps = 3;
@@ -17,8 +18,13 @@ public class Neuron implements Comparable {
         this.sizeY = sizeY;
         w = new double[sizeX * sizeY * comps];
         input = new double[sizeX * sizeY * comps];
-        output = new double[sizeX * sizeY * comps];
         initW(1.0);
+    }
+
+    public void compute() {
+        double dot = dot(getW(), getInput());
+        double function = function();
+        output = function;
     }
 
     public int getSizeX() {
@@ -53,11 +59,11 @@ public class Neuron implements Comparable {
         this.input = input;
     }
 
-    public double[] getOutput() {
+    public double getOutput() {
         return output;
     }
 
-    public void setOutput(double[] output) {
+    public void setOutput(double output) {
         this.output = output;
     }
 
@@ -97,7 +103,7 @@ public class Neuron implements Comparable {
     public double error() {
         double e = 0.0;
         for (int i = 0; i < w.length; i++) {
-            e = e + Math.pow(output[i] - input[i] * w[i], 2);
+            e = e + Math.pow(output - input[i] * w[i], 2);
 
         }
         return e;
@@ -110,7 +116,7 @@ public class Neuron implements Comparable {
     public double error(double[] w) {
         double e = 0.0;
         for (int i = 0; i < w.length; i++) {
-            e = e + Math.pow(output[i] - input[i] * w[i], 2);
+            e = e + Math.pow(output - input[i] * w[i], 2);
 
         }
         return e;
@@ -168,4 +174,14 @@ public class Neuron implements Comparable {
     public double getBias() {
         return bias;
     }
+
+    public void setInputImage(PixM pixM) {
+        for (int x = 0; x < Config.RES; x++)
+            for (int y = 0; y < Config.RES; y++)
+                for (int c = 0; c < pixM.getCompCount(); c++) {
+                    pixM.setCompNo(c);
+                    input[(x + y * pixM.getColumns() * pixM.compCount) + c] = pixM.get(x, y);
+                }
+    }
+
 }

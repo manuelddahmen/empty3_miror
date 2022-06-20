@@ -2,52 +2,55 @@ package one.empty3.neunet;
 
 import one.empty3.feature.PixM;
 
+import javax.imageio.IIOException;
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.TreeMap;
+import java.util.function.Consumer;
 
-public class Net {
+public class Net<T extends Neuron> {
     private static double RESOLUTION = 14;
     private List<File> trainSet;
-    private InputNeuron inputLayer;
-    private List<HiddenNeuron> hiddenNeuronList;
-    private List<OutputNeuron> outputNeuronList;
-    private PredictedResult predictedResult;
+    private Layer<T> inputLayer;
+    private List<Layer<T>> hiddenLayerList;
+    private List<Layer<OutputNeuron>> outputLayerList;
+    private PredictedResult<T> predictedResult;
     private TreeMap<Neuron, Neuron> layersOrder;
 
     public Net() {
         layersOrder = new TreeMap<>();
-        outputNeuronList = new ArrayList<>();
-        hiddenNeuronList = new ArrayList<>();
+        outputLayerList = new ArrayList<>();
+        hiddenLayerList = new ArrayList<>();
         trainSet = new ArrayList<>();
         RESOLUTION = 14;
     }
 
-    public InputNeuron getInputLayer() {
+    public Layer<T> getInputLayer() {
         return inputLayer;
     }
 
-    public void setInputLayer(InputNeuron inputLayer) {
+    public void setInputLayer(Layer inputLayer) {
         this.inputLayer = inputLayer;
     }
 
-    public List<HiddenNeuron> getHiddenLayerList() {
-        return hiddenNeuronList;
+    public List<Layer<T>> getHiddenLayerList() {
+        return hiddenLayerList;
     }
 
-    public void setHiddenLayerList(List<HiddenNeuron> hiddenNeuronList) {
-        this.hiddenNeuronList = hiddenNeuronList;
+    public void setHiddenLayerList(List<Layer<T>> hiddenNeuronList) {
+        this.hiddenLayerList = hiddenNeuronList;
     }
 
-    public List<OutputNeuron> getOutputLayerList() {
-        return outputNeuronList;
+    public List<Layer<OutputNeuron>> getOutputLayerList() {
+        return outputLayerList;
     }
 
-    public void setOutputLayerList(List<OutputNeuron> outputNeuronList) {
-        this.outputNeuronList = outputNeuronList;
+    public void setOutputLayerList(List<Layer<OutputNeuron>> outputNeuronList) {
+        this.outputLayerList = outputNeuronList;
     }
 
     public List<File> getTrainSet() {
@@ -58,11 +61,11 @@ public class Net {
         this.trainSet = trainSet;
     }
 
-    public PredictedResult getPredictedResult() {
+    public PredictedResult<T> getPredictedResult() {
         return predictedResult;
     }
 
-    public void setPredictedResult(PredictedResult predictedResult) {
+    public void setPredictedResult(PredictedResult<T> predictedResult) {
         this.predictedResult = predictedResult;
     }
 
@@ -87,68 +90,48 @@ public class Net {
     }
 
 
-    public void train() {
+    public void train() throws IOException {
         int maxIterations = 1000;
         int t = 0;
-        try {
-
-            double error = 0.0;
+            double errorGlobal = 0.0;
 
             while (t < maxIterations) {
                 for (int n = 0; n < trainSet.size(); n++) {
                     PixM pixM = PixM.getPixM(ImageIO.read(trainSet.get(n)), RESOLUTION);
-                    inputLayer.setInputImage(pixM, null);
-                    double function = inputLayer.function();
-                    error += inputLayer.error();
-                    inputLayer.updateW();
-                    for (int i = 0; i < inputLayer.getSizeX(); i++) {
-                        for (int h = 0; h < hiddenNeuronList.get(0).getSizeX(); h++) {
-                            hiddenNeuronList.get(0).getInput()[h] += function; // ??? et le
+                    inputLayer.getNeurons().data2d.forEach(new Consumer<List<T>>() {
+                        @Override
+                        public void accept(List<T> ts) {
+                            ts.forEach(new Consumer<T>() {
+                                @Override
+                                public void accept(T t) {
+                                    t.setInputImage(pixM);
+                                }
+                            });
                         }
-                    }
-                    error += hiddenNeuronList.get(0).error();
-                    hiddenNeuronList.get(0).updateW();
-                    for (int i = 1; i < hiddenNeuronList.size() - 1; i++) {
-                        function = hiddenNeuronList.get(i).function();
-                        for (int h = 0; h < hiddenNeuronList.get(h).getSizeX(); h++) {
-                            hiddenNeuronList.get(i + 1).getInput()[h] += function;
-                        }
-                        error += hiddenNeuronList.get(i).error();
-                        hiddenNeuronList.get(i).updateW();
-                    }
+                    });
+                    final double[] error = {0};
 
-                    HiddenNeuron hiddenNeuronOut = hiddenNeuronList.get(hiddenNeuronList.size() - 1);
-                    OutputNeuron outputNeuron = outputNeuronList.get(0);
-                    function = hiddenNeuronOut.function();
-                    error += outputNeuronList.get(0).error();
-                    hiddenNeuronList.get(0).updateW();
-                    for (int h = 1; h < hiddenNeuronList.get(h).getSizeX(); h++) {
-                        outputNeuron.getInput()[h] += function;
-                    }
+                    final double[] function = {0};
+                    inputLayer.getNeurons().data2d.forEach(new Consumer<List<T>>() {
+                        @Override
+                        public void accept(List<T> ts) {
+                            ts.forEach(new Consumer<T>() {
+                                @Override
+                                public void accept(T t) {
+                                    function[0] += t.function();
+                                    error[0] += t.error();
+                                    t.updateW();
+                                }
+                            });
+                        }
+                    });
+                    // Compute Xs through network
 
                 }
                 t++;
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
-    public String toString() {
-        StringBuilder s = new StringBuilder();
-        for (int i = 0; i < RESOLUTION * RESOLUTION * 3; i++) {
-            s.append("\t");
-            s.append("").append(inputLayer.getW()[i]);
-            for (HiddenNeuron hiddenNeuron : hiddenNeuronList) {
-                s.append("\t");
-                s.append("").append(hiddenNeuron.getW()[i]);
+
             }
-            for (OutputNeuron outputNeuron : outputNeuronList) {
-                s.append("\t");
-                s.append("").append(outputNeuron.getW()[i]);
-            }
-            s.append("\n");
-        }
-        return s.toString();
-    }
+     }
+
 }

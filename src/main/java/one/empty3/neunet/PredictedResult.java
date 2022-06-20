@@ -1,6 +1,6 @@
 package one.empty3.neunet;
 
-public class PredictedResult {
+public class PredictedResult<T extends Neuron> {
     private double outputValues;
     private double sigmaError;
     private String inputFilenameId;
