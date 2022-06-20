@@ -10,4 +10,14 @@ job("Build and publish") {
             api.gradle("publish")
         }
     }
+    
+    
+    container(displayName = "Show key using api", image = "openjdk:11.0.3-jdk") {
+        kotlinScript { api ->
+            // get env var from system
+            println("Project key: " + System.getenv("JB_SPACE_PROJECT_KEY"))
+            // get env var using API
+            println("Project key: " + api.projectKey())
+        }
+    }
 }
