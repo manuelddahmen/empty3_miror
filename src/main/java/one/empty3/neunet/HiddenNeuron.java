@@ -3,9 +3,10 @@ package one.empty3.neunet;
 public class HiddenNeuron extends Neuron {
     private Dimension dimensionZ;
 
-    public HiddenNeuron(int sizeX, int sizeY) {
-        super(sizeX, sizeY);
+    public HiddenNeuron(int length) {
+        super(length);
     }
+
 
     /***
      * Brut calculus

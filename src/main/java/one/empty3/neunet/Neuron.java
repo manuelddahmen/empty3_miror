@@ -4,20 +4,17 @@ import one.empty3.feature.PixM;
 import one.empty3.library.Point3D;
 
 public class Neuron implements Comparable {
-    private Net network;
-    private int sizeX;
-    private int sizeY;
-    private int comps;
+    private final int length;
+    private Net<? extends Neuron> network;
+    private Layer<? extends Neuron> layer;
     private double[] w;
     protected double[] input;
     protected double output;
     protected double bias;
-    public Neuron(int sizeX, int sizeY) {
-        comps = 3;
-        this.sizeX = sizeX;
-        this.sizeY = sizeY;
-        w = new double[sizeX * sizeY * comps];
-        input = new double[sizeX * sizeY * comps];
+    public Neuron(int length) {
+        this.length = length;
+        w = new double[length];
+        input = new double[length];
         initW(1.0);
     }
 
@@ -25,22 +22,6 @@ public class Neuron implements Comparable {
         double dot = dot(getW(), getInput());
         double function = function();
         output = function;
-    }
-
-    public int getSizeX() {
-        return sizeX;
-    }
-
-    public void setSizeX(int sizeX) {
-        this.sizeX = sizeX;
-    }
-
-    public int getSizeY() {
-        return sizeY;
-    }
-
-    public void setSizeY(int sizeY) {
-        this.sizeY = sizeY;
     }
 
     public double[] getW() {
@@ -67,21 +48,6 @@ public class Neuron implements Comparable {
         this.output = output;
     }
 
-    public Net getNetwork() {
-        return network;
-    }
-
-    public void setNetwork(Net network) {
-        this.network = network;
-    }
-
-    public int getComps() {
-        return comps;
-    }
-
-    public void setComps(int comps) {
-        this.comps = comps;
-    }
 
     public double function() {
         return dot(input, w);
@@ -157,15 +123,17 @@ public class Neuron implements Comparable {
     public double activation() {
         return function()+bias >0?1:0;
     }
+/*
     public int ordPix(int x, int y, int comp) {
         return comp * sizeX * sizeY + sizeX * y + x;
     }
-
+*/
+    /*
     public Point3D getPixelColorComponents(int i, int j) {
         return new Point3D(input[ordPix(i, j, 0)],
                 input[ordPix(i, j, 1)], input[ordPix(i, j, 2)]);
     }
-
+*/
 
     public void setBias(double bias) {
         bias = bias;
@@ -184,4 +152,19 @@ public class Neuron implements Comparable {
                 }
     }
 
+    public int getLength() {
+        return length;
+    }
+
+    public void setNetwork(Net<? extends Neuron> network) {
+        this.network = network;
+    }
+
+    public Layer<? extends Neuron> getLayer() {
+        return layer;
+    }
+
+    public void setLayer(Layer<? extends Neuron> layer) {
+        this.layer = layer;
+    }
 }

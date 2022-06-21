@@ -13,7 +13,7 @@ public class RunPerceptronAndCharacterClassifiers {
     private static HashMap<String, String> options;
 
     public static double and(double x1, double x2) {
-        Neuron l = new Neuron(2, 0);
+        Neuron l = new Neuron(2);
         l.setInput(new double[] {0, 1});
         l.setW(new double[] {0.5, 0.5});
         double b = 0.5;
@@ -41,7 +41,7 @@ public class RunPerceptronAndCharacterClassifiers {
             }
         }
         if(args.length==0) {
-            Neuron l = new Neuron(2, 0);
+            Neuron l = new Neuron(2);
             l.setInput(new double[] {0, 1});
             l.setW(new double[] {0.5, 0.5});
             l.setBias(-1);
@@ -66,12 +66,12 @@ public class RunPerceptronAndCharacterClassifiers {
                 System.out.println("New network");
                 Net net = new Net();
                 //net.setInputLayer(new InputNeuron(res, res));
-                net.getHiddenLayerList().add(new HiddenNeuron(res, res));
-                net.getHiddenLayerList().add(new HiddenNeuron(res, res));
-                net.getHiddenLayerList().add(new HiddenNeuron(res, res));
-                net.getHiddenLayerList().add(new HiddenNeuron(res, res));
-                net.getHiddenLayerList().add(new HiddenNeuron(res, res));
-                net.getOutputLayerList().add(new OutputNeuron(res, res));
+                net.getHiddenLayerList().add(new HiddenNeuron(res*res));
+                net.getHiddenLayerList().add(new HiddenNeuron(res*res));
+                net.getHiddenLayerList().add(new HiddenNeuron(res*res));
+                net.getHiddenLayerList().add(new HiddenNeuron(res*res));
+                net.getHiddenLayerList().add(new HiddenNeuron(res*res));
+                net.getOutputLayerList().add(new OutputNeuron(res*res));
                 for (File image : Objects.requireNonNull(directory.listFiles())) {
                     //if (net.getInputLayer().loadData(image)) {
 
@@ -94,12 +94,12 @@ public class RunPerceptronAndCharacterClassifiers {
                     System.out.println("New network");
                     Net net = new Net();
                     //net.setInputLayer(new InputNeuron(res, res));
-                    net.getHiddenLayerList().add(new HiddenNeuron(res, res));
-                    net.getHiddenLayerList().add(new HiddenNeuron(res, res));
-                    net.getHiddenLayerList().add(new HiddenNeuron(res, res));
-                    net.getHiddenLayerList().add(new HiddenNeuron(res, res));
-                    net.getHiddenLayerList().add(new HiddenNeuron(res, res));
-                    net.getOutputLayerList().add(new OutputNeuron(res, res));
+                    net.getHiddenLayerList().add(new HiddenNeuron(res* res));
+                    net.getHiddenLayerList().add(new HiddenNeuron(res* res));
+                    net.getHiddenLayerList().add(new HiddenNeuron(res* res));
+                    net.getHiddenLayerList().add(new HiddenNeuron(res* res));
+                    net.getHiddenLayerList().add(new HiddenNeuron(res* res));
+                    net.getOutputLayerList().add(new OutputNeuron(res* res));
                     reader.setAction(new Action() {
                         @Override
                         public void init() {

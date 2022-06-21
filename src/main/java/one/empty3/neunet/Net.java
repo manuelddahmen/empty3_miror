@@ -1,15 +1,14 @@
 package one.empty3.neunet;
 
+import com.android.tools.r8.internal.Ne;
 import one.empty3.feature.PixM;
+import one.empty3.library.StructureMatrix;
 
-import javax.imageio.IIOException;
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.TreeMap;
 import java.util.function.Consumer;
 
 public class Net<T extends Neuron> {
@@ -19,10 +18,8 @@ public class Net<T extends Neuron> {
     private List<Layer<T>> hiddenLayerList;
     private List<Layer<OutputNeuron>> outputLayerList;
     private PredictedResult<T> predictedResult;
-    private TreeMap<Neuron, Neuron> layersOrder;
-
     public Net() {
-        layersOrder = new TreeMap<>();
+    //    inputLayer = new Layer<T>();
         outputLayerList = new ArrayList<>();
         hiddenLayerList = new ArrayList<>();
         trainSet = new ArrayList<>();
@@ -77,14 +74,6 @@ public class Net<T extends Neuron> {
         Net.RESOLUTION = RESOLUTION;
     }
 
-    public TreeMap<Neuron, Neuron> getLayersOrder() {
-        return layersOrder;
-    }
-
-    public void setLayersOrder(TreeMap<Neuron, Neuron> layersOrder) {
-        this.layersOrder = layersOrder;
-    }
-
     public void loadModel(File model) {
 
     }
@@ -134,4 +123,41 @@ public class Net<T extends Neuron> {
             }
      }
 
+    public double predict1() {
+        StructureMatrix<Double> structureMatrix = new StructureMatrix<Double>(inputLayer.getNeurons().getDim(), Double.class);
+        switch (inputLayer.getNeurons().getDim()) {
+            case 0:
+                Neuron neuron = inputLayer.getNeurons().getElem();
+                neuron.compute();
+                structureMatrix.setElem(neuron.getOutput());
+                break;
+            case 1:
+                inputLayer.getNeurons().getData1d().forEach(new Consumer<T>() {
+                    @Override
+                    public void accept(T t) {
+                        t.compute();
+                        structureMatrix.getData1d().add(t.getOutput());
+                    }
+                });
+                break;
+            case 2:
+                inputLayer.getNeurons().getData2d().forEach(new Consumer<List<T>>() {
+                    int i=0;
+                    @Override
+                    public void accept(List<T> ts) {
+                        final int[] j = {0};
+                        ts.forEach(new Consumer<T>() {
+                            @Override
+                            public void accept(T t) {
+                                t.compute();
+                                structureMatrix.setElem(t.getOutput(), i, j[0]);
+                                j[0]++;
+                            }
+                        });
+                        i++;
+                    }
+                });
+        }
+        return 0;
+    }
 }

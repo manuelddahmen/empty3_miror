@@ -36,7 +36,7 @@ public class FeatureDescriptor {
     public void setFd(double[] fd) {
         this.fd = fd;
     }
-
+/*
     public double match(Neuron neuron) {
         double highScore = -1.0;
         double score = 0.0;
@@ -109,5 +109,5 @@ public class FeatureDescriptor {
 
         }
         return highScore;
-    }
+    }*/
 }

@@ -9,11 +9,13 @@ import java.io.IOException;
 import java.util.Arrays;
 
 public class InputNeuron extends Neuron {
+    private int res;
     private File uri;
 
-    public InputNeuron(int sizeX, int sizeY) {
-        super(sizeX, sizeY);
+    public InputNeuron(int length) {
+        super(length);
     }
+
 
     public File getUri() {
         return uri;
@@ -50,5 +52,9 @@ public class InputNeuron extends Neuron {
             e.printStackTrace();
         }
         return false;
+    }
+
+    private int ordPix(int i, int j, int comp) {
+        return ((j*res+i)*res)*comp+comp;
     }
 }
