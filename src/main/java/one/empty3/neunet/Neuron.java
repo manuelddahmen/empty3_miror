@@ -1,7 +1,7 @@
 package one.empty3.neunet;
 
 import one.empty3.feature.PixM;
-import one.empty3.library.Point3D;
+import one.empty3.neunet.*;
 
 public class Neuron implements Comparable {
     private final int length;
@@ -11,6 +11,9 @@ public class Neuron implements Comparable {
     protected double[] input;
     protected double output;
     protected double bias;
+    private ActivationFunction activationFunction;
+    private ActivationMethod activationMethod = ActivationMethod.Relu;
+
     public Neuron(int length) {
         this.length = length;
         w = new double[length];
@@ -50,7 +53,7 @@ public class Neuron implements Comparable {
 
 
     public double function() {
-        return dot(input, w);
+        return dot(input, w)+bias;
     }
 
     private double dot(double[] inputs, double[] w) {
@@ -121,6 +124,20 @@ public class Neuron implements Comparable {
         }
     }
     public double activation() {
+        switch (activationMethod) {
+            case None:
+                return activationFunction!=null?
+                        activationFunction.activation(this):
+                        getOutput();
+            case Relu:
+                //# rectified linear function
+                return Math.max(0.0, getOutput());
+            case Identity:
+            case Linear:
+                return getOutput();
+            case Signmoid:
+                break;
+        }
         return function()+bias >0?1:0;
     }
 /*
@@ -166,5 +183,25 @@ public class Neuron implements Comparable {
 
     public void setLayer(Layer<? extends Neuron> layer) {
         this.layer = layer;
+    }
+
+    public Net<? extends Neuron> getNetwork() {
+        return network;
+    }
+
+    public ActivationFunction getActivationFunction() {
+        return activationFunction;
+    }
+
+    public void setActivationFunction(ActivationFunction activationFunction) {
+        this.activationFunction = activationFunction;
+    }
+
+    public ActivationMethod getActivationMethod() {
+        return activationMethod;
+    }
+
+    public void setActivationMethod(ActivationMethod activationMethod) {
+        this.activationMethod = activationMethod;
     }
 }

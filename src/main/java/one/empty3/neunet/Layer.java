@@ -10,9 +10,10 @@ public class Layer <T extends Neuron>{
     private int dimensions;
 
     public Layer(int lengthX, int size, Class<T> t) {
+        dimensions = 1;
         this.size = size;
         this.lengthX = lengthX;
-        neurons = new StructureMatrix<>(1, t);
+        neurons = new StructureMatrix<>(dimensions, t);
         for (int i = 0; i < size; i++) {
             try {
                 neurons.setElem(t.newInstance(), i);
@@ -24,8 +25,7 @@ public class Layer <T extends Neuron>{
         }
     }
     public Layer(int lengthX, Class<T> t) {
-        neurons = new StructureMatrix<>(2, t);
-        lengthX = lengthX;
+        this(lengthX, 0, t);
     }
 
     public Layer(StructureMatrix<T> neurons) {
@@ -38,5 +38,29 @@ public class Layer <T extends Neuron>{
 
     public void setNeurons(StructureMatrix<T> neurons) {
         this.neurons = neurons;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
+    }
+
+    public int getLengthX() {
+        return lengthX;
+    }
+
+    public void setLengthX(int lengthX) {
+        this.lengthX = lengthX;
+    }
+
+    public int getDimensions() {
+        return dimensions;
+    }
+
+    public void setDimensions(int dimensions) {
+        this.dimensions = dimensions;
     }
 }

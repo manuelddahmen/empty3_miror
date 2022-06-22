@@ -1,6 +1,5 @@
 package one.empty3.neunet;
 
-import com.android.tools.r8.internal.Ne;
 import one.empty3.feature.PixM;
 import one.empty3.library.StructureMatrix;
 
@@ -123,7 +122,7 @@ public class Net<T extends Neuron> {
             }
      }
 
-    public double predict1() {
+    public double computeAll() {
         StructureMatrix<Double> structureMatrix = new StructureMatrix<Double>(inputLayer.getNeurons().getDim(), Double.class);
         switch (inputLayer.getNeurons().getDim()) {
             case 0:
