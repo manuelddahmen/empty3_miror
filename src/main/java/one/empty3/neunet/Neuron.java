@@ -1,7 +1,6 @@
 package one.empty3.neunet;
 
 import one.empty3.feature.PixM;
-import one.empty3.neunet.*;
 
 public class Neuron implements Comparable {
     private final int length;
@@ -12,7 +11,7 @@ public class Neuron implements Comparable {
     protected double output;
     protected double bias;
     private ActivationFunction activationFunction;
-    private ActivationMethod activationMethod = ActivationMethod.Relu;
+    private ActivationMethod activationMethod = ActivationMethod.ReLU;
 
     public Neuron(int length) {
         this.length = length;
@@ -23,8 +22,8 @@ public class Neuron implements Comparable {
 
     public void compute() {
         double dot = dot(getW(), getInput());
-        double function = function();
-        output = function;
+        double a = activation();
+        output = a;
     }
 
     public double[] getW() {
@@ -129,7 +128,7 @@ public class Neuron implements Comparable {
                 return activationFunction!=null?
                         activationFunction.activation(this):
                         getOutput();
-            case Relu:
+            case ReLU:
                 //# rectified linear function
                 return Math.max(0.0, getOutput());
             case Identity:
@@ -137,6 +136,11 @@ public class Neuron implements Comparable {
                 return getOutput();
             case Signmoid:
                 break;
+            case MinMax:
+                double min = Math.min(1.0, Math.max(0.0, function()));
+                return min<1.0?0.0:1.0;
+            case MinMax01:
+                return Math.min(1.0, Math.max(0.0, function()));
         }
         return function()+bias >0?1:0;
     }

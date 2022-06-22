@@ -1,7 +1,5 @@
 package one.empty3.neunet;
-public class ActivationFunction {
+public abstract class ActivationFunction {
 
-    public double activation(Neuron neuron) {
-        return neuron.sigmoid(neuron.getInput(), neuron.getW());
-    }
+    public abstract double activation(Neuron neuron);
 }

@@ -15,7 +15,7 @@ public class TestNeunet {
 
         net.getInputLayer().getNeurons().getElem(0).setW(new double[] {0.5, 0.5});
 
-        net.getInputLayer().getNeurons().getElem(0).setActivationFunction(new ActivationFunction());
+        net.getInputLayer().getNeurons().getElem(0).setActivationMethod(ActivationMethod.MinMax01);
 
         net.getInputLayer().getNeurons().getElem(0).setInput(new double[] {0.,0.});
         net.computeAll();
