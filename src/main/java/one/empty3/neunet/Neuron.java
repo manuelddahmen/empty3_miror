@@ -22,8 +22,8 @@ public class Neuron implements Comparable {
 
     public void compute() {
         double dot = dot(getW(), getInput());
-        double a = activation();
-        output = a;
+        double function = function();
+        output = function;
     }
 
     public double[] getW() {
@@ -139,6 +139,8 @@ public class Neuron implements Comparable {
             case MinMax:
                 double min = Math.min(1.0, Math.max(0.0, function()));
                 return min<1.0?0.0:1.0;
+            case Logisitic:
+                return 1.0/(1.0+Math.exp(-getOutput()));
             case MinMax01:
                 return Math.min(1.0, Math.max(0.0, function()));
         }

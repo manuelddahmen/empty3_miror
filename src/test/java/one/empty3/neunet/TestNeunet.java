@@ -1,5 +1,6 @@
 package one.empty3.neunet;
 
+import one.empty3.library.core.math.Matrix;
 import one.empty3.neunet.ActivationFunction;
 import org.junit.jupiter.api.Test;
 
@@ -37,5 +38,19 @@ public class TestNeunet {
 
 
 
+    }
+    @Test
+    public void testMatrices() {
+        Matrix inputs = new Matrix(3, 3);
+        Matrix weights = new Matrix(3, 3);
+        Matrix biases = new Matrix(3, 1);
+
+
+        Matrix modify = inputs.multiply(weights).modify((row, col, value) -> value + biases.get(row, 1));
+
+        System.out.println(inputs);
+        System.out.println(weights);
+        System.out.println(biases);
+        System.out.println(modify);
     }
 }

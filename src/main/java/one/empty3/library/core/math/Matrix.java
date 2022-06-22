@@ -1,25 +1,26 @@
 package one.empty3.library.core.math;
 
-import com.android.tools.r8.internal.S;
-import one.empty3.feature.M;
-import one.empty3.library.shader.Mat;
-
-import java.text.Format;
 import java.util.Arrays;
-import java.util.Formatter;
-import java.util.Locale;
 
 public class Matrix {
     private static final String NUMBER_FORMAT = "%+12.5f";
     private static final double TOLERANCE = 0.000001;
     private final int cols;
     private final int rows;
+    private double[] a;
 
-    public interface Producer {
-        double produce(int index);
+    public Matrix(int rows, int cols) {
+        this.rows = rows;
+        this.cols = cols;
+        a = new double[rows * cols];
     }
-    public interface ValueProducer {
-        double produce(int index, double value);
+
+    public Matrix(int rows, int cols, Producer producer) {
+        this(rows, cols);
+        for (int i = 0; i < a.length; i++) {
+            a[i] = producer.produce(i);
+
+        }
     }
 
     public Matrix apply(ValueProducer producer) {
@@ -29,23 +30,7 @@ public class Matrix {
             result.a[i] = producer.produce(i, a[i]);
         }
 
-            return result;
-    }
-
-    private double [] a;
-
-
-    public Matrix(int rows,  int cols) {
-        this.rows = rows;
-        this.cols = cols;
-        a= new double[rows*cols];
-    }
-    public Matrix(int rows,  int cols, Producer producer) {
-        this(rows, cols);
-        for (int i = 0; i < a.length; i++) {
-            a[i]= producer.produce(i);
-
-        }
+        return result;
     }
 
     @Override
@@ -66,23 +51,22 @@ public class Matrix {
         return sb.toString();
     }
 
-    public Matrix multipy(Matrix m)  {
+    public Matrix multiply(Matrix m) {
         Matrix result = new Matrix(rows, m.cols);
 
-        assert cols==m.rows:"Cannot multipy";
-    int index = 0;
+        assert cols == m.rows : "Cannot multipy";
+        int index = 0;
         for (int row = 0; row < result.rows; row++) {
             for (int col = 0; col < result.cols; col++) {
                 result.a[index] = 0.0;
-                for(int k=0; k<cols; k++) {
-                    result.a[row*result.cols+col] += a[row* result.cols+k]*m.a[k*m.cols+col];
+                for (int k = 0; k < cols; k++) {
+                    result.a[row * result.cols + col] += get(row, k) * get(k, col);
                 }
                 index++;
             }
         }
         return result;
     }
-
 
     @Override
     public boolean equals(Object o) {
@@ -94,7 +78,7 @@ public class Matrix {
         if (cols != matrix.cols) return false;
         if (rows != matrix.rows) return false;
         for (int i = 0; i < a.length; i++) {
-            if(Math.abs(a[i]-matrix.a[i])>TOLERANCE)
+            if (Math.abs(a[i] - matrix.a[i]) > TOLERANCE)
                 return false;
 
         }
@@ -107,5 +91,35 @@ public class Matrix {
         result = 31 * result + rows;
         result = 31 * result + Arrays.hashCode(a);
         return result;
+    }
+
+    public double get(int row, int col) {
+        return a[row*cols+col];
+    }
+    public void set(int row, int col, double value) {
+        a[row*cols+col] = value;
+    }
+
+
+    public interface Producer {
+        double produce(int index);
+    }
+
+    public interface ValueProducer {
+        double produce(int index, double value);
+    }
+    public interface RowColProducer {
+        double produce(int row, int col, double value);
+    }
+
+    public Matrix modify(RowColProducer producer) {
+        int index=0;
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < cols; col++) {
+                a[index] = producer.produce(row, col, a[index]);
+                index++;
+            }
+        }
+        return this;
     }
 }
