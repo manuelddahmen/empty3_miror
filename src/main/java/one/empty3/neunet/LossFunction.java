@@ -6,7 +6,12 @@ public class LossFunction {
     public static Matrix crossEntropy(Matrix expected, Matrix actual) {
         Matrix result = actual.apply((index, value) -> {
             return -expected.get(index) * Math.log(value);
-        }).sumColumns();
+        });
+        Matrix result2 = result.sumColumns();
+
+        result.forEach((row, col, index, value) -> {
+            result.set(row, col,value/result2.get(row));
+        });
 
         return result;
     }
