@@ -4,7 +4,7 @@ import one.empty3.library.Point3D;
 import one.empty3.library.core.nurbs.ParametricCurve;
 
 public class Rectangle extends ParametricCurve {
-    private final double height;
+     final double height;
     private final double width;
     private final double y;
     private final double x;
@@ -29,5 +29,21 @@ public class Rectangle extends ParametricCurve {
         if(point3D.get(0).equals(Double.NaN)||point3D.get(1).equals(Double.NaN))
             throw new UnsupportedOperationException("Double NaN Rectangle calculerPoint3D");
         return point3D;
+    }
+
+    public double getHeight() {
+        return height;
+    }
+
+    public double getWidth() {
+        return width;
+    }
+
+    public double getY() {
+        return y;
+    }
+
+    public double getX() {
+        return x;
     }
 }
