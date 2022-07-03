@@ -2,7 +2,6 @@ package one.empty3.feature.tryocr;
 
 import atlasgen.CsvWriter;
 import one.empty3.feature.Linear;
-import one.empty3.feature.MultiLinkList;
 import one.empty3.feature.PixM;
 import one.empty3.feature.app.replace.javax.imageio.ImageIO;
 import one.empty3.feature.shape.Rectangle;
@@ -19,11 +18,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.*;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
-import java.util.stream.Stream;
 
-import static com.android.tools.r8.graph.P.s;
 import static java.util.Collections.sort;
 
 public class ResolutionCharacter3 implements Runnable {
@@ -50,7 +45,7 @@ public class ResolutionCharacter3 implements Runnable {
     final boolean[] testedRectangleBorder = new boolean[4];
     private final File dirOut;
     private final int stepMax = 120;
-    private final int charMinWidth = 3;
+    private final int charMinWidth = 7;
     private final double[] WHITE_DOUBLES = new double[]{1, 1, 1};
     private final double[] BLACK_DOUBLES = new double[]{0, 0, 0};
     int step = 1;// Searched Characters size.
@@ -218,30 +213,37 @@ public class ResolutionCharacter3 implements Runnable {
                 exec2(i, j);
             }
         }
+
         exec(texture, output, input, dirOut, name);
 
+
+        System.out.println("Ajouter les rectangles et enlever l'espace blanc autour");
         for (int i1 = 0; i1 < rectangles.size(); i1++) {
-            rectangle2s.add(new Rectangle2(rectangles.get(i1)));
+            // Transfert vers arraylist classe Rectangle2, enlever les blancs (perte d'info sur
+            // les espaces vides).
+            rectangle2s.add(removeUpLeftBlanks(input, new Rectangle2(rectangles.get(i1))));
+
         }
-        List<Rectangle2> rectangle2s1 = sortRectangles();
-        rectangle2s1.forEach(new Consumer<Rectangle2>() {
-            @Override
-            public void accept(Rectangle2 rectangle2) {
-                File file = new File(dirOutChars2 + "__-"+s[0]+"-" + rectangle2.left + "-" + rectangle2.down + "-"
-                        + rectangle2.up + "-" + rectangle2.right+".jpg");
-                PixM outChar = input.copySubImage(rectangle2.left, rectangle2.up, rectangle2.right-rectangle2.left+1,
-                        rectangle2.down-rectangle2.up+1);
-                if(!file.getParentFile().exists() || file.getParentFile().isDirectory()) {
-                    file.getParentFile().mkdirs();
-                    try {
-                        ImageIO.write(outChar.getImage(), "jpg", file);
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
+        System.out.println("Trier les rectangles et éliminer les doubles");
+        rectangle2s = sortRectangles();
+
+        System.out.println("Enregistrer les fichiers JPG avec les caractères triés et nettoyés");
+        rectangle2s.forEach(rectangle2 -> {
+            File file = new File(dirOutChars2 + "__-" + rectangle2.left + "-" + rectangle2.down + "-"
+                    + rectangle2.up + "-" + rectangle2.right+".jpg");
+            rectangle2 = rectangle2;
+            PixM outChar = input.copySubImage(rectangle2.left, rectangle2.up, rectangle2.right-rectangle2.left+1,
+                    rectangle2.down-rectangle2.up+1);
+            if(!file.getParentFile().exists() || file.getParentFile().isDirectory()) {
+                file.getParentFile().mkdirs();
+                try {
+                    ImageIO.write(outChar.getImage(), "jpg", file);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
                 }
-
-
             }
+
+
         });
 
     }
@@ -815,7 +817,7 @@ public class ResolutionCharacter3 implements Runnable {
         }
 
         public Rectangle2(Rectangle rectangle) {
-            this((int)rectangle.getY(), (int)(rectangle.getY()+rectangle.getHeight()),
+            this((int)rectangle.getX(), (int)(rectangle.getY()+rectangle.getHeight()),
                     (int)rectangle.getY(), (int)(rectangle.getY()+rectangle.getWidth()));
         }
 
@@ -869,12 +871,11 @@ public class ResolutionCharacter3 implements Runnable {
                         return -1;
                     } else if(o1.getRight()>getRight()) {
                         return 1;
-                    }
-                    else return 0;
+                    } else return 0;
 
                 }
             }
-            return Integer.MAX_VALUE;
+            return -1;
         }
 
         @Override
@@ -899,23 +900,23 @@ public class ResolutionCharacter3 implements Runnable {
             return result;
         }
     }
-    private final List<Rectangle2> rectangle2s = new ArrayList<>();
+    private List<Rectangle2> rectangle2s = new ArrayList<>();
     public List<Rectangle2> sortRectangles() {
         sort(rectangle2s);
 
         HashMap<Rectangle2, List<Rectangle2>> contains = new HashMap<>();
 
-        Rectangle2 r0 = rectangle2s.get(0);
         for (int j = 0; j < rectangle2s.size(); j++) {
             // Rectangle candidat contenant ...
             Rectangle2 rectangle1 = rectangle2s.get(j);
             for (int i = j+1; i < rectangle2s.size(); i++) {
                 Rectangle2 rectangle2 = rectangle2s.get(i);
 
-                if(rectangle2!=rectangle1 &&rectangle1.compareTo(rectangle2)==0) {
-                    if(!contains.containsKey(rectangle1) && !rectangle1.equals(rectangle2))
+                if(rectangle2!=rectangle1 &&rectangle1.compareTo(rectangle2)==0
+                        && !rectangle1.equals(rectangle2)) {
+                    if(!contains.containsKey(rectangle1))
                         contains.put(rectangle1, new ArrayList<>());
-                    contains.get(rectangle1).add( rectangle2);
+                    contains.get(rectangle1).add(rectangle2);
                 } else {
                     j = i+1;
                     break;
@@ -950,6 +951,29 @@ public class ResolutionCharacter3 implements Runnable {
         ArrayList<Point3D> moveXY;
         ArrayList<Point3D> added;
         ArrayList<Point3D> deleted;
+    }
+
+    public Rectangle2 removeUpLeftBlanks(PixM input, Rectangle2 r2) {
+        boolean modified = true;
+        boolean[] booleans = new boolean[] {false, false, false, false};
+
+        while(modified && r2.left<r2.right&&r2.down>r2.up) {
+            modified = false;
+            testRectIs(input, r2.left, r2.up, r2.right - r2.left + 1, r2.down - r2.up, booleans,
+                    WHITE_DOUBLES);
+            for (int i = 0; i < booleans.length; i++) {
+                if(booleans[i] &&!modified) {
+                    switch (i) {
+                        case XPLUS -> {r2.up+=1; modified=true;}
+                        case YPLUS -> {r2.right-=1;modified=true;}
+                        case XINVE -> {r2.down-=1;modified=true;}
+                        case YINVE -> {r2.left+=1;modified=true;}
+                        default -> throw new IllegalStateException("Unexpected value: " + i);
+                    }
+                }
+            }
+        }
+        return r2;
     }
 
     class State {
@@ -1006,6 +1030,8 @@ public class ResolutionCharacter3 implements Runnable {
             return copy;
         }
     }
+
+
     private static boolean isExporting() {
         return exporting;
     }
