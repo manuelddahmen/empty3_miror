@@ -41,6 +41,8 @@ public class ResolutionCharacter3 implements Runnable {
     private static boolean exporting = true ;
     private static String dirOutChars;
     private static String dirOutChars2;
+    private static File dir;
+    private static File dirOutF;
     final int epochs = 100;
     final boolean[] testedRectangleBorder = new boolean[4];
     private final File dirOut;
@@ -75,8 +77,8 @@ public class ResolutionCharacter3 implements Runnable {
 
     public static void main(String[] args) {
 
-        File dir = new File("C:\\Users\\manue\\EmptyCanvasTest\\ocr");
-        File dirOut = new File("C:\\Users\\manue\\EmptyCanvasTest\\ocr\\TestsOutputV3"+("ResolutionCharacter3.java"));
+        dir = new File("C:\\Users\\manue\\EmptyCanvasTest\\ocr");
+        dirOutF = new File("C:\\Users\\manue\\EmptyCanvasTest\\ocr\\TestsOutputV3"+("ResolutionCharacter3.java"));
         if(isExporting()) {
 
         }
@@ -97,9 +99,9 @@ public class ResolutionCharacter3 implements Runnable {
 
                     System.out.println("ResolutionCharacter3 : " + name);
 
-                    ResolutionCharacter3 resolutionCharacter3 = new ResolutionCharacter3(read, name, dirOut);
-                    dirOutChars =dirOut.getAbsolutePath()+File.separator+name+File.separator+"char"+File.separator+"outs";
-                    dirOutChars2 =dirOut.getAbsolutePath()+File.separator+name+File.separator+"char2"+File.separator+"outs2";
+                    ResolutionCharacter3 resolutionCharacter3 = new ResolutionCharacter3(read, name, dirOutF);
+                    dirOutChars =dirOutF.getAbsolutePath()+File.separator+name+File.separator+"char"+File.separator+"outs";
+                    dirOutChars2 =dirOutF.getAbsolutePath()+File.separator+name+File.separator+"char2"+File.separator+"outs2";
 
                     System.out.printf("%s", resolutionCharacter3.getClass().getSimpleName());
 
@@ -231,9 +233,9 @@ public class ResolutionCharacter3 implements Runnable {
         rectangle2s.forEach(rectangle2 -> {
             File file = new File(dirOutChars2 + "__-" + rectangle2.left + "-" + rectangle2.down + "-"
                     + rectangle2.up + "-" + rectangle2.right+".jpg");
-            rectangle2 = rectangle2;
             PixM outChar = input.copySubImage(rectangle2.left, rectangle2.up, rectangle2.right-rectangle2.left+1,
                     rectangle2.down-rectangle2.up+1);
+            System.out.println(rectangle2);
             if(!file.getParentFile().exists() || file.getParentFile().isDirectory()) {
                 file.getParentFile().mkdirs();
                 try {
@@ -245,7 +247,44 @@ public class ResolutionCharacter3 implements Runnable {
 
 
         });
+        System.out.println("Découper les dernières briques de plusieurs caractères et les mettre dans l'ordre");
+        List<Rectangle2> min = new ArrayList<>();
+        List<Rectangle2> grosse = new ArrayList<>();
 
+        computeLetterStatsAndSort(input, min, grosse, rectangle2s);
+
+        System.out.printf("Mettre dans l'ordre de la base", min.size());
+        /*
+        min.sort(new Comparator<Rectangle2>() {
+            @Override
+            public int compare(Rectangle2 o1, Rectangle2 o2) {
+                if(o1.left<o2.right+charMinWidth&&o1.left+charMinWidth>o2.right) {
+                    return 0;
+                } else
+                    return -1;//COmpleter
+            }
+        });
+
+         */
+        PixM pixMblack = new PixM(input.getColumns(), input.getLines());
+        for (int i = 0; i < min.size(); i++) {
+            Rectangle2 rectangle2 = min.get(i);
+            pixMblack.colorsRegion(rectangle2.getLeft(), rectangle2.getUp(),
+                    rectangle2.getRight()-rectangle2.getLeft()+1,
+                    rectangle2.getDown()-rectangle2.getUp()+1, new PixM(input, rectangle2.getLeft(), rectangle2.getUp(),
+                            rectangle2.getRight()-rectangle2.getLeft()+1,
+                            rectangle2.getDown()-rectangle2.getUp()+1));
+        }
+        try {
+            ImageIO.write(pixMblack.getImage(), "jpg", new File(dirOut.getAbsolutePath()+File.separator+name+"RECOLLé.jpg"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        //rectangle2s retrouver les images englobant plusieurs autres images
+        // p1(x11,y11,x12,y12) chercher p2(x22,y22,x22,y22) tel que (x21>=x11&&y21>=y11&&x22<=x12&&y22<=y12)
+    }
+    public void computeLetterStatsAndSort(PixM input, List<Rectangle2> min, List<Rectangle2> grosse, List<Rectangle2> originals) {
+        min.addAll(originals);
     }
 
     private void exec(int i, int j) {
@@ -809,7 +848,7 @@ public class ResolutionCharacter3 implements Runnable {
     public class Rectangle2 implements Comparable {
         private int up, down, left, right;
 
-        public Rectangle2(int up, int down, int left, int right) {
+        private Rectangle2(int up, int down, int left, int right) {
             this.up = up;
             this.down = down;
             this.left = left;
@@ -817,8 +856,8 @@ public class ResolutionCharacter3 implements Runnable {
         }
 
         public Rectangle2(Rectangle rectangle) {
-            this((int)rectangle.getX(), (int)(rectangle.getY()+rectangle.getHeight()),
-                    (int)rectangle.getY(), (int)(rectangle.getY()+rectangle.getWidth()));
+            this((int)rectangle.getY(), (int)(rectangle.getY()+rectangle.getHeight()),
+                    (int)rectangle.getX(), (int)(rectangle.getX()+rectangle.getWidth()));
         }
 
         public int getUp() {
@@ -898,6 +937,16 @@ public class ResolutionCharacter3 implements Runnable {
             result = 31 * result + left;
             result = 31 * result + right;
             return result;
+        }
+
+        @Override
+        public String toString() {
+            return "Rectangle2{" +
+                    "up=" + up +
+                    ", down=" + down +
+                    ", left=" + left +
+                    ", right=" + right +
+                    '}';
         }
     }
     private List<Rectangle2> rectangle2s = new ArrayList<>();

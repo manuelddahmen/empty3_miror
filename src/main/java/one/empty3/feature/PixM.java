@@ -44,6 +44,18 @@ public class PixM extends M {
                 set(i, j, distances[i][j]);
     }
 
+    public PixM(PixM input, int xMin, int yMin, int w, int h) {
+        super(w, h);
+        for (int i = xMin; i <= xMin+h; i++)
+            for (int j = yMin; j <= yMin+h; j++)
+                for (int c = 0; c < compCount; c++) {
+                    setCompNo(c);
+                    input.setCompNo(c);
+                    set(i, j, input.get(i-xMin, j-yMin));
+                }
+
+    }
+
     public Point3D getRgb(int i, int j) {
         setCompNo(0);
         double dr = get(i, j);
@@ -488,12 +500,13 @@ public class PixM extends M {
     }
 
 
-    public void colorsRegion(int x, int y, int w, int h, double[] comps) {
-        for (int i = x; i < x + w; i++)
-            for (int j = y; j < y + h; j++)
-                for (int c = 0; c < comps.length; c++) {
+    public void colorsRegion(int x, int y, int w, int h, PixM comps) {
+        for (int i = x; i <= x + w; i++)
+            for (int j = y; j <= y + h; j++)
+                for (int c = 0; c < comps.getCompNo(); c++) {
                     setCompNo(c);
-                    set(i, j, comps[c]);
+                    comps.setCompNo(c);
+                    set(i, j, comps.get(i-x, j-y));
                 }
     }
 
@@ -522,17 +535,15 @@ public class PixM extends M {
                 }
     }
 
-    public PixM pasteSubImage(int x, int y, int w, int h) {
-        PixM p2 = new PixM(w, h);
+    public void pasteSubImage(PixM subImage, int x, int y, int w, int h) {
         for (int i = x; i < x + w; i++)
             for (int j = y; j < y + h; j++)
                 for (int c = 0; c < getCompCount(); c++) {
                     setCompNo(c);
-                    p2.setCompNo(c);
-                    double v = get(i, j);
+                    subImage.setCompNo(c);
+                    double v = get(i-w, j-h);
                     set(i - x, j - y, v);
                 }
-        return p2;
     }
     public PixM copySubImage(int x, int y, int w, int h) {
         PixM p2 = new PixM(w, h);
