@@ -13,7 +13,7 @@ public class M {
     protected int lines;
     double[] x;
     protected int compNo;
-    public int compCount = 3;
+    public final int compCount = 3;
 
     public M(int c, int l) {
         this.lines = l;

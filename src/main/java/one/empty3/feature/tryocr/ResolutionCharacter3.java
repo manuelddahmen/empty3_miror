@@ -269,14 +269,14 @@ public class ResolutionCharacter3 implements Runnable {
         PixM pixMblack = new PixM(input.getColumns(), input.getLines());
         for (int i = 0; i < min.size(); i++) {
             Rectangle2 rectangle2 = min.get(i);
-            pixMblack.colorsRegion(rectangle2.getLeft(), rectangle2.getUp(),
-                    rectangle2.getRight()-rectangle2.getLeft()+1,
-                    rectangle2.getDown()-rectangle2.getUp()+1, new PixM(input, rectangle2.getLeft(), rectangle2.getUp(),
-                            rectangle2.getRight()-rectangle2.getLeft()+1,
-                            rectangle2.getDown()-rectangle2.getUp()+1));
+            int x = rectangle2.getLeft();
+            int y = rectangle2.getUp();
+            int w = rectangle2.getRight() - x + 1;
+            int h = rectangle2.getDown() - y + 1;
+            pixMblack.colorsRegion(x, y, w, h, new PixM(input, x, y, w, h));
         }
         try {
-            ImageIO.write(pixMblack.getImage(), "jpg", new File(dirOut.getAbsolutePath()+File.separator+name+"RECOLLé.jpg"));
+            ImageIO.write(pixMblack.normalize(0,1).getImage(), "jpg", new File(dirOut.getAbsolutePath()+File.separator+name+"RECOLLé.jpg"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

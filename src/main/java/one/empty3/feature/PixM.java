@@ -44,14 +44,16 @@ public class PixM extends M {
                 set(i, j, distances[i][j]);
     }
 
-    public PixM(PixM input, int xMin, int yMin, int w, int h) {
+    public PixM(PixM totalImage, int x, int y, int w, int h) {
         super(w, h);
-        for (int i = xMin; i <= xMin+h; i++)
-            for (int j = yMin; j <= yMin+h; j++)
+        // Parcourir l'image total dans un rectangle (,y,w,h)
+        // Assigner les valeurs de doubles[] à l'image partielle
+        for (int i = x; i <= x+h; i++)
+            for (int j = y; j <= y+h; j++)
                 for (int c = 0; c < compCount; c++) {
                     setCompNo(c);
-                    input.setCompNo(c);
-                    set(i, j, input.get(i-xMin, j-yMin));
+                    totalImage.setCompNo(c);
+                    set(x-i, y-j, totalImage.get(i, j));
                 }
 
     }
@@ -500,13 +502,13 @@ public class PixM extends M {
     }
 
 
-    public void colorsRegion(int x, int y, int w, int h, PixM comps) {
+    public void colorsRegion(int x, int y, int w, int h, PixM pastedImage) {
         for (int i = x; i <= x + w; i++)
             for (int j = y; j <= y + h; j++)
-                for (int c = 0; c < comps.getCompNo(); c++) {
+                for (int c = 0; c < pastedImage.getCompNo(); c++) {
                     setCompNo(c);
-                    comps.setCompNo(c);
-                    set(i, j, comps.get(i-x, j-y));
+                    pastedImage.setCompNo(c);
+                    set(i, j, pastedImage.get(i-x, j-y));
                 }
     }
 
