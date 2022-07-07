@@ -37,6 +37,7 @@ public class TestNeunet {
 
     @Test
     public void testFunctionAnd() {
+       /*
         Net<Neuron> net = new Net<>();
         net.setInputLayer(new Layer<Neuron>(2, Neuron.class));
         net.getInputLayer().getNeurons().setElem(new Neuron(2), 0);
@@ -62,11 +63,12 @@ public class TestNeunet {
 
         net.getInputLayer().getNeurons().getData1d().forEach(n -> System.out.println(n.getOutput()));
 
-
+        */
     }
 
     @Test
     public void testMatrices() {
+        /*
         random = new Random();
 
         int numberOfInputs = 7;
@@ -97,10 +99,13 @@ public class TestNeunet {
         });
         result2.modify((index, value) -> Math.exp(value) / softmax.get());
         System.out.println(result2);
+
+         */
     }
 
     @Test
     public void testMatrices1() {
+        /*
         random = new Random();
 
         int numberOfInputs = 7;
@@ -131,5 +136,7 @@ public class TestNeunet {
         });
         result2.modify((index, value) -> Math.exp(value) / softmax.get());
         System.out.println(result2);
+         */
+
     }
 }
