@@ -16,6 +16,7 @@ public class PixM extends M {
     public static final int COMP_BLUE = 2;
     public static final int COMP_ALPHA = 3;
     public static final int COMP_INTENSITY = 4;
+    double INCR_T = 0.0001;
     private int MAX_DISTANCE_ITERATIONS = 100;
 
     public PixM(int l, int c) {
@@ -48,24 +49,14 @@ public class PixM extends M {
         super(w, h);
         // Parcourir l'image total dans un rectangle (,y,w,h)
         // Assigner les valeurs de doubles[] à l'image partielle
-        for (int i = x; i <= x+h; i++)
-            for (int j = y; j <= y+h; j++)
+        for (int i = x; i <= x + w; i++)
+            for (int j = y; j <= y + h; j++)
                 for (int c = 0; c < compCount; c++) {
                     setCompNo(c);
                     totalImage.setCompNo(c);
-                    set(x-i, y-j, totalImage.get(i, j));
+                    set(x - i, y - j, totalImage.get(i, j));
                 }
 
-    }
-
-    public Point3D getRgb(int i, int j) {
-        setCompNo(0);
-        double dr = get(i, j);
-        setCompNo(1);
-        double dg = get(i, j);
-        setCompNo(2);
-        double db = get(i, j);
-        return new Point3D(dr, dg, db);
     }
 
     public static PixM getPixM(BufferedImage image, double maxRes) {
@@ -106,6 +97,31 @@ public class PixM extends M {
 
     }
 
+    public static PixM subImage(PixM input, int x, int y, int w, int h) {
+            PixM m = new PixM(w, h);
+            // Parcourir l'image total dans un rectangle (,y,w,h)
+            // Assigner les valeurs de doubles[] à l'image partielle
+            for (int i = x; i <= x + w; i++)
+                for (int j = y; j <= y + h; j++)
+                    for (int c = 0; c < 3; c++) {
+                        input.setCompNo(c);
+                        m.setCompNo(c);
+                        m.set(x - i, y - j, input.get(i, j));
+                    }
+
+        return m;
+    }
+
+    public Point3D getRgb(int i, int j) {
+        setCompNo(0);
+        double dr = get(i, j);
+        setCompNo(1);
+        double dg = get(i, j);
+        setCompNo(2);
+        double db = get(i, j);
+        return new Point3D(dr, dg, db);
+    }
+
     public PixM applyFilter(FilterPixM filter) {
         PixM c = new PixM(columns, lines);
         double sum;
@@ -122,8 +138,8 @@ public class PixM extends M {
                     sum = 0.0;
                     for (int u = -filter.columns / 2; u <= filter.lines / 2; u++) {
                         for (int v = -filter.lines / 2; v <= filter.lines / 2; v++) {
-     
-                        
+
+
                         /*V derivative = derivative(i, j, 2, null);
                         double v1 = derivative.get(0, 0);
                         double v2 = derivative.get(1, 0);
@@ -190,13 +206,12 @@ public class PixM extends M {
 
     }
 
-
     public void plotCurve(ParametricCurve curve, ITexture texture) {
         double INCR_T = curve.getIncrU().getElem();
 
         float[] rgba = new float[getCompCount()];
         for (double t = 0; t < 1.0; t += INCR_T) {
-            rgba = new Color((texture!=null?texture:curve.texture()).getColorAt(t, 0.5)).getColorComponents(rgba);
+            rgba = new Color((texture != null ? texture : curve.texture()).getColorAt(t, 0.5)).getColorComponents(rgba);
             Point3D p = curve.calculerPoint3D(t);
             for (int c = 0; c < 3; c++) {
                 setCompNo(c);
@@ -205,8 +220,6 @@ public class PixM extends M {
         }
 
     }
-
-    double INCR_T = 0.0001;
 
     public void plotCurveRaw(ParametricCurve curve, ITexture texture) {
         INCR_T = curve.getIncrU().getElem();
@@ -219,8 +232,8 @@ public class PixM extends M {
                 setCompNo(c);
                 set((int) (double) p.getX(), (int) (double) p.getY(), rgba[c]);
             }
-            }
         }
+    }
 
 /*
 
@@ -502,13 +515,13 @@ public class PixM extends M {
     }
 
 
-    public void colorsRegion(int x, int y, int w, int h, PixM pastedImage) {
+    public void pasteSubImageInRect(int x, int y, int w, int h, PixM pastedImage) {
         for (int i = x; i <= x + w; i++)
             for (int j = y; j <= y + h; j++)
                 for (int c = 0; c < pastedImage.getCompNo(); c++) {
                     setCompNo(c);
                     pastedImage.setCompNo(c);
-                    set(i, j, pastedImage.get(i-x, j-y));
+                    set(i, j, pastedImage.get(i - x, j - y));
                 }
     }
 
@@ -526,15 +539,19 @@ public class PixM extends M {
         return subimage;
     }
 
-    public void colorsRegion(int x, int y, int w, int h, PixM subimage, int subImageCopyMode) {
-        for (int i = x; i < x + w; i++)
-            for (int j = y; j < y + h; j++)
-                for (int c = 0; c < getCompCount(); c++) {
-                    setCompNo(c);
-                    subimage.setCompNo(c);
-                    double v = subimage.get((int) (1.0 * (x + w - i) / w * subimage.columns), (int) (1.0 * (y + h - j) / h * subimage.lines));
-                    set(i, j, v);
-                }
+    public void pasteSubImageInRect(int x, int y, int w, int h, PixM subimage, int subImageCopyMode) {
+        if (subImageCopyMode == 0) {
+            pasteSubImageInRect(x, y, w, h, subimage);
+        } else {
+            for (int i = x; i < x + w; i++)
+                for (int j = y; j < y + h; j++)
+                    for (int c = 0; c < getCompCount(); c++) {
+                        setCompNo(c);
+                        subimage.setCompNo(c);
+                        double v = subimage.get((int) (1.0 * (x + w - i) / w * subimage.columns), (int) (1.0 * (y + h - j) / h * subimage.lines));
+                        set(i, j, v);
+                    }
+        }
     }
 
     public void pasteSubImage(PixM subImage, int x, int y, int w, int h) {
@@ -543,10 +560,11 @@ public class PixM extends M {
                 for (int c = 0; c < getCompCount(); c++) {
                     setCompNo(c);
                     subImage.setCompNo(c);
-                    double v = get(i-w, j-h);
+                    double v = subImage.get(i - w, j - h);
                     set(i - x, j - y, v);
                 }
     }
+
     public PixM copySubImage(int x, int y, int w, int h) {
         PixM p2 = new PixM(w, h);
         for (int i = x; i < x + w; i++)
@@ -641,13 +659,13 @@ public class PixM extends M {
         for (int i = 0; i < getColumns(); i++)
             for (int j = 0; j < getLines(); j++) {
                 double[] values = getValues(i, j);
-                int k=0;
-                for(int c=0; c<3; c++) {
+                int k = 0;
+                for (int c = 0; c < 3; c++) {
                     if (doubles[c] - delta < values[c] && doubles[c] + delta > values[c])
                         k++;
                 }
 
-                if(k==3)
+                if (k == 3)
                     setValues(i, j, doubles1);
 
             }

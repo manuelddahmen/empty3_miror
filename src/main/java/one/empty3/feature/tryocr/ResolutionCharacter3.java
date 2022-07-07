@@ -235,7 +235,6 @@ public class ResolutionCharacter3 implements Runnable {
                     + rectangle2.up + "-" + rectangle2.right+".jpg");
             PixM outChar = input.copySubImage(rectangle2.left, rectangle2.up, rectangle2.right-rectangle2.left+1,
                     rectangle2.down-rectangle2.up+1);
-            System.out.println(rectangle2);
             if(!file.getParentFile().exists() || file.getParentFile().isDirectory()) {
                 file.getParentFile().mkdirs();
                 try {
@@ -253,30 +252,20 @@ public class ResolutionCharacter3 implements Runnable {
 
         computeLetterStatsAndSort(input, min, grosse, rectangle2s);
 
-        System.out.printf("Mettre dans l'ordre de la base", min.size());
-        /*
-        min.sort(new Comparator<Rectangle2>() {
-            @Override
-            public int compare(Rectangle2 o1, Rectangle2 o2) {
-                if(o1.left<o2.right+charMinWidth&&o1.left+charMinWidth>o2.right) {
-                    return 0;
-                } else
-                    return -1;//COmpleter
-            }
-        });
-
-         */
-        PixM pixMblack = new PixM(input.getColumns(), input.getLines());
-        for (int i = 0; i < min.size(); i++) {
-            Rectangle2 rectangle2 = min.get(i);
+        System.out.println("Mettre dans l'ordre de la base" + min.size());
+        List<Rectangle2> toPaste = rectangle2s;
+        PixM black = new PixM(input.getColumns(), input.getLines());
+        for (int i = 0; i < toPaste.size(); i++) {
+            Rectangle2 rectangle2 = toPaste.get(i);
             int x = rectangle2.getLeft();
             int y = rectangle2.getUp();
             int w = rectangle2.getRight() - x + 1;
             int h = rectangle2.getDown() - y + 1;
-            pixMblack.colorsRegion(x, y, w, h, new PixM(input, x, y, w, h));
+            System.out.print((w<=1||h<=1)?"ERROR RECTANGLE TOO SMALL":"");
+            black.pasteSubImageInRect(x, y, w, h, PixM.subImage(input, x, y, w, h));
         }
         try {
-            ImageIO.write(pixMblack.normalize(0,1).getImage(), "jpg", new File(dirOut.getAbsolutePath()+File.separator+name+"RECOLLé.jpg"));
+            ImageIO.write(black.normalize(0,1).getImage(), "jpg", new File(dirOut.getAbsolutePath()+File.separator+name+"RECOLLé.jpg"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
