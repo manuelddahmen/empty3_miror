@@ -98,16 +98,16 @@ public class PixM extends M {
     }
 
     public static PixM subImage(PixM input, int x, int y, int w, int h) {
-            PixM m = new PixM(w, h);
-            // Parcourir l'image total dans un rectangle (,y,w,h)
-            // Assigner les valeurs de doubles[] à l'image partielle
-            for (int i = x; i <= x + w; i++)
-                for (int j = y; j <= y + h; j++)
-                    for (int c = 0; c < 3; c++) {
-                        input.setCompNo(c);
-                        m.setCompNo(c);
-                        m.set(x - i, y - j, input.get(i, j));
-                    }
+        PixM m = new PixM(w, h);
+        // Parcourir l'image total dans un rectangle (,y,w,h)
+        // Assigner les valeurs de doubles[] à l'image partielle
+        for (int i = x; i <= x + w; i++)
+            for (int j = y; j <= y + h; j++)
+                for (int c = 0; c < 3; c++) {
+                    input.setCompNo(c);
+                    m.setCompNo(c);
+                    m.set(i-x, j-y, input.get(i, j));
+                }
 
         return m;
     }
@@ -515,15 +515,6 @@ public class PixM extends M {
     }
 
 
-    public void pasteSubImageInRect(int x, int y, int w, int h, PixM pastedImage) {
-        for (int i = x; i <= x + w; i++)
-            for (int j = y; j <= y + h; j++)
-                for (int c = 0; c < pastedImage.getCompNo(); c++) {
-                    setCompNo(c);
-                    pastedImage.setCompNo(c);
-                    set(i, j, pastedImage.get(i - x, j - y));
-                }
-    }
 
     public PixM getColorsRegion(int x, int y, int w, int h, int sizeX, int sizeY) {
         PixM subimage = new PixM(sizeX, sizeY);
@@ -541,7 +532,7 @@ public class PixM extends M {
 
     public void pasteSubImageInRect(int x, int y, int w, int h, PixM subimage, int subImageCopyMode) {
         if (subImageCopyMode == 0) {
-            pasteSubImageInRect(x, y, w, h, subimage);
+            pasteSubImageInRect(subimage, x, y, w, h);
         } else {
             for (int i = x; i < x + w; i++)
                 for (int j = y; j < y + h; j++)
@@ -552,6 +543,15 @@ public class PixM extends M {
                         set(i, j, v);
                     }
         }
+    }
+    public void pasteSubImageInRect(PixM pastedImage, int x, int y, int w, int h) {
+        for (int i = x; i <= x + w; i++)
+            for (int j = y; j <= y + h; j++)
+                for (int c = 0; c < 3; c++) {
+                    setCompNo(c);
+                    pastedImage.setCompNo(c);
+                    set(i, j, pastedImage.get(i - x, j - y));
+                }
     }
 
     public void pasteSubImage(PixM subImage, int x, int y, int w, int h) {

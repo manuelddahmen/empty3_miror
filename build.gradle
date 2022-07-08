@@ -106,7 +106,7 @@ publishing {
             from components.java
 
             pom {
-                name = 'My  Empty3 Graphics Library'
+                name = 'My Empty3 Graphics Library'
                 description = 'Graphics, image processing '
 
             }
@@ -120,7 +120,7 @@ publishing {
                 // Automation has a special account for authentication in Space
                 // account credentials are accessible via env vars
                 username = System.getenv("JB_SPACE_CLIENT_ID")
-                password = System.getenv("JJB_SPACE_CLIENT_SECRET")
+                password = System.getenv("JB_SPACE_CLIENT_SECRET")
             }
 
             url = "https://maven.pkg.jetbrains.space/empty3/p/empty3/maven/maven"

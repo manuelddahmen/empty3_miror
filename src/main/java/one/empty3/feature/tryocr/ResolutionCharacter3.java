@@ -262,10 +262,10 @@ public class ResolutionCharacter3 implements Runnable {
             int w = rectangle2.getRight() - x + 1;
             int h = rectangle2.getDown() - y + 1;
             System.out.print((w<=1||h<=1)?"ERROR RECTANGLE TOO SMALL":"");
-            black.pasteSubImageInRect(x, y, w, h, PixM.subImage(input, x, y, w, h));
+            black.pasteSubImageInRect(PixM.subImage(input, x, y, w, h), x, y, w, h);
         }
         try {
-            ImageIO.write(black.normalize(0,1).getImage(), "jpg", new File(dirOut.getAbsolutePath()+File.separator+name+"RECOLLé.jpg"));
+            ImageIO.write(black.getImage(), "jpg", new File(dirOut.getAbsolutePath()+File.separator+name+"RECOLLé.jpg"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
