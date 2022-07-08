@@ -255,6 +255,7 @@ public class ResolutionCharacter3 implements Runnable {
         System.out.println("Mettre dans l'ordre de la base" + min.size());
         List<Rectangle2> toPaste = rectangle2s;
         PixM black = new PixM(input.getColumns(), input.getLines());
+        PixM blackOrig = new PixM(input.getColumns(), input.getLines());
         for (int i = 0; i < toPaste.size(); i++) {
             Rectangle2 rectangle2 = toPaste.get(i);
             int x = rectangle2.getLeft();
@@ -269,6 +270,22 @@ public class ResolutionCharacter3 implements Runnable {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        // Recoller tout (orignianl)
+        for (int i = 0; i < rectangles.size(); i++) {
+            Rectangle2 rectangle2 = new Rectangle2(rectangles.get(i));
+            int x = rectangle2.getLeft();
+            int y = rectangle2.getUp();
+            int w = rectangle2.getRight() - x + 1;
+            int h = rectangle2.getDown() - y + 1;
+            System.out.print((w<=1||h<=1)?"ERROR RECTANGLE TOO SMALL":"");
+            blackOrig.pasteSubImageInRect(PixM.subImage(input, x, y, w, h), x, y, w, h);
+        }
+        try {
+            ImageIO.write(blackOrig.getImage(), "jpg", new File(dirOut.getAbsolutePath()+File.separator+name+"00RECOLLé.jpg"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
         //rectangle2s retrouver les images englobant plusieurs autres images
         // p1(x11,y11,x12,y12) chercher p2(x22,y22,x22,y22) tel que (x21>=x11&&y21>=y11&&x22<=x12&&y22<=y12)
     }
@@ -937,6 +954,10 @@ public class ResolutionCharacter3 implements Runnable {
                     ", right=" + right +
                     '}';
         }
+
+        public int getArea() {
+            return (down-up)*(right-left);
+        }
     }
     private List<Rectangle2> rectangle2s = new ArrayList<>();
     public List<Rectangle2> sortRectangles() {
@@ -969,7 +990,7 @@ public class ResolutionCharacter3 implements Runnable {
             final int[] up = {rectangle1.getLeft()};
             final Rectangle2[] chosen = {rectangle1};
             rectangles2.forEach(rectangle2 -> {
-                if (rectangle2.getLeft() >= left[0] && rectangle2.getUp() >= up[0]) {
+                if (rectangle2.getArea()<chosen[0].getArea()) {
                     chosen[0] = rectangle2;
                     left[0] = rectangle2.getLeft();
                     up[0] = rectangle2.getUp();
