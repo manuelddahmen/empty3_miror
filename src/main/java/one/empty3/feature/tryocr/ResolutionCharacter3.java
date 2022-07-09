@@ -18,10 +18,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.*;
+import java.util.function.Consumer;
 
 import static java.util.Collections.sort;
 
 public class ResolutionCharacter3 implements Runnable {
+
     public static final float MIN_DIFF = 0.6f;
     public static final int XPLUS = 0;
     public static final int YPLUS = 1;
@@ -222,7 +224,7 @@ public class ResolutionCharacter3 implements Runnable {
         System.out.println("Ajouter les rectangles et enlever l'espace blanc autour");
         for (int i1 = 0; i1 < rectangles.size(); i1++) {
             // Transfert vers arraylist classe Rectangle2, enlever les blancs (perte d'info sur
-            // les espaces vides).
+            // les espaces vides).-
             rectangle2s.add(removeUpLeftBlanks(input, new Rectangle2(rectangles.get(i1))));
 
         }
@@ -290,7 +292,153 @@ public class ResolutionCharacter3 implements Runnable {
         // p1(x11,y11,x12,y12) chercher p2(x22,y22,x22,y22) tel que (x21>=x11&&y21>=y11&&x22<=x12&&y22<=y12)
     }
     public void computeLetterStatsAndSort(PixM input, List<Rectangle2> min, List<Rectangle2> grosse, List<Rectangle2> originals) {
+
         min.addAll(originals);
+    }
+
+    public void computeLetterStatsAndSort(PixM subImageInput,
+                                          List<Rectangle2> originals, List<Rectangle2> total) {
+        originals.forEach((Consumer<Rectangle2>) rectangle2 -> {
+            List<Rectangle2> subComputeAdditionnels = (computeSubImageStep(subImageInput.copySubImage(
+                rectangle2.left, rectangle2.up, rectangle2.right-rectangle2.left,
+                rectangle2.down-rectangle2.up)));
+            if(subComputeAdditionnels.size()==0)
+                writeImage(subImageInput, new Rectangle2(0, subImageInput.getLines(),
+                        0, subImageInput.getColumns()), dirOutChars2);
+
+            subComputeAdditionnels.forEach(rectangle21 -> {
+                writeImage(subImageInput, rectangle21, dirOutChars2);
+                    }
+            );
+        });
+
+    }
+
+    private void writeImage(PixM subImageInput, Rectangle2 rectangle21, String dirOutChars2) {
+        try {
+            ImageIO.write(subImageInput.getImage(), "jpg", getFilenameFor("chars2sub", rectangle21));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private File getFilenameFor(String chars2sub, Rectangle2 r) {
+        File file  = null;
+        switch (chars2sub)
+        {
+            case "exec2subimages":
+            case "chars2sub":
+                file = new File(dirOutChars + "-"+"-" + r.getLeft() + "-" + r.getUp()
+                        + "-" + (r.getRight()-r.getLeft()) + "-" + (r.getDown()-r.getUp())+".jpg");
+                break;
+            case "chars2":
+                file = new File(dirOutChars2 + "-"+"-" + r.getLeft() + "-" + r.getUp()
+                        + "-" + (r.getRight()-r.getLeft()) + "-" + (r.getDown()-r.getUp())+".jpg");
+                break;
+
+        }
+        return file;
+    }
+
+    private List<Rectangle2> computeSubImageStep(PixM copySubImage) {
+        ArrayList<Rectangle2> objects = new ArrayList<>();
+        run(copySubImage, objects);
+        return objects;
+    }
+
+    private void run(PixM copySubImage, ArrayList<Rectangle2> objects) {
+        if (!dirOut.exists() || !dirOut.isDirectory())
+            dirOut.mkdir();
+
+        input = new PixM(read);
+        output = input.copy();
+
+        System.out.println("Image size: " + output.getColumns() + ", " + output.getLines());
+
+        final ITexture texture = new TextureCol(Color.BLACK);
+
+        for (int j = 0; j < input.getLines() - step; j += step) {
+            if (j % (input.getLines() / 100) == 0)
+                System.out.printf("%d %%, Image %s, Count Rects : %d\n", (int) (100.0 * j / input.getLines()), name, countRects);
+
+            for (int i = 0; i < input.getColumns() - step; i += step) {
+                exec2(i, j);
+            }
+        }
+
+        exec(texture, output, input, dirOut, name);
+
+
+        System.out.println("Ajouter les rectangles et enlever l'espace blanc autour");
+        for (int i1 = 0; i1 < rectangles.size(); i1++) {
+            // Transfert vers arraylist classe Rectangle2, enlever les blancs (perte d'info sur
+            // les espaces vides).-
+            rectangle2s.add(removeUpLeftBlanks(input, new Rectangle2(rectangles.get(i1))));
+
+        }
+        System.out.println("Trier les rectangles et éliminer les doubles");
+        rectangle2s = sortRectangles();
+
+        System.out.println("Enregistrer les fichiers JPG avec les caractères triés et nettoyés");
+        rectangle2s.forEach(rectangle2 -> {
+            File file = new File(dirOutChars2 + "__-" + rectangle2.left + "-" + rectangle2.down + "-"
+                    + rectangle2.up + "-" + rectangle2.right+".jpg");
+            PixM outChar = input.copySubImage(rectangle2.left, rectangle2.up, rectangle2.right-rectangle2.left+1,
+                    rectangle2.down-rectangle2.up+1);
+            if(!file.getParentFile().exists() || file.getParentFile().isDirectory()) {
+                file.getParentFile().mkdirs();
+                try {
+                    ImageIO.write(outChar.getImage(), "jpg", file);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+
+        });
+        System.out.println("Découper les dernières briques de plusieurs caractères et les mettre dans l'ordre");
+        List<Rectangle2> min = new ArrayList<>();
+        List<Rectangle2> grosse = new ArrayList<>();
+
+        computeLetterStatsAndSort(input, min, grosse, rectangle2s);
+
+        System.out.println("Mettre dans l'ordre de la base" + min.size());
+        List<Rectangle2> toPaste = rectangle2s;
+        PixM black = new PixM(input.getColumns(), input.getLines());
+        PixM blackOrig = new PixM(input.getColumns(), input.getLines());
+        for (int i = 0; i < toPaste.size(); i++) {
+            Rectangle2 rectangle2 = toPaste.get(i);
+            int x = rectangle2.getLeft();
+            int y = rectangle2.getUp();
+            int w = rectangle2.getRight() - x + 1;
+            int h = rectangle2.getDown() - y + 1;
+            System.out.print((w<=1||h<=1)?"ERROR RECTANGLE TOO SMALL":"");
+            black.pasteSubImageInRect(PixM.subImage(input, x, y, w, h), x, y, w, h);
+        }
+        try {
+            ImageIO.write(black.getImage(), "jpg", new File(dirOut.getAbsolutePath()+File.separator+name+"RECOLLé.jpg"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        // Recoller tout (orignianl)
+        for (int i = 0; i < rectangles.size(); i++) {
+            Rectangle2 rectangle2 = new Rectangle2(rectangles.get(i));
+            int x = rectangle2.getLeft();
+            int y = rectangle2.getUp();
+            int w = rectangle2.getRight() - x + 1;
+            int h = rectangle2.getDown() - y + 1;
+            System.out.print((w<=1||h<=1)?"ERROR RECTANGLE TOO SMALL":"");
+            blackOrig.pasteSubImageInRect(PixM.subImage(input, x, y, w, h), x, y, w, h);
+        }
+        try {
+            ImageIO.write(blackOrig.getImage(), "jpg", new File(dirOut.getAbsolutePath()+File.separator+name+"00RECOLLé.jpg"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        //rectangle2s retrouver les images englobant plusieurs autres images
+        // p1(x11,y11,x12,y12) chercher p2(x22,y22,x22,y22) tel que (x21>=x11&&y21>=y11&&x22<=x12&&y22<=y12)
+
     }
 
     private void exec(int i, int j) {
@@ -511,7 +659,7 @@ public class ResolutionCharacter3 implements Runnable {
                     output.plotCurve(rectangle, new TextureCol(random));
                     countRects ++;
                     if(isExporting()) {
-                        File file = new File(dirOutChars + "-"+s[0]+"-" + i + "-" + j + "-" + w + "-" + h+".jpg");
+                        File file = getFilenameFor("exec2subimages", new Rectangle2(rectangle));
                         PixM outChar = input.copySubImage(i, j, w, h);
                         if(!file.getParentFile().exists() || file.getParentFile().isDirectory()) {
                             file.getParentFile().mkdirs();
@@ -982,6 +1130,27 @@ public class ResolutionCharacter3 implements Runnable {
                 }
             }
         }
+        // Reprendre les absents
+        for (Rectangle2 rectangle21 : rectangle2s) {
+            if (contains.containsKey(rectangle21))
+                continue;
+            final boolean[] found = {false};
+            contains.entrySet().forEach(new Consumer<>() {
+                @Override
+                public void accept(Map.Entry<Rectangle2, List<Rectangle2>> rectangle2ListEntry) {
+                    if (rectangle2ListEntry.getValue()!=null
+                            && rectangle2ListEntry.getValue().contains(rectangle21)) {
+                        found[0] =true;
+                        return;
+                    }
+                }
+            });
+            if(!found[0]) {
+                List<Rectangle2> plus = new ArrayList<>();
+                contains.put(rectangle21, null);
+            }
+        }
+
         ArrayList<Rectangle2> listRect = new ArrayList<>();
         for (Map.Entry<Rectangle2, List<Rectangle2>> entry : contains.entrySet()) {
             Rectangle2 rectangle1 = entry.getKey();
@@ -989,13 +1158,15 @@ public class ResolutionCharacter3 implements Runnable {
             final int[] left = {rectangle1.getUp()};
             final int[] up = {rectangle1.getLeft()};
             final Rectangle2[] chosen = {rectangle1};
-            rectangles2.forEach(rectangle2 -> {
-                if (rectangle2.getArea()<chosen[0].getArea()) {
-                    chosen[0] = rectangle2;
-                    left[0] = rectangle2.getLeft();
-                    up[0] = rectangle2.getUp();
-                }
-            });
+            if(rectangles2!=null) {
+                rectangles2.forEach(rectangle2 -> {
+                    if (rectangle2 != null && rectangle2.getArea() < chosen[0].getArea()) {
+                        chosen[0] = rectangle2;
+                        left[0] = rectangle2.getLeft();
+                        up[0] = rectangle2.getUp();
+                    }
+                });
+            }
             listRect.add(chosen[0]);
 
         }
