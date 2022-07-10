@@ -264,7 +264,7 @@ public class ResolutionCharacter3 implements Runnable {
             int y = rectangle2.getUp();
             int w = rectangle2.getRight() - x + 1;
             int h = rectangle2.getDown() - y + 1;
-            System.out.print((w<=1||h<=1)?"ERROR RECTANGLE TOO SMALL":"");
+            System.out.print((w<=1&&h<=1)?"ERROR RECTANGLE TOO SMALL":"");
             black.pasteSubImageInRect(PixM.subImage(input, x, y, w, h), x, y, w, h);
         }
         try {
@@ -279,7 +279,7 @@ public class ResolutionCharacter3 implements Runnable {
             int y = rectangle2.getUp();
             int w = rectangle2.getRight() - x + 1;
             int h = rectangle2.getDown() - y + 1;
-            System.out.print((w<=1||h<=1)?"ERROR RECTANGLE TOO SMALL":"");
+            System.out.print((w<=1&&h<=1)?"ERROR RECTANGLE TOO SMALL":"");
             blackOrig.pasteSubImageInRect(PixM.subImage(input, x, y, w, h), x, y, w, h);
         }
         try {
@@ -412,7 +412,7 @@ public class ResolutionCharacter3 implements Runnable {
             int y = rectangle2.getUp();
             int w = rectangle2.getRight() - x + 1;
             int h = rectangle2.getDown() - y + 1;
-            System.out.print((w<=1||h<=1)?"ERROR RECTANGLE TOO SMALL":"");
+            System.out.print((w<=1&&h<=1)?"ERROR RECTANGLE TOO SMALL":"");
             black.pasteSubImageInRect(PixM.subImage(input, x, y, w, h), x, y, w, h);
         }
         try {
@@ -427,7 +427,7 @@ public class ResolutionCharacter3 implements Runnable {
             int y = rectangle2.getUp();
             int w = rectangle2.getRight() - x + 1;
             int h = rectangle2.getDown() - y + 1;
-            System.out.print((w<=1||h<=1)?"ERROR RECTANGLE TOO SMALL":"");
+            System.out.print((w<=1&&h<=1)?"ERROR RECTANGLE TOO SMALL":"");
             blackOrig.pasteSubImageInRect(PixM.subImage(input, x, y, w, h), x, y, w, h);
         }
         try {

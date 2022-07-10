@@ -40,6 +40,7 @@ import one.empty3.library.core.lighting.Colors;
 import one.empty3.library.core.raytracer.RtIntersectInfo;
 import one.empty3.library.core.raytracer.RtMatiere;
 import one.empty3.library.core.raytracer.RtRay;
+import one.empty3.library.zshapecontrols.ShapeModifier;
 import one.empty3.tests.Path;
 
 import java.io.*;
@@ -83,9 +84,11 @@ public class Representable /*extends RepresentableT*/ implements Serializable, C
     private Map<String, StructureMatrix> declaredDataStructure;// = Collections.synchronizedMap(new HashMap());
     private Map<String, StructureMatrix> declaredLists;//= new HashMap<>();
 
+    private List<ShapeModifier> shapeModifiers;
     public Representable() {
         if (!(this instanceof Matrix33 || this instanceof Point3D || this instanceof Camera)) {
             rotation.setElem(new Rotation());
+            shapeModifiers = new ArrayList<>();
             //scale = new Point3D(1d, 1d, 1d);
             //texture = new TextureCol(Colors.random());
 

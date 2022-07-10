@@ -38,6 +38,7 @@
 package one.empty3.library;
 
 import one.empty3.library.core.nurbs.*;
+import one.empty3.library.zshapecontrols.ZBufferExtension;
 import one.empty3.pointset.PCont;
 
 import java.awt.*;
@@ -1636,5 +1637,9 @@ public class ZBufferImpl extends Representable implements ZBuffer {
 
     public void setFORCE_POSITIVE_NORMALS(boolean FORCE_POSITIVE_NORMALS) {
         this.FORCE_POSITIVE_NORMALS = FORCE_POSITIVE_NORMALS;
+    }
+
+    protected ZBufferExtension getExtension(ParametricSurface surface) {
+        return new ZBufferExtension(this, surface);
     }
 }
