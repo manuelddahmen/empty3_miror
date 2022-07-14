@@ -50,4 +50,9 @@ public class Rectangle2 {
     public void setH(int h) {
         this.h = h;
     }
+    
+    public boolean isValid() {
+        return getX() >= 0 && getW() >= 0 &&
+                getY() >= 0 && getH() >= 0;
+    }
 }

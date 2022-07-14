@@ -859,7 +859,10 @@ public class ResolutionCharacter3 implements Runnable {
 
         boolean[] bools = new boolean[4];
 
-        while(hasChanged) {
+        while(hasChanged && render.getX() >= 0 && render.getX() + render.getW() <= input.getColumns()
+                && render.getW() >= 0 &&
+                render.getY() >= 0 && render.getY() + render.getH() <= input.getLines()
+                && render.getH() >= 0) {
             testRectIs(input, render.getX(), render.getY(), render.getW(), render.getH(), bools, WHITE_DOUBLES);
             if(bools[XPLUS])
                 render.setX(render.getX()+1);
@@ -873,10 +876,10 @@ public class ResolutionCharacter3 implements Runnable {
                 hasChanged = false;
 
         }
-        return render.getX() > 0 && render.getX() + render.getW() < input.getColumns()
-                && render.getW() > 0 &&
-                render.getY() > 0 && render.getY() + render.getH() < input.getLines()
-                && render.getH() > 0;
+        return render.getX() >= 0 && render.getX() + render.getW() <= input.getColumns()
+                && render.getW() >= 0 &&
+                render.getY() >= 0 && render.getY() + render.getH() <= input.getLines()
+                && render.getH() >= 0;
     }
     private static boolean isExporting() {
         return isExporting;
