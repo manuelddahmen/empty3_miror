@@ -30,4 +30,20 @@ public class Rectangle extends ParametricCurve {
             throw new UnsupportedOperationException("Double NaN Rectangle calculerPoint3D");
         return point3D;
     }
+
+    public double getX() {
+        return x;
+    }
+
+    public double getHeight() {
+        return height;
+    }
+
+    public double getWidth() {
+        return width;
+    }
+
+    public double getY() {
+        return y;
+    }
 }

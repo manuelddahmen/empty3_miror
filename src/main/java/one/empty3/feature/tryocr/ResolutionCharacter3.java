@@ -18,9 +18,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.*;
-import java.util.function.BiConsumer;
 
 public class ResolutionCharacter3 implements Runnable {
+    public boolean cEchoing = false;
     public static final float MIN_DIFF = 0.6f;
     public static final int XPLUS = 0;
     public static final int YPLUS = 1;
@@ -37,7 +37,7 @@ public class ResolutionCharacter3 implements Runnable {
     private static final boolean[] TRUE_BOOLEANS = new boolean[]{true, true, true, true};
     private static int SHAKE_SIZE = 20;
     private static CsvWriter writer;
-    private static boolean exporting = true ;
+    private static boolean isExporting = true ;
     private static String dirOutChars;
     final int epochs = 100;
     final boolean[] testedRectangleBorder = new boolean[4];
@@ -308,7 +308,8 @@ public class ResolutionCharacter3 implements Runnable {
                     && (h <= stepMax) && (w <= stepMax) && (h >= charMinWidth) && (w >= charMinWidth);
             if (succeded) {
                 Rectangle rectangle = new Rectangle(i, j, w, h);
-                List<Character> candidates = recognize(input, i, j, w, h);
+
+                List<Character> candidates = recognize(input, new Rectangle2(rectangle));
                 if (candidates.size() > 0) {
                     System.out.printf("In %s, Rectangle = (%d,%d,%d,%d) \t\tCandidates: ", name, i, j, w, h);
                     candidates.forEach(System.out::print);
@@ -417,7 +418,9 @@ public class ResolutionCharacter3 implements Runnable {
                     && (h <= stepMax) && (w <= stepMax) && (h >= charMinWidth) && (w >= charMinWidth);
             if (succeded) {
                 Rectangle rectangle = new Rectangle(i, j, w, h);
-                List<Character> candidates = recognize(input, i, j, w, h);
+                Rectangle2 rectangle2 = new Rectangle2(0,0,0,0);
+                if(reduce(input, new Rectangle2(rectangle), rectangle2)) {
+                List<Character> candidates = recognize(input, rectangle2);
                 if (candidates.size() > 0) {
                     ///System.out.printf("In %s, Rectangle = (%d,%d,%d,%d) \t\tCandidates: ", name, i, j, w, h);
                     //candidates.forEach(System.out::print);
@@ -429,9 +432,9 @@ public class ResolutionCharacter3 implements Runnable {
                     output.plotCurve(rectangle, new TextureCol(random));
                     countRects ++;
                     if(isExporting()) {
-                        File file = new File(dirOutChars + "-" + i + "-" + j + "-" + w + "-" + h+".jpg");
+                        File file = new File(dirOutChars + "-" + i + "-" + j + "-" + w + "-" + h + "-" + s[0] + ".jpg");
                         PixM outChar = input.copySubImage(i, j, w, h);
-                        if(!file.getParentFile().exists() || file.getParentFile().isDirectory()) {
+                        if (!file.getParentFile().exists() || file.getParentFile().isDirectory()) {
                             file.getParentFile().mkdirs();
                             try {
                                 ImageIO.write(outChar.getImage(), "jpg", file);
@@ -439,14 +442,18 @@ public class ResolutionCharacter3 implements Runnable {
                                 throw new RuntimeException(e);
                             }
                         }
-
+                    }
                     }
                 }
             }
         }
     }
 
-    private List<Character> recognize(PixM input, int i, int j, int w, int h) {
+    private List<Character> recognize(PixM input, Rectangle2 rectangle2) {
+        int i = rectangle2.getX();
+        int j = rectangle2.getY();
+        int w = rectangle2.getW();
+        int h = rectangle2.getH();
         if (System.currentTimeMillis() % 100 == 0)
             System.gc();
         List<Character> ch = recognizeH(input, i, j, w, h);
@@ -675,12 +682,12 @@ public class ResolutionCharacter3 implements Runnable {
         boolean firstColumn = true;
         int idx = 0;
         int count0 = 0;
-        for (int j = x; j <= x + w; j++) {
+        for (int i = x; i <= x + w; i++) {
             var ref = new Object() {
                 int countOnColumnI = 0;
             };
             int current = BLANK;
-            for (int i = y; i <= y + h; i++) {
+            for (int j = y; j <= y + h; j++) {
                 if (mat.luminance(i, j) < 0.2) {
                     if (current == BLANK) {
                         if (firstColumn) {
@@ -718,7 +725,8 @@ public class ResolutionCharacter3 implements Runnable {
     }
 
     private void printIntegerArray(Integer[] finalColumns) {
-
+        if(!cEchoing)
+            return;
         System.out.println("Final Columns (debug)");
         for (int i = 0; i < finalColumns.length; i++) {
             System.out.print(finalColumns[i]+":");
@@ -841,8 +849,43 @@ public class ResolutionCharacter3 implements Runnable {
             return copy;
         }
     }
-    private static boolean isExporting() {
-        return exporting;
+
+    public boolean reduce(PixM input, Rectangle2 rectangle2origin, Rectangle2 render) {
+        boolean hasChanged = true;
+        render.setX(rectangle2origin.getX());
+        render.setY(rectangle2origin.getY());
+        render.setW(rectangle2origin.getW());
+        render.setH(rectangle2origin.getH());
+
+        boolean[] bools = new boolean[4];
+
+        while(hasChanged) {
+            testRectIs(input, render.getX(), render.getY(), render.getW(), render.getH(), bools, WHITE_DOUBLES);
+            if(bools[XPLUS])
+                render.setX(render.getX()+1);
+            else if(bools[XINVE])
+                render.setW(render.getW()-1);
+            else if(bools[YPLUS])
+                render.setY(render.getY()+1);
+            else if(bools[YINVE])
+                render.setH(render.getH()-1);
+            else
+                hasChanged = false;
+
+        }
+        return render.getX() > 0 && render.getX() + render.getW() < input.getColumns()
+                && render.getW() > 0 &&
+                render.getY() > 0 && render.getY() + render.getH() < input.getLines()
+                && render.getH() > 0;
     }
+    private static boolean isExporting() {
+        return isExporting;
+    }
+
+    public boolean isEchoing() {
+        return cEchoing;
+    }
+
+
 }
 
