@@ -42,7 +42,7 @@ public class ResolutionCharacter3 implements Runnable {
     final int epochs = 100;
     final boolean[] testedRectangleBorder = new boolean[4];
     private final File dirOut;
-    private final int stepMax = 120;
+    private final int stepMax = 40;
     private final int charMinWidth = 5;
     private final double[] WHITE_DOUBLES = new double[]{1, 1, 1};
     private final double[] BLACK_DOUBLES = new double[]{0, 0, 0};
@@ -470,7 +470,7 @@ public class ResolutionCharacter3 implements Runnable {
         allCharsPossible.addAll(ch);
         allCharsPossible.addAll(cv);
         if (allCharsPossible.size() == 0)
-            allCharsPossible.add('-');
+            ;//allCharsPossible.add('-');
 
         return allCharsPossible;
     }
