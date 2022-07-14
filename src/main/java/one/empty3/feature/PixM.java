@@ -642,4 +642,17 @@ public class PixM extends M {
 
         return this;
     }
+
+    public void pasteSubImage(PixM copySubImage, int i, int j, int w, int h) {
+        for(int x=i; x<i+w; x++) {
+            for(int y=i; y<j+h; y++) {
+                for(int c=0; c<3; c++) {
+                    setCompNo(c);
+                    copySubImage.setCompNo(c);
+                    set(x, y, copySubImage.get(x-i, y-j));
+                }
+            }
+
+        }
+    }
 }

@@ -188,6 +188,7 @@ public class ResolutionCharacter3 implements Runnable {
             }
     }
 
+    PixM outRecompose;
     public void run() {
         characterMapH = initPatternsH();
         characterMapV = initPatternsV();
@@ -198,7 +199,7 @@ public class ResolutionCharacter3 implements Runnable {
 
         input = new PixM(read);
         output = input.copy();
-
+        outRecompose = new PixM(input.getColumns(), input.getLines());
         System.out.println("Image size: " + output.getColumns() + ", " + output.getLines());
 
         final ITexture texture = new TextureCol(Color.BLACK);
@@ -421,7 +422,7 @@ public class ResolutionCharacter3 implements Runnable {
                 Rectangle2 rectangle2 = new Rectangle2(0,0,0,0);
                 if(reduce(input, new Rectangle2(rectangle), rectangle2)) {
                 List<Character> candidates = recognize(input, rectangle2);
-                if (candidates.size() > 0) {
+                if (candidates.size() >= 0) {
                     ///System.out.printf("In %s, Rectangle = (%d,%d,%d,%d) \t\tCandidates: ", name, i, j, w, h);
                     //candidates.forEach(System.out::print);
                     //System.out.println();
@@ -442,6 +443,7 @@ public class ResolutionCharacter3 implements Runnable {
                                 throw new RuntimeException(e);
                             }
                         }
+                        outRecompose.pasteSubImage(input.copySubImage(i, j, w, h), i, j, w, h);
                     }
                     }
                 }
