@@ -319,7 +319,7 @@ public class ResolutionCharacter3 implements Runnable {
                 Rectangle rectangle = new Rectangle(i, j, w, h);
 
                 List<Character> candidates = recognize(input, new Rectangle2(rectangle));
-                if (candidates.size() > 0) {
+                if (candidates.size() >= 0) {
                     System.out.printf("In %s, Rectangle = (%d,%d,%d,%d) \t\tCandidates: ", name, i, j, w, h);
                     candidates.forEach(System.out::print);
                     System.out.println();
@@ -442,7 +442,8 @@ public class ResolutionCharacter3 implements Runnable {
                         countRects++;
                         if (isExporting()) {
                             File file = new File(dirOutChars + "-" + i + "-" + j + "-" + w + "-" + h + "-" + s[0] + ".jpg");
-                            PixM outChar = input.copySubImage(i, j, w, h);
+                            PixM outChar = input.copySubImage(rectangle2.getX(),
+                                    rectangle2.getY(), rectangle2.getW(), rectangle2.getH());
                             if (!file.getParentFile().exists() || file.getParentFile().isDirectory()) {
                                 file.getParentFile().mkdirs();
                                 try {
@@ -451,7 +452,8 @@ public class ResolutionCharacter3 implements Runnable {
                                     throw new RuntimeException(e);
                                 }
                             }
-                            outRecompose.pasteSubImage(input.copySubImage(i, j, w, h), i, j, w, h);
+                            outRecompose.pasteSubImage(input.copySubImage(i, j, w, h),
+                                    rectangle2.getX(), rectangle2.getY(), rectangle2.getW(), rectangle2.getH());
                         }
                     }
                 }
