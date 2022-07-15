@@ -429,8 +429,9 @@ public class ResolutionCharacter3 implements Runnable {
                 Rectangle rectangle = new Rectangle(i, j, w, h);
                 Rectangle2 rectangle2 = new Rectangle2(0, 0, 0, 0);
                 if (reduce(input, new Rectangle2(rectangle), rectangle2)) {
+                    rectangle2 = new Rectangle2(rectangle);// PROVISOIRE
                     List<Character> candidates = recognize(input, rectangle2);
-                    if (candidates.size() >= 0) {
+                    if (candidates.size()>=0) {
                         ///System.out.printf("In %s, Rectangle = (%d,%d,%d,%d) \t\tCandidates: ", name, i, j, w, h);
                         //candidates.forEach(System.out::print);
                         //System.out.println();
@@ -489,18 +490,19 @@ public class ResolutionCharacter3 implements Runnable {
 
     private boolean[] testRectIs(PixM input, int x, int y, int w, int h, boolean[] result, double[] color) {
         int i, j;
-        result[0] = true;
+        // XPLUS
+        result[XPLUS] = true;
         for (i = x; i <= x + w; i++)
-            if (arrayDiff(input.getValues(i, y), color) > MIN_DIFF) result[0] = false;
-        result[1] = true;
+            if (arrayDiff(input.getValues(i, y), color) > MIN_DIFF) result[XPLUS] = false;
+        result[YPLUS] = true;
         for (j = y; j <= y + h; j++)
-            if (arrayDiff(input.getValues(x + w, j), color) > MIN_DIFF) result[1] = false;
-        result[2] = true;
+            if (arrayDiff(input.getValues(x+w, j), color) > MIN_DIFF) result[YPLUS] = false;
+        result[XINVE] = true;
         for (i = x + w; i >= x; i--)
-            if (arrayDiff(input.getValues(i, y + h), color) > MIN_DIFF) result[2] = false;
-        result[3] = true;
+            if (arrayDiff(input.getValues(i, y + h), color) > MIN_DIFF) result[XINVE] = false;
+        result[YINVE] = true;
         for (j = y + h; j >= y; j--)
-            if (arrayDiff(input.getValues(x, j), color) > MIN_DIFF) result[3] = false;
+            if (arrayDiff(input.getValues(x, j), color) > MIN_DIFF) result[YINVE] = false;
         return result;
     }
 
@@ -824,10 +826,10 @@ public class ResolutionCharacter3 implements Runnable {
                 hasChanged = false;
 
         }
-        return render.getX() >= 0 && render.getX() + render.getW() <= input.getColumns()
-                && render.getW() >= 0 &&
-                render.getY() >= 0 && render.getY() + render.getH() <= input.getLines()
-                && render.getH() >= 0;
+        return render.getX()  > 0 && render.getX() + render.getW() < input.getColumns()
+                && render.getW() > 0 &&
+                render.getY() > 0 && render.getY() + render.getH() < input.getLines()
+                && render.getH() > 0;
     }
 
     public boolean isEchoing() {
