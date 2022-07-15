@@ -497,7 +497,7 @@ public class ResolutionCharacter3 implements Runnable {
             if (arrayDiff(input.getValues(i, y), color) > MIN_DIFF) result[XPLUS] = false;
         result[YPLUS] = true;
         for (j = y; j <= y + h; j++)
-            if (arrayDiff(input.getValues(x+w, j), color) > MIN_DIFF) result[YPLUS] = false;
+            if (arrayDiff(input.getValues(x + w, j), color) > MIN_DIFF) result[YPLUS] = false;
         result[XINVE] = true;
         for (i = x + w; i >= x; i--)
             if (arrayDiff(input.getValues(i, y + h), color) > MIN_DIFF) result[XINVE] = false;
