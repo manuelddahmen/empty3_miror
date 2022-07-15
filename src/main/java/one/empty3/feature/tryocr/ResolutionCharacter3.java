@@ -34,6 +34,7 @@ public class ResolutionCharacter3 implements Runnable {
     private static final int BLANK = 0;
     private static final int CHARS = 1;
     private static final boolean[] TRUE_BOOLEANS = new boolean[]{true, true, true, true};
+    private static final double MAX_BLACK_VALUE = 0.5;
     private static int SHAKE_SIZE = 20;
     private static CsvWriter writer;
     private static boolean isExporting = true;
@@ -42,7 +43,7 @@ public class ResolutionCharacter3 implements Runnable {
     final int epochs = 100;
     final boolean[] testedRectangleBorder = new boolean[4];
     private final File dirOut;
-    private final int stepMax = 40;
+    private final int stepMax = 80;
     private final int charMinWidth = 5;
     private final double[] WHITE_DOUBLES = new double[]{1, 1, 1};
     private final double[] BLACK_DOUBLES = new double[]{0, 0, 0};
@@ -429,7 +430,7 @@ public class ResolutionCharacter3 implements Runnable {
                 Rectangle rectangle = new Rectangle(i, j, w, h);
                 Rectangle2 rectangle2 = new Rectangle2(0, 0, 0, 0);
                 if (reduce(input, new Rectangle2(rectangle), rectangle2)) {
-                    rectangle2 = new Rectangle2(rectangle);// PROVISOIRE
+                    //rectangle2 = new Rectangle2(rectangle);// PROVISOIRE
                     List<Character> candidates = recognize(input, rectangle2);
                     if (candidates.size()>=0) {
                         ///System.out.printf("In %s, Rectangle = (%d,%d,%d,%d) \t\tCandidates: ", name, i, j, w, h);
@@ -765,7 +766,7 @@ public class ResolutionCharacter3 implements Runnable {
             };
             int current = BLANK;
             for (int i = x; i <= x + w; i++) {
-                if (mat.luminance(i, j) < 0.3) {
+                if (mat.luminance(i, j) < MAX_BLACK_VALUE) {
                     if (current == BLANK) {
                         if (firstLine) {
                             firstLine = false;
@@ -815,20 +816,20 @@ public class ResolutionCharacter3 implements Runnable {
                 && render.getH() >= 0) {
             testRectIs(input, render.getX(), render.getY(), render.getW(), render.getH(), bools, WHITE_DOUBLES);
             if (bools[XPLUS])
-                render.setX(render.getX() + 1);
-            else if (bools[XINVE])
-                render.setW(render.getW() - 1);
-            else if (bools[YPLUS])
                 render.setY(render.getY() + 1);
-            else if (bools[YINVE])
+            else if (bools[XINVE])
                 render.setH(render.getH() - 1);
+            else if (bools[YPLUS])
+                render.setW(render.getW() + 1);
+            else if (bools[YINVE])
+                render.setX(render.getX() - 1);
             else
                 hasChanged = false;
 
         }
-        return render.getX()  > 0 && render.getX() + render.getW() < input.getColumns()
+        return render.getX()  >= 0 && render.getX() + render.getW() <= input.getColumns()
                 && render.getW() > 0 &&
-                render.getY() > 0 && render.getY() + render.getH() < input.getLines()
+                render.getY() >= 0 && render.getY() + render.getH() <= input.getLines()
                 && render.getH() > 0;
     }
 
