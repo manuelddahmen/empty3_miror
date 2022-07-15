@@ -121,7 +121,7 @@ public class ResolutionCharacter3 implements Runnable {
 
     }
 
-    static void exec(ITexture texture, PixM output, PixM input, File dirOut, String name) {
+    public void exec(ITexture texture, PixM output, PixM input, File dirOut, String name) {
         output.plotCurve(new Rectangle(10, 10, output.getColumns() - 20, output.getLines() - 20), texture);
 
         try {
@@ -129,9 +129,13 @@ public class ResolutionCharacter3 implements Runnable {
                     new File(dirOut + File.separator + name.replace(' ', '_').replace(".jpg", "INPUT.jpg")));
             ImageIO.write(output.getImage(), "jpg",
                     new File(dirOut + File.separator + name.replace(' ', '_').replace(".jpg", "OUTPUT.jpg")));
+
+                ImageIO.write(outRecompose.getImage(), "jpg", new File(
+                        dirOut.getAbsolutePath()+File.separator+"charsRecomposed.jpg"));
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
+
     }
 
     public void addRandomCurves(State state) {
@@ -213,6 +217,7 @@ public class ResolutionCharacter3 implements Runnable {
             }
         }
         exec(texture, output, input, dirOut, name);
+
     }
 
     private void exec(int i, int j) {
