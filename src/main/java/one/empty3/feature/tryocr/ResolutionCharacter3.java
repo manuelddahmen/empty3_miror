@@ -135,7 +135,7 @@ public class ResolutionCharacter3 implements Runnable {
                     new File(dirOut + File.separator + name.replace(' ', '_').replace(".jpg", "OUTPUT.jpg")));
 
             ImageIO.write(outRecompose.getImage(), "jpg", new File(
-                    dirOut.getAbsolutePath() + File.separator + "charsRecomposed.jpg"));
+                    dirOut + File.separator + name.replace(' ', '_').replace(".jpg", "RECOMPOSE.jpg")));
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
