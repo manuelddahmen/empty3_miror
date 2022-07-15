@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.*;
 
 public class ResolutionCharacter3 implements Runnable {
-    public boolean cEchoing = false;
     public static final float MIN_DIFF = 0.6f;
     public static final int XPLUS = 0;
     public static final int YPLUS = 1;
@@ -37,8 +36,9 @@ public class ResolutionCharacter3 implements Runnable {
     private static final boolean[] TRUE_BOOLEANS = new boolean[]{true, true, true, true};
     private static int SHAKE_SIZE = 20;
     private static CsvWriter writer;
-    private static boolean isExporting = true ;
+    private static boolean isExporting = true;
     private static String dirOutChars;
+    private static String dirOutChars2;
     final int epochs = 100;
     final boolean[] testedRectangleBorder = new boolean[4];
     private final File dirOut;
@@ -46,7 +46,9 @@ public class ResolutionCharacter3 implements Runnable {
     private final int charMinWidth = 5;
     private final double[] WHITE_DOUBLES = new double[]{1, 1, 1};
     private final double[] BLACK_DOUBLES = new double[]{0, 0, 0};
+    public boolean cEchoing = false;
     int step = 1;// Searched Characters size.
+    PixM outRecompose;
     private BufferedImage read;
     private String name;
     private int shakeTimes;
@@ -74,7 +76,7 @@ public class ResolutionCharacter3 implements Runnable {
 
         File dir = new File("C:\\Users\\manue\\EmptyCanvasTest\\ocr");
         File dirOut = new File("C:\\Users\\manue\\EmptyCanvasTest\\ocr\\TestsOutput");
-        if(isExporting()) {
+        if (isExporting()) {
 
         }
         if (dir.exists() && dir.isDirectory()) {
@@ -90,17 +92,15 @@ public class ResolutionCharacter3 implements Runnable {
                     String name = file.getName();
 
 
-
-
                     System.out.println("ResolutionCharacter3 : " + name);
 
                     ResolutionCharacter3 ResolutionCharacter3 = new ResolutionCharacter3(read, name, dirOut);
-                    dirOutChars =dirOut.getAbsolutePath()+File.separator+name+File.separator+"char";
+                    dirOutChars = dirOut.getAbsolutePath() + File.separator + name + File.separator + "char";
+                    dirOutChars2 = dirOut.getAbsolutePath() + File.separator + name + File.separator + "char2";
 
                     System.out.printf("%s", ResolutionCharacter3.getClass().getSimpleName());
 
                     Thread thread = new Thread(ResolutionCharacter3);
-
 
 
                     thread.start();
@@ -121,6 +121,10 @@ public class ResolutionCharacter3 implements Runnable {
 
     }
 
+    private static boolean isExporting() {
+        return isExporting;
+    }
+
     public void exec(ITexture texture, PixM output, PixM input, File dirOut, String name) {
         output.plotCurve(new Rectangle(10, 10, output.getColumns() - 20, output.getLines() - 20), texture);
 
@@ -130,8 +134,8 @@ public class ResolutionCharacter3 implements Runnable {
             ImageIO.write(output.getImage(), "jpg",
                     new File(dirOut + File.separator + name.replace(' ', '_').replace(".jpg", "OUTPUT.jpg")));
 
-                ImageIO.write(outRecompose.getImage(), "jpg", new File(
-                        dirOut.getAbsolutePath()+File.separator+"charsRecomposed.jpg"));
+            ImageIO.write(outRecompose.getImage(), "jpg", new File(
+                    dirOut.getAbsolutePath() + File.separator + "charsRecomposed.jpg"));
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
@@ -192,7 +196,6 @@ public class ResolutionCharacter3 implements Runnable {
             }
     }
 
-    PixM outRecompose;
     public void run() {
         characterMapH = initPatternsH();
         characterMapV = initPatternsV();
@@ -402,7 +405,7 @@ public class ResolutionCharacter3 implements Runnable {
                 }
 
 
-                if ((h>stepMax || w > stepMax) || ((h0 == h) && (w0 == w))) {
+                if ((h > stepMax || w > stepMax) || ((h0 == h) && (w0 == w))) {
                     break;
                 }
 
@@ -424,32 +427,32 @@ public class ResolutionCharacter3 implements Runnable {
                     && (h <= stepMax) && (w <= stepMax) && (h >= charMinWidth) && (w >= charMinWidth);
             if (succeded) {
                 Rectangle rectangle = new Rectangle(i, j, w, h);
-                Rectangle2 rectangle2 = new Rectangle2(0,0,0,0);
-                if(reduce(input, new Rectangle2(rectangle), rectangle2)) {
-                List<Character> candidates = recognize(input, rectangle2);
-                if (candidates.size() >= 0) {
-                    ///System.out.printf("In %s, Rectangle = (%d,%d,%d,%d) \t\tCandidates: ", name, i, j, w, h);
-                    //candidates.forEach(System.out::print);
-                    //System.out.println();
-                    final String[] s = {""};
-                    candidates.forEach(character -> s[0] += character);
-                    //writer.writeLine(new String[]{name, "" + i, "" + j, "" + w, "" + h, s[0]});
-                    Color random = Colors.random();
-                    output.plotCurve(rectangle, new TextureCol(random));
-                    countRects ++;
-                    if(isExporting()) {
-                        File file = new File(dirOutChars + "-" + i + "-" + j + "-" + w + "-" + h + "-" + s[0] + ".jpg");
-                        PixM outChar = input.copySubImage(i, j, w, h);
-                        if (!file.getParentFile().exists() || file.getParentFile().isDirectory()) {
-                            file.getParentFile().mkdirs();
-                            try {
-                                ImageIO.write(outChar.getImage(), "jpg", file);
-                            } catch (IOException e) {
-                                throw new RuntimeException(e);
+                Rectangle2 rectangle2 = new Rectangle2(0, 0, 0, 0);
+                if (reduce(input, new Rectangle2(rectangle), rectangle2)) {
+                    List<Character> candidates = recognize(input, rectangle2);
+                    if (candidates.size() >= 0) {
+                        ///System.out.printf("In %s, Rectangle = (%d,%d,%d,%d) \t\tCandidates: ", name, i, j, w, h);
+                        //candidates.forEach(System.out::print);
+                        //System.out.println();
+                        final String[] s = {""};
+                        candidates.forEach(character -> s[0] += character);
+                        //writer.writeLine(new String[]{name, "" + i, "" + j, "" + w, "" + h, s[0]});
+                        Color random = Colors.random();
+                        output.plotCurve(rectangle, new TextureCol(random));
+                        countRects++;
+                        if (isExporting()) {
+                            File file = new File(dirOutChars + "-" + i + "-" + j + "-" + w + "-" + h + "-" + s[0] + ".jpg");
+                            PixM outChar = input.copySubImage(i, j, w, h);
+                            if (!file.getParentFile().exists() || file.getParentFile().isDirectory()) {
+                                file.getParentFile().mkdirs();
+                                try {
+                                    ImageIO.write(outChar.getImage(), "jpg", file);
+                                } catch (IOException e) {
+                                    throw new RuntimeException(e);
+                                }
                             }
+                            outRecompose.pasteSubImage(input.copySubImage(i, j, w, h), i, j, w, h);
                         }
-                        outRecompose.pasteSubImage(input.copySubImage(i, j, w, h), i, j, w, h);
-                    }
                     }
                 }
             }
@@ -732,16 +735,15 @@ public class ResolutionCharacter3 implements Runnable {
     }
 
     private void printIntegerArray(Integer[] finalColumns) {
-        if(!cEchoing)
+        if (!cEchoing)
             return;
         System.out.println("Final Columns (debug)");
         for (int i = 0; i < finalColumns.length; i++) {
-            System.out.print(finalColumns[i]+":");
+            System.out.print(finalColumns[i] + ":");
         }
         System.out.println();
 
     }
-
 
     public List<Character> recognizeH(PixM mat, int x, int y, int w, int h) {
 
@@ -792,6 +794,42 @@ public class ResolutionCharacter3 implements Runnable {
         printIntegerArray(finalLines);
 
         return retained;
+    }
+
+    public boolean reduce(PixM input, Rectangle2 rectangle2origin, Rectangle2 render) {
+        boolean hasChanged = true;
+        render.setX(rectangle2origin.getX());
+        render.setY(rectangle2origin.getY());
+        render.setW(rectangle2origin.getW());
+        render.setH(rectangle2origin.getH());
+
+        boolean[] bools = new boolean[4];
+
+        while (hasChanged && render.getX() >= 0 && render.getX() + render.getW() <= input.getColumns()
+                && render.getW() >= 0 &&
+                render.getY() >= 0 && render.getY() + render.getH() <= input.getLines()
+                && render.getH() >= 0) {
+            testRectIs(input, render.getX(), render.getY(), render.getW(), render.getH(), bools, WHITE_DOUBLES);
+            if (bools[XPLUS])
+                render.setX(render.getX() + 1);
+            else if (bools[XINVE])
+                render.setW(render.getW() - 1);
+            else if (bools[YPLUS])
+                render.setY(render.getY() + 1);
+            else if (bools[YINVE])
+                render.setH(render.getH() - 1);
+            else
+                hasChanged = false;
+
+        }
+        return render.getX() >= 0 && render.getX() + render.getW() <= input.getColumns()
+                && render.getW() >= 0 &&
+                render.getY() >= 0 && render.getY() + render.getH() <= input.getLines()
+                && render.getH() >= 0;
+    }
+
+    public boolean isEchoing() {
+        return cEchoing;
     }
 
     class StateAction {
@@ -855,45 +893,6 @@ public class ResolutionCharacter3 implements Runnable {
 
             return copy;
         }
-    }
-
-    public boolean reduce(PixM input, Rectangle2 rectangle2origin, Rectangle2 render) {
-        boolean hasChanged = true;
-        render.setX(rectangle2origin.getX());
-        render.setY(rectangle2origin.getY());
-        render.setW(rectangle2origin.getW());
-        render.setH(rectangle2origin.getH());
-
-        boolean[] bools = new boolean[4];
-
-        while(hasChanged && render.getX() >= 0 && render.getX() + render.getW() <= input.getColumns()
-                && render.getW() >= 0 &&
-                render.getY() >= 0 && render.getY() + render.getH() <= input.getLines()
-                && render.getH() >= 0) {
-            testRectIs(input, render.getX(), render.getY(), render.getW(), render.getH(), bools, WHITE_DOUBLES);
-            if(bools[XPLUS])
-                render.setX(render.getX()+1);
-            else if(bools[XINVE])
-                render.setW(render.getW()-1);
-            else if(bools[YPLUS])
-                render.setY(render.getY()+1);
-            else if(bools[YINVE])
-                render.setH(render.getH()-1);
-            else
-                hasChanged = false;
-
-        }
-        return render.getX() >= 0 && render.getX() + render.getW() <= input.getColumns()
-                && render.getW() >= 0 &&
-                render.getY() >= 0 && render.getY() + render.getH() <= input.getLines()
-                && render.getH() >= 0;
-    }
-    private static boolean isExporting() {
-        return isExporting;
-    }
-
-    public boolean isEchoing() {
-        return cEchoing;
     }
 
 
