@@ -452,7 +452,7 @@ public class ResolutionCharacter3 implements Runnable {
                                     throw new RuntimeException(e);
                                 }
                             }
-                            outRecompose.pasteSubImage(input.copySubImage(i, j, w, h),
+                            outRecompose.pasteSubImage(outChar,
                                     rectangle2.getX(), rectangle2.getY(), rectangle2.getW(), rectangle2.getH());
                         }
                     }
