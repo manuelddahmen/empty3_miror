@@ -148,9 +148,4 @@ public class Trainee {
         return super.toString();
     }
 
-    @Override
-    protected void finalize() throws Throwable {
-        super.finalize();
-    }
-
 }

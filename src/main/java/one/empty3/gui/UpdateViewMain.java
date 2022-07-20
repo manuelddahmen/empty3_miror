@@ -61,7 +61,7 @@ public class UpdateViewMain extends JPanel implements RepresentableEditor {
                 System.out.println("Mouse Pressed MouseEvent e in select ROTATE");
                 if (threadDrawing != null) {
                     threadDrawing.setRunning(false);
-                    threadDrawing.stop();
+                    threadDrawing.setStop(true);
                     threadDrawing = null;
                 }
                 mousePoint = null;
@@ -120,6 +120,7 @@ public class UpdateViewMain extends JPanel implements RepresentableEditor {
             class ThreadDrawing extends Thread {
                 boolean running;
                 private boolean pause = false;
+                private boolean isStopped;
 
                 public void run() {
                     running = true;
@@ -178,6 +179,10 @@ public class UpdateViewMain extends JPanel implements RepresentableEditor {
 
                 public boolean isPause() {
                     return pause;
+                }
+
+                public void setStop(boolean stop) {
+                    this.isStopped = true;
                 }
             }
         });
