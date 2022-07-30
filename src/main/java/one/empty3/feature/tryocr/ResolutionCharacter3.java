@@ -422,12 +422,12 @@ public class ResolutionCharacter3 implements Runnable {
                 }
 
 
-               /* if ((h > stepMax || w > stepMax) || ((h0 == h) && (w0 == w))) {
+               if ((h > stepMax || w > stepMax) || ((h0 == h) && (w0 == w))) {
                     break;
-                }*/
+                }
 
             }
-            boolean succeded = false;
+            boolean succeded;
             if(Arrays.equals(testRectIs(input, i, j, w - 1, h, testedRectangleBorder, WHITE_DOUBLES), TRUE_BOOLEANS)){
                 succeded = true;
             }
