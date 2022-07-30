@@ -365,16 +365,22 @@ public class ResolutionCharacter3 implements Runnable {
                 int w0 = w;
                 int h0 = h;
                 testRectIs(input, i, j, w, h, testedRectangleBorder, WHITE_DOUBLES);
-
-                if (widthBlackHistory == 0 && Arrays.equals(testedRectangleBorder, TRUE_BOOLEANS)
-                        && heightBlackHistory == 0) {
-                    h++;
-                    w++;
+                if(!testedRectangleBorder[XPLUS] || !testedRectangleBorder[YINVE]){
+                    break;
+                }
+                if ((widthBlackHistory == 0|| heightBlackHistory == 0) && Arrays.equals(testedRectangleBorder, TRUE_BOOLEANS)
+                        ) {
+                    if(widthBlackHistory==0)
+                        w++;
+                    if(heightBlackHistory==0 )
+                        h++;
                     continue;
-                } else if (widthBlackHistory == 1 && !Arrays.equals(testedRectangleBorder, TRUE_BOOLEANS)
-                        && heightBlackHistory == 1) {
-                    h++;
-                    w++;
+                } else if ((widthBlackHistory == 1|| heightBlackHistory == 1) && !Arrays.equals(testedRectangleBorder, TRUE_BOOLEANS)
+                        ) {
+                    if(widthBlackHistory==1)
+                        w++;
+                    if(heightBlackHistory==1)
+                        h++;
                     continue;
                 }
                 if (!testedRectangleBorder[XINVE] && widthBlackHistory == 0) {
@@ -414,17 +420,17 @@ public class ResolutionCharacter3 implements Runnable {
             testRectIs(input, i, j, w, h, testedRectangleBorder, WHITE_DOUBLES);
             boolean succeded = false;
             if (heightBlackHistory == 2 && widthBlackHistory == 2) {
-                if (Arrays.equals(testRectIs(input, i, j, w - 1, h, testedRectangleBorder, WHITE_DOUBLES), TRUE_BOOLEANS)) {
+                /*if (Arrays.equals(testRectIs(input, i, j, w - 1, h, testedRectangleBorder, WHITE_DOUBLES), TRUE_BOOLEANS)) {
                     w = w - 1;
                     succeded = true;
                 }
                 if (Arrays.equals(testRectIs(input, i, j, w, h - 1, testedRectangleBorder, WHITE_DOUBLES), TRUE_BOOLEANS)) {
                     h = h - 1;
                     succeded = true;
-                }
+                }*/
             }
-
-            succeded = succeded && (heightBlackHistory >= 2) && (widthBlackHistory >= 2) && Arrays.equals(testRectIs(input, i, j, w, h, testedRectangleBorder, WHITE_DOUBLES), TRUE_BOOLEANS)
+            succeded = true;
+            succeded = (heightBlackHistory >= 2) && (widthBlackHistory >= 2) && Arrays.equals(testRectIs(input, i, j, w, h, testedRectangleBorder, WHITE_DOUBLES), TRUE_BOOLEANS)
                     && (h <= stepMax) && (w <= stepMax) && (h >= charMinWidth) && (w >= charMinWidth);
             if (succeded) {
                 Rectangle rectangle = new Rectangle(i, j, w, h);
@@ -443,7 +449,7 @@ public class ResolutionCharacter3 implements Runnable {
                         output.plotCurve(rectangle, new TextureCol(random));
                         countRects++;
                         if (isExporting()) {
-                            File file = new File(dirOutChars + "-" + i + "-" + j + "-" + w + "-" + h + "-" + s[0] + ".jpg");
+                            File file = new File(dirOutChars + "-" + j + "-" + i + "-" + w + "-" + h + "-" + s[0] + ".jpg");
                             PixM outChar = input.copySubImage(rectangle2.getX(),
                                     rectangle2.getY(), rectangle2.getW(), rectangle2.getH());
                             if (!file.getParentFile().exists() || file.getParentFile().isDirectory()) {
