@@ -371,23 +371,28 @@ public class ResolutionCharacter3 implements Runnable {
                 }
                 if ((widthBlackHistory == 0|| heightBlackHistory == 0) && Arrays.equals(testedRectangleBorder, TRUE_BOOLEANS)
                         ) {
-                    if(widthBlackHistory==0) {
+                    if(widthBlackHistory == 0&& heightBlackHistory == 0) {
+                    } else if(widthBlackHistory==0) {
                         w++;
                         continue;
+                    }else if(heightBlackHistory==0) {
+                        h++;
+                        continue;
                     }
-                    h++;
-                    continue;
-                }/* else if ((widthBlackHistory == 1|| heightBlackHistory == 1) && !Arrays.equals(testedRectangleBorder, TRUE_BOOLEANS)
+
+                } else if ((widthBlackHistory == 1|| heightBlackHistory == 1) && !Arrays.equals(testedRectangleBorder, TRUE_BOOLEANS)
                         ) {
                     if(widthBlackHistory==1 && heightBlackHistory==1) {
                         w++;
                         h++;
                         continue;
                     } else if (widthBlackHistory==1) {
-
+                        w++;
+                    } else if(heightBlackHistory==1) {
+                        h++;
                     }
                     continue;
-                }*/
+                }
                 if (!testedRectangleBorder[XINVE] && widthBlackHistory == 0) {
                     widthBlackHistory = 1;
                     w++;
@@ -397,10 +402,10 @@ public class ResolutionCharacter3 implements Runnable {
                     widthBlackHistory = 2;
                 }
                 // Case "L"
-                /*if (widthBlackHistory == 2 && !testedRectangleBorder[YPLUS]) {
+                if (widthBlackHistory == 2 && !testedRectangleBorder[YPLUS]) {
                     h++;
                     heightBlackHistory = 1;
-                }*/
+                }
 
                 if (!testedRectangleBorder[YPLUS] && heightBlackHistory == 0) {
                     heightBlackHistory = 1;
@@ -411,10 +416,10 @@ public class ResolutionCharacter3 implements Runnable {
                     heightBlackHistory = 2;
                 }
                 // Case '>'
-                /*if (heightBlackHistory == 2 && !testedRectangleBorder[XINVE]) {
+                if (heightBlackHistory == 2 && !testedRectangleBorder[XINVE]) {
                     w++;
                     widthBlackHistory = 1;
-                }*/
+                }
 
 
                /* if ((h > stepMax || w > stepMax) || ((h0 == h) && (w0 == w))) {
@@ -422,19 +427,21 @@ public class ResolutionCharacter3 implements Runnable {
                 }*/
 
             }
-            //testRectIs(input, i, j, w, h, testedRectangleBorder, WHITE_DOUBLES);
             boolean succeded = false;
+            if(Arrays.equals(testRectIs(input, i, j, w - 1, h, testedRectangleBorder, WHITE_DOUBLES), TRUE_BOOLEANS)){
+                succeded = true;
+            }
+
             if (heightBlackHistory == 2 && widthBlackHistory == 2) {
-                /*if (Arrays.equals(testRectIs(input, i, j, w - 1, h, testedRectangleBorder, WHITE_DOUBLES), TRUE_BOOLEANS)) {
+                if (Arrays.equals(testRectIs(input, i, j, w - 1, h, testedRectangleBorder, WHITE_DOUBLES), TRUE_BOOLEANS)) {
                     w = w - 1;
                     succeded = true;
                 }
                 if (Arrays.equals(testRectIs(input, i, j, w, h - 1, testedRectangleBorder, WHITE_DOUBLES), TRUE_BOOLEANS)) {
                     h = h - 1;
                     succeded = true;
-                }*/
+                }
             }
-            succeded = false;
             succeded = (heightBlackHistory >= 2) && (widthBlackHistory >= 2)
                     && Arrays.equals(testRectIs(input, i, j, w, h, testedRectangleBorder, WHITE_DOUBLES), TRUE_BOOLEANS)
                     && (h < stepMax) && (w < stepMax) && (h > charMinWidth) && (w > charMinWidth);
