@@ -366,7 +366,6 @@ public class ResolutionCharacter4 implements Runnable {
                                 testedRectangleBorder = testRectIs(input, i, j, w, h, testedRectangleBorder, WHITE_DOUBLES)))) {
                 int w0 = w;
                 int h0 = h;
-                testedRectangleBorder = testRectIs(input, i, j, w, h, testedRectangleBorder, WHITE_DOUBLES);
                 if (!testedRectangleBorder[XPLUS] || !testedRectangleBorder[YINVE]) {
                     break;
                 }
