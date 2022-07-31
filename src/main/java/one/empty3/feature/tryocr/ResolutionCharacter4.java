@@ -95,13 +95,13 @@ public class ResolutionCharacter4 implements Runnable {
 
                     System.out.println("ResolutionCharacter4 : " + name);
 
-                    ResolutionCharacter4 ResolutionCharacter4 = new ResolutionCharacter4(read, name, dirOut);
+                    ResolutionCharacter4 resolutionCharacter4 = new ResolutionCharacter4(read, name, dirOut);
                     dirOutChars = dirOut.getAbsolutePath() + File.separator + name + File.separator + "char";
                     dirOutChars2 = dirOut.getAbsolutePath() + File.separator + name + File.separator + "char2";
 
-                    System.out.printf("%s", ResolutionCharacter4.getClass().getSimpleName());
+                    System.out.printf("%s", resolutionCharacter4.getClass().getSimpleName());
 
-                    Thread thread = new Thread(ResolutionCharacter4);
+                    Thread thread = new Thread(resolutionCharacter4);
 
 
                     thread.start();
@@ -246,7 +246,7 @@ public class ResolutionCharacter4 implements Runnable {
             int heightBlackHistory = 0;
             int widthBlackHistory = 0;
             boolean firstPass = true;
-            while ((firstPass & Arrays.equals(testedRectangleBorder =testRectIs(input, i, j, w, h, testedRectangleBorder, WHITE_DOUBLES), TRUE_BOOLEANS)) || !(heightBlackHistory >= 2 && widthBlackHistory >= 2)
+            while ((firstPass & Arrays.equals(testedRectangleBorder = testRectIs(input, i, j, w, h, testedRectangleBorder, WHITE_DOUBLES), TRUE_BOOLEANS)) || !(heightBlackHistory >= 2 && widthBlackHistory >= 2)
                     & i + w < input.getColumns() & j + h < input.getLines() & w < stepMax & h < stepMax & h >= 0 && w >= 0) {
                 firstPass = false;
                 if (!testedRectangleBorder[XPLUS] && w >= 1 && (widthBlackHistory == 1 || heightBlackHistory >= 1)) {
@@ -370,11 +370,14 @@ public class ResolutionCharacter4 implements Runnable {
                 int h0 = h;
                 testedRectangleBorder = testRectIs(input, i, j, w, h, testedRectangleBorder, WHITE_DOUBLES);
                 if (!testedRectangleBorder[XPLUS] || !testedRectangleBorder[YINVE]) {
-                    break;
+                    //break;
                 }
                 if ((widthBlackHistory == 0 || heightBlackHistory == 0) && Arrays.equals(testedRectangleBorder, TRUE_BOOLEANS)
                 ) {
-                    if (widthBlackHistory == 0 && heightBlackHistory == 0) {
+                    //widthBlackHistory = 2;
+                    //heightBlackHistory = 2;
+                    break;
+                    /*if (widthBlackHistory == 0 && heightBlackHistory == 0) {
                     } else if (widthBlackHistory == 0) {
                         w++;
                         continue;
@@ -382,13 +385,12 @@ public class ResolutionCharacter4 implements Runnable {
                         h++;
                         continue;
                     }
-
+*/
                 } else if ((widthBlackHistory == 1 || heightBlackHistory == 1) && !Arrays.equals(testedRectangleBorder, TRUE_BOOLEANS)
                 ) {
                     if (widthBlackHistory == 1 && heightBlackHistory == 1) {
                         w++;
                         h++;
-                        continue;
                     } else if (widthBlackHistory == 1) {
                         w++;
                     } else if (heightBlackHistory == 1) {
@@ -398,9 +400,9 @@ public class ResolutionCharacter4 implements Runnable {
                 }
                 if (!testedRectangleBorder[XINVE] && widthBlackHistory == 0) {
                     widthBlackHistory = 1;
-                    w++;
+                    h++;
                 } else if (!testedRectangleBorder[XINVE] && widthBlackHistory == 1) {
-                    w++;
+                    h++;
                 } else if (testedRectangleBorder[XINVE] && widthBlackHistory == 1) {
                     widthBlackHistory = 2;
                 } else
@@ -412,9 +414,9 @@ public class ResolutionCharacter4 implements Runnable {
 
                 if (!testedRectangleBorder[YPLUS] && heightBlackHistory == 0) {
                     heightBlackHistory = 1;
-                    h++;
+                    w++;
                 } else if (!testedRectangleBorder[YPLUS] && heightBlackHistory == 1) {
-                    h++;
+                    w++;
                 } else if (testedRectangleBorder[YPLUS] && heightBlackHistory == 1) {
                     heightBlackHistory = 2;
                 } else
@@ -466,13 +468,13 @@ public class ResolutionCharacter4 implements Runnable {
                         output.plotCurve(rectangle, new TextureCol(random));
                         countRects++;
                         if (isExporting()) {
-                            File file = new File(dirOutChars + "-" + j + "-" + i + "-" + w + "-" + h + "-" + s[0] + ".jpg");
+                            File file = new File(dirOutChars + "-" + j + "-" + i + "-" + w + "-" + h + "-" + s[0] + ".png");
                             PixM outChar = input.copySubImage(rectangle2.getX(),
                                     rectangle2.getY(), rectangle2.getW(), rectangle2.getH());
                             if (!file.getParentFile().exists() || file.getParentFile().isDirectory()) {
                                 file.getParentFile().mkdirs();
                                 try {
-                                    ImageIO.write(outChar.getImage(), "jpg", file);
+                                    ImageIO.write(outChar.getImage(), "png", file);
                                 } catch (IOException e) {
                                     throw new RuntimeException(e);
                                 }

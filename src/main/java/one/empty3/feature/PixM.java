@@ -536,8 +536,8 @@ public class PixM extends M {
     }
     public PixM copySubImage(int x, int y, int w, int h) {
         PixM p2 = new PixM(w, h);
-        for (int i = x; i < x + w; i++)
-            for (int j = y; j < y + h; j++)
+        for (int i = x; i <= x + w; i++)
+            for (int j = y; j <= y + h; j++)
                 for (int c = 0; c < getCompCount(); c++) {
                     setCompNo(c);
                     p2.setCompNo(c);
