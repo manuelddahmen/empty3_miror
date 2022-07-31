@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.*;
 
-public class ResolutionCharacter3 implements Runnable {
+public class ResolutionCharacter4 implements Runnable {
     public static final float MIN_DIFF = 0.6f;
     public static final int XPLUS = 0;
     public static final int YPLUS = 1;
@@ -62,11 +62,11 @@ public class ResolutionCharacter3 implements Runnable {
     private Map<Character, Integer[]> characterMapV;
     private int countRects = 0;
 
-    public ResolutionCharacter3(BufferedImage read, String name) {
+    public ResolutionCharacter4(BufferedImage read, String name) {
         this(read, name, new File("testsResults"));
     }
 
-    public ResolutionCharacter3(BufferedImage read, String name, File dirOut) {
+    public ResolutionCharacter4(BufferedImage read, String name, File dirOut) {
         this.read = read;
         this.name = name;
         this.dirOut = dirOut;
@@ -93,15 +93,15 @@ public class ResolutionCharacter3 implements Runnable {
                     String name = file.getName();
 
 
-                    System.out.println("ResolutionCharacter3 : " + name);
+                    System.out.println("ResolutionCharacter4 : " + name);
 
-                    ResolutionCharacter3 ResolutionCharacter3 = new ResolutionCharacter3(read, name, dirOut);
+                    ResolutionCharacter4 ResolutionCharacter4 = new ResolutionCharacter4(read, name, dirOut);
                     dirOutChars = dirOut.getAbsolutePath() + File.separator + name + File.separator + "char";
                     dirOutChars2 = dirOut.getAbsolutePath() + File.separator + name + File.separator + "char2";
 
-                    System.out.printf("%s", ResolutionCharacter3.getClass().getSimpleName());
+                    System.out.printf("%s", ResolutionCharacter4.getClass().getSimpleName());
 
-                    Thread thread = new Thread(ResolutionCharacter3);
+                    Thread thread = new Thread(ResolutionCharacter4);
 
 
                     thread.start();
@@ -293,12 +293,12 @@ public class ResolutionCharacter3 implements Runnable {
                 } else if (testedRectangleBorder[YPLUS] && heightBlackHistory == 1) {
                     heightBlackHistory = 2;
                 }
-                        if (heightBlackHistory == 1 || heightBlackHistory == 0 && widthBlackHistory == 2) {
-                            h++;
-                        }
-                        if (widthBlackHistory == 1 || widthBlackHistory == 0 && heightBlackHistory == 2) {
-                            w++;
-                        }
+                if (heightBlackHistory == 1 || heightBlackHistory == 0 && widthBlackHistory == 2) {
+                    h++;
+                }
+                if (widthBlackHistory == 1 || widthBlackHistory == 0 && heightBlackHistory == 2) {
+                    w++;
+                }
                 if (h > stepMax || w > stepMax) {
                     fail = true;
                     break;
