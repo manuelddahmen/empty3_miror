@@ -245,26 +245,27 @@ public class ResolutionCharacter3 implements Runnable {
             // plus rien jusqu'à ce que le balai V ait fini.
             int heightBlackHistory = 0;
             int widthBlackHistory = 0;
-            testedRectangleBorder = testRectIs(input, i, j, w, h, testedRectangleBorder, WHITE_DOUBLES);
             boolean firstPass = true;
-            while ((firstPass && Arrays.equals(testedRectangleBorder, TRUE_BOOLEANS)) || !(heightBlackHistory >= 2 && widthBlackHistory >= 2)
-                    && i + w < input.getColumns() && j + h < input.getLines() && w < stepMax && h < stepMax && h >= 0 && w >= 0) {
+            while ((firstPass & Arrays.equals(testedRectangleBorder =testRectIs(input, i, j, w, h, testedRectangleBorder, WHITE_DOUBLES), TRUE_BOOLEANS)) || !(heightBlackHistory >= 2 && widthBlackHistory >= 2)
+                    & i + w < input.getColumns() & j + h < input.getLines() & w < stepMax & h < stepMax & h >= 0 && w >= 0) {
                 firstPass = false;
-                testedRectangleBorder = testRectIs(input, i, j, w, h, testedRectangleBorder, WHITE_DOUBLES);
                 if (!testedRectangleBorder[XPLUS] && w >= 1 && (widthBlackHistory == 1 || heightBlackHistory >= 1)) {
                     w--;
                     testRectIs(input, i, j, w, h, testedRectangleBorder, WHITE_DOUBLES);
                     if (testedRectangleBorder[XPLUS]) {
                         widthBlackHistory = 2;
+                        continue;
                     } else {
                         w++;
                     }
+
                 }
                 if (!testedRectangleBorder[YINVE] && h >= 1 && (heightBlackHistory == 1 || widthBlackHistory >= 1)) {
                     h--;
                     testRectIs(input, i, j, w, h, testedRectangleBorder, WHITE_DOUBLES);
                     if (testedRectangleBorder[YINVE]) {
                         heightBlackHistory = 2;
+                        continue;
                     } else {
                         h++;
                     }
@@ -273,8 +274,9 @@ public class ResolutionCharacter3 implements Runnable {
                 if (testedRectangleBorder[XINVE] && widthBlackHistory == 0 && testedRectangleBorder[YPLUS] && heightBlackHistory == 0) {
                     h++;
                     w++;
+                    continue;
                 }
-                testRectIs(input, i, j, w, h, testedRectangleBorder, WHITE_DOUBLES);
+                testedRectangleBorder = testRectIs(input, i, j, w, h, testedRectangleBorder, WHITE_DOUBLES);
                 if (!testedRectangleBorder[XINVE] && widthBlackHistory == 0) {
                     widthBlackHistory = 1;
                     w++;
