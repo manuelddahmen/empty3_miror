@@ -362,38 +362,38 @@ public class ResolutionCharacter4 implements Runnable {
             h = charMinWidth;
             boolean firstPass = false;//true;
             while (firstPass ||
-                    !(heightBlackHistory >= 2 && widthBlackHistory >= 2 && Arrays.equals(TRUE_BOOLEANS,
-                            testRectIs(input, i, j, w, h, testedRectangleBorder, WHITE_DOUBLES)))
-                            && i + w < input.getColumns() && j + h < input.getLines() && h > 0 && w > 0 && w < stepMax && h < stepMax) {
+                    !(heightBlackHistory >= 2 && widthBlackHistory >= 2
+                            && i + w < input.getColumns() && j + h < input.getLines() && h > 0 && w > 0 && w < stepMax && h < stepMax
+                            && !Arrays.equals(TRUE_BOOLEANS,
+                                testedRectangleBorder = testRectIs(input, i, j, w, h, testedRectangleBorder, WHITE_DOUBLES)))) {
                 firstPass = false;
                 int w0 = w;
                 int h0 = h;
                 testedRectangleBorder = testRectIs(input, i, j, w, h, testedRectangleBorder, WHITE_DOUBLES);
                 if (!testedRectangleBorder[XPLUS] || !testedRectangleBorder[YINVE]) {
-                    //break;
+                    break;
                 }
                 if ((widthBlackHistory == 0 || heightBlackHistory == 0) && Arrays.equals(testedRectangleBorder, TRUE_BOOLEANS)
                 ) {
-                    //widthBlackHistory = 2;
-                    //heightBlackHistory = 2;
-                    break;
                     /*if (widthBlackHistory == 0 && heightBlackHistory == 0) {
-                    } else if (widthBlackHistory == 0) {
+                    } else*/
+                    if (widthBlackHistory == 0 && testedRectangleBorder[YPLUS]) {
                         w++;
                         continue;
-                    } else if (heightBlackHistory == 0) {
+                    } else if (heightBlackHistory == 0 && testedRectangleBorder[XINVE]) {
                         h++;
                         continue;
                     }
-*/
-                } else if ((widthBlackHistory == 1 || heightBlackHistory == 1) && !Arrays.equals(testedRectangleBorder, TRUE_BOOLEANS)
-                ) {
-                    if (widthBlackHistory == 1 && heightBlackHistory == 1) {
+
+                }
+                if ((widthBlackHistory == 1 || heightBlackHistory == 1) && !Arrays.equals(testedRectangleBorder, TRUE_BOOLEANS)) {
+                    /*if (widthBlackHistory == 1 && heightBlackHistory == 1) {
                         w++;
                         h++;
-                    } else if (widthBlackHistory == 1) {
+                    } else */
+                    if (widthBlackHistory == 1 && !testedRectangleBorder[YPLUS]) {
                         w++;
-                    } else if (heightBlackHistory == 1) {
+                    } else if (heightBlackHistory == 1&& !testedRectangleBorder[XINVE]) {
                         h++;
                     }
                     continue;
