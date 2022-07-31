@@ -400,7 +400,7 @@ public class ResolutionCharacter3 implements Runnable {
                     w++;
                 } else if (testedRectangleBorder[XINVE] && widthBlackHistory == 1) {
                     widthBlackHistory = 2;
-                }
+                } else
                 // Case "L"
                 if (widthBlackHistory == 2 && !testedRectangleBorder[YPLUS]) {
                     h++;
@@ -414,7 +414,7 @@ public class ResolutionCharacter3 implements Runnable {
                     h++;
                 } else if (testedRectangleBorder[YPLUS] && heightBlackHistory == 1) {
                     heightBlackHistory = 2;
-                }
+                } else
                 // Case '>'
                 if (heightBlackHistory == 2 && !testedRectangleBorder[XINVE]) {
                     w++;
@@ -422,17 +422,17 @@ public class ResolutionCharacter3 implements Runnable {
                 }
 
 
-               if ((h > stepMax || w > stepMax) || ((h0 == h) && (w0 == w))) {
+                if ((h > stepMax || w > stepMax) || ((h0 == h) && (w0 == w))) {
                     break;
                 }
 
             }
-            boolean succeded;
-            if(Arrays.equals(testRectIs(input, i, j, w - 1, h, testedRectangleBorder, WHITE_DOUBLES), TRUE_BOOLEANS)){
+            boolean succeded = false;
+            if(Arrays.equals(testRectIs(input, i, j, w, h, testedRectangleBorder, WHITE_DOUBLES), TRUE_BOOLEANS)){
                 succeded = true;
             }
 
-            if (heightBlackHistory == 2 && widthBlackHistory == 2) {
+            if (heightBlackHistory == 2 && widthBlackHistory == 2 && !succeded) {
                 if (Arrays.equals(testRectIs(input, i, j, w - 1, h, testedRectangleBorder, WHITE_DOUBLES), TRUE_BOOLEANS)) {
                     w = w - 1;
                     succeded = true;
@@ -448,7 +448,8 @@ public class ResolutionCharacter3 implements Runnable {
             if (succeded) {
                 Rectangle rectangle = new Rectangle(i, j, w, h);
                 Rectangle2 rectangle2 = new Rectangle2(0, 0, 0, 0);
-                if (reduce(input, new Rectangle2(rectangle), rectangle2)) {
+                if (/*reduce(input, new Rectangle2(rectangle), rectangle2)*/true) {
+                    rectangle2 = new Rectangle2(rectangle);
                     //rectangle2 = new Rectangle2(rectangle);// PROVISOIRE
                     List<Character> candidates = recognize(input, rectangle2);
                     if (candidates.size()>=0) {
