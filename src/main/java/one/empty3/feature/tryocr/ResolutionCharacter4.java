@@ -360,13 +360,10 @@ public class ResolutionCharacter4 implements Runnable {
             testRectIs(input, i, j, w, h, testedRectangleBorder, WHITE_DOUBLES);
             w = charMinWidth;
             h = charMinWidth;
-            boolean firstPass = false;//true;
-            while (firstPass ||
-                    !(heightBlackHistory >= 2 && widthBlackHistory >= 2
+            while (!(heightBlackHistory == 2 && widthBlackHistory == 2
                             && i + w < input.getColumns() && j + h < input.getLines() && h > 0 && w > 0 && w < stepMax && h < stepMax
                             && !Arrays.equals(TRUE_BOOLEANS,
                                 testedRectangleBorder = testRectIs(input, i, j, w, h, testedRectangleBorder, WHITE_DOUBLES)))) {
-                firstPass = false;
                 int w0 = w;
                 int h0 = h;
                 testedRectangleBorder = testRectIs(input, i, j, w, h, testedRectangleBorder, WHITE_DOUBLES);
@@ -375,28 +372,37 @@ public class ResolutionCharacter4 implements Runnable {
                 }
                 if ((widthBlackHistory == 0 || heightBlackHistory == 0) && Arrays.equals(testedRectangleBorder, TRUE_BOOLEANS)
                 ) {
-                    /*if (widthBlackHistory == 0 && heightBlackHistory == 0) {
-                    } else*/
-                    if (widthBlackHistory == 0 && testedRectangleBorder[YPLUS]) {
+                    if (widthBlackHistory == 0 && heightBlackHistory == 0) {
+                        w++;
+                        h++;
+                        continue;
+                    }
+                    if (widthBlackHistory == 0) {
                         w++;
                         continue;
-                    } else if (heightBlackHistory == 0 && testedRectangleBorder[XINVE]) {
+                    }
+                    if (heightBlackHistory == 0) {
                         h++;
                         continue;
                     }
 
                 }
                 if ((widthBlackHistory == 1 || heightBlackHistory == 1) && !Arrays.equals(testedRectangleBorder, TRUE_BOOLEANS)) {
-                    /*if (widthBlackHistory == 1 && heightBlackHistory == 1) {
+                   if (widthBlackHistory == 1 && heightBlackHistory == 1) {
                         w++;
                         h++;
-                    } else */
+                       continue;
+                   }
                     if (widthBlackHistory == 1 && !testedRectangleBorder[YPLUS]) {
+                        widthBlackHistory = 2;
                         w++;
-                    } else if (heightBlackHistory == 1&& !testedRectangleBorder[XINVE]) {
-                        h++;
+                        continue;
                     }
-                    continue;
+                    if (heightBlackHistory == 1&& !testedRectangleBorder[XINVE]) {
+                        h++;
+                        heightBlackHistory = 2;
+                        continue;
+                    }
                 }
                 if (!testedRectangleBorder[XINVE] && widthBlackHistory == 0) {
                     widthBlackHistory = 1;
