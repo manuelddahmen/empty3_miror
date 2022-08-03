@@ -362,15 +362,14 @@ public class ResolutionCharacter4 implements Runnable {
             h = charMinWidth;
             while (!(heightBlackHistory == 2 && widthBlackHistory == 2
                             && i + w < input.getColumns() && j + h < input.getLines() && h > 0 && w > 0 && w < stepMax && h < stepMax
-                            && !Arrays.equals(TRUE_BOOLEANS,
+                            && Arrays.equals(TRUE_BOOLEANS,
                                 testedRectangleBorder = testRectIs(input, i, j, w, h, testedRectangleBorder, WHITE_DOUBLES)))) {
                 int w0 = w;
                 int h0 = h;
                 if (!testedRectangleBorder[XPLUS] || !testedRectangleBorder[YINVE]) {
                     break;
                 }
-                if ((widthBlackHistory == 0 || heightBlackHistory == 0) && Arrays.equals(testedRectangleBorder, TRUE_BOOLEANS)
-                ) {
+                if ((widthBlackHistory == 0 || heightBlackHistory == 0) && Arrays.equals(testedRectangleBorder, TRUE_BOOLEANS)) {
                     if (widthBlackHistory == 0 && heightBlackHistory == 0) {
                         w++;
                         h++;
@@ -387,11 +386,11 @@ public class ResolutionCharacter4 implements Runnable {
 
                 }
                 if ((widthBlackHistory == 1 || heightBlackHistory == 1) && !Arrays.equals(testedRectangleBorder, TRUE_BOOLEANS)) {
-                   if (widthBlackHistory == 1 && heightBlackHistory == 1) {
+                   /*if (widthBlackHistory == 1 && heightBlackHistory == 1) {
                         w++;
                         h++;
                        continue;
-                   }
+                   }*/
                     if (widthBlackHistory == 1 && !testedRectangleBorder[YPLUS]) {
                         widthBlackHistory = 2;
                         w++;
@@ -458,7 +457,7 @@ public class ResolutionCharacter4 implements Runnable {
             if (succeded) {
                 Rectangle rectangle = new Rectangle(i, j, w, h);
                 Rectangle2 rectangle2 = new Rectangle2(0, 0, 0, 0);
-                if (/*reduce(input, new Rectangle2(rectangle), rectangle2)*/true) {
+                if (reduce(input, new Rectangle2(rectangle), rectangle2)) {
                     rectangle2 = new Rectangle2(rectangle);
                     //rectangle2 = new Rectangle2(rectangle);// PROVISOIRE
                     List<Character> candidates = recognize(input, rectangle2);
