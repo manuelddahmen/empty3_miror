@@ -74,8 +74,8 @@ public class Face extends RepresentableConteneur {
                 int errorCode = process.waitFor();
 // adjust the error code for your use case, different programs migth not use 0 as success
                 if (errorCode != 0) {
-                    try (BufferedReader reader = process.errorReader(StandardCharsets.UTF_8)) {
-                    }
+                    /*try (BufferedReader reader = process.errorReader(StandardCharsets.UTF_8)) {
+                    }*/
                 }
             }
         } catch (IOException e) {

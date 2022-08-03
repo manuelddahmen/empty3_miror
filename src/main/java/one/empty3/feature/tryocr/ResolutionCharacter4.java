@@ -357,7 +357,6 @@ public class ResolutionCharacter4 implements Runnable {
             // plus rien jusqu'à ce que le balai V ait fini.
             int heightBlackHistory = 0;
             int widthBlackHistory = 0;
-            testRectIs(input, i, j, w, h, testedRectangleBorder, WHITE_DOUBLES);
             w = charMinWidth;
             h = charMinWidth;
             while (!(heightBlackHistory == 2 && widthBlackHistory == 2
@@ -366,6 +365,7 @@ public class ResolutionCharacter4 implements Runnable {
                                 testedRectangleBorder = testRectIs(input, i, j, w, h, testedRectangleBorder, WHITE_DOUBLES)))) {
                 int w0 = w;
                 int h0 = h;
+                testedRectangleBorder = testRectIs(input, i, j, w, h, testedRectangleBorder, WHITE_DOUBLES);
                 if (!testedRectangleBorder[XPLUS] || !testedRectangleBorder[YINVE]) {
                     break;
                 }
