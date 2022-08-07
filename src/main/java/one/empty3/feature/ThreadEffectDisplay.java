@@ -51,7 +51,7 @@ public class ThreadEffectDisplay extends Thread {
             uniqueObject = this;
         else {
             System.err.println("Error duplicate class viewer (?)");
-            System.exit(-1);
+            //System.exit(-1);
         }
     }
 

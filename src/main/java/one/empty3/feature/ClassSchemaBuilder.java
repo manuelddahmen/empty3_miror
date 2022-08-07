@@ -504,7 +504,7 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
                         ce.process(fileIn, fileOut);
 
                     }
-
+/*
                     if (imageSource == 1 && fileOut != f) {
                         File filePaste = new File(fileOut.getAbsolutePath() + "-paste.jpg");
                         try {
@@ -523,6 +523,8 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
                             ex.printStackTrace();
                         }
                     }
+
+ */
                     System.out.println("fileOut : " + fileOut.getAbsolutePath());
                     System.out.println("Exists? : " + fileOut.exists());
                     direstEffect.setFileIn(fileOut);
