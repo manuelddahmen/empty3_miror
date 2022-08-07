@@ -474,8 +474,6 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
             System.out.printf("Error first.files==null");
         }
 
-        direstEffect.threadEffectDisplay.setTempDir(tempDir);
-
         for (File[] files : this.files) {
             for (File f : files) {
                 int imageSource = 0;
@@ -525,6 +523,8 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
                             ex.printStackTrace();
                         }
                     }
+                    System.out.println("fileOut : " + fileOut.getAbsolutePath());
+                    System.out.println("Exists? : " + fileOut.exists());
                     direstEffect.setFileIn(fileOut);
 
                 }
@@ -677,9 +677,11 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
 
     private void buttonCamActionPerformed(ActionEvent e) {
         cam = ((JToggleButton) e.getSource()).isSelected();
-        if (direstEffect == null) {
-            direstEffect = new DirestEffect();
+        if (direstEffect != null) {
+            direstEffect.setVisible(false);
         }
+        direstEffect = new DirestEffect();
+
         direstEffect.setVisible(cam);
         direstEffect.setMainWindow(this);
         /*if (cam)

@@ -1,3 +1,5 @@
+import org.gradle.api.tasks.JavaExec
+
 plugins {
     id("application") // enabling the plugin here
     id("java")
@@ -9,7 +11,17 @@ plugins {
 java {
     withSourcesJar()
 }
+task myRunFeatureAppGui(type: JavaExec) {
+    classpath sourceSets.main.runtimeClasspath
+    main = "one.empty3.feature.ClassSchemaBuilder"
+    args "arg1", "arg2"
+}
 
+task myRunOpadGameGui(type: JavaExec) {
+    classpath sourceSets.main.runtimeClasspath
+    main = "one.empty3.apps.opad.PanelGraphics"
+    args "arg1", "arg2"
+}
 
 repositories {
     google()

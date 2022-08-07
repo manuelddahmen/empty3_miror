@@ -14,10 +14,7 @@ import one.empty3.feature.motion.Motion;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ItemEvent;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -38,13 +35,21 @@ public class DirestEffect extends JFrame {
                 = new ThreadEffectDisplay();
         threadEffectDisplay.setJpanel(panel1);
         threadEffectDisplay.motion = new LastFrameMotion();
-        threadEffectDisplay.effect = new IdentNullProcess();
         threadEffectDisplay.start();
 
         viewSizes = Webcam.getDefault().getViewSizes();
 
         this.comboBoxDimenisions.setModel(new DefaultComboBoxModel(Webcam.getDefault().getViewSizes()));
-
+        this.comboBoxDimenisions.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                threadEffectDisplay.webcam.close();
+                threadEffectDisplay.webcam = Webcam.getDefault();
+                threadEffectDisplay.webcam
+                        .setViewSize((Dimension) comboBoxDimenisions
+                                .getItemAt(comboBoxDimenisions.getSelectedIndex()));
+            }
+        });
 
     }
 
@@ -56,95 +61,35 @@ public class DirestEffect extends JFrame {
     private void comboBoxMotionItemStateChanged(ItemEvent e) {
         switch (comboBoxMotion.getSelectedIndex()) {
             case 0:
-            case 1:
                 //Aucun mouvement, effet
+                threadEffectDisplay.motion = new LastFrameMotion();
+                threadEffectDisplay.setMotionActive(false);
+                threadEffectDisplay.setEffectActive(true);
+                break;
+            case 1:
                 //Aucun mouvement, aucun effet
                 threadEffectDisplay.motion = new LastFrameMotion();
-                threadEffectDisplay.effect = new IdentNullProcess();
+                threadEffectDisplay.setMotionActive(false);
+                threadEffectDisplay.setEffectActive(false);
                 break;
             case 2:
-            case 3:
-                //Mouvement diff, effet
-                //Mouvement diff, aucun effet
+                //Mouvement, effet
                 threadEffectDisplay.motion = new DiffMotion();
-                threadEffectDisplay.effect = new IdentNullProcess();
+                threadEffectDisplay.setMotionActive(true);
+                threadEffectDisplay.setEffectActive(true);
                 break;
-                /*
-                case 4:
-                //Effet, mouvement diff
-                threadEffectDisplay.setRunEffect(new RunEffect() {
-                    @Override
-                    public BufferedImage runEffect(ArrayList<BufferedImage> imageList, ClassSchemaBuilder classSchemaBuilder) {
-                        boolean b = imageList.size() > 1;
-                        if (b) {
-                            BufferedImage bufferedImage = imageList.get(0);
-                            BufferedImage bufferedImage1 = imageList.get(1);
-                            if (imageList.size() > Motion.BUFFER_MAX_FRAMES)
-                                imageList.remove(0);
-                            classSchemaBuilder.files = new ArrayList<>();
-                            try {
-                                ImageIO.write(bufferedImage, "jpg", new File("temp/webcam.jpg"));
-                                classSchemaBuilder.files.add(new File[]{new File("temp/webcam.jpg")});
-                                classSchemaBuilder.buttonGOActionPerformed(null);
-                                BufferedImage loaded0 = ImageIO.read(new File("temp/webcam.jpg"));
-                                classSchemaBuilder.files = new ArrayList<>();
-                                ImageIO.write(bufferedImage, "jpg", new File("temp/webcam.jpg"));
-                                classSchemaBuilder.files.add(new File[]{new File("temp/webcam.jpg")});
-                                classSchemaBuilder.buttonGOActionPerformed(null);
-                                BufferedImage loaded1 = ImageIO.read(new File("temp/webcam.jpg"));
-                                Linear linear = new Linear(loaded0, loaded1);
-                                linear.op2d2d(new char[]{'-'}, new int[][]{{0, 1}}, new int[]{2});
-                                PixM image = linear.getImages()[2];
-                                ImageIO.write(image.getImage(), "jpg", new File("temp/webcam.jpg"));
-                                setFileIn(new File("temp/webcam.jpg"));
-                            } catch (IOException ex) {
-                                ex.printStackTrace();
-                            }
-                        }
-                        return null;
-                    }
-                });*/
-            case 5:
-                //Aucun effet, mouvement diff
-                threadEffectDisplay.setRunEffect(new RunEffect() {
-                    @Override
-                    public BufferedImage runEffect(ArrayList<BufferedImage> imageList, ClassSchemaBuilder classSchemaBuilder) {
-                        boolean b = imageList.size() > 1;
-                        if (b) {
-                            BufferedImage bufferedImage = imageList.get(0);
-                            BufferedImage bufferedImage1 = imageList.get(1);
-                            if (imageList.size() > Motion.BUFFER_MAX_FRAMES)
-                                imageList.remove(0);
-                            classSchemaBuilder.files = new ArrayList<>();
-                            try {
-                                Linear linear = new Linear(bufferedImage, bufferedImage1);
-                                linear.op2d2d(new char[]{'-'}, new int[][]{{0, 1}}, new int[]{2});
-                                PixM image = linear.getImages()[2];
-                                ImageIO.write(image.getImage(), "jpg", new File("temp/webcam.jpg"));
-                                classSchemaBuilder.buttonGOActionPerformed(null);
-                                setFileIn(new File("temp/webcam.jpg"));
-                            } catch (IOException ex) {
-                                ex.printStackTrace();
-                            }
-                        }
-                        return null;
-                    }
-                });
+            case 3:
+                //Mouvement, aucun effet
+                threadEffectDisplay.motion = new DiffMotion();
+                threadEffectDisplay.setMotionActive(true);
+                threadEffectDisplay.setEffectActive(false);
                 break;
-            case 6:
-                threadEffectDisplay.motion = new FeatureMotion();
         }
     }
 
     private void comboBoxDimenisionsActionPerformed(ActionEvent e) {
         Dimension selectedItem = threadEffectDisplay.webcam.getViewSizes()[comboBoxDimenisions.getSelectedIndex()];
-        if (comboBoxDimenisions.getSelectedIndex() < threadEffectDisplay.webcam.getCustomViewSizes().length) {
-            System.out.printf("Selected item = " + selectedItem);
-            threadEffectDisplay.webcam.close();
-            threadEffectDisplay.webcam.setViewSize(selectedItem);
-            threadEffectDisplay.webcam.open();
-        }
-    }
+       }
 
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
@@ -189,9 +134,6 @@ public class DirestEffect extends JFrame {
                     "Aucun mouvement, effet",
                     "Mouvement diff, aucun effet",
                     "Mouvement diff, effet",
-                    "****Effet, mouvement diff",
-                    "****Aucun effet, mouvement diff",
-                    "Aucun changement Effet, Feature Motion matching"
             }));
             comboBoxMotion.setDoubleBuffered(true);
             comboBoxMotion.addItemListener(e -> {
@@ -263,9 +205,6 @@ public class DirestEffect extends JFrame {
         }
     }
 
-    public void setBusy(boolean b) {
-        threadEffectDisplay.setBusy(false);
-    }
 
     public ClassSchemaBuilder getMainWindow() {
         return main;
