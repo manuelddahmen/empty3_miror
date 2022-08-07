@@ -5,7 +5,7 @@ import one.empty3.library.Point3D;
 import java.util.PrimitiveIterator;
 import java.util.Random;
 
-public class M {
+public class M implements InterfaceMatrix {
     public static PrimitiveIterator.OfDouble r = new Random().doubles().iterator();
     public static final Double noValue = r.next();
 
@@ -132,7 +132,7 @@ public class M {
     }
 
 
-    protected void init(int l, int c) {
+    public void init(int l, int c) {
         this.lines = l;
         this.columns = c;
         x = new double[l * c * compCount];
@@ -185,6 +185,11 @@ public class M {
             x[index(column, line)] = d;
         }
 
+    }
+
+    @Override
+    public void set(int column, int line, double... values) {
+        setValues(column, line, values);
     }
 
     public M tild() {
