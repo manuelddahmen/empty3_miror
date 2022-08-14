@@ -371,13 +371,14 @@ public class ResolutionCharacter6 implements Runnable {
                 if (!testedRectangleBorder[XPLUS] || !testedRectangleBorder[YINVE]) {
                     break;
                 }
+
                 if ((widthBlackHistory == 1 && heightBlackHistory == 1) && !testedRectangleBorder[XINVE]
                         && !testedRectangleBorder[YPLUS]) {
-                        w++;
-                        h++;
-                        continue;
+                    widthBlackHistory++;
+                    heightBlackHistory++;
+                    continue;
                 }
-                    if ((widthBlackHistory == 0 || heightBlackHistory == 0) && Arrays.equals(testedRectangleBorder, TRUE_BOOLEANS)) {
+                if ((widthBlackHistory == 0 || heightBlackHistory == 0) && Arrays.equals(testedRectangleBorder, TRUE_BOOLEANS)) {
                     if (widthBlackHistory == 0 && heightBlackHistory == 0) {
                         w++;
                         h++;
@@ -400,13 +401,13 @@ public class ResolutionCharacter6 implements Runnable {
                        continue;
                    }*/
                     if (widthBlackHistory == 1 && !testedRectangleBorder[YPLUS]) {
-                        widthBlackHistory = 1;
+                        widthBlackHistory = 2;
                         w++;
                         continue;
                     }
                     if (heightBlackHistory == 1 && !testedRectangleBorder[XINVE]) {
                         h++;
-                        heightBlackHistory = 1;
+                        heightBlackHistory = 2;
                         continue;
                     }
                 }
