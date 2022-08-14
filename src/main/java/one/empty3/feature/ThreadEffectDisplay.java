@@ -72,16 +72,12 @@ public class ThreadEffectDisplay extends Thread {
                 e.printStackTrace();
             }
         }
-
-        webcam.setViewSize(new Dimension(directEffect.viewSizes[0]));
-        try {
-            webcam.open();
-        } catch (WebcamLockException exception) {
-            exception.printStackTrace();
+        if(!webcam.isOpen()) {
+            webcam.setViewSize(new Dimension(directEffect.viewSizes[0]));
             try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+                webcam.open();
+            } catch (WebcamLockException exception) {
+                exception.printStackTrace();
             }
         }
         webcam.setImageTransformer(bufferedImage -> {

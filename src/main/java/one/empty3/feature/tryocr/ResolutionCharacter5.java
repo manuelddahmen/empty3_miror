@@ -43,7 +43,7 @@ public class ResolutionCharacter5 implements Runnable {
     final int epochs = 100;
     private final File dirOut;
     private final int stepMax = 80;
-    private final int charMinWidth = 5;
+    private final int charMinWidth = 4;
     private final double[] WHITE_DOUBLES = new double[]{1, 1, 1};
     private final double[] BLACK_DOUBLES = new double[]{0, 0, 0};
     public boolean cEchoing = false;
@@ -469,7 +469,9 @@ public class ResolutionCharacter5 implements Runnable {
                         //System.out.println();
                         final String[] s = {""};
                         candidates.forEach(character -> s[0] += character);
-                        //writer.writeLine(new String[]{name, "" + i, "" + j, "" + w, "" + h, s[0]});
+                        if(candidates.size()>1) {
+                            writer.writeLine(new String[]{name, "" + i, "" + j, "" + w, "" + h, s[0]});
+                        }
                         Color random = Colors.random();
                         output.plotCurve(rectangle, new TextureCol(random));
                         countRects++;
@@ -755,7 +757,7 @@ public class ResolutionCharacter5 implements Runnable {
 
         }
         if(columns[columns[idx-1]]==0) {
-            columns = Arrays.copyOfRange(columns, 0, idx--);
+            columns = Arrays.copyOfRange(columns, 0, --idx);
         }
         if(columns[0]==0) {
             columns = Arrays.copyOfRange(columns, 1, idx--);
@@ -823,7 +825,7 @@ public class ResolutionCharacter5 implements Runnable {
 
         }
         if(lines[lines[idx-1]]==0) {
-            lines = Arrays.copyOfRange(lines, 0, idx--);
+            lines = Arrays.copyOfRange(lines, 0, --idx);
         }
         if(lines[0]==0) {
             lines = Arrays.copyOfRange(lines, 1, idx--);
@@ -848,28 +850,29 @@ public class ResolutionCharacter5 implements Runnable {
         render.setW(rectangle2origin.getW());
         render.setH(rectangle2origin.getH());
 
-        boolean[] bools = new boolean[4];
+        boolean[] booleans = new boolean[4];
 
-        while (hasChanged && render.getX() >= 0 && render.getX() + render.getW() <= input.getColumns()
-                && render.getW() >= 0 &&
-                render.getY() >= 0 && render.getY() + render.getH() <= input.getLines()
-                && render.getH() >= 0) {
-            testRectIs(input, render.getX(), render.getY(), render.getW(), render.getH(), bools, WHITE_DOUBLES);
-            if (bools[XPLUS])
+        while (hasChanged && render.getX() >= 0 && render.getX() + render.getW() < input.getColumns()
+                && render.getW() > 0 &&
+                render.getY() >= 0 && render.getY() + render.getH() < input.getLines()
+                && render.getH() > 0) {
+            hasChanged = true;
+            booleans = testRectIs(input, render.getX(), render.getY(), render.getW(), render.getH(), booleans, WHITE_DOUBLES);
+            if (booleans[XPLUS])
                 render.setY(render.getY() + 1);
-            else if (bools[XINVE])
+            else if (booleans[XINVE])
                 render.setH(render.getH() - 1);
-            else if (bools[YPLUS])
-                render.setW(render.getW() + 1);
-            else if (bools[YINVE])
-                render.setX(render.getX() - 1);
+            else if (booleans[YPLUS])
+                render.setW(render.getW() - 1);
+            else if (booleans[YINVE])
+                render.setX(render.getX() + 1);
             else
                 hasChanged = false;
 
         }
-        return render.getX() >= 0 && render.getX() + render.getW() <= input.getColumns()
+        return render.getX() >= 0 && render.getX() + render.getW() < input.getColumns()
                 && render.getW() > 0 &&
-                render.getY() >= 0 && render.getY() + render.getH() <= input.getLines()
+                render.getY() >= 0 && render.getY() + render.getH() < input.getLines()
                 && render.getH() > 0;
     }
 
