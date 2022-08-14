@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.*;
 
-public class ResolutionCharacter5 implements Runnable {
+public class ResolutionCharacter6 implements Runnable {
     public static final float MIN_DIFF = 0.6f;
     public static final int XPLUS = 0;
     public static final int YPLUS = 1;
@@ -62,11 +62,11 @@ public class ResolutionCharacter5 implements Runnable {
     private Map<Character, Integer[]> characterMapV;
     private int countRects = 0;
 
-    public ResolutionCharacter5(BufferedImage read, String name) {
+    public ResolutionCharacter6(BufferedImage read, String name) {
         this(read, name, new File("testsResults"));
     }
 
-    public ResolutionCharacter5(BufferedImage read, String name, File dirOut) {
+    public ResolutionCharacter6(BufferedImage read, String name, File dirOut) {
         this.read = read;
         this.name = name;
         this.dirOut = dirOut;
@@ -93,15 +93,15 @@ public class ResolutionCharacter5 implements Runnable {
                     String name = file.getName();
 
 
-                    System.out.println("ResolutionCharacter5 : " + name);
+                    System.out.println("ResolutionCharacter6 : " + name);
 
-                    ResolutionCharacter5 resolutionCharacter5 = new ResolutionCharacter5(read, name, dirOut);
+                    ResolutionCharacter6 resolutionCharacter6 = new ResolutionCharacter6(read, name, dirOut);
                     dirOutChars = dirOut.getAbsolutePath() + File.separator + name + File.separator + "char";
                     dirOutChars2 = dirOut.getAbsolutePath() + File.separator + name + File.separator + "char2";
 
-                    System.out.printf("%s", resolutionCharacter5.getClass().getSimpleName());
+                    System.out.printf("%s", resolutionCharacter6.getClass().getSimpleName());
 
-                    Thread thread = new Thread(resolutionCharacter5);
+                    Thread thread = new Thread(resolutionCharacter6);
 
 
                     thread.start();
@@ -371,7 +371,13 @@ public class ResolutionCharacter5 implements Runnable {
                 if (!testedRectangleBorder[XPLUS] || !testedRectangleBorder[YINVE]) {
                     break;
                 }
-                if ((widthBlackHistory == 0 || heightBlackHistory == 0) && Arrays.equals(testedRectangleBorder, TRUE_BOOLEANS)) {
+                if ((widthBlackHistory == 1 && heightBlackHistory == 1) && !testedRectangleBorder[XINVE]
+                        && !testedRectangleBorder[YPLUS]) {
+                        w++;
+                        h++;
+                        continue;
+                }
+                    if ((widthBlackHistory == 0 || heightBlackHistory == 0) && Arrays.equals(testedRectangleBorder, TRUE_BOOLEANS)) {
                     if (widthBlackHistory == 0 && heightBlackHistory == 0) {
                         w++;
                         h++;
@@ -394,13 +400,13 @@ public class ResolutionCharacter5 implements Runnable {
                        continue;
                    }*/
                     if (widthBlackHistory == 1 && !testedRectangleBorder[YPLUS]) {
-                        widthBlackHistory = 2;
+                        widthBlackHistory = 1;
                         w++;
                         continue;
                     }
                     if (heightBlackHistory == 1 && !testedRectangleBorder[XINVE]) {
                         h++;
-                        heightBlackHistory = 2;
+                        heightBlackHistory = 1;
                         continue;
                     }
                 }
@@ -755,6 +761,7 @@ public class ResolutionCharacter5 implements Runnable {
 
 
         }
+        /*
         if (idx == 1) {
             columns = new Integer[]{columns[idx]};
 
@@ -768,6 +775,8 @@ public class ResolutionCharacter5 implements Runnable {
                 columns = Arrays.copyOfRange(columns, 1, idx--);
             }
         }
+
+         */
         Integer[] finalColumns = columns;
 
         patternsVertical.forEach((character, integers) -> {
@@ -830,6 +839,7 @@ public class ResolutionCharacter5 implements Runnable {
 
 
         }
+        /*
         if (idx == 1) {
             lines = new Integer[]{lines[idx]};
 
@@ -843,7 +853,7 @@ public class ResolutionCharacter5 implements Runnable {
                 lines = Arrays.copyOfRange(lines, 1, idx--);
             }
         }
-
+*/
         lines = Arrays.copyOf(lines, idx);
         Integer[] finalLines = lines;
 
