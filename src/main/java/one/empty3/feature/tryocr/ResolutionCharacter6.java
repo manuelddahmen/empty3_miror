@@ -362,85 +362,67 @@ public class ResolutionCharacter6 implements Runnable {
             w = charMinWidth;
             h = charMinWidth;
             while (!(heightBlackHistory == 2 && widthBlackHistory == 2
-                    && i + w < input.getColumns() && j + h < input.getLines() && h > 0 && w > 0 && w < stepMax && h < stepMax
                     && Arrays.equals(TRUE_BOOLEANS,
                     testedRectangleBorder = testRectIs(input, i, j, w, h, testedRectangleBorder, WHITE_DOUBLES)))) {
-                int w0 = w;
-                int h0 = h;
+                int w0;
+                int h0;
+                int wbhBak;
+                int hbhBak;
+                h0 = h;
+                w0 = w;
+                hbhBak = heightBlackHistory;
+                wbhBak = widthBlackHistory;
+
                 testedRectangleBorder = testRectIs(input, i, j, w, h, testedRectangleBorder, WHITE_DOUBLES);
                 if (!testedRectangleBorder[XPLUS] || !testedRectangleBorder[YINVE]) {
                     break;
-                }
-
-                if ((widthBlackHistory == 1 && heightBlackHistory == 1) && testedRectangleBorder[XINVE]
-                        && testedRectangleBorder[YPLUS]) {
-                    widthBlackHistory++;
-                    heightBlackHistory++;
-                    continue;
                 }
                 if ((widthBlackHistory == 0 || heightBlackHistory == 0) && Arrays.equals(testedRectangleBorder, TRUE_BOOLEANS)) {
                     if (widthBlackHistory == 0 && heightBlackHistory == 0) {
                         w++;
                         h++;
                         continue;
-                    }
-                    if (widthBlackHistory == 0) {
+                    } else if (widthBlackHistory == 0) {
                         w++;
                         continue;
-                    }
-                    if (heightBlackHistory == 0) {
+                    } else if (heightBlackHistory == 0) {
                         h++;
                         continue;
                     }
 
                 }
                 if ((widthBlackHistory == 1 || heightBlackHistory == 1) && !Arrays.equals(testedRectangleBorder, TRUE_BOOLEANS)) {
-                   /*if (widthBlackHistory == 1 && heightBlackHistory == 1) {
-                        w++;
-                        h++;
-                       continue;
-                   }*/
                     if (widthBlackHistory == 1 && !testedRectangleBorder[YPLUS]) {
                         widthBlackHistory = 1;
-                        w++;
                         continue;
-                    }
-                    if (heightBlackHistory == 1 && !testedRectangleBorder[XINVE]) {
-                        h++;
+                    } else if (heightBlackHistory == 1 && !testedRectangleBorder[XINVE]) {
                         heightBlackHistory = 1;
                         continue;
                     }
                 }
-                if (!testedRectangleBorder[XINVE] && widthBlackHistory == 0) {
-                    widthBlackHistory = 1;
-                    h++;
-                } else if (!testedRectangleBorder[XINVE] && widthBlackHistory == 1) {
-                    h++;
-                } else if (testedRectangleBorder[XINVE] && widthBlackHistory == 1) {
-                    widthBlackHistory = 2;
-                } else
-                    // Case "L"
-                    if (widthBlackHistory == 2 && !testedRectangleBorder[YPLUS]) {
-                        h++;
-                        heightBlackHistory = 1;
-                    }
-
-                if (!testedRectangleBorder[YPLUS] && heightBlackHistory == 0) {
+                if (!testedRectangleBorder[XINVE] && heightBlackHistory == 0) {
                     heightBlackHistory = 1;
-                    w++;
-                } else if (!testedRectangleBorder[YPLUS] && heightBlackHistory == 1) {
-                    w++;
-                } else if (testedRectangleBorder[YPLUS] && heightBlackHistory == 1) {
+                    h++;
+                    continue;
+                } else if (!testedRectangleBorder[XINVE] && heightBlackHistory == 1) {
+                    h++;
+                } else if (testedRectangleBorder[XINVE] && heightBlackHistory== 1) {
                     heightBlackHistory = 2;
-                } else
-                    // Case '>'
-                    if (heightBlackHistory == 2 && !testedRectangleBorder[XINVE]) {
-                        w++;
-                        widthBlackHistory = 1;
-                    }
+                }
 
+                if (!testedRectangleBorder[YPLUS] && widthBlackHistory == 0) {
+                    widthBlackHistory = 1;
+                    w++;
+                } else if (!testedRectangleBorder[YPLUS] && widthBlackHistory == 1) {
+                    w++;
+                } else if (testedRectangleBorder[YPLUS] && widthBlackHistory == 1) {
+                    widthBlackHistory = 2;
+                    continue;
+                }
 
-                if ((h > stepMax || w > stepMax) || ((h0 == h) && (w0 == w))) {
+                if ((h > stepMax || w > stepMax) || (((h0 == h) && (w0 == w)
+                        &&hbhBak==heightBlackHistory && wbhBak==widthBlackHistory)
+                            ||(heightBlackHistory>2 && widthBlackHistory>2)))  {
                     break;
                 }
 
