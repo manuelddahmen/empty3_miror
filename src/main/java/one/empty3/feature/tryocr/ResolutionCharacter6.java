@@ -828,29 +828,26 @@ public class ResolutionCharacter6 implements Runnable {
     }
 
     private Integer[] cutArray(Integer[] lines, int idx) {
-        if (idx == 1) {
-            lines = new Integer[]{lines[idx]};
+        Integer [] cut = new Integer[] {lines.length};
+        boolean firstZeros = true;
+        boolean lastZeroes = true;
+        int j = 0;
+        for(int i=0; i<lines.length; i++) {
+            if (firstZeros && lines[i] == 0) {
+            } else if(lines[i]!=0 || !firstZeros) {
+                cut[j++] = lines[i];
+                firstZeros = false;
+            }
 
-        } else if (idx == 0) {
-            return null;
-        } else {
-            idx=0;
-            while(idx<lines.length &&lines[idx]==0) {
-                idx++;
-            }
-            if (idx<=lines.length && lines[idx - 1] == 0) {
-                lines = Arrays.copyOfRange(lines, idx, lines.length);
-            }
-            idx = lines.length-1;
-            while(idx>0 &&lines[idx]==0) {
-                idx--;
-            }
-            if (idx>0) {
-                lines = Arrays.copyOfRange(lines, 0, idx);
+        }
+        Integer [] cut2 = new Integer[] {cut.length};
+        for(int i= cut.length-1; i>=0; i--) {
+            if(lastZeroes && cut[i]==0) {
+            } else if(cut[i]!=0 || !lastZeroes){
+                cut2[j--] = cut[i];
             }
         }
-
-        return lines;
+        return cut2;
     }
 
     public boolean reduce(PixM input, Rectangle2 rectangle2origin, Rectangle2 render) {
