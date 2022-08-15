@@ -372,8 +372,8 @@ public class ResolutionCharacter6 implements Runnable {
                     break;
                 }
 
-                if ((widthBlackHistory == 1 && heightBlackHistory == 1) && !testedRectangleBorder[XINVE]
-                        && !testedRectangleBorder[YPLUS]) {
+                if ((widthBlackHistory == 1 && heightBlackHistory == 1) && testedRectangleBorder[XINVE]
+                        && testedRectangleBorder[YPLUS]) {
                     widthBlackHistory++;
                     heightBlackHistory++;
                     continue;
@@ -401,13 +401,13 @@ public class ResolutionCharacter6 implements Runnable {
                        continue;
                    }*/
                     if (widthBlackHistory == 1 && !testedRectangleBorder[YPLUS]) {
-                        widthBlackHistory = 2;
+                        widthBlackHistory = 1;
                         w++;
                         continue;
                     }
                     if (heightBlackHistory == 1 && !testedRectangleBorder[XINVE]) {
                         h++;
-                        heightBlackHistory = 2;
+                        heightBlackHistory = 1;
                         continue;
                     }
                 }
