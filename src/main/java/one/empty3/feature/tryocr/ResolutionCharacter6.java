@@ -362,6 +362,7 @@ public class ResolutionCharacter6 implements Runnable {
             w = charMinWidth;
             h = charMinWidth;
             while (!(heightBlackHistory == 2 && widthBlackHistory == 2
+                    && i + w < input.getColumns() && j + h < input.getLines() && h > 0 && w > 0 && w < stepMax && h < stepMax
                     && Arrays.equals(TRUE_BOOLEANS,
                     testedRectangleBorder = testRectIs(input, i, j, w, h, testedRectangleBorder, WHITE_DOUBLES)))) {
                 int w0;
@@ -392,13 +393,13 @@ public class ResolutionCharacter6 implements Runnable {
 
                 }
                 if ((widthBlackHistory == 1 || heightBlackHistory == 1) && !Arrays.equals(testedRectangleBorder, TRUE_BOOLEANS)) {
-                    if (widthBlackHistory == 1 && !testedRectangleBorder[YPLUS]) {
-                        widthBlackHistory = 1;
+                    /*if (widthBlackHistory == 1 && !testedRectangleBorder[YPLUS]) {
+                        widthBlackHistory = 2;
                         continue;
                     } else if (heightBlackHistory == 1 && !testedRectangleBorder[XINVE]) {
-                        heightBlackHistory = 1;
+                        heightBlackHistory = 2;
                         continue;
-                    }
+                    }*/
                 }
                 if (!testedRectangleBorder[XINVE] && heightBlackHistory == 0) {
                     heightBlackHistory = 1;
