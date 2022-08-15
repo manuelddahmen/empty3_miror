@@ -745,22 +745,9 @@ public class ResolutionCharacter6 implements Runnable {
 
 
         }
-        /*
-        if (idx == 1) {
-            columns = new Integer[]{columns[idx]};
 
-        } else if (idx == 0) {
-            return retained;
-        } else {
-            if (columns[columns[idx - 1]] == 0) {
-                columns = Arrays.copyOfRange(columns, 0, --idx);
-            }
-            if (columns[0] == 0) {
-                columns = Arrays.copyOfRange(columns, 1, idx--);
-            }
-        }
+        columns = cutArray(columns, idx);
 
-         */
         Integer[] finalColumns = columns;
 
         patternsVertical.forEach((character, integers) -> {
@@ -797,7 +784,7 @@ public class ResolutionCharacter6 implements Runnable {
         int count0 = 0;
         for (int j = y; j <= y + h; j++) {
             var ref = new Object() {
-                int countOnLineI = 0;
+                int countOnLineJ = 0;
             };
             int current = BLANK;
             for (int i = x; i <= x + w; i++) {
@@ -806,7 +793,7 @@ public class ResolutionCharacter6 implements Runnable {
                         if (firstLine) {
                             firstLine = false;
                         }
-                        ref.countOnLineI++;
+                        ref.countOnLineJ++;
                         current = CHARS;
 
                     }
@@ -814,30 +801,19 @@ public class ResolutionCharacter6 implements Runnable {
                     current = BLANK;
                 }
             }
-            if (ref.countOnLineI != count0) {
-                lines[idx] = ref.countOnLineI;
+            if (ref.countOnLineJ != count0) {
+                lines[idx] = ref.countOnLineJ;
                 idx++;
             }
 
-            count0 = ref.countOnLineI;
+            count0 = ref.countOnLineJ;
 
 
         }
-        /*
-        if (idx == 1) {
-            lines = new Integer[]{lines[idx]};
 
-        } else if (idx == 0) {
-            return retained;
-        } else {
-            if (lines[lines[idx - 1]] == 0) {
-                lines = Arrays.copyOfRange(lines, 0, --idx);
-            }
-            if (lines[0] == 0) {
-                lines = Arrays.copyOfRange(lines, 1, idx--);
-            }
-        }
-*/
+        lines = cutArray(lines, idx);
+
+
         lines = Arrays.copyOf(lines, idx);
         Integer[] finalLines = lines;
 
@@ -849,6 +825,32 @@ public class ResolutionCharacter6 implements Runnable {
         printIntegerArray(finalLines);
 
         return retained;
+    }
+
+    private Integer[] cutArray(Integer[] lines, int idx) {
+        if (idx == 1) {
+            lines = new Integer[]{lines[idx]};
+
+        } else if (idx == 0) {
+            return null;
+        } else {
+            idx=0;
+            while(idx<lines.length &&lines[idx]==0) {
+                idx++;
+            }
+            if (idx<=lines.length && lines[idx - 1] == 0) {
+                lines = Arrays.copyOfRange(lines, idx, lines.length);
+            }
+            idx = lines.length-1;
+            while(idx>0 &&lines[idx]==0) {
+                idx--;
+            }
+            if (idx>0) {
+                lines = Arrays.copyOfRange(lines, 0, idx);
+            }
+        }
+
+        return lines;
     }
 
     public boolean reduce(PixM input, Rectangle2 rectangle2origin, Rectangle2 render) {
