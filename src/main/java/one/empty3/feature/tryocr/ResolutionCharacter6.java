@@ -46,7 +46,7 @@ public class ResolutionCharacter6 implements Runnable {
     private final int charMinWidth = 4;
     private final double[] WHITE_DOUBLES = new double[]{1, 1, 1};
     private final double[] BLACK_DOUBLES = new double[]{0, 0, 0};
-    public boolean cEchoing = false;
+    public boolean cEchoing = true;
     boolean[] testedRectangleBorder = new boolean[4];
     int step = 1;// Searched Characters size.
     PixM outRecompose;
@@ -497,12 +497,13 @@ public class ResolutionCharacter6 implements Runnable {
 
 
         // Intersect
-        /*cv.forEach(character -> {
+        cv.forEach(character -> {
             if(ch.stream().anyMatch(character::equals))
                 allCharsPossible.add(character);
-        });*/
-        allCharsPossible.addAll(ch);
-        allCharsPossible.addAll(cv);
+        });
+
+        //allCharsPossible.addAll(ch);
+        //allCharsPossible.addAll(cv);
         if (allCharsPossible.size() == 0)
             allCharsPossible.add('-');
 
@@ -710,6 +711,7 @@ public class ResolutionCharacter6 implements Runnable {
     public List<Character> recognizeV(PixM mat, int x, int y, int w, int h) {
 
         List<Character> retained = new ArrayList<>();
+
         Map<Character, Integer[]> patternsVertical = characterMapV;
 
 
@@ -746,7 +748,7 @@ public class ResolutionCharacter6 implements Runnable {
 
         }
 
-        columns = cutArray(columns);
+        columns = trimArrayZeroes(columns, idx);
 
         Integer[] finalColumns = columns;
 
@@ -762,7 +764,7 @@ public class ResolutionCharacter6 implements Runnable {
     }
 
     private void printIntegerArray(Integer[] finalColumns) {
-        if (!cEchoing)
+        if (!cEchoing || finalColumns==null)
             return;
         System.out.println("Final Columns (debug)");
         for (int i = 0; i < finalColumns.length; i++) {
@@ -811,7 +813,7 @@ public class ResolutionCharacter6 implements Runnable {
 
         }
 
-        lines = cutArray(lines);
+        lines = trimArrayZeroes(lines, idx);
 
 
         Integer[] finalLines = lines;
@@ -826,31 +828,34 @@ public class ResolutionCharacter6 implements Runnable {
         return retained;
     }
 
-    private Integer[] cutArray(Integer[] lines) {
-        int [] cut = new int[lines.length];
+    private Integer[] trimArrayZeroes(Integer[] lines, int length) {
+        int [] cut = new int[length];
         boolean firstZeros = true;
         boolean lastZeroes = true;
         int j = 0;
-        for(int i=0; i<lines.length; i++) {
-            if (firstZeros && lines[i] == 0) {
-            } else if(lines[i]!=null &&(lines[i]!=0 || !firstZeros)) {
+        for(int i=0; i<length; i++) {
+            if (firstZeros && (lines[i]==null || lines[i] == 0)) {
+            } else if(lines[i]==null || (lines[i]==0 & !firstZeros)) {
                 cut[j] = lines[i];
                 j++;
                 firstZeros = false;
             }
 
         }
-        j=cut.length-1;
-        int [] cut2 = new int[cut.length];
-        int i= cut.length-1;
+
+
+        int [] cut2 = new int[j];
+        int i= j-1;
 
         if(i>=0) {
-            while(i>=0 && cut[i] == 0)
+            while(i>=0 && cut[i] <= 0) {
                 i--;
-            if(i<-1)
+            }
+            if(i<-1) {
                 return null;
+            }
 
-        }else {
+        } else {
             return null;
         }
 
