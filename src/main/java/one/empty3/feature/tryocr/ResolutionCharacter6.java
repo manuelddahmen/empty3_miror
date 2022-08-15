@@ -746,7 +746,7 @@ public class ResolutionCharacter6 implements Runnable {
 
         }
 
-        columns = cutArray(columns, idx);
+        columns = cutArray(columns);
 
         Integer[] finalColumns = columns;
 
@@ -811,10 +811,9 @@ public class ResolutionCharacter6 implements Runnable {
 
         }
 
-        lines = cutArray(lines, idx);
+        lines = cutArray(lines);
 
 
-        lines = Arrays.copyOf(lines, idx);
         Integer[] finalLines = lines;
 
         patternsHorizon.forEach((character, integers) -> {
@@ -827,27 +826,43 @@ public class ResolutionCharacter6 implements Runnable {
         return retained;
     }
 
-    private Integer[] cutArray(Integer[] lines, int idx) {
-        Integer [] cut = new Integer[] {lines.length};
+    private Integer[] cutArray(Integer[] lines) {
+        int [] cut = new int[lines.length];
         boolean firstZeros = true;
         boolean lastZeroes = true;
         int j = 0;
         for(int i=0; i<lines.length; i++) {
             if (firstZeros && lines[i] == 0) {
-            } else if(lines[i]!=0 || !firstZeros) {
-                cut[j++] = lines[i];
+            } else if(lines[i]!=null &&(lines[i]!=0 || !firstZeros)) {
+                cut[j] = lines[i];
+                j++;
                 firstZeros = false;
             }
 
         }
-        Integer [] cut2 = new Integer[] {cut.length};
-        for(int i= cut.length-1; i>=0; i--) {
-            if(lastZeroes && cut[i]==0) {
-            } else if(cut[i]!=0 || !lastZeroes){
-                cut2[j--] = cut[i];
-            }
+        j=cut.length-1;
+        int [] cut2 = new int[cut.length];
+        int i= cut.length-1;
+
+        if(i>=0) {
+            while(i>=0 && cut[i] == 0)
+                i--;
+            if(i<-1)
+                return null;
+
+        }else {
+            return null;
         }
-        return cut2;
+
+        int [] cut3 = Arrays.copyOfRange(cut2, 0, i+1);
+
+        Integer[] cut4 = new Integer[cut3.length];
+
+        for (i = 0; i < cut3.length; i++) {
+            cut4[i] = cut3[i];
+        }
+
+        return cut4;
     }
 
     public boolean reduce(PixM input, Rectangle2 rectangle2origin, Rectangle2 render) {
