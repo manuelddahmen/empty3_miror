@@ -61,77 +61,76 @@ public class ThreadEffectDisplay extends Thread {
 
     @Override
     public void run() {
-        if (webcam != null && webcam.isOpen())
-            Webcam.getDefault().close();
+            if (webcam != null && webcam.isOpen())
+                Webcam.getDefault().close();
 
-        webcam = Webcam.getDefault();
-        while (directEffect == null) {
-            try {
-                Thread.sleep(200);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-        if(!webcam.isOpen()) {
-            webcam.setViewSize(new Dimension(directEffect.viewSizes[0]));
-            try {
-                webcam.open();
-            } catch (WebcamLockException exception) {
-                exception.printStackTrace();
-            }
-        }
-        webcam.setImageTransformer(bufferedImage -> {
-
-            BufferedImage bufferedImage1 = new BufferedImage(bufferedImage.getWidth(), bufferedImage.getHeight(),
-                    BufferedImage.TYPE_INT_RGB);
-            for (int i = 0; i < bufferedImage.getWidth(); i++)
-                for (int j = 0; j < bufferedImage.getHeight(); j++) {
-                    bufferedImage1.setRGB(bufferedImage.getWidth() - i - 1, j,
-                            bufferedImage.getRGB(i, j));
-                }
-            return bufferedImage1;
-        });
-
-        do {
-            main.files.clear();
-            boolean add = main.files.add(new File[]{
-                    new File("./temp/webcam.jpg")
-            });
-            image = webcam.getImage();
-
-
-            try {
-                if (image != null)
-                    ImageIO.write(image, "jpg", new File(tempDir + File.separator + "webcam.jpg"));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            main.buttonGOActionPerformed(null);
-
-            while((image=imageIn)==null) {
+            webcam = Webcam.getDefault();
+            while (directEffect == null ) {
                 try {
-                    Thread.sleep(10);
-                    main.buttonGOActionPerformed(null);
+                    Thread.sleep(200);
                 } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
+                    e.printStackTrace();
                 }
             }
-            imageIn = null;
-
-            if(isMotionActive()) {
-                motion.addFrame(image);
-                imageIn = motion.processFrame();
-            } else {
-                imageIn = image;
+            if (!webcam.isOpen()) {
+                webcam.setViewSize(new Dimension(directEffect.viewSizes[0]));
+                try {
+                    webcam.open();
+                } catch (WebcamLockException exception) {
+                    exception.printStackTrace();
+                }
             }
-            Graphics graphics = jPanel.getGraphics();
-            if (imageIn != null) {
-                graphics.drawImage(imageIn, 0, 0, jPanel.getWidth(), jPanel.getHeight(), null);
-            }
+            webcam.setImageTransformer(bufferedImage -> {
 
-        } while (directEffect.isVisible());
+                BufferedImage bufferedImage1 = new BufferedImage(bufferedImage.getWidth(), bufferedImage.getHeight(),
+                        BufferedImage.TYPE_INT_RGB);
+                for (int i = 0; i < bufferedImage.getWidth(); i++)
+                    for (int j = 0; j < bufferedImage.getHeight(); j++) {
+                        bufferedImage1.setRGB(bufferedImage.getWidth() - i - 1, j,
+                                bufferedImage.getRGB(i, j));
+                    }
+                return bufferedImage1;
+            });
 
+            do {
+                main.files.clear();
+                boolean add = main.files.add(new File[]{
+                        new File("./temp/webcam.jpg")
+                });
+                image = webcam.getImage();
+
+
+                try {
+                    if (image != null)
+                        ImageIO.write(image, "jpg", new File(tempDir + File.separator + "webcam.jpg"));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                main.buttonGOActionPerformed(null);
+
+                while ((image = imageIn) == null) {
+                    try {
+                        Thread.sleep(10);
+                        main.buttonGOActionPerformed(null);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+                imageIn = null;
+
+                if (isMotionActive()) {
+                    motion.addFrame(image);
+                    imageIn = motion.processFrame();
+                } else {
+                    imageIn = image;
+                }
+                Graphics graphics = jPanel.getGraphics();
+                if (imageIn != null) {
+                    graphics.drawImage(imageIn, 0, 0, jPanel.getWidth(), jPanel.getHeight(), null);
+                }
+
+            } while (directEffect.isVisible()&&!this.isInterrupted());
 
     }
 
@@ -181,5 +180,9 @@ public class ThreadEffectDisplay extends Thread {
 
     public void setEffectActive(boolean b) {
         this.effectActive = b;
+    }
+
+    public void stop1() {
+        this.interrupt();
     }
 }

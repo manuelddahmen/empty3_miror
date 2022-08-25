@@ -1,7 +1,3 @@
-/*
- * Created by JFormDesigner on Tue Aug 10 12:00:16 CEST 2021
- */
-
 package one.empty3.feature;
 
 import net.miginfocom.swing.MigLayout;
@@ -863,6 +859,10 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
             listProcessClasses.add(GaussFilterProcess.class.newInstance());
             listProcessClasses.add(GradProcess.class.newInstance());
             listProcessClasses.add(HarrisProcess.class.newInstance());
+            listProcessClasses.add(one.empty3.feature.histograms.Histogram.class.newInstance());
+            listProcessClasses.add(one.empty3.feature.histograms.Histogram1.class.newInstance());
+            listProcessClasses.add(one.empty3.feature.histograms.Hist4Contour.class.newInstance());
+            listProcessClasses.add(one.empty3.feature.histograms.Hist4Contour2.class.newInstance());
             listProcessClasses.add(Histogram0.class.newInstance());
             listProcessClasses.add(Histogram2.class.newInstance());
             listProcessClasses.add(Histogram3.class.newInstance());
@@ -1007,7 +1007,7 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
                 ", listProcessClasses=" + listProcessClasses +
                 '}';
     }
-
+    private JButton buttonStop;
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
     // Generated using JFormDesigner non-commercial license
     private JComboBox comboBox1;

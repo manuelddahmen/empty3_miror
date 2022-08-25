@@ -24,14 +24,16 @@ import java.util.ArrayList;
  * @author Manuel Dahmen
  */
 public class DirestEffect extends JFrame {
-    public final ThreadEffectDisplay threadEffectDisplay;
-    public final Dimension[] viewSizes;
+    public ThreadEffectDisplay threadEffectDisplay;
+    public Dimension[] viewSizes;
     private ClassSchemaBuilder main;
 
     public DirestEffect() {
         initComponents();
-
-        threadEffectDisplay
+        init();
+    }
+    public void init() {
+    threadEffectDisplay
                 = new ThreadEffectDisplay();
         threadEffectDisplay.setJpanel(panel1);
         threadEffectDisplay.motion = new LastFrameMotion();
@@ -91,33 +93,39 @@ public class DirestEffect extends JFrame {
         Dimension selectedItem = threadEffectDisplay.webcam.getViewSizes()[comboBoxDimenisions.getSelectedIndex()];
        }
 
+       private void stop(ActionEvent e) {
+           threadEffectDisplay.stop1();
+           init();
+       }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         // Generated using JFormDesigner non-commercial license
         comboBoxDimenisions = new JComboBox();
         scrollPane2 = new JScrollPane();
         comboBoxMotion = new JComboBox<>();
+        buttonStop1 = new JButton();
         scrollPane1 = new JScrollPane();
         panel1 = new JPanel();
 
         //======== this ========
         setTitle("Effect viewer");
         setMinimumSize(new Dimension(640, 480));
-        Container contentPane = getContentPane();
+        var contentPane = getContentPane();
         contentPane.setLayout(new MigLayout(
-                "fill",
-                // columns
-                "[fill]" +
-                        "[fill]" +
-                        "[fill]" +
-                        "[fill]" +
-                        "[fill]",
-                // rows
-                "[]" +
-                        "[]" +
-                        "[]" +
-                        "[]" +
-                        "[]"));
+            "fill",
+            // columns
+            "[fill]" +
+            "[fill]" +
+            "[fill]" +
+            "[fill]" +
+            "[fill]",
+            // rows
+            "[]" +
+            "[]" +
+            "[]" +
+            "[]" +
+            "[]"));
 
         //---- comboBoxDimenisions ----
         comboBoxDimenisions.setDoubleBuffered(true);
@@ -129,20 +137,25 @@ public class DirestEffect extends JFrame {
             scrollPane2.setDoubleBuffered(true);
 
             //---- comboBoxMotion ----
-            comboBoxMotion.setModel(new DefaultComboBoxModel<>(new String[]{
-                    "Aucun mouvement, aucun effet",
-                    "Aucun mouvement, effet",
-                    "Mouvement diff, aucun effet",
-                    "Mouvement diff, effet",
+            comboBoxMotion.setModel(new DefaultComboBoxModel<>(new String[] {
+                "Aucun mouvement, aucun effet",
+                "Aucun mouvement, effet",
+                "Mouvement diff, aucun effet",
+                "Mouvement diff, effet"
             }));
             comboBoxMotion.setDoubleBuffered(true);
             comboBoxMotion.addItemListener(e -> {
-                comboBoxMotionItemStateChanged(e);
-                comboBoxMotionItemStateChanged(e);
-            });
+			comboBoxMotionItemStateChanged(e);
+			comboBoxMotionItemStateChanged(e);
+		});
             scrollPane2.setViewportView(comboBoxMotion);
         }
         contentPane.add(scrollPane2, "cell 0 0 5 1");
+
+        //---- buttonStop1 ----
+        buttonStop1.setText("STOP");
+        buttonStop1.addActionListener(e -> stop(e));
+        contentPane.add(buttonStop1, "cell 0 0 5 1");
 
         //======== scrollPane1 ========
         {
@@ -157,14 +170,14 @@ public class DirestEffect extends JFrame {
                     }
                 });
                 panel1.setLayout(new MigLayout(
-                        "fill,hidemode 3",
-                        // columns
-                        "[fill]" +
-                                "[fill]",
-                        // rows
-                        "[]" +
-                                "[]" +
-                                "[]"));
+                    "fill,hidemode 3",
+                    // columns
+                    "[fill]" +
+                    "[fill]",
+                    // rows
+                    "[]" +
+                    "[]" +
+                    "[]"));
             }
             scrollPane1.setViewportView(panel1);
         }
@@ -179,6 +192,7 @@ public class DirestEffect extends JFrame {
     private JComboBox comboBoxDimenisions;
     private JScrollPane scrollPane2;
     private JComboBox<String> comboBoxMotion;
+    private JButton buttonStop1;
     private JScrollPane scrollPane1;
     private JPanel panel1;
     // JFormDesigner - End of variables declaration  //GEN-END:variables

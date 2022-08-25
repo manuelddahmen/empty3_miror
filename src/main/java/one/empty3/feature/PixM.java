@@ -58,10 +58,12 @@ public class PixM extends M {
         double f = 1.0;
         if (maxRes < image.getWidth() && maxRes < image.getHeight())
             f = 1.0 / Math.max(image.getWidth(), image.getHeight()) * maxRes;
-
+        if(maxRes==0) {
+            f = 1.0;
+        }
         double columns2 = 1.0 * image.getWidth() * f;
         double lines2 = 1.0 * image.getHeight() * f;
-        System.out.println("pixm resizing init  --> (" + maxRes + ", " + maxRes + ")  (" + columns2 + ", " + lines2 + ")");
+        System.out.println("PixM resizing init  --> (" + maxRes + ", " + maxRes + ")  (" + columns2 + ", " + lines2 + ")");
         PixM pixM = new PixM((int) (columns2), ((int) lines2));
 
 
@@ -653,5 +655,26 @@ public class PixM extends M {
             }
 
         }
+    }
+
+    public double difference(PixM other, double precision) {
+        if(precision==0.0) {
+            precision = Math.max(Math.max(this.columns, other.columns),
+                    Math.max(this.lines, other.lines));
+        }
+        double diff = 0.0;
+        for(double x=0; x<precision; x+= 1.) {
+            for(double y=0; y<precision; y+= 1.) {
+                for (int c = 0; c < 3; c++) {
+                    int i1 =(int) (1./precision*this.columns);
+                    int j1 =(int) (1./precision*this.lines);
+                    int i2 =(int) (1./precision*other.columns);
+                    int j2 =(int) (1./precision*other.lines);
+                    other.setCompNo(c);
+                    diff += Math.abs(get(i1, j1)-other.get(i2, j2));
+                }
+            }
+        }
+        return diff/(this.columns*this.lines*other.columns*other.lines);
     }
 }
