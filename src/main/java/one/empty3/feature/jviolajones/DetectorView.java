@@ -14,10 +14,21 @@ import java.util.List;
 public class DetectorView extends JFrame {
 
     public static void main(String[] args) throws IOException {
-        new DetectorView(new File(args[0]), args[1]).setVisible(true);
+        File imageFile = null;
+        String xmlFileString = null;
+        if(args.length==0) {
+            imageFile = new File("samples/img/manu.jpg");
+            xmlFileString = "resources/xmlopencv/haarcascade_frontalface_alt2.xml";
+        } else if(args.length==2) {
+            imageFile = new File(args[0]);
+            xmlFileString = args[1];
+        }
+        new DetectorView(imageFile, xmlFileString).setVisible(true);
     }
 
     public DetectorView(File img, String XMLFile) throws FileNotFoundException, IOException {
+
+
         Image image = null;
         try {
             image = ImageIO.read(img);
@@ -25,6 +36,7 @@ public class DetectorView extends JFrame {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+        assert image != null;
         Dessin d = new Dessin(image);
         Detector detector = new Detector(XMLFile);
         List<Rectangle> res = detector.getFaces(img.getAbsolutePath(), 1, 1.25f, 0.1f, 1, true);
