@@ -1,6 +1,5 @@
 package one.empty3.feature;
 
-import android.graphics.Bitmap;
 
 public interface InterfaceMatrix {
 

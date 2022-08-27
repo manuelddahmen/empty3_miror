@@ -142,3 +142,4 @@ publishing {
         }
     }
 }
+//project.buildDir = '/gen/main/java'
