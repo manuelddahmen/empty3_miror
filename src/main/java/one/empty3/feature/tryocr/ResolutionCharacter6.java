@@ -228,7 +228,23 @@ public class ResolutionCharacter6 implements Runnable {
         }
         exec(texture, output, input, dirOut, name);
 
+        deleteEquals(rectangles);
+
         compare(rectangles);
+    }
+
+    private void deleteEquals(List<Rectangle2> rectangles) {
+        for (Rectangle2 rect1 : rectangles) {
+            Rectangle2 delete = null;
+            for (Rectangle2 rect2 : rectangles) {
+                if(rect1!=rect2 && rect1.equals(rect2)) {
+                    delete = rect2;
+                }
+            }
+            if(delete!=null)
+                rectangles.remove(delete);
+        }
+
     }
 
     private void compare(List<Rectangle2> rectangles) {
@@ -547,8 +563,8 @@ public class ResolutionCharacter6 implements Runnable {
                 allCharsPossible.add(character);
         });
 
-        //allCharsPossible.addAll(ch);
-        //allCharsPossible.addAll(cv);
+        allCharsPossible.addAll(ch);
+        allCharsPossible.addAll(cv);
         if (allCharsPossible.size() == 0)
             allCharsPossible.add('-');
 

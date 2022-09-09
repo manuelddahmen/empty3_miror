@@ -55,4 +55,26 @@ public class Rectangle2 {
         return getX() >= 0 && getW() >= 0 &&
                 getY() >= 0 && getH() >= 0;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Rectangle2 that = (Rectangle2) o;
+
+        if (x != that.x) return false;
+        if (y != that.y) return false;
+        if (w != that.w) return false;
+        return h == that.h;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = x;
+        result = 31 * result + y;
+        result = 31 * result + w;
+        result = 31 * result + h;
+        return result;
+    }
 }
