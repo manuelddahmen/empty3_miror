@@ -12,6 +12,7 @@ import one.empty3.library.Point3D;
 import one.empty3.library.TextureCol;
 import one.empty3.library.core.lighting.Colors;
 import one.empty3.library.core.nurbs.CourbeParametriquePolynomialeBezier;
+import shadow.bundletool.com.android.tools.r8.logging.Log;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -228,7 +229,10 @@ public class ResolutionCharacter6 implements Runnable {
         }
         exec(texture, output, input, dirOut, name);
 
+
+        Log.info(this.getClass(), "rectangles : "+rectangles.size());
         deleteEquals(rectangles);
+        Log.info(this.getClass(), "rectangles : "+rectangles.size());
 
         compare(rectangles);
     }
