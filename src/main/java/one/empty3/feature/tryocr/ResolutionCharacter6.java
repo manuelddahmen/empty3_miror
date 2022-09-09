@@ -238,6 +238,7 @@ public class ResolutionCharacter6 implements Runnable {
     }
 
     private void deleteEquals(List<Rectangle2> rectangles) {
+        ArrayList<Rectangle2> deletes = new ArrayList<>();
         for (Rectangle2 rect1 : rectangles) {
             Rectangle2 delete = null;
             for (Rectangle2 rect2 : rectangles) {
@@ -246,9 +247,10 @@ public class ResolutionCharacter6 implements Runnable {
                 }
             }
             if(delete!=null)
-                rectangles.remove(delete);
-        }
+                deletes.add(delete);
 
+        }
+        rectangles.removeAll(deletes);
     }
 
     private void compare(List<Rectangle2> rectangles) {
@@ -555,18 +557,18 @@ public class ResolutionCharacter6 implements Runnable {
         int j = rectangle2.getY();
         int w = rectangle2.getW();
         int h = rectangle2.getH();
-        List<Character> ch = recognizeH(input, i, j, w, h);
-        List<Character> cv = recognizeV(input, i, j, w, h);
+        List<Character> ch = null;//recognizeH(input, i, j, w, h);
+        List<Character> cv = null;//recognizeV(input, i, j, w, h);
 
         List<Character> allCharsPossible = new ArrayList<>();
 
 
         // Intersect
-        cv.forEach(character -> {
+        /*cv.forEach(character -> {
             if(ch.stream().anyMatch(character::equals))
                 allCharsPossible.add(character);
         });
-
+*/
         allCharsPossible.addAll(ch);
         allCharsPossible.addAll(cv);
         if (allCharsPossible.size() == 0)
