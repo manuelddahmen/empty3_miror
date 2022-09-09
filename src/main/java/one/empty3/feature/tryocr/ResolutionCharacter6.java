@@ -257,11 +257,13 @@ public class ResolutionCharacter6 implements Runnable {
         double [][] distances = new double[rectangles.size()][rectangles.size()];
         int i = 0, j = 0;
         for (Rectangle2 rect1 : rectangles) {
-            i++;
+            j=0;
             for (Rectangle2 rect2 : rectangles) {
-                j++;
                 distances[i][j] = compare(rect1, rect2);
+                j++;
             }
+            i++;
+
         }
         PixM pixM = new PixM(distances);
         try {
@@ -276,13 +278,18 @@ public class ResolutionCharacter6 implements Runnable {
 
         for(double i=0; i<1; i+=STEPS_COMPARE_METHOD) {
             for(double j=0; j<1; j+=STEPS_COMPARE_METHOD) {
-                PixM pixMa = input.copySubImage(rect1.getX(), rect1.getY(), rect1.getW(), rect1.getH());
-                PixM pixMb = input.copySubImage(rect2.getX(), rect2.getY(), rect2.getW(), rect2.getH());
+                Point3D a = input.getP(
+                        (int)(rect1.getX()
+                                +i*rect1.getW())
+                        , (int)(rect1.getY()
+                                +j*rect1.getH()));
+                Point3D b = input.getP(
+                        (int)(rect2.getX()
+                                +i*rect2.getW())
+                        , (int)(rect2.getY()
+                                +j*rect2.getH()));
 
-                Point3D moins = pixMa.getRgb((int) (i * rect1.getW()), (int) (j * rect1.getH()))
-                        .moins(pixMb.getRgb((int) (i * rect2.getW()), (int) (j * rect2.getH())));
-
-                distTotale += moins.norme();
+                distTotale += a.moins(b).norme();
             }
 
         }
