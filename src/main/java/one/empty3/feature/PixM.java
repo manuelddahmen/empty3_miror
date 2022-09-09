@@ -39,6 +39,7 @@ public class PixM extends M {
 
     public PixM(double[][] distances) {
         super(distances.length, distances[0].length);
+        setCompNo(0);
         for (int i = 0; i < getColumns(); i++)
             for (int j = 0; j < getLines(); j++)
                 set(i, j, distances[i][j]);

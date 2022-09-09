@@ -90,6 +90,11 @@ public final class DarkFortressGUI extends JFrame {
             if (drawerType.equals(JoglDrawer.class)) {
                 Title += "with OpenGL bindings";
                 drawer = new JoglDrawer(this);
+                try {
+                    Thread.sleep(4000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
                 drawerType = JoglDrawer.class;
 
 
@@ -119,7 +124,7 @@ public final class DarkFortressGUI extends JFrame {
             addKeyListener(plotter3D);
 
 
-            setVisible(true);
+            //setVisible(true);
 
         } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException ex) {
             Logger.getLogger(DarkFortressGUI.class.getName()).log(Level.SEVERE, null, ex);

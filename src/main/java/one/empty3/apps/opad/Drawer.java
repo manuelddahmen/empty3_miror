@@ -19,6 +19,7 @@ public abstract class Drawer {
     public abstract void setLogic(PositionUpdate l);
 
     public void initFrame(Frame component) {
+    //    component.setVisible(true);
 
     }
 

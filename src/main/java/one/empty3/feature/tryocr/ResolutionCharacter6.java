@@ -2,6 +2,7 @@ package one.empty3.feature.tryocr;
 
 import atlasgen.CsvWriter;
 import one.empty3.feature.Linear;
+import one.empty3.feature.MultiLinkList;
 import one.empty3.feature.PixM;
 import one.empty3.feature.app.replace.javax.imageio.ImageIO;
 import one.empty3.feature.shape.Rectangle;
@@ -18,6 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.*;
+import java.util.function.Consumer;
 
 public class ResolutionCharacter6 implements Runnable {
     public static final float MIN_DIFF = 0.6f;
@@ -61,6 +63,8 @@ public class ResolutionCharacter6 implements Runnable {
     private Map<Character, Integer[]> characterMapH;
     private Map<Character, Integer[]> characterMapV;
     private int countRects = 0;
+    private List<Rectangle2> rectangles;
+    private double STEPS_COMPARE_METHOD = 0.1;
 
     public ResolutionCharacter6(BufferedImage read, String name) {
         this(read, name, new File("testsResults"));
@@ -198,6 +202,8 @@ public class ResolutionCharacter6 implements Runnable {
     }
 
     public void run() {
+        rectangles = new ArrayList<>();
+
         characterMapH = initPatternsH();
         characterMapV = initPatternsV();
 
@@ -222,6 +228,44 @@ public class ResolutionCharacter6 implements Runnable {
         }
         exec(texture, output, input, dirOut, name);
 
+        compare(rectangles);
+    }
+
+    private void compare(List<Rectangle2> rectangles) {
+        double [][] distances = new double[rectangles.size()][rectangles.size()];
+        int i = 0, j = 0;
+        for (Rectangle2 rect1 : rectangles) {
+            i++;
+            for (Rectangle2 rect2 : rectangles) {
+                j++;
+                distances[i][j] = compare(rect1, rect2);
+            }
+        }
+        PixM pixM = new PixM(distances);
+        try {
+            ImageIO.write(pixM.normalize(0, 1).getImage(), "jpg", new File("distances.jpg"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private double compare(Rectangle2 rect1, Rectangle2 rect2) {
+        double distTotale = 0.0;
+
+        for(double i=0; i<1; i+=STEPS_COMPARE_METHOD) {
+            for(double j=0; j<1; j+=STEPS_COMPARE_METHOD) {
+                PixM pixMa = input.copySubImage(rect1.getX(), rect1.getY(), rect1.getW(), rect1.getH());
+                PixM pixMb = input.copySubImage(rect2.getX(), rect2.getY(), rect2.getW(), rect2.getH());
+
+                Point3D moins = pixMa.getRgb((int) (i * rect1.getW()), (int) (j * rect1.getH()))
+                        .moins(pixMb.getRgb((int) (i * rect2.getW()), (int) (j * rect2.getH())));
+
+                distTotale += moins.norme();
+            }
+
+        }
+
+        return distTotale/rect1.getW()/rect1.getH()/rect2.getW()/rect2.getH();
     }
 
     private void exec(int i, int j) {
@@ -464,6 +508,7 @@ public class ResolutionCharacter6 implements Runnable {
                         Color random = Colors.random();
                         output.plotCurve(rectangle, new TextureCol(random));
                         countRects++;
+                        rectangles.add(rectangle2);
                         if (isExporting()) {
                             File file = new File(dirOutChars + "-" + j + "-" + i + "-" + w + "-" + h + "-" + s[0] + ".png");
                             PixM outChar = input.copySubImage(rectangle2.getX(),
