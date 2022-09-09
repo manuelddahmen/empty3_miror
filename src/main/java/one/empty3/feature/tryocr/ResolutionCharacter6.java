@@ -568,9 +568,9 @@ public class ResolutionCharacter6 implements Runnable {
             if(ch.stream().anyMatch(character::equals))
                 allCharsPossible.add(character);
         });
-*/
         allCharsPossible.addAll(ch);
         allCharsPossible.addAll(cv);
+*/
         if (allCharsPossible.size() == 0)
             allCharsPossible.add('-');
 
