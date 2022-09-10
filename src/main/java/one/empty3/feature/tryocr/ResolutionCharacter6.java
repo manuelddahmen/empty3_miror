@@ -241,21 +241,15 @@ public class ResolutionCharacter6 implements Runnable {
     }
 
     private void deleteEquals(List<Rectangle2> rectangles) {
-        for (int i = 0, rectanglesSize = rectangles.size(); i < rectanglesSize; i++) {
-            if(i<rectangles.size()) {
-                Rectangle2 rect1 = rectangles.get(i);
-                Rectangle2 delete = null;
-                for (int j = 0, size = rectangles.size(); j < size; ) {
-                    if (j < rectangles.size()) {
-                        Rectangle2 rect2 = rectangles.get(j);
-                        if (i != j && rect1 != rect2 && rect1.equals(rect2)) {
-                            delete = rect2;
-                            rectangles.remove(delete);
-                        } else {
-                            j++;
-                        }
-                    }
-
+        for (int i = 0; i < rectangles.size(); i++) {
+            Rectangle2 rect1 = rectangles.get(i);
+            Rectangle2 delete;
+            for (int j = i; j < rectangles.size();) {
+                Rectangle2 rect2 = rectangles.get(j);
+                if (i != j && rect1 != rect2 && rect1.equals(rect2)) {
+                    rectangles.remove(rect2);
+                } else {
+                    j++;
                 }
             }
         }
