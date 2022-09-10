@@ -32,7 +32,13 @@
 
 package one.empty3.library.core.nurbs;
 
-import one.empty3.library.*;
+import one.empty3.library.Camera;
+import one.empty3.library.Matrix33;
+import one.empty3.library.Point3D;
+import one.empty3.library.StructureMatrix;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /*__
  * @author Manuel Dahmen
@@ -96,7 +102,7 @@ public class CameraInPath extends Camera {
             Point3D tan = eye.moins(courbe.getElem().calculerPoint3D(t - 0.001)).norme1();
             Point3D vert = getVerticale().getElem()==null?(tan.prodVect(dir).norme1());//:getVerticale().data0d;
             matrice.setElem(new Matrix33(new Point3D[] { tan, tan.prodVect(dir).norme1(),  dir }));
-            System.out.println("Matrice "+matrice.getElem().toString());
+            Logger.getAnonymousLogger().log(Level.INFO, "Matrice "+matrice.getElem().toString());
             setEye(eye);
 
         }
@@ -130,7 +136,7 @@ public class CameraInPath extends Camera {
         matrice.setElem(new Matrix33(new Point3D[]{tan, vert2,
                 tan.prodVect(vert2).norme1()}).tild());
         setVerticale(vert2);
-        System.out.println("Matrice (tan, vert, dir)" + matrice.getElem().toString());
+        Logger.getAnonymousLogger().log(Level.INFO, "Matrice (tan, vert, dir)" + matrice.getElem().toString());
         setEye(eye);
     }
 

@@ -43,7 +43,7 @@ public class Horloge extends JFrame {
             @Override
             public void componentResized(ComponentEvent e) {
 
-                System.out.println("Resize ...");
+                Logger.getAnonymousLogger().log(Level.INFO, "Resize ...");
 
             }
         });

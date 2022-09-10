@@ -7,6 +7,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class PanelSphereMove extends JPanel {
     private static int RES = 200;
@@ -49,7 +51,7 @@ public class PanelSphereMove extends JPanel {
                 if (z.largeur() != getWidth() || z.hauteur() != getHeight()) {
                     z = new ZBufferImpl(SIZE, SIZE);
                     initComputeArea(SIZE, SIZE);
-                    System.out.println("Reninit");
+                    Logger.getAnonymousLogger().log(Level.INFO, "Reninit");
                 }
                 Point3D[] colVectors = matrice.getColVectors();
                 Point ex = proj(colVectors[0].norme1());
@@ -114,8 +116,8 @@ public class PanelSphereMove extends JPanel {
 
                 store(x, y);
 
-                System.out.println("Current location on screen : " + p2_current);
-                System.out.println("Current location in space" + p3_current);
+                Logger.getAnonymousLogger().log(Level.INFO, "Current location on screen : " + p2_current);
+                Logger.getAnonymousLogger().log(Level.INFO, "Current location in space" + p3_current);
 
 
                 move = false;

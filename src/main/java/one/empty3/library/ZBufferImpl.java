@@ -46,6 +46,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /*__
  * * Classe de rendu graphique
@@ -105,7 +107,7 @@ public class ZBufferImpl extends Representable implements ZBuffer {
         ha = h;
         dimx = la;
         dimy = ha;
-        System.out.println("width,height(" + la + ", " + ha + ")");
+        Logger.getAnonymousLogger().log(Level.INFO, "width,height(" + la + ", " + ha + ")");
         this.ime = new ImageMap(la, ha);
     }
 
@@ -145,7 +147,7 @@ public class ZBufferImpl extends Representable implements ZBuffer {
 
     public synchronized void draw(Representable r) {
         if (r == null) {
-            System.out.println("r is null return");
+            Logger.getAnonymousLogger().log(Level.INFO, "r is null return");
             return;
         }
         r.texture().timeNext();
@@ -164,12 +166,12 @@ public class ZBufferImpl extends Representable implements ZBuffer {
             Point3D p = (Point3D) r;
             ime.testDeep(p);
         } else if (r instanceof ThickSurface) {
-            // System.out.println("Surface");
+            // Logger.getAnonymousLogger().log(Level.INFO, "Surface");
             ThickSurface n = (ThickSurface) r;
             // TODO Dessiner les bords
 
             for (double u = n.getStartU(); u <= n.getEndU(); u += n.getIncrU()) {
-                // System.out.println("(u,v) = ("+u+","+")");
+                // Logger.getAnonymousLogger().log(Level.INFO, "(u,v) = ("+u+","+")");
                 for (double v = n.getStartU(); v <= n.getEndV(); v += n.getIncrV()) {
                     Point3D p1, p2, p3, p4;
 
@@ -235,11 +237,11 @@ public class ZBufferImpl extends Representable implements ZBuffer {
             }
         } else if (r instanceof ParametricSurface) {
             ParametricSurface n = (ParametricSurface) r;
-            // System.out.println("Surface");
-            System.out.println("class" + n.getClass());
+            // Logger.getAnonymousLogger().log(Level.INFO, "Surface");
+            Logger.getAnonymousLogger().log(Level.INFO, "class" + n.getClass());
             // TODO Dessiner les bords
             for (double u = n.getStartU(); u + n.getIncrU() <= n.getEndU(); u += n.getIncrU()) {
-                // System.out.println("(u,v) = ("+u+","+")");
+                // Logger.getAnonymousLogger().log(Level.INFO, "(u,v) = ("+u+","+")");
                 for (double v = n.getStartV(); v + n.getIncrV() <= n.getEndV(); v += n.getIncrV()) {
                     Point3D p1, p2, p3, p4;
                     p1 = n.calculerPoint3D(u, v);
@@ -306,7 +308,7 @@ public class ZBufferImpl extends Representable implements ZBuffer {
             // OBJETS
             if (r instanceof TRIObject) {
                 TRIObject o = (TRIObject) r;
-                System.out.println("Objets triangle n°" + ((TRIObject) r).getTriangles().size());
+                Logger.getAnonymousLogger().log(Level.INFO, "Objets triangle n°" + ((TRIObject) r).getTriangles().size());
                 for (TRI t : o.getTriangles()) {
 
                     draw(t);

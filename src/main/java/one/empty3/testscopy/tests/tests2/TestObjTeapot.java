@@ -7,6 +7,8 @@ import one.empty3.library.objloader.E3Model;
 import one.empty3.library.objloader.ModelLoaderOBJ;
 
 import java.awt.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class TestObjTeapot extends TestObjetSub {
     private CameraInPath cameraInPath;
@@ -29,10 +31,10 @@ public class TestObjTeapot extends TestObjetSub {
         cameraInPath.calculerMatrice(Point3D.Y);
         Point3D eye = cameraInPath.getEye();
         //scene().cameraActive().setEye(eye);
-        System.out.println(eye);
+        Logger.getAnonymousLogger().log(Level.INFO,""+ eye);
         eye = scene().cameraActive().eye();
-        System.out.println(eye);
-        System.out.println(cameraInPath.getLookat());
+        Logger.getAnonymousLogger().log(Level.INFO,""+ eye);
+        Logger.getAnonymousLogger().log(Level.INFO,""+ cameraInPath.getLookat());
         z.idzpp();
     }
 

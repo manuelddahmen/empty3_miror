@@ -57,7 +57,7 @@ public class ProxyValue extends ProcessFile {
         }
 
 
-        System.out.println("point " + p);
+        Logger.getAnonymousLogger().log(Level.INFO, "point " + p);
 
         return true;
     }
@@ -115,7 +115,7 @@ public class ProxyValue extends ProcessFile {
                 }
             }
         }
-        // System.out.println("error not found");
+        // Logger.getAnonymousLogger().log(Level.INFO, "error not found");
 
         return;
     }

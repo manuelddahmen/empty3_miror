@@ -19,6 +19,8 @@ package one.empty3.library;
 
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /*__
  * Created by manue on 03-11-19.
@@ -555,7 +557,7 @@ public class ArcBall {
         if(representable!=null) {
             List<Double> d = representable.getRotation().getElem().getRot().getElem().getD().data1d;
             int size = d.size();
-            System.out.println("List size rot = " + size);
+            Logger.getAnonymousLogger().log(Level.INFO, "List size rot = " + size);
             Double[] a = new Double[12];
             int[] i = new int[]{0};
             d.forEach(new Consumer<Double>() {

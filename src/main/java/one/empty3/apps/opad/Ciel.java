@@ -48,6 +48,8 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /*__
  *
@@ -61,7 +63,7 @@ public class Ciel {
 
         try {
             URL resource = getClass().getResource("one.empty3.library/apps/darz/marssurface.jpg");
-            System.out.println(resource.toExternalForm());
+            Logger.getAnonymousLogger().log(Level.INFO, resource.toExternalForm());
             BufferedImage read = ImageIO.read(resource);
             ECBufferedImage ecBufferedImage = new ECBufferedImage(read);
             bleu.texture(new ImageTexture(ecBufferedImage));

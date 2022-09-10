@@ -42,6 +42,8 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /*__
  * G:\Apps\IdeaProjects\empty3\src\test\java\be\manudahmen\empty3\one.empty3.library\tests\TestSoS.java
@@ -159,7 +161,7 @@ public class TestSoS extends TestObjetSub {
         //camera.setMatrix(x, y, z);
         //camera.calculerMatrice(y);
 
-        System.out.println("Nombre d'objet: " + scene().getObjets().getData1d().size());
+        Logger.getAnonymousLogger().log(Level.INFO, "Nombre d'objet: " + scene().getObjets().getData1d().size());
     }
 
     private boolean isQuadrillage() {

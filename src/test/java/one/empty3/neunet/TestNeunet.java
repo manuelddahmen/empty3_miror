@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -16,15 +18,15 @@ public class TestNeunet {
         double[] expectedValues = new double[]{1, 0, 0, 0, 0, 1, 0, 1, 0};
         Matrix expected = new Matrix(3, 3, i -> expectedValues[i]);
 
-        System.out.println(expected);
+        Logger.getAnonymousLogger().log(Level.INFO, ""+expected);
 
         Matrix actual = new Matrix(3, 3, i -> 2 * i - 4).softmax();
 
-        System.out.println(actual);
+        Logger.getAnonymousLogger().log(Level.INFO, ""+actual);
 
         Matrix result = LossFunction.crossEntropy(expected, actual);
 
-        System.out.println(result);
+        Logger.getAnonymousLogger().log(Level.INFO,""+ result);
 
         actual.forEach(((row, col, index, value) -> {
             double expectedValue = value;
@@ -60,7 +62,7 @@ public class TestNeunet {
         net.computeAll();
         assertEquals(1.0, net.getInputLayer().getNeurons().getElem(0).getOutput());
 
-        net.getInputLayer().getNeurons().getData1d().forEach(n -> System.out.println(n.getOutput()));
+        net.getInputLayer().getNeurons().getData1d().forEach(n -> Logger.getAnonymousLogger().log(Level.INFO,""+ n.getOutput()));
 
 
     }
@@ -84,11 +86,11 @@ public class TestNeunet {
         Matrix result2 = weights.multiply(inputs).modify((row, col, value) -> value + biases.get(row))
                 .modify((index, value) -> value > 0 ? value : 0.0);
 
-        System.out.println(inputs);
-        System.out.println(weights);
-        System.out.println(biases);
-        System.out.println(result1);
-        System.out.println(result2);
+        Logger.getAnonymousLogger().log(Level.INFO,""+ inputs);
+        Logger.getAnonymousLogger().log(Level.INFO, ""+weights);
+        Logger.getAnonymousLogger().log(Level.INFO,""+ biases);
+        Logger.getAnonymousLogger().log(Level.INFO,""+ result1);
+        Logger.getAnonymousLogger().log(Level.INFO, ""+result2);
 
         AtomicReference<Double> softmax = new AtomicReference<>(0.0);
         result2.forEach((index, value) -> {
@@ -96,7 +98,7 @@ public class TestNeunet {
             //assertTrue(value-r1<Matrix.DOUBLE_MIN);
         });
         result2.modify((index, value) -> Math.exp(value) / softmax.get());
-        System.out.println(result2);
+        Logger.getAnonymousLogger().log(Level.INFO, ""+result2);
     }
 
     @Test
@@ -118,11 +120,11 @@ public class TestNeunet {
         Matrix result2 = weights.multiply(inputs).modify((row, col, value) -> value + biases.get(row))
                 .modify((index, value) -> value > 0 ? value : 0.0);
 
-        System.out.println(inputs);
-        System.out.println(weights);
-        System.out.println(biases);
-        System.out.println(result1);
-        System.out.println(result2);
+        Logger.getAnonymousLogger().log(Level.INFO, ""+inputs);
+        Logger.getAnonymousLogger().log(Level.INFO,""+ weights);
+        Logger.getAnonymousLogger().log(Level.INFO,""+ biases);
+        Logger.getAnonymousLogger().log(Level.INFO,""+ result1);
+        Logger.getAnonymousLogger().log(Level.INFO,""+ result2);
 
         AtomicReference<Double> softmax = new AtomicReference<>(0.0);
         result2.forEach((index, value) -> {
@@ -130,6 +132,6 @@ public class TestNeunet {
             //assertTrue(value-r1<Matrix.DOUBLE_MIN);
         });
         result2.modify((index, value) -> Math.exp(value) / softmax.get());
-        System.out.println(result2);
+        Logger.getAnonymousLogger().log(Level.INFO,""+ result2);
     }
 }

@@ -1,9 +1,8 @@
 package one.empty3.gui;
 
 import net.miginfocom.swing.MigLayout;
-import one.empty3.library.*;
 import one.empty3.library.Polygon;
-import one.empty3.library.core.gdximports.gdx_BSplineCurve;
+import one.empty3.library.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,6 +10,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class EyeBallRoll extends JPanel {
     private static int RES = 200;
@@ -118,13 +119,13 @@ public class EyeBallRoll extends JPanel {
                     graphics.drawLine(RES / 2, RES / 2, (int) ey.getX(), (int) ey.getY());
                     graphics.setColor(Color.BLUE);
                     graphics.drawLine(RES / 2, RES / 2, (int) ez.getX(), (int) ez.getY());
-                    //System.out.println("ex, ey, ez" + ex + "\n" + ey + "\n" + ez);
+                    //Logger.getAnonymousLogger().log(Level.INFO, "ex, ey, ez" + ex + "\n" + ey + "\n" + ez);
 
 
                     ex = transform3D2D1(Point3D.X);
                     ey = transform3D2D1(Point3D.Y);
                     ez = transform3D2D1(Point3D.Z);
-                    //System.out.println("Systeme d'origine ex, ey, ez" + ex + "\n" + ey + "\n" + ez);
+                    //Logger.getAnonymousLogger().log(Level.INFO, "Systeme d'origine ex, ey, ez" + ex + "\n" + ey + "\n" + ez);
 
                     graphics.setColor(Color.RED);
                     graphics.drawString("eX", (int) ex.getX(), (int) ex.getY());
@@ -135,10 +136,10 @@ public class EyeBallRoll extends JPanel {
 
                     graphics.drawString(inscr, 0, 0);
 /*
-                    System.out.println("Angle px,py " + Math.acos(colVectors[0].norme1().dot(colVectors[1].norme1())) / Math.PI * 2);
-                    System.out.println("Angle py,pz " + Math.acos(colVectors[1].norme1().dot(colVectors[2].norme1())) / Math.PI * 2);
-                    System.out.println("Angle pz,px " + Math.acos(colVectors[2].norme1().dot(colVectors[0].norme1())) / Math.PI * 2);
-                    System.out.println("Angle pz,py " + Math.acos(colVectors[2].norme1().dot(colVectors[1].norme1())) / Math.PI * 2);
+                    Logger.getAnonymousLogger().log(Level.INFO, "Angle px,py " + Math.acos(colVectors[0].norme1().dot(colVectors[1].norme1())) / Math.PI * 2);
+                    Logger.getAnonymousLogger().log(Level.INFO, "Angle py,pz " + Math.acos(colVectors[1].norme1().dot(colVectors[2].norme1())) / Math.PI * 2);
+                    Logger.getAnonymousLogger().log(Level.INFO, "Angle pz,px " + Math.acos(colVectors[2].norme1().dot(colVectors[0].norme1())) / Math.PI * 2);
+                    Logger.getAnonymousLogger().log(Level.INFO, "Angle pz,py " + Math.acos(colVectors[2].norme1().dot(colVectors[1].norme1())) / Math.PI * 2);
 */
                 }
 
@@ -215,7 +216,7 @@ public class EyeBallRoll extends JPanel {
                         pInitial = null;
                         pMoved = null;
                         getGraphics().drawString("cursor not in window" + vAxe, 10, 10);
-                        System.out.println("Error Point2D out");
+                        Logger.getAnonymousLogger().log(Level.INFO, "Error Point2D out");
                     }
                 }
                 clicked = false;
@@ -248,11 +249,11 @@ public class EyeBallRoll extends JPanel {
 
                 store(e.getX(), e.getY());
 
-                /*System.out.println("Current location in space (move from ) " + pInitial);
-                System.out.println("Current location in space (move to   ) " + pMoved);
-                System.out.println("Current location in space i column     " + i_current);
-                System.out.println("Current location in space j row        " + j_current);
-                System.out.println("Matrice                                " + matrice);
+                /*Logger.getAnonymousLogger().log(Level.INFO, "Current location in space (move from ) " + pInitial);
+                Logger.getAnonymousLogger().log(Level.INFO, "Current location in space (move to   ) " + pMoved);
+                Logger.getAnonymousLogger().log(Level.INFO, "Current location in space i column     " + i_current);
+                Logger.getAnonymousLogger().log(Level.INFO, "Current location in space j row        " + j_current);
+                Logger.getAnonymousLogger().log(Level.INFO, "Matrice                                " + matrice);
 */
                 move = false;
             }

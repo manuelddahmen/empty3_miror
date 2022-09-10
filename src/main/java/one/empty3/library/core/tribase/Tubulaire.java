@@ -47,6 +47,8 @@ import one.empty3.library.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 public class Tubulaire extends Representable implements TRIGenerable, TRIConteneur {
@@ -152,7 +154,7 @@ public class Tubulaire extends Representable implements TRIGenerable, TRIContene
     }
 
     public void generateWire() {
-        System.out.println("WIRE SIZE " + points.size());
+        Logger.getAnonymousLogger().log(Level.INFO, "WIRE SIZE " + points.size());
         beziers = new ArrayList<BezierCubique>();
 
         for (int i = 0; i < points.size() - 3; i += 4) {
@@ -169,7 +171,7 @@ public class Tubulaire extends Representable implements TRIGenerable, TRIContene
             beziers.add(bc);
         }
 
-        System.out.println("Beziers = " + beziers.size());
+        Logger.getAnonymousLogger().log(Level.INFO, "Beziers = " + beziers.size());
     }
 
     @Override
@@ -245,7 +247,7 @@ public class Tubulaire extends Representable implements TRIGenerable, TRIContene
 
             px = px.norme1();
             py = py.norme1();
-            //System.out.println("px.py: " +px.prodScalaire(py)+"px.tg: "+px.prodScalaire(tangente)+"py.tg "+py.prodScalaire(tangente));
+            //Logger.getAnonymousLogger().log(Level.INFO, "px.py: " +px.prodScalaire(py)+"px.tg: "+px.prodScalaire(tangente)+"py.tg "+py.prodScalaire(tangente));
             vecteurs.add(px);
             vecteurs.add(py);
             vecteurs.add(tangente);

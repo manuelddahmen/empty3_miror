@@ -286,6 +286,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class TestDrawingLSystem2D extends TestCaseExtended {
     private int MAX = 3;
@@ -381,9 +383,9 @@ public class TestDrawingLSystem2D extends TestCaseExtended {
         for (int i = 0; i < 10; i++) {
             drawingLSystem2D.drawStep();
             lSystem.applyRules();
-            //System.out.println(lSystem.toString());
+            //Logger.getAnonymousLogger().log(Level.INFO, lSystem.toString());
         }
-        System.out.println(lSystem.toString());
+        Logger.getAnonymousLogger().log(Level.INFO, lSystem.toString());
         try {
             File filename = getUniqueFilenameForProduction("testResults", "testDrawing", "jpg");
             ImageIO.write((RenderedImage) turtle2D.getZeImage(), "jpg", filename);
@@ -577,7 +579,7 @@ public class TestDrawingLSystem2D extends TestCaseExtended {
         Turtle2D turtle2D;
         for (int i = 0; i < n; i++) {
             lSystem.applyRules();
-            System.out.println("t::" + lSystem.getT());
+            Logger.getAnonymousLogger().log(Level.INFO, "t::" + lSystem.getT());
             if (i < n - 1 && writeIntermediateImages) {
                 BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
                 turtle2D = new Turtle2D(bufferedImage);

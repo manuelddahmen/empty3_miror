@@ -341,7 +341,7 @@ public class LSystem {
 
         symbols.add(rest);
 
-        //System.out.println(this);
+        //Logger.getAnonymousLogger().log(Level.INFO, this);
 
 
         return rest;

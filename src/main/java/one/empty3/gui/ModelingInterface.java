@@ -5,7 +5,6 @@
 package one.empty3.gui;
 
 import net.miginfocom.swing.MigLayout;
-import one.empty3.gui.Tubulaire4map;
 import one.empty3.library.*;
 import one.empty3.library.core.export.STLExport;
 import one.empty3.library.core.nurbs.CourbeParametriquePolynomialeBezier;
@@ -21,6 +20,8 @@ import java.awt.event.MouseMotionAdapter;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /*
  * @author Manuel Dahmen
@@ -145,7 +146,7 @@ public class ModelingInterface extends JFrame {
                 graphics.drawImage(ecBufferedImage, 0, 0, panel3.getWidth(), panel3.getHeight(), null);
                 graphics = panel4.getGraphics();
                 graphics.drawImage(image, 0, 0, panel4.getWidth(), panel4.getHeight(), null);
-                System.out.println("Nano time ellapsed: " + (System.nanoTime() - nanos) / 1000000000d);
+                Logger.getAnonymousLogger().log(Level.INFO, "Nano time ellapsed: " + (System.nanoTime() - nanos) / 1000000000d);
                 runningViewDisplay = false;
             }).start();
     }
@@ -289,7 +290,7 @@ public class ModelingInterface extends JFrame {
         } catch (IOException ioException) {
             ioException.printStackTrace();
         }
-        System.out.println("Nano time ellapsed (save): " + (System.nanoTime() - nanos) / 1000000000d);
+        Logger.getAnonymousLogger().log(Level.INFO, "Nano time ellapsed (save): " + (System.nanoTime() - nanos) / 1000000000d);
     }
 
     private void menuItemGradPCActionPerformed(ActionEvent e) {

@@ -5,6 +5,8 @@ import one.empty3.io.ProcessFile;
 import java.io.*;
 import java.util.Objects;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class FFMpeg {
     private File inputFile;
@@ -100,23 +102,23 @@ public class FFMpeg {
         BufferedReader stdError = new BufferedReader(new InputStreamReader(pr.getErrorStream()));
 
         // Read any errors from the attempted command:
-        System.out.println("Here is the standard error of the command (if any):\n");
+        Logger.getAnonymousLogger().log(Level.INFO, "Here is the standard error of the command (if any):\n");
         String s;
         while ((s = stdError.readLine()) != null)
-            System.out.println(s);
+            Logger.getAnonymousLogger().log(Level.INFO, s);
         String line = "";
         while ((line = buf.readLine()) != null) {
-            System.out.println(line);
+            Logger.getAnonymousLogger().log(Level.INFO, line);
 
         }
         // Read any errors from the attempted command:
-        System.out.println("Here is the standard error of the command (if any):\n");
+        Logger.getAnonymousLogger().log(Level.INFO, "Here is the standard error of the command (if any):\n");
         s = null;
         while ((s = stdError.readLine()) != null)
-            System.out.println(s);
+            Logger.getAnonymousLogger().log(Level.INFO, s);
         line = null;
         while ((line = buf.readLine()) != null) {
-            System.out.println(line);
+            Logger.getAnonymousLogger().log(Level.INFO, line);
         }
 
     }

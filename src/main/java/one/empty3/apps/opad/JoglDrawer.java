@@ -51,6 +51,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class JoglDrawer extends Drawer implements GLEventListener {
     private final Frame component;
@@ -150,7 +152,7 @@ public class JoglDrawer extends Drawer implements GLEventListener {
         }
 
         millis = System.currentTimeMillis();
-        System.out.println("FPS " + (millis - millis0));
+        Logger.getAnonymousLogger().log(Level.INFO, "FPS " + (millis - millis0));
         millis0 = millis;
 
         try {
@@ -272,7 +274,7 @@ public class JoglDrawer extends Drawer implements GLEventListener {
         gl.glVertex3f((float) (double) p2.get(0), (float) (double) p2.get(1), (float) (double) p2.get(2));
         gl.glEnd();
         //System.out.print("SD");
-        // System.out.println("L");
+        // Logger.getAnonymousLogger().log(Level.INFO, "L");
     }
     /*
      public void draw(Representable rep, GLU glu, GL2 gl)
@@ -655,7 +657,7 @@ public class JoglDrawer extends Drawer implements GLEventListener {
     @Override
     public void init(GLAutoDrawable gLDrawable) {
         /*
-         * System.out.println("init() called"); GL2 gl =
+         * Logger.getAnonymousLogger().log(Level.INFO, "init() called"); GL2 gl =
          * gLDrawable.getGL().getGL2(); gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
          * gl.glShadeModel(GL2.GL_FLAT);
          */
@@ -683,7 +685,7 @@ public class JoglDrawer extends Drawer implements GLEventListener {
                         int height) {
         if (glu == null)
             glu = new GLU();
-        System.out.println("reshape() called: coordArr = " + x + ", y = " + y
+        Logger.getAnonymousLogger().log(Level.INFO, "reshape() called: coordArr = " + x + ", y = " + y
                 + ", width = " + width + ", height = " + height);
         final GL2 gl = gLDrawable.getGL().getGL2();
 
@@ -707,7 +709,7 @@ public class JoglDrawer extends Drawer implements GLEventListener {
 
     @Override
     public void dispose(GLAutoDrawable arg0) {
-        System.out.println("dispose() called");
+        Logger.getAnonymousLogger().log(Level.INFO, "dispose() called");
     }
 
     @Override

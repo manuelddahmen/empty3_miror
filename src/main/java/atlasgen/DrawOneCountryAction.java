@@ -85,8 +85,8 @@ public class DrawOneCountryAction implements Action {
 
             Point2D pR = dim.getRatios(p);
             /*
-            System.out.println("p" + Seriald.point2DtoString(p));
-            System.out.println("pR" + Seriald.point2DtoString(pR));
+            Logger.getAnonymousLogger().log(Level.INFO, "p" + Seriald.point2DtoString(p));
+            Logger.getAnonymousLogger().log(Level.INFO, "pR" + Seriald.point2DtoString(pR));
             */
             pixeler.pixelize((int) p.x, (int) p.y,
                     new Color(tex.getColorAt(pR.x, pR.y)));

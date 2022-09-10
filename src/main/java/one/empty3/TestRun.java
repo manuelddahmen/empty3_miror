@@ -1,9 +1,10 @@
 package one.empty3;
 
-import one.empty3.library.core.testing.*;
+import one.empty3.library.core.testing.TestObjet;
 
-import java.util.*;
-import java.io.*;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class TestRun {
     //Map<String, String> properties = new HashMap<>();
@@ -14,8 +15,8 @@ public class TestRun {
 
     public static void main(String[] args) {
         Properties p = new Properties();
-        System.out.println(args.length + " arguments :");
-        System.out.println(" arguments class=className" + "\nSETTERproperty (resx, resy, filename1,etc");
+        Logger.getAnonymousLogger().log(Level.INFO, args.length + " arguments :");
+        Logger.getAnonymousLogger().log(Level.INFO, " arguments class=className" + "\nSETTERproperty (resx, resy, filename1,etc");
 
         Object t = null;
 
@@ -27,7 +28,7 @@ public class TestRun {
         int i = 0;
         for (String arg : args) {
 
-            System.out.println(arg);
+            Logger.getAnonymousLogger().log(Level.INFO, arg);
             String[] kv = arg.split("=");
             String key = kv[0];
             String value = "";
@@ -35,7 +36,7 @@ public class TestRun {
                 value = kv[1];
 
             if (kv.length == 2) {
-                System.out.println("argument : key=value;\n (key=value) = (" + kv[0] + "; " + kv[1] + ") " + (i++) + "/" + kv.length);
+                Logger.getAnonymousLogger().log(Level.INFO, "argument : key=value;\n (key=value) = (" + kv[0] + "; " + kv[1] + ") " + (i++) + "/" + kv.length);
 
 
                 switch (key) {

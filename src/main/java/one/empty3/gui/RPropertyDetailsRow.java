@@ -24,16 +24,14 @@ package one.empty3.gui;
 
 import one.empty3.library.*;
 
-import javax.swing.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableModel;
-import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.BiConsumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Created by manue on 15-07-19.
@@ -180,10 +178,10 @@ public class RPropertyDetailsRow implements TableModel {
                     if(r!=null)
                         value = r.getConstructor().newInstance();
                     else
-                        System.out.println("Class R is null");
+                        Logger.getAnonymousLogger().log(Level.INFO, "Class R is null");
                 } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
                     //e.printStackTrace();
-                    System.out.println("Cannot instantiate: "+ objectDescription.getR());
+                    Logger.getAnonymousLogger().log(Level.INFO, "Cannot instantiate: "+ objectDescription.getR());
 
                 }
                 if (value != null) {
@@ -259,7 +257,7 @@ public class RPropertyDetailsRow implements TableModel {
             } catch (NoSuchMethodException e) {
                 e.printStackTrace();
             }
-            //System.out.println("property : " + propertyClass.toString());
+            //Logger.getAnonymousLogger().log(Level.INFO, "property : " + propertyClass.toString());
             try {
                 Class propertyType = null;
                 try {
@@ -287,7 +285,7 @@ public class RPropertyDetailsRow implements TableModel {
 
                     }
 
-                    System.out.println(propertyClass.toString());
+                    Logger.getAnonymousLogger().log(Level.INFO, propertyClass.toString());
                     Object avalue = "Error";
                     switch (propertyClass.toString()) {
                         case "class java.lang.Double":
@@ -307,7 +305,7 @@ public class RPropertyDetailsRow implements TableModel {
                             break;
 
                     }
-                    //System.out.println(avalue.getClass());
+                    //Logger.getAnonymousLogger().log(Level.INFO, avalue.getClass());
                     switch (property1.getDim()) {
                         case 0:
                             property1.setElem(avalue);
@@ -326,7 +324,7 @@ public class RPropertyDetailsRow implements TableModel {
                         aValue = Double.parseDouble((String) aValue);
                     if (propertyType.equals(Integer.class))
                         aValue = Integer.parseInt((String) aValue);
-                    System.out.println("Property type : " + propertyType.getName() + " Property name " + aValue);
+                    Logger.getAnonymousLogger().log(Level.INFO, "Property type : " + propertyType.getName() + " Property name " + aValue);
                     ((Representable) representable).setProperty(descr.getName(),
                             aValue);
                     refresh();
@@ -359,7 +357,7 @@ public class RPropertyDetailsRow implements TableModel {
                             ((Double[]) property)[rowArray] = Double.parseDouble((String) aValue);
                         }
                     }
-                    System.out.println("Property type : " + propertyType.getName() + " Property name " + descr.getName());
+                    Logger.getAnonymousLogger().log(Level.INFO, "Property type : " + propertyType.getName() + " Property name " + descr.getName());
                     ((Representable) representable).setProperty(descr.getName(),
                             aValue);
                     refresh();

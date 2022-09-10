@@ -24,13 +24,16 @@ import one.empty3.library.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /***
  * Created by manue on 02-10-19.
@@ -79,20 +82,20 @@ public class ThreadGraphicalEditor extends Thread implements PropertyChangeListe
                 main.getUpdateView().addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseClicked(MouseEvent e) {
-                        System.out.println("Mouse clicked in " + this.getClass());
+                        Logger.getAnonymousLogger().log(Level.INFO, "Mouse clicked in " + this.getClass());
                         if (getMain().getGraphicalEdit2().getActionToPerform().equals(GraphicalEdit2.Action.SELECT)) {
                             if (main.getGraphicalEdit2().isSelectArbitraryPoints()) {
                                 Point3D selectedPoint = getMain().getUpdateView().getzRunner().getzBuffer().clickAt(e.getX(), e.getY());
                                 main.getGraphicalEdit2().add(selectedPoint);
-                                System.out.println("point added" + selectedPoint);
+                                Logger.getAnonymousLogger().log(Level.INFO, "point added" + selectedPoint);
                             } else if (main.getGraphicalEdit2().isSelectingMultipleObjects()) {
                                 Representable multiple = getMain().getUpdateView().getzRunner().getzBuffer().representableAt(e.getX(), e.getY());
                                 main.getGraphicalEdit2().add(multiple);
-                                System.out.println("representable added" + multiple);
+                                Logger.getAnonymousLogger().log(Level.INFO, "representable added" + multiple);
                             } else {
                                 List<ModelBrowser.Cell> cellList;
                                 cellList = new ModelBrowser(getMain().getUpdateView().getzRunner().getzBuffer(), main.getDataModel().getScene(), Point3D.class).getObjects();
-                                System.out.println("Select point ADD/REMOVE from selected points list");
+                                Logger.getAnonymousLogger().log(Level.INFO, "Select point ADD/REMOVE from selected points list");
 
                                 if (cellList != null) {
                                     cellList.forEach(cell -> {
@@ -117,11 +120,11 @@ public class ThreadGraphicalEditor extends Thread implements PropertyChangeListe
 
                                             }
                                             main.getGraphicalEdit2().getCurrentSelection().forEach(representable
-                                                    -> System.out.println("[selection from GraphicalEdit]" + representable));
+                                                    -> Logger.getAnonymousLogger().log(Level.INFO, "[selection from GraphicalEdit]" + representable));
                                         }
                                     });
                                 } else {
-                                    System.out.println("cellList == null" + this.getClass());
+                                    Logger.getAnonymousLogger().log(Level.INFO, "cellList == null" + this.getClass());
                                 }
 
                             }
@@ -155,11 +158,11 @@ public class ThreadGraphicalEditor extends Thread implements PropertyChangeListe
 
 
                             Point3D elem = invert;
-                            System.out.println("Inverted location " + elem);
+                            Logger.getAnonymousLogger().log(Level.INFO, "Inverted location " + elem);
                             ModelBrowser modelBrowser = new ModelBrowser(getMain().getGraphicalEdit2().getSelectionIn(), zBuffer);
                             if (getMain().getGraphicalEdit2().getActionToPerform().equals(GraphicalEdit2.Action.TRANSLATE)) {
                                 modelBrowser.translateSelection(elem);
-                                System.out.println(main.getGraphicalEdit2().getCurrentSelection());
+                                Logger.getAnonymousLogger().log(Level.INFO,""+ main.getGraphicalEdit2().getCurrentSelection());
                             }
                         }
                     }
@@ -295,7 +298,7 @@ public class ThreadGraphicalEditor extends Thread implements PropertyChangeListe
 
     private void drawPoint(Point3D p, Color color) {
         if (p == null) {
-            System.out.println("p parameter drawPoint ThreadGraphicalEditor is null");
+            Logger.getAnonymousLogger().log(Level.INFO, "p parameter drawPoint ThreadGraphicalEditor is null");
             System.exit(-1);
         }
         ZBufferImpl zBuffer = getMain().getUpdateView().getzRunner()
@@ -313,6 +316,6 @@ public class ThreadGraphicalEditor extends Thread implements PropertyChangeListe
                         }
                     }
         } else
-            System.out.println("Camera Z");
+            Logger.getAnonymousLogger().log(Level.INFO, "Camera Z");
     }
 }

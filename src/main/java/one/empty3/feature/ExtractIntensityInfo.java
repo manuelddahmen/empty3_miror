@@ -91,7 +91,7 @@ public class ExtractIntensityInfo extends
                 return circle.i > isumtot[0] / pix.columns / pix.lines;
             }
         }).forEach(circle -> {
-            //System.out.println(circle.toString());
+            //Logger.getAnonymousLogger().log(Level.INFO, circle.toString());
             pix2.setCompNo(0);
 
             pix2.set((int) circle.x, (int) circle.y, 1.0);

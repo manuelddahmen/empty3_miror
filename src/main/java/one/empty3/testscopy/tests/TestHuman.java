@@ -7,6 +7,8 @@ import one.empty3.library.core.testing.TestObjetSub;
 import one.empty3.library.core.tribase.Tubulaire3;
 
 import java.awt.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class TestHuman extends TestObjetSub {
 
@@ -60,9 +62,9 @@ public class TestHuman extends TestObjetSub {
         } else
             System.err.println("Human animation == null");
 
-        System.out.println(((Tubulaire3) humanModel.jambeHautGauche.getRepresentable()).getSoulCurve().getElem()
+        Logger.getAnonymousLogger().log(Level.INFO, ""+((Tubulaire3) humanModel.jambeHautGauche.getRepresentable()).getSoulCurve().getElem()
                 .calculerPoint3D(0.0));
-        System.out.println(((Tubulaire3) humanModel.jambeHautGauche.getRepresentable()).getSoulCurve().getElem()
+        Logger.getAnonymousLogger().log(Level.INFO, ""+((Tubulaire3) humanModel.jambeHautGauche.getRepresentable()).getSoulCurve().getElem()
                 .calculerPoint3D(1.0));
 
     }

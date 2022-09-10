@@ -84,7 +84,7 @@ public class FollowLines {
 /*
         final int[] linesRemoved = {1};
         while (linesRemoved[0] > 0) {
-            System.out.println("Lines size : " + lines.size() + " ; lines removed" + linesRemoved[0]);
+            Logger.getAnonymousLogger().log(Level.INFO, "Lines size : " + lines.size() + " ; lines removed" + linesRemoved[0]);
             linesRemoved[0] = 0;
             lines.stream().iterator().forEachRemaining(line0 -> lines.stream().iterator().forEachRemaining(line1 -> {
                 if (line0.join(line1)) {

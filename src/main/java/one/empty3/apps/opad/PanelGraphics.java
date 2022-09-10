@@ -45,8 +45,9 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /*__
  *
@@ -289,7 +290,7 @@ public class PanelGraphics extends JDialog {
         int selectedIndex = jComboBoxTerrain.getSelectedIndex();
 
         if (selectedIndex < 0 || selectedIndex >= levelMenu.getLevel().length) {
-            System.out.println("Error creating init Level");
+            Logger.getAnonymousLogger().log(Level.INFO, "Error creating init Level");
         } else {
             levelMenu.setIndex(selectedIndex);
         }

@@ -60,7 +60,7 @@ public class TestTimer {
             } catch (InterruptedException ex) {
                 Logger.getLogger(TestTimer.class.getName()).log(Level.SEVERE, null, ex);
             }
-            System.out.println(t.getTimeEllapsed());
+            Logger.getAnonymousLogger().log(Level.INFO,""+ t.getTimeEllapsed());
         }
     }
 }

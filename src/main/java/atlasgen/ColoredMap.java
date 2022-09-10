@@ -37,11 +37,12 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-
+import java.util.logging.Logger;
+import java.util.logging.Level;
 public class ColoredMap {
 
     public static void main(String[] args) {
-        System.out.println(
+        Logger.getAnonymousLogger().log(Level.INFO,
                 "Colored Map"
         );
         BufferedImage image = new BufferedImage(1800, 1600, BufferedImage.TYPE_INT_RGB);

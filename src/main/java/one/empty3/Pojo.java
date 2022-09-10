@@ -1,10 +1,11 @@
 package one.empty3;
 
-import java.util.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.*;
-import java.util.function.Consumer;
+import java.util.Iterator;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Pojo {
     public static boolean parseBoolean(String s) throws NumberFormatException{
@@ -20,47 +21,47 @@ public class Pojo {
         Double d;
         Integer i = 0;
         Boolean b = false;
-        System.out.println("Pojo.before.setO. "
+        Logger.getAnonymousLogger().log(Level.INFO, "Pojo.before.setO. "
             +"\t"+o
             +"\t"+propName+"\t"+value);
         try {
             i = Integer.parseInt(value);
-System.out.println("int value: "+i);
+Logger.getAnonymousLogger().log(Level.INFO, "int value: "+i);
             setProperty(o, propName, i, int.class);
-System.out.println("property "+propName+" is set to "+i);
-            System.out.println(": " + i.getClass());
+Logger.getAnonymousLogger().log(Level.INFO, "property "+propName+" is set to "+i);
+            Logger.getAnonymousLogger().log(Level.INFO, ": " + i.getClass());
             
         } catch (NumberFormatException|InvocationTargetException | IllegalAccessException | NoSuchMethodException ex) {
-           System.out.println("integer not set/nreason "+ex.getClass());
+           Logger.getAnonymousLogger().log(Level.INFO, "integer not set/nreason "+ex.getClass());
            try {
                 d = (double) Double.parseDouble(value);
                 setProperty(o, propName, d, double.class);
-  System.out.println(": " + d.getClass());
+  Logger.getAnonymousLogger().log(Level.INFO, ": " + d.getClass());
           
             } catch (NumberFormatException|InvocationTargetException | IllegalAccessException | NoSuchMethodException ex1) {
-                System.out.println("double not set");
+                Logger.getAnonymousLogger().log(Level.INFO, "double not set");
 
                 try {
                     b = (boolean) parseBoolean(value);
                     setProperty(o, propName, b, boolean.class);
-                    System.out.println(": " + b.getClass());
+                    Logger.getAnonymousLogger().log(Level.INFO, ": " + b.getClass());
           
                 } catch (NumberFormatException|InvocationTargetException | IllegalAccessException | NoSuchMethodException ex2) {
-                    System.out.println("boolean not set");
+                    Logger.getAnonymousLogger().log(Level.INFO, "boolean not set");
 
                     try {
                         if(value!=null && !"".equals(value)) {
                             setProperty(o, propName, value, String.class);
-                            System.out.println(": " + value.getClass());
+                            Logger.getAnonymousLogger().log(Level.INFO, ": " + value.getClass());
                           }
                     } catch (NumberFormatException|InvocationTargetException | IllegalAccessException | NoSuchMethodException e1) {
-                      System.out.println("string not set");
+                      Logger.getAnonymousLogger().log(Level.INFO, "string not set");
                       //e1.printStackTrace();
                     }
                     //ex2.printStackTrace();
                 }
             }
-            System.out.println("Pojo.after.setO. "
+            Logger.getAnonymousLogger().log(Level.INFO, "Pojo.after.setO. "
             +"\t"+o
             +"\t"+propName+"\t"+value);
         }
@@ -162,7 +163,7 @@ switch(vType) {
          }
 } 
        propertySetter.invoke(o, value);
-        System.out.println("type : " + o.getClass().getName() + " Property: " + propertyName + " New Value set " + getProperty(o, propertyName));
+        Logger.getAnonymousLogger().log(Level.INFO, "type : " + o.getClass().getName() + " Property: " + propertyName + " New Value set " + getProperty(o, propertyName));
     }
 
     public static Object getProperty(Object o, String propertyName) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException {

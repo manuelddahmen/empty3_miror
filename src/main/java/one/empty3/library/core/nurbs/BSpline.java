@@ -118,7 +118,7 @@ public class BSpline extends ParametricCurve {
             boor += boor(t, i, degree.getElem());
             p = p.plus(controls.getElem(i).mult(boor));
         }
-        //System.out.println("p = " + p.toString() + "\tt = " + t);
+        //Logger.getAnonymousLogger().log(Level.INFO, "p = " + p.toString() + "\tt = " + t);
         return p;//.mult(1/boor);
     }
 

@@ -7,6 +7,8 @@ import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class InputNeuron extends Neuron {
     private int res;
@@ -46,7 +48,7 @@ public class InputNeuron extends Neuron {
             this.uri = file;
             return true;
         } catch (IIOException exception) {
-            System.out.println("Error reading image. Returns");
+            Logger.getAnonymousLogger().log(Level.INFO, "Error reading image. Returns");
             throw new Exception(exception);
         } catch (IOException e) {
             e.printStackTrace();

@@ -62,7 +62,7 @@ public class ListingTableau {
             }
             f.calculer();
 
-            System.out.println(frame);
+            Logger.getAnonymousLogger().log(Level.INFO, frame);
 
             frame++;
 

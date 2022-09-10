@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Lines7luckyLinesOutline extends ProcessFile {
 
@@ -174,7 +176,7 @@ public class Lines7luckyLinesOutline extends ProcessFile {
             final double distMin = 1.3;
 
             boolean modified = true;
-            System.out.println("List2(i).size" + lists2.size());
+            Logger.getAnonymousLogger().log(Level.INFO, "List2(i).size" + lists2.size());
             for (int i = 0; i < lists2.size(); ) {
                 boolean added = false;
                 Point3D p1 = lists2.get(i);
@@ -197,9 +199,9 @@ public class Lines7luckyLinesOutline extends ProcessFile {
                 }
             }
 
-            System.out.println("List3.size : " + list3.size());
+            Logger.getAnonymousLogger().log(Level.INFO, "List3.size : " + list3.size());
             for (int j1 = 0; j1 < list3.size(); j1++) {
-                //System.out.println("List3(i).size : " + list3.get(j1).size());
+                //Logger.getAnonymousLogger().log(Level.INFO, "List3(i).size : " + list3.get(j1).size());
             }
 
             while (modified) {
@@ -234,9 +236,9 @@ public class Lines7luckyLinesOutline extends ProcessFile {
                     }
                 }
             }
-            System.out.println("List3.size : " + list3.size());
+            Logger.getAnonymousLogger().log(Level.INFO, "List3.size : " + list3.size());
             for (int j1 = 0; j1 < list3.size(); j1++) {
-                //System.out.println("List3(i).size : " + list3.get(j1).size());
+                //Logger.getAnonymousLogger().log(Level.INFO, "List3(i).size : " + list3.get(j1).size());
             }
 
             PixM img3 = new PixM(pixM.getColumns(), pixM.getLines());
@@ -253,7 +255,7 @@ public class Lines7luckyLinesOutline extends ProcessFile {
                 }
             });
 
-            System.out.println("Lines : " + lines.size());
+            Logger.getAnonymousLogger().log(Level.INFO, "Lines : " + lines.size());
 
 
             double d = 0.0;

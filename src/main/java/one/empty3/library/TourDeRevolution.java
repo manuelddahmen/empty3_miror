@@ -43,6 +43,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class TourDeRevolution extends Representable {
 
@@ -106,7 +108,7 @@ public class TourDeRevolution extends Representable {
             double diamx = p.getX();
             double diamy = p.getY();
 
-            System.out.println(courbe.getPoints().size());
+            Logger.getAnonymousLogger().log(Level.INFO, ""+courbe.getPoints().size());
             int i = 0;
             for (i = 0; i < max; i++) {
                 double a = 2 * Math.PI * i / max;

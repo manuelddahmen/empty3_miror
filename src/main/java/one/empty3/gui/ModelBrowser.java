@@ -23,14 +23,14 @@
 package one.empty3.gui;
 
 import one.empty3.library.*;
-import one.empty3.library.core.nurbs.ParametricSurface;
-import one.empty3.library.core.nurbs.SurfaceParametriquePolynomialeBezier;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Created by manue on 07-10-19.
@@ -222,7 +222,7 @@ public class ModelBrowser {
                 });
             } catch (ConcurrentModificationException ex) {
                 ex.printStackTrace();
-                System.out.println("ModelBrowser.browse() Continue...");
+                Logger.getAnonymousLogger().log(Level.INFO, "ModelBrowser.browse() Continue...");
             }
         }
     }
@@ -308,14 +308,14 @@ public class ModelBrowser {
                 origin = cell.ref.getRotation().getElem().getCentreRot().getElem();
             }
             else {
-                System.out.println("Error in translate selection");
+                Logger.getAnonymousLogger().log(Level.INFO, "Error in translate selection");
                 return;
             }
             if(vect!=null && origin!=null) {
                 origin.changeTo(vect.plus(origin));
-                System.out.println("Moves " + origin0 + "\n to \n" + cell.o);
+                Logger.getAnonymousLogger().log(Level.INFO, "Moves " + origin0 + "\n to \n" + cell.o);
             }else {
-                System.out.println("Error in translate selection");
+                Logger.getAnonymousLogger().log(Level.INFO, "Error in translate selection");
             }
         });
     }

@@ -21,7 +21,7 @@ public class M implements InterfaceMatrix {
         x = new double[l * c * compCount];
         for(int i=0; i<x.length; i++)
             x[i] = 0.0;
-        //System.out.println("Columns=" + columns + "\n Lines = " + lines+ " \n Total size ="+x.length);
+        //Logger.getAnonymousLogger().log(Level.INFO, "Columns=" + columns + "\n Lines = " + lines+ " \n Total size ="+x.length);
     }
 
     public int getColumns() {
@@ -128,7 +128,7 @@ public class M implements InterfaceMatrix {
                 }
             }
         }
-        //System.out.println("Columns=" + columns + "\n Lines = " + lines+ " \n Total size ="+x.length);
+        //Logger.getAnonymousLogger().log(Level.INFO, "Columns=" + columns + "\n Lines = " + lines+ " \n Total size ="+x.length);
     }
 
 

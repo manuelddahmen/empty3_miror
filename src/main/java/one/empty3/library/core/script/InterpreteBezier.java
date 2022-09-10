@@ -37,11 +37,13 @@
  */
 package one.empty3.library.core.script;
 
-import one.empty3.library.*;
-import one.empty3.library.*;
+import one.empty3.library.BezierCubique;
+import one.empty3.library.Point3D;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class InterpreteBezier implements Interprete {
 
@@ -101,7 +103,7 @@ public class InterpreteBezier implements Interprete {
             }
 
         }
-        System.out.println(numPoints);
+        Logger.getAnonymousLogger().log(Level.INFO,""+ numPoints);
         pattern = new ArrayList<Integer>();
         pattern.add(ib.BLANK);
         pattern.add(ib.RIGHTPARENTHESIS);

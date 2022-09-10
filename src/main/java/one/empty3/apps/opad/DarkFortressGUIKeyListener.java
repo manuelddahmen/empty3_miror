@@ -37,6 +37,8 @@ import com.jogamp.newt.event.KeyEvent;
 import one.empty3.apps.opad.menu.ToggleMenu;
 
 import java.awt.event.KeyListener;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 
@@ -61,25 +63,25 @@ public class DarkFortressGUIKeyListener implements KeyListener, Runnable {
 
     private void cont(long timeKeyPress) {
         timeKeyPress = Math.abs(timeKeyPress);
-        //System.out.println("cont"+timeKeyPress);
-        //System.out.println("ctrl"+ctrl+"releaseUp"+release_up);
+        //Logger.getAnonymousLogger().log(Level.INFO, "cont"+timeKeyPress);
+        //Logger.getAnonymousLogger().log(Level.INFO, "ctrl"+ctrl+"releaseUp"+release_up);
 
         if(!ctrl) {
             if (!release_up) {
-                System.out.println("Acc");
+                Logger.getAnonymousLogger().log(Level.INFO, "Acc");
                 mover.acc(timeKeyPress);
             }
             if (!release_down) {
                 mover.dec(timeKeyPress);
-                System.out.println("Dec");
+                Logger.getAnonymousLogger().log(Level.INFO, "Dec");
             }
             if (!release_left) {
                 mover.rotationGauche(timeKeyPress);
-                System.out.println("Left");
+                Logger.getAnonymousLogger().log(Level.INFO, "Left");
             }
             if (!release_right) {
                 mover.rotationDroite(timeKeyPress);
-                System.out.println("Right");
+                Logger.getAnonymousLogger().log(Level.INFO, "Right");
             }
             if(!release_space) {
                 mover.moveUp(timeKeyPress);
@@ -116,7 +118,7 @@ public class DarkFortressGUIKeyListener implements KeyListener, Runnable {
 
     @Override
     public void keyPressed(java.awt.event.KeyEvent e) {
-        System.out.println("Key Pressed");
+        Logger.getAnonymousLogger().log(Level.INFO, "Key Pressed");
         if (e.getKeyChar()== 't')
             toggleMenu.setDisplayMenu(!toggleMenu.isDisplayMenu());
         if (e.getKeyChar()== '+')
@@ -131,7 +133,7 @@ public class DarkFortressGUIKeyListener implements KeyListener, Runnable {
         }
         if (e.getExtendedKeyCode() == KeyEvent.VK_Z
                 && mover.state() == mover.STATE_GAME_IN_PROGRESS()) {
-            System.out.println("UPPRESSED");
+            Logger.getAnonymousLogger().log(Level.INFO, "UPPRESSED");
             release_up = false;
         }
         if (e.getKeyCode() == KeyEvent.VK_SPACE

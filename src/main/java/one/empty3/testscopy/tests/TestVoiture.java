@@ -4,6 +4,9 @@ import one.empty3.library.Camera;
 import one.empty3.library.Point3D;
 import one.empty3.library.core.testing.TestObjetSub;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public class TestVoiture extends TestObjetSub {
     public void ginit() {
         scene().add(new Voiture());
@@ -15,7 +18,7 @@ public class TestVoiture extends TestObjetSub {
     @Override
     public void finit() throws Exception {
         super.finit();
-        System.out.println(scene());
+        Logger.getAnonymousLogger().log(Level.INFO,""+ scene());
     }
     public static void main(String [] args) {
         TestVoiture testVoiture = new TestVoiture();

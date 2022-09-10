@@ -309,12 +309,12 @@ public class InterpreteFacade {
         try {
             while (true) {
                 String id = interpreteIdentifier();
-                System.out.println(id);
+                Logger.getAnonymousLogger().log(Level.INFO, id);
                 if ("camera".equals(id == null ? "NULL" : id.toLowerCase())) {
                     interpreteBlank();
                     c = interpreteCamera();
                     cameras.add(1, c);
-                    System.out.println(id);
+                    Logger.getAnonymousLogger().log(Level.INFO, id);
                 } else {
                     break;
                 }

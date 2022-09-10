@@ -222,7 +222,7 @@ public class Loader implements SceneLoader {
         }
         dir = file.getAbsolutePath().substring(0,
                 file.getAbsolutePath().lastIndexOf(File.separator));
-        System.out.println(dir);
+        Logger.getAnonymousLogger().log(Level.INFO, dir);
         setRepertoire(dir);
 
         FileInputStream fis = null;

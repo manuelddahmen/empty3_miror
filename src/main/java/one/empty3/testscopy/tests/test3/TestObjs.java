@@ -5,6 +5,8 @@ import one.empty3.library.objloader.E3Model;
 import one.empty3.library.objloader.ModelLoaderOBJ;
 
 import java.io.File;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class TestObjs extends TestObjetSub {
     String directory = "resources/models/samples/";
@@ -20,7 +22,7 @@ public class TestObjs extends TestObjetSub {
         String[] list = new File(directory).list();
         assert list != null;
         setMaxFrames(list.length);
-        System.out.println("Obj directory. Number of files : " + list.length);
+        Logger.getAnonymousLogger().log(Level.INFO, "Obj directory. Number of files : " + list.length);
         scene().getObjets().getData1d().clear();
         int i = frame();
         if(i<list.length) {
@@ -32,10 +34,10 @@ public class TestObjs extends TestObjetSub {
 
                 scene().add(e3Model);
 
-                System.out.println("Obj file added. "+file.getName());
+                Logger.getAnonymousLogger().log(Level.INFO, "Obj file added. "+file.getName());
             }
             else {
-                System.out.println("Not a obj file");
+                Logger.getAnonymousLogger().log(Level.INFO, "Not a obj file");
             }
         }
     }

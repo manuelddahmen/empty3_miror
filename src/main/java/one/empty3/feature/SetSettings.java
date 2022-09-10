@@ -7,8 +7,8 @@ import org.apache.commons.net.ftp.FTPReply;
 
 import java.io.*;
 import java.lang.reflect.Method;
-import java.net.URL;
 import java.util.*;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class SetSettings {
@@ -177,7 +177,7 @@ public class SetSettings {
 
                 currentDirout = "" + directoryOut + "-" + i + "-" + classname + "/";
                 Logger.getLogger(FTPProcessFiles.class.getName()).info("Process class name read " + classname);
-                System.out.println(classname);
+                Logger.getAnonymousLogger().log(Level.INFO, classname);
                 Class classs = Class.forName(
                         classname
                 );
@@ -218,7 +218,7 @@ public class SetSettings {
 
                         int replyCode = ftpClient.getReplyCode();
                         if (!FTPReply.isPositiveCompletion(replyCode)) {
-                            System.out.println("Connect failed");
+                            Logger.getAnonymousLogger().log(Level.INFO, "Connect failed");
                             return;
                         }
                         // reads settings.xml or prompts user/pass
@@ -226,7 +226,7 @@ public class SetSettings {
                         showServerReply(ftpClient);
 
                         if (!success) {
-                            System.out.println("Could not login to the server");
+                            Logger.getAnonymousLogger().log(Level.INFO, "Could not login to the server");
                             return;
                         }
 
@@ -273,7 +273,7 @@ public class SetSettings {
 
                 i++;
             } catch (Exception ex) {
-                System.out.println("Oops! Something wrong happened");
+                Logger.getAnonymousLogger().log(Level.INFO, "Oops! Something wrong happened");
                 ex.printStackTrace();
             } finally {
                 // logs out and disconnects from server
@@ -296,7 +296,7 @@ public class SetSettings {
         String[] replies = ftpClient.getReplyStrings();
         if (replies != null && replies.length > 0) {
             for (String aReply : replies) {
-                System.out.println("SERVER: " + aReply);
+                Logger.getAnonymousLogger().log(Level.INFO, "SERVER: " + aReply);
             }
         }
     }

@@ -11,10 +11,11 @@ import one.empty3.library.stl_loader.IncorrectFormatException;
 import one.empty3.library.stl_loader.ParsingErrorException;
 import one.empty3.library.stl_loader.StlFile;
 
-import java.awt.*;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class TestStl extends TestObjetSub {
     private BufferedReader reader;
@@ -39,7 +40,7 @@ public class TestStl extends TestObjetSub {
 
         scene().add(load.getObjets().getElem(0));
 
-        System.out.println("scene objets= "+load.getObjets().data1d.size());
+        Logger.getAnonymousLogger().log(Level.INFO, "scene objets= "+load.getObjets().data1d.size());
 
         TextureCol colorTexture0 = new TextureCol(Colors.random());
         for (int i = 0; i < ((RepresentableConteneur) scene().getObjets().getElem(0)).getListRepresentable().size(); i++) {
@@ -47,7 +48,7 @@ public class TestStl extends TestObjetSub {
             t.texture(colorTexture0);
         }
         load.getObjets().getElem(0).texture(colorTexture0);
-        //System.out.println(((RepresentableConteneur) scene().getObjets().getElem(0)).getListRepresentable().size());
+        //Logger.getAnonymousLogger().log(Level.INFO, ((RepresentableConteneur) scene().getObjets().getElem(0)).getListRepresentable().size());
 
         Sphere s = new Sphere(new Axe(new Point3D(0., -1., 0.),
                 new Point3D(0., 1., 0.)), 1.0);

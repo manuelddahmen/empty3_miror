@@ -58,7 +58,7 @@ public class FirstPassColoredMapsAction implements Action {
         String countryCode = lineArray[17];
         /*for(int i=0; i<lineArray.length; i++)
             if(lineArray[i]!=null)
-            System.out.println(""+i+"  "+lineArray[i]);
+            Logger.getAnonymousLogger().log(Level.INFO, ""+i+"  "+lineArray[i]);
 */
         if (colors.get(countryCode) == null) {
             colors.put(countryCode, Colors.random());

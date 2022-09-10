@@ -37,6 +37,8 @@ import com.jogamp.opengl.GL2;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /*__
  * Image loading class that converts BufferedImages into a data structure that
@@ -63,10 +65,10 @@ public class ModelLoaderOBJ {
 			b_read1.close();
 
 		} catch (Exception e) {
-			System.out.println("LOADING ERROR" + e);
+			Logger.getAnonymousLogger().log(Level.INFO, "LOADING ERROR" + e);
 		}
 
-		System.out.println("ModelLoaderOBJ init() done"); // ddd
+		Logger.getAnonymousLogger().log(Level.INFO, "ModelLoaderOBJ init() done"); // ddd
 	}
 
 	public void draw(GL2 gl) {
@@ -89,10 +91,10 @@ public class ModelLoaderOBJ {
 			b_read1.close();
 
 		} catch (Exception e) {
-			System.out.println("LOADING ERROR" + e);
+			Logger.getAnonymousLogger().log(Level.INFO, "LOADING ERROR" + e);
 		}
 
-		System.out.println("ModelLoaderOBJ init() done"); // ddd
+		Logger.getAnonymousLogger().log(Level.INFO, "ModelLoaderOBJ init() done"); // ddd
 		return model;
 	}
 }

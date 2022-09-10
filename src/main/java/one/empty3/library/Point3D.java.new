@@ -513,7 +513,7 @@ public class Point3D extends Representable {
          } 
          else
               e = false;
-         System.out.println("equals " + e + "\np1: "
+         Logger.getAnonymousLogger().log(Level.INFO, "equals " + e + "\np1: "
                    +this+"\np2: "+p);
          return e;
      } 

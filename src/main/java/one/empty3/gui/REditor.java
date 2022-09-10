@@ -43,6 +43,7 @@ import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -139,7 +140,7 @@ public class REditor extends JPanel implements PropertyChangeListener, Represent
 
                     }
                         history.addToHistory(new RPropertyDetailsRow(newR));
-                        System.out.println("add to history " + history.getCurrent());
+                        Logger.getAnonymousLogger().log(Level.INFO, "add to history " + history.getCurrent());
                         init(newR);
                         refreshTable();
 

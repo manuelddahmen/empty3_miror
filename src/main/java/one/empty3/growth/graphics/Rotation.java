@@ -52,6 +52,9 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 import one.empty3.library.Point3D;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public class Rotation {
     private Matrix4 matriceRotation;
     private Point3D origin;
@@ -74,9 +77,9 @@ public class Rotation {
     public static Point3D rotate(Point3D originVector, Point3D vector, double angle, Point3D pointToRotate) {
         Rotation rot = new Rotation(vector, originVector, angle);
         Point3D rotated = rot.rotate(pointToRotate);
-        System.out.println("Axe              : " + originVector + " -> " + vector);
-        System.out.println("Point de départ  : " + pointToRotate);
-        System.out.println("Point transformé : " + rotated);
+        Logger.getAnonymousLogger().log(Level.INFO, "Axe              : " + originVector + " -> " + vector);
+        Logger.getAnonymousLogger().log(Level.INFO, "Point de départ  : " + pointToRotate);
+        Logger.getAnonymousLogger().log(Level.INFO, "Point transformé : " + rotated);
         return rotated;
     }
 

@@ -151,6 +151,8 @@ import one.empty3.library.core.raytracer.tree.TreeNodeEvalException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class FunctionalParameter extends Parameter {
     private String formula;
@@ -207,7 +209,7 @@ public class FunctionalParameter extends Parameter {
             try {
                 Double d = (Double) (tree.eval());
                 setValue(d);
-                System.out.println(d);
+                Logger.getAnonymousLogger().log(Level.INFO,""+ d);
                 return d;
             } catch (TreeNodeEvalException | AlgebraicFormulaSyntaxException e) {
                 e.printStackTrace();

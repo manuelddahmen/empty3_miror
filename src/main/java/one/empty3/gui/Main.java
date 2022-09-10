@@ -40,6 +40,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.function.Consumer;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 /*
  * Created by JFormDesigner on Thu Jun 27 11:40:57 CEST 2019
@@ -212,8 +213,8 @@ public class Main implements PropertyChangeListener {
 
     private void updateViewMouseClicked(MouseEvent e) {
             try {
-                System.out.println(e.getX());
-                System.out.println(e.getY());
+                Logger.getAnonymousLogger().log(Level.INFO,""+ e.getX());
+                Logger.getAnonymousLogger().log(Level.INFO, ""+e.getY());
                 Point3D point3D = getUpdateView().getzRunner().getzBuffer(). clickAt(
                         (int)e.getX(), (int)e.getY());
 
@@ -386,7 +387,7 @@ public class Main implements PropertyChangeListener {
         boolean isSelected;
         if(isSelected = ((JCheckBox)e.getSource()).isSelected())
         {
-            System.out.println("Graphical edition enabled");
+            Logger.getAnonymousLogger().log(Level.INFO, "Graphical edition enabled");
         }
         else
         {
@@ -394,7 +395,7 @@ public class Main implements PropertyChangeListener {
                 graphicalEdit2 = new GraphicalEdit2();
                 graphicalEdit2.setMain(this);
             }
-            System.out.println("Graphical edition disabled");
+            Logger.getAnonymousLogger().log(Level.INFO, "Graphical edition disabled");
         }
         graphicalEdit2.setActiveGraphicalEdit(isSelected);
 

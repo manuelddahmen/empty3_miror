@@ -9,6 +9,8 @@ import one.empty3.library.core.nurbs.ParametricCurve;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class PixM extends M {
     public static final int COMP_RED = 0;
@@ -64,7 +66,7 @@ public class PixM extends M {
         }
         double columns2 = 1.0 * image.getWidth() * f;
         double lines2 = 1.0 * image.getHeight() * f;
-        System.out.println("PixM resizing init  --> (" + maxRes + ", " + maxRes + ")  (" + columns2 + ", " + lines2 + ")");
+        Logger.getAnonymousLogger().log(Level.INFO, "PixM resizing init  --> (" + maxRes + ", " + maxRes + ")  (" + columns2 + ", " + lines2 + ")");
         PixM pixM = new PixM((int) (columns2), ((int) lines2));
 
 

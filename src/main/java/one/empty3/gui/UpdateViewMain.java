@@ -27,6 +27,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Created by manue on 26-06-19.
@@ -58,7 +60,7 @@ public class UpdateViewMain extends JPanel implements RepresentableEditor {
 
             @Override
             public void mousePressed(MouseEvent e) {
-                System.out.println("Mouse Pressed MouseEvent e in select ROTATE");
+                Logger.getAnonymousLogger().log(Level.INFO, "Mouse Pressed MouseEvent e in select ROTATE");
                 if (threadDrawing != null) {
                     threadDrawing.setRunning(false);
                     threadDrawing.setStop(true);
@@ -71,8 +73,8 @@ public class UpdateViewMain extends JPanel implements RepresentableEditor {
                 representable = zRunner.getzBuffer().representableAt(e.getX(), e.getY());
 
                 if (main.getGraphicalEdit2().getActionToPerform().equals(GraphicalEdit2.Action.ROTATE)) {
-                    System.out.println("Mouse Pressed");
-                    System.out.println("Mouse starts dragging rotating");
+                    Logger.getAnonymousLogger().log(Level.INFO, "Mouse Pressed");
+                    Logger.getAnonymousLogger().log(Level.INFO, "Mouse starts dragging rotating");
                     arcBall = new ArcBall2(getzRunner().getzBuffer().camera(), mousePoint3D,
                             Math.atan(2.0 * Math.PI *
                                     e.getX() / getWidth()),
@@ -92,14 +94,14 @@ public class UpdateViewMain extends JPanel implements RepresentableEditor {
             public void mouseReleased(MouseEvent e) {
                if (main.getGraphicalEdit2().getActionToPerform().equals(GraphicalEdit2.Action.ROTATE)) {
                     if (arcBall.matrix() != null) {
-                        System.out.println("Mouse Released");
+                        Logger.getAnonymousLogger().log(Level.INFO, "Mouse Released");
                         representable.getRotation().getElem().getRot().setElem(arcBall.matrix());
-                        System.out.println("Matrix changed = " + representable.getRotation().getElem().getRot().getElem());
+                        Logger.getAnonymousLogger().log(Level.INFO, "Matrix changed = " + representable.getRotation().getElem().getRot().getElem());
                         representable.getRotation().getElem().getCentreRot().setElem(mousePoint3D);
-                        System.out.println("centreRot changed" + representable.getRotation().getElem().getCentreRot().getElem());
-                        System.out.println("class re" + representable.getClass());
+                        Logger.getAnonymousLogger().log(Level.INFO, "centreRot changed" + representable.getRotation().getElem().getCentreRot().getElem());
+                        Logger.getAnonymousLogger().log(Level.INFO, "class re" + representable.getClass());
                     } else {
-                        System.out.println("Matrix == null");
+                        Logger.getAnonymousLogger().log(Level.INFO, "Matrix == null");
                     }
                 }
 
@@ -154,7 +156,7 @@ public class UpdateViewMain extends JPanel implements RepresentableEditor {
                             //
                             //
                             //    arcBall.getRadius()), (int)location.getX()+unit3t2(arcBall.getRadius()));
-////System.out.println("Mouse rotation moved");
+////Logger.getAnonymousLogger().log(Level.INFO, "Mouse rotation moved");
                         } else if (main.getGraphicalEdit2().getActionToPerform().equals(GraphicalEdit2.Action.TRANSLATE)) {
 
                         }

@@ -23,20 +23,20 @@ public class Tree {
             int where = cur_node.getLeftOrRight(grayImage, squares, i, j, scale);
             if (where == LEFT) {
                 if (cur_node.has_left_val) {
-                    //System.out.println("LEFT");
+                    //Logger.getAnonymousLogger().log(Level.INFO, "LEFT");
                     return cur_node.left_val;
                 } else {
-                    //System.out.println("REDIRECTION !");
+                    //Logger.getAnonymousLogger().log(Level.INFO, "REDIRECTION !");
                     //System.exit(0);
                     cur_node = features.get(cur_node.left_node);
                 }
             } else {
                 if (cur_node.has_right_val) {
 
-                    //System.out.println("RIGHT");
+                    //Logger.getAnonymousLogger().log(Level.INFO, "RIGHT");
                     return cur_node.right_val;
                 } else {
-                    //System.out.println("REDIRECTION !");
+                    //Logger.getAnonymousLogger().log(Level.INFO, "REDIRECTION !");
                     //System.exit(0);
                     cur_node = features.get(cur_node.right_node);
                 }

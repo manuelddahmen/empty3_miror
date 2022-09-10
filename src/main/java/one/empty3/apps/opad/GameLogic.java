@@ -37,6 +37,8 @@ import one.empty3.library.Representable;
 import one.empty3.library.core.tribase.TRISphere;
 
 import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class GameLogic {
 
@@ -113,11 +115,11 @@ public class GameLogic {
  if (r instanceof TRISphere) {
  if (Point3D.distance(((TRISphere) r).getCentre(), position) < 0.1) {
  int points = 10;
- //System.out.println("POINTS" + points);
+ //Logger.getAnonymousLogger().log(Level.INFO, "POINTS" + points);
 
  score += points;
 
- System.out.println(score);
+ Logger.getAnonymousLogger().log(Level.INFO, ""+score);
 
  if(ennemi.removeBonus(r))
  win();

@@ -46,6 +46,8 @@ import one.empty3.library.TextureCol;
 import one.empty3.library.core.testing.TestObjetSub;
 
 import java.awt.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /*__
  * @author Manuel Dahmen _manuel.dahmen@gmx.com_
@@ -101,7 +103,7 @@ public class TestNurbs1 extends TestObjetSub {
         n.creerNurbs();
 
         scene().add(n);
-        System.out.println(n);
+        Logger.getAnonymousLogger().log(Level.INFO,""+ n);
         //Axes axes = new Axes();
 
         //scene().add(axes);

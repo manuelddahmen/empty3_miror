@@ -9,7 +9,8 @@ import one.empty3.library.core.nurbs.SurfaceParametriquePolynomialeBezier;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.function.Consumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class MeshEditorBean {
     public static final int MESH_EDITOR_ParametricSurface = 0;
@@ -124,7 +125,7 @@ public class MeshEditorBean {
        switch(getOperationType()) {
            case OP_SELECTION_TRANSLATION:
                getReplaces().forEach(replaceMatrix -> {
-                   System.out.println("Replace points from ("+replaceMatrix.representable.getClass()+") of string {\n"+replaceMatrix.representable.toString()+"+\n}");
+                   Logger.getAnonymousLogger().log(Level.INFO, "Replace points from ("+replaceMatrix.representable.getClass()+") of string {\n"+replaceMatrix.representable.toString()+"+\n}");
                    if(replaceMatrix.representable instanceof SurfaceParametriquePolynomialeBezier) {
                        SurfaceParametriquePolynomialeBezier surface = (SurfaceParametriquePolynomialeBezier) replaceMatrix.representable;
                        for(int i=0; i<surface.getCoefficients().getData2d().size(); i++)

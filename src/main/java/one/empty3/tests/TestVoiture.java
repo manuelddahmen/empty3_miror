@@ -1,7 +1,9 @@
 package one.empty3.tests;
 
-import one.empty3.library.core.testing.TestObjet;
 import one.empty3.library.core.testing.TestObjetSub;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class TestVoiture extends TestObjetSub {
     public void ginit() {
@@ -12,7 +14,7 @@ public class TestVoiture extends TestObjetSub {
     @Override
     public void finit() throws Exception {
         super.finit();
-        System.out.println(scene());
+        Logger.getAnonymousLogger().log(Level.INFO,""+ scene());
     }
     public static void main(String [] args) {
         TestVoiture testVoiture = new TestVoiture();

@@ -37,11 +37,13 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class SimpleMap {
 
     public static void main(String[] args) {
-        System.out.println(
+        Logger.getAnonymousLogger().log(Level.INFO,
                 "One color Map"
         );
 

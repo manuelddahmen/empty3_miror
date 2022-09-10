@@ -2,7 +2,6 @@ package one.empty3.feature.tryocr;
 
 import atlasgen.CsvWriter;
 import one.empty3.feature.Linear;
-import one.empty3.feature.MultiLinkList;
 import one.empty3.feature.PixM;
 import one.empty3.feature.app.replace.javax.imageio.ImageIO;
 import one.empty3.feature.shape.Rectangle;
@@ -12,7 +11,6 @@ import one.empty3.library.Point3D;
 import one.empty3.library.TextureCol;
 import one.empty3.library.core.lighting.Colors;
 import one.empty3.library.core.nurbs.CourbeParametriquePolynomialeBezier;
-import shadow.bundletool.com.android.tools.r8.logging.Log;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -20,7 +18,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.*;
-import java.util.function.Consumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ResolutionCharacter6 implements Runnable {
     public static final float MIN_DIFF = 0.6f;
@@ -43,6 +42,7 @@ public class ResolutionCharacter6 implements Runnable {
     private static boolean isExporting = true;
     private static String dirOutChars;
     private static String dirOutChars2;
+    private static File dirOutDist;
     final int epochs = 100;
     private final File dirOut;
     private final int stepMax = 80;
@@ -65,7 +65,7 @@ public class ResolutionCharacter6 implements Runnable {
     private Map<Character, Integer[]> characterMapV;
     private int countRects = 0;
     private List<Rectangle2> rectangles;
-    private double STEPS_COMPARE_METHOD = 0.1;
+    private double STEPS_COMPARE_METHOD = 0.01;
 
     public ResolutionCharacter6(BufferedImage read, String name) {
         this(read, name, new File("testsResults"));
@@ -98,9 +98,10 @@ public class ResolutionCharacter6 implements Runnable {
                     String name = file.getName();
 
 
-                    System.out.println("ResolutionCharacter6 : " + name);
+                    Logger.getAnonymousLogger().log(Level.INFO, "ResolutionCharacter6 : " + name);
 
                     ResolutionCharacter6 resolutionCharacter6 = new ResolutionCharacter6(read, name, dirOut);
+                    dirOutDist = new File(dirOut.getAbsolutePath() + File.separator + name + File.separator+"images-distances.jpg");
                     dirOutChars = dirOut.getAbsolutePath() + File.separator + name + File.separator + "char";
                     dirOutChars2 = dirOut.getAbsolutePath() + File.separator + name + File.separator + "char2";
 
@@ -215,7 +216,7 @@ public class ResolutionCharacter6 implements Runnable {
         input = new PixM(read);
         output = input.copy();
         outRecompose = new PixM(input.getColumns(), input.getLines());
-        System.out.println("Image size: " + output.getColumns() + ", " + output.getLines());
+        Logger.getAnonymousLogger().log(Level.INFO, "Image size: " + output.getColumns() + ", " + output.getLines());
 
         final ITexture texture = new TextureCol(Color.BLACK);
 
@@ -230,35 +231,44 @@ public class ResolutionCharacter6 implements Runnable {
         exec(texture, output, input, dirOut, name);
 
 
-        Log.info(this.getClass(), "rectangles : "+rectangles.size());
+        Logger.getAnonymousLogger().log(Level.INFO, ""+this.getClass()+ "rectangles : " + rectangles.size());
         deleteEquals(rectangles);
-        Log.info(this.getClass(), "rectangles : "+rectangles.size());
+        Logger.getAnonymousLogger().log(Level.INFO, ""+this.getClass()+ "rectangles : " + rectangles.size());
+        Logger.getAnonymousLogger().log(Level.INFO, ""+this.getClass()+ "Compare Start");
 
         compare(rectangles);
+        Logger.getAnonymousLogger().log(Level.INFO, ""+this.getClass()+ "Compare end");
     }
 
     private void deleteEquals(List<Rectangle2> rectangles) {
-        ArrayList<Rectangle2> deletes = new ArrayList<>();
-        for (Rectangle2 rect1 : rectangles) {
-            Rectangle2 delete = null;
-            for (Rectangle2 rect2 : rectangles) {
-                if(rect1!=rect2 && rect1.equals(rect2)) {
-                    delete = rect2;
+        for (int i = 0, rectanglesSize = rectangles.size(); i < rectanglesSize; i++) {
+            if(i<rectangles.size()) {
+                Rectangle2 rect1 = rectangles.get(i);
+                Rectangle2 delete = null;
+                for (int j = 0, size = rectangles.size(); j < size; ) {
+                    if (j < rectangles.size()) {
+                        Rectangle2 rect2 = rectangles.get(j);
+                        if (i != j && rect1 != rect2 && rect1.equals(rect2)) {
+                            delete = rect2;
+                            rectangles.remove(delete);
+                        } else {
+                            j++;
+                        }
+                    }
+
                 }
             }
-            if(delete!=null)
-                deletes.add(delete);
-
         }
-        rectangles.removeAll(deletes);
     }
 
     private void compare(List<Rectangle2> rectangles) {
         double [][] distances = new double[rectangles.size()][rectangles.size()];
         int i = 0, j = 0;
-        for (Rectangle2 rect1 : rectangles) {
-            j=0;
-            for (Rectangle2 rect2 : rectangles) {
+        for (int k = 0, rectanglesSize = rectangles.size(); k < rectanglesSize; k++) {
+            Rectangle2 rect1 = rectangles.get(k);
+            j = 0;
+            for (int i1 = 0, size = rectangles.size(); i1 < size; i1++) {
+                Rectangle2 rect2 = rectangles.get(i1);
                 distances[i][j] = compare(rect1, rect2);
                 j++;
             }
@@ -267,7 +277,7 @@ public class ResolutionCharacter6 implements Runnable {
         }
         PixM pixM = new PixM(distances);
         try {
-            ImageIO.write(pixM.normalize(0, 1).getImage(), "jpg", new File("distances.jpg"));
+            ImageIO.write(pixM.normalize(0, 1).getImage(), "jpg", dirOutDist);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -295,118 +305,6 @@ public class ResolutionCharacter6 implements Runnable {
         }
 
         return distTotale/rect1.getW()/rect1.getH()/rect2.getW()/rect2.getH();
-    }
-
-    private void exec(int i, int j) {
-        if (arrayDiff(input.getValues(i, j), WHITE_DOUBLES) < MIN_DIFF) {
-            int w = 0;
-            int h = 0;
-            boolean fail = false;
-            // La condition doit s'arrêter après les points quand les bords droits
-            // et bas ont augmenté de manière à ce que le caractère cherché soit mis en
-            // évidence.
-            // Bord haut et gauche restent blancs (pas toujours vrai dans les polices)
-            // Balai vers la droite rencontrent une chose (points noirs) puis s'arrête
-            // à blanc.
-            // Balai vers le bas rencontre une chose aussi (points noirs puis s'arrête
-            // à blanc.
-            // Peut-il y avoir une confusion en passant 2 balais (peignes) perpendiculaires ?
-            // Sans doute que oui, ils n'avancent pas au même pas. Quand le blanc est rencontré
-            // après le noir, il y a arrêt du balai H (par exemple) donc le balai V continue
-            // jusqu'au blanc. Là le balai H a-t-il rencontré quelque chose qui annule la
-            // recherche croisée ? Si le balai H est en dessous des caractères il ne rencontre
-            // plus rien jusqu'à ce que le balai V ait fini.
-            int heightBlackHistory = 0;
-            int widthBlackHistory = 0;
-            boolean firstPass = true;
-            while ((firstPass & Arrays.equals(testedRectangleBorder = testRectIs(input, i, j, w, h, testedRectangleBorder, WHITE_DOUBLES), TRUE_BOOLEANS)) || !(heightBlackHistory >= 2 && widthBlackHistory >= 2)
-                    & i + w < input.getColumns() & j + h < input.getLines() & w < stepMax & h < stepMax & h >= 0 && w >= 0) {
-                firstPass = false;
-                if (!testedRectangleBorder[XPLUS] && w >= 1 && (widthBlackHistory == 1 || heightBlackHistory >= 1)) {
-                    w--;
-                    testRectIs(input, i, j, w, h, testedRectangleBorder, WHITE_DOUBLES);
-                    if (testedRectangleBorder[XPLUS]) {
-                        widthBlackHistory = 2;
-                        continue;
-                    } else {
-                        w++;
-                    }
-
-                }
-                if (!testedRectangleBorder[YINVE] && h >= 1 && (heightBlackHistory == 1 || widthBlackHistory >= 1)) {
-                    h--;
-                    testRectIs(input, i, j, w, h, testedRectangleBorder, WHITE_DOUBLES);
-                    if (testedRectangleBorder[YINVE]) {
-                        heightBlackHistory = 2;
-                        continue;
-                    } else {
-                        h++;
-                    }
-                }
-
-                if (testedRectangleBorder[XINVE] && widthBlackHistory == 0 && testedRectangleBorder[YPLUS] && heightBlackHistory == 0) {
-                    h++;
-                    w++;
-                    continue;
-                }
-                testedRectangleBorder = testRectIs(input, i, j, w, h, testedRectangleBorder, WHITE_DOUBLES);
-                if (!testedRectangleBorder[XINVE] && widthBlackHistory == 0) {
-                    widthBlackHistory = 1;
-                    w++;
-                } else if (!testedRectangleBorder[XINVE] && widthBlackHistory == 1) {
-                    w++;
-                } else if (testedRectangleBorder[XINVE] && widthBlackHistory == 1) {
-                    widthBlackHistory = 2;
-                }
-                if (!testedRectangleBorder[YPLUS] && heightBlackHistory == 0) {
-                    heightBlackHistory = 1;
-                    h++;
-                } else if (!testedRectangleBorder[YPLUS] && heightBlackHistory == 1) {
-                    h++;
-                } else if (testedRectangleBorder[YPLUS] && heightBlackHistory == 1) {
-                    heightBlackHistory = 2;
-                }
-                if (heightBlackHistory == 1 || heightBlackHistory == 0 && widthBlackHistory == 2) {
-                    h++;
-                }
-                if (widthBlackHistory == 1 || widthBlackHistory == 0 && heightBlackHistory == 2) {
-                    w++;
-                }
-                if (h > stepMax || w > stepMax) {
-                    fail = true;
-                    break;
-                }
-            }
-            boolean succeded = false;
-            if (heightBlackHistory == 2 && widthBlackHistory == 2) {
-                if (Arrays.equals(testRectIs(input, i, j, w - 1, h, testedRectangleBorder, WHITE_DOUBLES), TRUE_BOOLEANS)) {
-                    w = w - 1;
-                    succeded = true;
-                }
-                if (Arrays.equals(testRectIs(input, i, j, w, h - 1, testedRectangleBorder, WHITE_DOUBLES), TRUE_BOOLEANS)) {
-                    h = h - 1;
-                    succeded = true;
-                }
-            }
-            succeded = (heightBlackHistory >= 2) && (widthBlackHistory >= 2)
-                    && Arrays.equals(testRectIs(input, i, j, w, h, testedRectangleBorder, WHITE_DOUBLES), TRUE_BOOLEANS)
-                    && (h <= stepMax) && (w <= stepMax) && (h >= charMinWidth) && (w >= charMinWidth);
-            if (succeded) {
-                Rectangle rectangle = new Rectangle(i, j, w, h);
-
-                List<Character> candidates = recognize(input, new Rectangle2(rectangle));
-                if (candidates.size() >= 0) {
-                    candidates.forEach(System.out::print);
-                    System.out.println();
-                    final String[] s = {""};
-                    candidates.forEach(character -> s[0] += character);
-                    System.out.printf("In %s, Rectangle = (%d,%d,%d,%d) \t%s\tCandidates: ", name, i, j, w, h, s[0]);
-                    writer.writeLine(new String[]{name, "" + i, "" + j, "" + w, "" + h, s[0]});
-                    Color random = Colors.random();
-                    output.plotCurve(rectangle, new TextureCol(random));
-                }
-            }
-        }
     }
 
     private void exec2(int i, int j) {
@@ -504,9 +402,7 @@ public class ResolutionCharacter6 implements Runnable {
             boolean succeded = false;
             if (Arrays.equals(testRectIs(input, i, j, w, h, testedRectangleBorder, WHITE_DOUBLES), TRUE_BOOLEANS)) {
                 succeded = true;
-            }
-
-            if (heightBlackHistory == 2 && widthBlackHistory == 2 && !succeded) {
+            } else if (heightBlackHistory == 2 && widthBlackHistory == 2 && !succeded) {
                 if (Arrays.equals(testRectIs(input, i, j, w - 1, h, testedRectangleBorder, WHITE_DOUBLES), TRUE_BOOLEANS)) {
                     w = w - 1;
                     succeded = true;
@@ -528,7 +424,7 @@ public class ResolutionCharacter6 implements Runnable {
                     if (candidates.size() >= 0) {
                         ///System.out.printf("In %s, Rectangle = (%d,%d,%d,%d) \t\tCandidates: ", name, i, j, w, h);
                         //candidates.forEach(System.out::print);
-                        //System.out.println();
+                        //
                         final String[] s = {""};
                         candidates.forEach(character -> s[0] += character);
                         if (candidates.size() > 1) {
@@ -840,11 +736,10 @@ public class ResolutionCharacter6 implements Runnable {
     private void printIntegerArray(Integer[] finalColumns) {
         if (!cEchoing || finalColumns==null)
             return;
-        System.out.println("Final Columns (debug)");
+        Logger.getAnonymousLogger().log(Level.INFO, "Final Columns (debug)");
         for (int i = 0; i < finalColumns.length; i++) {
             System.out.print(finalColumns[i] + ":");
         }
-        System.out.println();
 
     }
 

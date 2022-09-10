@@ -19,6 +19,7 @@
     <output url="file://$PROJECT_DIR$/out" />
   </component>
   <component name="StateStore">
+    <option name="mTargetDirectory" value="Current Path" />
     <option name="mFastbootTarget" value="boot" />
   </component>
 </project>

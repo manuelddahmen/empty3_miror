@@ -45,6 +45,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.Base64;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /*__
@@ -103,7 +105,7 @@ public class TextureImg extends ITexture {
                 :
                 transparent;
         if(c==transparent)
-            System.out.println("Transparent");
+            Logger.getAnonymousLogger().log(Level.INFO, "Transparent");
         return c;
     }
 

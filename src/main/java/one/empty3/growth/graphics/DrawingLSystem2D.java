@@ -164,6 +164,8 @@ import one.empty3.growth.*;
 
 import java.awt.*;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class DrawingLSystem2D {
     private Turtle2D turtle2D;
@@ -188,7 +190,7 @@ public class DrawingLSystem2D {
     public void drawStep() {
         SymbolSequence currentSymbols = lSystem.getCurrentSymbols();
         SymbolSequence parts = currentSymbols.parts();
-        //System.out.println("s= " + (s==null?"null":s)+"::"+param);
+        //Logger.getAnonymousLogger().log(Level.INFO, "s= " + (s==null?"null":s)+"::"+param);
         parts.getSymbols().stream().filter(symb -> symb instanceof Symbol).map(
                 symb -> (Symbol) symb).forEach(
                 sym -> symbolActionMap.forEach((symbol, s) -> {
@@ -203,7 +205,7 @@ public class DrawingLSystem2D {
                         paramV = ((FunctionalParameter) param).eval(lSystem.getT(), 1);
 
                     }
-                }//System.out.println("s= " + (s==null?"null":s)+"::"+param);
+                }//Logger.getAnonymousLogger().log(Level.INFO, "s= " + (s==null?"null":s)+"::"+param);
                 switch (s)
 
                 {
@@ -225,7 +227,7 @@ public class DrawingLSystem2D {
                     default:
                         break;
                 }
-                System.out.println(s + "(p=" + paramV + ")");
+                Logger.getAnonymousLogger().log(Level.INFO, s + "(p=" + paramV + ")");
             }
         }));
     }

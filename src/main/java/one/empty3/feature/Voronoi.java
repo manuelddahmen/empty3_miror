@@ -54,7 +54,7 @@ public class Voronoi extends ProcessFile {
                         Point3D p = pixM.getP((int) (double) near.get(0), (int) (double) near.get(1));
                         pixMOut.setValues(i, j, p.getX(), p.getY(), p.getZ());
                     } else {
-                        //System.out.println("Error near==null");
+                        //Logger.getAnonymousLogger().log(Level.INFO, "Error near==null");
                     }
                 }
             }

@@ -37,7 +37,10 @@
  */
 package one.empty3.library;
 
-import one.empty3.library.core.nurbs.*;
+import one.empty3.library.core.nurbs.ParametricCurve;
+import one.empty3.library.core.nurbs.ParametricSurface;
+import one.empty3.library.core.nurbs.Point3DS;
+import one.empty3.library.core.nurbs.ThickSurface;
 import one.empty3.pointset.PCont;
 
 import java.awt.*;
@@ -45,6 +48,8 @@ import java.awt.image.BufferedImage;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /***
  * * Classe de rendu graphique
@@ -82,7 +87,7 @@ class Data {
         this.ha = h;
 
 
-        System.out.println("la,ha " + la + ", " + ha);
+        Logger.getAnonymousLogger().log(Level.INFO, "la,ha " + la + ", " + ha);
 
 
     }
@@ -127,7 +132,7 @@ class Data {
                  r = zBuffer;
                         }(*/
             container[y][x] = r;
-            //System.out.println("x,y "+x+", "+y+" u,v : " + u+" "+v+" r " +r.getClass());
+            //Logger.getAnonymousLogger().log(Level.INFO, "x,y "+x+", "+y+" u,v : " + u+" "+v+" r " +r.getClass());
             return true;
         }
         return false;
@@ -174,7 +179,7 @@ class Data {
                             dataP[9][j][i], dataP[10][j][i]);
                     bi.setRGB(i, j, i, j, c, 0, la);
                 } else
-                    System.out.println("error texture null Data.getBitmap");
+                    Logger.getAnonymousLogger().log(Level.INFO, "error texture null Data.getBitmap");
 
 
         return new ECBufferedImage(bi);
@@ -346,12 +351,12 @@ public class ZBufferImpl8 extends ZBufferImpl {
                 Point3D p = (Point3D) r;
                 add(p.get(0), p.get(1), p.get(2), null, null, null, null, null, null, 0.0, 0.0, 0.0, p);
             } else if (r instanceof ThickSurface) {
-                // System.out.println("Surface");
+                // Logger.getAnonymousLogger().log(Level.INFO, "Surface");
                 ThickSurface n = (ThickSurface) r;
                 // TODO Dessiner les bords
 
                 for (double u = n.getStartU(); u <= n.getEndU(); u += n.getIncrU()) {
-                    // System.out.println("(u,v) = ("+u+","+")");
+                    // Logger.getAnonymousLogger().log(Level.INFO, "(u,v) = ("+u+","+")");
                     for (double v = n.getStartU(); v <= n.getEndV(); v += n.getIncrV()) {
                         Point3D p1, p2, p3, p4;
 
@@ -421,11 +426,11 @@ public class ZBufferImpl8 extends ZBufferImpl {
             } else
                 // GENERATORS
                 if (r instanceof ParametricSurface) {
-                    // System.out.println("Surface");
+                    // Logger.getAnonymousLogger().log(Level.INFO, "Surface");
                     ParametricSurface n = (ParametricSurface) r;
                     // TODO Dessiner les bords
                     for (double u = n.getStartU(); u <= n.getEndU() - n.getIncrU(); u += n.getIncrU()) {
-                        // System.out.println("(u,v) = ("+u+","+")");
+                        // Logger.getAnonymousLogger().log(Level.INFO, "(u,v) = ("+u+","+")");
                         for (double v = n.getStartV(); v <= n.getEndV() - n.getIncrV(); v += n.getIncrV()) {
                             /*
                              * draw(new TRI(n.calculerPoint3D(u, v), n.calculerPoint3D(u + n.getIncrU(), v),
@@ -486,7 +491,7 @@ public class ZBufferImpl8 extends ZBufferImpl {
                                 ime.testDeep(rotate(p3, r));
                                 ime.testDeep(rotate(p4, r));
                             } else {
-                                System.out.println("Surface" + n.getClass() + " u,v,u1,v1 = " + u + "," + v + " u1,v1 "
+                                Logger.getAnonymousLogger().log(Level.INFO, "Surface" + n.getClass() + " u,v,u1,v1 = " + u + "," + v + " u1,v1 "
                                         + (u + n.getIncrU()) + " " + (v + n.getIncrV()));
                                 tracerQuad(rotate(p1, n), rotate(p2, n),
                                         rotate(p3, n), rotate(p4, n),
@@ -530,7 +535,7 @@ public class ZBufferImpl8 extends ZBufferImpl {
                     if (r instanceof TRIObject) {
                         TRIObject o = (TRIObject) r;
                         for (TRI t : o.getTriangles()) {
-                            // System.out.println("Triangle suivant");
+                            // Logger.getAnonymousLogger().log(Level.INFO, "Triangle suivant");
 
                             draw(t);
 
@@ -927,7 +932,7 @@ public class ZBufferImpl8 extends ZBufferImpl {
         // ime.testDeep(new Point3D(px, py, pz), new Point3D(nx, ny, nz), r.texture().getColorAt(u, v));
         if (data1.addData(px, py, pz,
                 tx, ty, tz, nx, ny, nz, u, v, w, r)) {
-            //System.out.println(":");
+            //Logger.getAnonymousLogger().log(Level.INFO, ":");
             return true;
         }
         return false;

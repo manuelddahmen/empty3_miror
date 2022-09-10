@@ -118,7 +118,7 @@ public final class ShowTestResult extends JFrame implements Runnable {
         System.setErr(out);
 
 // now test the mechanism
-        System.out.println("Hello World");
+        Logger.getAnonymousLogger().log(Level.INFO, "Hello World");
 
     }
 

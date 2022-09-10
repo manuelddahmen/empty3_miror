@@ -60,7 +60,7 @@ public class DrawAction implements Action {
         String[] lineArray = csvLine.getValue();
         /*for(int i=0; i<lineArray.length; i++)
             if(lineArray[i]!=null)
-                System.out.println(""+i+"  "+lineArray[i]);
+                Logger.getAnonymousLogger().log(Level.INFO, ""+i+"  "+lineArray[i]);
         */
         pixeler.pixelize(
                 (int) ((Double.parseDouble(lineArray[longitudeColumn]) / 180 + 1) / 2 * pixeler.getImage().getWidth()),

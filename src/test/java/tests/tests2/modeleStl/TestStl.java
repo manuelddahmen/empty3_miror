@@ -5,7 +5,6 @@
 package tests.tests2.modeleStl;
 
 import one.empty3.library.*;
-import one.empty3.library.Polygon;
 import one.empty3.library.core.testing.TestObjetSub;
 import one.empty3.library.stl_loader.IncorrectFormatException;
 import one.empty3.library.stl_loader.ParsingErrorException;
@@ -15,6 +14,8 @@ import java.awt.*;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class TestStl extends TestObjetSub {
     private BufferedReader reader;
@@ -45,7 +46,7 @@ public class TestStl extends TestObjetSub {
             t.texture(colorTexture0);
         }
         load.getObjets().getElem(0).texture(colorTexture0);
-        System.out.println(((RepresentableConteneur) scene().getObjets().getElem(0)).getListRepresentable().size());
+        Logger.getAnonymousLogger().log(Level.INFO,""+ ((RepresentableConteneur) scene().getObjets().getElem(0)).getListRepresentable().size());
 
 
         Sphere s = new Sphere(new Axe(new Point3D(0., -1., 0.),

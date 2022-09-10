@@ -12,6 +12,7 @@ import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 //import org.json.*;
 
@@ -80,7 +81,7 @@ public class FTPProcessFiles {
         try {
             Method m = processInstance.class.getDeclaredMethod(argCl, argValue);
         Object rv = m.invoke(processInstance);
-        System.out.println(rv);
+        Logger.getAnonymousLogger().log(Level.INFO, rv);
             }
         catch (NoSuchMethodException,
             InvocationTargetException, IllegalAccessException
@@ -147,9 +148,9 @@ public class FTPProcessFiles {
     }
 
     public static void defaultProcess() {
-        System.out.println("arg 0 : dir0 or ftp1 dir path");
-        System.out.println("arg 1 : one.empty3.io.ProcessFile class");
-        System.out.println("arg 2 : dir0 or ftp1 dir output");
+        Logger.getAnonymousLogger().log(Level.INFO, "arg 0 : dir0 or ftp1 dir path");
+        Logger.getAnonymousLogger().log(Level.INFO, "arg 1 : one.empty3.io.ProcessFile class");
+        Logger.getAnonymousLogger().log(Level.INFO, "arg 2 : dir0 or ftp1 dir output");
 
         try {
             DiffEnergy.pw = new PrintWriter("." + File.separator + "energies.txt");
@@ -283,7 +284,7 @@ public class FTPProcessFiles {
 
                         int replyCode = ftpClient.getReplyCode();
                         if (!FTPReply.isPositiveCompletion(replyCode)) {
-                            System.out.println("Connect failed");
+                            Logger.getAnonymousLogger().log(Level.INFO, "Connect failed");
                             return;
                         }
                         // reads settings.xml or prompts user/pass
@@ -291,7 +292,7 @@ public class FTPProcessFiles {
                         showServerReply(ftpClient);
 
                         if (!success) {
-                            System.out.println("Could not login to the server");
+                            Logger.getAnonymousLogger().log(Level.INFO, "Could not login to the server");
                             return;
                         }
 
@@ -334,9 +335,9 @@ public class FTPProcessFiles {
 
                 } else {
 
-                    System.out.println("effect" + processInstance.toString());
+                    Logger.getAnonymousLogger().log(Level.INFO, "effect" + processInstance.toString());
 
-                    System.out.println("I>0 classes de traitement\nClasse : " + clazz.toString() + " : " + currentDirin[inDirectoryIndex]);
+                    Logger.getAnonymousLogger().log(Level.INFO, "I>0 classes de traitement\nClasse : " + clazz.toString() + " : " + currentDirin[inDirectoryIndex]);
 
                     File file = new File(currentDirin[inDirectoryIndex]);
                     if (file.exists() && file.isDirectory())
@@ -355,7 +356,7 @@ public class FTPProcessFiles {
 
 
             } catch (Exception ex) {
-                System.out.println("Oops! Something wrong happened");
+                Logger.getAnonymousLogger().log(Level.INFO, "Oops! Something wrong happened");
                 ex.printStackTrace();
             } finally {
                 // logs out and disconnects from server
@@ -506,7 +507,7 @@ public class FTPProcessFiles {
                     String filePath = "";
                     String remoteFile = directory + "/" + file.getName();
                     //Logger.getLogger(getClass()).info(file.getName());
-                    //System.out.println(file.getName() + " "+ remote);
+                    //Logger.getAnonymousLogger().log(Level.INFO, file.getName() + " "+ remote);
 
 
                     process(file, remoteFile);
@@ -533,7 +534,7 @@ public class FTPProcessFiles {
 
                 List<File> files1 = searchFile(file);
 
-                System.out.println(file.getName());
+                Logger.getAnonymousLogger().log(Level.INFO, file.getName());
 
                 if (file.exists() && (file.getName().endsWith("mpg") || file.getName().endsWith("mp4")
                         || file.getName().endsWith("avi"))) {
@@ -553,7 +554,7 @@ public class FTPProcessFiles {
 
                 process(file);
             }/* else {
-                System.out.println("error file in not found");
+                Logger.getAnonymousLogger().log(Level.INFO, "error file in not found");
                 System.exit(-1);
             }*/
 
@@ -578,7 +579,7 @@ public class FTPProcessFiles {
         ffMpeg.extraireImagesJpg();
 
         for (File frame : Objects.requireNonNull(tempDir.listFiles())) {
-            System.out.println("process file "
+            Logger.getAnonymousLogger().log(Level.INFO, "process file "
                     + frame.getAbsolutePath());
 
             ffMpeg.process(processInstance);
@@ -600,25 +601,25 @@ public class FTPProcessFiles {
             File ftmp = new File(mpeg.getAbsolutePath() + "---" + (findex++) + ".jpg");
             image = t.getImage();
             if (image == null) {
-                System.out.println("Movie frame == null");
+                Logger.getAnonymousLogger().log(Level.INFO, "Movie frame == null");
                 continue;
             }
             try {
                 ImageIO.write(image, "JPEG", ftmp);
             } catch (Exception ex) {
-                System.out.println("error writing movie frame");
+                Logger.getAnonymousLogger().log(Level.INFO, "error writing movie frame");
                 ex.printStackTrace();
 
             }
             //list.add(ftmp);
 
-            System.out.println("frame no" + (i++));
+            Logger.getAnonymousLogger().log(Level.INFO, "frame no" + (i++));
         } while (t.nextFrame());
 
         //  File[] files = new File[list.size()];
 
         for (File file : list) {
-            System.out.println("process file "
+            Logger.getAnonymousLogger().log(Level.INFO, "process file "
                     + file.getAbsolutePath());
             process(file);
         }
@@ -631,7 +632,7 @@ public class FTPProcessFiles {
             for (String aFile : files) {
                 if (it++ > maxFilesInDir)
                     return;
-                System.out.println(aFile);
+                Logger.getAnonymousLogger().log(Level.INFO, aFile);
             }
         }
     }
@@ -640,7 +641,7 @@ public class FTPProcessFiles {
         String[] replies = ftpClient.getReplyStrings();
         if (replies != null && replies.length > 0) {
             for (String aReply : replies) {
-                System.out.println("SERVER: " + aReply);
+                Logger.getAnonymousLogger().log(Level.INFO, "SERVER: " + aReply);
             }
         }
     }

@@ -35,14 +35,13 @@ package one.empty3.apps.opad;
 import one.empty3.apps.opad.menu.ToggleMenu;
 import one.empty3.library.*;
 
-
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.Collection;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /*__
@@ -205,22 +204,22 @@ public class Plotter3D implements KeyListener, Runnable {
 
     private void cont(long timeKeyPress) {
         if (isActive()) {
-            System.out.println("Plotter is active");
+            Logger.getAnonymousLogger().log(Level.INFO, "Plotter is active");
             if (!release_up) {
                 distanceCount.rotationHaut(timeKeyPress);
-                //System.out.println("Acc");
+                //Logger.getAnonymousLogger().log(Level.INFO, "Acc");
             }
             if (!release_down) {
                 distanceCount.rotationBas(timeKeyPress);
-                //System.out.println("Dec");
+                //Logger.getAnonymousLogger().log(Level.INFO, "Dec");
             }
             if (!release_left) {
                 distanceCount.rotationGauche(timeKeyPress);
-                //System.out.println("Left");
+                //Logger.getAnonymousLogger().log(Level.INFO, "Left");
             }
             if (!release_right) {
                 distanceCount.rotationDroite(timeKeyPress);
-                //System.out.println("Right");
+                //Logger.getAnonymousLogger().log(Level.INFO, "Right");
             }
         }
     }
@@ -283,7 +282,7 @@ public class Plotter3D implements KeyListener, Runnable {
                     Math.cos(angle) * Math.cos(angleY),
                     dir.getZ()+angle);
             positionUpdate.getPositionMobile().setAngleVueMobile(dir);
-            System.out.println("RG");
+            Logger.getAnonymousLogger().log(Level.INFO, "RG");
         }
 
         public void rotationDroite(long timeMillis) {
@@ -294,7 +293,7 @@ public class Plotter3D implements KeyListener, Runnable {
                     Math.cos(angle) * Math.cos(angleY),
                     dir.getZ()+angle);
             positionUpdate.getPositionMobile().setAngleVueMobile(dir);
-            System.out.println("RD");
+            Logger.getAnonymousLogger().log(Level.INFO, "RD");
 
         }
 
@@ -306,7 +305,7 @@ public class Plotter3D implements KeyListener, Runnable {
                     Math.cos(angle) * Math.cos(angleY),
                     Math.sin(angleY));
             positionUpdate.getPositionMobile().setAngleVueMobile(dir);
-            System.out.println("RH");
+            Logger.getAnonymousLogger().log(Level.INFO, "RH");
         }
 
         public void rotationBas(long timeMillis) {
@@ -317,7 +316,7 @@ public class Plotter3D implements KeyListener, Runnable {
                     Math.sin(angleY));
 
             positionUpdate.getPositionMobile().setAngleVueMobile(dir);
-            System.out.println("RB");
+            Logger.getAnonymousLogger().log(Level.INFO, "RB");
         }
 
         public Point2D getDirY() {

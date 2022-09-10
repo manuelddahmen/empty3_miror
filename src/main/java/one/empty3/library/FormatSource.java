@@ -82,7 +82,7 @@ public class FormatSource {
             Scene s = new Scene();
             new Loader().loadIF(i, s);
             try {
-                System.out.println(o.getAbsolutePath());
+                Logger.getAnonymousLogger().log(Level.INFO, o.getAbsolutePath());
                 //o.mkdirs();
                 o.createNewFile();
             } catch (IOException ex) {

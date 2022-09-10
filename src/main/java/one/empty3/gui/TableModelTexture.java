@@ -26,6 +26,8 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Created by manue on 25-07-19.
@@ -131,7 +133,7 @@ public class TableModelTexture implements TableModel {
 //            rows++;
 //            index++;
 //        });
-        System.out.println("Lines count =  " +getRowCount());
+        Logger.getAnonymousLogger().log(Level.INFO, "Lines count =  " +getRowCount());
         if(lines.size()>0) {
       //      listener.tableChanged(new TableModelEvent(this, 0, lines.size(), 0, 2));
         }

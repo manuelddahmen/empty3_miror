@@ -53,7 +53,7 @@ public class Clusters extends ProcessFile {
     public static void read(int String) {
 
         String[] values;
-        //System.out.println("Working Directory = " +
+        //Logger.getAnonymousLogger().log(Level.INFO, "Working Directory = " +
         // System.getProperty("user.dir"));
 
         Data = new ArrayList();
@@ -75,9 +75,9 @@ public class Clusters extends ProcessFile {
 
                 }
                 Data.add(v);
-                //System.out.println(Data);
+                //Logger.getAnonymousLogger().log(Level.INFO, Data);
                 Pvisited.add(false);
-                //System.out.println(Pvisited.get(j));
+                //Logger.getAnonymousLogger().log(Level.INFO, Pvisited.get(j));
                 v = null;
                 j++;
             }
@@ -90,7 +90,7 @@ public class Clusters extends ProcessFile {
 
     public static void DBSCAN(int esp, int minPts) {
         int c = 0;
-        //System.out.println(c);
+        //Logger.getAnonymousLogger().log(Level.INFO, c);
         Clusters = new <Clusters>ArrayList();
         neighborpts = new ArrayList();
         for (int i = 0; i < Data.size(); i++) {
@@ -98,36 +98,36 @@ public class Clusters extends ProcessFile {
         }
         noise = new ArrayList();
         for (int i = 0; i < Data.size(); i++) {
-            //System.out.println("The size of the file is: "+ Data.size());
+            //Logger.getAnonymousLogger().log(Level.INFO, "The size of the file is: "+ Data.size());
             if (!Pvisited.get(i)) {
                 Pvisited.set(i, true);
                 neighborpts.set(i, regionQuery(Data.get(i), esp));
-                //System.out.println(neighborpts);
+                //Logger.getAnonymousLogger().log(Level.INFO, neighborpts);
                 int size = neighborpts.size();
-                //System.out.println(minPts);
+                //Logger.getAnonymousLogger().log(Level.INFO, minPts);
                 if (size < minPts)
-                    //System.out.println(noise);
+                    //Logger.getAnonymousLogger().log(Level.INFO, noise);
                     noise.add(i);
-                    //System.out.println(noise.get(i));
+                    //Logger.getAnonymousLogger().log(Level.INFO, noise.get(i));
                 else {
-                    //System.out.println("HEy");
+                    //Logger.getAnonymousLogger().log(Level.INFO, "HEy");
                     Clusters.addAll(Data.get(i));
-                    //System.out.println(c);
+                    //Logger.getAnonymousLogger().log(Level.INFO, c);
                     c++;
-                    //System.out.println("This is c" + c);
+                    //Logger.getAnonymousLogger().log(Level.INFO, "This is c" + c);
 //            Clusters C = new Clusters(c);
 //            C.setPoint(Data.get(c));
 //            Clusters.add(C);
-                    //System.out.println(size);
+                    //Logger.getAnonymousLogger().log(Level.INFO, size);
                     //C.printC().toString();//System.out.print(C.printC());
                     for (int j = 0; j < size; j++) {
                         //if P' is not visited
                         if (!Pvisited.get(neighborpts.indexOf(j))) {
                             Pvisited.set(j, true);
                             neighbors.add(regionQuery((Vector) neighborpts.get(j), esp));
-                            //System.out.println(neighbors);
+                            //Logger.getAnonymousLogger().log(Level.INFO, neighbors);
                             int nSize = neighbors.size();
-                            //System.out.println(nSize);
+                            //Logger.getAnonymousLogger().log(Level.INFO, nSize);
                             if (nSize >= minPts) {
                                 neighborpts.add(neighbors);
                             }
@@ -169,7 +169,7 @@ public class Clusters extends ProcessFile {
                 n.set(i, Data.get(i));
             }
         }
-        //System.out.println(n);
+        //Logger.getAnonymousLogger().log(Level.INFO, n);
         return n;
     }
 
@@ -180,6 +180,6 @@ public class Clusters extends ProcessFile {
         DBSCAN(3, 5);
 
 
-        //System.out.println(((List<Vector>) Clusters.get(0)).get(1));
+        //Logger.getAnonymousLogger().log(Level.INFO, ((List<Vector>) Clusters.get(0)).get(1));
     }
 }

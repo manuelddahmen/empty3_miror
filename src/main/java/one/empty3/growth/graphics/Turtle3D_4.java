@@ -70,6 +70,8 @@ import one.empty3.library.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Turtle3D_4 {
     private Point3D position;
@@ -140,7 +142,7 @@ public class Turtle3D_4 {
         seg.texture(new ColorTexture(this.color));
         scene().add(seg);
         setPosition(newPosition);
-        System.out.println(newPosition);
+        Logger.getAnonymousLogger().log(Level.INFO, ""+newPosition);
     }
 
     private Scene scene() {

@@ -21,6 +21,8 @@ import java.io.*;
 import java.util.List;
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /*
  * @author Manuel Dahmen
@@ -521,8 +523,8 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
                     }
 
  */
-                    System.out.println("fileOut : " + fileOut.getAbsolutePath());
-                    System.out.println("Exists? : " + fileOut.exists());
+                    Logger.getAnonymousLogger().log(Level.INFO, "fileOut : " + fileOut.getAbsolutePath());
+                    Logger.getAnonymousLogger().log(Level.INFO, "Exists? : " + fileOut.exists());
                     direstEffect.setFileIn(fileOut);
 
                 }
@@ -721,7 +723,7 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
             buttonGOActionPerformed(null);
             //}
         } else {
-            System.out.println("Nothing chosen");
+            Logger.getAnonymousLogger().log(Level.INFO, "Nothing chosen");
         }
     }
 

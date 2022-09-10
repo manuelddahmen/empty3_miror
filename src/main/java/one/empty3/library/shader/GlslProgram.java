@@ -154,7 +154,7 @@ class WindowC extends JFrame implements GLEventListener {
  
     @Override
     public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
-        System.out.println("reshape");
+        Logger.getAnonymousLogger().log(Level.INFO, "reshape");
         this.display(drawable);
         
     }

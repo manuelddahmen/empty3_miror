@@ -4,6 +4,9 @@ import junit.framework.TestCase;
 import one.empty3.library.Scene;
 import org.junit.Test;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /*__
  * Created by manue on 20-09-19.
  */
@@ -16,7 +19,7 @@ public class XmlSceneTest extends TestCase {
         scene.declareProperties();
         scene.declarations();
         scene.xmlRepresentation(null, scene, stringBuilder);
-        System.out.println(stringBuilder);
+        Logger.getAnonymousLogger().log(Level.INFO, ""+stringBuilder);
 
         assertTrue(stringBuilder.toString().length()>0);
     }

@@ -35,6 +35,8 @@ package one.empty3.library.objloader;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class MtlLoader {
 	
@@ -169,14 +171,14 @@ public class MtlLoader {
 			
 		}
 		catch (IOException e) {
-			System.out.println("Failed to read file: " + br.toString());
+			Logger.getAnonymousLogger().log(Level.INFO, "Failed to read file: " + br.toString());
 			e.printStackTrace();		
 		}
 		catch (NumberFormatException e) {
-			System.out.println("Malformed MTL (on line " + linecounter + "): " + br.toString() + "\r \r" + e.getMessage());
+			Logger.getAnonymousLogger().log(Level.INFO, "Malformed MTL (on line " + linecounter + "): " + br.toString() + "\r \r" + e.getMessage());
 		}
 		catch (StringIndexOutOfBoundsException e) {
-			System.out.println("Malformed MTL (on line " + linecounter + "): " + br.toString() + "\r \r" + e.getMessage());
+			Logger.getAnonymousLogger().log(Level.INFO, "Malformed MTL (on line " + linecounter + "): " + br.toString() + "\r \r" + e.getMessage());
 		}
 	}
 }

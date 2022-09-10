@@ -97,7 +97,7 @@ public class SimpleSphere extends Representable implements TRIGenerable {
             incrLong = 2 * Math.PI * Math.cos(a) / numLongQuad;
             b = 0;
             while (b < 2 * Math.PI && incrLong > 0.0001) {
-                //System.out.println("a;b " + a +";"+b);
+                //Logger.getAnonymousLogger().log(Level.INFO, "a;b " + a +";"+b);
                 pCur[0] = CoordPoint(a, b);
                 pCur[1] = CoordPoint(a + incrLat, b);
                 pCur[2] = CoordPoint(a, b + incrLong);

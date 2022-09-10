@@ -64,13 +64,15 @@
 
 package one.empty3.growth.graphics.test;
 
-import one.empty3.test.TestCaseExtended;
 import one.empty3.growth.graphics.Turtle3D_4;
 import one.empty3.library.*;
+import one.empty3.test.TestCaseExtended;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Turtle3D_4Test extends TestCaseExtended {
     @Override
@@ -115,7 +117,7 @@ public class Turtle3D_4Test extends TestCaseExtended {
         try {
             java.io.File imageFile = getUniqueFilenameForProduction("testResults", getClass().getCanonicalName() + "___test1", "jpg");
             ImageIO.write(z.image(), "jpg", imageFile);
-            System.out.println(imageFile + " written");
+            Logger.getAnonymousLogger().log(Level.INFO, imageFile + " written");
         } catch (IOException e) {
             e.printStackTrace();
         }

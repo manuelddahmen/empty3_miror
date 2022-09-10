@@ -41,6 +41,8 @@ import one.empty3.library.TRI;
 import one.empty3.library.TRIObject;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class InterpreteListeTriangle implements Interprete {
 
@@ -97,7 +99,7 @@ public class InterpreteListeTriangle implements Interprete {
             } catch (InterpreteException ie) {
             }
         }
-        System.out.println(numFacettes + "" + text.substring(pos));
+        Logger.getAnonymousLogger().log(Level.INFO,""+ numFacettes + "" + text.substring(pos));
         pattern = new ArrayList<Integer>();
         pattern.add(ib.BLANK);
         pattern.add(ib.RIGHTPARENTHESIS);

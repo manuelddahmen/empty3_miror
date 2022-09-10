@@ -46,6 +46,8 @@ import one.empty3.library.TextureCol;
 import one.empty3.library.core.testing.TestObjetSub;
 
 import java.awt.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 //import nurbs.Axes;
 
 /*__
@@ -116,7 +118,7 @@ public class TestNurbs2 extends TestObjetSub {
         n.creerNurbs();
 
         scene().add(n);
-        System.out.println(n);
+        Logger.getAnonymousLogger().log(Level.INFO,""+ n);
 
         scene().cameraActive(new Camera(Point3D.Z.mult(-1d), Point3D.O0));
     }

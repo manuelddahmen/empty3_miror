@@ -14,6 +14,9 @@ import one.empty3.library.Point3D;
 import one.empty3.library.RepresentableConteneur;
 import one.empty3.library.core.testing.TestObjetSub;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /*__
  * @author Manuel Dahmen <manuel.dahmen@gmx.com>
  */
@@ -36,7 +39,7 @@ public class TestFeu extends TestObjetSub {
         FeuArbre fey = new FeuArbre();
         RepresentableConteneur generate = fey.generate();
         scene().add(generate);
-        System.out.println(generate.getListRepresentable().size());
+        Logger.getAnonymousLogger().log(Level.INFO, ""+generate.getListRepresentable().size());
 
 
     }

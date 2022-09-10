@@ -40,11 +40,13 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ColoredMaps {
 
     public static void main(String[] args) {
-        System.out.println(
+        Logger.getAnonymousLogger().log(Level.INFO,
                 "Colored Maps -- first pass Setting Rect Boundaries"
         );
 
@@ -59,17 +61,17 @@ public class ColoredMaps {
         HashMap<String, SetMinMax.MyDim> myDims = setMinMax.getMyDims();
 
         myDims.forEach((s, dim) -> {
-            System.out.println(s);
-            System.out.println(dim);
+            Logger.getAnonymousLogger().log(Level.INFO, s);
+            Logger.getAnonymousLogger().log(Level.INFO, dim.toString());
         });
-        System.out.println("myDims size " + myDims.size());
+        Logger.getAnonymousLogger().log(Level.INFO, "myDims size " + myDims.size());
 
 
         String serial = Seriald.newSerial();
 
 
         myDims.forEach((countryCode, myDim) -> {
-            System.out.println(
+            Logger.getAnonymousLogger().log(Level.INFO, 
                     "Colored Maps map " + countryCode
             );
             try {

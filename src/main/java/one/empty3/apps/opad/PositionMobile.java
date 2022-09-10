@@ -37,6 +37,8 @@ import one.empty3.library.Point3D;
 
 import java.util.HashMap;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /*__
  * Created by manuel on 10-07-17.
@@ -84,7 +86,7 @@ public class PositionMobile {
 
     public void setPositionSol(Point3D positionSol) {
         trace.put(System.nanoTime(), this.positionSol);
-        System.out.println("+");
+        Logger.getAnonymousLogger().log(Level.INFO, "+");
         this.positionSol = positionSol;
     }
 

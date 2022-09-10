@@ -118,7 +118,7 @@ public class DBScanProcess extends ProcessFile {
         ReadDataset r1 = new ReadDataset();
         r1.features.clear();
         //Scanner sc = new Scanner(System.in);
-        //System.out.println("Enter the filename with path");
+        //Logger.getAnonymousLogger().log(Level.INFO, "Enter the filename with path");
         String file = out.getAbsolutePath() + ".csv";
         try {
             r1.read(new File(file)); //load data

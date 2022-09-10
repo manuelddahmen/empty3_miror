@@ -1,5 +1,8 @@
 package one.empty3.feature.kmeans;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /*
  * Programmed by Shephalika Shekhar
  * class containing methods to calculate distance between two points with features
@@ -18,11 +21,11 @@ public class Distance {
         double sumColor = 0.01;
         double sumSpace = 0.01;
         if (point1.length < 5) {
-            System.out.println("kmeans distance error point1" + point1.length);
+            Logger.getAnonymousLogger().log(Level.INFO, "kmeans distance error point1" + point1.length);
             System.exit(-1);
         }
         if (point2.length < 5) {
-            System.out.println("kmeans distance error point2" + point2.length);
+            Logger.getAnonymousLogger().log(Level.INFO, "kmeans distance error point2" + point2.length);
 
             System.exit(-1);
 

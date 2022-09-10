@@ -80,11 +80,11 @@ if(in==null)
 
 
     public void tests(String[] args) {
-        //System.out.println("AVIDemo " + DecodeMonte.class.getPackage().getImplementationVersion());
-        System.out.println("This is a demo of the Monte Media library.");
-        System.out.println("Copyright © Werner Randelshofer. All Rights Reserved.");
-        System.out.println("License: Creative Commons Attribution 3.0.");
-        System.out.println();
+        //Logger.getAnonymousLogger().log(Level.INFO, "AVIDemo " + DecodeMonte.class.getPackage().getImplementationVersion());
+        Logger.getAnonymousLogger().log(Level.INFO, "This is a demo of the Monte Media library.");
+        Logger.getAnonymousLogger().log(Level.INFO, "Copyright © Werner Randelshofer. All Rights Reserved.");
+        Logger.getAnonymousLogger().log(Level.INFO, "License: Creative Commons Attribution 3.0.");
+        
 
         try {
             test(new File("avidemo-jpg.avi"), new Format(EncodingKey, ENCODING_AVI_MJPG, DepthKey, 24, QualityKey, 1f));
@@ -116,7 +116,7 @@ if(in==null)
     }
 
     private void testWriting(File file, Format format) throws IOException {
-        System.out.println("Writing " + file);
+        Logger.getAnonymousLogger().log(Level.INFO, "Writing " + file);
 
         // Make the format more specific
         format = format.prepend(MediaTypeKey, MediaType.VIDEO, //
@@ -179,7 +179,7 @@ if(in==null)
     }
 
     private void testReading(File file) throws IOException {
-        System.out.println("Reading " + file);
+        Logger.getAnonymousLogger().log(Level.INFO, "Reading " + file);
         AVIReader in = null;
 
         try {
@@ -205,10 +205,10 @@ in.read(track, img);
                 //...to do: do something with the image...
             } while (img != null);
         } catch (UnsupportedOperationException e) {
-            System.out.println("Reading failed " + file);
+            Logger.getAnonymousLogger().log(Level.INFO, "Reading failed " + file);
             throw e;
         } catch (IOException e) {
-            System.out.println("Reading failed " + file);
+            Logger.getAnonymousLogger().log(Level.INFO, "Reading failed " + file);
             throw e;
         } finally {
             // Close the rader

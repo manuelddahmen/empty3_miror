@@ -1,5 +1,8 @@
 package one.empty3.neunet;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public class HiddenNeuron extends Neuron {
     private Dimension dimensionZ;
 
@@ -37,7 +40,7 @@ public class HiddenNeuron extends Neuron {
     public double[] learn(double dw, double e, double n) {
         for (int i = 0; i < n; i++) {
             setW(updateDescend(e, dw));
-            System.out.println(error());
+            Logger.getAnonymousLogger().log(Level.INFO,""+ error());
         }
         return getW();
     }

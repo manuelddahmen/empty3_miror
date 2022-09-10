@@ -6,6 +6,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import static junit.framework.TestCase.assertTrue;
 
 /*__
@@ -110,7 +113,7 @@ coeff[x+2][y+2] =      Point3D.n(2. -x, 2. -y, 0. );
         for(int i=0; i<matrix.getData2d().size(); i++)
             for(int j=0; j<matrix.getData2d().get(i).size(); j++) {
                 assertTrue(coeff[i][j].equals(matrix.getElem(i, j)));
-                System.out.println(coeff[i][j].toString());
+                Logger.getAnonymousLogger().log(Level.INFO, coeff[i][j].toString());
             }
 
     }

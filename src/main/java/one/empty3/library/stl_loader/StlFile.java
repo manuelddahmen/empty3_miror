@@ -32,7 +32,10 @@
 
 package one.empty3.library.stl_loader;
 
-import one.empty3.library.*;
+import one.empty3.library.Point3D;
+import one.empty3.library.RepresentableConteneur;
+import one.empty3.library.Scene;
+import one.empty3.library.TRI;
 
 import java.io.*;
 import java.net.MalformedURLException;
@@ -41,6 +44,8 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 // New from JDK 1.4 for endian related problems
 
@@ -312,7 +317,7 @@ public class StlFile {
         Point3D outList[] = new Point3D[inList.size()];
 
         if (DEBUG == 1) {
-            System.out.println("Number of facets of the object=" + inList.size());
+            Logger.getAnonymousLogger().log(Level.INFO, "Number of facets of the object=" + inList.size());
         }
 
         // To-do
@@ -348,19 +353,19 @@ public class StlFile {
         int Number_faces; // First info (after the header) on the file
 
         if (DEBUG == 1) {
-            System.out.println("Machine's endian: " + ByteOrder.nativeOrder());
+            Logger.getAnonymousLogger().log(Level.INFO, "Machine's endian: " + ByteOrder.nativeOrder());
         }
 
         // Get file's name
         if (fromUrl) {
             // FileInputStream can only read local files!?
-            System.out.println("This version doesn't support reading binary files from internet");
+            Logger.getAnonymousLogger().log(Level.INFO, "This version doesn't support reading binary files from internet");
         } else { // It's a local file
             data = new FileInputStream(file);
 
             // First 80 bytes aren't important
             if (80 != data.read(Info)) { // File is incorrect
-                //System.out.println("Format Error: 80 bytes expected");
+                //Logger.getAnonymousLogger().log(Level.INFO, "Format Error: 80 bytes expected");
                 throw new IncorrectFormatException();
             } else { // We must first read the number of faces -> 4 bytes int
                 // It depends on the endian so..
@@ -378,7 +383,7 @@ public class StlFile {
                 dataBuffer.order(ByteOrder.nativeOrder());
 
                 if (DEBUG == 1) {
-                    System.out.println("Number of faces= " + Number_faces);
+                    Logger.getAnonymousLogger().log(Level.INFO, "Number of faces= " + Number_faces);
                 }
 
                 // We can create that array directly as we know how big it's going to be
@@ -398,7 +403,7 @@ public class StlFile {
                         }
                     } catch (IOException e) {
                         // Quitar
-                        System.out.println("Format Error: iteration number " + i);
+                        Logger.getAnonymousLogger().log(Level.INFO, "Format Error: iteration number " + i);
                         throw new IncorrectFormatException();
                     }
                 }//End for
@@ -501,7 +506,7 @@ public class StlFile {
         Point3D vertex = new Point3D();
 
         if (DEBUG == 1) {
-            System.out.println("Reading face number " + index);
+            Logger.getAnonymousLogger().log(Level.INFO, "Reading face number " + index);
         }
 
         // Read the Normal
@@ -511,7 +516,7 @@ public class StlFile {
         normArray[index].setZ(in.getDouble());
 
         if (DEBUG == 1) {
-            System.out.println("Normal: X=" + normArray[index].getX() + " Y=" + normArray[index].getY() + " Z=" + normArray[index].getZ());
+            Logger.getAnonymousLogger().log(Level.INFO, "Normal: X=" + normArray[index].getX() + " Y=" + normArray[index].getY() + " Z=" + normArray[index].getZ());
         }
 
         // Read vertex1
@@ -521,7 +526,7 @@ public class StlFile {
         coordArray[index * 3].setZ(in.getDouble());
 
         if (DEBUG == 1) {
-            System.out.println("Vertex 1: X=" + coordArray[index * 3].getX() + " Y=" + coordArray[index * 3].getY() + " Z=" + coordArray[index * 3].getZ());
+            Logger.getAnonymousLogger().log(Level.INFO, "Vertex 1: X=" + coordArray[index * 3].getX() + " Y=" + coordArray[index * 3].getY() + " Z=" + coordArray[index * 3].getZ());
         }
 
         // Read vertex2
@@ -531,7 +536,7 @@ public class StlFile {
         coordArray[index * 3 + 1].setZ(in.getDouble());
 
         if (DEBUG == 1) {
-            System.out.println("Vertex 2: X=" + coordArray[index * 3 + 1].getX() + " Y=" + coordArray[index * 3 + 1].getY() + " Z=" + coordArray[index * 3 + 1].getZ());
+            Logger.getAnonymousLogger().log(Level.INFO, "Vertex 2: X=" + coordArray[index * 3 + 1].getX() + " Y=" + coordArray[index * 3 + 1].getY() + " Z=" + coordArray[index * 3 + 1].getZ());
         }
 
         // Read vertex3
@@ -541,7 +546,7 @@ public class StlFile {
         coordArray[index * 3 + 2].setZ(in.getDouble());
 
         if (DEBUG == 1) {
-            System.out.println("Vertex 3: X=" + coordArray[index * 3 + 2].getX() + " Y=" + coordArray[index * 3 + 2].getY() + " Z=" + coordArray[index * 3 + 2].getZ());
+            Logger.getAnonymousLogger().log(Level.INFO, "Vertex 3: X=" + coordArray[index * 3 + 2].getX() + " Y=" + coordArray[index * 3 + 2].getY() + " Z=" + coordArray[index * 3 + 2].getZ());
         }
 
     }// End of readFacetB
@@ -594,7 +599,7 @@ public class StlFile {
                 System.err.println("Format Error:expecting 'endsolid', line " + parser.lineno());
             } else {
                 if (DEBUG == 1) {
-                    System.out.println("File readed");
+                    Logger.getAnonymousLogger().log(Level.INFO, "File readed");
                 }
             }
         }//End of Ascii reading
@@ -644,7 +649,7 @@ public class StlFile {
                 v.setX(parser.nval);
 
                 if (DEBUG == 1) {
-                    System.out.println("Normal:");
+                    Logger.getAnonymousLogger().log(Level.INFO, "Normal:");
                     System.out.print("X=" + v.getX() + " ");
                 }
 
@@ -657,7 +662,7 @@ public class StlFile {
                     if (parser.getNumber()) {
                         v.setZ(parser.nval);
                         if (DEBUG == 1) {
-                            System.out.println("Z=" + v.getZ());
+                            Logger.getAnonymousLogger().log(Level.INFO, "Z=" + v.getZ());
                         }
 
                         // We add that vector to the Normal's array
@@ -684,7 +689,7 @@ public class StlFile {
      */
     private void readSolid(StlFileParser parser) {
         if (!parser.sval.equals("solid")) {
-            System.out.println("Expecting solid on line " + parser.lineno());
+            Logger.getAnonymousLogger().log(Level.INFO, "Expecting solid on line " + parser.lineno());
             // If the first word is not "solid" then we consider the file is binary
             // Can give us problems if the comment of the binary file begins by "solid"
             this.setAscii(false);
@@ -701,7 +706,7 @@ public class StlFile {
             } else { // Store the object Name
                 this.setObjectName(parser.sval);
                 if (DEBUG == 1) {
-                    System.out.println("Object Name:" + this.getObjectName().toString());
+                    Logger.getAnonymousLogger().log(Level.INFO, "Object Name:" + this.getObjectName().toString());
                 }
                 this.readEOL(parser);
             }
@@ -723,7 +728,7 @@ public class StlFile {
                 p.setX(parser.nval);
 
                 if (DEBUG == 1) {
-                    System.out.println("Vertex:");
+                    Logger.getAnonymousLogger().log(Level.INFO, "Vertex:");
                     System.out.print("X=" + p.getX() + " ");
                 }
 
@@ -736,7 +741,7 @@ public class StlFile {
                     if (parser.getNumber()) {
                         p.setZ(parser.nval);
                         if (DEBUG == 1) {
-                            System.out.println("Z=" + p.getZ());
+                            Logger.getAnonymousLogger().log(Level.INFO, "Z=" + p.getZ());
                         }
 
                         // We add that vertex to the array of vertex

@@ -241,7 +241,7 @@ public class Camera extends CameraBox {
                     (int) (( - x3d.getY() *scale * ha + ha / 2)));
 /*
             Point p = new Point((int) (x + la / 2), (int) (y + ha / 2));
-            System.out.println(p.toString());
+            Logger.getAnonymousLogger().log(Level.INFO, p.toString());
 
             return p;
   */      }

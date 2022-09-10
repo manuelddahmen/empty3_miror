@@ -14,6 +14,8 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class SimilarPatchVolume {
     private final File directory = new File("outputFiles/_" + "__" +
@@ -42,12 +44,12 @@ public class SimilarPatchVolume {
         File file = new File(dir.getAbsolutePath() + "/" + outputFilename);
 
         if (file.exists()) {
-            System.out.println("File exists, quit" + file.getAbsolutePath());
+            Logger.getAnonymousLogger().log(Level.INFO, "File exists, quit" + file.getAbsolutePath());
             System.exit(-1);
         }
 
         if (dir1.mkdirs())
-            System.out.println(dir.getAbsolutePath() + " created");
+            Logger.getAnonymousLogger().log(Level.INFO, dir.getAbsolutePath() + " created");
         System.out.print("\n(width, height) = " + imageToWrite.getWidth() +
                 ", " + imageToWrite.getHeight() + ")");
         Iterator<ImageWriter> imageWriters = ImageIO.getImageWritersByFormatName("JPG");
@@ -56,7 +58,7 @@ public class SimilarPatchVolume {
         imageWriter.setOutput(ios);
         imageWriter.write(imageToWrite);
         /*if (!ImageIO.write(imageToWrite, "image/jpg", file)) {
-            System.out.println("Error inappropriate writer or not found " + "jpg");
+            Logger.getAnonymousLogger().log(Level.INFO, "Error inappropriate writer or not found " + "jpg");
             System.exit(-2);
         }*/
     }
@@ -68,15 +70,15 @@ public class SimilarPatchVolume {
     public BufferedImage getImageFromDir(String filename1) {
         String s0 = filename1.substring(filename1.lastIndexOf(".") + 1);
         if ((Arrays.asList(ImageIO.getReaderMIMETypes()).contains(s0))) {
-            System.out.println("No ImageReader for " + s0 + " from file" + filename1);
+            Logger.getAnonymousLogger().log(Level.INFO, "No ImageReader for " + s0 + " from file" + filename1);
             return null;
         }
 
         if (Arrays.asList(ImageIO.getWriterFormatNames()).contains(s0)) {
             try {
                 if (directory.mkdirs())
-                    System.out.println("Directory created" + directory.getAbsolutePath());
-                System.out.println("format name image1 " + s0 + " found");
+                    Logger.getAnonymousLogger().log(Level.INFO, "Directory created" + directory.getAbsolutePath());
+                Logger.getAnonymousLogger().log(Level.INFO, "format name image1 " + s0 + " found");
 
                 image1 = hideAlpha(new File("resources/" + filename1));
 
@@ -84,7 +86,7 @@ public class SimilarPatchVolume {
                 e.printStackTrace();
             }
         } else {
-            System.out.println("Format non found" + s0);
+            Logger.getAnonymousLogger().log(Level.INFO, "Format non found" + s0);
         }
         return image1;
     }
@@ -140,9 +142,9 @@ public class SimilarPatchVolume {
                             LocalExtrema localExtrema = new LocalExtrema(smoothedGradM3.columns, smoothedGradM3.lines, 3, 0);
                             M3 filter2 = localExtrema.filter(smoothedGradM3);
                             PixM filter1 = filter2.getImagesMatrix()[0][0];
-                            System.out.println("Original read image1");
+                            Logger.getAnonymousLogger().log(Level.INFO, "Original read image1");
                             work(directory, imagesMatrix[0][0].getImage(), filename1 + "/1/angle-" + angle + "/sigma" + sigma + "/size" + size + "gradient.jpg");
-                            System.out.println("oriented grad extremum search (max==1.0) ");
+                            Logger.getAnonymousLogger().log(Level.INFO, "oriented grad extremum search (max==1.0) ");
                             AtomicInteger i = new AtomicInteger();
                             int finalSize = size;
                             Arrays.stream(filter.getImagesMatrix()).forEach(pixMS -> Arrays.stream(pixMS).forEach(pixM1 ->
@@ -161,7 +163,7 @@ public class SimilarPatchVolume {
                     }
 
                 }
-                System.out.println("Thread terminated without exception");
+                Logger.getAnonymousLogger().log(Level.INFO, "Thread terminated without exception");
 
             } catch (IOException exception) {
                 exception.printStackTrace();
@@ -177,13 +179,13 @@ public class SimilarPatchVolume {
                     LocalExtrema localExtrema1 = new LocalExtrema(smoothedGradM3.columns, smoothedGradM3.lines, 3, 0);
                     M3 extremaOrientedGrad = localExtrema1.filter(new M3(pixM1, 1, 1));
                     try {
-                        System.out.println("Gradient (gx,gy).(nx,ny)");
+                        Logger.getAnonymousLogger().log(Level.INFO, "Gradient (gx,gy).(nx,ny)");
                         work(directory, pixM1.normalize(0, 1).getImage(), prefixDir + "/4/OrientedGradExtremum_1_sigma" + sigma + "angle" + angle + "size" + size + ".jpg");
                         System.gc();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    System.out.println("oriented grad extremum search (max==1.0) ");
+                    Logger.getAnonymousLogger().log(Level.INFO, "oriented grad extremum search (max==1.0) ");
                  /*   Arrays.stream(extremaOrientedGrad.getImagesMatrix()).forEach(pixMS1 -> Arrays.stream(pixMS1).forEach(pixM -> {
                         for (double min = 0.40; min < 1.0; min += 0.2)
                             Histogram2.testCircleSelect(pixM.getImage(),

@@ -47,7 +47,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.function.Consumer;
-
+import java.util.logging.Logger;
+import java.util.logging.Level;
 public class Representable /*extends RepresentableT*/ implements Serializable, Comparable, XmlRepresentable, MatrixPropertiesObject, TemporalComputedObject3D {
 
 
@@ -279,7 +280,7 @@ public class Representable /*extends RepresentableT*/ implements Serializable, C
 
         propertySetter = this.getClass().getMethod("set" + ("" + propertyName.charAt(0)).toUpperCase() + (propertyName.substring(1)), value.getClass());
         propertySetter.invoke(this, value);
-        System.out.println("RType : " + this.getClass().getName() + " Property: " + propertyName + " New Value set " + getProperty(propertyName));
+        Logger.getAnonymousLogger().log(Level.INFO, "RType : " + this.getClass().getName() + " Property: " + propertyName + " New Value set " + getProperty(propertyName));
     }
 
     public Object getProperty(String propertyName) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException {

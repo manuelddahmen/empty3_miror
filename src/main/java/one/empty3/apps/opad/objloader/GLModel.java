@@ -39,6 +39,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class GLModel{
 
@@ -223,16 +225,16 @@ public class GLModel{
 						coords[0] = coordstext[1];
 						coords[1] = facecounter + "";
 						mattimings.add(coords);
-						//System.out.println(coords[0] + ", " + coords[1]);
+						//Logger.getAnonymousLogger().log(Level.INFO, coords[0] + ", " + coords[1]);
 					}
                 }
              }
         }
         catch(IOException e){
-            System.out.println("Failed to read file: " + br.toString());
+            Logger.getAnonymousLogger().log(Level.INFO, "Failed to read file: " + br.toString());
         }
         catch(NumberFormatException e){
-            System.out.println("Malformed OBJ file: " + br.toString() + "\r \r"+ e.getMessage());
+            Logger.getAnonymousLogger().log(Level.INFO, "Malformed OBJ file: " + br.toString() + "\r \r"+ e.getMessage());
         }
     }
     
@@ -246,7 +248,7 @@ public class GLModel{
 			materials = new MtlLoader(brm,mtl_path);
 			frm.close();
 		} catch (IOException e) {
-			System.out.println("Could not open file: " + refm);
+			Logger.getAnonymousLogger().log(Level.INFO, "Could not open file: " + refm);
 			materials = null;
 		}
 	}

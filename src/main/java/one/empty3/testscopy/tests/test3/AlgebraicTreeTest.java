@@ -29,6 +29,8 @@ import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -79,14 +81,14 @@ public class AlgebraicTreeTest {
             algebricTree.setParametersValues(map);
             algebricTree.construct();
             if (echo)
-                System.out.println(algebricTree);
+                Logger.getAnonymousLogger().log(Level.INFO,""+ algebricTree);
             try {
                 Object result;
                 result = algebricTree.eval();
                 if (echo)
-                    System.out.println("Result : " + result);
+                    Logger.getAnonymousLogger().log(Level.INFO, "Result : " + result);
                 if (echo)
-                    System.out.println("Expected : " + expectedResult);
+                    Logger.getAnonymousLogger().log(Level.INFO, "Expected : " + expectedResult);
                 assertTrue((double) result == expectedResult);
                 return true;
             } catch (TreeNodeEvalException e) {
@@ -109,14 +111,14 @@ assertFalse(true);
             algebricTree = new AlgebricTree(expr);
             algebricTree.construct();
             if (echo)
-                System.out.println(algebricTree);
+                Logger.getAnonymousLogger().log(Level.INFO, ""+algebricTree);
             try {
                 Object result;
                 result = algebricTree.eval();
                 if (echo)
-                    System.out.println("Result : " + result);
+                    Logger.getAnonymousLogger().log(Level.INFO, "Result : " + result);
                 if (echo)
-                    System.out.println("Expected : " + expectedResult);
+                    Logger.getAnonymousLogger().log(Level.INFO, "Expected : " + expectedResult);
                 assertTrue((double) result == expectedResult);
                 return true;
             } catch (TreeNodeEvalException e) {

@@ -1,7 +1,14 @@
 package one.empty3;
 
-import java.util.*;
-import java.io.*;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Run {
     public static void main(String [] args) {
@@ -14,7 +21,7 @@ public class Run {
         properties.forEach((key, value ) -> {
             String [] line = new String []{(String)key, (String)value};
             String s;
-            System.out.println("var "+key+"\n\tdefault:\t"+value+"\n\tchange ? \t");
+            Logger.getAnonymousLogger().log(Level.INFO, "var "+key+"\n\tdefault:\t"+value+"\n\tchange ? \t");
 
             s = scanIn.nextLine(); 
 

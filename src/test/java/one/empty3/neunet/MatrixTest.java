@@ -1,8 +1,10 @@
 package one.empty3.neunet;
 
 import one.empty3.library.core.math.Matrix;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -24,7 +26,7 @@ public class MatrixTest {
         for (String row : rows) {
             String[] values = row.split("\t");
             for (String value : values) {
-                System.out.println(value);
+                Logger.getAnonymousLogger().log(Level.INFO, value);
                 var doubleValue = Double.valueOf(value);
                 assertTrue(Math.abs(doubleValue-expected[index])<0.0001);
                 index++;

@@ -76,7 +76,7 @@ public class CsvReader {
 
             while ((nRead = fileInputStream.read(bytes)) > 0 /*|| reste.toString().length()>0*/) {
                 if (countLines % countLineModulo == 0)
-                    ;//System.out.println(""+countLines+" lignes traitées");
+                    ;//Logger.getAnonymousLogger().log(Level.INFO, ""+countLines+" lignes traitées");
                 String read = "";
                 for (int i = 0; i < nRead; i++)
                     read += (char) (bytes[i]);

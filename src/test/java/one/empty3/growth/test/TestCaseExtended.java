@@ -171,6 +171,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class TestCaseExtended extends TestCase {
     private static boolean isInitialized = false;
@@ -241,7 +243,7 @@ public class TestCaseExtended extends TestCase {
                     (directory == null ? "" : directory + File.separator) +
                             baseFilename + "-" + (lastId + 1) +
                             (extension == null ? "" : "_." + extension));
-            System.out.println(file.getCanonicalPath().toString());
+            Logger.getAnonymousLogger().log(Level.INFO, file.getCanonicalPath().toString());
             setSerId(++lastId);
             loadSaveNewSerId();
         }
@@ -260,7 +262,7 @@ public class TestCaseExtended extends TestCase {
         try {
             File imageFile = getUniqueFilenameForProduction("testResults", getClass().getCanonicalName() + "___" + getClass().getEnclosingMethod(), "jpg");
             ImageIO.write(image, "jpg", imageFile);
-            System.out.println(imageFile + " written");
+            Logger.getAnonymousLogger().log(Level.INFO, imageFile + " written");
         } catch (IOException e) {
             e.printStackTrace();
         }

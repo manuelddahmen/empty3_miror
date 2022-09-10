@@ -41,6 +41,8 @@ import one.empty3.library.core.nurbs.Point3DS;
 import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /*__
  * Created by Manuel Dagmen on 29-06-18.
@@ -84,8 +86,8 @@ public class DrawPerCountryActionSphere implements Action {
         pcOnPs.setConnected(false);
         testEarth.getZ().draw(pcOnPs);
         if (countLine % 100000 == 0) {
-            System.out.println("Lines" + countLine);
-            System.out.println(d.calculerPoint3D(0.0));
+            Logger.getAnonymousLogger().log(Level.INFO, "Lines" + countLine);
+            Logger.getAnonymousLogger().log(Level.INFO, ""+d.calculerPoint3D(0.0));
         }
         //}
         countLine++;

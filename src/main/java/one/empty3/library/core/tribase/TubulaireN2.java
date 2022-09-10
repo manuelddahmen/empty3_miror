@@ -45,12 +45,14 @@ package one.empty3.library.core.tribase;
 import one.empty3.library.ColorTexture;
 import one.empty3.library.Point3D;
 import one.empty3.library.StructureMatrix;
-import one.empty3.library.core.gdximports.gdx_BSplineCurve;
-import one.empty3.library.core.nurbs.*;
+import one.empty3.library.core.nurbs.CourbeParametriquePolynomialeBezier;
+import one.empty3.library.core.nurbs.FctXY;
+import one.empty3.library.core.nurbs.ParametricCurve;
+import one.empty3.library.core.nurbs.ParametricSurface;
 
 import java.awt.*;
-import java.util.Iterator;
-import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class TubulaireN2 extends ParametricSurface {
     public double TAN_FCT_INCR = 0.00000001;
@@ -160,7 +162,7 @@ public class TubulaireN2 extends ParametricSurface {
             k++;
         }
         if (tangente.norme() == 0.0)
-            System.out.println("Error in TubulaireN2 tangente==0");
+            Logger.getAnonymousLogger().log(Level.INFO, "Error in TubulaireN2 tangente==0");
 
         tangente = tangente.norme1();
 
@@ -191,7 +193,7 @@ public class TubulaireN2 extends ParametricSurface {
         }
 
         if (min >= 1.0)
-            System.out.println("Error in TubulaireN2 vectPerp; px.cross.py.norme!=1");
+            Logger.getAnonymousLogger().log(Level.INFO, "Error in TubulaireN2 vectPerp; px.cross.py.norme!=1");
 
 
         return vecteurs[j];

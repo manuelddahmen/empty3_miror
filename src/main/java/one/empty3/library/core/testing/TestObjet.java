@@ -72,6 +72,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Properties;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*__
@@ -433,7 +434,7 @@ public abstract class TestObjet implements Test, Runnable {
 
         } catch (Exception ex) {
             config.setProperty("folderoutput", "./EmptyCanvasTests");
-            System.out.println("userHome/empty3.config not found use default");
+            Logger.getAnonymousLogger().log(Level.INFO, "userHome/empty3.config not found use default");
         }
         //          try {
         if (config.getProperty("folderoutput") != null) {
@@ -859,7 +860,7 @@ public abstract class TestObjet implements Test, Runnable {
                 }
             }
 
-            //System.out.println(z.scene());
+            //Logger.getAnonymousLogger().log(Level.INFO, z.scene());
 
             if ((generate & GENERATE_IMAGE) > 0) {
                 try {

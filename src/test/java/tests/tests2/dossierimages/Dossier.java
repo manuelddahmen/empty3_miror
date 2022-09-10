@@ -27,7 +27,7 @@ public class Dossier {
 
             }
         }
-        //System.out.println("Images size: " + images.size());
+        //Logger.getAnonymousLogger().log(Level.INFO, "Images size: " + images.size());
     }
 
     public void awaitForImage(File f) {

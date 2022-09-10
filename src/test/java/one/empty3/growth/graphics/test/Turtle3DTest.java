@@ -131,7 +131,10 @@ package one.empty3.growth.graphics.test;
 
 
 import junit.framework.TestCase;
-import one.empty3.growth.*;
+import one.empty3.growth.LSystem;
+import one.empty3.growth.NotWellFormattedSystem;
+import one.empty3.growth.Symbol;
+import one.empty3.growth.SymbolSequence;
 import one.empty3.growth.graphics.Rotation;
 import one.empty3.growth.graphics.Rotation2;
 import one.empty3.growth.graphics.Turtle3D_1;
@@ -143,6 +146,8 @@ import org.junit.Test;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static one.empty3.growth.graphics.Rotation.rotate;
 
@@ -235,12 +240,12 @@ public class Turtle3DTest extends TestCaseExtended {
 
             lSystem.setCurrentSymbols("A");
 
-            System.out.println(lSystem);
+            Logger.getAnonymousLogger().log(Level.INFO,""+ lSystem);
 
             lSystem.applyRules();
 
 
-            System.out.println(lSystem);
+            Logger.getAnonymousLogger().log(Level.INFO,""+ lSystem);
 
             SymbolSequence a2 = new SymbolSequence(new Symbol('A'));
             a2.add(new Symbol('A'));
@@ -261,12 +266,12 @@ public class Turtle3DTest extends TestCaseExtended {
             lSystem.addRule(a, ab);// a -> ab
             lSystem.addRule(b, a1);// b -> a
 
-            System.out.println("BEFORE" + lSystem.toString());
+            Logger.getAnonymousLogger().log(Level.INFO, "BEFORE" + lSystem.toString());
             for (int i = 0; i < n; i++) {
 
                 generate1(lSystem);
 
-                //System.out.println("AFTER " + (i + 1) + " PASS : " + lSystem.toString());
+                //Logger.getAnonymousLogger().log(Level.INFO, "AFTER " + (i + 1) + " PASS : " + lSystem.toString());
             }
         }
 

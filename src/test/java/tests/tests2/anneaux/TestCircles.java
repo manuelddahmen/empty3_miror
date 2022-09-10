@@ -5,6 +5,9 @@ import one.empty3.library.core.lighting.Colors;
 import one.empty3.library.core.move.Trajectoires;
 import one.empty3.library.core.testing.TestObjetSub;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /*__
  * Created by Win on 28-08-18.
  */
@@ -34,7 +37,7 @@ public class TestCircles extends TestObjetSub {
         scene().cameras().clear();
         int mod = getMaxFrames() / 4;
         double longpc = (frame() % mod) / 1.0 / mod;
-        System.out.println("Longitude= " + longpc);
+        Logger.getAnonymousLogger().log(Level.INFO, "Longitude= " + longpc);
         scene().cameraActive(new Camera(
                 Trajectoires.sphere(
                         longpc,
@@ -53,7 +56,7 @@ public class TestCircles extends TestObjetSub {
             circles[i].texture(new TextureCol(Colors.random()));
             circles[i].getParameters().setIncrU(0.01);
             scene().add(circles[i]);
-            System.out.println("Center: " + circles[i].getCenter());
+            Logger.getAnonymousLogger().log(Level.INFO, "Center: " + circles[i].getCenter());
         }
     }
 

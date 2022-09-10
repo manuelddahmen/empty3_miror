@@ -68,6 +68,8 @@ import one.empty3.library.StructureMatrix;
 import one.empty3.tests.Path;
 
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Animation extends Representable {
     private final HashMap<Class, MoveCollection> animations = new HashMap<>();
@@ -91,7 +93,7 @@ public class Animation extends Representable {
                         Point3D plus = Point3D.O0;
                         if (path.getPathElemType() == Representable.PATH_ELEM_STRUCTURE_MATRIX) {
                             if(path.getDeclaredProperty()==null ) {
-                                System.out.println("Error structureMatrix==null");
+                                Logger.getAnonymousLogger().log(Level.INFO, "Error structureMatrix==null");
                                 continue;
                             }
                             if (path.getDeclaredProperty().getDim()==0) {
@@ -130,13 +132,13 @@ public class Animation extends Representable {
 
                         }
                     } else {
-                        System.out.println("catched error... Cannot invoke \"one.empty3.tests.Path.getPathElemType()\" because \"path\" is null");
+                        Logger.getAnonymousLogger().log(Level.INFO, "catched error... Cannot invoke \"one.empty3.tests.Path.getPathElemType()\" because \"path\" is null");
                     }
                 }
             }
             }
         else
-            System.out.println("Animation anime error moves == null");
+            Logger.getAnonymousLogger().log(Level.INFO, "Animation anime error moves == null");
         return item;
     }
 

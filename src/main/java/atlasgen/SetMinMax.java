@@ -39,7 +39,8 @@ import one.empty3.library.Representable;
 import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
-
+import java.util.logging.Logger;
+import java.util.logging.Level;
 /*__
  * Created by Maauel Dahmen on 30-06-18.
  */
@@ -93,7 +94,7 @@ public class SetMinMax implements Action {
         MyDim(String countryCode) {
             this.countryCode = countryCode;
 
-            System.out.println("New dim" + countryCode);
+            Logger.getAnonymousLogger().log(Level.INFO, "New dim" + countryCode);
         }
 
         void setMin(Point2D newPoint, Point2D ref) {

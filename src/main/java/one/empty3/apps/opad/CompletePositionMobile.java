@@ -36,6 +36,9 @@ import one.empty3.library.Camera;
 import one.empty3.library.Matrix33;
 import one.empty3.library.Point3D;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public class CompletePositionMobile extends SimplePositionMobile {
 
     public CompletePositionMobile(PositionUpdate positionUpdate) {
@@ -130,9 +133,9 @@ public class CompletePositionMobile extends SimplePositionMobile {
             point3D = matrix33.mult(point.moins(calcPosition())).plus(calcPosition());
 
         } catch (NullPointerException ex) {
-            System.out.println("Null");
+            Logger.getAnonymousLogger().log(Level.INFO, "Null");
         }
-        System.out.println("point3D" + point3D);
+        Logger.getAnonymousLogger().log(Level.INFO, "point3D" + point3D);
 
         return point3D;
     }

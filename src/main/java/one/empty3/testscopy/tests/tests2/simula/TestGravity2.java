@@ -18,6 +18,9 @@ import one.empty3.library.core.physics.Bille;
 import one.empty3.library.core.physics.Force;
 import one.empty3.library.core.testing.TestObjetSub;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public class TestGravity2 extends TestObjetSub {
     int X = 3;
     int Y = 3;
@@ -97,7 +100,7 @@ public class TestGravity2 extends TestObjetSub {
         Camera camera = new Camera(f.centreMasse().plus(
                 new Point3D(0d, 0d, -f.getDistMax() / 4d)), f.centreMasse());
 
-        System.out.println(rc.getListRepresentable().size());
+        Logger.getAnonymousLogger().log(Level.INFO,""+ rc.getListRepresentable().size());
 
         scene().cameraActive(camera);
 

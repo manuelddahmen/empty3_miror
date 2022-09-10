@@ -1,8 +1,14 @@
 package tests.tests2.spherestexturees;
 
-import one.empty3.library.*;
+import one.empty3.library.Camera;
+import one.empty3.library.Point3D;
+import one.empty3.library.RepresentableConteneur;
+import one.empty3.library.TextureCol;
 import one.empty3.library.core.lighting.Colors;
 import one.empty3.library.core.testing.TestObjetSub;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /*__
  * @author Manuel DAHMEN
@@ -45,7 +51,7 @@ public class Spheres extends TestObjetSub {
         scene().add(representableConteneur);
         scene().cameraActive(camera);
 
-        System.out.println(representableConteneur);
+        Logger.getAnonymousLogger().log(Level.INFO,""+ representableConteneur);
     }
 
     public void bounce(int i) {

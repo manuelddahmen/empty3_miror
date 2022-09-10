@@ -16,6 +16,8 @@ import one.empty3.library.core.tribase.TRISphere;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /*__
  * cette classe produit une image de sphère avec "Manuel Dahmen" écrit dessus. La sphère tourne
@@ -49,9 +51,9 @@ public class TestRotationsObjets extends TestObjetSub {
     public TestRotationsObjets(double globalTimeMillis) {
         this.globalTimeMillis = globalTimeMillis;
         setMaxFrames((int) (globalTimeMillis * 25.0 / 1000.0));
-        System.out.println("Nombre de secondes total de la vidéo : " + globalTimeMillis / 1000.0);
-        System.out.println("Nombre de secondes de la vidéo par objet : " + globalTimeMillis / 1000.0 / nObjets);
-        System.out.println("Nombre de secondes de la vidéo par action : " + globalTimeMillis / 1000.0 / nObjets / rotationsParObjets);
+        Logger.getAnonymousLogger().log(Level.INFO, "Nombre de secondes total de la vidéo : " + globalTimeMillis / 1000.0);
+        Logger.getAnonymousLogger().log(Level.INFO, "Nombre de secondes de la vidéo par objet : " + globalTimeMillis / 1000.0 / nObjets);
+        Logger.getAnonymousLogger().log(Level.INFO, "Nombre de secondes de la vidéo par action : " + globalTimeMillis / 1000.0 / nObjets / rotationsParObjets);
         try {
             imageTexture = new TextureImg(new ECBufferedImage(ImageIO.read(this.getClass().getResourceAsStream("map2.png"))));
         } catch (IOException e) {
@@ -141,9 +143,9 @@ public class TestRotationsObjets extends TestObjetSub {
         label = "La be.manudahmen.empty3.tests.tests2.rotation autour de l'axe des " + (axe == 0 ? "X" : (axe == 1 ? "Y" : (axe == 2 ? "Z" : "AUCUN AXE CONNU"))) + " est effectuée à hauteur de " +
                 pourcentage + " % (no" + frameDansLAction + "/" + nFramesParObjet;
 
-        System.out.println("Frame courante globale = " + frame() + "\nFrame de l'objet : " + nopartielPartielle);
+        Logger.getAnonymousLogger().log(Level.INFO, "Frame courante globale = " + frame() + "\nFrame de l'objet : " + nopartielPartielle);
 
-        System.out.println(label);
+        Logger.getAnonymousLogger().log(Level.INFO, label);
 
         switch (axe) {
             case 0:
@@ -153,7 +155,7 @@ public class TestRotationsObjets extends TestObjetSub {
             case 2:
                 return Matrix33.rotationZ(angle);
             default:
-                System.out.println("Choisir un axe!");
+                Logger.getAnonymousLogger().log(Level.INFO, "Choisir un axe!");
                 System.exit(-1);
         }
         return Matrix33.I;

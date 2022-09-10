@@ -1,14 +1,14 @@
 package one.empty3.gui;
 
 import one.empty3.library.*;
-import one.empty3.library.core.move.Trajectoires;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
-import java.util.function.Consumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class PanelSphereMove2 extends JPanel {
     private static int RES = 200;
@@ -50,7 +50,7 @@ public class PanelSphereMove2 extends JPanel {
                 if (z.largeur() != getWidth() || z.hauteur() != getHeight()) {
                     z = new ZBufferImpl(RES, RES);
                     initComputeArea();
-                    System.out.println("Reninit");
+                    Logger.getAnonymousLogger().log(Level.INFO, "Reninit");
                 }
                 Point3D[] colVectors = matrice.getRowVectors();
                 Point ex = transform3D2D1(colVectors[0]);
@@ -69,13 +69,13 @@ public class PanelSphereMove2 extends JPanel {
                     graphics.drawLine(RES / 2, RES / 2, (int) ey.getX(), (int) ey.getY());
                     graphics.setColor(Color.BLUE);
                     graphics.drawLine(RES / 2, RES / 2, (int) ez.getX(), (int) ez.getY());
-                    System.out.println("ex, ey, ez"+ex+"\n"+ey+"\n"+ez);
+                    Logger.getAnonymousLogger().log(Level.INFO, "ex, ey, ez"+ex+"\n"+ey+"\n"+ez);
 
 
                     ex = transform3D2D1(Point3D.X);
                     ey = transform3D2D1(Point3D.Y);
                     ez = transform3D2D1(Point3D.Z);
-                    System.out.println("Systeme d'origine ex, ey, ez"+ex+"\n"+ey+"\n"+ez);
+                    Logger.getAnonymousLogger().log(Level.INFO, "Systeme d'origine ex, ey, ez"+ex+"\n"+ey+"\n"+ez);
 
                     graphics.setColor(Color.RED);
                     graphics.drawString("eX", (int) ex.getX(), (int) ex.getY());
@@ -86,10 +86,10 @@ public class PanelSphereMove2 extends JPanel {
 
 
 
-                    System.out.println("Angle px,py " +Math.acos(colVectors[0].norme1().dot(colVectors[1].norme1()))/Math.PI*2);
-                    System.out.println("Angle py,pz " +Math.acos(colVectors[1].norme1().dot(colVectors[2].norme1()))/Math.PI*2);
-                    System.out.println("Angle pz,px " +Math.acos(colVectors[2].norme1().dot(colVectors[0].norme1()))/Math.PI*2);
-                    System.out.println("Angle pz,py " +Math.acos(colVectors[2].norme1().dot(colVectors[1].norme1()))/Math.PI*2);
+                    Logger.getAnonymousLogger().log(Level.INFO, "Angle px,py " +Math.acos(colVectors[0].norme1().dot(colVectors[1].norme1()))/Math.PI*2);
+                    Logger.getAnonymousLogger().log(Level.INFO, "Angle py,pz " +Math.acos(colVectors[1].norme1().dot(colVectors[2].norme1()))/Math.PI*2);
+                    Logger.getAnonymousLogger().log(Level.INFO, "Angle pz,px " +Math.acos(colVectors[2].norme1().dot(colVectors[0].norme1()))/Math.PI*2);
+                    Logger.getAnonymousLogger().log(Level.INFO, "Angle pz,py " +Math.acos(colVectors[2].norme1().dot(colVectors[1].norme1()))/Math.PI*2);
                     //draw2(sphere(angleA[i_current][j_current], angleB[i_current][j_current], RES));
 
                     //ps.forEach(point3D -> draw2(point3D));
@@ -156,11 +156,11 @@ public class PanelSphereMove2 extends JPanel {
 
                 store(e.getX(), e.getY(), p);
 
-                //System.out.println("Current location on screen : " + p2_current);
-                System.out.println("Current location in space          " + p3[i_current][j_current]);
-                System.out.println("Current location in space i column " + i_current);
-                System.out.println("Current location in space j row    " + j_current);
-                System.out.println("Matrice                            " + matrice);
+                //Logger.getAnonymousLogger().log(Level.INFO, "Current location on screen : " + p2_current);
+                Logger.getAnonymousLogger().log(Level.INFO, "Current location in space          " + p3[i_current][j_current]);
+                Logger.getAnonymousLogger().log(Level.INFO, "Current location in space i column " + i_current);
+                Logger.getAnonymousLogger().log(Level.INFO, "Current location in space j row    " + j_current);
+                Logger.getAnonymousLogger().log(Level.INFO, "Matrice                            " + matrice);
 
                 move = false;
             }

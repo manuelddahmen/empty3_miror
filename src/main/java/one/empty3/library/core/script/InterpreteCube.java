@@ -89,7 +89,7 @@ class InterpreteCube implements Interprete {
 
         this.position = pos;
 
-        //System.out.println("CUBE Cote "+facteur+" centre"+pposition.toString());
+        //Logger.getAnonymousLogger().log(Level.INFO, "CUBE Cote "+facteur+" centre"+pposition.toString());
         return new Cube(facteur, pposition);
 
     }

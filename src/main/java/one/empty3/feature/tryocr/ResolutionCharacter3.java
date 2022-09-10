@@ -18,6 +18,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ResolutionCharacter3 implements Runnable {
     public static final float MIN_DIFF = 0.6f;
@@ -93,7 +95,7 @@ public class ResolutionCharacter3 implements Runnable {
                     String name = file.getName();
 
 
-                    System.out.println("ResolutionCharacter3 : " + name);
+                    Logger.getAnonymousLogger().log(Level.INFO, "ResolutionCharacter3 : " + name);
 
                     ResolutionCharacter3 ResolutionCharacter3 = new ResolutionCharacter3(read, name, dirOut);
                     dirOutChars = dirOut.getAbsolutePath() + File.separator + name + File.separator + "char";
@@ -208,7 +210,7 @@ public class ResolutionCharacter3 implements Runnable {
         input = new PixM(read);
         output = input.copy();
         outRecompose = new PixM(input.getColumns(), input.getLines());
-        System.out.println("Image size: " + output.getColumns() + ", " + output.getLines());
+        Logger.getAnonymousLogger().log(Level.INFO, "Image size: " + output.getColumns() + ", " + output.getLines());
 
         final ITexture texture = new TextureCol(Color.BLACK);
 
@@ -324,7 +326,6 @@ public class ResolutionCharacter3 implements Runnable {
                 List<Character> candidates = recognize(input, new Rectangle2(rectangle));
                 if (candidates.size() >= 0) {
                     candidates.forEach(System.out::print);
-                    System.out.println();
                     final String[] s = {""};
                     candidates.forEach(character -> s[0] += character);
                     System.out.printf("In %s, Rectangle = (%d,%d,%d,%d) \t%s\tCandidates: ", name, i, j, w, h, s[0]);
@@ -458,7 +459,7 @@ public class ResolutionCharacter3 implements Runnable {
                     if (candidates.size() >= 0) {
                         ///System.out.printf("In %s, Rectangle = (%d,%d,%d,%d) \t\tCandidates: ", name, i, j, w, h);
                         //candidates.forEach(System.out::print);
-                        //System.out.println();
+                        //
                         final String[] s = {""};
                         candidates.forEach(character -> s[0] += character);
                         //writer.writeLine(new String[]{name, "" + i, "" + j, "" + w, "" + h, s[0]});
@@ -765,11 +766,10 @@ public class ResolutionCharacter3 implements Runnable {
     private void printIntegerArray(Integer[] finalColumns) {
         if (!cEchoing)
             return;
-        System.out.println("Final Columns (debug)");
+        Logger.getAnonymousLogger().log(Level.INFO, "Final Columns (debug)");
         for (int i = 0; i < finalColumns.length; i++) {
             System.out.print(finalColumns[i] + ":");
         }
-        System.out.println();
 
     }
 

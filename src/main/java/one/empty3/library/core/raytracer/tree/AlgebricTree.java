@@ -528,7 +528,7 @@ fParamString, parametersValues
 
 
     public Double eval() throws TreeNodeEvalException, AlgebraicFormulaSyntaxException {
-        //System.out.println(parametersValues.size());
+        //Logger.getAnonymousLogger().log(Level.INFO, parametersValues.size());
         return root.eval();
     }
 

@@ -22,11 +22,11 @@ public class Stage {
         float sum = 0;
         for (Tree t : trees) {
 
-            //System.out.println("Returned value :"+t.getVal(grayImage, squares,i, j, scale));
+            //Logger.getAnonymousLogger().log(Level.INFO, "Returned value :"+t.getVal(grayImage, squares,i, j, scale));
 
             sum += t.getVal(grayImage, squares, i, j, scale);
         }
-        //System.out.println(sum+" "+threshold);
+        //Logger.getAnonymousLogger().log(Level.INFO, sum+" "+threshold);
         return sum > threshold;
     }
 

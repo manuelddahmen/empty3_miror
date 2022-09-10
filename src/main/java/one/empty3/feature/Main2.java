@@ -9,6 +9,8 @@ import java.sql.Time;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Main2 {
     private File directory;
@@ -30,15 +32,15 @@ public class Main2 {
                 outputFilename.lastIndexOf("/")));
         File file = new File(dir.getAbsolutePath() + "/" + outputFilename);
         if (dir1.mkdirs())
-            System.out.println(dir.getAbsolutePath() + " created");
+            Logger.getAnonymousLogger().log(Level.INFO, dir.getAbsolutePath() + " created");
         System.out.print("\n(width, height) = " + imageToWrite.getWidth() +
                 ", " + imageToWrite.getHeight() + ")");
 
         if (!ImageIO.write(imageToWrite, "jpg", file)) {
-            System.out.println("Error inappropriate writer or not found " + "JEG");
+            Logger.getAnonymousLogger().log(Level.INFO, "Error inappropriate writer or not found " + "JEG");
             System.exit(-2);
         } else {
-            System.out.println("Done writing : " + outputFilename);
+            Logger.getAnonymousLogger().log(Level.INFO, "Done writing : " + outputFilename);
 
         }
         return file;
@@ -51,7 +53,7 @@ public class Main2 {
     public void exec() {
 
         Arrays.stream(ImageIO.getWriterFormatNames()).forEach(s1 ->
-                System.out.println("Format name : \"" + s1 + "\""));
+                Logger.getAnonymousLogger().log(Level.INFO, "Format name : \"" + s1 + "\""));
         directory = new File("outputFiles/_" + "__" +
 
                 Time.from(Instant.now()).toString().replace(' ', '_').replace('|', '_')
@@ -64,8 +66,8 @@ public class Main2 {
                 try {
 
                     if (directory.mkdirs())
-                        System.out.println("Directory created" + directory.getAbsolutePath());
-                    System.out.println("format name image " + ext + " found");
+                        Logger.getAnonymousLogger().log(Level.INFO, "Directory created" + directory.getAbsolutePath());
+                    Logger.getAnonymousLogger().log(Level.INFO, "format name image " + ext + " found");
 
                     BufferedImage image = ImageIO.read(new File("resources/" + s));
 
@@ -106,18 +108,18 @@ public class Main2 {
                             PixM[][] filter2 = localExtrema.filter(smoothedGradM3).normalize(0.0, 1.0);
                             PixM filter1 = filter2[0][0];
                             BufferedImage image1 = filter1.getImage();
-                            System.out.println("Original read image");
+                            Logger.getAnonymousLogger().log(Level.INFO, "Original read image");
                             work(directory, imagesMatrix[0][0].getImage(), s + "/1/sigma" + sigma + "/size" + size + "gradient.jpg");
-                            System.out.println("oriented grad extremum search (max==1.0) ");
+                            Logger.getAnonymousLogger().log(Level.INFO, "oriented grad extremum search (max==1.0) ");
                             work(directory, filter1.getImage(), s + "/2/smoothed_grad-" + sigma + "/size" + size + ".jpg");
-                            System.out.println("oriented grad extremum search (max==1.0) ");
+                            Logger.getAnonymousLogger().log(Level.INFO, "oriented grad extremum search (max==1.0) ");
                             work(directory, image1, s + "/3/extremum_search" + sigma + "/size" + size + ".jpg");
 
                             System.gc();
                         }
                     }
 
-                    System.out.println("Thread terminated without exception");
+                    Logger.getAnonymousLogger().log(Level.INFO, "Thread terminated without exception");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -132,13 +134,13 @@ public class Main2 {
                     LocalExtrema localExtrema1 = new LocalExtrema(smoothedGradM3.columns, smoothedGradM3.lines, 3, 0);
                     M3 extremaOrientedGrad = localExtrema1.filter(new M3(pixM1, 1, 1));
                     try {
-                        System.out.println("Gradient (gx,gy).(nx,ny)");
+                        Logger.getAnonymousLogger().log(Level.INFO, "Gradient (gx,gy).(nx,ny)");
                         work(directory, pixM1.getImage(), s + "/4/OrientedGradExtremum_1_" + angle + ".jpg");
                         System.gc();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    System.out.println("oriented grad extremum search (max==1.0) ");
+                    Logger.getAnonymousLogger().log(Level.INFO, "oriented grad extremum search (max==1.0) ");
                     Arrays.stream(extremaOrientedGrad.getImagesMatrix()).forEach(pixMS1 -> Arrays.stream(pixMS1).forEach(pixM -> {
                         try {
                             String sub = s + "/4/OrientedGradExtremum_2_" +

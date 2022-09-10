@@ -35,6 +35,8 @@ package one.empty3.growth.graphics;
 import one.empty3.library.*;
 
 import java.awt.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Turtle3D_3 {
     private Point3D position;
@@ -87,13 +89,13 @@ public class Turtle3D_3 {
 
 
     public Point3D getPosition() {
-        System.out.println("return position" + position);
+        Logger.getAnonymousLogger().log(Level.INFO, "return position" + position);
         return position;
     }
 
     public void setPosition(Point3D position) {
         this.position = position;
-        System.out.println("this.position=" + position);
+        Logger.getAnonymousLogger().log(Level.INFO, "this.position=" + position);
     }
 
     public Point3D getvU() {

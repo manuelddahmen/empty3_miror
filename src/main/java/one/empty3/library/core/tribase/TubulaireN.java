@@ -48,6 +48,8 @@ import one.empty3.library.core.nurbs.CourbeParametriquePolynomialeBezier;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class TubulaireN extends Representable implements TRIGenerable, TRIConteneur {
 
@@ -142,7 +144,7 @@ public class TubulaireN extends Representable implements TRIGenerable, TRIConten
     }
 
     public void generateWire() {
-        System.out.println("WIRE SIZE " + points.size());
+        Logger.getAnonymousLogger().log(Level.INFO, "WIRE SIZE " + points.size());
 
         Object[] toArray = points.toArray();
         Point3D[] arr = new Point3D[toArray.length];

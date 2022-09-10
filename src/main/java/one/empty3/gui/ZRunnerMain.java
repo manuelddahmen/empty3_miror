@@ -63,7 +63,7 @@ public class ZRunnerMain extends Thread implements PropertyChangeListener {
         log.setLevel(Level.FINEST);
         running = true;
         zBuffer = null;
-        System.out.println("ZRunner new instance");
+        Logger.getAnonymousLogger().log(Level.INFO, "ZRunner new instance");
         start();
     }
 

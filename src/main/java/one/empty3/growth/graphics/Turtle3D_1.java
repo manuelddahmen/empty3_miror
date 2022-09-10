@@ -115,6 +115,8 @@ package one.empty3.growth.graphics;
 import one.empty3.library.*;
 
 import java.awt.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Turtle3D_1 {
 
@@ -211,7 +213,7 @@ public class Turtle3D_1 {
         droite.texture(new ColorTexture(color));
         zBuffer.scene().add(droite);
         position = newPosition;
-        System.out.println(position);
+        Logger.getAnonymousLogger().log(Level.INFO, ""+position);
     }
 
     public void move(double distance) {

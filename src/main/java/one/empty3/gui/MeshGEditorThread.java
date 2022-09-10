@@ -15,6 +15,8 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /***
  * main idea: replace structurematrix in representable objects after modifying it.
@@ -65,7 +67,7 @@ public class MeshGEditorThread extends Thread implements PropertyChangeListener 
                 main.getUpdateView().addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseClicked(MouseEvent e) {
-                        System.out.println("Mouse clicked in " + this.getClass());
+                        Logger.getAnonymousLogger().log(Level.INFO, "Mouse clicked in " + this.getClass());
                         // Select point or mark ready to move.
 //                        if (getMain().getUpdateView().getView().getMeshEditorBean().isSelection()) {
                         Point3D selectedPoint = getMain().getUpdateView().getzRunner().getzBuffer().clickAt(e.getX(), e.getY());
@@ -102,21 +104,21 @@ public class MeshGEditorThread extends Thread implements PropertyChangeListener 
                                 getMain().getMeshEditorProps().getInSelection().add(selectedPoint);//getMain().getDataModel().getScene().add(selectedObject);
                         }
                         //main.getDataModel().getScene().add(selectedPoint);
-                        System.out.println("point added" + selectedPoint);
+                        Logger.getAnonymousLogger().log(Level.INFO, "point added" + selectedPoint);
                         //}
                         if (main.getMeshEditorProps().isTranslation()) {
                             Representable multiple = getMain().getUpdateView().getzRunner().getzBuffer().representableAt(e.getX(), e.getY());
 
                             main.getGraphicalEditMesh().getBean().getInSelection().add(selectedPoint);
                             main.list2.setListData(getMain().getMeshEditorProps().getInSelection().toArray(new Point3D[0]));
-                            System.out.println("representable added" + multiple);
+                            Logger.getAnonymousLogger().log(Level.INFO, "representable added" + multiple);
                         } else {
                             List<ModelBrowser.Cell> cellList;
                             cellList = new ModelBrowser(getMain().getUpdateView().getzRunner().getzBuffer(), main.getDataModel().getScene(), Point3D.class).getObjects();
-                            System.out.println("Select point ADD/REMOVE from selected points list");
+                            Logger.getAnonymousLogger().log(Level.INFO, "Select point ADD/REMOVE from selected points list");
 
                             if (cellList != null) {
-                                System.out.println("Surface : " + surface);
+                                Logger.getAnonymousLogger().log(Level.INFO, "Surface : " + surface);
                                 cellList.forEach(cell -> {
                                     if (cell.pRot != null) {
                                         Point point = getMain().getUpdateView().getzRunner().getzBuffer().camera().coordonneesPoint2D(cell.pRot,
@@ -142,17 +144,17 @@ public class MeshGEditorThread extends Thread implements PropertyChangeListener 
                                                 }
                                             }
                                         }
-                                        main.getMeshEditorProps().getInSelection().forEach(representable -> System.out.println("[selection from MeshGraphicalEdit]"
+                                        main.getMeshEditorProps().getInSelection().forEach(representable -> Logger.getAnonymousLogger().log(Level.INFO, "[selection from MeshGraphicalEdit]"
                                                 + representable));
-                                        main.getMeshEditorProps().getReplaces().forEach(replaceMatrix -> System.out.println("[selection from MeshGraphicalEdit]"
+                                        main.getMeshEditorProps().getReplaces().forEach(replaceMatrix -> Logger.getAnonymousLogger().log(Level.INFO, "[selection from MeshGraphicalEdit]"
                                                 + replaceMatrix));
                                     } else {
-                                        System.out.println("cell.pRot in MeshGEditorThread is null");
+                                        Logger.getAnonymousLogger().log(Level.INFO, "cell.pRot in MeshGEditorThread is null");
                                     }
                                 });
 
                             } else {
-                                System.out.println("cellList == null" + this.getClass());
+                                Logger.getAnonymousLogger().log(Level.INFO, "cellList == null" + this.getClass());
                             }
 
                         }
@@ -185,10 +187,10 @@ public class MeshGEditorThread extends Thread implements PropertyChangeListener 
 
 
                         Point3D elem = invert;
-                        System.out.println("Inverted location " + elem);
+                        Logger.getAnonymousLogger().log(Level.INFO, "Inverted location " + elem);
                         ModelBrowser modelBrowser = new ModelBrowser(getMain().getGraphicalEdit2().getSelectionIn(), zBuffer);
                         modelBrowser.translateSelection(elem);
-                        System.out.println(main.getGraphicalEdit2().getCurrentSelection());
+                        Logger.getAnonymousLogger().log(Level.INFO,""+ main.getGraphicalEdit2().getCurrentSelection());
                         //}
                     }
 
@@ -397,7 +399,7 @@ public class MeshGEditorThread extends Thread implements PropertyChangeListener 
                         }
                     }
         } else
-            System.out.println("Cmaera Z");
+            Logger.getAnonymousLogger().log(Level.INFO, "Cmaera Z");
     }
 }
 

@@ -23,34 +23,18 @@ package one.empty3.gui;
 
 import nu.xom.*;
 import one.empty3.library.*;
-import one.empty3.library.core.script.Loader;
-import javax.imageio.ImageIO;
+
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.*;
-import java.lang.reflect.InvocationTargetException;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
-import java.util.function.BiConsumer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
-import java.util.zip.ZipOutputStream;
-import javax.imageio.ImageIO;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.io.*;
-import java.lang.reflect.InvocationTargetException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.function.BiConsumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
@@ -88,7 +72,7 @@ public class DataModel implements PropertyChangeListener {
                 e.printStackTrace();
             }
         }
-        System.out.println(this);
+        Logger.getAnonymousLogger().log(Level.INFO, ""+this);
         Logger.getAnonymousLogger().log(Level.INFO, "Model loaded");
     }
 
@@ -160,7 +144,7 @@ public class DataModel implements PropertyChangeListener {
 
                         if(valueOf instanceof Representable && size>0 && size==3)
                         {
-                            System.out.println(valueOf.toString());
+                            Logger.getAnonymousLogger().log(Level.INFO, valueOf.toString());
                         }
 
 

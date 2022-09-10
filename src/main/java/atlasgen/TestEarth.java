@@ -70,6 +70,6 @@ public class TestEarth extends TestSoS {
 
     public void testScene() {
         //csvReader.process();
-        //System.out.println("rendering now!");
+        //Logger.getAnonymousLogger().log(Level.INFO, "rendering now!");
     }
 }

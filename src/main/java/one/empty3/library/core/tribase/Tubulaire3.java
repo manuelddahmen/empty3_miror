@@ -42,7 +42,6 @@
  */
 package one.empty3.library.core.tribase;
 
-import one.empty3.library.LineSegment;
 import one.empty3.library.Point3D;
 import one.empty3.library.StructureMatrix;
 import one.empty3.library.core.nurbs.CourbeParametriquePolynomialeBezier;
@@ -50,7 +49,8 @@ import one.empty3.library.core.nurbs.FctXY;
 import one.empty3.library.core.nurbs.ParametricCurve;
 import one.empty3.library.core.nurbs.ParametricSurface;
 
-import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Tubulaire3 extends ParametricSurface {
     public double TAN_FCT_INCR = 0.000001;
@@ -180,7 +180,7 @@ public class Tubulaire3 extends ParametricSurface {
             }
         }
         if (j == -1) {
-            System.out.println("Error j==-1");
+            Logger.getAnonymousLogger().log(Level.INFO, "Error j==-1");
             j = 0;
         }
 

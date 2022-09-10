@@ -39,6 +39,9 @@ import one.empty3.library.Matrix33;
 import one.empty3.library.Point3D;
 import one.empty3.library.core.nurbs.ParametricCurve;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /*__
  * @author Se7en
  */
@@ -92,7 +95,7 @@ public class E3MathWaw {
 
     public Point3D tangente(ParametricCurve c, double t, int degre) {
         if (degre > 1) {
-            System.out.println("Degré est supérieur à 1: pas d'implémentation actuelle");
+            Logger.getAnonymousLogger().log(Level.INFO, "Degré est supérieur à 1: pas d'implémentation actuelle");
         }
         Point3D p;
         /*try {*/
@@ -119,7 +122,7 @@ public class E3MathWaw {
          }*/
 
         if (degre > 1) {
-            System.out.println("Degré est supérieur à 1: pas d'implémentation actuelle, ici, maintenant");
+            Logger.getAnonymousLogger().log(Level.INFO, "Degré est supérieur à 1: pas d'implémentation actuelle, ici, maintenant");
         }
         Point3D p;
         try {

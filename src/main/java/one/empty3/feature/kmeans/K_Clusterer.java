@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class K_Clusterer extends ReadDataset {
     private static final int K = 20;
@@ -50,7 +52,7 @@ public class K_Clusterer extends ReadDataset {
 
             ReadDataset r1 = new ReadDataset();
             r1.features.clear();
-            System.out.println("Enter the filename with path");
+            Logger.getAnonymousLogger().log(Level.INFO, "Enter the filename with path");
             r1.read(inCsv); //load data
             int ex = 1;
             clusters = new HashMap<>();
@@ -91,7 +93,7 @@ public class K_Clusterer extends ReadDataset {
 //					for(int x=0;x<key.length;x++){
 //						System.out.print(key[x]+", ");
 //						}
-//					System.out.println();
+//					
                             }
                         }
                         db = centroidCalculator(j, list);
@@ -104,8 +106,8 @@ public class K_Clusterer extends ReadDataset {
                 }
 
                 //final cluster print
-                ////System.out.println("\nFinal Clustering of Data");
-                ////System.out.println("Feature1\tFeature2\tFeature3\tFeature4\tCluster");
+                ////Logger.getAnonymousLogger().log(Level.INFO, "\nFinal Clustering of Data");
+                ////Logger.getAnonymousLogger().log(Level.INFO, "Feature1\tFeature2\tFeature3\tFeature4\tCluster");
                 for (double[] key : clusters.keySet()) {
                     for (int i = 0; i < key.length; i++) {
                         //System.out.print(key[i] + "\t \t");
@@ -130,11 +132,11 @@ public class K_Clusterer extends ReadDataset {
                     dis = "Euclidean";
                 else
                     dis = "Manhattan";
-                System.out.println("\n*********Programmed by Shephalika Shekhar************\n*********Results************\nDistance Metric: " + dis);
-                System.out.println("Iterations: " + max_iterations);
-                System.out.println("Number of Clusters: " + k);
-                System.out.println("WCSS: " + wcss);
-                System.out.println("Press 1 if you want to continue else press 0 to exit..");
+                Logger.getAnonymousLogger().log(Level.INFO, "\n*********Programmed by Shephalika Shekhar************\n*********Results************\nDistance Metric: " + dis);
+                Logger.getAnonymousLogger().log(Level.INFO, "Iterations: " + max_iterations);
+                Logger.getAnonymousLogger().log(Level.INFO, "Number of Clusters: " + k);
+                Logger.getAnonymousLogger().log(Level.INFO, "WCSS: " + wcss);
+                Logger.getAnonymousLogger().log(Level.INFO, "Press 1 if you want to continue else press 0 to exit..");
                 ex = 0;//sc.nextInt();
             } while (ex == 1);
 
@@ -144,7 +146,7 @@ public class K_Clusterer extends ReadDataset {
             clustersPrint = clusters;
 
             centroids.forEach((integer1, db1) -> clustersPrint.forEach((doubles, integer2) -> {
-                //System.out.println("Mean k=" + integer2 + " count=" + clustersPrint.get(integer2));
+                //Logger.getAnonymousLogger().log(Level.INFO, "Mean k=" + integer2 + " count=" + clustersPrint.get(integer2));
 //                pix2.setValues((int) (float) (db1[0]), (int) (float) (db1[1]),
 //                        colors[integer2].getRed(), colors[integer2].getGreen(),
 //                        colors[integer2].getBlue());

@@ -3,11 +3,16 @@ package one.empty3.neunet.of;
 import atlasgen.Action;
 import atlasgen.CsvLine;
 import atlasgen.CsvReader;
-import one.empty3.neunet.*;
+import one.empty3.neunet.HiddenNeuron;
+import one.empty3.neunet.Net;
+import one.empty3.neunet.Neuron;
+import one.empty3.neunet.OutputNeuron;
 
 import java.io.File;
 import java.util.HashMap;
 import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class RunPerceptronAndCharacterClassifiers {
     private static HashMap<String, String> options;
@@ -63,7 +68,7 @@ public class RunPerceptronAndCharacterClassifiers {
         if (options.get("directory") != null) {
             File directory = new File(options.get("directory"));
             if (directory.exists() && directory.isDirectory()) {
-                System.out.println("New network");
+                Logger.getAnonymousLogger().log(Level.INFO, "New network");
                 Net net = new Net();
                 //net.setInputLayer(new InputNeuron(res, res));
                 net.getHiddenLayerList().add(new HiddenNeuron(res*res));
@@ -75,15 +80,15 @@ public class RunPerceptronAndCharacterClassifiers {
                 for (File image : Objects.requireNonNull(directory.listFiles())) {
                     //if (net.getInputLayer().loadData(image)) {
 
-                        System.out.println("Train network");
+                        Logger.getAnonymousLogger().log(Level.INFO, "Train network");
                         net.train();
                     //}
                 }
-                System.out.println("Result: net");
+                Logger.getAnonymousLogger().log(Level.INFO, "Result: net");
 
-                System.out.println(net.toString());
+                Logger.getAnonymousLogger().log(Level.INFO, net.toString());
             } else
-                System.out.println("Directory not found" + directory.getAbsolutePath());
+                Logger.getAnonymousLogger().log(Level.INFO, "Directory not found" + directory.getAbsolutePath());
 
         } else if (options.get("csv") != null) {
             if (options.get("csv") != null) {
@@ -91,7 +96,7 @@ public class RunPerceptronAndCharacterClassifiers {
                 File directory = new File(options.get("csv"));
                 CsvReader reader = new CsvReader(directory, "\t", "\n", false);
                 if (directory.exists() && directory.isFile()) {
-                    System.out.println("New network");
+                    Logger.getAnonymousLogger().log(Level.INFO, "New network");
                     Net net = new Net();
                     //net.setInputLayer(new InputNeuron(res, res));
                     net.getHiddenLayerList().add(new HiddenNeuron(res* res));
@@ -112,7 +117,7 @@ public class RunPerceptronAndCharacterClassifiers {
                             try {
                                 if (net.getInputLayer().loadData(new File(csvLine.getValue()[1]))) {
 
-                                    System.out.println("Train network");
+                                    Logger.getAnonymousLogger().log(Level.INFO, "Train network");
                                     net.train();
                                 }
                             } catch (Exception e) {
@@ -121,11 +126,11 @@ public class RunPerceptronAndCharacterClassifiers {
                             */
                         }
                     });
-                    System.out.println("Result: net");
+                    Logger.getAnonymousLogger().log(Level.INFO, "Result: net");
 
-                    System.out.println(net.toString());
+                    Logger.getAnonymousLogger().log(Level.INFO, net.toString());
                 } else
-                    System.out.println("Directory not found" + directory.getAbsolutePath());
+                    Logger.getAnonymousLogger().log(Level.INFO, "Directory not found" + directory.getAbsolutePath());
 
             }
 

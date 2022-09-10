@@ -41,6 +41,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ConcurrentModificationException;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class PositionUpdateImpl implements PositionUpdate, Runnable, ActionListener {
     protected Path path;
@@ -142,7 +144,7 @@ public class PositionUpdateImpl implements PositionUpdate, Runnable, ActionListe
     }
 
     protected boolean isPositionOk(Point3D p, boolean repositionne) {
-        System.out.println("candidate new position : " + p + "\n" + getPositionMobile().getAngleVisee());
+        Logger.getAnonymousLogger().log(Level.INFO, "candidate new position : " + p + "\n" + getPositionMobile().getAngleVisee());
         if (p.getX() >= -positionEpsilon && p.getX() <= 1 + positionEpsilon
                 && p.getY() >= -positionEpsilon && p.getY() <= 1 + positionEpsilon) {
             update();
@@ -152,7 +154,7 @@ public class PositionUpdateImpl implements PositionUpdate, Runnable, ActionListe
                 p.setX(0.5);
                 p.setY(0.5);
                 p.setZ(hauteur);
-                // System.out.println("CORRECT position : " + p);
+                // Logger.getAnonymousLogger().log(Level.INFO, "CORRECT position : " + p);
             }
 
             return false;
@@ -171,28 +173,28 @@ public class PositionUpdateImpl implements PositionUpdate, Runnable, ActionListe
 
     @Override
     public void acc(long timeNano) {
-        System.out.println("ACC" + timeNano);
+        Logger.getAnonymousLogger().log(Level.INFO, "ACC" + timeNano);
         Point3D direction2D = getVecDir2D().norme1().mult(1.0 * timeNano * 1E-9 * unitPerSec);
         accera += timeNano;
         Point3D p2 = positionMobile.getPositionSol().plus(direction2D);
-        //System.out.println("acc:" + p2.toString());
+        //Logger.getAnonymousLogger().log(Level.INFO, "acc:" + p2.toString());
         if (isPositionOk(p2, false)) {
             positionMobile.setPositionSol(p2);
 
         } else
-            System.out.println("OUT acc:" + p2.toString());
+            Logger.getAnonymousLogger().log(Level.INFO, "OUT acc:" + p2.toString());
     }
 
     @Override
     public void dec(long timeNano) {
-        System.out.println("DEC" + timeNano);
+        Logger.getAnonymousLogger().log(Level.INFO, "DEC" + timeNano);
         Point3D direction2D = getVecDir2D().norme1().mult(timeNano * 1E-9 * unitPerSec);
         accera -= timeNano;
         Point3D p2 = positionMobile.getPositionSol().plus(direction2D);
         if (isPositionOk(p2, false)) {
             positionMobile.setPositionSol(p2);
         } else
-            System.out.println("OUT acc:" + p2.toString());
+            Logger.getAnonymousLogger().log(Level.INFO, "OUT acc:" + p2.toString());
     }
 
     @Override
@@ -298,7 +300,7 @@ public class PositionUpdateImpl implements PositionUpdate, Runnable, ActionListe
                         };
                         mouvement.start();
 
-                        System.out.println(score);
+                        Logger.getAnonymousLogger().log(Level.INFO,""+ score);
 
 
                         //circuit = new Circuit(bonus);

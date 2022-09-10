@@ -34,8 +34,9 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 import java.awt.event.ActionEvent;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author Manuel Dahmen
@@ -76,14 +77,14 @@ public class LoadSave extends JPanel {
         jFileChooser.showDialog(this, "Load");
         File selectedFile = jFileChooser.getSelectedFile();
         if (selectedFile != null) {
-            System.out.println("Try to save back");
+            Logger.getAnonymousLogger().log(Level.INFO, "Try to save back");
             try {
                 main.getDataModel().save(null);
-                System.out.println("Save back");
+                Logger.getAnonymousLogger().log(Level.INFO, "Save back");
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
-            System.out.println("Load file"+selectedFile.toString());
+            Logger.getAnonymousLogger().log(Level.INFO, "Load file"+selectedFile.toString());
 
             main.setDataModel(new DataModel(selectedFile));
            currentDirectory = jFileChooser.getCurrentDirectory();

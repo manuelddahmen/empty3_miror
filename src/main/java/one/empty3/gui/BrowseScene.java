@@ -31,6 +31,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Created by manue on 11-08-19.
@@ -107,7 +109,7 @@ public class BrowseScene {
         FileOutputStream fileOutputStream = new FileOutputStream(fileBaseName + (i++) + ".xml");
         encoder = new XMLEncoder(fileOutputStream);
         encoder.writeObject(o);
-        System.out.println(o);
+        Logger.getAnonymousLogger().log(Level.INFO,""+ o);
         encoder.close();
         fileOutputStream.close();
     }

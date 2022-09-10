@@ -128,11 +128,13 @@
 
 package one.empty3.growth.test;
 
-import junit.framework.TestCase;
 import one.empty3.growth.LSystem;
 import one.empty3.growth.NotWellFormattedSystem;
 import one.empty3.growth.Symbol;
 import one.empty3.growth.SymbolSequence;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class TestBasic extends TestCaseExtended {
     public void generate1(LSystem lSystem) {
@@ -157,7 +159,7 @@ public class TestBasic extends TestCaseExtended {
 
         lSystem.getCurrentSymbols().add(new Symbol('A'));
 
-        //System.out.println(lSystem);
+        //Logger.getAnonymousLogger().log(Level.INFO, lSystem);
 
         try {
             lSystem.applyRules();
@@ -166,7 +168,7 @@ public class TestBasic extends TestCaseExtended {
         }
 
 
-        //System.out.println(lSystem);
+        //Logger.getAnonymousLogger().log(Level.INFO, lSystem);
 
 //        assertTrue(lSystem.getCurrentSymbols().equals(new SymbolSequence(new Symbol('A'))));
 
@@ -184,12 +186,12 @@ public class TestBasic extends TestCaseExtended {
         lSystem.addRule(a, ab);// a -> ab
         lSystem.addRule(b, a1);// b -> a
 
-        System.out.println("BEFORE" + lSystem.toString());
+        Logger.getAnonymousLogger().log(Level.INFO, "BEFORE" + lSystem.toString());
         for (int i = 0; i < n; i++) {
 
             generate1(lSystem);
 
-            //System.out.println("AFTER " + (i + 1) + " PASS : " + lSystem.toString());
+            //Logger.getAnonymousLogger().log(Level.INFO, "AFTER " + (i + 1) + " PASS : " + lSystem.toString());
         }
     }
 

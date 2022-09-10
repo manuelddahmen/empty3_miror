@@ -1,5 +1,8 @@
 package one.empty3.apps.opad.menu;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /*__
  * Created by manuel on 21-05-17.
  */
@@ -44,7 +47,7 @@ public class LevelMenu {
         this.index = index % maxIndex;
         if (index < 0)
             this.index = maxIndex - 1;
-        System.out.println(index);
+        Logger.getAnonymousLogger().log(Level.INFO, ""+index);
     }
 
 }
