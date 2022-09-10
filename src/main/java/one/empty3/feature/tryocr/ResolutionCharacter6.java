@@ -65,7 +65,7 @@ public class ResolutionCharacter6 implements Runnable {
     private Map<Character, Integer[]> characterMapV;
     private int countRects = 0;
     private List<Rectangle2> rectangles;
-    private double STEPS_COMPARE_METHOD = 0.01;
+    private double STEPS_COMPARE_METHOD = 0.15;
 
     public ResolutionCharacter6(BufferedImage read, String name) {
         this(read, name, new File("testsResults"));
