@@ -101,7 +101,7 @@ public class ResolutionCharacter6 implements Runnable {
                     Logger.getAnonymousLogger().log(Level.INFO, "ResolutionCharacter6 : " + name);
 
                     ResolutionCharacter6 resolutionCharacter6 = new ResolutionCharacter6(read, name, dirOut);
-                    dirOutDist = new File(dirOut.getAbsolutePath() + File.separator + name + File.separator+"images-distances.jpg");
+                    dirOutDist = new File(dirOut.getAbsolutePath() + File.separator+ name +"_images-distances.jpg");
                     dirOutChars = dirOut.getAbsolutePath() + File.separator + name + File.separator + "char";
                     dirOutChars2 = dirOut.getAbsolutePath() + File.separator + name + File.separator + "char2";
 
@@ -211,7 +211,7 @@ public class ResolutionCharacter6 implements Runnable {
 
 
         if (!dirOut.exists() || !dirOut.isDirectory())
-            dirOut.mkdir();
+            dirOut.mkdirs();
 
         input = new PixM(read);
         output = input.copy();
@@ -257,17 +257,33 @@ public class ResolutionCharacter6 implements Runnable {
 
     private void compare(List<Rectangle2> rectangles) {
         PixM distances = new PixM(rectangles.size(), rectangles.size());
-        int i = 0, j = 0;
+        int i = 0, j;
         for (int k = 0, rectanglesSize = rectangles.size(); k < rectanglesSize; k++) {
             Rectangle2 rect1 = rectangles.get(k);
             j = 0;
             for (int i1 = 0, size = rectangles.size(); i1 < size; i1++) {
                 Rectangle2 rect2 = rectangles.get(i1);
-                distances.setP(i, j, compare(rect1, rect2));
+                Point3D pCompared = compare(rect1, rect2);
+                distances.setCompNo(0);
+                distances.set(i, j, pCompared.norme());
                 j++;
             }
             i++;
 
+        }
+
+        double [] values = new double[] {rectangles.size()};
+        int [] position = new int[rectangles.size()];
+
+        int nbValues = 200;
+
+        int index = 0;
+        for (int i1 = 0; i1 < distances.getColumns(); i1++) {
+                distances.setCompNo(0);
+                int  v =(int) (1.*nbValues*distances.get(i1, i1));
+                values[index] = v;
+                position[index] = i1;
+                index++;
         }
         try {
             ImageIO.write(distances.normalize(0, 1).getImage(), "jpg", dirOutDist);
