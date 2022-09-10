@@ -256,29 +256,28 @@ public class ResolutionCharacter6 implements Runnable {
     }
 
     private void compare(List<Rectangle2> rectangles) {
-        double [][] distances = new double[rectangles.size()][rectangles.size()];
+        PixM distances = new PixM(rectangles.size(), rectangles.size());
         int i = 0, j = 0;
         for (int k = 0, rectanglesSize = rectangles.size(); k < rectanglesSize; k++) {
             Rectangle2 rect1 = rectangles.get(k);
             j = 0;
             for (int i1 = 0, size = rectangles.size(); i1 < size; i1++) {
                 Rectangle2 rect2 = rectangles.get(i1);
-                distances[i][j] = compare(rect1, rect2);
+                distances.setP(i, j, compare(rect1, rect2));
                 j++;
             }
             i++;
 
         }
-        PixM pixM = new PixM(distances);
         try {
-            ImageIO.write(pixM.normalize(0, 1).getImage(), "jpg", dirOutDist);
+            ImageIO.write(distances.normalize(0, 1).getImage(), "jpg", dirOutDist);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private double compare(Rectangle2 rect1, Rectangle2 rect2) {
-        double distTotale = 0.0;
+    private Point3D compare(Rectangle2 rect1, Rectangle2 rect2) {
+        Point3D distTotale = Point3D.O0;
 
         for(double i=0; i<1; i+=STEPS_COMPARE_METHOD) {
             for(double j=0; j<1; j+=STEPS_COMPARE_METHOD) {
@@ -293,12 +292,12 @@ public class ResolutionCharacter6 implements Runnable {
                         , (int)(rect2.getY()
                                 +j*rect2.getH()));
 
-                distTotale += a.moins(b).norme();
+                distTotale = distTotale.plus(a).moins(b);
             }
 
         }
 
-        return distTotale/rect1.getW()/rect1.getH()/rect2.getW()/rect2.getH();
+        return distTotale;
     }
 
     private void exec2(int i, int j) {
