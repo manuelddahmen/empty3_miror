@@ -285,6 +285,37 @@ public class ResolutionCharacter6 implements Runnable {
                 position[index] = i1;
                 index++;
         }
+
+        // Aligner les caractères identiques
+        Dimension dimensionTotal = new Dimension(0,0);
+
+        for (int iSlides = 0; iSlides < nbValues; iSlides++) {
+            List<Rectangle2> matchingRects = new ArrayList<>();
+            double min = 1./nbValues*iSlides;
+            double max = 1./nbValues*(iSlides+1);
+            for (int i1 = 0; i1 < index; i1++) {
+                if(values[i1]>=min && values[i1]<=max) {
+                    Rectangle2 rectangle2 = rectangles.get(position[i1]);
+                    matchingRects.add(iSlides, rectangle2);
+                    dimensionTotal.setSize(dimensionTotal.getWidth()+rectangle2.getW(), dimensionTotal.getHeight()>rectangle2.getH()?
+                            dimensionTotal.getHeight():rectangle2.getH());
+                }
+            }
+            final int[] widthCurrent = {0};
+            PixM pSlide = new PixM((int)dimensionTotal.getWidth(), (int)dimensionTotal.getHeight());
+            matchingRects.forEach(rectangle2 -> {
+                    pSlide.pasteSubImage(input.copySubImage(rectangle2.getX(), rectangle2.getY(), rectangle2.getW(), rectangle2.getH()),
+                            widthCurrent[0], 0, rectangle2.getW(), rectangle2.getH());
+                    widthCurrent[0] += rectangle2.getW()
+            });
+            try {
+                ImageIO.write(pSlide.getImage(), "jpg", new File(dirOutDist+"_matchingRects_"+pSlide+".jpg"));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+        }
+
         try {
             ImageIO.write(distances.normalize(0, 1).getImage(), "jpg", dirOutDist);
         } catch (IOException e) {
