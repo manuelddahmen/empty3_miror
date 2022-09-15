@@ -80,6 +80,13 @@ public class ResolutionCharacter6 implements Runnable {
 
     public static void main(String[] args) {
 
+
+        //Logger.getAnonymousLogger().log(Level.INFO, "Test allocate (3000,3000) image");
+
+        //BufferedImage bufferedImage = new BufferedImage(3000, 3000, BufferedImage.TYPE_INT_RGB);
+
+
+
         File dir = new File("C:\\Users\\manue\\EmptyCanvasTest\\ocr");
         File dirOut = new File("C:\\Users\\manue\\EmptyCanvasTest\\ocr\\TestsOutput");
         if (isExporting()) {
@@ -272,7 +279,7 @@ public class ResolutionCharacter6 implements Runnable {
 
         }
 
-        double [] values = new double[] {rectangles.size()};
+        double [] values = new double[rectangles.size()];
         int [] position = new int[rectangles.size()];
 
         int nbValues = 200;
@@ -287,13 +294,17 @@ public class ResolutionCharacter6 implements Runnable {
         }
 
         // Aligner les caractères identiques
-        Dimension dimensionTotal = new Dimension(0,0);
+
+        int mean = (int) Math.sqrt(nbValues);
 
         for (int iSlides = 0; iSlides < nbValues; iSlides++) {
+            Dimension dimensionTotal = new Dimension(0,0);
             List<Rectangle2> matchingRects = new ArrayList<>();
             double min = 1./nbValues*iSlides;
             double max = 1./nbValues*(iSlides+1);
             for (int i1 = 0; i1 < index; i1++) {
+                int x = iSlides%mean;
+                int y = iSlides/mean;
                 if(values[i1]>=min && values[i1]<=max) {
                     Rectangle2 rectangle2 = rectangles.get(position[i1]);
                     matchingRects.add(iSlides, rectangle2);
@@ -306,7 +317,7 @@ public class ResolutionCharacter6 implements Runnable {
             matchingRects.forEach(rectangle2 -> {
                     pSlide.pasteSubImage(input.copySubImage(rectangle2.getX(), rectangle2.getY(), rectangle2.getW(), rectangle2.getH()),
                             widthCurrent[0], 0, rectangle2.getW(), rectangle2.getH());
-                    widthCurrent[0] += rectangle2.getW()
+                    widthCurrent[0] += rectangle2.getW();
             });
             try {
                 ImageIO.write(pSlide.getImage(), "jpg", new File(dirOutDist+"_matchingRects_"+pSlide+".jpg"));
