@@ -1,5 +1,3 @@
-import org.gradle.api.tasks.JavaExec
-
 plugins {
     id("application") // enabling the plugin here
     id("java")
@@ -131,7 +129,7 @@ publishing {
             from components.java
 
             pom {
-                name = 'My  Empty3 Graphics Library'
+                name = 'My Empty3 Graphics Library'
                 description = 'Graphics, image processing'
 
             }

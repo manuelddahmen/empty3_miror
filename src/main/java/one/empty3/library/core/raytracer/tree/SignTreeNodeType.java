@@ -32,6 +32,7 @@
 
 package one.empty3.library.core.raytracer.tree;
 
+
 /*__
  * Created by manuel on 16-12-16.
  */
@@ -53,5 +54,11 @@ public class SignTreeNodeType extends TreeNodeType {
     @Override
     public Double eval() {
         return sign;
+    }
+
+    public String toString() {
+        String string = super.toString();
+        string += "\nSign sign : " + sign;
+        return string;
     }
 }
