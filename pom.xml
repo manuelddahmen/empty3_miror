@@ -10,7 +10,7 @@
 
     <groupId>one.empty3</groupId>
     <artifactId>empty3-library</artifactId>
-    <version>2022.8.27</version><!-- -SNAPSHOT -->
+    <version>2022.9.16</version><!-- -SNAPSHOT -->
     <description>3D rendering engine. Plus modeling. Expected glsl textures 3d and 2d rendering. ANDROID VERSION.
         20212022
     </description>
