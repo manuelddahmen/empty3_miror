@@ -1,17 +1,9 @@
 package one.empty3.neunet;
 
-import one.empty3.library.core.math.Matrix;
-import org.junit.jupiter.api.Test;
-
-import java.util.Random;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 public class TestNeunet {
+    /*
     private static Random random;
+
 
     @Test
     public void testCrossEntropy() {
@@ -134,4 +126,6 @@ public class TestNeunet {
         result2.modify((index, value) -> Math.exp(value) / softmax.get());
         Logger.getAnonymousLogger().log(Level.INFO,""+ result2);
     }
+
+     */
 }
