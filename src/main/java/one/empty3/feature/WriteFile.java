@@ -1,9 +1,10 @@
 package one.empty3.feature;
 
-import java.awt.image.*;
 import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.logging.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class WriteFile {
     static int no = 1;
@@ -23,7 +24,9 @@ public class WriteFile {
         File n = new File(directory);
 
         n = new File(directory + File.separator + no + "-" + name + ".jpg");
-        new File(n.getAbsolutePath().substring(0, n.getAbsolutePath().lastIndexOf('/'))).mkdirs();
+        n.mkdirs();
+        int i = n.getAbsolutePath().lastIndexOf('/');
+        new File(n.getAbsolutePath().substring(0, i>=0?i:0)).mkdirs();
         try {
 
             no++;
