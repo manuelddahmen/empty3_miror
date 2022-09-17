@@ -8,15 +8,16 @@ public class Matrix extends PixM {
     public static final double DOUBLE_MIN = 0.0001;
     public static final String NUMBER_FORMAT = "%+12.5f";
     private static final double TOLERANCE = 0.000001;
-    public Matrix(int lines, int columns) {
+    public Matrix(int lines, int columns, int countComp) {
         super(lines, columns);
         this.lines = lines;
         this.columns = columns;
-        x = new double[lines * columns];
+        this.compCount = countComp;
+        x = new double[lines * columns * compCount];
     }
 
-    public Matrix(int lines, int columns, Producer producer) {
-        this(lines, columns);
+    public Matrix(int lines, int columns, int compCount, Producer producer) {
+        this(lines, columns, compCount);
         for (int i = 0; i < x.length; i++) {
             x[i] = producer.produce(i);
 
@@ -24,7 +25,7 @@ public class Matrix extends PixM {
     }
 
     public Matrix apply(ValueProducer producer) {
-        Matrix result = new Matrix(lines, columns);
+        Matrix result = new Matrix(lines, columns, 1);
 
         for (int i = 0; i < x.length; i++) {
             result.x[i] = producer.produce(i, x[i]);
@@ -52,7 +53,7 @@ public class Matrix extends PixM {
     }
 
     public Matrix multiply(Matrix m) {
-        Matrix result = new Matrix(lines, m.columns);
+        Matrix result = new Matrix(lines, m.columns, 1);
 
         assert columns == m.lines : "Cannot multiply";
         int index = 0;
@@ -108,7 +109,7 @@ public class Matrix extends PixM {
     }
 
     public Matrix softmax() {
-        Matrix matrix = new Matrix(lines, columns);
+        Matrix matrix = new Matrix(lines, columns, 1);
         double sumExp = 0.0;
         for (int i = 0; i < lines; i++) {
             for (int j = 0; j < columns; j++) {
@@ -175,12 +176,12 @@ public class Matrix extends PixM {
 
     }
     public Matrix sumColumns() {
-        Matrix matrix = new Matrix(1, columns);
+        Matrix matrix = new Matrix(1, columns, 1);
         forEach((row, col, index, value) -> matrix.set(0, col, matrix.get(0, col)+value));
         return matrix;
     }
     public Matrix sumlines() {
-        Matrix matrix = new Matrix(lines, 1);
+        Matrix matrix = new Matrix(lines, 1, 1);
         forEach((row, col, index, value) -> matrix.set(row, 0, matrix.get(row, 0)+value));
         return matrix;
     }
