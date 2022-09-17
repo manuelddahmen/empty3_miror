@@ -1,34 +1,33 @@
 package one.empty3.library.core.math;
 
+import one.empty3.feature.PixM;
+
 import java.util.Arrays;
 
-public class Matrix {
+public class Matrix extends PixM {
     public static final double DOUBLE_MIN = 0.0001;
     public static final String NUMBER_FORMAT = "%+12.5f";
     private static final double TOLERANCE = 0.000001;
-    private final int cols;
-    private final int rows;
-    private final double[] a;
-
-    public Matrix(int rows, int cols) {
-        this.rows = rows;
-        this.cols = cols;
-        a = new double[rows * cols];
+    public Matrix(int lines, int columns) {
+        super(lines, columns);
+        this.lines = lines;
+        this.columns = columns;
+        x = new double[lines * columns];
     }
 
-    public Matrix(int rows, int cols, Producer producer) {
-        this(rows, cols);
-        for (int i = 0; i < a.length; i++) {
-            a[i] = producer.produce(i);
+    public Matrix(int lines, int columns, Producer producer) {
+        this(lines, columns);
+        for (int i = 0; i < x.length; i++) {
+            x[i] = producer.produce(i);
 
         }
     }
 
     public Matrix apply(ValueProducer producer) {
-        Matrix result = new Matrix(rows, cols);
+        Matrix result = new Matrix(lines, columns);
 
-        for (int i = 0; i < a.length; i++) {
-            result.a[i] = producer.produce(i, a[i]);
+        for (int i = 0; i < x.length; i++) {
+            result.x[i] = producer.produce(i, x[i]);
         }
 
         return result;
@@ -41,9 +40,9 @@ public class Matrix {
 
         int index = 0;
 
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
-                sb.append(String.format(NUMBER_FORMAT, a[index]));
+        for (int i = 0; i < lines; i++) {
+            for (int j = 0; j < columns; j++) {
+                sb.append(String.format(NUMBER_FORMAT, x[index]));
                 sb.append("\t");
                 index++;
             }
@@ -53,15 +52,15 @@ public class Matrix {
     }
 
     public Matrix multiply(Matrix m) {
-        Matrix result = new Matrix(rows, m.cols);
+        Matrix result = new Matrix(lines, m.columns);
 
-        assert cols == m.rows : "Cannot multiply";
+        assert columns == m.lines : "Cannot multiply";
         int index = 0;
-        for (int row = 0; row < result.rows; row++) {
-            for (int col = 0; col < result.cols; col++) {
-                result.a[index] = 0.0;
-                for (int k = 0; k < cols; k++) {
-                    result.a[row * result.cols + col] += get(row, k) * get(k, col);
+        for (int row = 0; row < result.lines; row++) {
+            for (int col = 0; col < result.columns; col++) {
+                result.x[index] = 0.0;
+                for (int k = 0; k < columns; k++) {
+                    result.x[row * result.columns + col] += get(row, k) * get(k, col);
                 }
                 index++;
             }
@@ -76,10 +75,10 @@ public class Matrix {
 
         Matrix matrix = (Matrix) o;
 
-        if (cols != matrix.cols) return false;
-        if (rows != matrix.rows) return false;
-        for (int i = 0; i < a.length; i++) {
-            if (Math.abs(a[i] - matrix.a[i]) > TOLERANCE)
+        if (columns != matrix.columns) return false;
+        if (lines != matrix.lines) return false;
+        for (int i = 0; i < x.length; i++) {
+            if (Math.abs(x[i] - matrix.x[i]) > TOLERANCE)
                 return false;
 
         }
@@ -88,36 +87,36 @@ public class Matrix {
 
     @Override
     public int hashCode() {
-        int result = cols;
-        result = 31 * result + rows;
-        result = 31 * result + Arrays.hashCode(a);
+        int result = columns;
+        result = 31 * result + lines;
+        result = 31 * result + Arrays.hashCode(x);
         return result;
     }
 
     public double get(int row, int col) {
-        return a[row*cols+col];
+        return x[row*columns+col];
     }
     public void set(int row, int col, double value) {
-        a[row*cols+col] = value;
+        x[row*columns+col] = value;
     }
     public void set(int row, double value) {
-        a[row] = value;
+        x[row] = value;
     }
 
     public double get(int index) {
-        return a[index];
+        return x[index];
     }
 
     public Matrix softmax() {
-        Matrix matrix = new Matrix(rows, cols);
+        Matrix matrix = new Matrix(lines, columns);
         double sumExp = 0.0;
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
+        for (int i = 0; i < lines; i++) {
+            for (int j = 0; j < columns; j++) {
                 sumExp += Math.exp(get(i,j));
             }
         }
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
+        for (int i = 0; i < lines; i++) {
+            for (int j = 0; j < columns; j++) {
                 matrix.set(i, j, Math.exp(get(i,j))/sumExp);
             }
         }
@@ -137,9 +136,9 @@ public class Matrix {
 
     public Matrix modify(RowColProducer producer) {
         int index=0;
-        for (int row = 0; row < rows; row++) {
-            for (int col = 0; col < cols; col++) {
-                a[index] = producer.produce(row, col, a[index]);
+        for (int row = 0; row < lines; row++) {
+            for (int col = 0; col < columns; col++) {
+                x[index] = producer.produce(row, col, x[index]);
                 index++;
             }
         }
@@ -148,8 +147,8 @@ public class Matrix {
 
 
     public Matrix modify(ValueProducer producer) {
-        for (int i = 0; i < a.length; i++) {
-            a[i] = producer.produce(i, a[i]);
+        for (int i = 0; i < x.length; i++) {
+            x[i] = producer.produce(i, x[i]);
         }
         return this;
     }
@@ -158,8 +157,8 @@ public class Matrix {
         public void consume(int index, double value);
     }
     public void forEach(IndexValueConsumer consumer) {
-        for (int i = 0; i < a.length; i++) {
-            consumer.consume(i, a[i]);
+        for (int i = 0; i < x.length; i++) {
+            consumer.consume(i, x[i]);
         }
     }
     public interface RowColIndexValueConsumer {
@@ -167,8 +166,8 @@ public class Matrix {
     }
     public void forEach(RowColIndexValueConsumer consumer) {
         int index = 0;
-            for (int row = 0; row < rows; row++) {
-                for (int col = 0; col < cols; col++) {
+            for (int row = 0; row < lines; row++) {
+                for (int col = 0; col < columns; col++) {
                     consumer.consume(row, col, index, get(row, col));
                     index++;
                 }
@@ -176,12 +175,12 @@ public class Matrix {
 
     }
     public Matrix sumColumns() {
-        Matrix matrix = new Matrix(1, cols);
+        Matrix matrix = new Matrix(1, columns);
         forEach((row, col, index, value) -> matrix.set(0, col, matrix.get(0, col)+value));
         return matrix;
     }
-    public Matrix sumRows() {
-        Matrix matrix = new Matrix(rows, 1);
+    public Matrix sumlines() {
+        Matrix matrix = new Matrix(lines, 1);
         forEach((row, col, index, value) -> matrix.set(row, 0, matrix.get(row, 0)+value));
         return matrix;
     }

@@ -11,7 +11,7 @@ public class M implements InterfaceMatrix {
 
     protected int columns;
     protected int lines;
-    double[] x;
+    protected double[] x;
     protected int compNo;
     public int compCount = 3;
 
