@@ -39,7 +39,7 @@ public class ResolutionCharacter6 implements Runnable {
     private static final double MAX_BLACK_VALUE = 0.3;
     private static int SHAKE_SIZE = 20;
     private static CsvWriter writer;
-    private static boolean isExporting = false;
+    private boolean isExporting = true;
     private static String dirOutChars;
     private static String dirOutChars2;
     private static File dirOutDist;
@@ -90,9 +90,7 @@ public class ResolutionCharacter6 implements Runnable {
 
         File dir = new File("C:\\Users\\manue\\EmptyCanvasTest\\ocr");
         File dirOut = new File("C:\\Users\\manue\\EmptyCanvasTest\\ocr\\TestsOutput");
-        if (isExporting()) {
 
-        }
         if (dir.exists() && dir.isDirectory()) {
 
             writer = new CsvWriter("\n", ",");
@@ -136,7 +134,7 @@ public class ResolutionCharacter6 implements Runnable {
 
     }
 
-    private static boolean isExporting() {
+    private boolean isExporting() {
         return isExporting;
     }
 
@@ -524,9 +522,9 @@ public class ResolutionCharacter6 implements Runnable {
         // Intersect
         cv.forEach(character2 -> {
             ch.forEach(character1 -> {
-                if (character1 == character2) {
+                //if (character1.equals(character2)) {
                     allCharsPossible.add(character2);
-                }
+                //}
             });
         });
 
@@ -779,6 +777,11 @@ public class ResolutionCharacter6 implements Runnable {
 
 
         }
+        columns = Arrays.copyOfRange(columns, 0, idx);
+        columns = trimArrayZeroes(columns, columns.length);
+
+
+        printIntegerArray(columns);
 
         Integer[] compareA = Arrays.copyOfRange(columns, 0, idx);
         Object[] keys = characterMapV.keySet().toArray();
@@ -859,9 +862,11 @@ public class ResolutionCharacter6 implements Runnable {
 
 
         }
+        Integer[] integers1 = Arrays.copyOfRange(lines, 0, idx);
+        lines = trimArrayZeroes(integers1, integers1.length);
 
         //lines = trimArrayZeroes(lines, idx);
-
+        printIntegerArray(lines);
 
         final Integer[] finalLines = lines;
 
@@ -884,21 +889,28 @@ public class ResolutionCharacter6 implements Runnable {
     }
 
     private Integer[] trimArrayZeroes(Integer[] lines, int length) {
-        int[] cut = new int[length];
+        Integer[] cut = new Integer[length];
         boolean firstZeros = true;
         boolean lastZeroes = true;
         int j = 0;
         for (int i = 0; i < length; i++) {
             if (firstZeros && (lines[i] == null || lines[i] == 0)) {
-            } else if (lines[i] == null || (lines[i] == 0 & !firstZeros)) {
-                cut[j] = lines[i];
-                j++;
+            } else if (lines[i] == null || lines[i] == 0 ) {
                 firstZeros = false;
+                lastZeroes = true;
+            } else if(lines[i]!=null && lines[i]!=0){
+                if(firstZeros) {
+                    firstZeros = false;
+                } else if(lastZeroes) {
+                    lastZeroes = false;
+                cut[j++] = lines[i];
+                }
+
             }
 
         }
-
-
+        return Arrays.copyOfRange(cut, 0, j);
+/*
         int[] cut2 = new int[j];
         int i = j - 1;
 
@@ -923,7 +935,7 @@ public class ResolutionCharacter6 implements Runnable {
         }
 
         return cut4;
-    }
+  */  }
 
     public boolean reduce(PixM input, Rectangle2 rectangle2origin, Rectangle2 render) {
         boolean hasChanged = true;
