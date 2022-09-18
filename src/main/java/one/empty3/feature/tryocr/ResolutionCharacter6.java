@@ -519,16 +519,6 @@ public class ResolutionCharacter6 implements Runnable {
 
         List<Character> allCharsPossible = new ArrayList<>();
 
-        String sH[] = new String[]{""};
-
-        ch.forEach(character -> sH[0] += character + ":");
-
-        String sV[] = new String[]{""};
-
-        ch.forEach(character -> sV[0] += character + ":");
-
-        Logger.getAnonymousLogger().info("CsH = {" + sH[0] + "}");
-        Logger.getAnonymousLogger().info("CsV = {" + sV[0] + "}");
 
 
         // Intersect
@@ -540,13 +530,14 @@ public class ResolutionCharacter6 implements Runnable {
             });
         });
 
-        String sAll[] = new String[]{""};
-
-        ch.forEach(character -> sAll[0] += character + ":");
-
-        Logger.getAnonymousLogger().info("Call = {" + sAll[0] + "}");
-
-
+        if(allCharsPossible.size()>0) {
+            Logger.getAnonymousLogger().info("Csv {");
+            printCharacterArray(cv);
+            Logger.getAnonymousLogger().info("Csh {");
+            printCharacterArray(ch);
+            Logger.getAnonymousLogger().info("AllCharsPossible {");
+            printCharacterArray(allCharsPossible);
+        }
         if (allCharsPossible.size() == 0)
             allCharsPossible.add('-');
 
@@ -788,6 +779,7 @@ public class ResolutionCharacter6 implements Runnable {
 
 
         }
+
         Integer[] compareA = Arrays.copyOfRange(columns, 0, idx);
         Object[] keys = characterMapV.keySet().toArray();
         Object[] integers = characterMapV.entrySet().toArray();
@@ -807,7 +799,7 @@ public class ResolutionCharacter6 implements Runnable {
         for (Integer finalColumn : finalColumns) {
             s[0] += "" + finalColumn + ":";
         }
-        Logger.getAnonymousLogger().log(Level.INFO, "Final Columns or lines (debug): " + s[0]);
+        Logger.getAnonymousLogger().log(Level.INFO, "Array : { " + s[0]+" }");
 
     }
 
@@ -818,7 +810,7 @@ public class ResolutionCharacter6 implements Runnable {
         for (Character character : chars) {
             s[0] += "" + character + ":";
         }
-        Logger.getAnonymousLogger().log(Level.INFO, "Final Columns or lines (debug): " + s[0]);
+        Logger.getAnonymousLogger().log(Level.INFO, "Array : { " + s[0]+" }");
 
     }
 
