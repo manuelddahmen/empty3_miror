@@ -39,7 +39,7 @@ public class ResolutionCharacter6 implements Runnable {
     private static final double MAX_BLACK_VALUE = 0.3;
     private static int SHAKE_SIZE = 20;
     private static CsvWriter writer;
-    private static boolean isExporting = true;
+    private static boolean isExporting = false;
     private static String dirOutChars;
     private static String dirOutChars2;
     private static File dirOutDist;
@@ -473,23 +473,27 @@ public class ResolutionCharacter6 implements Runnable {
                 if (reduce(input, new Rectangle2(rectangle), rectangle2)) {
                     //rectangle2 = new Rectangle2(rectangle);// PROVISOIRE
                     List<Character> candidates = recognize(input, rectangle2);
-                    if (candidates.size() >= 0) {
+                    if (candidates.size() >= 1) {
                         ///System.out.printf("In %s, Rectangle = (%d,%d,%d,%d) \t\tCandidates: ", name, i, j, w, h);
                         //candidates.forEach(System.out::print);
                         //
                         final String[] s = {""};
                         candidates.forEach(character -> s[0] += character);
                         if (candidates.size() > 1) {
-                            writer.writeLine(new String[]{name, "" + i, "" + j, "" + w, "" + h, s[0]});
+                            writer.writeLine(new String[]{name, "" + i, "" + j, "" + w, "" + h, s[0], "\n"});
+                            System.err.println();
+                            Logger.getAnonymousLogger().info("Characters {" + s[0] + "} (" + i + ", " + j + ")");
                         }
                         Color random = Colors.random();
                         output.plotCurve(rectangle, new TextureCol(random));
                         countRects++;
                         rectangles.add(rectangle2);
+                        PixM outChar = input.copySubImage(rectangle2.getX(),
+                                rectangle2.getY(), rectangle2.getW(), rectangle2.getH());
+                        outRecompose.pasteSubImage(outChar,
+                                rectangle2.getX(), rectangle2.getY(), rectangle2.getW(), rectangle2.getH());
                         if (isExporting()) {
                             File file = new File(dirOutChars + "-" + j + "-" + i + "-" + w + "-" + h + "-" + s[0] + ".png");
-                            PixM outChar = input.copySubImage(rectangle2.getX(),
-                                    rectangle2.getY(), rectangle2.getW(), rectangle2.getH());
                             if (!file.getParentFile().exists() || file.getParentFile().isDirectory()) {
                                 file.getParentFile().mkdirs();
                                 try {
@@ -498,8 +502,6 @@ public class ResolutionCharacter6 implements Runnable {
                                     throw new RuntimeException(e);
                                 }
                             }
-                            outRecompose.pasteSubImage(outChar,
-                                    rectangle2.getX(), rectangle2.getY(), rectangle2.getW(), rectangle2.getH());
                         }
                     }
                 }
@@ -517,12 +519,33 @@ public class ResolutionCharacter6 implements Runnable {
 
         List<Character> allCharsPossible = new ArrayList<>();
 
+        String sH[] = new String[]{""};
+
+        ch.forEach(character -> sH[0] += character + ":");
+
+        String sV[] = new String[]{""};
+
+        ch.forEach(character -> sV[0] += character + ":");
+
+        Logger.getAnonymousLogger().info("CsH = {" + sH[0] + "}");
+        Logger.getAnonymousLogger().info("CsV = {" + sV[0] + "}");
+
 
         // Intersect
-        cv.forEach(character -> {
-            if (ch.stream().anyMatch(character::equals))
-                allCharsPossible.add(character);
+        cv.forEach(character2 -> {
+            ch.forEach(character1 -> {
+                if (character1 == character2) {
+                    allCharsPossible.add(character2);
+                }
+            });
         });
+
+        String sAll[] = new String[]{""};
+
+        ch.forEach(character -> sAll[0] += character + ":");
+
+        Logger.getAnonymousLogger().info("Call = {" + sAll[0] + "}");
+
 
         if (allCharsPossible.size() == 0)
             allCharsPossible.add('-');
@@ -734,13 +757,10 @@ public class ResolutionCharacter6 implements Runnable {
 
         List<Character> retained = new ArrayList<>();
 
-        Map<Character, Integer[]> patternsVertical = characterMapV;
-
-
         Integer[] columns = new Integer[w + h + 1];
         boolean firstColumn = true;
         int idx = 0;
-        int count0 = 0;
+        int count0 = -1;
         for (int i = x; i <= x + w; i++) {
             var ref = new Object() {
                 int countOnColumnI = 0;
@@ -749,30 +769,31 @@ public class ResolutionCharacter6 implements Runnable {
             for (int j = y; j <= y + h; j++) {
                 if (mat.luminance(i, j) < MAX_BLACK_VALUE
                         && current == BLANK) {
-                    if (firstColumn) {
-                        firstColumn = false;
-                    }
                     ref.countOnColumnI++;
                     current = CHARS;
                 } else {
                     current = BLANK;
                 }
             }
-            if (ref.countOnColumnI != count0) {
+            if (ref.countOnColumnI != count0
+                    || firstColumn) {
                 columns[idx] = ref.countOnColumnI;
                 idx++;
+            }
+            if (firstColumn) {
+                firstColumn = false;
             }
 
             count0 = ref.countOnColumnI;
 
 
         }
-        Integer [] compareA = Arrays.copyOfRange(columns, 0, idx);
+        Integer[] compareA = Arrays.copyOfRange(columns, 0, idx);
         Object[] keys = characterMapV.keySet().toArray();
         Object[] integers = characterMapV.entrySet().toArray();
         for (int i = 0; i < characterMapV.keySet().size(); i++) {
             Object compareB = keys[i];
-            if(Arrays.equals(compareA, characterMapV.get(compareB))) {
+            if (Arrays.equals(compareA, characterMapV.get(compareB))) {
                 retained.add((Character) compareB);
             }
         }
@@ -782,10 +803,22 @@ public class ResolutionCharacter6 implements Runnable {
     private void printIntegerArray(Integer[] finalColumns) {
         if (!cEchoing || finalColumns == null)
             return;
-        Logger.getAnonymousLogger().log(Level.INFO, "Final Columns (debug)");
-        for (int i = 0; i < finalColumns.length; i++) {
-            System.out.print(finalColumns[i] + ":");
+        String[] s = new String[]{""};
+        for (Integer finalColumn : finalColumns) {
+            s[0] += "" + finalColumn + ":";
         }
+        Logger.getAnonymousLogger().log(Level.INFO, "Final Columns or lines (debug): " + s[0]);
+
+    }
+
+    private void printCharacterArray(List<Character> chars) {
+        if (!cEchoing)
+            return;
+        String[] s = new String[]{""};
+        for (Character character : chars) {
+            s[0] += "" + character + ":";
+        }
+        Logger.getAnonymousLogger().log(Level.INFO, "Final Columns or lines (debug): " + s[0]);
 
     }
 
@@ -811,184 +844,185 @@ public class ResolutionCharacter6 implements Runnable {
             int current = BLANK;
             for (int i = x; i <= x + w; i++) {
                 if (mat.luminance(i, j) < MAX_BLACK_VALUE
-                    && current == BLANK) {
-                        if (firstLine) {
-                            firstLine = false;
-                        }
-                        ref.countOnColumnI++;
-                        current = CHARS;
+                        && current == BLANK) {
+                    ref.countOnColumnI++;
+                    current = CHARS;
 
-                    } else {
-                        current = BLANK;
-                    }
+                } else {
+                    current = BLANK;
                 }
-                if (ref.countOnColumnI != count0) {
-                    lines[idx] = ref.countOnColumnI;
-                    idx++;
-                }
-
-                count0 = ref.countOnColumnI;
-
-
             }
 
-            //lines = trimArrayZeroes(lines, idx);
+
+            if (ref.countOnColumnI != count0
+                    || firstLine) {
+                lines[idx] = ref.countOnColumnI;
+                idx++;
+            }
+            if (firstLine) {
+                firstLine = false;
+            }
+
+            count0 = ref.countOnColumnI;
 
 
-            Integer[] finalLines = lines;
+        }
 
-            patternsHorizon.forEach((character, integers) -> {
-                if (Arrays.equals(finalLines, integers))
-                    retained.add(character);
-            });
+        //lines = trimArrayZeroes(lines, idx);
 
-            printIntegerArray(finalLines);
 
-        Integer [] compareA = Arrays.copyOfRange(lines, 0, idx);
+        final Integer[] finalLines = lines;
+
+        patternsHorizon.forEach((character, integers) -> {
+            if (Arrays.equals(finalLines, integers))
+                retained.add(character);
+        });
+
+        Integer[] compareA = Arrays.copyOfRange(lines, 0, idx);
         Object[] keys = characterMapH.keySet().toArray();
         Object[] integers = characterMapH.entrySet().toArray();
         for (int i = 0; i < characterMapH.keySet().size(); i++) {
             Object compareB = keys[i];
-            if(Arrays.equals(compareA, characterMapH.get(compareB))) {
+            if (Arrays.equals(compareA, characterMapH.get(compareB))) {
                 retained.add((Character) compareB);
             }
         }
 
-            return retained;
-        }
+        return retained;
+    }
 
-        private Integer[] trimArrayZeroes (Integer[]lines,int length){
-            int[] cut = new int[length];
-            boolean firstZeros = true;
-            boolean lastZeroes = true;
-            int j = 0;
-            for (int i = 0; i < length; i++) {
-                if (firstZeros && (lines[i] == null || lines[i] == 0)) {
-                } else if (lines[i] == null || (lines[i] == 0 & !firstZeros)) {
-                    cut[j] = lines[i];
-                    j++;
-                    firstZeros = false;
-                }
-
+    private Integer[] trimArrayZeroes(Integer[] lines, int length) {
+        int[] cut = new int[length];
+        boolean firstZeros = true;
+        boolean lastZeroes = true;
+        int j = 0;
+        for (int i = 0; i < length; i++) {
+            if (firstZeros && (lines[i] == null || lines[i] == 0)) {
+            } else if (lines[i] == null || (lines[i] == 0 & !firstZeros)) {
+                cut[j] = lines[i];
+                j++;
+                firstZeros = false;
             }
 
+        }
 
-            int[] cut2 = new int[j];
-            int i = j - 1;
 
-            if (i >= 0) {
-                while (i >= 0 && cut[i] <= 0) {
-                    i--;
-                }
-                if (i < -1) {
-                    return null;
-                }
+        int[] cut2 = new int[j];
+        int i = j - 1;
 
-            } else {
+        if (i >= 0) {
+            while (i >= 0 && cut[i] <= 0) {
+                i--;
+            }
+            if (i < -1) {
                 return null;
             }
 
-            int[] cut3 = Arrays.copyOfRange(cut2, 0, i + 1);
-
-            Integer[] cut4 = new Integer[cut3.length];
-
-            for (i = 0; i < cut3.length; i++) {
-                cut4[i] = cut3[i];
-            }
-
-            return cut4;
+        } else {
+            return null;
         }
 
-        public boolean reduce (PixM input, Rectangle2 rectangle2origin, Rectangle2 render){
-            boolean hasChanged = true;
-            render.setX(rectangle2origin.getX());
-            render.setY(rectangle2origin.getY());
-            render.setW(rectangle2origin.getW());
-            render.setH(rectangle2origin.getH());
+        int[] cut3 = Arrays.copyOfRange(cut2, 0, i + 1);
 
-            boolean[] booleans = new boolean[4];
+        Integer[] cut4 = new Integer[cut3.length];
 
-            while (hasChanged && render.getX() >= 0 && render.getX() + render.getW() < input.getColumns()
-                    && render.getW() > 0 &&
-                    render.getY() >= 0 && render.getY() + render.getH() < input.getLines()
-                    && render.getH() > 0) {
-                hasChanged = true;
-                booleans = testRectIs(input, render.getX(), render.getY(), render.getW(), render.getH(), booleans, WHITE_DOUBLES);
-                if (booleans[XPLUS])
-                    render.setY(render.getY() + 1);
-                else if (booleans[XINVE])
-                    render.setH(render.getH() - 1);
-                else if (booleans[YPLUS])
-                    render.setW(render.getW() - 1);
-                else if (booleans[YINVE])
-                    render.setX(render.getX() + 1);
-                else
-                    hasChanged = false;
-
-            }
-            return render.getX() >= 0 && render.getX() + render.getW() < input.getColumns()
-                    && render.getW() > 0 &&
-                    render.getY() >= 0 && render.getY() + render.getH() < input.getLines()
-                    && render.getH() > 0;
+        for (i = 0; i < cut3.length; i++) {
+            cut4[i] = cut3[i];
         }
 
-        public boolean isEchoing () {
-            return cEchoing;
+        return cut4;
+    }
+
+    public boolean reduce(PixM input, Rectangle2 rectangle2origin, Rectangle2 render) {
+        boolean hasChanged = true;
+        render.setX(rectangle2origin.getX());
+        render.setY(rectangle2origin.getY());
+        render.setW(rectangle2origin.getW());
+        render.setH(rectangle2origin.getH());
+
+        boolean[] booleans = new boolean[4];
+
+        while (hasChanged && render.getX() >= 0 && render.getX() + render.getW() < input.getColumns()
+                && render.getW() > 0 &&
+                render.getY() >= 0 && render.getY() + render.getH() < input.getLines()
+                && render.getH() > 0) {
+            hasChanged = true;
+            booleans = testRectIs(input, render.getX(), render.getY(), render.getW(), render.getH(), booleans, WHITE_DOUBLES);
+            if (booleans[XPLUS])
+                render.setY(render.getY() + 1);
+            else if (booleans[XINVE])
+                render.setH(render.getH() - 1);
+            else if (booleans[YPLUS])
+                render.setW(render.getW() - 1);
+            else if (booleans[YINVE])
+                render.setX(render.getX() + 1);
+            else
+                hasChanged = false;
+
+        }
+        return render.getX() >= 0 && render.getX() + render.getW() < input.getColumns()
+                && render.getW() > 0 &&
+                render.getY() >= 0 && render.getY() + render.getH() < input.getLines()
+                && render.getH() > 0;
+    }
+
+    public boolean isEchoing() {
+        return cEchoing;
+    }
+
+    class State {
+        public Point3D xyz;
+        public double step;
+        public double currentError = 0.0;
+        public int[] lastErrors = new int[3];
+        ArrayList<CourbeParametriquePolynomialeBezier> resolvedCurved = new ArrayList<>();
+        ArrayList<CourbeParametriquePolynomialeBezier> currentCurves = new ArrayList<>();
+        double lastError = Double.NaN;
+        State previousState;
+        PixM input;
+        PixM backgroundImage;
+        Color textColor = Color.BLACK;
+        int dim;
+
+        public State(PixM image, PixM backgroundImage, int i, int j, int step) {
+            this.input = image;
+            this.backgroundImage = backgroundImage;
+            xyz = Point3D.n(i + step / 2., j + step / 2., 0.);
+            this.step = step;
         }
 
-        class State {
-            public Point3D xyz;
-            public double step;
-            public double currentError = 0.0;
-            public int[] lastErrors = new int[3];
-            ArrayList<CourbeParametriquePolynomialeBezier> resolvedCurved = new ArrayList<>();
-            ArrayList<CourbeParametriquePolynomialeBezier> currentCurves = new ArrayList<>();
-            double lastError = Double.NaN;
-            State previousState;
-            PixM input;
-            PixM backgroundImage;
-            Color textColor = Color.BLACK;
-            int dim;
+        public double computeError() {
+            State state = this;
+            PixM pError = state.backgroundImage;
+            PixM inputCopy = input.copy();
+            state.currentCurves.forEach(courbeParametriquePolynomialeBezier -> {
+                pError.plotCurve(courbeParametriquePolynomialeBezier, new TextureCol(Color.BLACK));
+                numCurves++;
+            });
+            PixM copy = pError.copy();
+            Linear linear = new Linear(inputCopy, pError, new PixM(input.getColumns(), input.getLines()));
+            linear.op2d2d(new char[]{'-'}, new int[][]{{1, 0}}, new int[]{2});
+            PixM diff = linear.getImages()[2];
+            return diff.mean(0, 0, diff.getColumns(), diff.getLines());
 
-            public State(PixM image, PixM backgroundImage, int i, int j, int step) {
-                this.input = image;
-                this.backgroundImage = backgroundImage;
-                xyz = Point3D.n(i + step / 2., j + step / 2., 0.);
-                this.step = step;
-            }
-
-            public double computeError() {
-                State state = this;
-                PixM pError = state.backgroundImage;
-                PixM inputCopy = input.copy();
-                state.currentCurves.forEach(courbeParametriquePolynomialeBezier -> {
-                    pError.plotCurve(courbeParametriquePolynomialeBezier, new TextureCol(Color.BLACK));
-                    numCurves++;
-                });
-                PixM copy = pError.copy();
-                Linear linear = new Linear(inputCopy, pError, new PixM(input.getColumns(), input.getLines()));
-                linear.op2d2d(new char[]{'-'}, new int[][]{{1, 0}}, new int[]{2});
-                PixM diff = linear.getImages()[2];
-                return diff.mean(0, 0, diff.getColumns(), diff.getLines());
-
-            }
-
-            public State copy() {
-                State copy = new State(this.input, backgroundImage, (int) (double) this.xyz.get(0), (int) (double) this.xyz.get(1), (int) (double) this.step);
-                copy.currentError = currentError;
-                copy.currentCurves = (ArrayList<CourbeParametriquePolynomialeBezier>) this.currentCurves.clone();
-                copy.lastError = lastError;
-                copy.step = step;
-                copy.xyz = xyz;
-                copy.backgroundImage = backgroundImage;
-                copy.input = input;
-                copy.dim = dim;
-                copy.lastErrors = lastErrors;
-                copy.textColor = textColor;
-                copy.previousState = this;
-
-                return copy;
-            }
         }
+
+        public State copy() {
+            State copy = new State(this.input, backgroundImage, (int) (double) this.xyz.get(0), (int) (double) this.xyz.get(1), (int) (double) this.step);
+            copy.currentError = currentError;
+            copy.currentCurves = (ArrayList<CourbeParametriquePolynomialeBezier>) this.currentCurves.clone();
+            copy.lastError = lastError;
+            copy.step = step;
+            copy.xyz = xyz;
+            copy.backgroundImage = backgroundImage;
+            copy.input = input;
+            copy.dim = dim;
+            copy.lastErrors = lastErrors;
+            copy.textColor = textColor;
+            copy.previousState = this;
+
+            return copy;
+        }
+    }
 }
 
