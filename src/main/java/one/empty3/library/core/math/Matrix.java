@@ -15,9 +15,16 @@ public class Matrix extends PixM {
         this.compCount = countComp;
         x = new double[lines * columns * compCount];
     }
+    public Matrix(int lines, int columns) {
+        super(lines, columns);
+        this.lines = lines;
+        this.columns = columns;
+        this.compCount = 1;
+        x = new double[lines * columns * compCount];
+    }
 
-    public Matrix(int lines, int columns, int compCount, Producer producer) {
-        this(lines, columns, compCount);
+    public Matrix(int lines, int columns, Producer producer) {
+        this(lines, columns, 1);
         for (int i = 0; i < x.length; i++) {
             x[i] = producer.produce(i);
 
