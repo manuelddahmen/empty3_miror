@@ -46,6 +46,7 @@ public class ResolutionCharacter6 implements Runnable {
     private static String dirOutChars2;
     private static File dirOutDist;
     private static PrintWriter pwTxt;
+    private static File dirOutGradient2;
     final int epochs = 100;
     private final File dirOut;
     private final int stepMax = 80;
@@ -115,8 +116,10 @@ public class ResolutionCharacter6 implements Runnable {
                     Logger.getAnonymousLogger().log(Level.INFO, "ResolutionCharacter6 : " + name);
 
                     ResolutionCharacter6 resolutionCharacter6 = new ResolutionCharacter6(read, name, dirOut);
-                    dirOutDist = new File(dirOut.getAbsolutePath() + File.separator + name + File.separator
+                    dirOutDist = new File(dirOut.getAbsolutePath() + File.separator + name
                             + "_images-distances.jpg");
+                    dirOutGradient2 = new File(dirOut.getAbsolutePath() + File.separator + name
+                            + "gradient.jpg");
                     dirOutChars = dirOut.getAbsolutePath() + File.separator + name + File.separator + "char";
                     dirOutChars2 = dirOut.getAbsolutePath() + File.separator + name + File.separator + "char2";
                     try {
@@ -128,7 +131,10 @@ public class ResolutionCharacter6 implements Runnable {
 
                     System.out.printf("%s", resolutionCharacter6.getClass().getSimpleName());
 
+
                     Thread thread = new Thread(resolutionCharacter6);
+
+
 
 
                     thread.start();
@@ -236,8 +242,19 @@ public class ResolutionCharacter6 implements Runnable {
             dirOut.mkdirs();
 
         input = new PixM(read);
+
+
+
+
         output = input.copy();
+
         outRecompose = new PixM(input.getColumns(), input.getLines());
+        try {
+            ImageIO.write(derivative(input).getImage(), "jpg", dirOutGradient2);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
         Logger.getAnonymousLogger().log(Level.INFO, "Image size: " + output.getColumns() + ", " + output.getLines());
 
         final ITexture texture = new TextureCol(Color.BLACK);
@@ -1028,6 +1045,19 @@ public class ResolutionCharacter6 implements Runnable {
 
             return copy;
         }
+    }
+
+    public PixM derivative(PixM input) {
+        PixM output = new PixM(input.getColumns(), input.getLines());
+
+        for(int i=0; i<input.getColumns(); i++) {
+            for (int j = 0; j < input.getLines(); j++) {
+                output.setP(i, j, output.getP(i-1, j)
+                        .plus(output.getP(i, j-1))
+                        .mult(input.get(i, j)));
+            }
+        }
+        return output.normalize(0., 1.);
     }
 }
 
