@@ -902,7 +902,8 @@ public class ResolutionCharacter6 implements Runnable {
     private Integer[] trimArrayZeroes(Integer[] lines) {
         Integer[] cut = new Integer[lines.length];
         boolean firstZeros = true;
-        boolean lastZeros = true;
+        boolean lastZeros = true
+                ;
         int j = 0;
         int size = 0;
         for (int i = 0; i < lines.length && (firstZeros); i++) {
