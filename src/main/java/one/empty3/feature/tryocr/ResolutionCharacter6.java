@@ -121,7 +121,7 @@ public class ResolutionCharacter6 implements Runnable {
                     dirOutChars2 = dirOut.getAbsolutePath() + File.separator + name + File.separator + "char2";
                     try {
                         pwTxt = new PrintWriter(dirOut.getAbsolutePath() + File.separator +
-                                name + File.separator + "output.txt");
+                                name +  "output.txt");
                     } catch (FileNotFoundException e) {
                         throw new RuntimeException(e);
                     }
@@ -798,7 +798,7 @@ public class ResolutionCharacter6 implements Runnable {
 
         }
         columns = Arrays.copyOfRange(columns, 0, idx);
-        columns = trimArrayZeroes(columns, columns.length);
+        columns = trimArrayZeroes(columns);
 
         printIntegerArray(columns);
 
@@ -877,7 +877,7 @@ public class ResolutionCharacter6 implements Runnable {
 
         }
         Integer[] integers1 = Arrays.copyOfRange(lines, 0, idx);
-        lines = trimArrayZeroes(integers1, integers1.length);
+        lines = trimArrayZeroes(integers1);
 
         //lines = trimArrayZeroes(lines, idx);
         printIntegerArray(lines);
@@ -899,55 +899,43 @@ public class ResolutionCharacter6 implements Runnable {
         return retained;
     }
 
-    private Integer[] trimArrayZeroes(Integer[] lines, int length) {
-        Integer[] cut = new Integer[length];
+    private Integer[] trimArrayZeroes(Integer[] lines) {
+        Integer[] cut = new Integer[lines.length];
         boolean firstZeros = true;
-        boolean lastZeroes = true;
+        boolean lastZeros = true;
         int j = 0;
-        for (int i = 0; i < length; i++) {
-            if (firstZeros && (lines[i] == null || lines[i] == 0)) {
-            } else if (lines[i] == null || lines[i] == 0) {
+        int size = 0;
+        for (int i = 0; i < lines.length && (firstZeros); i++) {
+            if (lines[i] == null || lines[i] == 0) {
+                size++;
+            }else {
                 firstZeros = false;
-                lastZeroes = true;
-            } else if (lines[i] != null && lines[i] != 0) {
-                if (firstZeros) {
-                    firstZeros = false;
-                } else if (lastZeroes) {
-                    lastZeroes = false;
-                    cut[j++] = lines[i];
-                }
-
             }
 
         }
-        return Arrays.copyOfRange(cut, 0, j);
-/*
-        int[] cut2 = new int[j];
-        int i = j - 1;
 
-        if (i >= 0) {
-            while (i >= 0 && cut[i] <= 0) {
-                i--;
-            }
-            if (i < -1) {
-                return null;
+        if(size==lines.length)
+            return new Integer[] {0};
+
+        cut = Arrays.copyOfRange(lines, size, lines.length);
+
+        size = cut.length;
+
+        for (int i = cut.length - 1; i >=0  && (lastZeros); i--) {
+            if (cut[i] == null || cut[i] == 0) {
+                size--;
+            }else {
+                lastZeros = false;
             }
 
-        } else {
-            return null;
         }
 
-        int[] cut3 = Arrays.copyOfRange(cut2, 0, i + 1);
-
-        Integer[] cut4 = new Integer[cut3.length];
-
-        for (i = 0; i < cut3.length; i++) {
-            cut4[i] = cut3[i];
-        }
-
-        return cut4;
-  */
+        if(size>0)
+            return Arrays.copyOfRange(cut, 0, size);
+        else
+            return new Integer[] {0};
     }
+
 
     public boolean reduce(PixM input, Rectangle2 rectangle2origin, Rectangle2 render) {
         boolean hasChanged = true;
