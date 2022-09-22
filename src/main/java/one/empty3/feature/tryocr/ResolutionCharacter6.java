@@ -15,7 +15,9 @@ import one.empty3.library.core.nurbs.CourbeParametriquePolynomialeBezier;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 import java.util.*;
 import java.util.function.Consumer;
@@ -43,6 +45,7 @@ public class ResolutionCharacter6 implements Runnable {
     private static String dirOutChars;
     private static String dirOutChars2;
     private static File dirOutDist;
+    private static PrintWriter pwTxt;
     final int epochs = 100;
     private final File dirOut;
     private final int stepMax = 80;
@@ -99,7 +102,11 @@ public class ResolutionCharacter6 implements Runnable {
             writer.writeLine(new String[]{"filename", "x", "y", "w", "h", "chars"});
 
             for (File file : Objects.requireNonNull(dir.listFiles())) {
-                if (!file.isDirectory() && file.isFile() && file.getName().toLowerCase(Locale.ROOT).endsWith(".jpg")) {
+                if (!file.isDirectory() && file.isFile() ) {
+                    String extension = file.getName().toLowerCase(Locale.ROOT);
+                    if(!Arrays.stream(javax.imageio.ImageIO.getReaderFileSuffixes()).noneMatch(s -> s.equals(extension)))
+                        continue;
+
                     BufferedImage read = ImageIO.read(file);
 
                     String name = file.getName();
@@ -108,9 +115,16 @@ public class ResolutionCharacter6 implements Runnable {
                     Logger.getAnonymousLogger().log(Level.INFO, "ResolutionCharacter6 : " + name);
 
                     ResolutionCharacter6 resolutionCharacter6 = new ResolutionCharacter6(read, name, dirOut);
-                    dirOutDist = new File(dirOut.getAbsolutePath() + File.separator + name + "_images-distances.jpg");
+                    dirOutDist = new File(dirOut.getAbsolutePath() + File.separator + name + File.separator
+                            + "_images-distances.jpg");
                     dirOutChars = dirOut.getAbsolutePath() + File.separator + name + File.separator + "char";
                     dirOutChars2 = dirOut.getAbsolutePath() + File.separator + name + File.separator + "char2";
+                    try {
+                        pwTxt = new PrintWriter(dirOut.getAbsolutePath() + File.separator +
+                                name + File.separator + "output.txt");
+                    } catch (FileNotFoundException e) {
+                        throw new RuntimeException(e);
+                    }
 
                     System.out.printf("%s", resolutionCharacter6.getClass().getSimpleName());
 
@@ -125,6 +139,7 @@ public class ResolutionCharacter6 implements Runnable {
                         throw new RuntimeException(e);
                     }
 
+                    pwTxt.close();
 
                     System.gc();
                 }
@@ -483,6 +498,8 @@ public class ResolutionCharacter6 implements Runnable {
                             System.err.println();
                             Logger.getAnonymousLogger().info("Characters {" + s[0] + "} (" + i + ", " + j + ")");
                         }
+                        if(s[0].length()>0)
+                            pwTxt.println(s[0]);
                         Color random = Colors.random();
                         output.plotCurve(rectangle, new TextureCol(random));
                         countRects++;
@@ -539,8 +556,8 @@ public class ResolutionCharacter6 implements Runnable {
             Logger.getAnonymousLogger().info("AllCharsPossible {");
             printCharacterArray(allCharsPossible);
         }
-        if (allCharsPossible.size() == 0)
-            allCharsPossible.add('-');
+        //if (allCharsPossible.size() == 0)
+        //    allCharsPossible.add('-');
 
         return allCharsPossible;
     }
