@@ -18,15 +18,16 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class ResolutionCharacter6 implements Runnable {
     public static final float MIN_DIFF = 0.6f;
-    public static final int XPLUS = 0;
-    public static final int YPLUS = 1;
-    public static final int XINVE = 2;
-    public static final int YINVE = 3;
+    public static final int X_PLUS = 0;
+    public static final int Y_PLUS = 1;
+    public static final int X_MINUS = 2;
+    public static final int Y_MINUS = 3;
     private static final int ADD_POINT_TO_RANDOM_CURVE = 0;
     private static final int ADD_RANDOM_CURVE = 2;
     private static final int DEL_RANDOM_CURVE = 3;
@@ -39,7 +40,6 @@ public class ResolutionCharacter6 implements Runnable {
     private static final double MAX_BLACK_VALUE = 0.3;
     private static int SHAKE_SIZE = 20;
     private static CsvWriter writer;
-    private boolean isExporting = true;
     private static String dirOutChars;
     private static String dirOutChars2;
     private static File dirOutDist;
@@ -53,6 +53,7 @@ public class ResolutionCharacter6 implements Runnable {
     boolean[] testedRectangleBorder = new boolean[4];
     int step = 1;// Searched Characters size.
     PixM outRecompose;
+    private boolean isExporting = true;
     private BufferedImage read;
     private String name;
     private int shakeTimes;
@@ -396,7 +397,7 @@ public class ResolutionCharacter6 implements Runnable {
                 wbhBak = widthBlackHistory;
 
                 testedRectangleBorder = testRectIs(input, i, j, w, h, testedRectangleBorder, WHITE_DOUBLES);
-                if (!testedRectangleBorder[XPLUS] || !testedRectangleBorder[YINVE]) {
+                if (!testedRectangleBorder[X_PLUS] || !testedRectangleBorder[Y_MINUS]) {
                     break;
                 }
                 if ((widthBlackHistory == 0 || heightBlackHistory == 0) && Arrays.equals(testedRectangleBorder, TRUE_BOOLEANS)) {
@@ -422,22 +423,22 @@ public class ResolutionCharacter6 implements Runnable {
                         continue;
                     }*/
                 }
-                if (!testedRectangleBorder[XINVE] && heightBlackHistory == 0) {
+                if (!testedRectangleBorder[X_MINUS] && heightBlackHistory == 0) {
                     heightBlackHistory = 1;
                     h++;
                     continue;
-                } else if (!testedRectangleBorder[XINVE] && heightBlackHistory == 1) {
+                } else if (!testedRectangleBorder[X_MINUS] && heightBlackHistory == 1) {
                     h++;
-                } else if (testedRectangleBorder[XINVE] && heightBlackHistory == 1) {
+                } else if (testedRectangleBorder[X_MINUS] && heightBlackHistory == 1) {
                     heightBlackHistory = 2;
                 }
 
-                if (!testedRectangleBorder[YPLUS] && widthBlackHistory == 0) {
+                if (!testedRectangleBorder[Y_PLUS] && widthBlackHistory == 0) {
                     widthBlackHistory = 1;
                     w++;
-                } else if (!testedRectangleBorder[YPLUS] && widthBlackHistory == 1) {
+                } else if (!testedRectangleBorder[Y_PLUS] && widthBlackHistory == 1) {
                     w++;
-                } else if (testedRectangleBorder[YPLUS] && widthBlackHistory == 1) {
+                } else if (testedRectangleBorder[Y_PLUS] && widthBlackHistory == 1) {
                     widthBlackHistory = 2;
                     continue;
                 }
@@ -512,23 +513,25 @@ public class ResolutionCharacter6 implements Runnable {
         int j = rectangle2.getY();
         int w = rectangle2.getW();
         int h = rectangle2.getH();
+
+        Logger.getAnonymousLogger().info("Horizontal");
         List<Character> ch = recognizeH(input, i, j, w, h);
+        Logger.getAnonymousLogger().info("vertical");
         List<Character> cv = recognizeV(input, i, j, w, h);
 
         List<Character> allCharsPossible = new ArrayList<>();
 
 
-
         // Intersect
         cv.forEach(character2 -> {
             ch.forEach(character1 -> {
-                //if (character1.equals(character2)) {
+                if (character1.equals(character2)) {
                     allCharsPossible.add(character2);
-                //}
+                }
             });
         });
 
-        if(allCharsPossible.size()>0) {
+        if (allCharsPossible.size() > 0) {
             Logger.getAnonymousLogger().info("Csv {");
             printCharacterArray(cv);
             Logger.getAnonymousLogger().info("Csh {");
@@ -545,18 +548,18 @@ public class ResolutionCharacter6 implements Runnable {
     private boolean[] testRectIs(PixM input, int x, int y, int w, int h, boolean[] result, double[] color) {
         int i, j;
         // XPLUS
-        result[XPLUS] = true;
+        result[X_PLUS] = true;
         for (i = x; i <= x + w; i++)
-            if (arrayDiff(input.getValues(i, y), color) > MIN_DIFF) result[XPLUS] = false;
-        result[YPLUS] = true;
+            if (arrayDiff(input.getValues(i, y), color) > MIN_DIFF) result[X_PLUS] = false;
+        result[Y_PLUS] = true;
         for (j = y; j <= y + h; j++)
-            if (arrayDiff(input.getValues(x + w, j), color) > MIN_DIFF) result[YPLUS] = false;
-        result[XINVE] = true;
+            if (arrayDiff(input.getValues(x + w, j), color) > MIN_DIFF) result[Y_PLUS] = false;
+        result[X_MINUS] = true;
         for (i = x + w; i >= x; i--)
-            if (arrayDiff(input.getValues(i, y + h), color) > MIN_DIFF) result[XINVE] = false;
-        result[YINVE] = true;
+            if (arrayDiff(input.getValues(i, y + h), color) > MIN_DIFF) result[X_MINUS] = false;
+        result[Y_MINUS] = true;
         for (j = y + h; j >= y; j--)
-            if (arrayDiff(input.getValues(x, j), color) > MIN_DIFF) result[YINVE] = false;
+            if (arrayDiff(input.getValues(x, j), color) > MIN_DIFF) result[Y_MINUS] = false;
         return result;
     }
 
@@ -760,7 +763,7 @@ public class ResolutionCharacter6 implements Runnable {
                         && current == BLANK) {
                     ref.countOnColumnI++;
                     current = CHARS;
-                } else {
+                } else if(current==CHARS && mat.luminance(i, j)>=MAX_BLACK_VALUE){
                     current = BLANK;
                 }
             }
@@ -780,16 +783,14 @@ public class ResolutionCharacter6 implements Runnable {
         columns = Arrays.copyOfRange(columns, 0, idx);
         columns = trimArrayZeroes(columns, columns.length);
 
-
         printIntegerArray(columns);
 
-        Integer[] compareA = Arrays.copyOfRange(columns, 0, idx);
-        Object[] keys = characterMapV.keySet().toArray();
-        Object[] integers = characterMapV.entrySet().toArray();
-        for (int i = 0; i < characterMapV.keySet().size(); i++) {
-            Object compareB = keys[i];
+        Integer[] compareA = columns;
+        Iterator<Character> spliterator = characterMapV.keySet().stream().iterator();
+        while (spliterator.hasNext()) {
+            Character compareB = spliterator.next();
             if (Arrays.equals(compareA, characterMapV.get(compareB))) {
-                retained.add((Character) compareB);
+                retained.add(compareB);
             }
         }
         return retained;
@@ -802,7 +803,7 @@ public class ResolutionCharacter6 implements Runnable {
         for (Integer finalColumn : finalColumns) {
             s[0] += "" + finalColumn + ":";
         }
-        Logger.getAnonymousLogger().log(Level.INFO, "Array : { " + s[0]+" }");
+        Logger.getAnonymousLogger().log(Level.INFO, "Array : { " + s[0] + " }");
 
     }
 
@@ -813,7 +814,7 @@ public class ResolutionCharacter6 implements Runnable {
         for (Character character : chars) {
             s[0] += "" + character + ":";
         }
-        Logger.getAnonymousLogger().log(Level.INFO, "Array : { " + s[0]+" }");
+        Logger.getAnonymousLogger().log(Level.INFO, "Array : { " + s[0] + " }");
 
     }
 
@@ -831,11 +832,6 @@ public class ResolutionCharacter6 implements Runnable {
             var ref = new Object() {
                 int countOnColumnI = 0;
             };
-            ArrayList<FeatureLine> beginWith;
-            CourbeParametriquePolynomialeBezier curve;
-            ArrayList<Point3D> moveXY;
-            ArrayList<Point3D> added;
-            ArrayList<Point3D> deleted;
             int current = BLANK;
             for (int i = x; i <= x + w; i++) {
                 if (mat.luminance(i, j) < MAX_BLACK_VALUE
@@ -843,7 +839,7 @@ public class ResolutionCharacter6 implements Runnable {
                     ref.countOnColumnI++;
                     current = CHARS;
 
-                } else {
+                } else if(current==CHARS && mat.luminance(i, j)>=MAX_BLACK_VALUE){
                     current = BLANK;
                 }
             }
@@ -851,6 +847,7 @@ public class ResolutionCharacter6 implements Runnable {
 
             if (ref.countOnColumnI != count0
                     || firstLine) {
+
                 lines[idx] = ref.countOnColumnI;
                 idx++;
             }
@@ -870,20 +867,17 @@ public class ResolutionCharacter6 implements Runnable {
 
         final Integer[] finalLines = lines;
 
-        patternsHorizon.forEach((character, integers) -> {
-            if (Arrays.equals(finalLines, integers))
-                retained.add(character);
-        });
+        Integer[] compareA = lines;
+        Iterator<Character> keys = characterMapH.keySet().iterator();
+        keys.forEachRemaining(new Consumer<Character>() {
+            @Override
+            public void accept(Character character) {
+                if (Arrays.equals(compareA, characterMapH.get(character))) {
+                    retained.add((Character) character);
+                }
 
-        Integer[] compareA = Arrays.copyOfRange(lines, 0, idx);
-        Object[] keys = characterMapH.keySet().toArray();
-        Object[] integers = characterMapH.entrySet().toArray();
-        for (int i = 0; i < characterMapH.keySet().size(); i++) {
-            Object compareB = keys[i];
-            if (Arrays.equals(compareA, characterMapH.get(compareB))) {
-                retained.add((Character) compareB);
             }
-        }
+        });
 
         return retained;
     }
@@ -895,15 +889,15 @@ public class ResolutionCharacter6 implements Runnable {
         int j = 0;
         for (int i = 0; i < length; i++) {
             if (firstZeros && (lines[i] == null || lines[i] == 0)) {
-            } else if (lines[i] == null || lines[i] == 0 ) {
+            } else if (lines[i] == null || lines[i] == 0) {
                 firstZeros = false;
                 lastZeroes = true;
-            } else if(lines[i]!=null && lines[i]!=0){
-                if(firstZeros) {
+            } else if (lines[i] != null && lines[i] != 0) {
+                if (firstZeros) {
                     firstZeros = false;
-                } else if(lastZeroes) {
+                } else if (lastZeroes) {
                     lastZeroes = false;
-                cut[j++] = lines[i];
+                    cut[j++] = lines[i];
                 }
 
             }
@@ -935,7 +929,8 @@ public class ResolutionCharacter6 implements Runnable {
         }
 
         return cut4;
-  */  }
+  */
+    }
 
     public boolean reduce(PixM input, Rectangle2 rectangle2origin, Rectangle2 render) {
         boolean hasChanged = true;
@@ -952,13 +947,13 @@ public class ResolutionCharacter6 implements Runnable {
                 && render.getH() > 0) {
             hasChanged = true;
             booleans = testRectIs(input, render.getX(), render.getY(), render.getW(), render.getH(), booleans, WHITE_DOUBLES);
-            if (booleans[XPLUS])
+            if (booleans[X_PLUS])
                 render.setY(render.getY() + 1);
-            else if (booleans[XINVE])
+            else if (booleans[X_MINUS])
                 render.setH(render.getH() - 1);
-            else if (booleans[YPLUS])
+            else if (booleans[Y_PLUS])
                 render.setW(render.getW() - 1);
-            else if (booleans[YINVE])
+            else if (booleans[Y_MINUS])
                 render.setX(render.getX() + 1);
             else
                 hasChanged = false;
