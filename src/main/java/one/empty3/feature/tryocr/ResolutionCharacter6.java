@@ -122,12 +122,6 @@ public class ResolutionCharacter6 implements Runnable {
                             + "gradient.jpg");
                     dirOutChars = dirOut.getAbsolutePath() + File.separator + name + File.separator + "char";
                     dirOutChars2 = dirOut.getAbsolutePath() + File.separator + name + File.separator + "char2";
-                    try {
-                        pwTxt = new PrintWriter(dirOut.getAbsolutePath() + File.separator +
-                                name +  "output.txt");
-                    } catch (FileNotFoundException e) {
-                        throw new RuntimeException(e);
-                    }
 
                     System.out.printf("%s", resolutionCharacter6.getClass().getSimpleName());
 
@@ -139,13 +133,18 @@ public class ResolutionCharacter6 implements Runnable {
 
                     thread.start();
 
+
+
                     try {
                         thread.join();
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
 
-                    pwTxt.close();
+                    if(pwTxt!=null) {
+                        pwTxt.close();
+                        pwTxt = null;
+                    }
 
                     System.gc();
                 }
@@ -244,6 +243,12 @@ public class ResolutionCharacter6 implements Runnable {
         input = new PixM(read);
 
 
+        try {
+            pwTxt = new PrintWriter(dirOut.getAbsolutePath() + File.separator +
+                    name +  "output.txt");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
 
 
         output = input.copy();
@@ -328,7 +333,8 @@ public class ResolutionCharacter6 implements Runnable {
         // Aligner les caractères identiques
 
         int mean = (int) Math.sqrt(nbValues);
-
+        int maxheight = 52;
+        int height = 0;
         for (int iSlides = 0; iSlides < nbValues; iSlides++) {
             Dimension dimensionTotal = new Dimension(0, 0);
             List<Rectangle2> matchingRects = new ArrayList<>();
@@ -342,15 +348,17 @@ public class ResolutionCharacter6 implements Runnable {
                     matchingRects.add(iSlides, rectangle2);
                     dimensionTotal.setSize(dimensionTotal.getWidth() + rectangle2.getW(), dimensionTotal.getHeight() > rectangle2.getH() ?
                             dimensionTotal.getHeight() : rectangle2.getH());
+                     maxheight = Math.max((int)dimensionTotal.getHeight(), maxheight);
                 }
             }
             final int[] widthCurrent = {0};
-            PixM pSlide = new PixM((int) dimensionTotal.getWidth(), (int) dimensionTotal.getHeight());
+            PixM pSlide = new PixM((int) dimensionTotal.getWidth(), (int) maxheight*mean);
             matchingRects.forEach(rectangle2 -> {
                 pSlide.pasteSubImage(input.copySubImage(rectangle2.getX(), rectangle2.getY(), rectangle2.getW(), rectangle2.getH()),
                         widthCurrent[0], 0, rectangle2.getW(), rectangle2.getH());
                 widthCurrent[0] += rectangle2.getW();
             });
+            height+=maxheight;
             try {
                 ImageIO.write(pSlide.getImage(), "jpg", new File(dirOutDist + "_matchingRects_" + pSlide + ".jpg"));
             } catch (IOException e) {
@@ -1054,7 +1062,7 @@ public class ResolutionCharacter6 implements Runnable {
             for (int j = 0; j < input.getLines(); j++) {
                 output.setP(i, j, output.getP(i-1, j)
                         .plus(output.getP(i, j-1))
-                        .mult(input.get(i, j)));
+                        .plus(input.getP(i, j)));
             }
         }
         return output.normalize(0., 1.);
