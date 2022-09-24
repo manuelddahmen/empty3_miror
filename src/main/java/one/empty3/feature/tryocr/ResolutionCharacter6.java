@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -105,48 +106,48 @@ public class ResolutionCharacter6 implements Runnable {
             for (File file : Objects.requireNonNull(dir.listFiles())) {
                 if (!file.isDirectory() && file.isFile() ) {
                     String extension = file.getName().toLowerCase(Locale.ROOT);
-                    if(!Arrays.stream(javax.imageio.ImageIO.getReaderFileSuffixes()).noneMatch(s -> s.equals(extension)))
+                    if (!Arrays.stream(javax.imageio.ImageIO.getReaderFileSuffixes()).noneMatch(s -> s.equals(extension)))
                         continue;
-
-                    BufferedImage read = ImageIO.read(file);
-
-                    String name = file.getName();
-
-
-                    Logger.getAnonymousLogger().log(Level.INFO, "ResolutionCharacter6 : " + name);
-
-                    ResolutionCharacter6 resolutionCharacter6 = new ResolutionCharacter6(read, name, dirOut);
-                    dirOutDist = new File(dirOut.getAbsolutePath() + File.separator + name
-                            + "_images-distances.jpg");
-                    dirOutGradient2 = new File(dirOut.getAbsolutePath() + File.separator + name
-                            + "gradient.jpg");
-                    dirOutChars = dirOut.getAbsolutePath() + File.separator + name + File.separator + "char";
-                    dirOutChars2 = dirOut.getAbsolutePath() + File.separator + name + File.separator + "char2";
-
-                    System.out.printf("%s", resolutionCharacter6.getClass().getSimpleName());
-
-
-                    Thread thread = new Thread(resolutionCharacter6);
-
-
-
-
-                    thread.start();
-
-
-
                     try {
-                        thread.join();
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
+                        BufferedImage read = ImageIO.read(file);
 
-                    if(pwTxt!=null) {
-                        pwTxt.close();
-                        pwTxt = null;
-                    }
+                        String name = file.getName();
 
-                    System.gc();
+
+                        Logger.getAnonymousLogger().log(Level.INFO, "ResolutionCharacter6 : " + name);
+
+                        ResolutionCharacter6 resolutionCharacter6 = new ResolutionCharacter6(read, name, dirOut);
+                        dirOutDist = new File(dirOut.getAbsolutePath() + File.separator + name
+                                + "_images-distances.jpg");
+                        dirOutGradient2 = new File(dirOut.getAbsolutePath() + File.separator + name
+                                + "gradient.jpg");
+                        dirOutChars = dirOut.getAbsolutePath() + File.separator + name + File.separator + "char";
+                        dirOutChars2 = dirOut.getAbsolutePath() + File.separator + name + File.separator + "char2";
+
+                        System.out.printf("%s", resolutionCharacter6.getClass().getSimpleName());
+
+
+                        Thread thread = new Thread(resolutionCharacter6);
+
+
+                        thread.start();
+
+
+                        try {
+                            thread.join();
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
+
+                        if (pwTxt != null) {
+                            pwTxt.close();
+                            pwTxt = null;
+                        }
+
+                        System.gc();
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
                 }
             }
 
@@ -333,38 +334,46 @@ public class ResolutionCharacter6 implements Runnable {
         // Aligner les caractères identiques
 
         int mean = (int) Math.sqrt(nbValues);
+        int maxLine = mean;
         int maxheight = 52;
         int height = 0;
+        Dimension dimensionTotal = new Dimension(0, 0);
+        HashMap<Integer, List<Rectangle2>> matchingRects = new HashMap<>();
         for (int iSlides = 0; iSlides < nbValues; iSlides++) {
-            Dimension dimensionTotal = new Dimension(0, 0);
-            List<Rectangle2> matchingRects = new ArrayList<>();
             double min = 1. / nbValues * iSlides;
             double max = 1. / nbValues * (iSlides + 1);
+            matchingRects.put(iSlides, new ArrayList<>());
             for (int i1 = 0; i1 < index; i1++) {
-                int x = iSlides % mean;
-                int y = iSlides / mean;
                 if (values[i1] >= min && values[i1] <= max) {
                     Rectangle2 rectangle2 = rectangles.get(position[i1]);
-                    matchingRects.add(iSlides, rectangle2);
+                    matchingRects.get(iSlides).add(rectangle2);
                     dimensionTotal.setSize(dimensionTotal.getWidth() + rectangle2.getW(), dimensionTotal.getHeight() > rectangle2.getH() ?
                             dimensionTotal.getHeight() : rectangle2.getH());
                      maxheight = Math.max((int)dimensionTotal.getHeight(), maxheight);
                 }
             }
-            final int[] widthCurrent = {0};
-            PixM pSlide = new PixM((int) dimensionTotal.getWidth(), (int) maxheight*mean);
-            matchingRects.forEach(rectangle2 -> {
-                pSlide.pasteSubImage(input.copySubImage(rectangle2.getX(), rectangle2.getY(), rectangle2.getW(), rectangle2.getH()),
-                        widthCurrent[0], 0, rectangle2.getW(), rectangle2.getH());
-                widthCurrent[0] += rectangle2.getW();
-            });
-            height+=maxheight;
-            try {
-                ImageIO.write(pSlide.getImage(), "jpg", new File(dirOutDist + "_matchingRects_" + pSlide + ".jpg"));
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            maxLine = Math.max(maxLine, matchingRects.get(iSlides).size());
 
+        }
+        PixM pSlide = new PixM((int) dimensionTotal.getWidth(), (int) maxheight*mean);
+        AtomicInteger iSlides = new AtomicInteger();
+        int finalMaxheight = maxheight;
+        iSlides.set(0);
+        matchingRects.forEach((idx, listOfRects)  -> {
+            listOfRects.forEach((rectangle2 -> {
+                int x = (iSlides.get() % mean)* finalMaxheight;
+                int y = (iSlides.get() / mean)* finalMaxheight;
+                pSlide.pasteSubImage(input.copySubImage(rectangle2.getX(), rectangle2.getY(), rectangle2.getW(), rectangle2.getH()),
+                        x, y, rectangle2.getW(), rectangle2.getH());
+                iSlides.getAndIncrement();
+
+            }));
+        });
+        height+=maxheight;
+        try {
+            ImageIO.write(pSlide.getImage(), "jpg", new File(dirOutDist + "_matchingRects_" + pSlide + ".jpg"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
 
         try {
