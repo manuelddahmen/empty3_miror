@@ -46,10 +46,10 @@ public class MakeImagesDataset {
 
     public static void main(String[] args) {
         new MakeImagesDataset(new File("datasetMyImageCollectionManuelDahmen.input.csv"),
-                new File[]{new File("../images/s"),
-                        new File("../images/m"),
-                        new File("../images/batiments"),
-                        new File("../images/"),
-                        new File("../images/out")});
+                new File[]{new File("./images/s"),
+                        new File("./images/m"),
+                        new File("./images/batiments"),
+                        new File("./images/"),
+                        new File("./images/out")});
     }
 }

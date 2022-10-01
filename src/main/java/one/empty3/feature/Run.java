@@ -14,7 +14,7 @@ public class Run extends Thread {
             if (file.exists()) {
                 FTPProcessFiles.settingsPropertiesPath = file.getAbsolutePath();
                 FTPProcessFiles.loadArgsProps(FTPProcessFiles.settingsPropertiesPath);
-                FTPProcessFiles.defaultProcess();
+                FTPProcessFiles.defaultProcess(file);
             }
         }
     }

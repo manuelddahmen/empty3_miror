@@ -1,6 +1,8 @@
 package one.empty3.feature;
 
 import one.empty3.FFMpeg;
+import one.empty3.feature.DiffEnergy;
+import one.empty3.feature.ProcessBean;
 import one.empty3.io.ProcessFile;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
@@ -14,21 +16,18 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-//import org.json.*;
 
-/*
- * An example program that demonstrates how to list files and directories
- * on a FTP server using Apache Commons Net API.
- *
- * @author www.codejava.net
- * @author empty3.one
- */
+
 public class FTPProcessFiles {
     public static String classnames, classname;
+    public static String directory = "./images/m";
     static String[] classes;
-
-    public static String directory = "images";
-    static String settingsPropertiesPath;
+    static String settingsPropertiesPath = System.getProperty("user.home") + File.separator + "EmptyCanvasTest" + File.separator + "setsEffects.properties";
+    static String currentDirout;
+    static String[] currentDirin;
+    static ProcessFile processInstance;
+    static String directoryOut;
+    static FTPClient ftpClient;
     private static int maxRes;
     private static int maxFilesInDir;
     private static String[] initialDirectories;
@@ -46,32 +45,30 @@ public class FTPProcessFiles {
         return s;
     }
 
-    static String currentDirout;
-    static String[] currentDirin;
-
-
-    static ProcessFile processInstance;
-    static String directoryOut;
-
-
-    public static void loadArgsJson(String file) {
-
-
-    }
-
-    static FTPClient ftpClient;
-
-
     public static Properties settings() {
-        Properties p = new Properties();
         appSettings = new Properties();
         try {
-            p.load(new FileInputStream(settingsPropertiesPath + "/settings.properties"));
-            appSettings.load(new FileInputStream("process-suite.properties"));
+            appSettings.load(
+                    new FileInputStream(
+                            settingsPropertiesPath));
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        return p;
+        return appSettings;
+    }
+
+    public static Properties setSettings(String settingsDir) {
+        Properties settings = new Properties();
+        try {
+            settings.load(
+                    new FileInputStream(
+                            settingsDir + File.separator + "settings.properties"));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            System.err.println("Configuration file = " + settingsDir+" doessn't content Settings.properties");
+            System.exit(1);
+        }
+        return settings;
     }
 
     public static void loadArgsProps(String propFile) {
@@ -86,47 +83,36 @@ public class FTPProcessFiles {
         catch (NoSuchMethodException,
             InvocationTargetException, IllegalAccessException
             }*/
-    public static Properties defProcess(
-            InputStream is) {
-        Properties p = new Properties();
-        try {
-            p.load(is);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        return p;
-    }
 
     public static void main(String[] args) {
-        settingsPropertiesPath = "sets/";
-        if (args.length > 1)
-            settingsPropertiesPath = args[1];
-        ffmpegExe = new File(appSettings.getProperty("ffmpegExe"));
-        tempDir = new File(appSettings.getProperty("tempDir"));
-        if (args.length > 1) {
-            if (args[0].endsWith(".properties")) {
-                loadArgsProps(args[1]);
-                defaultProcess();
-            }
-            if (args[0].endsWith(".json")) {
-                loadArgsJson(args[1]);
-                defaultProcess();
-            }
+        int j = 0;
+
+        appSettings = settings();
+
+        if (appSettings.getProperty("sets").equals("*")) {
+            System.out.println("All default tests");
+            settingsPropertiesPath = appSettings.getProperty("working") + File.separator + "sets";
         } else {
-                int j = 0;
-            String[] sets = new File("sets").list();
-            while (j < Objects.requireNonNull(sets).length) {
-                settingsPropertiesPath = "sets/" + sets[j];
-                defaultProcess();
-                j++;
-            }
-
+            settingsPropertiesPath = "./sets";
         }
-    }
+        String[] sets = new File(settingsPropertiesPath)
+                .list();
+        while (j < Objects.requireNonNull(sets).length) {
+            String settingsPropertiesPath1 = settingsPropertiesPath +File.separator+ sets[j];
 
-    public String[] split(String array) {
-        String[] split = array.split(",");
-        return split;
+
+            try {
+                System.out.println("Settings of effects path " + settingsPropertiesPath);
+                System.out.println("Settings of output" + settingsPropertiesPath);
+                defaultProcess(new File(settingsPropertiesPath1));
+                System.out.println("Process %s ran without error");
+            } catch (Exception ex) {
+                System.out.println("Process %s ran with exception");
+                ex.printStackTrace();
+            }
+            j++;
+        }
+
     }
 
     public static void parseAndSet(ProcessFile processInstance, List<Object> argCl) {
@@ -147,7 +133,7 @@ public class FTPProcessFiles {
         }
     }
 
-    public static void defaultProcess() {
+    public static void defaultProcess(File settingsDirectory) {
         Logger.getAnonymousLogger().log(Level.INFO, "arg 0 : dir0 or ftp1 dir path");
         Logger.getAnonymousLogger().log(Level.INFO, "arg 1 : one.empty3.io.ProcessFile class");
         Logger.getAnonymousLogger().log(Level.INFO, "arg 2 : dir0 or ftp1 dir output");
@@ -164,7 +150,7 @@ public class FTPProcessFiles {
 
         // Properties set = defProcess(args[0]);
 
-        Properties settings = settings();
+        Properties settings = setSettings(settingsDirectory.getAbsolutePath());
 
 
         String server;
@@ -173,19 +159,20 @@ public class FTPProcessFiles {
         String password;
 
 
-        currentDirin = new String[1];
-        if ("local".equals(settings.getProperty("in.device"))) {
-            currentDirin = (settings.getProperty("in.directory")).split(",");
-            server = "file";
-            port = 0;
-            username = "";
-            password = "";
-        } else {
-            currentDirin = ((String) settings.getProperty("in.directory")).split(",");
-            server = (String) settings.getProperty("host");
-            port = Integer.parseInt(settings.getProperty("port"));
-            username = (String) settings.getProperty("username");
-            password = (String) settings.getProperty("password");
+        currentDirin = settings.getProperty("in.directory").split(",");
+        switch (settings.getProperty("in.device")) {
+            case "local" -> {
+                server = "file";
+                port = 0;
+                username = "";
+                password = "";
+            }
+            default -> {
+                server = (String) settings.getProperty("host");
+                port = Integer.parseInt(settings.getProperty("port"));
+                username = (String) settings.getProperty("username");
+                password = (String) settings.getProperty("password");
+            }
         }
 
         String maxFilesInDir0 = settings.getProperty("maxFilesInDir");
@@ -193,6 +180,8 @@ public class FTPProcessFiles {
         String maxRes = settings.getProperty("maxRes");
         if (maxRes != null)
             FTPProcessFiles.maxRes = Integer.parseInt(maxRes);
+        else
+            FTPProcessFiles.maxRes = 0;
         /* String*/
         classnames = (String) settings.getProperty("classname");
         String class0 = (String) settings.getProperty("class0");
@@ -323,6 +312,8 @@ public class FTPProcessFiles {
                     } else {
                         // local path
                         initialDirectories = currentDirin;
+                        System.out.println("Settings of images" );
+                        Arrays.stream(initialDirectories).forEach(System.out::println);
                         for (int d = 0; d < initialDirectories.length; d++) {
                             File directory = new File(initialDirectories[d]);
                             if (directory.exists()) {
@@ -339,9 +330,10 @@ public class FTPProcessFiles {
 
                     Logger.getAnonymousLogger().log(Level.INFO, "I>0 classes de traitement\nClasse : " + clazz.toString() + " : " + currentDirin[inDirectoryIndex]);
 
-                    File file = new File(currentDirin[inDirectoryIndex]);
+                    String currentDirin1 = currentDirin[0];
+                    File file = new File(currentDirin1);
                     if (file.exists() && file.isDirectory())
-                        printFileDetails(Objects.requireNonNull(file.list()), currentDirin[inDirectoryIndex]);
+                        printFileDetails(Objects.requireNonNull(file.list()), currentDirin1);
 
                 }
 
@@ -413,7 +405,7 @@ public class FTPProcessFiles {
                 Logger.getLogger(FTPProcessFiles.class.getName()).info("fi" + fi.getAbsolutePath());
                 Logger.getLogger(FTPProcessFiles.class.getName()).info("fo" + fo.getAbsolutePath());
                 fi.createNewFile();
-                //fo.createNewFile();
+                fo.createNewFile();
 
                 FileOutputStream fos =
                         new FileOutputStream(fi.getAbsolutePath());
@@ -464,30 +456,32 @@ public class FTPProcessFiles {
 
 
             File fi = object;
-            File fo = new File(currentDirout + "/"+ stepIndex +"-"+ inDirectoryIndex +"-"+ object.getName());
+            File fo = new File(currentDirout + "/" + stepIndex + "-" + inDirectoryIndex + "-" + object.getName());
 
 
-            //new File(getDirname(fi.getAbsolutePath())).getParentFile().mkdirs();
+            new File(getDirname(fi.getAbsolutePath())).getParentFile().mkdirs();
             new File(getDirname(fo.getAbsolutePath())).getParentFile().mkdirs();
-            //fi.createNewFile();
-            //fo.createNewFile();
+            try {
+                fi.createNewFile();
+                fo.createNewFile();
+                Logger.getLogger(FTPProcessFiles.class.getName()).info("file  in : " + fi.getAbsolutePath());
+                Logger.getLogger(FTPProcessFiles.class.getName()).info("file out : " + fo.getAbsolutePath());
+                processInstance.setMaxRes(FTPProcessFiles.maxRes);
+                Logger.getLogger(FTPProcessFiles.class.getName()).info("process file  : " + processInstance.getClass().getName());
 
-            Logger.getLogger(FTPProcessFiles.class.getName()).info("file  in : " + fi.getAbsolutePath());
-            Logger.getLogger(FTPProcessFiles.class.getName()).info("file out : " + fo.getAbsolutePath());
-            processInstance.setMaxRes(maxRes);
-            Logger.getLogger(FTPProcessFiles.class.getName()).info("process file  : " + processInstance.getClass().getName());
+                // Thread thread = new Thread(() -> {
+                if (!fi.exists()) {
+                    System.err.println("Error file IN doesn't exist");
+                    System.err.println(fi.getAbsolutePath());
+                    System.exit(1);
+                }
+                processInstance.process(fi, fo);
+                processInstance.addSource(fo);
+                energy(fo);
 
-            // Thread thread = new Thread(() -> {
-            if (!fi.exists()) {
-                System.err.println("Error file IN doesn't exist");
-                System.err.println(fi.getAbsolutePath());
-                System.exit(1);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
-            processInstance.process(fi, fo);
-            processInstance.addSource(fo);
-            energy(fo);
-            //      });
-            //     new TimerKillThread(thread);
 
         }
     }
@@ -515,7 +509,6 @@ public class FTPProcessFiles {
             }
         }
     }
-
 
     private static void printFileDetails(String[] files, String directory) {
         DateFormat dateFormater = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -571,7 +564,6 @@ public class FTPProcessFiles {
         });
         return files1[0];
     }
-
 
     private static void printFileDetailsProcessOnce(File mpeg) {
         FFMpeg ffMpeg = new FFMpeg("", mpeg);
@@ -644,6 +636,11 @@ public class FTPProcessFiles {
                 Logger.getAnonymousLogger().log(Level.INFO, "SERVER: " + aReply);
             }
         }
+    }
+
+    public String[] split(String array) {
+        String[] split = array.split(",");
+        return split;
     }
 
 }
