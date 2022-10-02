@@ -38,7 +38,7 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
     private boolean selectedActionDeleteLink;
     private DirestEffect direstEffect;
     private boolean cam;
-    private int maxRes = 100;
+    private int maxRes = 0;
     private String fileChooserDir = ".";
     public String tempDir;
 
