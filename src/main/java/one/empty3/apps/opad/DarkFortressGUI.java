@@ -45,7 +45,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public final class DarkFortressGUI extends JFrame {
+public class DarkFortressGUI extends JFrame {
     private final Class<? extends Drawer> clazz;
     public PositionUpdateImpl positionUpdate;
     public PositionUpdate mover;

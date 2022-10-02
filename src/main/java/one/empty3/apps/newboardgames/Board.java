@@ -1,30 +1,25 @@
 package one.empty3.apps.newboardgames;
 
-import one.empty3.library.Camera;
-import one.empty3.library.Point3D;
-import one.empty3.library.Representable;
-import one.empty3.library.RepresentableConteneur;
-import one.empty3.neuralnetwork.Dimension;
+import one.empty3.library.*;
 
-import java.awt.geom.Point2D;
 import java.util.List;
 
-public class Board extends Representable {
-    private Camera camera;
+public abstract class Board extends Representable {
 
-    Camera camera() {
-        throw new UnsupportedOperationException("Not yet implemented");
-    }
-    Point2D getSize2D() {
-        throw new UnsupportedOperationException("Not yet implemented");
-    }
-    Point3D getSize3D() {
-        throw new UnsupportedOperationException("Not yet implemented");
-    }
-    Cell getCellContainer() {
-        throw new UnsupportedOperationException("Not yet implemented");
-    }
-    List<Character> getCharacters() {
-        throw new UnsupportedOperationException("Not yet implemented");
+
+    protected int dimX;
+    protected int dimY;
+    protected int heightView;
+    protected int medianDistView;
+    protected Camera camera;
+
+    public abstract Camera camera();
+    public abstract Point2D getSize2D();
+    public abstract Point3D getSize3D();
+    public abstract Cell getCellContainer();
+    protected abstract List<Character> getCharacters();
+
+    public Representable cellAt(int i, int j) {
+        return new Cell(this);
     }
 }

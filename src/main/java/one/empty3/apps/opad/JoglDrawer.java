@@ -55,33 +55,33 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class JoglDrawer extends Drawer implements GLEventListener {
-    private final Frame component;
-    private final Animator animator;
-    private final GLCanvas glCanvas;
+    protected final Frame component;
+    protected final Animator animator;
+    protected GLCanvas glCanvas;
     double INCR_AA = 0.1;
-    private final double maximize = INCR_AA / 10;
-    private final double minimize = INCR_AA;
+    protected final double maximize = INCR_AA / 10;
+    protected final double minimize = INCR_AA;
     double DISTANCE_MIN = 100;
     Timer timer;
-    private GLU glu;
-    private PositionUpdate mover;
-    private Terrain terrain;
-    private Bonus bonus;
-    private TextRenderer renderer;
-    private Vaisseau vaisseau;
-    private TextureRenderer textureRenderer;
-    private boolean locked;
-    private Circuit circuit;
-    private int BUFSIZE;
-    private Point2D pickPoint;
-    private PiloteAuto piloteAuto;
-    private Point3D del;
-    private Point3D diff;
-    private GL2 gl;
-    private Plotter3D plotter3D;
-    private long millis;
-    private long millis0;
-    private boolean wasAnimating = false;
+    protected GLU glu;
+    protected PositionUpdate mover;
+    protected Terrain terrain;
+    protected Bonus bonus;
+    protected TextRenderer renderer;
+    protected Vaisseau vaisseau;
+    protected TextureRenderer textureRenderer;
+    protected boolean locked;
+    protected Circuit circuit;
+    protected int BUFSIZE;
+    protected Point2D pickPoint;
+    protected PiloteAuto piloteAuto;
+    protected Point3D del;
+    protected Point3D diff;
+    protected GL2 gl;
+    protected Plotter3D plotter3D;
+    protected long millis;
+    protected long millis0;
+    protected boolean wasAnimating = false;
 
     {
         Plasma.scale = 2;
@@ -265,7 +265,7 @@ public class JoglDrawer extends Drawer implements GLEventListener {
                 c.getGreen() / 255f, c.getBlue() / 255f);
     }
 
-    private void draw(LineSegment segd, GLU glu, GL2 gl) {
+    protected void draw(LineSegment segd, GLU glu, GL2 gl) {
         gl.glBegin(GL2.GL_LINES);
         Point3D p1 = getTerrain().p3(segd.getOrigine());
         Point3D p2 = getTerrain().p3(segd.getExtremite());
@@ -370,7 +370,7 @@ public class JoglDrawer extends Drawer implements GLEventListener {
         }
     }
 
-    private void draw(ParametricSurface s, GLU glu, GL2 gl) {
+    protected void draw(ParametricSurface s, GLU glu, GL2 gl) {
         gl.glBegin(GL2.GL_TRIANGLES);
         for (double i = 0; i < s.getIncrU(); i++) {
             for (double j = 0; j < s.getIncrV(); j++) {
@@ -390,7 +390,7 @@ public class JoglDrawer extends Drawer implements GLEventListener {
 
     }
 
-    private void draw(Terrain t, ParametricSurface s, GLU glu, GL2 gl) {
+    protected void draw(Terrain t, ParametricSurface s, GLU glu, GL2 gl) {
         gl.glBegin(GL2.GL_TRIANGLES);
         for (double i = 0; i < s.getIncrU(); i++) {
             for (double j = 0; j < s.getIncrV(); j++) {
@@ -483,7 +483,7 @@ public class JoglDrawer extends Drawer implements GLEventListener {
      }*/
 
 
-    private void displayArcs(GLU glu, GL2 gl) {
+    protected void displayArcs(GLU glu, GL2 gl) {
         Point3D[][] arc = new Point3D[][]{
                 {
                         P.n(0.5, 0.5, 0),
@@ -511,12 +511,12 @@ public class JoglDrawer extends Drawer implements GLEventListener {
 
     }
 
-    private void displayTerrain(GLU glu, GL2 gl) {
+    protected void displayTerrain(GLU glu, GL2 gl) {
         draw((RepresentableConteneur) terrain, glu, gl);
     }
 
 
-    private void displayGround(GLU glu, GL2 gl) {
+    protected void displayGround(GLU glu, GL2 gl) {
         int nbrTriReduce = 0;
         double maxDistance = 0.01;
         gl.glBegin(GL2.GL_TRIANGLES);
@@ -619,16 +619,16 @@ public class JoglDrawer extends Drawer implements GLEventListener {
         gl.glEnd();
     }
 
-    private boolean isClose(double maxDistance, TRI toDraw) {
+    protected boolean isClose(double maxDistance, TRI toDraw) {
         return Point3D.distance(getTerrain().p3(toDraw.getSommet().getElem(0)), mover.calcCposition()) < maxDistance;
     }
 
 
-    private void drawTriLines(TRI triCourant, GLU glu, GL2 gl, boolean b) {
+    protected void drawTriLines(TRI triCourant, GLU glu, GL2 gl, boolean b) {
     }
 
 
-    private void draw(ParametricCurve courbeParametriquePolynomiale, GLU glu, GL2 gl) {
+    protected void draw(ParametricCurve courbeParametriquePolynomiale, GLU glu, GL2 gl) {
         double d0 = courbeParametriquePolynomiale.start();
         for (double d = courbeParametriquePolynomiale.start(); d < courbeParametriquePolynomiale.endU(); d += courbeParametriquePolynomiale.getIncrU().getElem()) {
             draw(new LineSegment(courbeParametriquePolynomiale.calculerPoint3D(d0), courbeParametriquePolynomiale.calculerPoint3D(d)), glu, gl);
@@ -636,7 +636,7 @@ public class JoglDrawer extends Drawer implements GLEventListener {
         }
     }
 
-    private void drawTrajectory(Plotter3D plotter3D, GLU glu, GL2 gl) {
+    protected void drawTrajectory(Plotter3D plotter3D, GLU glu, GL2 gl) {
         if (plotter3D == null)
             return;
         Point3D impact = plotter3D.getImpact();
@@ -722,11 +722,11 @@ public class JoglDrawer extends Drawer implements GLEventListener {
         mover.ennemi(bonus);
     }
 
-    private boolean locked() {
+    protected boolean locked() {
         return locked;
     }
 
-    private double time() {
+    protected double time() {
         return timer.getTimeEllapsed();
     }
 
@@ -794,7 +794,7 @@ public class JoglDrawer extends Drawer implements GLEventListener {
         return locked;
     }
 
-    private void setLocked(boolean l) {
+    protected void setLocked(boolean l) {
         locked = l;
     }
 
@@ -835,7 +835,7 @@ public class JoglDrawer extends Drawer implements GLEventListener {
     }
 
 
-    private boolean isRunning() {
+    protected boolean isRunning() {
         return true;
     }
 }
