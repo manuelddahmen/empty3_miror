@@ -1,5 +1,6 @@
 package one.empty3.apps.newboardgames;
 
+import com.jogamp.graph.geom.Triangle;
 import com.jogamp.nativewindow.AbstractGraphicsDevice;
 import com.jogamp.opengl.*;
 import com.jogamp.opengl.awt.GLCanvas;
@@ -21,12 +22,15 @@ import java.util.logging.Logger;
 public class JoglDrawerBoardGame extends JoglDrawer {
 
     private Board board;
+    private Camera camera;
 
     public JoglDrawerBoardGame(WindowDrawing darkFortressGUI) {
         super(darkFortressGUI);
     }
 
-
+    public void setCamera(Camera camera) {
+        this.camera = camera;
+    }
     public void setBoard(Board board) {
         this.board = board;
     }
@@ -38,7 +42,7 @@ public class JoglDrawerBoardGame extends JoglDrawer {
         }
 
         millis = System.currentTimeMillis();
-        Logger.getAnonymousLogger().log(Level.INFO, "FPS " + (millis - millis0));
+        Logger.getAnonymousLogger().log(Level.INFO, "FPS " + 1000/((millis - millis0)));
         millis0 = millis;
 
         try {
@@ -100,10 +104,19 @@ public class JoglDrawerBoardGame extends JoglDrawer {
             drawToggleMenu(glu, gl);
 
             drawTrajectory(getPlotter3D(), glu, gl);
+
+
+            for(int i=0; i<board.getSize2D().getX(); i++)
+                for(int j=0; j<board.getSize2D().getY(); j++)
+                    draw(board.cellAt(i, j), i, j);
         }
+
+
     }
 
-    public void setGlcanvas(GLCanvas canvas) {
-        this.glCanvas = canvas;
+    private void draw(Representable cellAt, int i, int j) {
+        this.draw((RepresentableConteneur) cellAt, glu, gl);
     }
+
+
 }

@@ -1,5 +1,6 @@
 package one.empty3.apps.newboardgames;
 
+import com.android.tools.r8.u.b.G;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLDrawable;
 import com.jogamp.opengl.awt.GLCanvas;
@@ -25,7 +26,6 @@ public class WindowDrawing extends DarkFortressGUI {
 
         JoglDrawerBoardGame joglDrawerBoardGame = new JoglDrawerBoardGame(this);
         GLCanvasBoardGame glCanvasBoardGame = new GLCanvasBoardGame(this);
-        joglDrawerBoardGame.setGlcanvas(glCanvasBoardGame);
         joglDrawerBoardGame.setBoard(new Grid(10, 10, 5, 8));
         glCanvasBoardGame.setVisible(true);
         glCanvasBoardGame.setMinimumSize(new Dimension(800, 600));
@@ -52,8 +52,9 @@ public class WindowDrawing extends DarkFortressGUI {
 
         setVisible(true);
 
-        joglDrawerBoardGame.display(glCanvasBoardGame);
-
+        joglDrawerBoardGame.setBoard(new Grid(10, 10, 5, 7));
+        joglDrawerBoardGame.setCamera(glCanvasBoardGame.getBoard().camera());
+        //joglDrawerBoardGame.display(glCanvasBoardGame);
 
     }
     public static void main(String [] args) {

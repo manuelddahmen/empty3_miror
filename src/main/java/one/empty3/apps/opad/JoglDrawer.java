@@ -635,6 +635,15 @@ public class JoglDrawer extends Drawer implements GLEventListener {
             d0 = d;
         }
     }
+    protected void draw(Polygon polygon, GLU glu, GL2 gl) {
+        int size = polygon.getPoints().data1d.size();
+        Point3D isocentre = polygon.getIsocentre();
+        for (int d = 0; d <=size; d ++) {
+            draw(new TRI(polygon.getPoints().getElem((d+size)%size),
+                    polygon.getPoints().getElem((d+size)%size),
+                    isocentre, polygon.texture()), glu, gl);
+        }
+    }
 
     protected void drawTrajectory(Plotter3D plotter3D, GLU glu, GL2 gl) {
         if (plotter3D == null)

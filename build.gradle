@@ -9,15 +9,20 @@ plugins {
 java {
     withSourcesJar()
 }
-task myRunFeatureAppGui(type: JavaExec) {
+task FeatureAppGui(type: JavaExec) {
     classpath sourceSets.main.runtimeClasspath
     main = "one.empty3.feature.ClassSchemaBuilder"
     args "arg1", "arg2"
 }
 
-task myRunOpadGameGui(type: JavaExec) {
+task OpadGameGui(type: JavaExec) {
     classpath sourceSets.main.runtimeClasspath
     main = "one.empty3.apps.opad.PanelGraphics"
+    args "arg1", "arg2"
+}
+task BoardGameGui(type: JavaExec) {
+    classpath sourceSets.main.runtimeClasspath
+    main = "one.empty3.apps.newboardgames.WindowDrawing"
     args "arg1", "arg2"
 }
 

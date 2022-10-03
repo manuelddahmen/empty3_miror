@@ -16,10 +16,9 @@ public abstract class Board extends Representable {
     public abstract Camera camera();
     public abstract Point2D getSize2D();
     public abstract Point3D getSize3D();
-    public abstract Cell getCellContainer();
     protected abstract List<Character> getCharacters();
 
     public Representable cellAt(int i, int j) {
-        return new Cell(this);
+        return new Cell(this, i, j);
     }
 }

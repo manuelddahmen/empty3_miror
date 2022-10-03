@@ -42,12 +42,6 @@ public class Grid extends Board {
     public Point3D getSize3D() {
         return new Point3D((double)dimX, (double)dimY, (double)heightView);
     }
-
-    @Override
-    public Cell getCellContainer() {
-        return new Cell(this);
-    }
-
     @Override
     protected List<Character> getCharacters() {
         return new ArrayList<>();
