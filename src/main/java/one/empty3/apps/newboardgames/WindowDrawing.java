@@ -53,7 +53,6 @@ public class WindowDrawing extends DarkFortressGUI {
         setVisible(true);
 
         joglDrawerBoardGame.setBoard(new Grid(10, 10, 5, 7));
-        joglDrawerBoardGame.setCamera(glCanvasBoardGame.getBoard().camera());
         //joglDrawerBoardGame.display(glCanvasBoardGame);
 
     }

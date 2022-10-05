@@ -66,10 +66,12 @@ public class JoglDrawerBoardGame extends JoglDrawer {
         glu.gluPerspective(60, 1.33, 0.01, 10.0);
         gl.glLoadIdentity();
 
+        if(board!=null)
+            camera = board.camera();
+        
 
-        Camera camera = null;
         if (mover!=null) {
-                if(mover.getPlotter3D() != null && mover.getPlotter3D().isActive())
+            if(mover.getPlotter3D() != null && mover.getPlotter3D().isActive())
                 camera = mover.getPositionMobile().calcCameraMobile();
             else
                 camera = mover.getPositionMobile().calcCamera();
