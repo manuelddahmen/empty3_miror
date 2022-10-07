@@ -18,30 +18,30 @@ public class WindowDrawing extends DarkFortressGUI {
 
     private GLCanvas canvas;
     private JFrame frame;
-
+    JoglDrawerBoardGame joglDrawerBoardGame;
+    GLCanvasBoardGame glCanvasBoardGame;
+    JPanel jPanel;
     public WindowDrawing() {
         super(JoglDrawerBoardGame.class);
-        frame = new JFrame("Game");
-        frame.setMinimumSize(new Dimension(800, 600));
 
-        JoglDrawerBoardGame joglDrawerBoardGame = new JoglDrawerBoardGame(this);
-        GLCanvasBoardGame glCanvasBoardGame = new GLCanvasBoardGame(this);
+        joglDrawerBoardGame = new JoglDrawerBoardGame(this);
+        glCanvasBoardGame = new GLCanvasBoardGame(this);
         joglDrawerBoardGame.setBoard(new Grid(10, 10, 5, 8));
         glCanvasBoardGame.setVisible(true);
         glCanvasBoardGame.setMinimumSize(new Dimension(800, 600));
 
 
 
-        JPanel jPanel = new JPanel();
+        jPanel = new JPanel();
         jPanel.setMinimumSize(new Dimension(800, 600));
         jPanel.add(glCanvasBoardGame);
 
 
 
 
-        frame.add(jPanel);
-        frame.setVisible(true);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        add(jPanel);
+        setVisible(true);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         Animator animator = new Animator();
         glCanvasBoardGame.setAnimator(animator);
@@ -49,12 +49,6 @@ public class WindowDrawing extends DarkFortressGUI {
 
 
         setMinimumSize(new Dimension(800, 600));
-
-        setVisible(true);
-
-        joglDrawerBoardGame.setBoard(new Grid(10, 10, 5, 7));
-        //joglDrawerBoardGame.display(glCanvasBoardGame);
-
     }
     public static void main(String [] args) {
         WindowDrawing windowDrawing = new WindowDrawing();
@@ -62,6 +56,6 @@ public class WindowDrawing extends DarkFortressGUI {
     }
 
     public void setCamera(Camera camera) {
-        ((GLCanvas)canvas).display();
+        joglDrawerBoardGame.setCamera(camera);
     }
 }

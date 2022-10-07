@@ -33,6 +33,7 @@ public class JoglDrawerBoardGame extends JoglDrawer {
     }
     public void setBoard(Board board) {
         this.board = board;
+        this.camera = board.camera();
     }
     @Override
     public void display(GLAutoDrawable gLDrawable) {
@@ -66,16 +67,11 @@ public class JoglDrawerBoardGame extends JoglDrawer {
         glu.gluPerspective(60, 1.33, 0.01, 10.0);
         gl.glLoadIdentity();
 
-        if(board!=null)
+        if(board!=null && board.camera!=null) {
+            Logger.getAnonymousLogger().log(Level.INFO, "setCamera");
             camera = board.camera();
-        
-
-        if (mover!=null) {
-            if(mover.getPlotter3D() != null && mover.getPlotter3D().isActive())
-                camera = mover.getPositionMobile().calcCameraMobile();
-            else
-                camera = mover.getPositionMobile().calcCamera();
-        }
+        } else if(board==null)
+            Logger.getAnonymousLogger().log(Level.INFO, "board==null");
 
 
         if(camera!=null) {
@@ -98,9 +94,9 @@ public class JoglDrawerBoardGame extends JoglDrawer {
                     up.get(0), up.get(1), up.get(2));
 
             if (toggleMenu.isDisplayScore())
-                draw("Score :  " + mover.score(), Color.WHITE, glu, gl);
+                draw("Score :  " + 100, Color.WHITE, glu, gl);
             if (toggleMenu.isDisplayEnergy())
-                draw("Life :  " + mover.energy(), new Dimension(30, 10), Color.GREEN, glu, gl);
+                draw("Life :  " + 100, new Dimension(30, 10), Color.GREEN, glu, gl);
 
 
             drawToggleMenu(glu, gl);
@@ -111,6 +107,8 @@ public class JoglDrawerBoardGame extends JoglDrawer {
             for(int i=0; i<board.getSize2D().getX(); i++)
                 for(int j=0; j<board.getSize2D().getY(); j++)
                     draw(board.cellAt(i, j), i, j);
+        } else {
+            Logger.getAnonymousLogger().log(Level.INFO, "Camera == null");
         }
 
 

@@ -10,12 +10,10 @@ public class GLCanvasBoardGame extends GLCanvas {
 
     public GLCanvasBoardGame(WindowDrawing frame) {
         super();
-        drawer = new JoglDrawerBoardGame(frame);
     }
     @Override
     public void display() {
         drawer.display(this);
-        //getGL().getGL2().glLoadMatrixf();
     }
 
     public void setDrawer(JoglDrawerBoardGame drawer) {
