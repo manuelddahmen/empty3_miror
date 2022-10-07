@@ -392,8 +392,8 @@ public class JoglDrawer extends Drawer implements GLEventListener {
 
     protected void draw(Terrain t, ParametricSurface s, GLU glu, GL2 gl) {
         gl.glBegin(GL2.GL_TRIANGLES);
-        for (double i = 0; i < s.getIncrU(); i++) {
-            for (double j = 0; j < s.getIncrV(); j++) {
+        for (double i = s.getStartU(); i < s.getEndU(); i+=s.getIncrU()) {
+            for (double j = s.getStartV(); j < s.getEndV(); j+=s.getIncrV()) {
                 Polygon elementSurface = s.getElementSurface(i, s.getIncrU(), j, s.getIncrV());
                 Point3D INFINI = Point3D.INFINI;
                 draw2(new TRI(t.p3(elementSurface.getPoints().getElem(0)),
