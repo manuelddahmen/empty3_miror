@@ -64,12 +64,12 @@ public class JoglDrawerBoardGame extends JoglDrawer {
         // Change to projection matrix.
         gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
 
-        glu.gluPerspective(60, 1.33, 0.01, 10.0);
+        glu.gluPerspective(60, 1.33, 1.0, 100.0);
         gl.glLoadIdentity();
 
         if(board!=null && board.camera!=null) {
-            Logger.getAnonymousLogger().log(Level.INFO, "setCamera");
-            camera = board.camera();
+            //Logger.getAnonymousLogger().log(Level.INFO, "setCamera");
+            //camera = board.camera();
         } else if(board==null)
             Logger.getAnonymousLogger().log(Level.INFO, "board==null");
 
@@ -103,6 +103,12 @@ public class JoglDrawerBoardGame extends JoglDrawer {
 
             drawTrajectory(getPlotter3D(), glu, gl);
 
+            Sphere sphere = new Sphere(new Axe(Point3D.Y.mult(10), Point3D.Y.mult(-10)), 5);
+            sphere.texture(new ColorTexture(Color.blue));
+            sphere.setIncrU(0.1);
+            sphere.setIncrV(0.1);
+
+            draw(sphere, glu, gl);
 
             for(int i=0; i<board.getSize2D().getX(); i++)
                 for(int j=0; j<board.getSize2D().getY(); j++)
@@ -115,7 +121,7 @@ public class JoglDrawerBoardGame extends JoglDrawer {
     }
 
     private void draw(Representable cellAt, int i, int j) {
-        this.draw((RepresentableConteneur) cellAt, glu, gl);
+        draw((RepresentableConteneur) cellAt, glu, gl);
     }
 
 
