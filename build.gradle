@@ -82,9 +82,6 @@ dependencies {
     testRuntimeOnly('org.junit.jupiter:junit-jupiter-engine:5.9.0')
 }
 
-tasks.getByName("test") {
-    useJUnitPlatform()
-}
 test {
     // show standard out and standard error of the test JVM(s) on the console
     useJUnitPlatform()
