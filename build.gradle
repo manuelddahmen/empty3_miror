@@ -130,7 +130,7 @@ publishing {
         maven(MavenPublication) {
             groupId = 'one.empty3'
             artifactId = 'empty3-library-generic'
-            version = "2.0"
+            version = "3.0"
             from components.java
 
             pom {
@@ -140,7 +140,7 @@ publishing {
             }
         }
     }
-//In the publishing section, in repositories, specify the repository URL and credentials using the environment variables:
+
 
     repositories {
         maven {
@@ -155,4 +155,3 @@ publishing {
         }
     }
 }
-//project.buildDir = '/gen/main/java'
