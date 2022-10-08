@@ -103,7 +103,7 @@ public class JoglDrawerBoardGame extends JoglDrawer {
 
             drawTrajectory(getPlotter3D(), glu, gl);
 
-            Sphere sphere = new Sphere(new Axe(Point3D.Y.mult(10), Point3D.Y.mult(-10)), 5);
+            Sphere sphere = new Sphere(new Axe(Point3D.Y.mult(10), Point3D.Y.mult(-10)), 10);
             sphere.texture(new ColorTexture(Color.blue));
             sphere.setIncrU(0.1);
             sphere.setIncrV(0.1);

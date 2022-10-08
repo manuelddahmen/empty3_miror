@@ -285,7 +285,12 @@ public class JoglDrawer extends Drawer implements GLEventListener {
     public void draw(TRI tri, GLU glu, GL2 gl) {
         color(gl, new Color(tri.texture().getColorAt(0.5, 0.5)));
         for (Point3D sommet : tri.getSommet().getData1d()) {
-            Point3D p = getTerrain().p3(sommet);
+            Point3D p;
+            if(getTerrain()!=null) {
+                p = getTerrain().p3(sommet);
+            } else {
+                p = sommet;
+            }
             gl.glVertex3f((float) (double) p.get(0),
                     (float) (double) p.get(1),
                     (float) (double) p.get(2));
@@ -361,6 +366,8 @@ public class JoglDrawer extends Drawer implements GLEventListener {
                     draw((LineSegment) r, glu, gl);
                 } else if (r instanceof ParametricSurface) {
                     draw((ParametricSurface) r, glu, gl);
+                } else if(r instanceof Polygon) {
+                    draw((Polygon) r, glu, gl);
                 }
             } catch (ConcurrentModificationException ex) {
                 ex.printStackTrace();
