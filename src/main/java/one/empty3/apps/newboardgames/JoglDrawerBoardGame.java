@@ -112,17 +112,12 @@ public class JoglDrawerBoardGame extends JoglDrawer {
 
             for(int i=0; i<board.getSize2D().getX(); i++)
                 for(int j=0; j<board.getSize2D().getY(); j++)
-                    draw(board.cellAt(i, j), i, j);
+                    draw((RepresentableConteneur) board.cellAt(i, j), glu, gl);
         } else {
             Logger.getAnonymousLogger().log(Level.INFO, "Camera == null");
         }
 
 
     }
-
-    private void draw(Representable cellAt, int i, int j) {
-        draw((RepresentableConteneur) cellAt, glu, gl);
-    }
-
 
 }
