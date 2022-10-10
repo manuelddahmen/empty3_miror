@@ -15,7 +15,9 @@ import one.empty3.library.core.testing.TestObjet;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
+import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -39,8 +41,11 @@ public class TestCoeur1 extends TestObjet {
     @Override
     public void ginit() {
         coeur = new SurfaceElasticite(5, 3, 1);
+        coeur.setIncrU(0.01);
+        coeur.setIncrV(0.01);
         try {
-            coeur.texture(new TextureImg(new ECBufferedImage(ImageIO.read(getClass().getResourceAsStream("moi1.jpg")))));
+            coeur.texture(new TextureImg(new ECBufferedImage(ImageIO.read(
+                    new File("samples/img/coeur.gif")))));
         } catch (IOException ex) {
             coeur.texture(new TextureCol(Color.PINK));
             Logger.getLogger(TestCoeur1.class.getName()).log(Level.SEVERE, null, ex);
