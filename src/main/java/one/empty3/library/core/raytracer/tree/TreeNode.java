@@ -182,4 +182,8 @@ public class TreeNode {
         }
         return s;
     }
+
+    public TreeNodeType getType() {
+        return type;
+    }
 }

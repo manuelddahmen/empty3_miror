@@ -85,6 +85,8 @@ public class AlgebricTree extends Tree {
         }
     }
 
+
+
     public boolean add(TreeNode src, String subformula) throws AlgebraicFormulaSyntaxException {
 
         stackSize++;
@@ -612,5 +614,13 @@ public class AlgebricTree extends Tree {
 
     public Map<String, Double> getParametersValues() {
         return parametersValues;
+    }
+
+    public String getFormula() {
+        return formula;
+    }
+
+    public TreeNode getRoot() {
+        return root;
     }
 }
