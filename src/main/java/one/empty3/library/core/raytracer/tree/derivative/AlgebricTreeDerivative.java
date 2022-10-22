@@ -2,6 +2,7 @@ package one.empty3.library.core.raytracer.tree.derivative;
 
 import one.empty3.library.core.raytracer.tree.*;
 
+import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class AlgebricTreeDerivative {
@@ -56,6 +57,8 @@ public class AlgebricTreeDerivative {
             return derivate;
 
         } else if (ExponentTreeNodeType.class.equals(type)) {
+            TreeNode e1 = currentTreeNode.getChildren().get(0);
+            TreeNode e2 = currentTreeNode.getChildren().get(1);
 
         }
 
