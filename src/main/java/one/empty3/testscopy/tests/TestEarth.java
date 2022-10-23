@@ -2,29 +2,38 @@ package one.empty3.testscopy.tests;
 
 import one.empty3.feature.app.replace.javax.imageio.ImageIO;
 import one.empty3.library.*;
-import one.empty3.library.core.nurbs.CameraInPath;
-import one.empty3.library.core.testing.TestObjet;
+import one.empty3.library.core.testing.TestObjetSub;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.logging.Logger;
 
-public class TestEarth extends TestObjet {
-    private File planets = new File("res/img/planets");
+public class TestEarth extends TestObjetSub {
+    private File planets = new File("C:\\Users\\manue\\empty3-library-generic\\res\\img\\planets");
     private File[] planetsImagesFiles;
     private int i = -1;
     private BufferedImage image;
     private Sphere sphere;
+    private Logger logger;
 
 
+    @Override
     public void ginit() {
+        logger = Logger.getLogger(this.getClass().getCanonicalName());
         planetsImagesFiles = planets.listFiles();
-        sphere = new Sphere(new Axe(Point3D.Y.mult(1.0), Point3D.Y.mult(-1)), 1.0);
+        sphere = new Sphere(new Axe(Point3D.Y.mult(1.0), Point3D.Y.mult(-1)), 2.0);
+
+
         z().texture(new ColorTexture(Color.BLACK));
         scene().texture(new ColorTexture(Color.BLACK));
+
+
+        Scene scene = new Scene();
+
         scene().add(sphere);
 
-        incr();
+
     }
 
     @Override
@@ -41,24 +50,31 @@ public class TestEarth extends TestObjet {
         i++;
         if (i < planets.length())
             image = ImageIO.read(planetsImagesFiles[i]);
-        TextureImg textureImg = new TextureImg(new ECBufferedImage(image));
+        ImageTexture textureImg = new ImageTexture(new ECBufferedImage(image));
         sphere.texture(textureImg);
 
+        z().setDisplayType(ZBufferImpl.SURFACE_DISPLAY_TEXT_TRI);
+
+        System.out.println("Planets:" + i + "/" + planetsImagesFiles.length);
     }
 
     @Override
     public void finit() throws Exception {
-        if ((frame() / 25 / 10) % planets.length() == 0) {
+        if ((frame() %( 25 * 10) == 0)) {
             incr();
         }
-        //Point3D p1axe = Point3D.Z.mult(-2 * Math.cos(2 * Math.PI * (frame() / 10.))).plus(
-        //        Point3D.X.mult(-2 * Math.sin(2 * Math.PI * (frame() / 10.))));
-        Point3D p1axe = Point3D.Z;
-        Circle circle = new Circle(new Axe(p1axe.mult(10), p1axe.mult(-10)), 20.0);
 
-        CameraInPath camera = new CameraInPath(circle);
+        Point3D p1axe = Point3D.Y;
 
-        camera().calculerMatrice(Point3D.X);
+        Circle circle = new Circle(new Axe(p1axe.mult(1), p1axe.mult(-1)), 5.0);
+
+        Camera camera = new Camera(circle.calculerPoint3D(((frame()%(25*10)) )), Point3D.O0);
+
+        camera.declareProperties();
+
+        z().scene().cameraActive(camera);
+
+
 
         scene().cameraActive(camera);
     }
@@ -66,5 +82,13 @@ public class TestEarth extends TestObjet {
     @Override
     public void afterRender() {
 
+    }
+
+    public static void main(String[] args) {
+        TestEarth testEarth = new TestEarth();
+        testEarth.loop(true);
+        testEarth.setMaxFrames(9*25*10);
+        Thread thread = new Thread(testEarth);
+        thread.start();
     }
 }

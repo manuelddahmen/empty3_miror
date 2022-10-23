@@ -91,7 +91,7 @@ public class ZBufferImpl extends Representable implements ZBuffer {
     private long[][] Simeid;
     private double[][] Simeprof;
     private Scene currentScene;
-    private int displayType = SURFACE_DISPLAY_TEXT_QUADS;
+    private int displayType = SURFACE_DISPLAY_TEXT_TRI;
 
     private boolean FORCE_POSITIVE_NORMALS = true;
 
