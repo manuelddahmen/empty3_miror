@@ -290,6 +290,7 @@ public abstract class TestObjet implements Test, Runnable {
 
     public void camera(Camera c) {
         scene().cameraActive(c);
+        z().camera(c);
     }
 
     public boolean D3() {
@@ -864,7 +865,8 @@ public abstract class TestObjet implements Test, Runnable {
 
             if ((generate & GENERATE_IMAGE) > 0) {
                 try {
-                    scene().cameraActive().declareProperties();
+                    if(scene()!=null && scene().cameraActive()!=null)
+                        scene().cameraActive().declareProperties();
                     
                     z.idzpp();
 

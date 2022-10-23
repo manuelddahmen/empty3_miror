@@ -1,5 +1,6 @@
 package one.empty3.library.core.raytracer.tree.derivative;
 
+import com.android.tools.r8.graph.O;
 import one.empty3.library.core.raytracer.tree.*;
 
 import java.util.ArrayList;
@@ -60,6 +61,19 @@ public class AlgebricTreeDerivative {
             TreeNode e1 = currentTreeNode.getChildren().get(0);
             TreeNode e2 = currentTreeNode.getChildren().get(1);
 
+            if(variable.equals(e1.getExpressionString())) {
+                FactorTreeNodeType factorTreeNodeType = new FactorTreeNodeType(1.0);
+                TreeNode treeNode = new TreeNode(derivate, new Object[] {derivate.getExpressionString()},
+                        factorTreeNodeType);
+
+                TreeNode treeNode1 = new TreeNode(treeNode, new Object[]{e2.getExpressionString()}, new TermTreeNodeType(1.0));
+                treeNode1.getChildren().add(e2);
+                TreeNodeDouble treeNodeDouble = new TreeNodeDouble(treeNode1, new Object[]{"-1.0"}
+                        , new DoubleTreeNodeType());
+                treeNode1.getChildren().add(treeNode1);
+                treeNode1.getChildren().add(treeNodeDouble);
+                treeNode.getChildren().add(treeNode1);
+            }
         }
 
         throw new UnsupportedOperationException("Not yet implemented");
