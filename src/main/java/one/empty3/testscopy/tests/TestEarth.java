@@ -33,7 +33,8 @@ public class TestEarth extends TestObjetSub {
 
         scene().add(sphere);
 
-
+        sphere.setIncrU(.001);
+        sphere.setIncrV(.001);
     }
 
     @Override
