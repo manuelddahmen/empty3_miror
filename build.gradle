@@ -50,10 +50,10 @@ repositories {
 }
 
 dependencies {
-        implementation("com.metsci.ext.org.jogamp.gluegen:gluegen-rt:v2.4.0-rc4")
-        implementation("com.metsci.ext.org.jogamp.jogl:jogl-all:v2.4.0-rc4")
-        implementation "com.metsci.ext.org.jogamp.gluegen:gluegen-rt:2.4.0-rc-20200202:natives-windows-amd64"
-        implementation "com.metsci.ext.org.jogamp.jogl:jogl-all:2.4.0-rc-20200202:natives-windows-amd64"
+    implementation("com.metsci.ext.org.jogamp.gluegen:gluegen-rt:v2.4.0-rc4")
+    implementation("com.metsci.ext.org.jogamp.jogl:jogl-all:v2.4.0-rc4")
+    implementation "com.metsci.ext.org.jogamp.gluegen:gluegen-rt:2.4.0-rc-20200202:natives-windows-amd64"
+    implementation "com.metsci.ext.org.jogamp.jogl:jogl-all:2.4.0-rc-20200202:natives-windows-amd64"
     //implementation('org.tensorflow:tensorflow-core-platform:0.4.1')
     //implementation 'org.tensorflow:tensorflow-core-api:0.4.1:windows-x86_64${javacpp.platform.extension}'
 
@@ -127,7 +127,7 @@ publishing {
         maven(MavenPublication) {
             groupId = 'one.empty3'
             artifactId = 'empty3-library-generic'
-            version = "3.0"
+            version = "4.0"
             from components.java
 
             pom {
@@ -150,5 +150,23 @@ publishing {
 
             url = "https://maven.pkg.jetbrains.space/empty3/p/empty3/maven/maven"
         }
+        maven {
+            name = "OSSRH"
+            url = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+            credentials {
+                username = System.getenv("ossrhUsername")
+                password = System.getenv("ossrhPassword")
+            }
+
+        }
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/manuelddahmne/empty3")
+            credentials {
+                username = System.getenv("GITHUB_ACTOR")
+                password = System.getenv("GITHUB_TOKEN")
+            }
+        }
     }
+
 }

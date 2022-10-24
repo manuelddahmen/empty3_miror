@@ -24,6 +24,7 @@ public class TestEarth extends TestObjetSub {
         planetsImagesFiles = planets.listFiles();
         sphere = new Sphere(new Axe(Point3D.Y.mult(1.0), Point3D.Y.mult(-1)), 2.0);
 
+        z().setDisplayType(ZBufferImpl.SURFACE_DISPLAY_TEXT_TRI);
 
         z().texture(new ColorTexture(Color.BLACK));
         scene().texture(new ColorTexture(Color.BLACK));
@@ -51,10 +52,10 @@ public class TestEarth extends TestObjetSub {
         i++;
         if (i < planets.length())
             image = ImageIO.read(planetsImagesFiles[i]);
+        else return;
         ImageTexture textureImg = new ImageTexture(new ECBufferedImage(image));
         sphere.texture(textureImg);
 
-        z().setDisplayType(ZBufferImpl.SURFACE_DISPLAY_TEXT_TRI);
 
         System.out.println("Planets:" + i + "/" + planetsImagesFiles.length);
     }
