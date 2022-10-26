@@ -151,14 +151,13 @@ public class Camera extends CameraBox {
             Point3D x = y.prodVect(z);//verticale;
 */
             setMatrix(x, y, z);
-            matrice.setElem(matrice.getElem().tild());
+            //matrice.setElem(matrice.getElem().tild());
         }
     }
 
-    public Point3D calculerPointDansRepere(Point3D p)
-    {// CHNANGES
-        Point3D p2 = matrice.getElem().mult(p.moins(getEye()));
-        //Point3D p2 = matrice.getElem().mult(eye().mult(-1)).plus(p);
+    public Point3D calculerPointDansRepere(Point3D p) {
+        //Point3D p2 = matrice.getElem().mult(p.moins(getEye()));
+        Point3D p2 = matrice.getElem().mult(eye().mult(-1)).plus(p);
         p2.texture(p.texture());
         return p2;
     }

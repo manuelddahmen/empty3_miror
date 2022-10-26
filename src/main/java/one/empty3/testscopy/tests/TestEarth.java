@@ -83,7 +83,13 @@ public class TestEarth extends TestObjetSub {
                 circle.calculerPoint3D
                         ((frame()%(FPS * SECONDS)) /(1.0*FPS * SECONDS)), axe);
 */
-        camera.calculerMatrice(axe.mult(-1));
+        camera.imposerMatrice(true);
+        camera.imposerMatrice(
+                new Matrix33(new Point3D[]  {
+                        axe.prodVect(
+                        camera.getEye().moins(camera().getLookat())),
+                        axe,
+                        camera.getEye().moins(camera().getLookat())}));
 
         z().scene().cameraActive(camera);
 
