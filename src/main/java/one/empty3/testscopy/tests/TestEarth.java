@@ -10,21 +10,25 @@ import java.io.File;
 import java.util.logging.Logger;
 
 public class TestEarth extends TestObjetSub {
-    private File planets = new File("C:\\Users\\manue\\empty3-library-generic\\res\\img\\planets");
+    public static final int SECONDS = 3;
+    public static final int FPS = 25;
+    private final File planets = new File("res\\img\\planets");
     private File[] planetsImagesFiles;
     private int i = -1;
     private BufferedImage image;
     private Sphere sphere;
     private Logger logger;
-
+    private Point3D axe = Point3D.Z;
+    private Circle circle;
 
     @Override
     public void ginit() {
         logger = Logger.getLogger(this.getClass().getCanonicalName());
         planetsImagesFiles = planets.listFiles();
-        sphere = new Sphere(new Axe(Point3D.Y.mult(1.0), Point3D.Y.mult(-1)), 2.0);
+        sphere = new Sphere(new Axe(axe.mult(1.0), axe.mult(-1)), 2.0);
+        sphere.texture(new ColorTexture(Color.WHITE));
 
-        z().setDisplayType(ZBufferImpl.SURFACE_DISPLAY_TEXT_TRI);
+        z().setDisplayType(ZBufferImpl.SURFACE_DISPLAY_TEXT_QUADS);
 
         z().texture(new ColorTexture(Color.BLACK));
         scene().texture(new ColorTexture(Color.BLACK));
@@ -34,8 +38,8 @@ public class TestEarth extends TestObjetSub {
 
         scene().add(sphere);
 
-        sphere.setIncrU(.001);
-        sphere.setIncrV(.001);
+        sphere.setIncrU(.005);
+        sphere.setIncrV(.005);
     }
 
     @Override
@@ -50,29 +54,36 @@ public class TestEarth extends TestObjetSub {
 
     public void incr() {
         i++;
-        if (i < planets.length())
+        if (i < planetsImagesFiles.length)
             image = ImageIO.read(planetsImagesFiles[i]);
         else return;
-        ImageTexture textureImg = new ImageTexture(new ECBufferedImage(image));
+        TextureImg textureImg = new TextureImg(new ECBufferedImage(image));
         sphere.texture(textureImg);
 
+        Point3D p1axe = axe;
 
+        //circle = new Circle(new Axe(p1axe.mult(1), p1axe.mult(-1)), 5.0);
+        circle = sphere.getCircle();
         System.out.println("Planets:" + i + "/" + planetsImagesFiles.length);
     }
 
     @Override
     public void finit() throws Exception {
-        if ((frame() %( 25 * 10) == 0)) {
+        if ((frame() %( FPS * SECONDS) == 1)) {
             incr();
         }
 
-        Point3D p1axe = Point3D.Y;
 
-        Circle circle = new Circle(new Axe(p1axe.mult(1), p1axe.mult(-1)), 5.0);
+        Camera camera = new Camera(circle.calculerPoint3D
+                (((frame()%(FPS * SECONDS)) /(1.0*FPS * SECONDS) )).mult(3.0),
+                Point3D.O0, axe);
 
-        Camera camera = new Camera(circle.calculerPoint3D(((frame()%(25*10)) )), Point3D.O0);
-
-        camera.declareProperties();
+        /*
+        Camera camera = new Camera(Point3D.O0,
+                circle.calculerPoint3D
+                        ((frame()%(FPS * SECONDS)) /(1.0*FPS * SECONDS)), axe);
+*/
+        camera.calculerMatrice(axe.mult(-1));
 
         z().scene().cameraActive(camera);
 
@@ -89,7 +100,7 @@ public class TestEarth extends TestObjetSub {
     public static void main(String[] args) {
         TestEarth testEarth = new TestEarth();
         testEarth.loop(true);
-        testEarth.setMaxFrames(9*25*10);
+        testEarth.setMaxFrames(9*FPS*SECONDS);
         Thread thread = new Thread(testEarth);
         thread.start();
     }
