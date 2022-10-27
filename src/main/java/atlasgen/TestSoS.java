@@ -158,8 +158,8 @@ public class TestSoS extends TestObjetSub {
         Point3D z = Point3D.O0.moins(camera.getCurve().calculerPoint3D(t)).norme1();
         Point3D x = camera.getCurve().tangente(t).norme1().mult(-1d);
         Point3D y = x.prodVect(z).norme1();
-        //camera.setMatrix(x, y, z);
-        //camera.calculerMatrice(y);
+        camera.setMatrix(x, y, z);
+        camera.calculerMatrice(y);
 
         Logger.getAnonymousLogger().log(Level.INFO, "Nombre d'objet: " + scene().getObjets().getData1d().size());
     }

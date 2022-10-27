@@ -10,7 +10,7 @@ class HeightMapSurfaceSphere extends HeightMapSurface {
 
     @Override
     public Point3D calculerPoint3D(double u, double v) {
-        throw new UnsupportedOperationException("Calculer point de la sphere + bitmap");
+        return surface.getData0d().calculerPoint3D(u, v);
     }
 
     public HeightMapSurfaceSphere() {

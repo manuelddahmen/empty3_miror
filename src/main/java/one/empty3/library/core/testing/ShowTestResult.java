@@ -600,7 +600,7 @@ public final class ShowTestResult extends javax.swing.JFrame implements Runnable
         while (true && !stop) {
             dessine();
             try {
-                Thread.sleep(100);
+                Thread.sleep(1000);
             } catch (InterruptedException ex) {
                 Logger.getLogger(ShowTestResult.class.getName()).log(
                         Level.SEVERE, null, ex);
