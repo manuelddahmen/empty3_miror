@@ -12,8 +12,8 @@ import java.io.File;
 import java.util.logging.Logger;
 
 public class TestEarth extends TestObjetSub {
-    public static final int SECONDS = 10;
-    public static final int FPS = 1;
+    public static final int SECONDS = 3;
+    public static final int FPS = 25;
     private final File planets = new File("res\\img\\planets");
     private File[] planetsImagesFiles;
     private int i = -1;
@@ -116,7 +116,7 @@ public class TestEarth extends TestObjetSub {
     public static void main(String[] args) {
         TestEarth testEarth = new TestEarth();
         testEarth.loop(true);
-        testEarth.setResolution(320, 200);
+        testEarth.setResolution(640, 480);
         testEarth.setMaxFrames(9*FPS*SECONDS);
         Thread thread = new Thread(testEarth);
         thread.start();
