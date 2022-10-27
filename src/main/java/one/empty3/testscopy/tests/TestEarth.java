@@ -30,7 +30,7 @@ public class TestEarth extends TestObjetSub {
         sphere = new Sphere(new Axe(axe.mult(1.0), axe.mult(-1)), 2.0);
         sphere.texture(new ColorTexture(Color.WHITE));
 
-        z().setDisplayType(ZBufferImpl.SURFACE_DISPLAY_COL_TRI);
+        z().setDisplayType(ZBufferImpl.SURFACE_DISPLAY_COL_QUADS);
 
         z().texture(new ColorTexture(Color.BLACK));
         scene().texture(new ColorTexture(Color.BLACK));
@@ -42,13 +42,13 @@ public class TestEarth extends TestObjetSub {
                 new Point3D(1., 0.5, 0.)));
         pcOnPs.texture(new TextureCol(Color.GREEN));
 
-        scene().add(pcOnPs);
-        sphere.setIncrU(.01);
-        sphere.setIncrV(.01);
+        //scene().add(pcOnPs);
+        sphere.setIncrU(.003);
+        sphere.setIncrV(.003);
 
         circle = sphere.getCircle();
 
-        scene().add(circle);
+        //scene().add(circle);
     }
 
     @Override
@@ -116,7 +116,7 @@ public class TestEarth extends TestObjetSub {
     public static void main(String[] args) {
         TestEarth testEarth = new TestEarth();
         testEarth.loop(true);
-        testEarth.setResolution(640, 480);
+        testEarth.setResolution(1024, 768);
         testEarth.setMaxFrames(9*FPS*SECONDS);
         Thread thread = new Thread(testEarth);
         thread.start();
