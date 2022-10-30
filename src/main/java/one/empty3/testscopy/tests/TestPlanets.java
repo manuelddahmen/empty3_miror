@@ -4,14 +4,13 @@ import one.empty3.feature.app.replace.javax.imageio.ImageIO;
 import one.empty3.library.*;
 import one.empty3.library.core.nurbs.PcOnPs;
 import one.empty3.library.core.testing.TestObjetSub;
-import one.empty3.library.core.tribase.CurveSurface;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.logging.Logger;
 
-public class TestEarth extends TestObjetSub {
+public class TestPlanets extends TestObjetSub {
     public static final int SECONDS = 3;
     public static final int FPS = 25;
     private final File planets = new File("res\\img\\planets");
@@ -49,6 +48,10 @@ public class TestEarth extends TestObjetSub {
         circle = sphere.getCircle();
 
         //scene().add(circle);
+
+        frame = 420;
+        i = 4;
+        incr();
     }
 
     @Override
@@ -114,11 +117,11 @@ public class TestEarth extends TestObjetSub {
     }
 
     public static void main(String[] args) {
-        TestEarth testEarth = new TestEarth();
-        testEarth.loop(true);
-        testEarth.setResolution(1024, 768);
-        testEarth.setMaxFrames(9*FPS*SECONDS);
-        Thread thread = new Thread(testEarth);
+        TestPlanets testPlanets = new TestPlanets();
+        testPlanets.loop(true);
+        testPlanets.setResolution(1024, 768);
+        testPlanets.setMaxFrames(9*FPS*SECONDS);
+        Thread thread = new Thread(testPlanets);
         thread.start();
     }
 }
