@@ -10,7 +10,7 @@
  * Pour le moment le programme est entièrement accessible sans frais supplémentaire. Get the sources, build it, use it, like it, share it.
  */
 
-package tests.tests2.simula;
+package tests.tests2.sim;
 
 import one.empty3.library.*;
 import one.empty3.library.core.lighting.Colors;

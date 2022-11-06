@@ -238,7 +238,7 @@ public class ZBufferImpl extends Representable implements ZBuffer {
         } else if (r instanceof ParametricSurface) {
             ParametricSurface n = (ParametricSurface) r;
             // Logger.getAnonymousLogger().log(Level.INFO, "Surface");
-            Logger.getAnonymousLogger().log(Level.INFO, "class" + n.getClass());
+            //Logger.getAnonymousLogger().log(Level.INFO, "class" + n.getClass());
             // TODO Dessiner les bords
             for (double u = n.getStartU(); u + n.getIncrU() <= n.getEndU(); u += n.getIncrU()) {
                 // Logger.getAnonymousLogger().log(Level.INFO, "(u,v) = ("+u+","+")");

@@ -395,6 +395,6 @@ public class Scene extends Representable implements Serializable {
     }
 
     public void clear() {
-        objets.reset();
+        objets.getData1d().clear();
     }
 }

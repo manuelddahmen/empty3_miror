@@ -37,7 +37,7 @@ import one.empty3.library.*;
 import java.awt.*;
 
 
-public class Bille implements IPoint {
+public class Bille extends Point3D {
     public Color color;
     public String nom;
     public Point3D position;

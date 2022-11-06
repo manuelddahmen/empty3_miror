@@ -1,44 +1,30 @@
-/*
- * Copyright (c) 2016. Tous les fichiers dans ce programme sont soumis à la License Publique Générale GNU créée par la Free Softxware Association, Boston.
- * La plupart des licenses de parties tièrces sont compatibles avec la license principale.
- * Les parties tierces peuvent être soumises à d'autres licenses.
- * Montemedia : Creative Commons
- * ECT : Tests à valeur artistique ou technique.
- * La partie RayTacer a été honteusement copiée sur le Net. Puis traduite en Java et améliorée.
- * Java est une marque de la société Oracle.
- *
- * Pour le moment le programme est entièrement accessible sans frais supplémentaire. Get the sources, build it, use it, like it, share it.
- */
-/*
 package tests.tests2.simula;
 
+import one.empty3.feature.app.replace.java.awt.Color;
 import one.empty3.library.*;
 import one.empty3.library.core.physics.Bille;
-import one.empty3.library.core.physics.Move;
+import one.empty3.library.core.physics.Force;
 import one.empty3.library.core.testing.TestObjetSub;
-import one.empty3.library.core.tribase.TRISphere;
 
-import java.awt.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class TestBlackHole extends TestObjetSub {
     int X = 10;
     int Y = 10;
     int Z = 10;
     Bille[] billes = new Bille[X * Y * Z];
-    Move f = new Move();
+    Force f = new Force();
 
     public static void main(String[] args) {
 
         TestBlackHole ttn = new TestBlackHole();
 
-        ttn.setResx(640);
-        ttn.setResy(480);
         ttn.loop(true);
-        ttn.setMaxFrames(100000);
+        ttn.setMaxFrames(1000);
         ttn.publishResult(true);
-        ttn.setFileExtension("png");
 
-        ttn.run();
+        new Thread(ttn).start();
 
     }
 
@@ -50,11 +36,12 @@ public class TestBlackHole extends TestObjetSub {
 
                     billes[k * Y * X + j * X + i] = new Bille();
                     billes[k * Y * X + j * X + i].position =
-                            /*
                             new Point3D(
-                            (i - X / 2) / 1f, (j - Y / 2) / 1f,
-                            (k - Z / 2) / 1f).mult(Math.random()*1000);
-                            Point3D.random(1000.0);
+                                    (double) ((i - X / 2) / 1f),
+                                    (double) ((j - Y / 2) / 1f),
+                                    (double) ((k - Z / 2) / 1f))
+                                    .mult(Math.random() * 1000);
+                    Point3D.random(1000.0);
                     billes[k * Y * X + j * X + i].color = new Color(1.0f * i
                             / X, 1.0f * j / Y, 1.0f * k / Z);
                     billes[k * Y * X + j * X + i].masse = 100000;
@@ -67,12 +54,21 @@ public class TestBlackHole extends TestObjetSub {
 
         }
         f.setFusion(true);
-        f.configurer(billes);
+        f.configurer(getArrayList(billes));
 
     }
 
-    public void testScene() {
+    public ArrayList<Bille> getArrayList(Bille[] billes) {
+        ArrayList<Bille> billes2 = new ArrayList<>();
+
+        billes2.addAll(Arrays.asList(billes));
+
+        return billes2;
+    }
+
+    public void finit() {
         scene().clear();
+        scene().cameras().clear();
 
         f.calculer();
         f.setDistMinFusion(5 * f.getDistMin() / 4);
@@ -83,22 +79,25 @@ public class TestBlackHole extends TestObjetSub {
         double distMin = f.getDistMin();
 
         for (int i = 0; i < X * Y; i++) {
-            Representable r = new TRISphere(billes[i].position, distMin);
+            Representable r = new Sphere(new Axe(billes[i].position.moins(
+                    Point3D.Y.mult(distMin)),
+                    billes[i].position.plus(Point3D.Y.mult(distMin))), distMin);
 
-            ((TRISphere) r).setMaxX(5);
-            ((TRISphere) r).setMaxY(5);
 
-            r.texture(new TextureCol(billes[i].color));
+            r.texture(new ColorTexture(billes[i].color));
 
             rc.add(r);
         }
 
         Camera camera = new Camera(
-                f.centreMasse().plus(f.getDistMax() * 2), f.centreMasse());
+                f.centreMasse().plus(Point3D.Z.mult(-f.getDistMax() * 2)),
+                f.centreMasse());
 
         scene().cameraActive(camera);
+        camera(camera);
         scene().add(rc);
+
+        f.getCourant().forEach(System.out::println);
     }
 
 }
-*/

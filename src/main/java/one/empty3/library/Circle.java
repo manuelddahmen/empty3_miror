@@ -112,7 +112,7 @@ public class Circle extends ParametricCurve {
         }
         if (!success) {
             isCalculerRepere1 = false;
-            throw new NullPointerException("Cannot compute axis");
+            //throw new NullPointerException("Cannot compute axis");
         }
         isCalculerRepere1 = true;
     }

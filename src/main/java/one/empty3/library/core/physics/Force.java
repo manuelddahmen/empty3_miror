@@ -102,7 +102,7 @@ public class Force {
 
             if (a == ind)
                 continue;
-            courantMinus1.set(a, courant.get(i));
+            courantMinus1.add(courant.get(i));
             i++;
         }
 
