@@ -59,9 +59,8 @@ public class TestBlackHole extends TestObjetSub {
     }
 
     public ArrayList<Bille> getArrayList(Bille[] billes) {
-        ArrayList<Bille> billes2 = new ArrayList<>();
 
-        billes2.addAll(Arrays.asList(billes));
+        ArrayList<Bille> billes2 = new ArrayList<>(Arrays.asList(billes));
 
         return billes2;
     }
