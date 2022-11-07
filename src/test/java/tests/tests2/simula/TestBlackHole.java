@@ -89,14 +89,13 @@ public class TestBlackHole extends TestObjetSub {
         }
 
         Camera camera = new Camera(
-                f.centreMasse().plus(Point3D.Z.mult(-f.getDistMax() * 2)),
+                f.centreMasse().plus(Point3D.Z.mult(-f.getDistMax() / 2)),
                 f.centreMasse());
 
         scene().cameraActive(camera);
         camera(camera);
         scene().add(rc);
 
-        //f.getCourant().forEach(System.out::println);
     }
 
 }

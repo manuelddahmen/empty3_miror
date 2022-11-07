@@ -9,14 +9,14 @@ import java.awt.*;
 /*__
  * Created by Win on 24-01-16.
  */
-public class TestSpheresTournent extends TestObjetSub {
+public class TestSpheresMove extends TestObjetSub {
     private TRISphere[] sps;
     private Trajectoire tr;
     private Matrix33[] matricess = new Matrix33[]{Matrix33.I, Matrix33.XYZ, Matrix33.YZX, Matrix33.ZXY};
     private Matrix33 matrix;
 
     public static void main(String[] args) {
-        TestSpheresTournent ts = new TestSpheresTournent();
+        TestSpheresMove ts = new TestSpheresMove();
 
         ts.setMaxFrames(3000);
 
