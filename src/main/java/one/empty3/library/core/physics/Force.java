@@ -160,6 +160,7 @@ public class Force {
 
     public void populateList(ArrayList<Bille> billes)
     {
+        billes.clear();
         for(int i=0; i<courant.size(); i++)
             billes.add(new Bille());
     }

@@ -53,7 +53,7 @@ public class TestBlackHole extends TestObjetSub {
             }
 
         }
-        f.setFusion(true);
+        //f.setFusion(true);
         f.configurer(getArrayList(billes));
 
     }
@@ -97,7 +97,7 @@ public class TestBlackHole extends TestObjetSub {
         camera(camera);
         scene().add(rc);
 
-        f.getCourant().forEach(System.out::println);
+        //f.getCourant().forEach(System.out::println);
     }
 
 }
