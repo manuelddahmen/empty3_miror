@@ -37,23 +37,23 @@ public class TestBlackHole extends TestObjetSub {
                     billes[k * Y * X + j * X + i] = new Bille();
                     billes[k * Y * X + j * X + i].position =
                             new Point3D(
-                                    (double) ((i - X / 2) / 1f),
-                                    (double) ((j - Y / 2) / 1f),
-                                    (double) ((k - Z / 2) / 1f))
+                                    ((i - X / 2.)),
+                                    ((j - Y / 2.)),
+                                    ((k - Z / 2.)))
                                     .mult(Math.random() * 1000);
                     Point3D.random(1000.0);
                     billes[k * Y * X + j * X + i].color = new Color(1.0f * i
                             / X, 1.0f * j / Y, 1.0f * k / Z);
-                    billes[k * Y * X + j * X + i].masse = 100000;
+                    billes[k * Y * X + j * X + i].masse = Math.random()*100000.0;
                     billes[k * Y * X + j * X + i].attraction = 10;
                     billes[k * Y * X + j * X + i].repulsion = 0.1;
                     billes[k * Y * X + j * X + i].amortissement = 0.2;
-                    billes[k * Y * X + j * X + i].vitesse = Point3D.O0;
+                    billes[k * Y * X + j * X + i].vitesse = Point3D.random(100.0);
                 }
             }
 
         }
-        //f.setFusion(true);
+        f.setFusion(false);
         f.configurer(getArrayList(billes));
 
     }
@@ -75,9 +75,9 @@ public class TestBlackHole extends TestObjetSub {
 
         RepresentableConteneur rc = new RepresentableConteneur();
 
-        double distMin = f.getDistMin();
+        double distMin = f.getDistMin()*2;
 
-        for (int i = 0; i < X * Y; i++) {
+        for (int i = 0; i < X * Y * Z; i++) {
             Representable r = new Sphere(new Axe(billes[i].position.moins(
                     Point3D.Y.mult(distMin)),
                     billes[i].position.plus(Point3D.Y.mult(distMin))), distMin);
