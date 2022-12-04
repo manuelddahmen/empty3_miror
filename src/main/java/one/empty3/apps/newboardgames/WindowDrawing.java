@@ -1,6 +1,5 @@
 package one.empty3.apps.newboardgames;
 
-import com.android.tools.r8.u.b.G;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLDrawable;
 import com.jogamp.opengl.awt.GLCanvas;

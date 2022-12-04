@@ -1,6 +1,5 @@
 package one.empty3.library.core.raytracer.tree.derivative;
 
-import com.android.tools.r8.graph.O;
 import one.empty3.library.core.raytracer.tree.*;
 
 import java.util.ArrayList;

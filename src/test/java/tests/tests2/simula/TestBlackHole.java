@@ -10,9 +10,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class TestBlackHole extends TestObjetSub {
-    int X = 10;
-    int Y = 10;
-    int Z = 10;
+    int X = 5;
+    int Y = 2;
+    int Z = 1;
     Bille[] billes = new Bille[X * Y * Z];
     Force f = new Force();
 
@@ -21,7 +21,7 @@ public class TestBlackHole extends TestObjetSub {
         TestBlackHole ttn = new TestBlackHole();
 
         ttn.loop(true);
-        ttn.setMaxFrames(1000);
+        ttn.setMaxFrames(600);
         ttn.publishResult(true);
 
         new Thread(ttn).start();
@@ -41,14 +41,13 @@ public class TestBlackHole extends TestObjetSub {
                                     ((j - Y / 2.)),
                                     ((k - Z / 2.)))
                                     .mult(Math.random() * 1000);
-                    Point3D.random(1000.0);
                     billes[k * Y * X + j * X + i].color = new Color(1.0f * i
                             / X, 1.0f * j / Y, 1.0f * k / Z);
                     billes[k * Y * X + j * X + i].masse = Math.random()*100000.0;
                     billes[k * Y * X + j * X + i].attraction = 10;
-                    billes[k * Y * X + j * X + i].repulsion = 0.1;
-                    billes[k * Y * X + j * X + i].amortissement = 0.2;
-                    billes[k * Y * X + j * X + i].vitesse = Point3D.random(100.0);
+                    billes[k * Y * X + j * X + i].repulsion = 0.0;
+                    billes[k * Y * X + j * X + i].amortissement = 0.0;
+                    billes[k * Y * X + j * X + i].vitesse = Point3D.random(1.0);
                 }
             }
 
@@ -69,9 +68,11 @@ public class TestBlackHole extends TestObjetSub {
         scene().clear();
         scene().cameras().clear();
 
-        f.calculer();
-        f.setDistMinFusion(5 * f.getDistMin() / 4);
 
+        for(int i = 0; i<10; i++) {
+            f.calculer();
+            //f.setDistMinFusion(5 * f.getDistMin() / 4);
+        }
 
         RepresentableConteneur rc = new RepresentableConteneur();
 
@@ -80,7 +81,8 @@ public class TestBlackHole extends TestObjetSub {
         for (int i = 0; i < X * Y * Z; i++) {
             Representable r = new Sphere(new Axe(billes[i].position.moins(
                     Point3D.Y.mult(distMin)),
-                    billes[i].position.plus(Point3D.Y.mult(distMin))), distMin);
+                    billes[i].position.plus(Point3D.Y.mult(distMin))),
+                    distMin);
 
 
             r.texture(new ColorTexture(billes[i].color));
@@ -89,7 +91,7 @@ public class TestBlackHole extends TestObjetSub {
         }
 
         Camera camera = new Camera(
-                f.centreMasse().plus(Point3D.Z.mult(-f.getDistMax() / 2)),
+                Point3D.Z.mult(-(f.getDistMax() / 2 + f.centreMasse().norme())),
                 f.centreMasse());
 
         scene().cameraActive(camera);

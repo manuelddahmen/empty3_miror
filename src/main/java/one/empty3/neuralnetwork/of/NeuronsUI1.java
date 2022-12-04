@@ -1,9 +1,11 @@
 package one.empty3.neuralnetwork.of;
 
+import java.awt.*;
 import atlasgen.Action;
 import atlasgen.CsvLine;
 import atlasgen.CsvReader;
 import atlasgen.CsvWriter;
+import com.intellij.uiDesigner.core.*;
 import one.empty3.neuralnetwork.Main;
 
 import javax.swing.*;
@@ -20,20 +22,7 @@ public class NeuronsUI1 {
     private static JRootPane rootPane;
     private static JFrame frame;
     private String csv;
-    private JButton parcourirButton;
-    private JTextField textField1;
-    private JTextField textField2;
-    private JTextField textField3;
-    private JTextField textField4;
-    private JList rectangles;
-    private JList labels;
-    private JButton saveAsButton;
-    private JButton reloadButton;
-    private JButton saveButton;
-    private JPanel imagePanel;
-    private JButton suivantButton;
     private JButton precedentButton;
-    private JList listImages;
     private int startIndex = 0;
     private int pageSize = 20;
     CsvLine csvLineSelected;
@@ -42,6 +31,7 @@ public class NeuronsUI1 {
     private CsvReader reader;
 
     public NeuronsUI1() {
+        initComponents();
         parcourirButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -126,4 +116,220 @@ public class NeuronsUI1 {
 
     }
 
+
+    private void initComponents() {
+        // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
+        // Generated using JFormDesigner non-commercial license
+        var panel1 = new JPanel();
+        var panel2 = new JPanel();
+        parcourirButton = new JButton();
+        var label1 = new JLabel();
+        var label2 = new JLabel();
+        var label3 = new JLabel();
+        var label4 = new JLabel();
+        var label5 = new JLabel();
+        textField1 = new JTextField();
+        textField2 = new JTextField();
+        textField3 = new JTextField();
+        textField4 = new JTextField();
+        var hSpacer1 = new Spacer();
+        labels = new JList();
+        imagePanel = new JPanel();
+        saveAsButton = new JButton();
+        reloadButton = new JButton();
+        saveButton = new JButton();
+        var panel3 = new JPanel();
+        listImages = new JList();
+        var hSpacer2 = new Spacer();
+        rectangles = new JList();
+        précédentButton = new JButton();
+        suivantButton = new JButton();
+
+        //======== panel1 ========
+        {
+            panel1.setLayout(new GridLayoutManager(5, 4, new Insets(0, 0, 0, 0), -1, -1));
+
+            //======== panel2 ========
+            {
+                panel2.setLayout(new GridLayoutManager(5, 2, new Insets(0, 0, 0, 0), -1, -1));
+
+                //---- parcourirButton ----
+                parcourirButton.setText("Parcourir");
+                panel2.add(parcourirButton, new GridConstraints(0, 1, 1, 1,
+                    GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
+                    GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                    GridConstraints.SIZEPOLICY_FIXED,
+                    null, null, null));
+
+                //---- label1 ----
+                label1.setText("Label");
+                panel2.add(label1, new GridConstraints(0, 0, 1, 1,
+                    GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
+                    GridConstraints.SIZEPOLICY_FIXED,
+                    GridConstraints.SIZEPOLICY_FIXED,
+                    null, null, null));
+
+                //---- label2 ----
+                label2.setText("id");
+                panel2.add(label2, new GridConstraints(1, 0, 1, 1,
+                    GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
+                    GridConstraints.SIZEPOLICY_FIXED,
+                    GridConstraints.SIZEPOLICY_FIXED,
+                    null, null, null));
+
+                //---- label3 ----
+                label3.setText("file");
+                panel2.add(label3, new GridConstraints(2, 0, 1, 1,
+                    GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
+                    GridConstraints.SIZEPOLICY_FIXED,
+                    GridConstraints.SIZEPOLICY_FIXED,
+                    null, null, null));
+
+                //---- label4 ----
+                label4.setText("rectangles");
+                panel2.add(label4, new GridConstraints(3, 0, 1, 1,
+                    GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
+                    GridConstraints.SIZEPOLICY_FIXED,
+                    GridConstraints.SIZEPOLICY_FIXED,
+                    null, null, null));
+
+                //---- label5 ----
+                label5.setText("labels");
+                panel2.add(label5, new GridConstraints(4, 0, 1, 1,
+                    GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
+                    GridConstraints.SIZEPOLICY_FIXED,
+                    GridConstraints.SIZEPOLICY_FIXED,
+                    null, null, null));
+                panel2.add(textField1, new GridConstraints(1, 1, 1, 1,
+                    GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
+                    GridConstraints.SIZEPOLICY_CAN_GROW | GridConstraints.SIZEPOLICY_WANT_GROW,
+                    GridConstraints.SIZEPOLICY_FIXED,
+                    null, null, null));
+                panel2.add(textField2, new GridConstraints(2, 1, 1, 1,
+                    GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
+                    GridConstraints.SIZEPOLICY_CAN_GROW | GridConstraints.SIZEPOLICY_WANT_GROW,
+                    GridConstraints.SIZEPOLICY_FIXED,
+                    null, null, null));
+                panel2.add(textField3, new GridConstraints(3, 1, 1, 1,
+                    GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
+                    GridConstraints.SIZEPOLICY_CAN_GROW | GridConstraints.SIZEPOLICY_WANT_GROW,
+                    GridConstraints.SIZEPOLICY_FIXED,
+                    null, null, null));
+                panel2.add(textField4, new GridConstraints(4, 1, 1, 1,
+                    GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
+                    GridConstraints.SIZEPOLICY_CAN_GROW | GridConstraints.SIZEPOLICY_WANT_GROW,
+                    GridConstraints.SIZEPOLICY_FIXED,
+                    null, null, null));
+            }
+            panel1.add(panel2, new GridConstraints(0, 1, 2, 2,
+                GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
+                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                null, null, null));
+            panel1.add(hSpacer1, new GridConstraints(1, 3, 1, 1,
+                GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
+                GridConstraints.SIZEPOLICY_CAN_GROW | GridConstraints.SIZEPOLICY_WANT_GROW,
+                GridConstraints.SIZEPOLICY_CAN_SHRINK,
+                null, null, null));
+            panel1.add(labels, new GridConstraints(3, 2, 2, 1,
+                GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
+                GridConstraints.SIZEPOLICY_CAN_GROW,
+                GridConstraints.SIZEPOLICY_CAN_GROW | GridConstraints.SIZEPOLICY_WANT_GROW,
+                null, new Dimension(74, 50), null));
+
+            //======== imagePanel ========
+            {
+                imagePanel.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
+            }
+            panel1.add(imagePanel, new GridConstraints(0, 3, 1, 1,
+                GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
+                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                null, null, null));
+
+            //---- saveAsButton ----
+            saveAsButton.setText("Save as");
+            panel1.add(saveAsButton, new GridConstraints(3, 3, 1, 1,
+                GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
+                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                GridConstraints.SIZEPOLICY_FIXED,
+                null, null, null));
+
+            //---- reloadButton ----
+            reloadButton.setText("Reload");
+            panel1.add(reloadButton, new GridConstraints(4, 3, 1, 1,
+                GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
+                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                GridConstraints.SIZEPOLICY_FIXED,
+                null, null, null));
+
+            //---- saveButton ----
+            saveButton.setText("Save");
+            panel1.add(saveButton, new GridConstraints(2, 3, 1, 1,
+                GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
+                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                GridConstraints.SIZEPOLICY_FIXED,
+                null, null, null));
+
+            //======== panel3 ========
+            {
+                panel3.setLayout(new GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1));
+                panel3.add(listImages, new GridConstraints(0, 1, 1, 1,
+                    GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
+                    GridConstraints.SIZEPOLICY_CAN_GROW,
+                    GridConstraints.SIZEPOLICY_CAN_GROW | GridConstraints.SIZEPOLICY_WANT_GROW,
+                    null, new Dimension(150, 50), null));
+                panel3.add(hSpacer2, new GridConstraints(0, 0, 1, 1,
+                    GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
+                    GridConstraints.SIZEPOLICY_CAN_GROW | GridConstraints.SIZEPOLICY_WANT_GROW,
+                    GridConstraints.SIZEPOLICY_CAN_SHRINK,
+                    null, null, null));
+            }
+            panel1.add(panel3, new GridConstraints(0, 0, 1, 1,
+                GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
+                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                null, new Dimension(185, 24), null));
+            panel1.add(rectangles, new GridConstraints(3, 1, 2, 1,
+                GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
+                GridConstraints.SIZEPOLICY_CAN_GROW,
+                GridConstraints.SIZEPOLICY_CAN_GROW | GridConstraints.SIZEPOLICY_WANT_GROW,
+                null, new Dimension(330, 50), null));
+
+            //---- précédentButton ----
+            précédentButton.setText("Precedent");
+            panel1.add(précédentButton, new GridConstraints(1, 0, 1, 1,
+                GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
+                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                GridConstraints.SIZEPOLICY_FIXED,
+                null, new Dimension(330, 30), null));
+
+            //---- suivantButton ----
+            suivantButton.setText("Suivant");
+            panel1.add(suivantButton, new GridConstraints(2, 0, 1, 1,
+                GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
+                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                GridConstraints.SIZEPOLICY_FIXED,
+                null, new Dimension(74, 30), null));
+        }
+        // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
+    }
+
+    // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables  @formatter:off
+    // Generated using JFormDesigner non-commercial license
+    private JButton parcourirButton;
+    private JTextField textField1;
+    private JTextField textField2;
+    private JTextField textField3;
+    private JTextField textField4;
+    private JList labels;
+    private JPanel imagePanel;
+    private JButton saveAsButton;
+    private JButton reloadButton;
+    private JButton saveButton;
+    private JList listImages;
+    private JList rectangles;
+    private JButton précédentButton;
+    private JButton suivantButton;
+    // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 }
