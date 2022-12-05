@@ -4,8 +4,16 @@ plugins {
     id 'java-library'
     id 'maven-publish'
 }
-// Other configuration here
-
+try {
+    // Other configuration here
+    Properties properties = new Properties()
+    File propertiesFile = new File('../private.properties/gradle.properties')
+    propertiesFile.withInputStream {
+        properties.load(it)
+    }
+} catch(Exception ex) {
+    ex.printStackTrace()
+}
 java {
     withSourcesJar()
 }

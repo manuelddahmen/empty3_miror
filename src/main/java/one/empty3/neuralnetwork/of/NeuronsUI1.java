@@ -1,5 +1,5 @@
 package one.empty3.neuralnetwork.of;
-
+/*
 import java.awt.*;
 import atlasgen.Action;
 import atlasgen.CsvLine;
@@ -333,3 +333,4 @@ public class NeuronsUI1 {
     private JButton suivantButton;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 }
+*/

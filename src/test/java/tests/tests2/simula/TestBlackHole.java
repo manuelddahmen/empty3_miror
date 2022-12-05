@@ -4,6 +4,7 @@ import one.empty3.feature.app.replace.java.awt.Color;
 import one.empty3.library.*;
 import one.empty3.library.core.physics.Bille;
 import one.empty3.library.core.physics.Force;
+import one.empty3.library.core.testing.Resolution;
 import one.empty3.library.core.testing.TestObjetSub;
 
 import java.util.ArrayList;
@@ -19,9 +20,8 @@ public class TestBlackHole extends TestObjetSub {
     public static void main(String[] args) {
 
         TestBlackHole ttn = new TestBlackHole();
-
-        ttn.loop(true);
-        ttn.setMaxFrames(600);
+        ttn.setMaxFrames(20000);
+        ttn.setDimension(new Resolution(320, 200));
         ttn.publishResult(true);
 
         new Thread(ttn).start();
@@ -40,14 +40,14 @@ public class TestBlackHole extends TestObjetSub {
                                     ((i - X / 2.)),
                                     ((j - Y / 2.)),
                                     ((k - Z / 2.)))
-                                    .mult(Math.random() * 1000);
+                                    .mult(Math.random() * 1E9);
                     billes[k * Y * X + j * X + i].color = new Color(1.0f * i
                             / X, 1.0f * j / Y, 1.0f * k / Z);
-                    billes[k * Y * X + j * X + i].masse = Math.random()*100000.0;
-                    billes[k * Y * X + j * X + i].attraction = 10;
+                    billes[k * Y * X + j * X + i].masse = Math.random()*10.0;
+                    billes[k * Y * X + j * X + i].attraction = 100;
                     billes[k * Y * X + j * X + i].repulsion = 0.0;
                     billes[k * Y * X + j * X + i].amortissement = 0.0;
-                    billes[k * Y * X + j * X + i].vitesse = Point3D.random(1.0);
+                    billes[k * Y * X + j * X + i].vitesse = Point3D.random(1E6);
                 }
             }
 
@@ -91,7 +91,8 @@ public class TestBlackHole extends TestObjetSub {
         }
 
         Camera camera = new Camera(
-                Point3D.Z.mult(-(f.getDistMax() / 2 + f.centreMasse().norme())),
+                f.centreMasse().moins(
+                        Point3D.Z.mult(f.getDistMax()*2)),
                 f.centreMasse());
 
         scene().cameraActive(camera);
