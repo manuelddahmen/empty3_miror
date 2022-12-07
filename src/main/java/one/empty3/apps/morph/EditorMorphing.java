@@ -8,55 +8,12 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.util.Arrays;
 
-public class EditorMorphing extends JFrame{
+public class EditorMorphing extends JFrame {
+    private static String directory;
     private double dimXnew = 20;
     private double dimYnew = 20;
-
-    class Model {
-        private File fileA;
-        private File fileB;
-        private Point3D[][] points3D;
-        private int dimX;
-        private int dimY;
-
-        public Point3D[][] getPoints3D() {
-            return points3D;
-        }
-        public void coverLine(int j, int dimX, Point3D [][] points3d_new) {
-            for (int i = 0; i < this.dimX || (i < dimX && dimX < this.dimX); i++) {
-                points3d_new[j][i] = myModel.getPoints3D()[j][i];
-            }
-            if (dimX > this.dimX) {
-                for (int i = this.dimX; i < dimX; i++) {
-                    points3d_new[j] = myModel.getPoints3D()[j];
-                }
-            }
-        }
-
-        public void setDimXY(int dimX, int dimY) {
-            if(dimX!=this.dimX || dimY!=this.dimY) {
-                Point3D[][] points3d_tmp = new Point3D[dimX][dimY];
-                for(int j=0; j<this.dimY||(j<dimY && dimY<this.dimY); j++) {
-                    points3d_tmp[j] = points3d_tmp[j];
-                    coverLine(j, dimX, points3d_tmp);
-
-
-                }
-                if(dimY>this.dimY) {
-                    for(int j=this.dimY; j<dimY; j++) {
-                        points3d_tmp[j] = points3D[points3d_tmp.length-1];
-                        coverLine(j, dimX, points3d_tmp);
-                    }
-                }
-                myModel.points3D = points3d_tmp;
-            }
-        }
-
-    }
     private Model myModel = new Model();
-    private static String directory;
     private JButton goButton;
     private JFormattedTextField dimX;
     private JFormattedTextField dimY;
@@ -74,19 +31,17 @@ public class EditorMorphing extends JFrame{
     private JButton parcourirB;
     private JButton saveButton;
     private JFrame jframe = this;
-
-
-    public EditorMorphing() {
+    public EditorMorphing(String morphingEditor) {
         parcourirA.addActionListener(new ActionListener() {
 
 
             @Override
             public void actionPerformed(ActionEvent e) {
                 FileDialog fileDialog = new FileDialog(jframe);
-                fileDialog.setDirectory(EditorMorphing.directory==null?".":EditorMorphing.directory);
+                fileDialog.setDirectory(EditorMorphing.directory == null ? "." : EditorMorphing.directory);
                 fileDialog.setVisible(true);
                 String file = fileDialog.getFile();
-                if(file!=null);
+                if (file != null) ;
                 try {
                     ImageIO.read(new File(file));
                     myModel.fileA = new File(file);
@@ -99,10 +54,10 @@ public class EditorMorphing extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 FileDialog fileDialog = new FileDialog(jframe);
-                fileDialog.setDirectory(EditorMorphing.directory==null?".":EditorMorphing.directory);
+                fileDialog.setDirectory(EditorMorphing.directory == null ? "." : EditorMorphing.directory);
                 fileDialog.setVisible(true);
                 String file = fileDialog.getFile();
-                if(file!=null);
+                if (file != null) ;
                 try {
                     ImageIO.read(new File(file));
                     myModel.fileB = new File(file);
@@ -117,22 +72,22 @@ public class EditorMorphing extends JFrame{
             public void actionPerformed(ActionEvent e) {
 
                 {
-                    if(dimX.getText()!=null) {
+                    if (dimX.getText() != null) {
                         try {
                             dimXnew = Double.parseDouble(dimX.getText());
                         } catch (Exception exception) {
                             exception.printStackTrace();
                         }
                     }
-                    if(dimY.getText()!=null) {
+                    if (dimY.getText() != null) {
                         try {
                             dimYnew = Double.parseDouble(dimY.getText());
-                         } catch (Exception exception) {
+                        } catch (Exception exception) {
                             exception.printStackTrace();
                         }
                     }
 
-                    myModel.setDimXY((int)dimXnew, (int)dimYnew);
+                    myModel.setDimXY((int) dimXnew, (int) dimYnew);
                 }
 
 
@@ -141,7 +96,57 @@ public class EditorMorphing extends JFrame{
     }
 
     public static void main(String[] args) {
-        EditorMorphing editorMorphing = new EditorMorphing();
+        EditorMorphing editorMorphing = new EditorMorphing("Morphing Editor");
+        JRootPane rootPane = editorMorphing.getRootPane();
+        editorMorphing.setContentPane(rootPane);
+        editorMorphing.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        editorMorphing.setVisible(true);
+        editorMorphing.pack();
+
 
     }
+
+    class Model {
+        private File fileA;
+        private File fileB;
+        private Point3D[][] points3D;
+        private int dimX;
+        private int dimY;
+
+        public Point3D[][] getPoints3D() {
+            return points3D;
+        }
+
+        public void coverLine(int j, int dimX, Point3D[][] points3d_new) {
+            for (int i = 0; i < this.dimX || (i < dimX && dimX < this.dimX); i++) {
+                points3d_new[j][i] = myModel.getPoints3D()[j][i];
+            }
+            if (dimX > this.dimX) {
+                for (int i = this.dimX; i < dimX; i++) {
+                    points3d_new[j] = myModel.getPoints3D()[j];
+                }
+            }
+        }
+
+        public void setDimXY(int dimX, int dimY) {
+            if (dimX != this.dimX || dimY != this.dimY) {
+                Point3D[][] points3d_tmp = new Point3D[dimX][dimY];
+                for (int j = 0; j < this.dimY || (j < dimY && dimY < this.dimY); j++) {
+                    points3d_tmp[j] = points3d_tmp[j];
+                    coverLine(j, dimX, points3d_tmp);
+
+
+                }
+                if (dimY > this.dimY) {
+                    for (int j = this.dimY; j < dimY; j++) {
+                        points3d_tmp[j] = points3D[points3d_tmp.length - 1];
+                        coverLine(j, dimX, points3d_tmp);
+                    }
+                }
+                myModel.points3D = points3d_tmp;
+            }
+        }
+
+    }
+
 }

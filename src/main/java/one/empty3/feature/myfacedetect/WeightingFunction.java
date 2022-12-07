@@ -4,10 +4,11 @@ import one.empty3.feature.FilterPixM;
 import one.empty3.feature.PixM;
 
 public class WeightingFunction extends FilterPixM {
-    private static final double MIN_START = 0.1;
+    private static final double MIN_START = 0.2;
 
     public WeightingFunction(int l, int c) {
         super(l, c);
+        generatePixels();
     }
 
     @Override

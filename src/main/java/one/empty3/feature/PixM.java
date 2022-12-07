@@ -114,12 +114,7 @@ public class PixM extends M {
                     for (int u = -filter.columns / 2; u <= filter.lines / 2; u++) {
                         for (int v = -filter.lines / 2; v <= filter.lines / 2; v++) {
      
-                        
-                        /*V derivative = derivative(i, j, 2, null);
-                        double v1 = derivative.get(0, 0);
-                        double v2 = derivative.get(1, 0);
-                        c.set(i, j,(v1+v2)
-                                * filter.filterUVvalue(u, v, u*v));*/
+
                             double filterUVvalue = filter.get(u + filter.columns / 2,
                                     v + filter.lines / 2);
                             double vAtUv = get(i + u, j + v);

@@ -22,7 +22,11 @@ task FeatureAppGui(type: JavaExec) {
     main = "one.empty3.feature.ClassSchemaBuilder"
     args "arg1", "arg2"
 }
-
+task MorphingAppGui(type: JavaExec) {
+    classpath sourceSets.main.runtimeClasspath
+    main = "one.empty3.apps.morph.EditorMorphing"
+    args "arg1", "arg2"
+}
 task OpadGameGui(type: JavaExec) {
     classpath sourceSets.main.runtimeClasspath
     main = "one.empty3.apps.opad.PanelGraphics"
@@ -54,6 +58,9 @@ repositories {
     }
     maven {
         url "https://maven.jzy3d.org/releases/"
+    }
+    maven {
+        url "https://www.jetbrains.com/intellij-repository/releases"
     }
 }
 
@@ -88,7 +95,7 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     testImplementation('org.junit.jupiter:junit-jupiter-api:5.9.0')
     testRuntimeOnly('org.junit.jupiter:junit-jupiter-engine:5.9.0')
-    //implementation("com.intellij:forms_rt:2022.8.27")
+    //implementation("com.jetbrains.intellij.android:com.jetbrains.intellij.uiDesigner:223.7571.182:jar")
 }
 
 test {

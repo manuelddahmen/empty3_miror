@@ -1,6 +1,7 @@
 package one.empty3.feature;
 
 import net.miginfocom.swing.MigLayout;
+import one.empty3.feature.facemorph.RunFeatures;
 import one.empty3.feature.gui.DirestEffect;
 import one.empty3.feature.selection.HighlightFeatures;
 import one.empty3.feature.tryocr.ReadLines;
@@ -890,6 +891,7 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
             listProcessClasses.add(TrueHarrisProcess.class.newInstance());
             listProcessClasses.add(Voronoi.class.newInstance());
             listProcessClasses.add(HighlightFeatures.class.newInstance());
+            listProcessClasses.add(RunFeatures.class.newInstance());
             listProcessClasses.forEach(new Consumer<ProcessFile>() {
                 @Override
                 public void accept(ProcessFile processFile) {
