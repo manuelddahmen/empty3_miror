@@ -48,6 +48,7 @@ import ru.sbtqa.monte.media.avi.AVIWriter;
 import ru.sbtqa.monte.media.math.Rational;
 */
 
+import one.empty3.gui.DataModel;
 import one.empty3.library.*;
 import one.empty3.library.core.export.ObjExport;
 import one.empty3.library.core.export.STLExport;
@@ -865,9 +866,9 @@ public abstract class TestObjet implements Test, Runnable {
 
             if ((generate & GENERATE_IMAGE) > 0) {
                 try {
-                    if(scene()!=null && scene().cameraActive()!=null)
+                    if (scene() != null && scene().cameraActive() != null)
                         scene().cameraActive().declareProperties();
-                    
+
                     z.idzpp();
 
                     z.draw(scene());
@@ -899,18 +900,19 @@ public abstract class TestObjet implements Test, Runnable {
                 biic.setImage(ri != null ? ri : (frame % 2 == 0 ? riG : riD));
                 biic.setStr("" + frame);
             }
-            if (isSaveBMood()) {
-                try {
-                    File foutm = new File(this.dir.getAbsolutePath()
-                            + File.separator + filename + ".bmood");
-                    new Loader().saveBin(foutm, scene);
-                    dataWriter.writeFrameData(frame(), "Save bin: " + foutm.getAbsolutePath());
-                } catch (VersionNonSupporteeException ex) {
-                    o.println(ex.getLocalizedMessage());
-                    reportException(ex);
-                } catch (ExtensionFichierIncorrecteException e) {
-                    e.printStackTrace();
-                }
+            try {
+                File foutm = new File(this.dir.getAbsolutePath()
+                        + File.separator + filename + ".bmo");
+                new Loader().saveTxt(foutm, scene);
+                dataWriter.writeFrameData(frame(), "Save text file: " + foutm.getAbsolutePath());
+                foutm = new File(this.dir.getAbsolutePath()
+                        + File.separator + filename + "-description.xml");
+                DataModel dataModel = new DataModel();
+                dataModel.setScene(scene());
+                dataModel.save(foutm.getAbsolutePath());
+                dataWriter.writeFrameData(frame(), "Save bin: " + foutm.getAbsolutePath());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
 
 

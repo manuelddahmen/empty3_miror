@@ -7,6 +7,13 @@ public class NeuronsInterfaceUI extends JDialog {
     private JPanel contentPane;
     private JButton buttonOK;
     private JButton buttonCancel;
+    private JList labels;
+    private JPanel imagePanel;
+    private JButton saveAsButton;
+    private JButton reloadButton;
+    private JList rectangles;
+    private JButton precedentButton;
+    private JButton suivantButton;
 
     public NeuronsInterfaceUI() {
         setContentPane(contentPane);
