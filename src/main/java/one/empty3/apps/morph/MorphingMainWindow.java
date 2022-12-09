@@ -2,7 +2,10 @@ package one.empty3.apps.morph;
 
 import javax.swing.*;
 
-public class UIDesignerMorphing {
+public class MorphingMainWindow extends JDialog {
+    private JPanel contentPane;
+    private JButton buttonOK;
+    private JButton buttonCancel;
     private JPanel panel1;
     private JToolBar toolBar1;
     private JButton goButton;
@@ -24,5 +27,18 @@ public class UIDesignerMorphing {
     private JLabel intermediatesLabel;
     private JFormattedTextField a250FormattedTextField;
     private JButton saveButton;
-    private JPanel panelMain;
+    private JPanel panel3;
+
+    public MorphingMainWindow() {
+        setContentPane(contentPane);
+        setModal(true);
+        getRootPane().setDefaultButton(buttonOK);
+    }
+
+    public static void main(String[] args) {
+        MorphingMainWindow dialog = new MorphingMainWindow();
+        dialog.pack();
+        dialog.setVisible(true);
+        System.exit(0);
+    }
 }

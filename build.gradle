@@ -19,22 +19,22 @@ java {
 }
 task FeatureAppGui(type: JavaExec) {
     classpath sourceSets.main.runtimeClasspath
-    main = "one.empty3.feature.ClassSchemaBuilder"
+    mainClass = "one.empty3.feature.ClassSchemaBuilder"
     args "arg1", "arg2"
 }
 task MorphingAppGui(type: JavaExec) {
     classpath sourceSets.main.runtimeClasspath
-    main = "one.empty3.apps.morph.EditorMorphing"
+    mainClass = "one.empty3.apps.morph.MorphingMainWindow"
     args "arg1", "arg2"
 }
 task OpadGameGui(type: JavaExec) {
     classpath sourceSets.main.runtimeClasspath
-    main = "one.empty3.apps.opad.PanelGraphics"
+    mainClass = "one.empty3.apps.opad.PanelGraphics"
     args "arg1", "arg2"
 }
 task BoardGameGui(type: JavaExec) {
     classpath sourceSets.main.runtimeClasspath
-    main = "one.empty3.apps.newboardgames.WindowDrawing"
+    mainClass = "one.empty3.apps.newboardgames.WindowDrawing"
     args "arg1", "arg2"
 }
 
@@ -95,7 +95,7 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     testImplementation('org.junit.jupiter:junit-jupiter-api:5.9.0')
     testRuntimeOnly('org.junit.jupiter:junit-jupiter-engine:5.9.0')
-    //implementation("com.jetbrains.intellij.android:com.jetbrains.intellij.uiDesigner:223.7571.182:jar")
+    //implementation("com.jetbrains.intellij:com.jetbrains.intellij.uiDesigner:223.7571.182")
 }
 
 test {

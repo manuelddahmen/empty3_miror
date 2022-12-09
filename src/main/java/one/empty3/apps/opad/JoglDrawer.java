@@ -140,7 +140,9 @@ public class JoglDrawer extends Drawer implements GLEventListener {
             System.err.println("Continue///");
         }
         ((JFrame)component).setContentPane(panel);
-        component.setVisible(true);
+        if(!component.isVisible()) {
+            component.setVisible(true);
+        }
 
     }
 
