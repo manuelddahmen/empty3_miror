@@ -2,6 +2,8 @@ package one.empty3.apps.morph;
 
 import one.empty3.feature.app.replace.javax.imageio.ImageIO;
 import one.empty3.library.Point3D;
+import one.empty3.library.Scene;
+import one.empty3.library.elements.JPanelPPMPreview;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,12 +11,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
-public class EditorMorphing extends JFrame {
+public class EditorMorphing extends JPanel implements Runnable {
     private static String directory;
     private double dimXnew = 20;
     private double dimYnew = 20;
     private Model myModel = new Model();
-    private JButton goButton;
+    private JButton goButton = new JButton("Go");
     private JFormattedTextField dimX;
     private JFormattedTextField dimY;
     private JButton addAtPointXButton;
@@ -27,17 +29,22 @@ public class EditorMorphing extends JFrame {
     private JButton renderButton;
     private JTextField textField1;
     private JFormattedTextField a250FormattedTextField;
-    private JButton parcourirA;
-    private JButton parcourirB;
+    private JButton parcourirA = new JButton("Choisir image A");
+    private JButton parcourirB = new JButton("Choisir image B");
     private JButton saveButton;
-    private JFrame jframe = this;
-    public EditorMorphing(String morphingEditor) {
+    private JPanel panel1;
+    private JToolBar toolBar1;
+    private JSplitPane splitPane1;
+    private JPanel panel2;
+    private JLabel intermediatesLabel;
+
+    public EditorMorphing() {
         parcourirA.addActionListener(new ActionListener() {
 
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                FileDialog fileDialog = new FileDialog(jframe);
+                FileDialog fileDialog = new FileDialog((JFrame) getParent());
                 fileDialog.setDirectory(EditorMorphing.directory == null ? "." : EditorMorphing.directory);
                 fileDialog.setVisible(true);
                 String file = fileDialog.getFile();
@@ -53,7 +60,7 @@ public class EditorMorphing extends JFrame {
         parcourirB.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                FileDialog fileDialog = new FileDialog(jframe);
+                FileDialog fileDialog = new FileDialog((JFrame) getParent());
                 fileDialog.setDirectory(EditorMorphing.directory == null ? "." : EditorMorphing.directory);
                 fileDialog.setVisible(true);
                 String file = fileDialog.getFile();
@@ -96,15 +103,24 @@ public class EditorMorphing extends JFrame {
     }
 
     public static void main(String[] args) {
-        EditorMorphing editorMorphing = new EditorMorphing("Morphing Editor");
-        JRootPane rootPane = editorMorphing.getRootPane();
-        editorMorphing.setContentPane(rootPane);
-        editorMorphing.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        editorMorphing.setVisible(true);
-        editorMorphing.pack();
+        JFrame frame = new JFrame("Morphing Editor");
+        EditorMorphing editorMorphing = new EditorMorphing();
+        editorMorphing.setMinimumSize(new Dimension(800, 600));
+        frame.setContentPane(editorMorphing);
+        frame.setMinimumSize(new Dimension(800, 600));
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        JPanelPPMPreview preview1 = new JPanelPPMPreview(new Scene());
+        editorMorphing.preview = new JPanel();
+        editorMorphing.preview.add(preview1);
+        frame.pack();
+        frame.setVisible(true);
+    }
 
+    @Override
+    public void run() {
 
     }
+
 
     class Model {
         private File fileA;
@@ -148,5 +164,4 @@ public class EditorMorphing extends JFrame {
         }
 
     }
-
 }

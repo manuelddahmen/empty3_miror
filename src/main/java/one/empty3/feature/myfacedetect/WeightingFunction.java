@@ -13,13 +13,13 @@ public class WeightingFunction extends FilterPixM {
 
     @Override
     public double filter(double x, double y) {
-        double percentsY = y / getLines();
+        double ratioY = y / getLines();
         for (int c = 0; c < 3; c++) {
             switch (c) {
                 case 0, 1, 2 -> {
-                    //                   set((int) x, (int) y, percentsY <= MIN_START ? percentsY / MIN_START : (percentsY < 1 - MIN_START ? 1.0 :
+                    //                   set((int) x, (int) y, ratioY <= MIN_START ? ratioY / MIN_START : (ratioY < 1 - MIN_START ? 1.0 :
                     //
-                    return percentsY <= MIN_START ? percentsY / MIN_START : (percentsY < 1 - MIN_START ? 1.0 : percentsY * (1 - MIN_START));
+                    return ratioY <= MIN_START ? ratioY / MIN_START : (ratioY < 1 - MIN_START ? 1.0 : ratioY * (1 - MIN_START));
                 }
             }
         }

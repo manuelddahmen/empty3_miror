@@ -22,7 +22,6 @@ public class NeuronsUI1 {
     private static JRootPane rootPane;
     private static JFrame frame;
     private String csv;
-    private JButton precedentButton;
     private int startIndex = 0;
     private int pageSize = 20;
     CsvLine csvLineSelected;
@@ -142,7 +141,7 @@ public class NeuronsUI1 {
         listImages = new JList();
         var hSpacer2 = new Spacer();
         rectangles = new JList();
-        précédentButton = new JButton();
+        precedentButton = new JButton();
         suivantButton = new JButton();
 
         //======== panel1 ========
@@ -296,9 +295,9 @@ public class NeuronsUI1 {
                 GridConstraints.SIZEPOLICY_CAN_GROW | GridConstraints.SIZEPOLICY_WANT_GROW,
                 null, new Dimension(330, 50), null));
 
-            //---- précédentButton ----
-            précédentButton.setText("Precedent");
-            panel1.add(précédentButton, new GridConstraints(1, 0, 1, 1,
+            //---- precedentButton ----
+            precedentButton.setText("Precedent");
+            panel1.add(precedentButton, new GridConstraints(1, 0, 1, 1,
                 GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
                 GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
                 GridConstraints.SIZEPOLICY_FIXED,
@@ -329,7 +328,7 @@ public class NeuronsUI1 {
     private JButton saveButton;
     private JList listImages;
     private JList rectangles;
-    private JButton précédentButton;
+    private JButton precedentButton;
     private JButton suivantButton;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 }
