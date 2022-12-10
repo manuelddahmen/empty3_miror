@@ -36,8 +36,8 @@ public class TextureMorphing extends ITexture {
         double [] dRgb1 = Lumiere.getDoubles(rgb1);
         double [] dRgb2 = Lumiere.getDoubles(rgb2);
         double[] d = new double[dRgb2.length];
-        for(int i=0; i<4; i++) {
-            d[i] = dRgb1[i]+(r)*dRgb2[i];
+        for(int i=0; i<dRgb1.length; i++) {
+            d[i] = (1-r)*dRgb1[i]+(r)*dRgb2[i];
         }
         return Lumiere.getInt(d);
     }

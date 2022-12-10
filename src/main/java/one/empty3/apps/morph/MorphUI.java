@@ -10,10 +10,15 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.logging.LoggingPermission;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.text.IconView;
+
+import android.util.Log;
 import com.jgoodies.forms.factories.*;
 
 import net.miginfocom.swing.*;
@@ -136,53 +141,78 @@ public class MorphUI extends JFrame {
     private void buttonGo(ActionEvent e) {
         int seconds = Integer.parseInt(textFieldSeconds.getText());
         int fps = Integer.parseInt(textFieldFps.getText());
-        if(imageRead1!=null &&imageRead2!=null) {
+        if(imageRead1!=null &&imageRead2!=null && grid1!=null && grid2!=null) {
             TextureMorphing textureMorphing = new TextureMorphing(imageRead1, imageRead2, fps * seconds);
 
             try {
                 StructureMatrix<Point3D> copy = grid1.copy();
 
-                Polygons polygons1 = new Polygons();
-                polygons1.setCoefficients(grid1);
+                if (copy != null) {
 
-                Polygons polygons2 = new Polygons();
-                polygons2.setCoefficients(grid2);
+                    Polygons polygons1 = new Polygons();
+                    polygons1.setCoefficients(grid1);
 
-                Polygons polygons = new Polygons();
-                polygons.setCoefficients(copy);
-                polygons.texture(textureMorphing);
+                    Polygons polygons2 = new Polygons();
+                    polygons2.setCoefficients(grid2);
 
-                Scene scene = new Scene();
-                scene.add(polygons);
+                    Polygons polygons = new Polygons();
+                    polygons.setCoefficients(copy);
+                    polygons.texture(textureMorphing);
 
-                ZBufferImpl zBuffer = new ZBufferImpl(imageRead1.getWidth(), imageRead2.getHeight());
-                for(int frame=0; frame<fps*seconds; frame++) {
+                    Scene scene = new Scene();
+                    scene.add(polygons);
 
-                    double r = 1.0 * frame / fps / seconds;
-                    zBuffer.draw(scene);
+                    int resX = 400;//imageRead1.getWidth();
+                    int resY = 400;//imageRead1.getHeight();
 
-                    ECBufferedImage image = zBuffer.image();
+                    ZBufferImpl zBuffer = new ZBufferImpl(resX, resY);
 
-                    ImageIcon imageIcon = new ImageIcon(image);
+                    Camera camera = new Camera(Point3D.Z.mult(
+                            -Math.max(resX, resY)).plus(Point3D.X.mult(
+                            resX / 2)).plus(Point3D.Y.mult(resY)),
+                            Point3D.O0.plus(Point3D.X.mult(
+                                    resX / 2)).plus(Point3D.Y.mult(resY)));
 
-                    JLabel jLabel = new JLabel(imageIcon);
+                    scene.cameraActive(camera);
 
-                    panelResult.add(jLabel);
+                    for (int frame = 0; frame < fps * seconds; frame++) {
 
-                    for(int x=0; x<grid1.getData2d().size(); x++)
-                        for(int y=0; y<grid1.getData2d().get(x).size(); y++) {
-                            grid1.setElem(transitionPoint(grid1.getElem(x, y), grid2.getElem(x, y), r));
+                        double r = 1.0 * frame / fps / seconds;
+
+                        zBuffer.scene(scene);
+
+                        zBuffer.draw();
+
+                        ECBufferedImage image = zBuffer.image();
+
+                        ImageIcon imageIcon = new ImageIcon(image);
+
+                        JLabel jLabel = new JLabel(imageIcon);
+
+                        if(panelResult.getComponents().length>0) {
+                            panelResult.remove(0);
                         }
+                        panelResult.add(jLabel);
+
+                        pack();
+
+                        for (int x = 0; x < grid1.getData2d().size(); x++)
+                            for (int y = 0; y < grid1.getData2d().get(x).size(); y++) {
+                                grid1.setElem(transitionPoint(grid1.getElem(x, y), grid2.getElem(x, y), r), x, y);
+                            }
+
+                        Logger.getLogger(this.getClass().getSimpleName())
+                                .log(Level.INFO, "Image "+frame);
+                    }
                 }
 
-            } catch (IllegalAccessException ex) {
-                throw new RuntimeException(ex);
-            } catch (CopyRepresentableError ex) {
-                throw new RuntimeException(ex);
-            } catch (InstantiationException ex) {
-                throw new RuntimeException(ex);
-            }
-
+                } catch(IllegalAccessException ex){
+                    throw new RuntimeException(ex);
+                } catch(CopyRepresentableError ex){
+                    throw new RuntimeException(ex);
+                } catch(InstantiationException ex){
+                    throw new RuntimeException(ex);
+                }
         }
 
     }

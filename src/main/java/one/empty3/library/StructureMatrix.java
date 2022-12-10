@@ -422,32 +422,33 @@ public class StructureMatrix<T> {
             }
             case 2 -> {
                 if (data2d != null) {
-                    int i[] = new int[]{0, 0};
+
                     data2d.forEach(new Consumer<List<T>>() {
                         @Override
                         public void accept(List<T> ts) {
-                            tStructureMatrix.data2d.add(new ArrayList<>());
+                            ArrayList<T> objects = new ArrayList<>();
+                            tStructureMatrix.data2d.add(objects);
                             ts.forEach(new Consumer<T>() {
                                 @Override
                                 public void accept(T t) {
                                     try {
-                                        tStructureMatrix.data2d.get(i[0]).add(cloneElement(t));
+                                        objects.add(cloneElement(t));
                                     } catch (IllegalAccessException | CopyRepresentableError |
                                              InstantiationException e) {
                                         e.printStackTrace();
                                     }
-                                    i[1]++;
+
 
                                 }
                             });
-                            i[0]++;
+
                         }
 
                     });
                 }
             }
         }
-        return null;
+        return tStructureMatrix;
 
     }
 
