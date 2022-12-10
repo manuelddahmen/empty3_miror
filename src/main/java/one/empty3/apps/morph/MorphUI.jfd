@@ -22,7 +22,7 @@ new FormModel {
 					"value": "cell 0 0"
 				} )
 				add( new FormComponent( "javax.swing.JTextField" ) {
-					name: "textField8"
+					name: "textFieldResX"
 					"text": "10"
 				}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 					"value": "cell 1 0"
@@ -34,7 +34,7 @@ new FormModel {
 					"value": "cell 2 0"
 				} )
 				add( new FormComponent( "javax.swing.JTextField" ) {
-					name: "textField9"
+					name: "textFieldResY"
 					"text": "10"
 				}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 					"value": "cell 3 0"
@@ -179,25 +179,25 @@ new FormModel {
 					"value": "cell 3 0"
 				} )
 				add( new FormComponent( "javax.swing.JTextField" ) {
-					name: "textField4"
+					name: "textFieldAddCol"
 					"text": "1"
 				}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 					"value": "cell 0 1"
 				} )
 				add( new FormComponent( "javax.swing.JTextField" ) {
-					name: "textField5"
+					name: "textFieldDelCol"
 					"text": "1"
 				}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 					"value": "cell 1 1"
 				} )
 				add( new FormComponent( "javax.swing.JTextField" ) {
-					name: "textField6"
+					name: "textFieldAddRow"
 					"text": "1"
 				}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 					"value": "cell 2 1"
 				} )
 				add( new FormComponent( "javax.swing.JTextField" ) {
-					name: "textField7"
+					name: "textFieldDelRow"
 					"text": "1"
 				}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 					"value": "cell 3 1"

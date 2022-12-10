@@ -36,8 +36,8 @@ public class MorphUI extends JFrame {
 //Ask for window decorations provided by the look and feel.
         JFrame.setDefaultLookAndFeelDecorated(true);
         try {
-            int i1 = Integer.parseInt(textField2.getText());
-            int j1 = Integer.parseInt(textField2.getText());
+            int i1 = Integer.parseInt(textFieldResX.getText());
+            int j1 = Integer.parseInt(textFieldResY.getText());
             for(int i=0; i<i1; i++)
                 for(int j=0; j<j1; j++) {
                     grid1.setElem(Point3D.n(1.0 * i / i1*imageRead1.getWidth(), 1.0 * j / j1*imageRead1.getHeight(), 0d), i, j);
@@ -156,6 +156,12 @@ public class MorphUI extends JFrame {
                     double r = 1.0 * frame / fps / seconds;
                     zBuffer.draw(scene);
 
+                    ImageIcon imageIcon = new ImageIcon(zBuffer.image());
+
+                    JLabel jLabel = new JLabel(imageIcon);
+
+                    panelResult.add(jLabel);
+
                     for(int x=0; x<grid1.getData2d().size(); x++)
                         for(int y=0; y<grid1.getData2d().get(x).size(); y++) {
                             grid1.setElem(transitionPoint(grid1.getElem(x, y), grid2.getElem(x, y), r));
@@ -197,9 +203,9 @@ public class MorphUI extends JFrame {
         menuBar1 = new JMenuBar();
         panel5 = new JPanel();
         label7 = new JLabel();
-        textField8 = new JTextField();
+        textFieldResX = new JTextField();
         label8 = new JLabel();
-        textField9 = new JTextField();
+        textFieldResY = new JTextField();
         button4 = new JButton();
         panel1 = new JPanel();
         panel2 = new JPanel();
@@ -220,10 +226,10 @@ public class MorphUI extends JFrame {
         button6 = new JButton();
         label4 = new JButton();
         label5 = new JButton();
-        textField4 = new JTextField();
-        textField5 = new JTextField();
-        textField6 = new JTextField();
-        textField7 = new JTextField();
+        textFieldAddCol = new JTextField();
+        textFieldDelCol = new JTextField();
+        textFieldAddRow = new JTextField();
+        textFieldDelRow = new JTextField();
         label6 = compFactory.createLabel("Bottom bar");
 
         //======== this ========
@@ -262,17 +268,17 @@ public class MorphUI extends JFrame {
             label7.setText("Grid X");
             panel5.add(label7, "cell 0 0");
 
-            //---- textField8 ----
-            textField8.setText("10");
-            panel5.add(textField8, "cell 1 0");
+            //---- textFieldResX ----
+            textFieldResX.setText("10");
+            panel5.add(textFieldResX, "cell 1 0");
 
             //---- label8 ----
             label8.setText("Grid Y");
             panel5.add(label8, "cell 2 0");
 
-            //---- textField9 ----
-            textField9.setText("10");
-            panel5.add(textField9, "cell 3 0");
+            //---- textFieldResY ----
+            textFieldResY.setText("10");
+            panel5.add(textFieldResY, "cell 3 0");
         }
         contentPane.add(panel5, "cell 0 0 2 1");
 
@@ -408,21 +414,21 @@ public class MorphUI extends JFrame {
             label5.setText("Del row");
             panel4.add(label5, "cell 3 0");
 
-            //---- textField4 ----
-            textField4.setText("1");
-            panel4.add(textField4, "cell 0 1");
+            //---- textFieldAddCol ----
+            textFieldAddCol.setText("1");
+            panel4.add(textFieldAddCol, "cell 0 1");
 
-            //---- textField5 ----
-            textField5.setText("1");
-            panel4.add(textField5, "cell 1 1");
+            //---- textFieldDelCol ----
+            textFieldDelCol.setText("1");
+            panel4.add(textFieldDelCol, "cell 1 1");
 
-            //---- textField6 ----
-            textField6.setText("1");
-            panel4.add(textField6, "cell 2 1");
+            //---- textFieldAddRow ----
+            textFieldAddRow.setText("1");
+            panel4.add(textFieldAddRow, "cell 2 1");
 
-            //---- textField7 ----
-            textField7.setText("1");
-            panel4.add(textField7, "cell 3 1");
+            //---- textFieldDelRow ----
+            textFieldDelRow.setText("1");
+            panel4.add(textFieldDelRow, "cell 3 1");
         }
         contentPane.add(panel4, "cell 2 5");
         contentPane.add(label6, "cell 0 6 5 1");
@@ -446,9 +452,9 @@ public class MorphUI extends JFrame {
     private JMenuBar menuBar1;
     private JPanel panel5;
     private JLabel label7;
-    private JTextField textField8;
+    private JTextField textFieldResX;
     private JLabel label8;
-    private JTextField textField9;
+    private JTextField textFieldResY;
     private JButton button4;
     private JPanel panel1;
     private JPanel panel2;
@@ -469,10 +475,10 @@ public class MorphUI extends JFrame {
     private JButton button6;
     private JButton label4;
     private JButton label5;
-    private JTextField textField4;
-    private JTextField textField5;
-    private JTextField textField6;
-    private JTextField textField7;
+    private JTextField textFieldAddCol;
+    private JTextField textFieldDelCol;
+    private JTextField textFieldAddRow;
+    private JTextField textFieldDelRow;
     private JLabel label6;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 }
