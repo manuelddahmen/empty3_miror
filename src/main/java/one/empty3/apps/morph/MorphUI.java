@@ -213,6 +213,8 @@ public class MorphUI extends JFrame {
         button1 = new JButton();
         button2 = new JButton();
         slider1 = new JSlider();
+        radioButtonActive1 = new JRadioButton();
+        radioButtonActive2 = new JRadioButton();
         panel4 = new JPanel();
         button5 = new JButton();
         button6 = new JButton();
@@ -369,6 +371,14 @@ public class MorphUI extends JFrame {
         contentPane.add(button2, "cell 1 4");
         contentPane.add(slider1, "cell 2 4");
 
+        //---- radioButtonActive1 ----
+        radioButtonActive1.setText("Active");
+        contentPane.add(radioButtonActive1, "cell 0 5");
+
+        //---- radioButtonActive2 ----
+        radioButtonActive2.setText("Active");
+        contentPane.add(radioButtonActive2, "cell 1 5");
+
         //======== panel4 ========
         {
             panel4.setLayout(new MigLayout(
@@ -452,6 +462,8 @@ public class MorphUI extends JFrame {
     private JButton button1;
     private JButton button2;
     private JSlider slider1;
+    private JRadioButton radioButtonActive1;
+    private JRadioButton radioButtonActive2;
     private JPanel panel4;
     private JButton button5;
     private JButton button6;
