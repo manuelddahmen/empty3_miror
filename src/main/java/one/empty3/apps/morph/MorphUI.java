@@ -14,8 +14,10 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.text.IconView;
+import com.jgoodies.forms.factories.*;
 
 import net.miginfocom.swing.*;
+import one.empty3.library.*;
 
 /**
  * @author Manuel Dahmen
@@ -27,9 +29,24 @@ public class MorphUI extends JFrame {
     private BufferedImage imageRead1;
     private BufferedImage imageRead2;
 
+    private StructureMatrix<Point3D> grid1 = new StructureMatrix<Point3D>(2, Point3D.class);
+    private StructureMatrix<Point3D> grid2 = new StructureMatrix<Point3D>(2, Point3D.class);
+
     public MorphUI() {
 //Ask for window decorations provided by the look and feel.
         JFrame.setDefaultLookAndFeelDecorated(true);
+        try {
+            int i1 = Integer.parseInt(textField2.getText());
+            int j1 = Integer.parseInt(textField2.getText());
+            for(int i=0; i<i1; i++)
+                for(int j=0; j<j1; j++) {
+                    grid1.setElem(Point3D.n(1.0 * i / i1*imageRead1.getWidth(), 1.0 * j / j1*imageRead1.getHeight(), 0d), i, j);
+                    grid2.setElem(Point3D.n(1.0 * i / i1*imageRead2.getWidth(), 1.0 * j / j1*imageRead2.getHeight(), 0d), i, j);
+                }
+        } catch(NumberFormatException ex) {
+            ex.printStackTrace();
+        }
+
 
         initComponents();
 
@@ -110,17 +127,87 @@ public class MorphUI extends JFrame {
 
     }
 
+    private void buttonGo(ActionEvent e) {
+        int seconds = Integer.parseInt(textFieldSeconds.getText());
+        int fps = Integer.parseInt(textFieldFps.getText());
+        if(imageRead1!=null &&imageRead2!=null) {
+            TextureMorphing textureMorphing = new TextureMorphing(imageRead1, imageRead2, fps * seconds);
+
+            try {
+                StructureMatrix<Point3D> copy = grid1.copy();
+
+                Polygons polygons1 = new Polygons();
+                polygons1.setCoefficients(grid1);
+
+                Polygons polygons2 = new Polygons();
+                polygons2.setCoefficients(grid2);
+
+                Polygons polygons = new Polygons();
+                polygons.setCoefficients(copy);
+
+                polygons2.texture(textureMorphing);
+
+                Scene scene = new Scene();
+                scene.add(polygons);
+
+                ZBufferImpl zBuffer = new ZBufferImpl(imageRead1.getWidth(), imageRead2.getHeight());
+                for(int frame=0; frame<fps*seconds; frame++) {
+
+                    double r = 1.0 * frame / fps / seconds;
+                    zBuffer.draw(scene);
+
+                    for(int x=0; x<grid1.getData2d().size(); x++)
+                        for(int y=0; y<grid1.getData2d().get(x).size(); y++) {
+                            grid1.setElem(transitionPoint(grid1.getElem(x, y), grid2.getElem(x, y), r));
+                        }
+                }
+
+            } catch (IllegalAccessException ex) {
+                throw new RuntimeException(ex);
+            } catch (CopyRepresentableError ex) {
+                throw new RuntimeException(ex);
+            } catch (InstantiationException ex) {
+                throw new RuntimeException(ex);
+            }
+
+        }
+
+    }
+
+    private Point3D transitionPoint(Point3D elem, Point3D elem1, double r) {
+        return elem.plus(elem.plus(elem1.moins(elem).mult(r)));
+    }
+
+    private void panelResultMouseClicked(MouseEvent e) {
+        System.out.println("Click on image mouseClick");
+    }
+
+    private void panelResultMouseDragged(MouseEvent e) {
+        System.out.println("Click on image= mouseDragged");
+    }
+
+    private void panelResultMouseMoved(MouseEvent e) {
+        System.out.println("Click on image= mouseMoved");
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
         // Generated using JFormDesigner non-commercial license
+        DefaultComponentFactory compFactory = DefaultComponentFactory.getInstance();
+        menuBar1 = new JMenuBar();
+        panel5 = new JPanel();
+        label7 = new JLabel();
+        textField8 = new JTextField();
+        label8 = new JLabel();
+        textField9 = new JTextField();
         button4 = new JButton();
         panel1 = new JPanel();
         panel2 = new JPanel();
-        panel3 = new JPanel();
+        panelResult = new JPanel();
         label1 = new JLabel();
         textFieldSeconds = new JTextField();
         label3 = new JLabel();
-        textField3 = new JTextField();
+        textFieldFps = new JTextField();
         label2 = new JLabel();
         textField2 = new JTextField();
         button1 = new JButton();
@@ -129,12 +216,13 @@ public class MorphUI extends JFrame {
         panel4 = new JPanel();
         button5 = new JButton();
         button6 = new JButton();
-        label4 = new JLabel();
-        label5 = new JLabel();
+        label4 = new JButton();
+        label5 = new JButton();
         textField4 = new JTextField();
         textField5 = new JTextField();
         textField6 = new JTextField();
         textField7 = new JTextField();
+        label6 = compFactory.createLabel("Bottom bar");
 
         //======== this ========
         var contentPane = getContentPane();
@@ -152,10 +240,43 @@ public class MorphUI extends JFrame {
             "[]" +
             "[]" +
             "[]" +
+            "[]" +
             "[]"));
+        setJMenuBar(menuBar1);
+
+        //======== panel5 ========
+        {
+            panel5.setLayout(new MigLayout(
+                "hidemode 3",
+                // columns
+                "[fill]" +
+                "[fill]" +
+                "[fill]" +
+                "[fill]",
+                // rows
+                "[]"));
+
+            //---- label7 ----
+            label7.setText("Grid X");
+            panel5.add(label7, "cell 0 0");
+
+            //---- textField8 ----
+            textField8.setText("10");
+            panel5.add(textField8, "cell 1 0");
+
+            //---- label8 ----
+            label8.setText("Grid Y");
+            panel5.add(label8, "cell 2 0");
+
+            //---- textField9 ----
+            textField9.setText("10");
+            panel5.add(textField9, "cell 3 0");
+        }
+        contentPane.add(panel5, "cell 0 0 2 1");
 
         //---- button4 ----
         button4.setText("GO");
+        button4.addActionListener(e -> buttonGo(e));
         contentPane.add(button4, "cell 2 0");
 
         //======== panel1 ========
@@ -186,10 +307,26 @@ public class MorphUI extends JFrame {
         }
         contentPane.add(panel2, "cell 1 1");
 
-        //======== panel3 ========
+        //======== panelResult ========
         {
-            panel3.setLayout(new MigLayout(
-                "hidemode 3",
+            panelResult.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    panelResultMouseClicked(e);
+                }
+            });
+            panelResult.addMouseMotionListener(new MouseMotionAdapter() {
+                @Override
+                public void mouseDragged(MouseEvent e) {
+                    panelResultMouseDragged(e);
+                }
+                @Override
+                public void mouseMoved(MouseEvent e) {
+                    panelResultMouseMoved(e);
+                }
+            });
+            panelResult.setLayout(new MigLayout(
+                "fill,hidemode 3",
                 // columns
                 "[fill]" +
                 "[fill]",
@@ -198,7 +335,7 @@ public class MorphUI extends JFrame {
                 "[]" +
                 "[]"));
         }
-        contentPane.add(panel3, "cell 2 1");
+        contentPane.add(panelResult, "cell 2 1 1 3");
 
         //---- label1 ----
         label1.setText("Seconds");
@@ -212,9 +349,9 @@ public class MorphUI extends JFrame {
         label3.setText("FPS");
         contentPane.add(label3, "cell 3 2");
 
-        //---- textField3 ----
-        textField3.setText("25");
-        contentPane.add(textField3, "cell 4 2");
+        //---- textFieldFps ----
+        textFieldFps.setText("25");
+        contentPane.add(textFieldFps, "cell 4 2");
 
         //---- label2 ----
         label2.setText("text");
@@ -228,20 +365,20 @@ public class MorphUI extends JFrame {
 
         //---- button2 ----
         button2.setText("Load 2");
+        button2.addActionListener(e -> buttonLoadImage2(e));
         contentPane.add(button2, "cell 1 4");
         contentPane.add(slider1, "cell 2 4");
 
         //======== panel4 ========
         {
             panel4.setLayout(new MigLayout(
-                "hidemode 3",
+                "fill,hidemode 3",
                 // columns
                 "[fill]" +
                 "[fill]" +
                 "[fill]" +
                 "[fill]",
                 // rows
-                "[]" +
                 "[]" +
                 "[]"));
 
@@ -254,11 +391,11 @@ public class MorphUI extends JFrame {
             panel4.add(button6, "cell 1 0");
 
             //---- label4 ----
-            label4.setText("Add line");
+            label4.setText("Add row");
             panel4.add(label4, "cell 2 0");
 
             //---- label5 ----
-            label5.setText("Del line");
+            label5.setText("Del row");
             panel4.add(label5, "cell 3 0");
 
             //---- textField4 ----
@@ -278,6 +415,7 @@ public class MorphUI extends JFrame {
             panel4.add(textField7, "cell 3 1");
         }
         contentPane.add(panel4, "cell 2 5");
+        contentPane.add(label6, "cell 0 6 5 1");
         pack();
         setLocationRelativeTo(getOwner());
         // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
@@ -295,14 +433,20 @@ public class MorphUI extends JFrame {
     }
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables  @formatter:off
     // Generated using JFormDesigner non-commercial license
+    private JMenuBar menuBar1;
+    private JPanel panel5;
+    private JLabel label7;
+    private JTextField textField8;
+    private JLabel label8;
+    private JTextField textField9;
     private JButton button4;
     private JPanel panel1;
     private JPanel panel2;
-    private JPanel panel3;
+    private JPanel panelResult;
     private JLabel label1;
     private JTextField textFieldSeconds;
     private JLabel label3;
-    private JTextField textField3;
+    private JTextField textFieldFps;
     private JLabel label2;
     private JTextField textField2;
     private JButton button1;
@@ -311,11 +455,12 @@ public class MorphUI extends JFrame {
     private JPanel panel4;
     private JButton button5;
     private JButton button6;
-    private JLabel label4;
-    private JLabel label5;
+    private JButton label4;
+    private JButton label5;
     private JTextField textField4;
     private JTextField textField5;
     private JTextField textField6;
     private JTextField textField7;
+    private JLabel label6;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 }
