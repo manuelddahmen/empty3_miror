@@ -139,81 +139,87 @@ public class MorphUI extends JFrame {
     }
 
     private void buttonGo(ActionEvent e) {
-        int seconds = Integer.parseInt(textFieldSeconds.getText());
-        int fps = Integer.parseInt(textFieldFps.getText());
-        if(imageRead1!=null &&imageRead2!=null && grid1!=null && grid2!=null) {
-            TextureMorphing textureMorphing = new TextureMorphing(imageRead1, imageRead2, fps * seconds);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                int seconds = Integer.parseInt(textFieldSeconds.getText());
+                int fps = Integer.parseInt(textFieldFps.getText());
+                if(imageRead1!=null &&imageRead2!=null && grid1!=null && grid2!=null) {
+                    TextureMorphing textureMorphing = new TextureMorphing(imageRead1, imageRead2, fps * seconds);
 
-            try {
-                StructureMatrix<Point3D> copy = grid1.copy();
+                    try {
+                        StructureMatrix<Point3D> copy = grid1.copy();
 
-                if (copy != null) {
+                        if (copy != null) {
 
-                    Polygons polygons1 = new Polygons();
-                    polygons1.setCoefficients(grid1);
+                            Polygons polygons1 = new Polygons();
+                            polygons1.setCoefficients(grid1);
 
-                    Polygons polygons2 = new Polygons();
-                    polygons2.setCoefficients(grid2);
+                            Polygons polygons2 = new Polygons();
+                            polygons2.setCoefficients(grid2);
 
-                    Polygons polygons = new Polygons();
-                    polygons.setCoefficients(copy);
-                    polygons.texture(textureMorphing);
+                            Polygons polygons = new Polygons();
+                            polygons.setCoefficients(copy);
+                            polygons.texture(textureMorphing);
 
-                    Scene scene = new Scene();
-                    scene.add(polygons);
+                            Scene scene = new Scene();
+                            scene.add(polygons);
 
-                    int resX = 400;//imageRead1.getWidth();
-                    int resY = 400;//imageRead1.getHeight();
+                            int resX = 400;//imageRead1.getWidth();
+                            int resY = 400;//imageRead1.getHeight();
 
-                    ZBufferImpl zBuffer = new ZBufferImpl(resX, resY);
+                            ZBufferImpl zBuffer = new ZBufferImpl(resX, resY);
 
-                    Camera camera = new Camera(Point3D.Z.mult(
-                            -Math.max(resX, resY)).plus(Point3D.X.mult(
-                            resX / 2)).plus(Point3D.Y.mult(resY)),
-                            Point3D.O0.plus(Point3D.X.mult(
-                                    resX / 2)).plus(Point3D.Y.mult(resY)));
+                            Camera camera = new Camera(Point3D.Z.mult(
+                                    -Math.max(resX, resY)).plus(Point3D.X.mult(
+                                    resX / 2)).plus(Point3D.Y.mult(resY)),
+                                    Point3D.O0.plus(Point3D.X.mult(
+                                            resX / 2)).plus(Point3D.Y.mult(resY)));
 
-                    scene.cameraActive(camera);
+                            scene.cameraActive(camera);
 
-                    for (int frame = 0; frame < fps * seconds; frame++) {
+                            for (int frame = 0; frame < fps * seconds; frame++) {
 
-                        double r = 1.0 * frame / fps / seconds;
+                                double r = 1.0 * frame / fps / seconds;
 
-                        zBuffer.scene(scene);
+                                zBuffer.scene(scene);
 
-                        zBuffer.draw();
+                                zBuffer.draw();
 
-                        ECBufferedImage image = zBuffer.image();
+                                ECBufferedImage image = zBuffer.image();
 
-                        ImageIcon imageIcon = new ImageIcon(image);
+                                ImageIcon imageIcon = new ImageIcon(image);
 
-                        JLabel jLabel = new JLabel(imageIcon);
+                                JLabel jLabel = new JLabel(imageIcon);
 
-                        if(panelResult.getComponents().length>0) {
-                            panelResult.remove(0);
-                        }
-                        panelResult.add(jLabel);
+                                if(panelResult.getComponents().length>0) {
+                                    panelResult.remove(0);
+                                }
+                                panelResult.add(jLabel);
 
-                        pack();
+                                pack();
 
-                        for (int x = 0; x < grid1.getData2d().size(); x++)
-                            for (int y = 0; y < grid1.getData2d().get(x).size(); y++) {
-                                grid1.setElem(transitionPoint(grid1.getElem(x, y), grid2.getElem(x, y), r), x, y);
+                                for (int x = 0; x < grid1.getData2d().size(); x++)
+                                    for (int y = 0; y < grid1.getData2d().get(x).size(); y++) {
+                                        grid1.setElem(transitionPoint(grid1.getElem(x, y), grid2.getElem(x, y), r), x, y);
+                                    }
+
+                                Logger.getLogger(this.getClass().getSimpleName())
+                                        .log(Level.INFO, "Image "+frame);
                             }
+                        }
 
-                        Logger.getLogger(this.getClass().getSimpleName())
-                                .log(Level.INFO, "Image "+frame);
+                    } catch(IllegalAccessException ex){
+                        throw new RuntimeException(ex);
+                    } catch(CopyRepresentableError ex){
+                        throw new RuntimeException(ex);
+                    } catch(InstantiationException ex){
+                        throw new RuntimeException(ex);
                     }
                 }
 
-                } catch(IllegalAccessException ex){
-                    throw new RuntimeException(ex);
-                } catch(CopyRepresentableError ex){
-                    throw new RuntimeException(ex);
-                } catch(InstantiationException ex){
-                    throw new RuntimeException(ex);
-                }
-        }
+            }
+        });
 
     }
 
