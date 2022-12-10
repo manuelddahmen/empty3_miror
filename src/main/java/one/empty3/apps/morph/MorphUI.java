@@ -33,24 +33,32 @@ public class MorphUI extends JFrame {
     private StructureMatrix<Point3D> grid2 = new StructureMatrix<Point3D>(2, Point3D.class);
 
     public MorphUI() {
-//Ask for window decorations provided by the look and feel.
-        JFrame.setDefaultLookAndFeelDecorated(true);
-        try {
-            int i1 = Integer.parseInt(textFieldResX.getText());
-            int j1 = Integer.parseInt(textFieldResY.getText());
-            for(int i=0; i<i1; i++)
-                for(int j=0; j<j1; j++) {
-                    grid1.setElem(Point3D.n(1.0 * i / i1*imageRead1.getWidth(), 1.0 * j / j1*imageRead1.getHeight(), 0d), i, j);
-                    grid2.setElem(Point3D.n(1.0 * i / i1*imageRead2.getWidth(), 1.0 * j / j1*imageRead2.getHeight(), 0d), i, j);
-                }
-        } catch(NumberFormatException ex) {
-            ex.printStackTrace();
-        }
 
 
         initComponents();
 
+//Ask for window decorations provided by the look and feel.
+        JFrame.setDefaultLookAndFeelDecorated(true);
 
+        initGrids();
+    }
+
+    private void initGrids() {
+        try {
+            if (imageRead1 != null && imageRead2 != null) {
+                int i1 = Integer.parseInt(textFieldResX.getText());
+                int j1 = Integer.parseInt(textFieldResY.getText());
+                for (int i = 0; i < i1; i++)
+                    for (int j = 0; j < j1; j++) {
+                        grid1.setElem(Point3D.n(1.0 * i / i1 * imageRead1.getWidth(), 1.0 * j / j1 * imageRead1.getHeight(), 0d), i, j);
+                        grid2.setElem(Point3D.n(1.0 * i / i1 * imageRead2.getWidth(), 1.0 * j / j1 * imageRead2.getHeight(), 0d), i, j);
+                    }
+            }
+        } catch (NumberFormatException ex) {
+            ex.printStackTrace();
+        } catch (NullPointerException ex) {
+            ex.printStackTrace();
+        }
     }
 
     private void buttonLoadImage1(ActionEvent e) {
