@@ -39,19 +39,16 @@ public class MorphUI extends JFrame {
 
 //Ask for window decorations provided by the look and feel.
         JFrame.setDefaultLookAndFeelDecorated(true);
-
-        initGrids();
     }
 
-    private void initGrids() {
+    private void initGrids(StructureMatrix<Point3D> grid, BufferedImage imageRead) {
         try {
-            if (imageRead1 != null && imageRead2 != null) {
+            if (imageRead != null) {
                 int i1 = Integer.parseInt(textFieldResX.getText());
                 int j1 = Integer.parseInt(textFieldResY.getText());
                 for (int i = 0; i < i1; i++)
                     for (int j = 0; j < j1; j++) {
-                        grid1.setElem(Point3D.n(1.0 * i / i1 * imageRead1.getWidth(), 1.0 * j / j1 * imageRead1.getHeight(), 0d), i, j);
-                        grid2.setElem(Point3D.n(1.0 * i / i1 * imageRead2.getWidth(), 1.0 * j / j1 * imageRead2.getHeight(), 0d), i, j);
+                        grid.setElem(Point3D.n(1.0 * i / i1 * imageRead.getWidth(), 1.0 * j / j1 * imageRead.getHeight(), 0d), i, j);
                     }
             }
         } catch (NumberFormatException ex) {
@@ -95,7 +92,7 @@ public class MorphUI extends JFrame {
             }
 
         }
-
+        initGrids(grid1, imageRead1);
     }
 
     private void buttonLoadImage2(ActionEvent e) {
@@ -132,6 +129,7 @@ public class MorphUI extends JFrame {
             }
 
         }
+        initGrids(grid2, imageRead2);
 
     }
 
@@ -152,8 +150,7 @@ public class MorphUI extends JFrame {
 
                 Polygons polygons = new Polygons();
                 polygons.setCoefficients(copy);
-
-                polygons2.texture(textureMorphing);
+                polygons.texture(textureMorphing);
 
                 Scene scene = new Scene();
                 scene.add(polygons);
@@ -164,7 +161,9 @@ public class MorphUI extends JFrame {
                     double r = 1.0 * frame / fps / seconds;
                     zBuffer.draw(scene);
 
-                    ImageIcon imageIcon = new ImageIcon(zBuffer.image());
+                    ECBufferedImage image = zBuffer.image();
+
+                    ImageIcon imageIcon = new ImageIcon(image);
 
                     JLabel jLabel = new JLabel(imageIcon);
 

@@ -388,22 +388,26 @@ public class StructureMatrix<T> {
 
     private T cloneElement(T t) throws IllegalAccessException, CopyRepresentableError, InstantiationException {
         T t1 = null;
+        if(t==null)
+            return null;
         if (t instanceof StructureMatrix) {
             t1 = (T) ((StructureMatrix) t).copy();
+        } else if(t instanceof Point3D) {
+            t1 = (T) new Point3D(((Point3D)t).get(0),
+                    ((Point3D)t).get(1),((Point3D)t).get(2));
         } else if (t instanceof MatrixPropertiesObject) {
+            ((MatrixPropertiesObject) t).declareProperties();
             t1 = (T) ((MatrixPropertiesObject) t).copy();
         }
         return t1;
     }
 
     public StructureMatrix<T> copy() throws IllegalAccessException, CopyRepresentableError, InstantiationException {
-        StructureMatrix<T> tStructureMatrix = new StructureMatrix<T>();
-        tStructureMatrix.setDim(getDim());
+        StructureMatrix<T> tStructureMatrix = new StructureMatrix<T>(this.getDim(), this.classType);
         switch (getDim()) {
-            case 0:
-                tStructureMatrix.data0d = cloneElement(data0d);
-                break;
-            case 1:
+            case 0 -> tStructureMatrix.data0d = cloneElement(data0d);
+            case 1 -> {
+                tStructureMatrix.data1d = new ArrayList<>();
                 if (data1d != null)
                     data1d.forEach(new Consumer<T>() {
                         @Override
@@ -415,19 +419,21 @@ public class StructureMatrix<T> {
                             }
                         }
                     });
-                break;
-            case 2:
+            }
+            case 2 -> {
                 if (data2d != null) {
-                    int i[] = new int[] {0, 0};
+                    int i[] = new int[]{0, 0};
                     data2d.forEach(new Consumer<List<T>>() {
                         @Override
                         public void accept(List<T> ts) {
+                            tStructureMatrix.data2d.add(new ArrayList<>());
                             ts.forEach(new Consumer<T>() {
                                 @Override
                                 public void accept(T t) {
                                     try {
-                                        tStructureMatrix.setElem(cloneElement(t), i[0], i[1]);
-                                    } catch (IllegalAccessException | CopyRepresentableError | InstantiationException e) {
+                                        tStructureMatrix.data2d.get(i[0]).add(cloneElement(t));
+                                    } catch (IllegalAccessException | CopyRepresentableError |
+                                             InstantiationException e) {
                                         e.printStackTrace();
                                     }
                                     i[1]++;
@@ -439,7 +445,7 @@ public class StructureMatrix<T> {
 
                     });
                 }
-                break;
+            }
         }
         return null;
 

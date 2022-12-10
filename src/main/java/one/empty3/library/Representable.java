@@ -278,7 +278,7 @@ public class Representable /*extends RepresentableT*/ implements Serializable, C
     public void setProperty(String propertyName, Object value) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException {
         Method propertySetter = null;
 
-        propertySetter = this.getClass().getMethod("set" + ("" + propertyName.charAt(0)).toUpperCase() + (propertyName.substring(1)), value.getClass());
+        propertySetter = this.getClass().getMethod("set" + ("" + propertyName.charAt(0)).toUpperCase() + (propertyName.substring(1)), value==null?null:value.getClass());
         propertySetter.invoke(this, value);
         Logger.getAnonymousLogger().log(Level.INFO, "RType : " + this.getClass().getName() + " Property: " + propertyName + " New Value set " + getProperty(propertyName));
     }
@@ -295,7 +295,8 @@ public class Representable /*extends RepresentableT*/ implements Serializable, C
 
     public void declareProperties() {
         getDeclaredDataStructure().clear();
-        if (getRotation() != null && getRotation().getElem() != null) {
+        if (getRotation() != null
+                && getRotation().getElem() != null && !(this instanceof Point3D)) {
             getDeclaredDataStructure().put("rotation/Rotation", rotation);
         }
     }
