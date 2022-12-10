@@ -158,12 +158,7 @@ public class MorphUI extends JFrame {
                             Polygons polygons2 = new Polygons();
                             polygons2.setCoefficients(grid2);
 
-                            Polygons polygons = new Polygons();
-                            polygons.setCoefficients(copy);
-                            polygons.texture(textureMorphing);
 
-                            Scene scene = new Scene();
-                            scene.add(polygons);
 
                             int resX = 400;//imageRead1.getWidth();
                             int resY = 400;//imageRead1.getHeight();
@@ -176,9 +171,16 @@ public class MorphUI extends JFrame {
                                     Point3D.O0.plus(Point3D.X.mult(
                                             resX / 2)).plus(Point3D.Y.mult(resY)));
 
-                            scene.cameraActive(camera);
 
                             for (int frame = 0; frame < fps * seconds; frame++) {
+                                Polygons polygons = new Polygons();
+                                polygons.setCoefficients(copy);
+                                polygons.texture(textureMorphing);
+
+                                Scene scene = new Scene();
+                                scene.add(polygons);
+
+                                scene.cameraActive(camera);
 
                                 double r = 1.0 * frame / fps / seconds;
 
@@ -201,7 +203,7 @@ public class MorphUI extends JFrame {
 
                                 for (int x = 0; x < grid1.getData2d().size(); x++)
                                     for (int y = 0; y < grid1.getData2d().get(x).size(); y++) {
-                                        grid1.setElem(transitionPoint(grid1.getElem(x, y), grid2.getElem(x, y), r), x, y);
+                                        copy.setElem(transitionPoint(grid1.getElem(x, y), grid2.getElem(x, y), r), x, y);
                                     }
 
                                 Logger.getLogger(this.getClass().getSimpleName())
