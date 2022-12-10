@@ -186,16 +186,16 @@ public class MorphUI extends JFrame {
 
                                 zBuffer.draw();
 
-                                ECBufferedImage image = zBuffer.image();
+                                BufferedImage image = zBuffer.image2();
 
                                 ImageIcon imageIcon = new ImageIcon(image);
 
-                                JLabel jLabel = new JLabel(imageIcon);
+                                JLabel jLabelResult = new JLabel(imageIcon);
 
                                 if(panelResult.getComponents().length>0) {
                                     panelResult.remove(0);
                                 }
-                                panelResult.add(jLabel);
+                                panelResult.add(jLabelResult);
 
                                 pack();
 
@@ -219,7 +219,7 @@ public class MorphUI extends JFrame {
                 }
 
             }
-        });
+        }).start();
 
     }
 
