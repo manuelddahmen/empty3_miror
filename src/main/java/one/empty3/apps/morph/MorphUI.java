@@ -118,10 +118,10 @@ public class MorphUI extends JFrame {
         if(jFileChooser.showOpenDialog(this)==JFileChooser.APPROVE_OPTION) {
             this.image2 = jFileChooser.getSelectedFile();
             try {
-                URL url = new URL("file:///" + image1.getAbsolutePath());
+                URL url = new URL("file:///" + image2.getAbsolutePath());
                 imageRead2 = ImageIO.read(url);
 
-                Component add = panel2.add(new JLabel(url.toString(),
+                panel2.add(new JLabel(url.toString(),
                         (Icon) new ImageIcon(imageRead2),
                         JLabel.CENTER));
                 pack();
@@ -297,6 +297,8 @@ public class MorphUI extends JFrame {
 
         //======== panel1 ========
         {
+            panel1.setMinimumSize(new Dimension(200, 200));
+            panel1.setMaximumSize(new Dimension(400, 400));
             panel1.setLayout(new MigLayout(
                 "hidemode 3",
                 // columns
@@ -307,10 +309,12 @@ public class MorphUI extends JFrame {
                 "[]" +
                 "[]"));
         }
-        contentPane.add(panel1, "cell 0 1");
+        contentPane.add(panel1, "cell 0 1 1 3");
 
         //======== panel2 ========
         {
+            panel2.setMaximumSize(new Dimension(400, 400));
+            panel2.setMinimumSize(new Dimension(200, 200));
             panel2.setLayout(new MigLayout(
                 "hidemode 3",
                 // columns
@@ -321,10 +325,12 @@ public class MorphUI extends JFrame {
                 "[]" +
                 "[]"));
         }
-        contentPane.add(panel2, "cell 1 1");
+        contentPane.add(panel2, "cell 1 1 1 3");
 
         //======== panelResult ========
         {
+            panelResult.setMaximumSize(new Dimension(400, 400));
+            panelResult.setMinimumSize(new Dimension(200, 200));
             panelResult.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {

@@ -390,8 +390,7 @@ public class StructureMatrix<T> {
         T t1 = null;
         if (t instanceof StructureMatrix) {
             t1 = (T) ((StructureMatrix) t).copy();
-        }
-        if (t instanceof MatrixPropertiesObject) {
+        } else if (t instanceof MatrixPropertiesObject) {
             t1 = (T) ((MatrixPropertiesObject) t).copy();
         }
         return t1;
@@ -419,11 +418,10 @@ public class StructureMatrix<T> {
                 break;
             case 2:
                 if (data2d != null) {
-                    int i[] = new int[2];
+                    int i[] = new int[] {0, 0};
                     data2d.forEach(new Consumer<List<T>>() {
                         @Override
                         public void accept(List<T> ts) {
-                            i[0]++;
                             ts.forEach(new Consumer<T>() {
                                 @Override
                                 public void accept(T t) {
@@ -436,6 +434,7 @@ public class StructureMatrix<T> {
 
                                 }
                             });
+                            i[0]++;
                         }
 
                     });
