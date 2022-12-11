@@ -195,7 +195,7 @@ public class MorphUI extends JFrame {
 
                             copy.addListener(new StructureMatrixListener() {
                                 @Override
-                                public void actionOnChange() {
+                                public void actionOnChange(Object value, Object newValue) {
                                     System.out.println("Element changed");
                                 }
                             });

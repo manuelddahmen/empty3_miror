@@ -79,7 +79,7 @@ public class StructureMatrix<T> {
         dim = 0;
         this.data0d = value;
         this.classType = value.getClass();
-        listenersPropertyChanged();
+        listenersPropertyChanged(null, value);
     }
 
     public void setElem(T elem, int i) {
@@ -101,7 +101,7 @@ public class StructureMatrix<T> {
             }
         }
         getData1d().set(i, elem);
-        listenersPropertyChanged();
+        listenersPropertyChanged(null, elem);
     }
 
     public void setElem(T elem, int i, int j) {
@@ -116,7 +116,7 @@ public class StructureMatrix<T> {
             data2d.get(i).add(elem);
         }
         data2d.get(i).set(j, elem);
-        listenersPropertyChanged();
+        listenersPropertyChanged(null, elem);
     }
 
     public T getElem(int[] indices) {
@@ -184,7 +184,7 @@ public class StructureMatrix<T> {
                 }
             }
         }
-        listenersPropertyChanged();
+        listenersPropertyChanged(null, value);
     }
 
     public void delete(int pos, int rowCol) {
@@ -200,7 +200,7 @@ public class StructureMatrix<T> {
                 }
             }
         }
-        listenersPropertyChanged();
+        listenersPropertyChanged(null, null);
     }
 
     public void delete(int pos) {
@@ -213,7 +213,7 @@ public class StructureMatrix<T> {
     public void insert(int i, T value) {
         if (dim == 1)
             data1d.add(i, value);
-        listenersPropertyChanged();
+        listenersPropertyChanged(null, value);
     }
 
     public void add(int dim, T value) {
@@ -227,7 +227,7 @@ public class StructureMatrix<T> {
             int ind1 = data2d.size();
             data2d.get(ind1).add(value);
         }
-        listenersPropertyChanged();
+        listenersPropertyChanged(null, value);
     }
 
     public void add(T value) {
@@ -241,14 +241,14 @@ public class StructureMatrix<T> {
             //int ind1 = data2d.size();
             //data2d.get(ind1).add(value);
         }
-        listenersPropertyChanged();
+        listenersPropertyChanged(null, value);
     }
 
     public void addRow() {
         if (this.dim == 2) {
             data2d.add(Collections.synchronizedList(new ArrayList<T>()));
         }
-        listenersPropertyChanged();
+        listenersPropertyChanged(null, null);
     }
 
     @Override
@@ -353,7 +353,7 @@ public class StructureMatrix<T> {
                 }
 
         }
-        listenersPropertyChanged();
+        listenersPropertyChanged(null, null);
     }
 
     public void setAll(ArrayList<T> all) {
@@ -367,12 +367,13 @@ public class StructureMatrix<T> {
             data1d.clear();
         if (dim == 2)
             data2d.clear();
-        listenersPropertyChanged();
+        listenersPropertyChanged(null, null);
     }
 
-    private void listenersPropertyChanged() {
+    private void listenersPropertyChanged(Object oldValue, Object newValue) {
         if (listeners.size() > 0) {
-            listeners.forEach(listener -> listener.actionOnChange());
+            listeners.forEach(listener ->
+                    listener.actionOnChange(oldValue, newValue));
         }
     }
 
