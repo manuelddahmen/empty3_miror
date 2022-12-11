@@ -20,6 +20,6 @@ package one.empty3.library;
 /*__
  * Created by manue on 29-10-19.
  */
-public abstract class StructureMatrixListener {
+public abstract interface StructureMatrixListener {
     public abstract void actionOnChange(Object oldValue, Object newValue);
 }

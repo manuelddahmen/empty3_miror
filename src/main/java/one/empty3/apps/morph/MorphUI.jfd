@@ -93,7 +93,7 @@ new FormModel {
 			} )
 			add( new FormComponent( "javax.swing.JTextField" ) {
 				name: "textFieldSeconds"
-				"text": "10"
+				"text": "1"
 				auxiliary() {
 					"JavaCodeGenerator.variableName": "textFieldSeconds"
 				}
