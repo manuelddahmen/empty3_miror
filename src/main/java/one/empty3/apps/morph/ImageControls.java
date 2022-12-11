@@ -23,15 +23,13 @@ public class ImageControls {
             @Override
             public void mouseClicked(MouseEvent e) {
                 System.out.println("Clicked = " + (clicked = true));
-                if (isSelected) {
-                    dragged();
-                }
                 clicked();
             }
 
             @Override
             public void mousePressed(MouseEvent e) {
                 System.out.println("Pressed : " + (isPressed=true));
+                isSelected = selectPoint(e.getX(), e.getY());
                 moving = true;
                 drags();
             }
@@ -41,7 +39,7 @@ public class ImageControls {
                 System.out.println("Pressed : " + (isPressed=false));
                 moving = false;
                 dropped = true;
-                dragged();
+                dragged(e.getX(), e.getY());
 
             }
 
@@ -63,6 +61,7 @@ public class ImageControls {
             }
         });
     }
+
 
     public void initBools() {
         moving = false;
@@ -87,12 +86,19 @@ public class ImageControls {
         }
     }
 
-    private void dragged() {
+    private void dragged(int x, int y) {
         // drops if moved
-        if (!moving && !isPressed) {
+        if (!moving && !isPressed && isSelected) {
             System.out.println("::update a point position");
         }
         initBools();
 
+    }
+    private boolean selectPoint(int x, int y) {
+        Point3D point3D = new Point3D((double) x, (double) y, 0d);
+        return true;
+    }
+    private void dragPoint(int x, int y) {
+        Point3D point3D = new Point3D((double) x, (double) y, 0d);
     }
 }
