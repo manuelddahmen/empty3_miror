@@ -68,7 +68,11 @@ public class MorphUI extends JFrame {
     private JTextField textFieldAddRow;
     private JTextField textFieldDelRow;
     private JLabel label6;
+
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
+    private ImageControls imageControl1;
+    private ImageControls imageControl2;
+
     public MorphUI() {
 
 
@@ -143,6 +147,7 @@ public class MorphUI extends JFrame {
 
         }
         initGrids(grid1, imageRead1);
+        imageControl1 = new ImageControls(grid1, imageRead1, panel1);
     }
 
     private void buttonLoadImage2(ActionEvent e) {
@@ -180,6 +185,7 @@ public class MorphUI extends JFrame {
 
         }
         initGrids(grid2, imageRead2);
+        imageControl2 = new ImageControls(grid2, imageRead2, panel2);
 
     }
 
