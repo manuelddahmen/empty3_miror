@@ -212,8 +212,6 @@ public class MorphUI extends JFrame {
                             int resX = 400;//imageRead1.getWidth();
                             int resY = 400;//imageRead1.getHeight();
 
-                            ZBufferImpl zBuffer = new ZBufferImpl(resX, resY);
-
                             Point3D plus = Point3D.X.mult(
                                     resX / 2.).plus(Point3D.Y.mult(resY / 2.));
                             Camera camera = new Camera(Point3D.Z.mult(
@@ -235,10 +233,9 @@ public class MorphUI extends JFrame {
                                 double r = 1.0 * frame / fps / seconds;
                                 textureMorphing.setFrameNo(frame);
 
+                                ZBufferImpl zBuffer = new ZBufferImpl(resX, resY);
                                 zBuffer.scene(scene);
-
                                 zBuffer.draw();
-
                                 BufferedImage image = zBuffer.image2();
 
                                 ImageIcon imageIcon = new ImageIcon(image);
