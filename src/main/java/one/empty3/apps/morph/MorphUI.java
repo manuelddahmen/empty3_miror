@@ -205,8 +205,8 @@ public class MorphUI extends JFrame {
 
                                 pack();
 
-                                for (int x = 0; x < grid1.getData2d().size(); x++)
-                                    for (int y = 0; y < grid1.getData2d().get(x).size(); y++) {
+                                for (int x = 0; x < copy.getData2d().size(); x++)
+                                    for (int y = 0; y < copy.getData2d().get(x).size(); y++) {
                                         copy.setElem(transitionPoint(grid1.getElem(x, y), grid2.getElem(x, y), r), x, y);
                                     }
 
@@ -230,8 +230,8 @@ public class MorphUI extends JFrame {
 
     }
 
-    private Point3D transitionPoint(Point3D elem, Point3D elem1, double r) {
-        return elem.plus(elem.plus(elem1.moins(elem).mult(r)));
+    private Point3D transitionPoint(Point3D p1, Point3D p2, double r) {
+        return p1.plus(p2.moins(p1).mult(r));
     }
 
     private void panelResultMouseClicked(MouseEvent e) {
