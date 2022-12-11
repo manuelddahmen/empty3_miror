@@ -142,12 +142,13 @@ public class MorphUI extends JFrame {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                int seconds = Integer.parseInt(textFieldSeconds.getText());
-                int fps = Integer.parseInt(textFieldFps.getText());
-                if(imageRead1!=null &&imageRead2!=null && grid1!=null && grid2!=null) {
-                    TextureMorphing textureMorphing = new TextureMorphing(imageRead1, imageRead2, fps * seconds);
 
                     try {
+                        int seconds = Integer.parseInt(textFieldSeconds.getText());
+                        int fps = Integer.parseInt(textFieldFps.getText());
+                        if(imageRead1!=null &&imageRead2!=null && grid1!=null && grid2!=null) {
+                            TextureMorphing textureMorphing = new TextureMorphing(imageRead1, imageRead2, fps * seconds);
+
                         StructureMatrix<Point3D> copy = grid1.copy();
 
                         if (copy != null) {
@@ -168,7 +169,7 @@ public class MorphUI extends JFrame {
                             Point3D plus = Point3D.X.mult(
                                     resX / 2.).plus(Point3D.Y.mult(resY/2.));
                             Camera camera = new Camera(Point3D.Z.mult(
-                                    -Math.max(resX, resY)).plus(plus),
+                                    Math.max(resX, resY)).plus(plus),
                                     Point3D.O0.plus(plus));
 
 
@@ -206,9 +207,12 @@ public class MorphUI extends JFrame {
                                         copy.setElem(transitionPoint(grid1.getElem(x, y), grid2.getElem(x, y), r), x, y);
                                     }
 
+                                textureMorphing.setFrameNo(frame);
+
                                 Logger.getLogger(this.getClass().getSimpleName())
                                         .log(Level.INFO, "Image "+frame);
                             }
+                        }
                         }
 
                     } catch(IllegalAccessException ex){
@@ -218,8 +222,6 @@ public class MorphUI extends JFrame {
                     } catch(InstantiationException ex){
                         throw new RuntimeException(ex);
                     }
-                }
-
             }
         }).start();
 

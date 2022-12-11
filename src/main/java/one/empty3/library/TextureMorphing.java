@@ -21,7 +21,10 @@ public class TextureMorphing extends ITexture {
     public void setFrameNo(int frameNo) {
         this.frameNo = frameNo;
     }
-
+    @Override
+    public void timeNext() {
+        setFrameNo(frameNo+1);
+    }
     @Override
     public int getColorAt(double x, double y) {
         int w1 = imageRead1.getWidth();
@@ -29,7 +32,7 @@ public class TextureMorphing extends ITexture {
         int w2 = imageRead2.getWidth();
         int h2 = imageRead2.getHeight();
 
-        double r = (double)frameNo/indexesIntermediates;
+        double r = 1.0*frameNo/indexesIntermediates;
 
         int rgb1 = imageRead1.getRGB((int) (w1 * x), (int) (h1 * y));
         int rgb2 = imageRead2.getRGB((int)(w2*x), (int)(h2*y));
