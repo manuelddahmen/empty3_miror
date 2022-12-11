@@ -165,11 +165,11 @@ public class MorphUI extends JFrame {
 
                             ZBufferImpl zBuffer = new ZBufferImpl(resX, resY);
 
+                            Point3D plus = Point3D.X.mult(
+                                    resX / 2.).plus(Point3D.Y.mult(resY/2.));
                             Camera camera = new Camera(Point3D.Z.mult(
-                                    -Math.max(resX, resY)).plus(Point3D.X.mult(
-                                    resX / 2)).plus(Point3D.Y.mult(resY)),
-                                    Point3D.O0.plus(Point3D.X.mult(
-                                            resX / 2)).plus(Point3D.Y.mult(resY)));
+                                    -Math.max(resX, resY)).plus(plus),
+                                    Point3D.O0.plus(plus));
 
 
                             for (int frame = 0; frame < fps * seconds; frame++) {
