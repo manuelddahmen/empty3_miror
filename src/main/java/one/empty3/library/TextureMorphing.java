@@ -47,6 +47,10 @@ public class TextureMorphing extends ITexture {
 
     @Override
     public MatrixPropertiesObject copy() throws CopyRepresentableError, IllegalAccessException, InstantiationException {
-        return null;
+        ITexture copy1 = imageRead1.copy();
+        ITexture copy2 = imageRead2.copy();
+        TextureMorphing morphing = new TextureMorphing(copy1, copy2, indexesIntermediates);
+        morphing.setFrameNo(frameNo);
+        return  morphing;
     }
 }

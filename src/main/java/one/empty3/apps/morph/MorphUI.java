@@ -4,25 +4,24 @@
 
 package one.empty3.apps.morph;
 
+import com.jgoodies.forms.factories.DefaultComponentFactory;
+import net.miginfocom.swing.MigLayout;
+import one.empty3.library.*;
+
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.logging.LoggingPermission;
-import javax.imageio.ImageIO;
-import javax.swing.*;
-import javax.swing.filechooser.FileFilter;
-import javax.swing.text.IconView;
-
-import android.util.Log;
-import com.jgoodies.forms.factories.*;
-
-import net.miginfocom.swing.*;
-import one.empty3.library.*;
 
 /**
  * @author Manuel Dahmen
@@ -36,7 +35,39 @@ public class MorphUI extends JFrame {
 
     private StructureMatrix<Point3D> grid1 = new StructureMatrix<Point3D>(2, Point3D.class);
     private StructureMatrix<Point3D> grid2 = new StructureMatrix<Point3D>(2, Point3D.class);
-
+    // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables  @formatter:off
+    // Generated using JFormDesigner non-commercial license
+    private JMenuBar menuBar1;
+    private JPanel panel5;
+    private JLabel label7;
+    private JTextField textFieldResX;
+    private JLabel label8;
+    private JTextField textFieldResY;
+    private JButton button4;
+    private JPanel panel1;
+    private JPanel panel2;
+    private JPanel panelResult;
+    private JLabel label1;
+    private JTextField textFieldSeconds;
+    private JLabel label3;
+    private JTextField textFieldFps;
+    private JLabel label2;
+    private JTextField textField2;
+    private JButton button1;
+    private JButton button2;
+    private JSlider slider1;
+    private JRadioButton radioButtonActive1;
+    private JRadioButton radioButtonActive2;
+    private JPanel panel4;
+    private JButton button5;
+    private JButton button6;
+    private JButton label4;
+    private JButton label5;
+    private JTextField textFieldAddCol;
+    private JTextField textFieldDelCol;
+    private JTextField textFieldAddRow;
+    private JTextField textFieldDelRow;
+    private JLabel label6;
     public MorphUI() {
 
 
@@ -76,11 +107,11 @@ public class MorphUI extends JFrame {
                 return "image/jpg";
             }
         });
-        if(currentDirectory != null && currentDirectory.exists()) {
+        if (currentDirectory != null && currentDirectory.exists()) {
             jFileChooser.setCurrentDirectory(currentDirectory);
         }
 
-        if(jFileChooser.showOpenDialog(this)==JFileChooser.APPROVE_OPTION) {
+        if (jFileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             this.image1 = jFileChooser.getSelectedFile();
             try {
                 URL url = new URL("file:///" + image1.getAbsolutePath());
@@ -113,11 +144,11 @@ public class MorphUI extends JFrame {
                 return "image/jpg";
             }
         });
-        if(currentDirectory != null && currentDirectory.exists()) {
+        if (currentDirectory != null && currentDirectory.exists()) {
             jFileChooser.setCurrentDirectory(currentDirectory);
         }
 
-        if(jFileChooser.showOpenDialog(this)==JFileChooser.APPROVE_OPTION) {
+        if (jFileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             this.image2 = jFileChooser.getSelectedFile();
             try {
                 URL url = new URL("file:///" + image2.getAbsolutePath());
@@ -143,14 +174,14 @@ public class MorphUI extends JFrame {
             @Override
             public void run() {
 
-                    try {
-                        int seconds = Integer.parseInt(textFieldSeconds.getText());
-                        int fps = Integer.parseInt(textFieldFps.getText());
-                        if(imageRead1!=null &&imageRead2!=null && grid1!=null && grid2!=null) {
-                            TextureImg text1 = new TextureImg(new ECBufferedImage(imageRead1));
-                            TextureImg text2 = new TextureImg(new ECBufferedImage(imageRead2));
-                            TextureMorphing textureMorphing = new TextureMorphing(text1, text2,
-                                    fps * seconds);
+                try {
+                    int seconds = Integer.parseInt(textFieldSeconds.getText());
+                    int fps = Integer.parseInt(textFieldFps.getText());
+                    if (imageRead1 != null && imageRead2 != null && grid1 != null && grid2 != null) {
+                        TextureImg text1 = new TextureImg(new ECBufferedImage(imageRead1));
+                        TextureImg text2 = new TextureImg(new ECBufferedImage(imageRead2));
+                        TextureMorphing textureMorphing = new TextureMorphing(text1, text2,
+                                fps * seconds);
 
                         StructureMatrix<Point3D> copy = grid1.copy();
 
@@ -163,14 +194,13 @@ public class MorphUI extends JFrame {
                             polygons2.setCoefficients(grid2);
 
 
-
                             int resX = 400;//imageRead1.getWidth();
                             int resY = 400;//imageRead1.getHeight();
 
                             ZBufferImpl zBuffer = new ZBufferImpl(resX, resY);
 
                             Point3D plus = Point3D.X.mult(
-                                    resX / 2.).plus(Point3D.Y.mult(resY/2.));
+                                    resX / 2.).plus(Point3D.Y.mult(resY / 2.));
                             Camera camera = new Camera(Point3D.Z.mult(
                                     Math.max(resX, resY)).plus(plus),
                                     Point3D.O0.plus(plus));
@@ -198,7 +228,7 @@ public class MorphUI extends JFrame {
 
                                 JLabel jLabelResult = new JLabel(imageIcon);
 
-                                if(panelResult.getComponents().length>0) {
+                                if (panelResult.getComponents().length > 0) {
                                     panelResult.remove(0);
                                 }
                                 panelResult.add(jLabelResult);
@@ -213,18 +243,18 @@ public class MorphUI extends JFrame {
                                 textureMorphing.setFrameNo(frame);
 
                                 Logger.getLogger(this.getClass().getSimpleName())
-                                        .log(Level.INFO, "Image "+frame);
+                                        .log(Level.INFO, "Image " + frame + "\tEvolution: " + r);
                             }
                         }
-                        }
-
-                    } catch(IllegalAccessException ex){
-                        throw new RuntimeException(ex);
-                    } catch(CopyRepresentableError ex){
-                        throw new RuntimeException(ex);
-                    } catch(InstantiationException ex){
-                        throw new RuntimeException(ex);
                     }
+
+                } catch (IllegalAccessException ex) {
+                    throw new RuntimeException(ex);
+                } catch (CopyRepresentableError ex) {
+                    throw new RuntimeException(ex);
+                } catch (InstantiationException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
         }).start();
 
@@ -285,34 +315,34 @@ public class MorphUI extends JFrame {
         //======== this ========
         var contentPane = getContentPane();
         contentPane.setLayout(new MigLayout(
-            "fill,hidemode 3",
-            // columns
-            "[fill]" +
-            "[fill]" +
-            "[fill]" +
-            "[fill]" +
-            "[fill]",
-            // rows
-            "[]" +
-            "[]" +
-            "[]" +
-            "[]" +
-            "[]" +
-            "[]" +
-            "[]"));
+                "fill,hidemode 3",
+                // columns
+                "[fill]" +
+                        "[fill]" +
+                        "[fill]" +
+                        "[fill]" +
+                        "[fill]",
+                // rows
+                "[]" +
+                        "[]" +
+                        "[]" +
+                        "[]" +
+                        "[]" +
+                        "[]" +
+                        "[]"));
         setJMenuBar(menuBar1);
 
         //======== panel5 ========
         {
             panel5.setLayout(new MigLayout(
-                "hidemode 3",
-                // columns
-                "[fill]" +
-                "[fill]" +
-                "[fill]" +
-                "[fill]",
-                // rows
-                "[]"));
+                    "hidemode 3",
+                    // columns
+                    "[fill]" +
+                            "[fill]" +
+                            "[fill]" +
+                            "[fill]",
+                    // rows
+                    "[]"));
 
             //---- label7 ----
             label7.setText("Grid X");
@@ -342,14 +372,14 @@ public class MorphUI extends JFrame {
             panel1.setMinimumSize(new Dimension(200, 200));
             panel1.setMaximumSize(new Dimension(400, 400));
             panel1.setLayout(new MigLayout(
-                "hidemode 3",
-                // columns
-                "[fill]" +
-                "[fill]",
-                // rows
-                "[]" +
-                "[]" +
-                "[]"));
+                    "hidemode 3",
+                    // columns
+                    "[fill]" +
+                            "[fill]",
+                    // rows
+                    "[]" +
+                            "[]" +
+                            "[]"));
         }
         contentPane.add(panel1, "cell 0 1 1 3");
 
@@ -358,14 +388,14 @@ public class MorphUI extends JFrame {
             panel2.setMaximumSize(new Dimension(400, 400));
             panel2.setMinimumSize(new Dimension(200, 200));
             panel2.setLayout(new MigLayout(
-                "hidemode 3",
-                // columns
-                "[fill]" +
-                "[fill]",
-                // rows
-                "[]" +
-                "[]" +
-                "[]"));
+                    "hidemode 3",
+                    // columns
+                    "[fill]" +
+                            "[fill]",
+                    // rows
+                    "[]" +
+                            "[]" +
+                            "[]"));
         }
         contentPane.add(panel2, "cell 1 1 1 3");
 
@@ -384,20 +414,21 @@ public class MorphUI extends JFrame {
                 public void mouseDragged(MouseEvent e) {
                     panelResultMouseDragged(e);
                 }
+
                 @Override
                 public void mouseMoved(MouseEvent e) {
                     panelResultMouseMoved(e);
                 }
             });
             panelResult.setLayout(new MigLayout(
-                "fill,hidemode 3",
-                // columns
-                "[fill]" +
-                "[fill]",
-                // rows
-                "[]" +
-                "[]" +
-                "[]"));
+                    "fill,hidemode 3",
+                    // columns
+                    "[fill]" +
+                            "[fill]",
+                    // rows
+                    "[]" +
+                            "[]" +
+                            "[]"));
         }
         contentPane.add(panelResult, "cell 2 1 1 3");
 
@@ -444,15 +475,15 @@ public class MorphUI extends JFrame {
         //======== panel4 ========
         {
             panel4.setLayout(new MigLayout(
-                "fill,hidemode 3",
-                // columns
-                "[fill]" +
-                "[fill]" +
-                "[fill]" +
-                "[fill]",
-                // rows
-                "[]" +
-                "[]"));
+                    "fill,hidemode 3",
+                    // columns
+                    "[fill]" +
+                            "[fill]" +
+                            "[fill]" +
+                            "[fill]",
+                    // rows
+                    "[]" +
+                            "[]"));
 
             //---- button5 ----
             button5.setText("Add col");
@@ -492,7 +523,10 @@ public class MorphUI extends JFrame {
         setLocationRelativeTo(getOwner());
         // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
     }
-    /** Returns an ImageIcon, or null if the path was invalid. */
+
+    /**
+     * Returns an ImageIcon, or null if the path was invalid.
+     */
     protected ImageIcon createImageIcon(String path,
                                         String description) {
         java.net.URL imgURL = getClass().getResource(path);
@@ -503,38 +537,5 @@ public class MorphUI extends JFrame {
             return null;
         }
     }
-    // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables  @formatter:off
-    // Generated using JFormDesigner non-commercial license
-    private JMenuBar menuBar1;
-    private JPanel panel5;
-    private JLabel label7;
-    private JTextField textFieldResX;
-    private JLabel label8;
-    private JTextField textFieldResY;
-    private JButton button4;
-    private JPanel panel1;
-    private JPanel panel2;
-    private JPanel panelResult;
-    private JLabel label1;
-    private JTextField textFieldSeconds;
-    private JLabel label3;
-    private JTextField textFieldFps;
-    private JLabel label2;
-    private JTextField textField2;
-    private JButton button1;
-    private JButton button2;
-    private JSlider slider1;
-    private JRadioButton radioButtonActive1;
-    private JRadioButton radioButtonActive2;
-    private JPanel panel4;
-    private JButton button5;
-    private JButton button6;
-    private JButton label4;
-    private JButton label5;
-    private JTextField textFieldAddCol;
-    private JTextField textFieldDelCol;
-    private JTextField textFieldAddRow;
-    private JTextField textFieldDelRow;
-    private JLabel label6;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 }
