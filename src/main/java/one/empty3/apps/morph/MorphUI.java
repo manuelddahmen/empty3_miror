@@ -212,15 +212,10 @@ public class MorphUI extends JFrame {
                             int resX = 400;//imageRead1.getWidth();
                             int resY = 400;//imageRead1.getHeight();
 
-                            Point3D plus = Point3D.X.mult(
-                                    resX / 2.).plus(Point3D.Y.mult(resY / 2.));
-                            Camera camera = new Camera(Point3D.Z.mult(
-                                    Math.max(resX, resY)).plus(plus),
-                                    Point3D.O0.plus(plus));
-                            camera.declareProperties();
-                            camera.calculerMatrice(Point3D.Y);
 
                             for (int frame = 0; frame < fps * seconds; frame++) {
+                                copy = grid1.copy();
+
                                 Polygons polygons = new Polygons();
                                 polygons.setCoefficients(copy);
                                 polygons.texture(textureMorphing);
@@ -228,13 +223,22 @@ public class MorphUI extends JFrame {
                                 Scene scene = new Scene();
                                 scene.add(polygons);
 
-                                scene.cameraActive(camera);
 
                                 double r = 1.0 * frame / fps / seconds;
                                 textureMorphing.setFrameNo(frame);
 
+                                Point3D plus = Point3D.X.mult(
+                                        resX / 2.).plus(Point3D.Y.mult(resY / 2.));
+
+                                Camera camera = new Camera(Point3D.Z.mult(
+                                        Math.max(resX, resY)).plus(plus), plus);
+                                camera.declareProperties();
+                                camera.calculerMatrice(Point3D.Y);
+
                                 ZBufferImpl zBuffer = new ZBufferImpl(resX, resY);
                                 zBuffer.scene(scene);
+                                scene.cameraActive(camera);
+
                                 zBuffer.draw();
                                 BufferedImage image = zBuffer.image2();
 

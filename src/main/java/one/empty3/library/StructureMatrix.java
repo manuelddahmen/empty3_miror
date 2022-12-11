@@ -109,10 +109,10 @@ public class StructureMatrix<T> {
         this.classType = elem.getClass();
         if (data2d == null)
             data2d = Collections.synchronizedList(new ArrayList<>());
-        while (data2d.size() <= i) {
+        while (i >= data2d.size()) {
             data2d.add(Collections.synchronizedList(new ArrayList<>()));
         }
-        while (data2d.get(i).size() <= j) {
+        while (j >= data2d.get(i).size()) {
             data2d.get(i).add(elem);
         }
         data2d.get(i).set(j, elem);
