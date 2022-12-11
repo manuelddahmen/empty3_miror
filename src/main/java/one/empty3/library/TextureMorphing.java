@@ -4,13 +4,13 @@ import java.awt.image.BufferedImage;
 import java.util.Arrays;
 
 public class TextureMorphing extends ITexture {
-    private final BufferedImage imageRead2;
-    private final BufferedImage imageRead1;
+    private final ITexture imageRead2;
+    private final ITexture imageRead1;
     private final int indexesIntermediates;
     private final LumiereIdent ident;
     private int frameNo;
 
-    public TextureMorphing(BufferedImage imageRead1, BufferedImage imageRead2, int indexesIntermediates) {
+    public TextureMorphing(ITexture imageRead1, ITexture imageRead2, int indexesIntermediates) {
         super();
         this.imageRead1 = imageRead1;
         this.imageRead2 = imageRead2;
@@ -27,15 +27,15 @@ public class TextureMorphing extends ITexture {
     }
     @Override
     public int getColorAt(double x, double y) {
-        int w1 = imageRead1.getWidth();
-        int h1 = imageRead1.getHeight();
-        int w2 = imageRead2.getWidth();
-        int h2 = imageRead2.getHeight();
+        int w1 = 1;
+        int h1 = 1;
+        int w2 = 1;
+        int h2 = 1;
 
         double r = 1.0*frameNo/indexesIntermediates;
 
-        int rgb1 = imageRead1.getRGB((int) (w1 * x), (int) (h1 * y));
-        int rgb2 = imageRead2.getRGB((int)(w2*x), (int)(h2*y));
+        int rgb1 = imageRead1.getColorAt(x, y);
+        int rgb2 = imageRead2.getColorAt(x, y);
         double [] dRgb1 = Lumiere.getDoubles(rgb1);
         double [] dRgb2 = Lumiere.getDoubles(rgb2);
         double[] d = new double[dRgb2.length];

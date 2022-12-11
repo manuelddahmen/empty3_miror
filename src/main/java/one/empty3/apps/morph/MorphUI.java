@@ -147,7 +147,10 @@ public class MorphUI extends JFrame {
                         int seconds = Integer.parseInt(textFieldSeconds.getText());
                         int fps = Integer.parseInt(textFieldFps.getText());
                         if(imageRead1!=null &&imageRead2!=null && grid1!=null && grid2!=null) {
-                            TextureMorphing textureMorphing = new TextureMorphing(imageRead1, imageRead2, fps * seconds);
+                            TextureImg text1 = new TextureImg(new ECBufferedImage(imageRead1));
+                            TextureImg text2 = new TextureImg(new ECBufferedImage(imageRead2));
+                            TextureMorphing textureMorphing = new TextureMorphing(text1, text2,
+                                    fps * seconds);
 
                         StructureMatrix<Point3D> copy = grid1.copy();
 

@@ -47,6 +47,7 @@ import java.io.File;
 /*__
  * @author manu
  */
+@Deprecated
 public class ImageTexture extends ITexture {
 
     private StructureMatrix<ECBufferedImage> ecBufferedImageStructureMatrix = new StructureMatrix<>(0, ECBufferedImage.class);
