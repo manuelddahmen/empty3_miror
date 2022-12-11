@@ -56,7 +56,7 @@ public abstract class ITexture implements MatrixPropertiesObject{
     public static final int COLOR_ROT_180 = 16;
     public static final int COLOR_ROT_270 = 32;
     public int onTextureEnds = 0;
-    protected int colorMask = 32*32;
+    protected int colorMask = 0;
     DeformMap dm;
 
     public int getColorMask() {

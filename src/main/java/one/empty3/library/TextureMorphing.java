@@ -1,19 +1,16 @@
 package one.empty3.library;
 
-import java.awt.image.BufferedImage;
-import java.util.Arrays;
-
 public class TextureMorphing extends ITexture {
-    private final ITexture imageRead2;
-    private final ITexture imageRead1;
+    private final ITexture texture2;
+    private final ITexture texture1;
     private final int indexesIntermediates;
     private final LumiereIdent ident;
     private int frameNo;
 
     public TextureMorphing(ITexture imageRead1, ITexture imageRead2, int indexesIntermediates) {
         super();
-        this.imageRead1 = imageRead1;
-        this.imageRead2 = imageRead2;
+        this.texture1 = imageRead1;
+        this.texture2 = imageRead2;
         this.indexesIntermediates = indexesIntermediates;
         ident = new LumiereIdent();
     }
@@ -27,15 +24,10 @@ public class TextureMorphing extends ITexture {
     }
     @Override
     public int getColorAt(double x, double y) {
-        int w1 = 1;
-        int h1 = 1;
-        int w2 = 1;
-        int h2 = 1;
-
         double r = 1.0*frameNo/indexesIntermediates;
 
-        int rgb1 = imageRead1.getColorAt(x, y);
-        int rgb2 = imageRead2.getColorAt(x, y);
+        int rgb1 = texture1.getColorAt(x, y);
+        int rgb2 = texture2.getColorAt(x, y);
         double [] dRgb1 = Lumiere.getDoubles(rgb1);
         double [] dRgb2 = Lumiere.getDoubles(rgb2);
         double[] d = new double[dRgb1.length];
@@ -47,10 +39,10 @@ public class TextureMorphing extends ITexture {
 
     @Override
     public MatrixPropertiesObject copy() throws CopyRepresentableError, IllegalAccessException, InstantiationException {
-        ITexture copy1 = imageRead1.copy();
-        ITexture copy2 = imageRead2.copy();
+        ITexture copy1 = (ITexture) texture1.copy();
+        ITexture copy2 = (ITexture) texture2.copy();
         TextureMorphing morphing = new TextureMorphing(copy1, copy2, indexesIntermediates);
         morphing.setFrameNo(frameNo);
-        return  morphing;
+        return morphing;
     }
 }

@@ -178,8 +178,8 @@ public class MorphUI extends JFrame {
                     int seconds = Integer.parseInt(textFieldSeconds.getText());
                     int fps = Integer.parseInt(textFieldFps.getText());
                     if (imageRead1 != null && imageRead2 != null && grid1 != null && grid2 != null) {
-                        TextureImg text1 = new TextureImg(new ECBufferedImage(imageRead1));
-                        TextureImg text2 = new TextureImg(new ECBufferedImage(imageRead2));
+                        ITexture text1 = new ImageTexture(new ECBufferedImage(imageRead1));
+                        ITexture text2 = new ImageTexture(new ECBufferedImage(imageRead2));
                         TextureMorphing textureMorphing = new TextureMorphing(text1, text2,
                                 fps * seconds);
 
@@ -193,6 +193,12 @@ public class MorphUI extends JFrame {
                             Polygons polygons2 = new Polygons();
                             polygons2.setCoefficients(grid2);
 
+                            copy.addListener(new StructureMatrixListener() {
+                                @Override
+                                public void actionOnChange() {
+                                    System.out.println("Element changed");
+                                }
+                            });
 
                             int resX = 400;//imageRead1.getWidth();
                             int resY = 400;//imageRead1.getHeight();
@@ -217,6 +223,7 @@ public class MorphUI extends JFrame {
                                 scene.cameraActive(camera);
 
                                 double r = 1.0 * frame / fps / seconds;
+                                textureMorphing.setFrameNo(frame);
 
                                 zBuffer.scene(scene);
 
@@ -232,7 +239,6 @@ public class MorphUI extends JFrame {
                                     panelResult.remove(0);
                                 }
                                 panelResult.add(jLabelResult);
-
                                 pack();
 
                                 for (int x = 0; x < copy.getData2d().size(); x++)
@@ -240,7 +246,6 @@ public class MorphUI extends JFrame {
                                         copy.setElem(transitionPoint(grid1.getElem(x, y), grid2.getElem(x, y), r), x, y);
                                     }
 
-                                textureMorphing.setFrameNo(frame);
 
                                 Logger.getLogger(this.getClass().getSimpleName())
                                         .log(Level.INFO, "Image " + frame + "\tEvolution: " + r);

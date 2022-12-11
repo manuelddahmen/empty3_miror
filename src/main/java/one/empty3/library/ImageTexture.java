@@ -47,7 +47,6 @@ import java.io.File;
 /*__
  * @author manu
  */
-@Deprecated
 public class ImageTexture extends ITexture {
 
     private StructureMatrix<ECBufferedImage> ecBufferedImageStructureMatrix = new StructureMatrix<>(0, ECBufferedImage.class);
@@ -76,10 +75,10 @@ public class ImageTexture extends ITexture {
     @Override
     public int getColorAt(double x, double y) {
         Point2D trans = getCoord(x, y);
-        return couleur(trans.x / ecBufferedImageStructureMatrix.getElem().getWidth(), trans.y / ecBufferedImageStructureMatrix.getElem().getHeight()).getRGB();
+        return couleur(trans.x, trans.y);
     }
 
-    protected Color couleur(double rx, double ry) {
+    protected int couleur(double rx, double ry) {
         int x = (int) (rx * ecBufferedImageStructureMatrix.getElem().getWidth());
         int y = (int) (ry * ecBufferedImageStructureMatrix.getElem().getHeight());
         if (x < 0) {
@@ -96,12 +95,13 @@ public class ImageTexture extends ITexture {
         }
 
 
-        int c = ecBufferedImageStructureMatrix != null ? ecBufferedImageStructureMatrix
+        int c = ecBufferedImageStructureMatrix != null
+                ? ecBufferedImageStructureMatrix
                 .getElem().getRGB(x, y) : transparent;
         if (c == transparent)
-            return new Color(transparent);
+            return transparent;
         else
-            return new Color(c);
+            return c;
     }
 
 
