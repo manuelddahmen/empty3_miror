@@ -148,6 +148,7 @@ public class MorphUI extends JFrame {
         }
         initGrids(grid1, imageRead1);
         imageControl1 = new ImageControls(grid1, imageRead1, panel1);
+        new Thread(imageControl1).start();
     }
 
     private void buttonLoadImage2(ActionEvent e) {
@@ -186,6 +187,7 @@ public class MorphUI extends JFrame {
         }
         initGrids(grid2, imageRead2);
         imageControl2 = new ImageControls(grid2, imageRead2, panel2);
+        new Thread(imageControl2).start();
 
     }
 
