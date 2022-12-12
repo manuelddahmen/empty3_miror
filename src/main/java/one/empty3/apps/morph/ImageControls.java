@@ -1,7 +1,6 @@
 package one.empty3.apps.morph;
 
-import one.empty3.library.Point3D;
-import one.empty3.library.StructureMatrix;
+import one.empty3.library.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,8 +8,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
-import java.util.List;
-import java.util.function.Consumer;
 
 public class ImageControls implements Runnable {
     private final JPanel panelDisplay;
@@ -119,7 +116,7 @@ public class ImageControls implements Runnable {
     }
     private boolean selectPoint(int x, int y) {
         selectedPoint = null;
-        Point3D point3D = new Point3D((double) x, (double) y, 0d);
+        Point3D point3D = convertScreenCoordToSceneCoord(new Point3D((double) x, (double) y, 0d));
         for (int i = 0; i < grid.data2d.size(); i++) {
             for (int j = 0; j < grid.data2d.get(i).size(); j++) {
                 Point3D point3D1 = grid.data2d.get(i).get(j);
@@ -133,7 +130,7 @@ public class ImageControls implements Runnable {
         return selectedPoint!=null;
     }
     private void dragPoint(int x, int y) {
-        Point3D point3Dmoved = new Point3D((double) x, (double) y, 0d);
+        Point3D point3Dmoved = convertScreenCoordToSceneCoord(new Point3D((double) x, (double) y, 0d));
         if(selectedPoint!=null) {
             grid.setElem(point3Dmoved, this.xGrid, this.yGrid);
         }
@@ -148,22 +145,39 @@ public class ImageControls implements Runnable {
     private boolean isRunning() {
         return false;
     }
+    public Point3D convertSceneCoordToScreenCoord(Point3D pScene) {
+        double x = pScene.getX()/panelDisplay.getWidth()*image.getWidth();
+        double y = pScene.getY()/panelDisplay.getHeight()*image.getHeight();
 
+        return new Point3D(x, y, 0d);
+
+    }
+    public Point3D convertScreenCoordToSceneCoord(Point3D pScreen) {
+        double x = pScreen.getX()*panelDisplay.getWidth()/image.getWidth();
+        double y = pScreen.getY()*panelDisplay.getHeight()/image.getHeight();
+
+        return new Point3D(x, y, 0d);
+
+    }
     private void display() {
         Graphics graphics = panelDisplay.getGraphics();
-        grid.getData2d().forEach(new Consumer<List<Point3D>>() {
-            @Override
-            public void accept(List<Point3D> point3DS) {
-                point3DS.forEach(new Consumer<Point3D>() {
-                    @Override
-                    public void accept(Point3D point3D) {
-                        graphics.setColor(Color.BLACK);
-                        graphics.drawOval((int)(double) point3D.getX()-RADIUS/2,
-                                (int) (double)point3D.getY()-RADIUS/2,
-                                RADIUS, RADIUS);
-                    }
-                });
+        grid.getData2d().forEach(point3DS -> point3DS.forEach(point3D -> {
+            graphics.setColor(Color.BLACK);
+            graphics.drawOval((int)(double) point3D.getX()-RADIUS/2,
+                    (int) (double)point3D.getY()-RADIUS/2,
+                    RADIUS, RADIUS);
+        }));
+    }
+
+    public void addToScene(Scene scene) {
+        for (int i = 0; i < grid.getData2d().size(); i++) {
+            for (int j = 0; j < grid.getData2d().get(i).size(); j++) {
+                Point3D point3D = grid.getData2d().get(i).get(j);
+                Sphere sphere = new Sphere(new Axe(point3D.plus(Point3D.Y.mult(RADIUS / 2)),
+                        point3D.moins(Point3D.Y.mult(RADIUS / 2))),
+                        RADIUS);
+                scene.add(sphere);
             }
-        });
+        }
     }
 }
