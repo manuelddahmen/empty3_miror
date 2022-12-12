@@ -23,11 +23,13 @@ public class ImageControls implements Runnable {
     private Point3D selectedPoint;
     private int xGrid;
     private int yGrid;
+    private boolean running = false;
 
     public ImageControls(StructureMatrix<Point3D> grid, BufferedImage image, JPanel panelDisplay) {
         this.grid = grid;
         this.image = image;
         this.panelDisplay = panelDisplay;
+        setRunning(true);
         panelDisplay.addMouseListener(new MouseListener() {
 
             @Override
@@ -70,6 +72,10 @@ public class ImageControls implements Runnable {
             public void mouseMoved(MouseEvent e) {
             }
         });
+    }
+
+    private void setRunning(boolean isRunning) {
+        this.running = isRunning;
     }
 
 
@@ -143,7 +149,7 @@ public class ImageControls implements Runnable {
     }
 
     private boolean isRunning() {
-        return false;
+        return running;
     }
     public Point3D convertSceneCordToScreenCord(Point3D pScene) {
         double x = pScene.getX()/panelDisplay.getWidth()*image.getWidth();
