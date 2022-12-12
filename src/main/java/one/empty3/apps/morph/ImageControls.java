@@ -116,7 +116,7 @@ public class ImageControls implements Runnable {
     }
     private boolean selectPoint(int x, int y) {
         selectedPoint = null;
-        Point3D point3D = convertScreenCoordToSceneCoord(new Point3D((double) x, (double) y, 0d));
+        Point3D point3D = convertScreenCordToSceneCord(new Point3D((double) x, (double) y, 0d));
         for (int i = 0; i < grid.data2d.size(); i++) {
             for (int j = 0; j < grid.data2d.get(i).size(); j++) {
                 Point3D point3D1 = grid.data2d.get(i).get(j);
@@ -130,7 +130,7 @@ public class ImageControls implements Runnable {
         return selectedPoint!=null;
     }
     private void dragPoint(int x, int y) {
-        Point3D point3Dmoved = convertScreenCoordToSceneCoord(new Point3D((double) x, (double) y, 0d));
+        Point3D point3Dmoved = convertScreenCordToSceneCord(new Point3D((double) x, (double) y, 0d));
         if(selectedPoint!=null) {
             grid.setElem(point3Dmoved, this.xGrid, this.yGrid);
         }
@@ -145,14 +145,14 @@ public class ImageControls implements Runnable {
     private boolean isRunning() {
         return false;
     }
-    public Point3D convertSceneCoordToScreenCoord(Point3D pScene) {
+    public Point3D convertSceneCordToScreenCord(Point3D pScene) {
         double x = pScene.getX()/panelDisplay.getWidth()*image.getWidth();
         double y = pScene.getY()/panelDisplay.getHeight()*image.getHeight();
 
         return new Point3D(x, y, 0d);
 
     }
-    public Point3D convertScreenCoordToSceneCoord(Point3D pScreen) {
+    public Point3D convertScreenCordToSceneCord(Point3D pScreen) {
         double x = pScreen.getX()*panelDisplay.getWidth()/image.getWidth();
         double y = pScreen.getY()*panelDisplay.getHeight()/image.getHeight();
 
@@ -163,8 +163,9 @@ public class ImageControls implements Runnable {
         Graphics graphics = panelDisplay.getGraphics();
         grid.getData2d().forEach(point3DS -> point3DS.forEach(point3D -> {
             graphics.setColor(Color.BLACK);
-            graphics.drawOval((int)(double) point3D.getX()-RADIUS/2,
-                    (int) (double)point3D.getY()-RADIUS/2,
+            Point3D screen = convertSceneCordToScreenCord(point3D);
+            graphics.drawOval((int)(double) screen.getX()-RADIUS/2,
+                    (int) (double)screen.getY()-RADIUS/2,
                     RADIUS, RADIUS);
         }));
     }
