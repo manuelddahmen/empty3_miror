@@ -229,6 +229,7 @@ public class ImageControls implements Runnable {
             Scene scene = new Scene();
             scene.add(polygons);
 
+            addToScene(scene);
 
             Point3D plus = Point3D.X.mult(
                     resX / 2.).plus(Point3D.Y.mult(resY / 2.));
@@ -259,7 +260,7 @@ public class ImageControls implements Runnable {
 
         Graphics graphics = panelDisplay.getGraphics();
         grid.getData2d().forEach(point3DS -> point3DS.forEach(point3D -> {
-            graphics.setColor(Color.BLACK);
+            /*graphics.setColor(Color.BLACK);
             Point3D screen = convertSceneCordToScreenCord(point3D);
             if (isSelected && Point3D.distance(screen, selectedPoint) < 0.01) {
                 graphics.setColor(Color.BLUE);
@@ -267,19 +268,22 @@ public class ImageControls implements Runnable {
             graphics.fillOval((int) (double) screen.getX() - RADIUS / 2,
                     (int) (double) screen.getY() - RADIUS / 2,
                     RADIUS, RADIUS);
-
+*/
         }));
     }
 
     public void addToScene(Scene scene) {
+        rc = new RepresentableConteneur();
         for (int i = 0; i < grid.getData2d().size(); i++) {
             for (int j = 0; j < grid.getData2d().get(i).size(); j++) {
                 Point3D point3D = grid.getData2d().get(i).get(j);
                 Sphere sphere = new Sphere(new Axe(point3D.plus(Point3D.Y.mult(RADIUS / 2)),
                         point3D.moins(Point3D.Y.mult(RADIUS / 2))),
                         RADIUS);
-                scene.add(sphere);
+                sphere.texture(new ColorTexture(Color.BLACK));
+                rc.add(sphere);
             }
         }
+        scene.add(rc);
     }
 }
