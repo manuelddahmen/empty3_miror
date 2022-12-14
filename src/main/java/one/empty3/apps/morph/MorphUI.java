@@ -297,7 +297,7 @@ public class MorphUI extends JFrame {
                 }
 
             }
-        });
+        }).start();
 
     }
 
