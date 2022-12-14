@@ -198,17 +198,8 @@ public class MorphUI extends JFrame {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                for (int frame = 0;
-                     frame < getFps() * getSeconds(); frame++) {
-                    try {
-                        computeFrame(frame);
-                    } catch (CopyRepresentableError ex) {
-                        throw new RuntimeException(ex);
-                    } catch (IllegalAccessException ex) {
-                        throw new RuntimeException(ex);
-                    } catch (InstantiationException ex) {
-                        throw new RuntimeException(ex);
-                    }
+                for (int frame = 0; frame < getFps() * getSeconds(); frame++) {
+                    computeFrame(frame);
                 }
             }
         });
@@ -234,88 +225,92 @@ public class MorphUI extends JFrame {
         JSlider source = (JSlider) e.getSource();
         int value = source.getValue();
         double v = 1.0 * value / (source.getMaximum() - source.getMinimum());
-        try {
-            computeFrame((int) (v * getFps() * getSeconds()));
-        } catch (CopyRepresentableError ex) {
-            throw new RuntimeException(ex);
-        } catch (IllegalAccessException ex) {
-            throw new RuntimeException(ex);
-        } catch (InstantiationException ex) {
-            throw new RuntimeException(ex);
-        }
+        computeFrame((int) (v * getFps() * getSeconds()));
     }
 
-    private void computeFrame(int frame) throws CopyRepresentableError, IllegalAccessException, InstantiationException {
-        int seconds = Integer.parseInt(textFieldSeconds.getText());
-        int fps = Integer.parseInt(textFieldFps.getText());
-        if (imageRead1 != null && imageRead2 != null && grid1 != null && grid2 != null) {
-            ITexture text1 = new ImageTexture(new ECBufferedImage(imageRead1));
-            ITexture text2 = new ImageTexture(new ECBufferedImage(imageRead2));
-            TextureMorphing textureMorphing = new TextureMorphing(text1, text2,
-                    fps * seconds);
+    private void computeFrame(int frameNo) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    int seconds = Integer.parseInt(textFieldSeconds.getText());
+                    int fps = Integer.parseInt(textFieldFps.getText());
+                    if (imageRead1 != null && imageRead2 != null && grid1 != null && grid2 != null) {
+                        ITexture text1 = new ImageTexture(new ECBufferedImage(imageRead1));
+                        ITexture text2 = new ImageTexture(new ECBufferedImage(imageRead2));
+                        TextureMorphing textureMorphing = new TextureMorphing(text1, text2,
+                                fps * seconds);
 
-            StructureMatrix<Point3D> copy = grid1.copy();
+                        StructureMatrix<Point3D> copy = null;
+                        copy = grid1.copy();
 
-            if (copy != null) {
+                        if (copy != null) {
 
-                Polygons polygons1 = new Polygons();
-                polygons1.setCoefficients(grid1);
+                            Polygons polygons1 = new Polygons();
+                            polygons1.setCoefficients(grid1);
 
-                Polygons polygons2 = new Polygons();
-                polygons2.setCoefficients(grid2);
+                            Polygons polygons2 = new Polygons();
+                            polygons2.setCoefficients(grid2);
 
-                double r = 1.0*frame/(getFps()*getSeconds());
+                            double r = 1.0 * frameNo / (getFps() * getSeconds());
 
-                for (int x = 0; x < copy.getData2d().size(); x++)
-                    for (int y = 0; y < copy.getData2d().get(x).size(); y++) {
-                        copy.setElem(transitionPoint(grid1.getElem(x, y), grid2.getElem(x, y), r), x, y);
+                            for (int x = 0; x < copy.getData2d().size(); x++)
+                                for (int y = 0; y < copy.getData2d().get(x).size(); y++) {
+                                    copy.setElem(transitionPoint(grid1.getElem(x, y), grid2.getElem(x, y), r), x, y);
+                                }
+
+                            int resX = 400;//imageRead1.getWidth();
+                            int resY = 400;//imageRead1.getHeight();
+
+
+                            Polygons polygons = new Polygons();
+                            polygons.setCoefficients(copy);
+                            polygons.texture(textureMorphing);
+
+                            Scene scene = new Scene();
+                            scene.add(polygons);
+
+
+                            Point3D plus = Point3D.X.mult(
+                                    resX / 2.).plus(Point3D.Y.mult(resY / 2.));
+
+                            Camera camera = new Camera(Point3D.Z.mult(
+                                    Math.max(resX, resY)).plus(plus), plus);
+                            camera.declareProperties();
+                            camera.calculerMatrice(Point3D.Y);
+
+                            ZBufferImpl zBuffer = new ZBufferImpl(resX, resY);
+                            zBuffer.scene(scene);
+                            scene.cameraActive(camera);
+
+                            zBuffer.draw();
+                            BufferedImage image = zBuffer.image2();
+
+                            ImageIcon imageIcon = new ImageIcon(image);
+
+                            JLabel jLabelResult = new JLabel(imageIcon);
+
+                            if (panelResult.getComponents().length > 0) {
+                                panelResult.remove(0);
+                            }
+                            panelResult.add(jLabelResult);
+                            pack();
+
+
+                            Logger.getLogger(this.getClass().getSimpleName())
+                                    .log(Level.INFO, "Image " + frameNo + "\tEvolution: " + r);
+                        }
                     }
-
-                int resX = 400;//imageRead1.getWidth();
-                int resY = 400;//imageRead1.getHeight();
-
-
-                Polygons polygons = new Polygons();
-                polygons.setCoefficients(copy);
-                polygons.texture(textureMorphing);
-
-                Scene scene = new Scene();
-                scene.add(polygons);
-
-
-                textureMorphing.setFrameNo(frame);
-
-                Point3D plus = Point3D.X.mult(
-                        resX / 2.).plus(Point3D.Y.mult(resY / 2.));
-
-                Camera camera = new Camera(Point3D.Z.mult(
-                        Math.max(resX, resY)).plus(plus), plus);
-                camera.declareProperties();
-                camera.calculerMatrice(Point3D.Y);
-
-                ZBufferImpl zBuffer = new ZBufferImpl(resX, resY);
-                zBuffer.scene(scene);
-                scene.cameraActive(camera);
-
-                zBuffer.draw();
-                BufferedImage image = zBuffer.image2();
-
-                ImageIcon imageIcon = new ImageIcon(image);
-
-                JLabel jLabelResult = new JLabel(imageIcon);
-
-                if (panelResult.getComponents().length > 0) {
-                    panelResult.remove(0);
+                } catch (IllegalAccessException e) {
+                    throw new RuntimeException(e);
+                } catch (CopyRepresentableError e) {
+                    throw new RuntimeException(e);
+                } catch (InstantiationException e) {
+                    throw new RuntimeException(e);
                 }
-                panelResult.add(jLabelResult);
-                pack();
 
-
-
-                Logger.getLogger(this.getClass().getSimpleName())
-                        .log(Level.INFO, "Image " + frame + "\tEvolution: " + r);
             }
-        }
+        });
 
     }
 

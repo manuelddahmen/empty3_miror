@@ -177,6 +177,7 @@ public class ImageControls implements Runnable {
         double x = pScene.getX() * panelDisplay.getWidth() / image.getWidth();
         double y = pScene.getY() * panelDisplay.getHeight() / image.getHeight();
 
+
         return new Point3D(x, y, 0d);
 
     }
