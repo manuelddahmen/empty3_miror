@@ -194,18 +194,6 @@ public class ImageControls implements Runnable {
     }
 
     private void display() {
-        StructureMatrix<Point3D> copy = null;
-        try {
-            copy = grid.copy();
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        } catch (CopyRepresentableError e) {
-            throw new RuntimeException(e);
-        } catch (InstantiationException e) {
-            throw new RuntimeException(e);
-        }
-
-        if (copy != null) {
             while(isDisplaying()) {
                 try {
                     Thread.sleep(80);
@@ -216,12 +204,6 @@ public class ImageControls implements Runnable {
             }
             displaying = true;
 
-            Polygons polygons1 = new Polygons();
-            polygons1.setCoefficients(grid);
-
-            Polygons polygons2 = new Polygons();
-            polygons2.setCoefficients(grid);
-
             int resX = 400;//imageRead1.getWidth();
             int resY = 400;//imageRead1.getHeight();
 
@@ -229,7 +211,7 @@ public class ImageControls implements Runnable {
             ImageTexture imageTexture = new ImageTexture(new ECBufferedImage(image));
 
             Polygons polygons = new Polygons();
-            polygons.setCoefficients(copy);
+            polygons.setCoefficients(grid);
             polygons.texture(imageTexture);
 
             rc = new RepresentableConteneur();
@@ -269,7 +251,6 @@ public class ImageControls implements Runnable {
             panelDisplay.add(jLabelResult);
 
             displaying = false;
-        }
 
 
         Graphics graphics = panelDisplay.getGraphics();

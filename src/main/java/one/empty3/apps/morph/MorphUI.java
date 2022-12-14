@@ -89,14 +89,17 @@ public class MorphUI extends JFrame {
     }
 
 
-    private void initGrids(StructureMatrix<Point3D> grid, BufferedImage imageRead) {
+    private void initGrids(StructureMatrix<Point3D> grid, BufferedImage imageRead, JPanel panel) {
+        int resX = panel.getMaximumSize().width;
+        int resY = panel.getMaximumSize().height;
+
         try {
             if (imageRead != null) {
                 int i1 = Integer.parseInt(textFieldResX.getText());
                 int j1 = Integer.parseInt(textFieldResY.getText());
                 for (int i = 0; i < i1; i++)
                     for (int j = 0; j < j1; j++) {
-                        grid.setElem(Point3D.n(1.0 * i / i1 * imageRead.getWidth(), 1.0 * j / j1 * imageRead.getHeight(), 0d), i, j);
+                        grid.setElem(Point3D.n(1.0 * i / i1 * resX, 1.0 * j / j1 * resY, 0d), i, j);
                     }
             }
         } catch (NumberFormatException ex) {
@@ -140,7 +143,7 @@ public class MorphUI extends JFrame {
             }
 
         }
-        initGrids(grid1, imageRead1);
+        initGrids(grid1, imageRead1, panel1);
         imageControl1 = new ImageControls(grid1, imageRead1, panel1);
         new Thread(imageControl1).start();
 
@@ -182,7 +185,7 @@ public class MorphUI extends JFrame {
             }
 
         }
-        initGrids(grid2, imageRead2);
+        initGrids(grid2, imageRead2, panel2);
         imageControl2 = new ImageControls(grid2, imageRead2, panel2);
         new Thread(imageControl2).start();
 
@@ -285,11 +288,12 @@ public class MorphUI extends JFrame {
                             camera.declareProperties();
                             camera.calculerMatrice(Point3D.Y);
 
-                            if(zBufferComputing==null)
+                            //if(zBufferComputing==null)
                                 zBufferComputing
                                         = new ZBufferImpl(resX, resY);
 
                             zBufferComputing.scene(scene);
+                            zBufferComputing.camera(camera);
                             scene.cameraActive(camera);
 
                             zBufferComputing.draw();
