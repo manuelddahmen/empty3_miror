@@ -233,8 +233,8 @@ public class MorphUI extends JFrame {
             @Override
             public void run() {
                 try {
-                    int seconds = Integer.parseInt(textFieldSeconds.getText());
-                    int fps = Integer.parseInt(textFieldFps.getText());
+                    int seconds = getSeconds();
+                    int fps = getFps();
                     if (imageRead1 != null && imageRead2 != null && grid1 != null && grid2 != null) {
                         ITexture text1 = new ImageTexture(new ECBufferedImage(imageRead1));
                         ITexture text2 = new ImageTexture(new ECBufferedImage(imageRead2));
@@ -245,13 +245,6 @@ public class MorphUI extends JFrame {
                         copy = grid1.copy();
 
                         if (copy != null) {
-
-                            Polygons polygons1 = new Polygons();
-                            polygons1.setCoefficients(grid1);
-
-                            Polygons polygons2 = new Polygons();
-                            polygons2.setCoefficients(grid2);
-
                             double r = 1.0 * frameNo / (getFps() * getSeconds());
 
                             for (int x = 0; x < copy.getData2d().size(); x++)
