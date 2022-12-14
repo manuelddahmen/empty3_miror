@@ -193,9 +193,9 @@ public class MorphUI extends JFrame {
     }
 
     private void initialization() {
-        if(imageRead1 != null)
+        if (imageRead1 != null)
             text1 = new ImageTexture(new ECBufferedImage(imageRead1));
-        if(imageRead2 != null)
+        if (imageRead2 != null)
             text2 = new ImageTexture(new ECBufferedImage(imageRead2));
 
     }
@@ -207,7 +207,7 @@ public class MorphUI extends JFrame {
             public void run() {
                 for (int frame = 0; frame < getFps() * getSeconds(); frame++) {
                     Logger.getAnonymousLogger()
-                            .log(Level.FINE, "FrameNo"+frame);
+                            .log(Level.FINE, "FrameNo" + frame);
                     computeFrame(frame);
                 }
             }
@@ -219,15 +219,15 @@ public class MorphUI extends JFrame {
     }
 
     private void panelResultMouseClicked(MouseEvent e) {
-        System.out.println("Click on image mouseClick");
+        //System.out.println("Click on image mouseClick");
     }
 
     private void panelResultMouseDragged(MouseEvent e) {
-        System.out.println("Click on image= mouseDragged");
+        //System.out.println("Click on image= mouseDragged");
     }
 
     private void panelResultMouseMoved(MouseEvent e) {
-        System.out.println("Click on image= mouseMoved");
+        //System.out.println("Click on image= mouseMoved");
     }
 
     private void slider1StateChanged(ChangeEvent e) {
@@ -239,94 +239,87 @@ public class MorphUI extends JFrame {
 
 
     private void computeFrame(int frameNo) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while(isComputing()) {
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-                try {
-                    int seconds = getSeconds();
-                    int fps = getFps();
-                    if (imageRead1 != null && imageRead2 != null && grid1 != null && grid2 != null) {
-                        TextureMorphing textureMorphing = new TextureMorphing(text1, text2, fps * seconds);
-
-                        StructureMatrix<Point3D> copy = null;
-                        copy = grid1.copy();
-
-                        if (copy != null) {
-                            setComputing(true);
-
-                            double r = 1.0 * frameNo / (getFps() * getSeconds());
-
-                            for (int x = 0; x < copy.getData2d().size(); x++)
-                                for (int y = 0; y < copy.getData2d().get(x).size(); y++) {
-                                    copy.setElem(transitionPoint(grid1.getElem(x, y), grid2.getElem(x, y), r), x, y);
-                                }
-
-                            int resX = 400;//imageRead1.getWidth();
-                            int resY = 400;//imageRead1.getHeight();
-
-
-                            Polygons polygons = new Polygons();
-                            polygons.setCoefficients(copy);
-                            polygons.texture(textureMorphing);
-
-                            Scene scene = new Scene();
-                            scene.add(polygons);
-
-
-                            Point3D plus = Point3D.X.mult(
-                                    resX / 2.).plus(Point3D.Y.mult(resY / 2.));
-
-                            Camera camera = new Camera(Point3D.Z.mult(
-                                    Math.max(resX, resY)).plus(plus), plus);
-                            camera.declareProperties();
-                            camera.calculerMatrice(Point3D.Y);
-
-                            //if(zBufferComputing==null)
-                                zBufferComputing
-                                        = new ZBufferImpl(resX, resY);
-
-                            zBufferComputing.scene(scene);
-                            zBufferComputing.camera(camera);
-                            scene.cameraActive(camera);
-
-                            zBufferComputing.draw();
-                            BufferedImage image = zBufferComputing.image2();
-
-                            ImageIcon imageIcon = new ImageIcon(image);
-
-
-                            JLabel jLabelResult = new JLabel(imageIcon);
-
-                            jLabelResult
-                                    .setMaximumSize(
-                                            new Dimension(resX, resY));
-
-                            if (panelResult.getComponents().length > 0) {
-                                panelResult.remove(0);
-                            }
-                            panelResult.add(jLabelResult);
-                            pack();
-
-
-                            Logger.getLogger(this.getClass().getSimpleName())
-                                    .log(Level.INFO, "Image " + frameNo + "\tEvolution: " + r);
-                            setComputing(false);
-                        }
-                    }
-                } catch (IllegalAccessException | CopyRepresentableError | InstantiationException e) {
-                    setComputing(false);
-                    throw new RuntimeException(e);
-                }
-
+        while (isComputing()) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
             }
-        }).start();
+        }
+        try {
+            int seconds = getSeconds();
+            int fps = getFps();
+            if (imageRead1 != null && imageRead2 != null && grid1 != null && grid2 != null) {
+                TextureMorphing textureMorphing = new TextureMorphing(text1, text2, fps * seconds);
+
+                textureMorphing.setFrameNo(frameNo);
+
+                StructureMatrix<Point3D> copy = grid1.copy();
+
+                if (copy != null) {
+                    setComputing(true);
+                    double r = 1.0 * frameNo / (getFps() * getSeconds());
+
+                    for (int x = 0; x < copy.getData2d().size(); x++)
+                        for (int y = 0; y < copy.getData2d().get(x).size(); y++) {
+                            copy.setElem(transitionPoint(grid1.getElem(x, y), grid2.getElem(x, y), r), x, y);
+                        }
+
+                    int resX = 400;//imageRead1.getWidth();
+                    int resY = 400;//imageRead1.getHeight();
+
+
+                    Polygons polygons = new Polygons();
+                    polygons.setCoefficients(copy);
+                    polygons.texture(textureMorphing);
+
+                    Scene scene = new Scene();
+                    scene.add(polygons);
+
+
+                    Point3D plus = Point3D.X.mult(
+                            resX / 2.).plus(Point3D.Y.mult(resY / 2.));
+
+                    Camera camera = new Camera(Point3D.Z.mult(
+                            Math.max(resX, resY)).plus(plus), plus);
+                    camera.declareProperties();
+                    camera.calculerMatrice(Point3D.Y);
+
+                    scene.cameraActive(camera);
+
+                    //if(zBufferComputing==null)
+                    zBufferComputing
+                            = new ZBufferImpl(resX, resY);
+
+                    zBufferComputing.scene(scene);
+                    zBufferComputing.camera(camera);
+
+                    zBufferComputing.draw();
+                    BufferedImage image = zBufferComputing.image2();
+
+                    ImageIcon imageIcon = new ImageIcon(image);
+
+
+                    JLabel jLabelResult = new JLabel(imageIcon);
+
+                    if (panelResult.getComponents().length > 0) {
+                        panelResult.remove(0);
+                    }
+
+                    panelResult.add(jLabelResult);
+
+                    pack();
+
+
+                    Logger.getLogger(this.getClass().getSimpleName())
+                            .log(Level.INFO, "Image " + frameNo + "\tEvolution: " + r);
+                    setComputing(false);
+                }
+            }
+        } catch (IllegalAccessException | CopyRepresentableError | InstantiationException e) {
+            setComputing(false);
+            throw new RuntimeException(e);
+        }
 
     }
 
@@ -594,6 +587,7 @@ public class MorphUI extends JFrame {
     public boolean isComputing() {
         return computing;
     }
+
     public void setComputing(boolean computing) {
         this.computing = computing;
     }

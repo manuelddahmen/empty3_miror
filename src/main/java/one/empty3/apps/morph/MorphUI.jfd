@@ -79,9 +79,6 @@ new FormModel {
 				name: "panelResult"
 				"maximumSize": new java.awt.Dimension( 400, 400 )
 				"minimumSize": new java.awt.Dimension( 200, 200 )
-				addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "panelResultMouseClicked", true ) )
-				addEvent( new FormEvent( "java.awt.event.MouseMotionListener", "mouseDragged", "panelResultMouseDragged", true ) )
-				addEvent( new FormEvent( "java.awt.event.MouseMotionListener", "mouseMoved", "panelResultMouseMoved", true ) )
 			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 				"value": "cell 2 1 1 3"
 			} )
