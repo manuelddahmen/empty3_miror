@@ -184,6 +184,7 @@ public class MorphUI extends JFrame {
     }
 
     private void buttonGo(ActionEvent e) {
+
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -303,13 +304,7 @@ public class MorphUI extends JFrame {
                             setComputing(false);
                         }
                     }
-                } catch (IllegalAccessException e) {
-                    setComputing(false);
-                    throw new RuntimeException(e);
-                } catch (CopyRepresentableError e) {
-                    setComputing(false);
-                    throw new RuntimeException(e);
-                } catch (InstantiationException e) {
+                } catch (IllegalAccessException | CopyRepresentableError | InstantiationException e) {
                     setComputing(false);
                     throw new RuntimeException(e);
                 }

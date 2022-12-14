@@ -28,6 +28,8 @@ public class ImageControls implements Runnable {
     private boolean running = false;
     private Scene scene;
     RepresentableConteneur rc;
+    private boolean displaying;
+
     public ImageControls(StructureMatrix<Point3D> grid, BufferedImage image,
                          JPanel panelDisplay) {
         this.grid = grid;
@@ -113,6 +115,7 @@ public class ImageControls implements Runnable {
         // drops if moved
         if (!moving && !isPressed && isSelected) {
             System.out.println("::update a point position");
+            display();
         }
         initBools();
 
@@ -203,6 +206,15 @@ public class ImageControls implements Runnable {
         }
 
         if (copy != null) {
+            while(isDisplaying()) {
+                try {
+                    Thread.sleep(80);
+                    // Temps d'attente max? Tuer thread.
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            displaying = true;
 
             Polygons polygons1 = new Polygons();
             polygons1.setCoefficients(grid);
@@ -256,20 +268,14 @@ public class ImageControls implements Runnable {
             }
             panelDisplay.add(jLabelResult);
 
+            displaying = true;
         }
 
 
         Graphics graphics = panelDisplay.getGraphics();
         grid.getData2d().forEach(point3DS -> point3DS.forEach(point3D -> {
-            /*graphics.setColor(Color.BLACK);
-            Point3D screen = convertSceneCordToScreenCord(point3D);
-            if (isSelected && Point3D.distance(screen, selectedPoint) < 0.01) {
-                graphics.setColor(Color.BLUE);
-            }
-            graphics.fillOval((int) (double) screen.getX() - RADIUS / 2,
-                    (int) (double) screen.getY() - RADIUS / 2,
-                    RADIUS, RADIUS);
-*/
+
+
         }));
     }
 
@@ -286,5 +292,13 @@ public class ImageControls implements Runnable {
             }
         }
         scene.add(rc);
+    }
+
+    public boolean isDisplaying() {
+        return displaying;
+    }
+
+    public void setDisplaying(boolean displaying) {
+        this.displaying = displaying;
     }
 }
