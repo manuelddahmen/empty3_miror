@@ -76,6 +76,8 @@ public class MorphUI extends JFrame {
     private ZBuffer zBuffer1;
     private ZBuffer zBuffer2;
     private ZBufferImpl zBufferComputing;
+    private ImageTexture text1;
+    private ImageTexture text2;
 
     public MorphUI() {
 
@@ -141,6 +143,9 @@ public class MorphUI extends JFrame {
         initGrids(grid1, imageRead1);
         imageControl1 = new ImageControls(grid1, imageRead1, panel1);
         new Thread(imageControl1).start();
+
+
+        initialization();
     }
 
     private void buttonLoadImage2(ActionEvent e) {
@@ -181,6 +186,15 @@ public class MorphUI extends JFrame {
         imageControl2 = new ImageControls(grid2, imageRead2, panel2);
         new Thread(imageControl2).start();
 
+        initialization();
+    }
+
+    private void initialization() {
+        if(imageRead1 != null)
+            text1 = new ImageTexture(new ECBufferedImage(imageRead1));
+        if(imageRead2 != null)
+            text2 = new ImageTexture(new ECBufferedImage(imageRead2));
+
     }
 
     private void buttonGo(ActionEvent e) {
@@ -220,6 +234,7 @@ public class MorphUI extends JFrame {
         computeFrame((int) (v * getFps() * getSeconds()));
     }
 
+
     private void computeFrame(int frameNo) {
         new Thread(new Runnable() {
             @Override
@@ -235,10 +250,7 @@ public class MorphUI extends JFrame {
                     int seconds = getSeconds();
                     int fps = getFps();
                     if (imageRead1 != null && imageRead2 != null && grid1 != null && grid2 != null) {
-                        ITexture text1 = new ImageTexture(new ECBufferedImage(imageRead1));
-                        ITexture text2 = new ImageTexture(new ECBufferedImage(imageRead2));
-                        TextureMorphing textureMorphing = new TextureMorphing(text1, text2,
-                                fps * seconds);
+                        TextureMorphing textureMorphing = new TextureMorphing(text1, text2, fps * seconds);
 
                         StructureMatrix<Point3D> copy = null;
                         copy = grid1.copy();

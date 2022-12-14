@@ -268,7 +268,7 @@ public class ImageControls implements Runnable {
             }
             panelDisplay.add(jLabelResult);
 
-            displaying = true;
+            displaying = false;
         }
 
 
