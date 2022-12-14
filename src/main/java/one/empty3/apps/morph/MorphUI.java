@@ -10,6 +10,7 @@ import one.empty3.library.*;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
 import javax.swing.filechooser.FileFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -68,7 +69,6 @@ public class MorphUI extends JFrame {
     private JTextField textFieldAddRow;
     private JTextField textFieldDelRow;
     private JLabel label6;
-
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
     private ImageControls imageControl1;
     private ImageControls imageControl2;
@@ -83,6 +83,7 @@ public class MorphUI extends JFrame {
 //Ask for window decorations provided by the look and feel.
         JFrame.setDefaultLookAndFeelDecorated(true);
     }
+
     /**
      * Returns an ImageIcon, or null if the path was invalid.
      */
@@ -197,93 +198,20 @@ public class MorphUI extends JFrame {
         new Thread(new Runnable() {
             @Override
             public void run() {
-
-                try {
-                    int seconds = Integer.parseInt(textFieldSeconds.getText());
-                    int fps = Integer.parseInt(textFieldFps.getText());
-                    if (imageRead1 != null && imageRead2 != null && grid1 != null && grid2 != null) {
-                        ITexture text1 = new ImageTexture(new ECBufferedImage(imageRead1));
-                        ITexture text2 = new ImageTexture(new ECBufferedImage(imageRead2));
-                        TextureMorphing textureMorphing = new TextureMorphing(text1, text2,
-                                fps * seconds);
-
-                        StructureMatrix<Point3D> copy = grid1.copy();
-
-                        if (copy != null) {
-
-                            Polygons polygons1 = new Polygons();
-                            polygons1.setCoefficients(grid1);
-
-                            Polygons polygons2 = new Polygons();
-                            polygons2.setCoefficients(grid2);
-
-                            copy.addListener((value, newValue) -> System.out.println("Element changed"));
-
-                            int resX = 400;//imageRead1.getWidth();
-                            int resY = 400;//imageRead1.getHeight();
-
-
-                            for (int frame = 0; frame < fps * seconds; frame++) {
-                                copy = grid1.copy();
-
-                                Polygons polygons = new Polygons();
-                                polygons.setCoefficients(copy);
-                                polygons.texture(textureMorphing);
-
-                                Scene scene = new Scene();
-                                scene.add(polygons);
-
-
-                                double r = 1.0 * frame / fps / seconds;
-                                textureMorphing.setFrameNo(frame);
-
-                                Point3D plus = Point3D.X.mult(
-                                        resX / 2.).plus(Point3D.Y.mult(resY / 2.));
-
-                                Camera camera = new Camera(Point3D.Z.mult(
-                                        Math.max(resX, resY)).plus(plus), plus);
-                                camera.declareProperties();
-                                camera.calculerMatrice(Point3D.Y);
-
-                                ZBufferImpl zBuffer = new ZBufferImpl(resX, resY);
-                                zBuffer.scene(scene);
-                                scene.cameraActive(camera);
-
-                                zBuffer.draw();
-                                BufferedImage image = zBuffer.image2();
-
-                                ImageIcon imageIcon = new ImageIcon(image);
-
-                                JLabel jLabelResult = new JLabel(imageIcon);
-
-                                if (panelResult.getComponents().length > 0) {
-                                    panelResult.remove(0);
-                                }
-                                panelResult.add(jLabelResult);
-                                pack();
-
-                                for (int x = 0; x < copy.getData2d().size(); x++)
-                                    for (int y = 0; y < copy.getData2d().get(x).size(); y++) {
-                                        copy.setElem(transitionPoint(grid1.getElem(x, y), grid2.getElem(x, y), r), x, y);
-                                    }
-
-
-                                Logger.getLogger(this.getClass().getSimpleName())
-                                        .log(Level.INFO, "Image " + frame + "\tEvolution: " + r);
-                            }
-                        }
+                for (int frame = 0;
+                     frame < getFps() * getSeconds(); frame++) {
+                    try {
+                        computeFrame(frame);
+                    } catch (CopyRepresentableError ex) {
+                        throw new RuntimeException(ex);
+                    } catch (IllegalAccessException ex) {
+                        throw new RuntimeException(ex);
+                    } catch (InstantiationException ex) {
+                        throw new RuntimeException(ex);
                     }
-
-                } catch (IllegalAccessException ex) {
-                    throw new RuntimeException(ex);
-                } catch (CopyRepresentableError ex) {
-                    throw new RuntimeException(ex);
-                } catch (InstantiationException ex) {
-                    throw new RuntimeException(ex);
                 }
             }
-        }).start();
-
+        });
     }
 
     private Point3D transitionPoint(Point3D p1, Point3D p2, double r) {
@@ -300,6 +228,105 @@ public class MorphUI extends JFrame {
 
     private void panelResultMouseMoved(MouseEvent e) {
         System.out.println("Click on image= mouseMoved");
+    }
+
+    private void slider1StateChanged(ChangeEvent e) {
+        JSlider source = (JSlider) e.getSource();
+        int value = source.getValue();
+        double v = 1.0 * value / (source.getMaximum() - source.getMinimum());
+        try {
+            computeFrame((int) (v * getFps() * getSeconds()));
+        } catch (CopyRepresentableError ex) {
+            throw new RuntimeException(ex);
+        } catch (IllegalAccessException ex) {
+            throw new RuntimeException(ex);
+        } catch (InstantiationException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    private void computeFrame(int frame) throws CopyRepresentableError, IllegalAccessException, InstantiationException {
+        int seconds = Integer.parseInt(textFieldSeconds.getText());
+        int fps = Integer.parseInt(textFieldFps.getText());
+        if (imageRead1 != null && imageRead2 != null && grid1 != null && grid2 != null) {
+            ITexture text1 = new ImageTexture(new ECBufferedImage(imageRead1));
+            ITexture text2 = new ImageTexture(new ECBufferedImage(imageRead2));
+            TextureMorphing textureMorphing = new TextureMorphing(text1, text2,
+                    fps * seconds);
+
+            StructureMatrix<Point3D> copy = grid1.copy();
+
+            if (copy != null) {
+
+                Polygons polygons1 = new Polygons();
+                polygons1.setCoefficients(grid1);
+
+                Polygons polygons2 = new Polygons();
+                polygons2.setCoefficients(grid2);
+
+                double r = 1.0*frame/(getFps()*getSeconds());
+
+                for (int x = 0; x < copy.getData2d().size(); x++)
+                    for (int y = 0; y < copy.getData2d().get(x).size(); y++) {
+                        copy.setElem(transitionPoint(grid1.getElem(x, y), grid2.getElem(x, y), r), x, y);
+                    }
+
+                int resX = 400;//imageRead1.getWidth();
+                int resY = 400;//imageRead1.getHeight();
+
+
+                Polygons polygons = new Polygons();
+                polygons.setCoefficients(copy);
+                polygons.texture(textureMorphing);
+
+                Scene scene = new Scene();
+                scene.add(polygons);
+
+
+                textureMorphing.setFrameNo(frame);
+
+                Point3D plus = Point3D.X.mult(
+                        resX / 2.).plus(Point3D.Y.mult(resY / 2.));
+
+                Camera camera = new Camera(Point3D.Z.mult(
+                        Math.max(resX, resY)).plus(plus), plus);
+                camera.declareProperties();
+                camera.calculerMatrice(Point3D.Y);
+
+                ZBufferImpl zBuffer = new ZBufferImpl(resX, resY);
+                zBuffer.scene(scene);
+                scene.cameraActive(camera);
+
+                zBuffer.draw();
+                BufferedImage image = zBuffer.image2();
+
+                ImageIcon imageIcon = new ImageIcon(image);
+
+                JLabel jLabelResult = new JLabel(imageIcon);
+
+                if (panelResult.getComponents().length > 0) {
+                    panelResult.remove(0);
+                }
+                panelResult.add(jLabelResult);
+                pack();
+
+
+
+                Logger.getLogger(this.getClass().getSimpleName())
+                        .log(Level.INFO, "Image " + frame + "\tEvolution: " + r);
+            }
+        }
+
+    }
+
+    public int getFps() {
+        return Integer.parseInt(textFieldFps.getText());
+
+    }
+
+    public int getSeconds() {
+        return Integer.parseInt(textFieldSeconds.getText());
+
     }
 
     private void initComponents() {
@@ -341,34 +368,34 @@ public class MorphUI extends JFrame {
         //======== this ========
         var contentPane = getContentPane();
         contentPane.setLayout(new MigLayout(
-            "fill,hidemode 3",
-            // columns
-            "[fill]" +
-            "[fill]" +
-            "[fill]" +
-            "[fill]" +
-            "[fill]",
-            // rows
-            "[]" +
-            "[]" +
-            "[]" +
-            "[]" +
-            "[]" +
-            "[]" +
-            "[]"));
+                "fill,hidemode 3",
+                // columns
+                "[fill]" +
+                        "[fill]" +
+                        "[fill]" +
+                        "[fill]" +
+                        "[fill]",
+                // rows
+                "[]" +
+                        "[]" +
+                        "[]" +
+                        "[]" +
+                        "[]" +
+                        "[]" +
+                        "[]"));
         setJMenuBar(menuBar1);
 
         //======== panel5 ========
         {
             panel5.setLayout(new MigLayout(
-                "hidemode 3",
-                // columns
-                "[fill]" +
-                "[fill]" +
-                "[fill]" +
-                "[fill]",
-                // rows
-                "[]"));
+                    "hidemode 3",
+                    // columns
+                    "[fill]" +
+                            "[fill]" +
+                            "[fill]" +
+                            "[fill]",
+                    // rows
+                    "[]"));
 
             //---- label7 ----
             label7.setText("Grid X");
@@ -398,14 +425,14 @@ public class MorphUI extends JFrame {
             panel1.setMinimumSize(new Dimension(200, 200));
             panel1.setMaximumSize(new Dimension(400, 400));
             panel1.setLayout(new MigLayout(
-                "hidemode 3",
-                // columns
-                "[fill]" +
-                "[fill]",
-                // rows
-                "[]" +
-                "[]" +
-                "[]"));
+                    "hidemode 3",
+                    // columns
+                    "[fill]" +
+                            "[fill]",
+                    // rows
+                    "[]" +
+                            "[]" +
+                            "[]"));
         }
         contentPane.add(panel1, "cell 0 1 1 3");
 
@@ -414,14 +441,14 @@ public class MorphUI extends JFrame {
             panel2.setMaximumSize(new Dimension(400, 400));
             panel2.setMinimumSize(new Dimension(200, 200));
             panel2.setLayout(new MigLayout(
-                "hidemode 3",
-                // columns
-                "[fill]" +
-                "[fill]",
-                // rows
-                "[]" +
-                "[]" +
-                "[]"));
+                    "hidemode 3",
+                    // columns
+                    "[fill]" +
+                            "[fill]",
+                    // rows
+                    "[]" +
+                            "[]" +
+                            "[]"));
         }
         contentPane.add(panel2, "cell 1 1 1 3");
 
@@ -440,20 +467,21 @@ public class MorphUI extends JFrame {
                 public void mouseDragged(MouseEvent e) {
                     panelResultMouseDragged(e);
                 }
+
                 @Override
                 public void mouseMoved(MouseEvent e) {
                     panelResultMouseMoved(e);
                 }
             });
             panelResult.setLayout(new MigLayout(
-                "fill,hidemode 3",
-                // columns
-                "[fill]" +
-                "[fill]",
-                // rows
-                "[]" +
-                "[]" +
-                "[]"));
+                    "fill,hidemode 3",
+                    // columns
+                    "[fill]" +
+                            "[fill]",
+                    // rows
+                    "[]" +
+                            "[]" +
+                            "[]"));
         }
         contentPane.add(panelResult, "cell 2 1 1 3");
 
@@ -487,6 +515,9 @@ public class MorphUI extends JFrame {
         button2.setText("Load 2");
         button2.addActionListener(e -> buttonLoadImage2(e));
         contentPane.add(button2, "cell 1 4");
+
+        //---- slider1 ----
+        slider1.addChangeListener(e -> slider1StateChanged(e));
         contentPane.add(slider1, "cell 2 4");
 
         //---- radioButtonActive1 ----
@@ -500,15 +531,15 @@ public class MorphUI extends JFrame {
         //======== panel4 ========
         {
             panel4.setLayout(new MigLayout(
-                "fill,hidemode 3",
-                // columns
-                "[fill]" +
-                "[fill]" +
-                "[fill]" +
-                "[fill]",
-                // rows
-                "[]" +
-                "[]"));
+                    "fill,hidemode 3",
+                    // columns
+                    "[fill]" +
+                            "[fill]" +
+                            "[fill]" +
+                            "[fill]",
+                    // rows
+                    "[]" +
+                            "[]"));
 
             //---- button5 ----
             button5.setText("Add col");
