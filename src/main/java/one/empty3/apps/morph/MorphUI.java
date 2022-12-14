@@ -72,6 +72,8 @@ public class MorphUI extends JFrame {
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
     private ImageControls imageControl1;
     private ImageControls imageControl2;
+    private ZBuffer zBuffer1;
+    private ZBuffer zBuffer2;
 
     public MorphUI() {
 
