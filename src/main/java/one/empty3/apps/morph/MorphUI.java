@@ -28,6 +28,7 @@ import java.util.logging.Logger;
  * @author Manuel Dahmen
  */
 public class MorphUI extends JFrame {
+    private boolean computing = false;
     private File currentDirectory;
     private File image1;
     private File image2;
@@ -74,6 +75,7 @@ public class MorphUI extends JFrame {
     private ImageControls imageControl2;
     private ZBuffer zBuffer1;
     private ZBuffer zBuffer2;
+    private ZBufferImpl zBufferComputing;
 
     public MorphUI() {
 
@@ -221,6 +223,13 @@ public class MorphUI extends JFrame {
         new Thread(new Runnable() {
             @Override
             public void run() {
+                while(isComputing()) {
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
                 try {
                     int seconds = getSeconds();
                     int fps = getFps();
@@ -234,6 +243,8 @@ public class MorphUI extends JFrame {
                         copy = grid1.copy();
 
                         if (copy != null) {
+                            setComputing(true);
+
                             double r = 1.0 * frameNo / (getFps() * getSeconds());
 
                             for (int x = 0; x < copy.getData2d().size(); x++)
@@ -261,12 +272,15 @@ public class MorphUI extends JFrame {
                             camera.declareProperties();
                             camera.calculerMatrice(Point3D.Y);
 
-                            ZBufferImpl zBuffer = new ZBufferImpl(resX, resY);
-                            zBuffer.scene(scene);
+                            if(zBufferComputing==null)
+                                zBufferComputing
+                                        = new ZBufferImpl(resX, resY);
+
+                            zBufferComputing.scene(scene);
                             scene.cameraActive(camera);
 
-                            zBuffer.draw();
-                            BufferedImage image = zBuffer.image2();
+                            zBufferComputing.draw();
+                            BufferedImage image = zBufferComputing.image2();
 
                             ImageIcon imageIcon = new ImageIcon(image);
 
@@ -286,13 +300,17 @@ public class MorphUI extends JFrame {
 
                             Logger.getLogger(this.getClass().getSimpleName())
                                     .log(Level.INFO, "Image " + frameNo + "\tEvolution: " + r);
+                            setComputing(false);
                         }
                     }
                 } catch (IllegalAccessException e) {
+                    setComputing(false);
                     throw new RuntimeException(e);
                 } catch (CopyRepresentableError e) {
+                    setComputing(false);
                     throw new RuntimeException(e);
                 } catch (InstantiationException e) {
+                    setComputing(false);
                     throw new RuntimeException(e);
                 }
 
@@ -562,4 +580,10 @@ public class MorphUI extends JFrame {
         // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
     }
 
+    public boolean isComputing() {
+        return computing;
+    }
+    public void setComputing(boolean computing) {
+        this.computing = computing;
+    }
 }
