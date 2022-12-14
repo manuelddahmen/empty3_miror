@@ -84,19 +84,6 @@ public class MorphUI extends JFrame {
         JFrame.setDefaultLookAndFeelDecorated(true);
     }
 
-    /**
-     * Returns an ImageIcon, or null if the path was invalid.
-     */
-    protected ImageIcon createImageIcon(String path,
-                                        String description) {
-        java.net.URL imgURL = getClass().getResource(path);
-        if (imgURL != null) {
-            return new ImageIcon(imgURL, description);
-        } else {
-            System.err.println("Couldn't find file: " + path);
-            return null;
-        }
-    }
 
     private void initGrids(StructureMatrix<Point3D> grid, BufferedImage imageRead) {
         try {
@@ -137,10 +124,10 @@ public class MorphUI extends JFrame {
             try {
                 URL url = new URL("file:///" + image1.getAbsolutePath());
                 imageRead1 = ImageIO.read(url);
-
-                Component add = panel1.add(new JLabel(url.toString(),
+/*
+                Component add = panel1.add(new JLabel("",//url.toString(),
                         (Icon) new ImageIcon(imageRead1),
-                        JLabel.CENTER));
+                        JLabel.CENTER));*/
                 pack();
 
                 currentDirectory = jFileChooser.getCurrentDirectory();
@@ -176,10 +163,10 @@ public class MorphUI extends JFrame {
             try {
                 URL url = new URL("file:///" + image2.getAbsolutePath());
                 imageRead2 = ImageIO.read(url);
-
-                panel2.add(new JLabel(url.toString(),
+/*
+                panel2.add(new JLabel("",//url.toString(),
                         (Icon) new ImageIcon(imageRead2),
-                        JLabel.CENTER));
+                        JLabel.CENTER));*/
                 pack();
 
                 currentDirectory = jFileChooser.getCurrentDirectory();
@@ -199,10 +186,12 @@ public class MorphUI extends JFrame {
             @Override
             public void run() {
                 for (int frame = 0; frame < getFps() * getSeconds(); frame++) {
+                    Logger.getAnonymousLogger()
+                            .log(Level.FINE, "FrameNo"+frame);
                     computeFrame(frame);
                 }
             }
-        });
+        }).start();
     }
 
     private Point3D transitionPoint(Point3D p1, Point3D p2, double r) {
@@ -281,7 +270,12 @@ public class MorphUI extends JFrame {
 
                             ImageIcon imageIcon = new ImageIcon(image);
 
+
                             JLabel jLabelResult = new JLabel(imageIcon);
+
+                            jLabelResult
+                                    .setMaximumSize(
+                                            new Dimension(resX, resY));
 
                             if (panelResult.getComponents().length > 0) {
                                 panelResult.remove(0);
