@@ -23,7 +23,7 @@ new FormModel {
 				} )
 				add( new FormComponent( "javax.swing.JTextField" ) {
 					name: "textFieldResX"
-					"text": "10"
+					"text": "4"
 				}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 					"value": "cell 1 0"
 				} )
@@ -35,7 +35,7 @@ new FormModel {
 				} )
 				add( new FormComponent( "javax.swing.JTextField" ) {
 					name: "textFieldResY"
-					"text": "10"
+					"text": "4"
 				}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 					"value": "cell 3 0"
 				} )
@@ -55,7 +55,7 @@ new FormModel {
 				"$rowConstraints": "[][][]"
 			} ) {
 				name: "panel1"
-				"minimumSize": new java.awt.Dimension( 200, 200 )
+				"minimumSize": new java.awt.Dimension( 400, 400 )
 				"maximumSize": new java.awt.Dimension( 400, 400 )
 			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 				"value": "cell 0 1 1 3"
@@ -67,7 +67,7 @@ new FormModel {
 			} ) {
 				name: "panel2"
 				"maximumSize": new java.awt.Dimension( 400, 400 )
-				"minimumSize": new java.awt.Dimension( 200, 200 )
+				"minimumSize": new java.awt.Dimension( 400, 400 )
 			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 				"value": "cell 1 1 1 3"
 			} )
@@ -78,7 +78,7 @@ new FormModel {
 			} ) {
 				name: "panelResult"
 				"maximumSize": new java.awt.Dimension( 400, 400 )
-				"minimumSize": new java.awt.Dimension( 200, 200 )
+				"minimumSize": new java.awt.Dimension( 400, 400 )
 			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 				"value": "cell 2 1 1 3"
 			} )

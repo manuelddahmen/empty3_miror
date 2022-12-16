@@ -131,10 +131,7 @@ public class MorphUI extends JFrame {
             try {
                 URL url = new URL("file:///" + image1.getAbsolutePath());
                 imageRead1 = ImageIO.read(url);
-/*
-                Component add = panel1.add(new JLabel("",//url.toString(),
-                        (Icon) new ImageIcon(imageRead1),
-                        JLabel.CENTER));*/
+
                 pack();
 
                 currentDirectory = jFileChooser.getCurrentDirectory();
@@ -144,7 +141,7 @@ public class MorphUI extends JFrame {
 
         }
         initGrids(grid1, imageRead1, panel1);
-        imageControl1 = new ImageControls(grid1, imageRead1, panel1);
+        imageControl1 = new ImageControls(this, grid1, imageRead1, panel1);
         new Thread(imageControl1).start();
 
 
@@ -173,10 +170,7 @@ public class MorphUI extends JFrame {
             try {
                 URL url = new URL("file:///" + image2.getAbsolutePath());
                 imageRead2 = ImageIO.read(url);
-/*
-                panel2.add(new JLabel("",//url.toString(),
-                        (Icon) new ImageIcon(imageRead2),
-                        JLabel.CENTER));*/
+
                 pack();
 
                 currentDirectory = jFileChooser.getCurrentDirectory();
@@ -186,7 +180,7 @@ public class MorphUI extends JFrame {
 
         }
         initGrids(grid2, imageRead2, panel2);
-        imageControl2 = new ImageControls(grid2, imageRead2, panel2);
+        imageControl2 = new ImageControls(this, grid2, imageRead2, panel2);
         new Thread(imageControl2).start();
 
         initialization();
@@ -295,7 +289,7 @@ public class MorphUI extends JFrame {
                     zBufferComputing.camera(camera);
 
                     zBufferComputing.draw();
-                    BufferedImage image = zBufferComputing.image2();
+                    BufferedImage image = zBufferComputing.image();
 
                     ImageIcon imageIcon = new ImageIcon(image);
 
@@ -372,41 +366,41 @@ public class MorphUI extends JFrame {
         //======== this ========
         var contentPane = getContentPane();
         contentPane.setLayout(new MigLayout(
-                "fill,hidemode 3",
-                // columns
-                "[fill]" +
-                        "[fill]" +
-                        "[fill]" +
-                        "[fill]" +
-                        "[fill]",
-                // rows
-                "[]" +
-                        "[]" +
-                        "[]" +
-                        "[]" +
-                        "[]" +
-                        "[]" +
-                        "[]"));
+            "fill,hidemode 3",
+            // columns
+            "[fill]" +
+            "[fill]" +
+            "[fill]" +
+            "[fill]" +
+            "[fill]",
+            // rows
+            "[]" +
+            "[]" +
+            "[]" +
+            "[]" +
+            "[]" +
+            "[]" +
+            "[]"));
         setJMenuBar(menuBar1);
 
         //======== panel5 ========
         {
             panel5.setLayout(new MigLayout(
-                    "hidemode 3",
-                    // columns
-                    "[fill]" +
-                            "[fill]" +
-                            "[fill]" +
-                            "[fill]",
-                    // rows
-                    "[]"));
+                "hidemode 3",
+                // columns
+                "[fill]" +
+                "[fill]" +
+                "[fill]" +
+                "[fill]",
+                // rows
+                "[]"));
 
             //---- label7 ----
             label7.setText("Grid X");
             panel5.add(label7, "cell 0 0");
 
             //---- textFieldResX ----
-            textFieldResX.setText("10");
+            textFieldResX.setText("4");
             panel5.add(textFieldResX, "cell 1 0");
 
             //---- label8 ----
@@ -414,7 +408,7 @@ public class MorphUI extends JFrame {
             panel5.add(label8, "cell 2 0");
 
             //---- textFieldResY ----
-            textFieldResY.setText("10");
+            textFieldResY.setText("4");
             panel5.add(textFieldResY, "cell 3 0");
         }
         contentPane.add(panel5, "cell 0 0 2 1");
@@ -426,66 +420,49 @@ public class MorphUI extends JFrame {
 
         //======== panel1 ========
         {
-            panel1.setMinimumSize(new Dimension(200, 200));
+            panel1.setMinimumSize(new Dimension(400, 400));
             panel1.setMaximumSize(new Dimension(400, 400));
             panel1.setLayout(new MigLayout(
-                    "hidemode 3",
-                    // columns
-                    "[fill]" +
-                            "[fill]",
-                    // rows
-                    "[]" +
-                            "[]" +
-                            "[]"));
+                "hidemode 3",
+                // columns
+                "[fill]" +
+                "[fill]",
+                // rows
+                "[]" +
+                "[]" +
+                "[]"));
         }
         contentPane.add(panel1, "cell 0 1 1 3");
 
         //======== panel2 ========
         {
             panel2.setMaximumSize(new Dimension(400, 400));
-            panel2.setMinimumSize(new Dimension(200, 200));
+            panel2.setMinimumSize(new Dimension(400, 400));
             panel2.setLayout(new MigLayout(
-                    "hidemode 3",
-                    // columns
-                    "[fill]" +
-                            "[fill]",
-                    // rows
-                    "[]" +
-                            "[]" +
-                            "[]"));
+                "hidemode 3",
+                // columns
+                "[fill]" +
+                "[fill]",
+                // rows
+                "[]" +
+                "[]" +
+                "[]"));
         }
         contentPane.add(panel2, "cell 1 1 1 3");
 
         //======== panelResult ========
         {
             panelResult.setMaximumSize(new Dimension(400, 400));
-            panelResult.setMinimumSize(new Dimension(200, 200));
-            panelResult.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mouseClicked(MouseEvent e) {
-                    panelResultMouseClicked(e);
-                }
-            });
-            panelResult.addMouseMotionListener(new MouseMotionAdapter() {
-                @Override
-                public void mouseDragged(MouseEvent e) {
-                    panelResultMouseDragged(e);
-                }
-
-                @Override
-                public void mouseMoved(MouseEvent e) {
-                    panelResultMouseMoved(e);
-                }
-            });
+            panelResult.setMinimumSize(new Dimension(400, 400));
             panelResult.setLayout(new MigLayout(
-                    "fill,hidemode 3",
-                    // columns
-                    "[fill]" +
-                            "[fill]",
-                    // rows
-                    "[]" +
-                            "[]" +
-                            "[]"));
+                "fill,hidemode 3",
+                // columns
+                "[fill]" +
+                "[fill]",
+                // rows
+                "[]" +
+                "[]" +
+                "[]"));
         }
         contentPane.add(panelResult, "cell 2 1 1 3");
 
@@ -535,15 +512,15 @@ public class MorphUI extends JFrame {
         //======== panel4 ========
         {
             panel4.setLayout(new MigLayout(
-                    "fill,hidemode 3",
-                    // columns
-                    "[fill]" +
-                            "[fill]" +
-                            "[fill]" +
-                            "[fill]",
-                    // rows
-                    "[]" +
-                            "[]"));
+                "fill,hidemode 3",
+                // columns
+                "[fill]" +
+                "[fill]" +
+                "[fill]" +
+                "[fill]",
+                // rows
+                "[]" +
+                "[]"));
 
             //---- button5 ----
             button5.setText("Add col");

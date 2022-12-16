@@ -15,6 +15,7 @@ public class ImageControls implements Runnable {
     private final JPanel panelDisplay;
     private final BufferedImage image;
     private final StructureMatrix<Point3D> grid;
+    private final JFrame jframe;
     boolean moving = false;
     boolean dropped = false;
     boolean clicked = false;
@@ -30,8 +31,10 @@ public class ImageControls implements Runnable {
     RepresentableConteneur rc;
     private boolean displaying;
 
-    public ImageControls(StructureMatrix<Point3D> grid, BufferedImage image,
+    public ImageControls(JFrame jframe,
+                         StructureMatrix<Point3D> grid, BufferedImage image,
                          JPanel panelDisplay) {
+        this.jframe = jframe;
         this.grid = grid;
         this.image = image;
         this.panelDisplay = panelDisplay;
@@ -48,6 +51,7 @@ public class ImageControls implements Runnable {
             public void mousePressed(MouseEvent e) {
                 System.out.println("Pressed : " + (isPressed = true));
                 isSelected = selectPoint(e.getX(), e.getY());
+                System.out.println("Selected point: " + grid.getElem(xGrid, yGrid));
                 moving = true;
                 drags();
             }
@@ -107,7 +111,7 @@ public class ImageControls implements Runnable {
         //move if selected
         moving = true;
         if (isPressed) {
-            System.out.println("::move a point");
+            //System.out.println("::move a point");
         }
     }
 
@@ -115,7 +119,9 @@ public class ImageControls implements Runnable {
         // drops if moved
         if (!moving && !isPressed && isSelected) {
             System.out.println("::update a point position");
-            display();
+            System.out.println(selectedPoint);
+            grid.setElem(selectedPoint, this.xGrid, this.yGrid);
+            System.out.println(grid.getElem(xGrid, yGrid));
         }
         initBools();
 
@@ -150,12 +156,6 @@ public class ImageControls implements Runnable {
         return selectedPoint != null;
     }
 
-    private void dragPoint(int x, int y) {
-        Point3D point3dMoved = convertScreenCordToSceneCord(new Point3D((double) x, (double) y, 0d));
-        if (selectedPoint != null) {
-            grid.setElem(point3dMoved, this.xGrid, this.yGrid);
-        }
-    }
 
     public void run() {
         while (isRunning()) {
@@ -214,14 +214,8 @@ public class ImageControls implements Runnable {
             polygons.setCoefficients(grid);
             polygons.texture(imageTexture);
 
-            rc = new RepresentableConteneur();
-            grid.getData2d().forEach(point3DS -> point3DS.forEach(point3D ->
-                    rc.add(new Sphere(new Axe(point3D.plus(Point3D.Y),
-                            point3D.plus(Point3D.Y.mult(-1))),
-                            2))));
 
-
-            Scene scene = new Scene();
+            scene = new Scene();
             scene.add(polygons);
 
             addToScene(scene);
@@ -239,7 +233,8 @@ public class ImageControls implements Runnable {
             scene.cameraActive(camera);
 
             zBuffer.draw();
-            BufferedImage image = zBuffer.image2();
+
+            BufferedImage image = zBuffer.image();
 
             ImageIcon imageIcon = new ImageIcon(image);
 
@@ -250,14 +245,9 @@ public class ImageControls implements Runnable {
             }
             panelDisplay.add(jLabelResult);
 
+            jframe.pack();
+
             displaying = false;
-
-
-        Graphics graphics = panelDisplay.getGraphics();
-        grid.getData2d().forEach(point3DS -> point3DS.forEach(point3D -> {
-
-
-        }));
     }
 
     public void addToScene(Scene scene) {
@@ -265,10 +255,12 @@ public class ImageControls implements Runnable {
         for (int i = 0; i < grid.getData2d().size(); i++) {
             for (int j = 0; j < grid.getData2d().get(i).size(); j++) {
                 Point3D point3D = grid.getData2d().get(i).get(j);
-                Sphere sphere = new Sphere(new Axe(point3D.plus(Point3D.Y.mult(RADIUS / 2)),
-                        point3D.moins(Point3D.Y.mult(RADIUS / 2))),
+                Sphere sphere = new Sphere(new Axe(point3D.plus(Point3D.Y.mult(RADIUS / 2.)),
+                        point3D.moins(Point3D.Y.mult(RADIUS / 2.))),
                         RADIUS);
                 sphere.texture(new ColorTexture(Color.BLACK));
+                sphere.setIncrU(0.4);
+                sphere.setIncrV(0.4);
                 rc.add(sphere);
             }
         }

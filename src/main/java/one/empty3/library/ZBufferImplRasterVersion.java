@@ -1,46 +1,11 @@
-/*
- *  This file is part of Empty3.
- *
- *     Empty3 is free software: you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
- *     the Free Software Foundation, either version 3 of the License, or
- *     (at your option) any later version.
- *
- *     Empty3 is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
- *
- *     You should have received a copy of the GNU General Public License
- *     along with Empty3.  If not, see <https://www.gnu.org/licenses/>. 2
- */
-
-/*
- * This program is free software: you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
- *     the Free Software Foundation, either version 3 of the License, or
- *     (at your option) any later version.
- *
- *     This program is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
- *
- *     You should have received a copy of the GNU General Public License
- *     along with this program.  If not, see <https://www.gnu.org/licenses/>
- */
-
-/*__
- * *
- * Global license  GNU GPL v2
- * author Manuel Dahmen _manuel.dahmen@gmx.com_
- */
 package one.empty3.library;
 
 import one.empty3.library.core.nurbs.*;
 import one.empty3.pointset.PCont;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.awt.image.WritableRaster;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -53,7 +18,7 @@ import java.util.logging.Logger;
 /*__
  * * Classe de rendu graphique
  */
-public class ZBufferImpl extends Representable implements ZBuffer {
+public class ZBufferImplRasterVersion extends Representable implements ZBuffer {
 
     public static final int DISPLAY_ALL = 0;
     public static final int SURFACE_DISPLAY_TEXT_QUADS = 1;
@@ -79,7 +44,7 @@ public class ZBufferImpl extends Representable implements ZBuffer {
     protected ECBufferedImage bi;
     protected int ha;
     protected int la;
-    ZBufferImpl that;
+    ZBufferImplRasterVersion that;
     // PARAMETRES
     private float zoom = 1.05f;
     private boolean locked = false;
@@ -88,7 +53,6 @@ public class ZBufferImpl extends Representable implements ZBuffer {
     private int dimx;
     private int dimy;
     private Point3D[][] Scordinate;
-    private int[] Scolor;
     private long[][] Simeid;
     private double[][] Simeprof;
     private Scene currentScene;
@@ -96,13 +60,13 @@ public class ZBufferImpl extends Representable implements ZBuffer {
 
     private boolean FORCE_POSITIVE_NORMALS = true;
 
-    public ZBufferImpl() {
+    public ZBufferImplRasterVersion() {
         that = this;
         scene = new Scene();
         texture(new TextureCol(Color.BLACK));
     }
 
-    public ZBufferImpl(int l, int h) {
+    public ZBufferImplRasterVersion(int l, int h) {
         this();
         la = l;
         ha = h;
@@ -113,7 +77,7 @@ public class ZBufferImpl extends Representable implements ZBuffer {
     }
 
 
-    public ZBufferImpl(Resolution resolution) {
+    public ZBufferImplRasterVersion(Resolution resolution) {
 
 
         this(resolution.x(), resolution.y());
@@ -436,12 +400,17 @@ public class ZBufferImpl extends Representable implements ZBuffer {
         }
     }
 
-    public int[] getData() {
-        return Scolor;
+    public WritableRaster getData() {
+        return ime.getIME().wr;
     }
 
     public ZBuffer getInstance(int x, int y) {
         return new ZBufferImpl(x, y);
+    }
+
+    @Override
+    public ECBufferedImage image() {
+        return imageFromRaster();
     }
 
     /*__
@@ -457,32 +426,14 @@ public class ZBufferImpl extends Representable implements ZBuffer {
         ha = height;
     }
 
-    public ECBufferedImage image() {
+
+    public ECBufferedImage imageFromRaster() {
 
         ECBufferedImage bi2 = new ECBufferedImage(la, ha, ECBufferedImage.TYPE_INT_RGB);
-        for (int i = 0; i < la; i++) {
-            for (int j = 0; j < ha; j++) {
-                int elementCouleur = ime.ime.getElementCouleur(i, j);
-                bi2.setRGB(i, j, elementCouleur);
-
-            }
-        }
-        this.bi = bi2;
+        bi2.getRaster().setRect(ime.ime.wr);
         return bi2;
 
     }
-
-    //??
-    public ECBufferedImage image2() {
-        //return image2();
-
-//        BufferedImage bi = new BufferedImage(la, ha, BufferedImage.TYPE_INT_RGB);
-//        bi.setRGB(0, 0, la, ha, getData(), 0, la);
-//        return new ECBufferedImage(bi);
-        return image();
-
-    }
-
     public boolean isLocked() {
         return locked;
     }
@@ -1314,20 +1265,12 @@ public class ZBufferImpl extends Representable implements ZBuffer {
     }
 
     public class ImageMap {
-
         protected ImageMapElement ime;
 
         public ImageMap(int x, int y) {
-            dimx = x;
-            dimy = y;
             ime = new ImageMapElement();
-            for (int i = 0; i < x; i++) {
-                for (int j = 0; j < y; j++) {
-                    ime.setElementID(i, j, idImg);
-                    ime.setElementPoint(i, j, INFINITY);
-                    ime.setElementCouleur(i, j, texture().getColorAt(1. * i / la, 1. * j / ha));
-                }
-            }
+            la = x;
+            ha = y;
         }
 
         public void dessine(Point3D x3d, Color c) {
@@ -1341,7 +1284,7 @@ public class ZBufferImpl extends Representable implements ZBuffer {
             if (x >= 0 & x < la & y >= 0 & y < ha && c.getAlpha() == 255) {
                 ime.setElementID(x, y, idImg);
                 ime.setElementPoint(x, y, x3d);
-                ime.setElementCouleur(x, y, c.getRGB());
+                ime.wr.setPixel(x, y, Lumiere.getRgb(c));
                 ime.setDeep(x, y, prof);
             } else if (checkScreen(ce)) {
                 int elementCouleur = ime.getElementCouleur(x, y);
@@ -1354,7 +1297,7 @@ public class ZBufferImpl extends Representable implements ZBuffer {
                 int anInt = Lumiere.getInt(b);
                 ime.setElementID(x, y, idImg);
                 ime.setElementPoint(x, y, x3d);
-                ime.setElementCouleur(x, y, anInt);
+                ime.wr.setPixel(x, y, Lumiere.getDoubles(anInt));
                 ime.setDeep(x, y, prof);
 
             }
@@ -1508,7 +1451,7 @@ public class ZBufferImpl extends Representable implements ZBuffer {
 //    }
 
     public class ImageMapElement {
-
+        protected WritableRaster wr;
         protected int couleur_fond_int = -1;
         private ImageMapElement instance;
         private Representable[][] Simerepresentable;
@@ -1518,7 +1461,6 @@ public class ZBufferImpl extends Representable implements ZBuffer {
 
         public ImageMapElement() {
             Scordinate = new Point3D[la][ha];
-            Scolor = new int[la * ha];
             Simeid = new long[la][ha];
             Simeprof = new double[la][ha];
             Simerepresentable = new Representable[la][ha];
@@ -1529,10 +1471,14 @@ public class ZBufferImpl extends Representable implements ZBuffer {
                 for (int j = 0; j < ha; j++) {
                     Simeprof[i][j] = INFINITY.getZ();
                     Simeid[i][j] = idImg;
-                    Scolor[j * la + i] = COULEUR_FOND_INT(i, j);
                     Simerepresentable[i][j] = null;
                 }
             }
+            if(wr==null) {
+                bi = new ECBufferedImage(new BufferedImage(la, ha, BufferedImage.TYPE_INT_ARGB));
+
+            }
+            wr = bi.getRaster();
         }
 
         public Representable getElementRepresentable(int x, int y) {
@@ -1554,12 +1500,13 @@ public class ZBufferImpl extends Representable implements ZBuffer {
             couleur_fond_int = texture().getColorAt(1.0 * x / largeur(), 1.0 * y / hauteur());
             return couleur_fond_int;
         }
-
+        double[] defaultArray = new double[3];
         public int getElementCouleur(int x, int y) {
             if (checkCordinates(x, y)
                     && Simeid[x][y] == idImg
                     && Simeprof[x][y] < INFINITY.getZ()) {
-                return getRGBInt(Scolor, x, y);
+                defaultArray = wr.getPixel(x, y,defaultArray);
+                return Lumiere.getInt(defaultArray);
             } else {
                 return COULEUR_FOND_INT(x, y);
             }
@@ -1588,10 +1535,9 @@ public class ZBufferImpl extends Representable implements ZBuffer {
             return sc[x + y * la];
 
         }
-
         public void setElementCouleur(int x, int y, int pc) {
             setElementID(x, y, idImg);
-            setRGBInts(pc, Scolor, x, y);
+            wr.setPixel(x, y, Lumiere.getDoubles(pc));
         }
 
         public void setElementID(int x, int y, long id) {
