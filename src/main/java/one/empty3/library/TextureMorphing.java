@@ -45,4 +45,11 @@ public class TextureMorphing extends ITexture {
         morphing.setFrameNo(frameNo);
         return morphing;
     }
+
+    @Override
+    public void timeNext(long milli) {
+        super.timeNext(milli);
+        this.texture1.timeNext(milli);
+        this.texture2.timeNext(milli);
+    }
 }

@@ -60,8 +60,8 @@ public abstract class Lumiere  extends Representable{
     return res;//|0xFF000000;
   }
 
-    static double [] res = new double[4];
    public static double[] getDoubles(int c) {
+        double [] res = new double[4];
        for(int i=0 ;i<3;i++) {
         res[i] = (((c&(0xff<<((2-i)*8)) )>>((2-i)*8)))/255.;
        }

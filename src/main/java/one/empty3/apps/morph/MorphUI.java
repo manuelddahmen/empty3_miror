@@ -76,8 +76,12 @@ public class MorphUI extends JFrame {
     private ZBuffer zBuffer1;
     private ZBuffer zBuffer2;
     private ZBufferImpl zBufferComputing;
-    private ImageTexture text1;
-    private ImageTexture text2;
+    private ITexture text1;
+    private ITexture text2;
+    private String vid1;
+    private String vid2;
+    private VideoDecoder instance1;
+    private VideoDecoder instance2;
 
     public MorphUI() {
 
@@ -97,8 +101,8 @@ public class MorphUI extends JFrame {
             if (imageRead != null) {
                 int i1 = Integer.parseInt(textFieldResX.getText());
                 int j1 = Integer.parseInt(textFieldResY.getText());
-                for (int i = 0; i < i1; i++)
-                    for (int j = 0; j < j1; j++) {
+                for (int i = 0; i <= i1; i++)
+                    for (int j = 0; j <= j1; j++) {
                         grid.setElem(Point3D.n(1.0 * i / i1 * resX, 1.0 * j / j1 * resY, 0d), i, j);
                     }
             }
@@ -110,17 +114,34 @@ public class MorphUI extends JFrame {
     }
 
     private void buttonLoadImage1(ActionEvent e) {
+        boolean isLoaded = false;
         JFileChooser jFileChooser = new JFileChooser();
         jFileChooser.setFileFilter(new FileFilter() {
             @Override
             public boolean accept(File f) {
-                return f.getName().toLowerCase().endsWith(".jpg");
+                return f.getName().toLowerCase().endsWith(".jpg")||f.getName().toLowerCase().endsWith(".png")||
+                        f.getName().toLowerCase().endsWith(".mp4")||f.getName().toLowerCase().endsWith(".m4a")
+                ||f.getName().toLowerCase().endsWith(".avi")||f.isDirectory();
             }
 
             @Override
             public String getDescription() {
-                return "image/jpg";
+                return "image/jpg,png";
             }
+        });
+        jFileChooser.addChoosableFileFilter(new FileFilter() {
+            @Override
+            public boolean accept(File f) {
+                return f.getName().toLowerCase().endsWith(".jpg")||f.getName().toLowerCase().endsWith(".png")||
+                        f.getName().toLowerCase().endsWith(".mp4")||f.getName().toLowerCase().endsWith(".m4a")
+                        ||f.getName().toLowerCase().endsWith(".avi");
+            }
+
+            @Override
+            public String getDescription() {
+                return "video/mp4,m4a,avi";
+            }
+
         });
         if (currentDirectory != null && currentDirectory.exists()) {
             jFileChooser.setCurrentDirectory(currentDirectory);
@@ -130,35 +151,68 @@ public class MorphUI extends JFrame {
             this.image1 = jFileChooser.getSelectedFile();
             try {
                 URL url = new URL("file:///" + image1.getAbsolutePath());
-                imageRead1 = ImageIO.read(url);
-
+                try {
+                    imageRead1 = ImageIO.read(url);
+                    isLoaded = true;
+                } catch (Exception ex) {
+                    isLoaded = false;
+                    vid1 = image1.getAbsolutePath();
+                    isLoaded = true;
+                    imageRead1 = null;
+                }
                 pack();
 
+
                 currentDirectory = jFileChooser.getCurrentDirectory();
+
+                initialization();
+
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
 
         }
         initGrids(grid1, imageRead1, panel1);
-        imageControl1 = new ImageControls(this, grid1, imageRead1, panel1);
-        new Thread(imageControl1).start();
+        if (isLoaded) {
+            if(imageControl1!=null) {
+                imageControl1.setDisplaying(false);
+                imageControl1.setRunning(false);
+            }
+            imageControl1 = new ImageControls(this, grid1, imageRead1, panel1, text1);
+            new Thread(imageControl1).start();
+
+        }
 
 
-        initialization();
     }
 
     private void buttonLoadImage2(ActionEvent e) {
+        boolean isLoaded = false;
         JFileChooser jFileChooser = new JFileChooser();
         jFileChooser.setFileFilter(new FileFilter() {
             @Override
             public boolean accept(File f) {
-                return f.getName().toLowerCase().endsWith(".jpg");
+                return f.getName().toLowerCase().endsWith(".jpg")||f.getName().toLowerCase().endsWith(".png")||
+                        f.getName().toLowerCase().endsWith(".mp4")||f.getName().toLowerCase().endsWith(".m4a")
+                        ||f.getName().toLowerCase().endsWith(".avi")||f.isDirectory();
             }
 
             @Override
             public String getDescription() {
-                return "image/jpg";
+                return "image/jpg,png {- video/mp4,m4a,avi";
+            }
+        });
+        jFileChooser.addChoosableFileFilter(new FileFilter() {
+            @Override
+            public boolean accept(File f) {
+                return f.getName().toLowerCase().endsWith(".jpg")||f.getName().toLowerCase().endsWith(".png")||
+                        f.getName().toLowerCase().endsWith(".mp4")||f.getName().toLowerCase().endsWith(".m4a")
+                        ||f.getName().toLowerCase().endsWith(".avi");
+            }
+
+            @Override
+            public String getDescription() {
+                return "video/mp4,m4a,avi";
             }
         });
         if (currentDirectory != null && currentDirectory.exists()) {
@@ -167,31 +221,61 @@ public class MorphUI extends JFrame {
 
         if (jFileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             this.image2 = jFileChooser.getSelectedFile();
+
             try {
                 URL url = new URL("file:///" + image2.getAbsolutePath());
-                imageRead2 = ImageIO.read(url);
-
+                try {
+                    imageRead2 = ImageIO.read(url);
+                    isLoaded = true;
+                } catch (Exception ex) {
+                    isLoaded = false;
+                    vid2 = image2.getAbsolutePath();
+                    isLoaded = true;
+                    imageRead2 = null;
+                }
                 pack();
 
                 currentDirectory = jFileChooser.getCurrentDirectory();
+
+
+                initialization();
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
-
         }
         initGrids(grid2, imageRead2, panel2);
-        imageControl2 = new ImageControls(this, grid2, imageRead2, panel2);
-        new Thread(imageControl2).start();
+        if (isLoaded) {
+            if(imageControl2!=null) {
+                imageControl2.setDisplaying(false);
+                imageControl2.setRunning(false);
+            }
+            imageControl2 = new ImageControls(this, grid2, imageRead2, panel2, text2);
+            new Thread(imageControl2).start();
+        }
 
-        initialization();
     }
 
     private void initialization() {
         if (imageRead1 != null)
             text1 = new ImageTexture(new ECBufferedImage(imageRead1));
+        else if(vid1!=null) {
+            text1 = new TextureMov(vid1);
+            instance1 = VideoDecoderFactory.createInstance(image1,(TextureMov) text1);
+        } else {
+            text1 = null;
+            imageRead1 = null;
+            vid1 = null;
+        }
         if (imageRead2 != null)
             text2 = new ImageTexture(new ECBufferedImage(imageRead2));
-
+        else if(vid2!=null) {
+            text2 = new TextureMov(vid2);
+            instance2 = VideoDecoderFactory.createInstance(image2, (TextureMov) text2);
+        } else {
+            text2 = null;
+            imageRead2 = null;
+            vid2 = null;
+        }
     }
 
     private void buttonGo(ActionEvent e) {
@@ -243,8 +327,17 @@ public class MorphUI extends JFrame {
         try {
             int seconds = getSeconds();
             int fps = getFps();
-            if (imageRead1 != null && imageRead2 != null && grid1 != null && grid2 != null) {
+            if (imageRead1 != null && imageRead2 != null && grid1 != null && grid2 != null && text1!=null && text2!=null) {
+
                 TextureMorphing textureMorphing = new TextureMorphing(text1, text2, fps * seconds);
+
+                if(text1 instanceof TextureMov) {
+                    new Thread(instance1).start();
+                }
+                if(text2 instanceof TextureMov) {
+                    new Thread(instance2).start();
+                }
+
 
                 textureMorphing.setFrameNo(frameNo);
 
@@ -289,6 +382,7 @@ public class MorphUI extends JFrame {
                     zBufferComputing.camera(camera);
 
                     zBufferComputing.draw();
+
                     BufferedImage image = zBufferComputing.image();
 
                     ImageIcon imageIcon = new ImageIcon(image);

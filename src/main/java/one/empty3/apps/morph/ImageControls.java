@@ -10,12 +10,15 @@ import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ImageControls implements Runnable {
     private final JPanel panelDisplay;
     private final BufferedImage image;
     private final StructureMatrix<Point3D> grid;
     private final JFrame jframe;
+    private final ITexture texture;
     boolean moving = false;
     boolean dropped = false;
     boolean clicked = false;
@@ -33,11 +36,12 @@ public class ImageControls implements Runnable {
 
     public ImageControls(JFrame jframe,
                          StructureMatrix<Point3D> grid, BufferedImage image,
-                         JPanel panelDisplay) {
+                         JPanel panelDisplay, ITexture texture) {
         this.jframe = jframe;
         this.grid = grid;
         this.image = image;
         this.panelDisplay = panelDisplay;
+        this.texture = texture;
         setRunning(true);
         panelDisplay.addMouseListener(new MouseListener() {
 
@@ -172,7 +176,7 @@ public class ImageControls implements Runnable {
         return running;
     }
 
-    private void setRunning(boolean isRunning) {
+    public void setRunning(boolean isRunning) {
         this.running = isRunning;
     }
 
@@ -208,11 +212,14 @@ public class ImageControls implements Runnable {
             int resY = 400;//imageRead1.getHeight();
 
 
-            ImageTexture imageTexture = new ImageTexture(new ECBufferedImage(image));
+        if(texture==null) {
+            Logger.getLogger(this.getClass().getSimpleName()).log(Level.SEVERE, "Error texture Movie or Image is null");
+            return;
+        }
 
-            Polygons polygons = new Polygons();
+        Polygons polygons = new Polygons();
             polygons.setCoefficients(grid);
-            polygons.texture(imageTexture);
+            polygons.texture(texture);
 
 
             scene = new Scene();

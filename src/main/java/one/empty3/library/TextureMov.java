@@ -103,7 +103,7 @@ public class TextureMov extends ITexture {
 
     @Override
     public void timeNext(long milli) {
-
+        nextFrame();
     }
 
     

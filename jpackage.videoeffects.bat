@@ -1,1 +1,5 @@
-jpackage -i build/libs/empty3-library-generic.jar -i target/lib-maven -n Video --main-class one.empty3.feature.ClassSchemaBuilder --main-jar videoeffect.jar
+set JAVA_HOME=C:\Program Files\Java\jdk-17\
+set PATH=%PATH;C:\Program Files\Java\jdk-17\bin
+jpackage --main-jar empty3-library-generic.jar -i build/libs -n VideoEffects --main-class one.empty3.feature.ClassSchemaBuilder
+jpackage --main-jar empty3-library-generic.jar -i build/libs -n MorphUI --main-class one.empty3.apps.MorphUI
+
