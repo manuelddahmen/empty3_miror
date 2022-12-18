@@ -4,9 +4,14 @@
 
 package one.empty3.apps.morph;
 
+import java.awt.event.*;
 import com.jgoodies.forms.factories.DefaultComponentFactory;
 import net.miginfocom.swing.MigLayout;
 import one.empty3.library.*;
+import org.jcodec.api.awt.AWTSequenceEncoder;
+import org.jcodec.common.io.FileChannelWrapper;
+import org.jcodec.common.io.NIOUtils;
+import org.jcodec.common.model.Rational;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -14,13 +19,13 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.filechooser.FileFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -35,8 +40,8 @@ public class MorphUI extends JFrame {
     private BufferedImage imageRead1;
     private BufferedImage imageRead2;
 
-    private StructureMatrix<Point3D> grid1 = new StructureMatrix<Point3D>(2, Point3D.class);
-    private StructureMatrix<Point3D> grid2 = new StructureMatrix<Point3D>(2, Point3D.class);
+    private final StructureMatrix<Point3D> grid1;
+    private final StructureMatrix<Point3D> grid2;
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables  @formatter:off
     // Generated using JFormDesigner non-commercial license
     private JMenuBar menuBar1;
@@ -45,6 +50,11 @@ public class MorphUI extends JFrame {
     private JTextField textFieldResX;
     private JLabel label8;
     private JTextField textFieldResY;
+    private JPanel panel3;
+    private JLabel labelFinalResX;
+    private JTextField textFieldFinalResX;
+    private JLabel labelFinalResY;
+    private JTextField textFieldFinalResY;
     private JButton button4;
     private JPanel panel1;
     private JPanel panel2;
@@ -53,8 +63,7 @@ public class MorphUI extends JFrame {
     private JTextField textFieldSeconds;
     private JLabel label3;
     private JTextField textFieldFps;
-    private JLabel label2;
-    private JTextField textField2;
+    private JButton button3;
     private JButton button1;
     private JButton button2;
     private JSlider slider1;
@@ -82,6 +91,8 @@ public class MorphUI extends JFrame {
     private String vid2;
     private VideoDecoder instance1;
     private VideoDecoder instance2;
+    private int finalResY;
+    private int finalResX;
 
     public MorphUI() {
 
@@ -90,12 +101,15 @@ public class MorphUI extends JFrame {
 
 //Ask for window decorations provided by the look and feel.
         JFrame.setDefaultLookAndFeelDecorated(true);
+        grid2 = new StructureMatrix<Point3D>(2, Point3D.class);
+        grid1 = new StructureMatrix<Point3D>(2, Point3D.class);
     }
 
 
     private void initGrids(StructureMatrix<Point3D> grid, BufferedImage imageRead, JPanel panel) {
-        int resX = panel.getMaximumSize().width;
-        int resY = panel.getMaximumSize().height;
+        grid.reset();
+        int resX = panel.getSize().width;
+        int resY = panel.getSize().height;
 
         try {
             if (imageRead != null) {
@@ -112,7 +126,6 @@ public class MorphUI extends JFrame {
             ex.printStackTrace();
         }
     }
-
     private void buttonLoadImage1(ActionEvent e) {
         boolean isLoaded = false;
         JFileChooser jFileChooser = new JFileChooser();
@@ -316,7 +329,7 @@ public class MorphUI extends JFrame {
     }
 
 
-    private void computeFrame(int frameNo) {
+    private BufferedImage computeFrame(int frameNo) {
         while (isComputing()) {
             try {
                 Thread.sleep(100);
@@ -324,6 +337,7 @@ public class MorphUI extends JFrame {
                 throw new RuntimeException(e);
             }
         }
+        BufferedImage image = null;
         try {
             int seconds = getSeconds();
             int fps = getFps();
@@ -352,8 +366,8 @@ public class MorphUI extends JFrame {
                             copy.setElem(transitionPoint(grid1.getElem(x, y), grid2.getElem(x, y), r), x, y);
                         }
 
-                    int resX = 400;//imageRead1.getWidth();
-                    int resY = 400;//imageRead1.getHeight();
+                    int resX = getFinalResX();//imageRead1.getWidth();
+                    int resY = getFinalResY();//imageRead1.getHeight();
 
 
                     Polygons polygons = new Polygons();
@@ -368,7 +382,7 @@ public class MorphUI extends JFrame {
                             resX / 2.).plus(Point3D.Y.mult(resY / 2.));
 
                     Camera camera = new Camera(Point3D.Z.mult(
-                            Math.max(resX, resY)).plus(plus), plus);
+                           - Math.max(resX, resY)).plus(plus), plus);
                     camera.declareProperties();
                     camera.calculerMatrice(Point3D.Y);
 
@@ -383,7 +397,7 @@ public class MorphUI extends JFrame {
 
                     zBufferComputing.draw();
 
-                    BufferedImage image = zBufferComputing.image();
+                    image = zBufferComputing.image();
 
                     ImageIcon imageIcon = new ImageIcon(image);
 
@@ -409,6 +423,7 @@ public class MorphUI extends JFrame {
             throw new RuntimeException(e);
         }
 
+        return image;
     }
 
     public int getFps() {
@@ -421,6 +436,66 @@ public class MorphUI extends JFrame {
 
     }
 
+    private void buttonSave(ActionEvent e) {
+
+        new Thread(() -> {
+            try {
+                FileChannelWrapper out = NIOUtils.writableFileChannel(new File("Video--"+UUID.randomUUID()).getAbsolutePath());
+                AWTSequenceEncoder encoder = new AWTSequenceEncoder(out, Rational.R(25, 1));
+                for (int frame = 0; frame < getFps() * getSeconds(); frame++) {
+                    Logger.getAnonymousLogger()
+                            .log(Level.FINE, "FrameNo" + frame);
+                    BufferedImage i = computeFrame(frame);
+                    encoder.encodeImage(i);
+                }
+                encoder.finish();
+                out.close();
+            } catch (FileNotFoundException ex) {
+                throw new RuntimeException(ex);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        }).start();
+    }
+
+    public boolean isComputing() {
+        return computing;
+    }
+
+    public void setComputing(boolean computing) {
+        this.computing = computing;
+    }
+
+    public int getFinalResY() {
+        return Integer.parseInt(textFieldFinalResY.getText());
+    }
+
+    public void setFinalResY(int finalResY) {
+        textFieldFinalResY.setText(""+finalResY);
+    }
+
+    public int getFinalResX() {
+        return Integer.parseInt(textFieldFinalResX.getText());
+    }
+
+    public void setFinalResX(int finalResX) {
+        textFieldFinalResX.setText(""+finalResX);
+    }
+
+    private void panel1ComponentResized(ComponentEvent e) {
+        if(grid1!=null && imageRead1!=null && panel1!=null)
+        initGrids(grid1, imageRead1, panel1);
+        if(grid2!=null && imageRead2!=null && panel2!=null)
+            initGrids(grid2, imageRead2, panel2);
+    }
+
+    private void panel2ComponentResized(ComponentEvent e) {
+        if(grid1!=null && imageRead1!=null && panel1!=null)
+            initGrids(grid1, imageRead1, panel1);
+        if(grid2!=null && imageRead2!=null && panel2!=null)
+            initGrids(grid2, imageRead2, panel2);
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
         // Generated using JFormDesigner non-commercial license
@@ -431,6 +506,11 @@ public class MorphUI extends JFrame {
         textFieldResX = new JTextField();
         label8 = new JLabel();
         textFieldResY = new JTextField();
+        panel3 = new JPanel();
+        labelFinalResX = new JLabel();
+        textFieldFinalResX = new JTextField();
+        labelFinalResY = new JLabel();
+        textFieldFinalResY = new JTextField();
         button4 = new JButton();
         panel1 = new JPanel();
         panel2 = new JPanel();
@@ -439,8 +519,7 @@ public class MorphUI extends JFrame {
         textFieldSeconds = new JTextField();
         label3 = new JLabel();
         textFieldFps = new JTextField();
-        label2 = new JLabel();
-        textField2 = new JTextField();
+        button3 = new JButton();
         button1 = new JButton();
         button2 = new JButton();
         slider1 = new JSlider();
@@ -474,6 +553,7 @@ public class MorphUI extends JFrame {
             "[]" +
             "[]" +
             "[]" +
+            "[]" +
             "[]"));
         setJMenuBar(menuBar1);
 
@@ -482,6 +562,7 @@ public class MorphUI extends JFrame {
             panel5.setLayout(new MigLayout(
                 "hidemode 3",
                 // columns
+                "[fill]" +
                 "[fill]" +
                 "[fill]" +
                 "[fill]" +
@@ -504,6 +585,38 @@ public class MorphUI extends JFrame {
             //---- textFieldResY ----
             textFieldResY.setText("4");
             panel5.add(textFieldResY, "cell 3 0");
+
+            //======== panel3 ========
+            {
+                panel3.setLayout(new MigLayout(
+                    "hidemode 3",
+                    // columns
+                    "[fill]" +
+                    "[fill]" +
+                    "[fill]" +
+                    "[fill]",
+                    // rows
+                    "[]" +
+                    "[]" +
+                    "[]"));
+
+                //---- labelFinalResX ----
+                labelFinalResX.setText("Final Res X");
+                panel3.add(labelFinalResX, "cell 0 1");
+
+                //---- textFieldFinalResX ----
+                textFieldFinalResX.setText("400");
+                panel3.add(textFieldFinalResX, "cell 1 1");
+
+                //---- labelFinalResY ----
+                labelFinalResY.setText("Final Res Y");
+                panel3.add(labelFinalResY, "cell 2 1");
+
+                //---- textFieldFinalResY ----
+                textFieldFinalResY.setText("400");
+                panel3.add(textFieldFinalResY, "cell 3 1");
+            }
+            panel5.add(panel3, "cell 4 0");
         }
         contentPane.add(panel5, "cell 0 0 2 1");
 
@@ -516,6 +629,12 @@ public class MorphUI extends JFrame {
         {
             panel1.setMinimumSize(new Dimension(400, 400));
             panel1.setMaximumSize(new Dimension(400, 400));
+            panel1.addComponentListener(new ComponentAdapter() {
+                @Override
+                public void componentResized(ComponentEvent e) {
+                    panel1ComponentResized(e);
+                }
+            });
             panel1.setLayout(new MigLayout(
                 "hidemode 3",
                 // columns
@@ -532,6 +651,12 @@ public class MorphUI extends JFrame {
         {
             panel2.setMaximumSize(new Dimension(400, 400));
             panel2.setMinimumSize(new Dimension(400, 400));
+            panel2.addComponentListener(new ComponentAdapter() {
+                @Override
+                public void componentResized(ComponentEvent e) {
+                    panel2ComponentResized(e);
+                }
+            });
             panel2.setLayout(new MigLayout(
                 "hidemode 3",
                 // columns
@@ -576,10 +701,10 @@ public class MorphUI extends JFrame {
         textFieldFps.setText("25");
         contentPane.add(textFieldFps, "cell 4 2");
 
-        //---- label2 ----
-        label2.setText("text");
-        contentPane.add(label2, "cell 3 3");
-        contentPane.add(textField2, "cell 4 3");
+        //---- button3 ----
+        button3.setText("Save as");
+        button3.addActionListener(e -> buttonSave(e));
+        contentPane.add(button3, "cell 3 3 2 1");
 
         //---- button1 ----
         button1.setText("Load 1");
@@ -653,13 +778,5 @@ public class MorphUI extends JFrame {
         pack();
         setLocationRelativeTo(getOwner());
         // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
-    }
-
-    public boolean isComputing() {
-        return computing;
-    }
-
-    public void setComputing(boolean computing) {
-        this.computing = computing;
     }
 }

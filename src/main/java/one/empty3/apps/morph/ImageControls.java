@@ -25,7 +25,7 @@ public class ImageControls implements Runnable {
     boolean drags = false;
     private boolean isSelected;
     private boolean isPressed;
-    private int RADIUS = 5;
+    private double RADIUS = 5;
     private Point3D selectedPoint;
     private int xGrid;
     private int yGrid;
@@ -190,8 +190,8 @@ public class ImageControls implements Runnable {
     }
 
     public Point3D convertScreenCordToSceneCord(Point3D pScreen) {
-        double x = pScreen.getX() / panelDisplay.getWidth() * image.getWidth();
-        double y = pScreen.getY() / panelDisplay.getHeight() * image.getHeight();
+        double x = pScreen.getX() ;/// panelDisplay.getWidth() * image.getWidth();
+        double y = pScreen.getY() ;/// panelDisplay.getHeight() * image.getHeight();
 
         return new Point3D(x, y, 0d);
 
@@ -231,7 +231,7 @@ public class ImageControls implements Runnable {
                     resX / 2.).plus(Point3D.Y.mult(resY / 2.));
 
             Camera camera = new Camera(Point3D.Z.mult(
-                    Math.max(resX, resY)).plus(plus), plus);
+                    -Math.max(resX, resY)).plus(plus), plus);
             camera.declareProperties();
             camera.calculerMatrice(Point3D.Y);
 
