@@ -33,6 +33,8 @@ import java.util.logging.Logger;
  * @author Manuel Dahmen
  */
 public class MorphUI extends JFrame {
+    private final StructureMatrix<Point3D> gridUV1;
+    private final StructureMatrix<Point3D> gridUV2;
     private boolean computing = false;
     private File currentDirectory;
     private File image1;
@@ -67,8 +69,19 @@ public class MorphUI extends JFrame {
     private JButton button1;
     private JButton button2;
     private JSlider slider1;
-    private JRadioButton radioButtonActive1;
-    private JRadioButton radioButtonActive2;
+    private JPanel panel6;
+    private JLabel labelX;
+    private JTextField textFieldX;
+    private JLabel labelY;
+    private JTextField textFieldY;
+    private JButton button7;
+    private JButton buttonLoadPoint;
+    private JLabel labelU;
+    private JTextField textFieldU;
+    private JLabel labelV;
+    private JTextField textFieldV;
+    private JButton button8;
+    private JButton buttonSavePoint;
     private JPanel panel4;
     private JButton button5;
     private JButton button6;
@@ -103,11 +116,15 @@ public class MorphUI extends JFrame {
         JFrame.setDefaultLookAndFeelDecorated(true);
         grid2 = new StructureMatrix<Point3D>(2, Point3D.class);
         grid1 = new StructureMatrix<Point3D>(2, Point3D.class);
+        gridUV2 = new StructureMatrix<Point3D>(2, Point3D.class);
+        gridUV1 = new StructureMatrix<Point3D>(2, Point3D.class);
     }
 
 
-    private void initGrids(StructureMatrix<Point3D> grid, BufferedImage imageRead, JPanel panel) {
+    private void initGrids(StructureMatrix<Point3D> grid, StructureMatrix<Point3D> gridUV,
+                           BufferedImage imageRead, JPanel panel) {
         grid.reset();
+        gridUV.reset();
         int resX = panel.getSize().width;
         int resY = panel.getSize().height;
 
@@ -118,6 +135,7 @@ public class MorphUI extends JFrame {
                 for (int i = 0; i <= i1; i++)
                     for (int j = 0; j <= j1; j++) {
                         grid.setElem(Point3D.n(1.0 * i / i1 * resX, 1.0 * j / j1 * resY, 0d), i, j);
+                        gridUV.setElem(Point3D.n(1.0 * i / i1 * resX, 1.0 * j / j1 * resY, 0d), i, j);
                     }
             }
         } catch (NumberFormatException ex) {
@@ -185,7 +203,7 @@ public class MorphUI extends JFrame {
             }
 
         }
-        initGrids(grid1, imageRead1, panel1);
+        initGrids(grid1, gridUV1, imageRead1, panel1);
         if (isLoaded) {
             if(imageControl1!=null) {
                 imageControl1.setDisplaying(false);
@@ -256,7 +274,7 @@ public class MorphUI extends JFrame {
                 throw new RuntimeException(ex);
             }
         }
-        initGrids(grid2, imageRead2, panel2);
+        initGrids(grid2, gridUV2, imageRead2, panel2);
         if (isLoaded) {
             if(imageControl2!=null) {
                 imageControl2.setDisplaying(false);
@@ -484,16 +502,24 @@ public class MorphUI extends JFrame {
 
     private void panel1ComponentResized(ComponentEvent e) {
         if(grid1!=null && imageRead1!=null && panel1!=null)
-        initGrids(grid1, imageRead1, panel1);
+        initGrids(grid1, gridUV1, imageRead1, panel1);
         if(grid2!=null && imageRead2!=null && panel2!=null)
-            initGrids(grid2, imageRead2, panel2);
+            initGrids(grid2, gridUV2, imageRead2, panel2);
     }
 
     private void panel2ComponentResized(ComponentEvent e) {
         if(grid1!=null && imageRead1!=null && panel1!=null)
-            initGrids(grid1, imageRead1, panel1);
+            initGrids(grid1, gridUV1, imageRead1, panel1);
         if(grid2!=null && imageRead2!=null && panel2!=null)
-            initGrids(grid2, imageRead2, panel2);
+            initGrids(grid2, gridUV2, imageRead2, panel2);
+    }
+
+    private void loadPoint(ActionEvent e) {
+        // TODO add your code here
+    }
+
+    private void savePoint(ActionEvent e) {
+        // TODO add your code here
     }
 
     private void initComponents() {
@@ -523,8 +549,19 @@ public class MorphUI extends JFrame {
         button1 = new JButton();
         button2 = new JButton();
         slider1 = new JSlider();
-        radioButtonActive1 = new JRadioButton();
-        radioButtonActive2 = new JRadioButton();
+        panel6 = new JPanel();
+        labelX = new JLabel();
+        textFieldX = new JTextField();
+        labelY = new JLabel();
+        textFieldY = new JTextField();
+        button7 = new JButton();
+        buttonLoadPoint = new JButton();
+        labelU = new JLabel();
+        textFieldU = new JTextField();
+        labelV = new JLabel();
+        textFieldV = new JTextField();
+        button8 = new JButton();
+        buttonSavePoint = new JButton();
         panel4 = new JPanel();
         button5 = new JButton();
         button6 = new JButton();
@@ -720,13 +757,61 @@ public class MorphUI extends JFrame {
         slider1.addChangeListener(e -> slider1StateChanged(e));
         contentPane.add(slider1, "cell 2 4");
 
-        //---- radioButtonActive1 ----
-        radioButtonActive1.setText("Active");
-        contentPane.add(radioButtonActive1, "cell 0 5");
+        //======== panel6 ========
+        {
+            panel6.setLayout(new MigLayout(
+                "fill,hidemode 3",
+                // columns
+                "[fill]" +
+                "[fill]" +
+                "[fill]" +
+                "[fill]" +
+                "[fill]" +
+                "[fill]",
+                // rows
+                "[]" +
+                "[]" +
+                "[]"));
 
-        //---- radioButtonActive2 ----
-        radioButtonActive2.setText("Active");
-        contentPane.add(radioButtonActive2, "cell 1 5");
+            //---- labelX ----
+            labelX.setText("X");
+            panel6.add(labelX, "cell 0 0");
+            panel6.add(textFieldX, "cell 1 0");
+
+            //---- labelY ----
+            labelY.setText("Y");
+            panel6.add(labelY, "cell 2 0");
+            panel6.add(textFieldY, "cell 3 0");
+
+            //---- button7 ----
+            button7.setText("X");
+            panel6.add(button7, "cell 4 0");
+
+            //---- buttonLoadPoint ----
+            buttonLoadPoint.setText("Load point");
+            buttonLoadPoint.addActionListener(e -> loadPoint(e));
+            panel6.add(buttonLoadPoint, "cell 5 0");
+
+            //---- labelU ----
+            labelU.setText("U");
+            panel6.add(labelU, "cell 0 1");
+            panel6.add(textFieldU, "cell 1 1");
+
+            //---- labelV ----
+            labelV.setText("V");
+            panel6.add(labelV, "cell 2 1");
+            panel6.add(textFieldV, "cell 3 1");
+
+            //---- button8 ----
+            button8.setText("Y");
+            panel6.add(button8, "cell 4 1");
+
+            //---- buttonSavePoint ----
+            buttonSavePoint.setText("Save point");
+            buttonSavePoint.addActionListener(e -> savePoint(e));
+            panel6.add(buttonSavePoint, "cell 5 1");
+        }
+        contentPane.add(panel6, "cell 0 5 2 1");
 
         //======== panel4 ========
         {

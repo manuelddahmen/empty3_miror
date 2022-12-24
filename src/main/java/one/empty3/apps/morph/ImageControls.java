@@ -32,7 +32,9 @@ public class ImageControls implements Runnable {
     private boolean running = false;
     private Scene scene;
     RepresentableConteneur rc;
+    private Camera camera;
     private boolean displaying;
+    private ZBuffer zBuffer;
 
     public ImageControls(JFrame jframe,
                          StructureMatrix<Point3D> grid, BufferedImage image,
@@ -143,8 +145,13 @@ public class ImageControls implements Runnable {
 
     private boolean selectPoint(int x, int y) {
         selectedPoint = null;
-        double minDist = 1000d;
-        Point3D point3D = convertScreenCordToSceneCord(new Point3D((double) x, (double) y, 0d));
+        double minDist = Double.MAX_VALUE;
+        Point3D point3D;
+        if((camera == null) || (zBuffer == null)) {
+            point3D = convertScreenCordToSceneCord(new Point3D((double) x, (double) y, 0d));
+        } else {
+            point3D = convertScreenCordToSceneCord(new Point3D((double) x, (double) y, 0d));
+        }
         for (int i = 0; i < grid.data2d.size(); i++) {
             for (int j = 0; j < grid.data2d.get(i).size(); j++) {
                 Point3D point3D1 = grid.data2d.get(i).get(j);
@@ -230,12 +237,13 @@ public class ImageControls implements Runnable {
             Point3D plus = Point3D.X.mult(
                     resX / 2.).plus(Point3D.Y.mult(resY / 2.));
 
-            Camera camera = new Camera(Point3D.Z.mult(
+            camera = new Camera(Point3D.Z.mult(
                     -Math.max(resX, resY)).plus(plus), plus);
             camera.declareProperties();
             camera.calculerMatrice(Point3D.Y);
 
-            ZBufferImpl zBuffer = new ZBufferImpl(resX, resY);
+            zBuffer = new ZBufferImpl(resX, resY);
+
             zBuffer.scene(scene);
             scene.cameraActive(camera);
 
@@ -265,7 +273,11 @@ public class ImageControls implements Runnable {
                 Sphere sphere = new Sphere(new Axe(point3D.plus(Point3D.Y.mult(RADIUS / 2.)),
                         point3D.moins(Point3D.Y.mult(RADIUS / 2.))),
                         RADIUS);
-                sphere.texture(new ColorTexture(Color.BLACK));
+                if(point3D.equals(selectedPoint)) {
+                    sphere.texture(new ColorTexture(Color.RED));
+                } else {
+                    sphere.texture(new ColorTexture(Color.BLACK));
+                }
                 sphere.setIncrU(0.4);
                 sphere.setIncrV(0.4);
                 rc.add(sphere);
@@ -281,4 +293,5 @@ public class ImageControls implements Runnable {
     public void setDisplaying(boolean displaying) {
         this.displaying = displaying;
     }
+
 }
