@@ -247,7 +247,7 @@ public class ImageControls implements Runnable {
 
         scene = new Scene();
 
-
+        scene.add(polygons);
         addToScene(scene);
 
 
@@ -257,29 +257,25 @@ public class ImageControls implements Runnable {
         zBuffer.scene(scene);
         scene.cameraActive(camera);
 
+        zBuffer.draw(scene);
+
         //drawSceneOnScreen(scene);
 
+
+        //2
         scene.add(polygons);
 
         long time0 = 10000;
         if(((time * 1000) < 1) || (loopIndex % 20==0)) {
             time0 = System.currentTimeMillis();
-            zBuffer.draw(scene);
+            //zBuffer.draw(scene);
         }
         long timeAfter = System.currentTimeMillis();
 
         time = (int) (timeAfter - time0);
 
-        zBuffer = new ZBufferImpl(resX, resY);
-
         zBuffer.scene(scene);
         scene.cameraActive(camera);
-
-
-        scene = new Scene();
-        addToScene(scene);
-        zBuffer.draw(scene);
-
 
         drawSceneOnScreen(scene);
 

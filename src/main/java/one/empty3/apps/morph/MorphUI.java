@@ -396,6 +396,8 @@ public class MorphUI extends JFrame {
                     polygons.setCoefficients(copy);
                     polygons.texture(textureMorphing);
 
+
+
                     Scene scene = new Scene();
                     scene.add(polygons);
 
