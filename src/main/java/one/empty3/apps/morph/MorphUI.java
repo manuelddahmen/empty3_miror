@@ -205,17 +205,17 @@ public class MorphUI extends JFrame {
         }
         initGrids(grid1, gridUV1, imageRead1, panel1);
         if (isLoaded) {
-            if(imageControl1!=null) {
+            if (imageControl1 != null) {
                 imageControl1.setDisplaying(false);
                 imageControl1.setRunning(false);
             }
-            imageControl1 = new ImageControls(this, grid1,gridUV1, imageRead1, panel1, text1);
-            new Thread(imageControl1).start();
-
         }
-
+        imageControl1 = new ImageControls(this, grid1,gridUV1, imageRead1, panel1, text1);
+        //imageControl1.initUv(gridUV1);
+        new Thread(imageControl1).start();
 
     }
+
 
     private void buttonLoadImage2(ActionEvent e) {
         boolean isLoaded = false;
@@ -276,14 +276,15 @@ public class MorphUI extends JFrame {
         }
         initGrids(grid2, gridUV2, imageRead2, panel2);
         if (isLoaded) {
-            if(imageControl2!=null) {
+            if (imageControl2 != null) {
                 imageControl2.setDisplaying(false);
                 imageControl2.setRunning(false);
             }
-            initUv(gridUV2);
-            imageControl2 = new ImageControls(this, grid2,gridUV2, imageRead2, panel2, text2);
-            new Thread(imageControl2).start();
         }
+        imageControl2 = new ImageControls(this, grid2,gridUV2, imageRead2, panel2, text2);
+        //imageControl2.initUv(gridUV2);
+        new Thread(imageControl2).start();
+
 
     }
 

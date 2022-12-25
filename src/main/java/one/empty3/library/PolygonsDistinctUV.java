@@ -39,14 +39,14 @@ public class PolygonsDistinctUV extends Polygons {
                     coefficients.getElem(indexU0, indexV0), coefficients.getElem(indexU1, indexV0),
                     coefficients.getElem(indexU1, indexV1), coefficients.getElem(indexU0, indexV1)
             };
-            //Sum ==>u0
+            /*//Sum ==>u0
             //Sum ==>u1
             //Sum ==>v0
             //Sum ==>v1
             Point3D[] uvElem = new Point3D[] {
                     uvMap.getElem(indexU0, indexV0), uvMap.getElem(indexU1, indexV0),
                     uvMap.getElem(indexU1, indexV1), uvMap.getElem(indexU0, indexV1)
-            };
+            };*/
             double U = u * (coefficients.getData2d().get(0).size()) - indexU0;
             double V = v * (coefficients.getData2d().size()) - indexV0;
             assert U>=0 && U<=1 && V>=0 && V<=1;
@@ -54,12 +54,6 @@ public class PolygonsDistinctUV extends Polygons {
             Point3D pUv1 = vectorPointPercent(points[3], points[2], U);
             Point3D pU0v = vectorPointPercent(points[3], points[0], V);
             Point3D pU1v = vectorPointPercent(points[3], points[2], V);
-
-            Point3D uvUv0 = vectorPointPercent(uvElem[0], uvElem[1], U);
-            Point3D uvUv1 = vectorPointPercent(uvElem[3], uvElem[2], U);
-            Point3D uvU0v = vectorPointPercent(uvElem[3], uvElem[0], V);
-            Point3D uvU1v = vectorPointPercent(uvElem[3], uvElem[2], V);
-
 
             Point3D point3D = vectorPointPercent(pUv0, pUv1, V);// Discutable
             return point3D;
@@ -74,8 +68,7 @@ public class PolygonsDistinctUV extends Polygons {
 
     @Override
     public void texture(ITexture t) {
-        this.texture2 = t;
-        texture = new TextureOp2D() {
+        texture = new ITexture() {
             @Override
             public MatrixPropertiesObject copy() throws CopyRepresentableError, IllegalAccessException, InstantiationException {
                 return null;
@@ -84,57 +77,49 @@ public class PolygonsDistinctUV extends Polygons {
             @Override
             public int getColorAt(double u, double v) {
                 try {
-                    int indexU0 = (int) (u * coefficients.getData2d().get(0).size());
-                    int indexV0 = (int) (v * coefficients.getData2d().size());
-                    if (indexU0 > coefficients.getData2d().get(0).size() - 1) {
-                        indexU0 = coefficients.getData2d().get(0).size() - 1;
+
+                    int indexU0 = (int) (u * uvMap.getData2d().get(0).size());
+                    int indexV0 = (int) (v * uvMap.getData2d().size());
+                    if (indexU0 > uvMap.getData2d().get(0).size() - 1) {
+                        indexU0 = uvMap.getData2d().get(0).size() - 1;
                     }
-                    if (indexV0 > coefficients.getData2d().size() - 1) {
-                        indexV0 = coefficients.getData2d().size() - 1;
+                    if (indexV0 > uvMap.getData2d().size() - 1) {
+                        indexV0 = uvMap.getData2d().size() - 1;
                     }
                     int indexU1 = (int) (indexU0 + 1.);
                     int indexV1 = (int) (indexV0 + 1.);
-                    if (indexU1 > coefficients.getData2d().get(0).size() - 1) {
-                        indexU1 = coefficients.getData2d().get(0).size() - 1;
+                    if (indexU1 > uvMap.getData2d().get(0).size() - 1) {
+                        indexU1 = uvMap.getData2d().get(0).size() - 1;
                     }
-                    if (indexV1 > coefficients.getData2d().size() - 1) {
-                        indexV1 = coefficients.getData2d().size() - 1;
+                    if (indexV1 > uvMap.getData2d().size() - 1) {
+                        indexV1 = uvMap.getData2d().size() - 1;
                     }
-
-
-
-                    Point3D[] points = new Point3D[]{
-                            coefficients.getElem(indexU0, indexV0), coefficients.getElem(indexU1, indexV0),
-                            coefficients.getElem(indexU1, indexV1), coefficients.getElem(indexU0, indexV1)
-                    };
-                    //Sum ==>u0
-                    //Sum ==>u1
-                    //Sum ==>v0
-                    //Sum ==>v1
-                    Point3D[] uvElem = new Point3D[]{
+                    Point3D[] uvQuad = new Point3D[]{
                             uvMap.getElem(indexU0, indexV0), uvMap.getElem(indexU1, indexV0),
                             uvMap.getElem(indexU1, indexV1), uvMap.getElem(indexU0, indexV1)
                     };
-                    double U = u * (coefficients.getData2d().get(0).size()) - indexU0;
-                    double V = v * (coefficients.getData2d().size()) - indexV0;
-                    assert U >= 0 && U <= 1 && V >= 0 && V <= 1;
-                    Point3D pUv0 = vectorPointPercent(points[0], points[1], U);
-                    Point3D pUv1 = vectorPointPercent(points[3], points[2], U);
-                    Point3D pU0v = vectorPointPercent(points[3], points[0], V);
-                    Point3D pU1v = vectorPointPercent(points[3], points[2], V);
+            /*//Sum ==>u0
+            //Sum ==>u1
+            //Sum ==>v0
+            //Sum ==>v1
+            Point3D[] uvElem = new Point3D[] {
+                    uvMap.getElem(indexU0, indexV0), uvMap.getElem(indexU1, indexV0),
+                    uvMap.getElem(indexU1, indexV1), uvMap.getElem(indexU0, indexV1)
+            };*/
+                    double U = u * (uvMap.getData2d().get(0).size()) - indexU0;
+                    double V = v * (uvMap.getData2d().size()) - indexV0;
+                    assert U>=0 && U<=1 && V>=0 && V<=1;
+                    Point3D pUv0 = vectorPointPercent(uvQuad[0], uvQuad[1], U);
+                    Point3D pUv1 = vectorPointPercent(uvQuad[3], uvQuad[2], U);
+                    Point3D pU0v = vectorPointPercent(uvQuad[3], uvQuad[0], V);
+                    Point3D pU1v = vectorPointPercent(uvQuad[3], uvQuad[2], V);
 
-                    Point3D uvUv0 = vectorPointPercent(uvElem[0], uvElem[1], U);
-                    Point3D uvUv1 = vectorPointPercent(uvElem[3], uvElem[2], U);
-                    Point3D uvU0v = vectorPointPercent(uvElem[3], uvElem[0], V);
-                    Point3D uvU1v = vectorPointPercent(uvElem[3], uvElem[2], V);
-
-
-                    Point3D point3D = vectorPointPercent(pUv0, pUv1, V);// Discutable
-                    return texture2.getColorAt(point3D.getX(), point3D.getY());
+                    Point3D uv1 = vectorPointPercent(pUv0, pUv1, V);
+                    return texture2.getColorAt(uv1.getX(), uv1.getY());
                 } catch(Exception ex) {
                     ex.printStackTrace();
                 }
-                return 0;
+                throw new UnsupportedOperationException("ex: should have a point color int ");
             }
         };
     }

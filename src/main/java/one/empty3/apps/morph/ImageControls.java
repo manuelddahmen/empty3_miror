@@ -90,18 +90,6 @@ public class ImageControls implements Runnable {
         });
     }
 
-    private void initUv(StructureMatrix<Point3D> gridUv2) {
-        gridUv.reset();
-        for (int i = 0; i < gridUv.getData2d().size(); i++) {
-            int sizeI = gridUv.getData2d().size();
-            for (int j = 0; j < gridUv.getData2d().get(j).size(); j++) {
-                int sizeJ = gridUv.getData2d().get(i).size();
-
-                gridUv.setElem(new Point3D(1.0 * i / sizeI,
-                        1.0 * j / sizeJ, 0.0), i, j);
-            }
-        }
-    }
 
     public void setScene(Scene scene) {
         this.scene = scene;
@@ -239,19 +227,12 @@ public class ImageControls implements Runnable {
 
         PolygonsDistinctUV polygons = new PolygonsDistinctUV();
         polygons.setCoefficients(grid);
-        polygons.texture(texture);
-        try {
-            polygons.setUvMap(grid.copy());
-
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        } catch (CopyRepresentableError e) {
-            throw new RuntimeException(e);
-        } catch (InstantiationException e) {
-            throw new RuntimeException(e);
-        }
+        polygons.setUvMap(gridUv);
+        polygons.texture(null);
+        polygons.setTexture2(texture);
 
         scene = new Scene();
+
         scene.add(polygons);
 
         addToScene(scene);
