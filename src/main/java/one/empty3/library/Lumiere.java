@@ -41,6 +41,16 @@ public abstract class Lumiere  extends Representable{
    
    protected double S=0.5;
 
+    public static Color getColor(int colorAt) {
+        int [] c = new int[3];
+        int res = 0xFF000000;
+        for(int i=0 ;i<3;i++) {
+            c[i] = ((int)(float)(colorAt*0xff))<<((2-i)*8);
+            res += c[i];
+        }
+        return new Color(c[0], c[1], c[2]);
+    }
+
     public abstract int getCouleur(int base, Point3D p, Point3D n);
     public int getLa() {return La.getRGB();}
     public int getLs() {return Ls.getRGB();}

@@ -209,7 +209,7 @@ public class MorphUI extends JFrame {
                 imageControl1.setDisplaying(false);
                 imageControl1.setRunning(false);
             }
-            imageControl1 = new ImageControls(this, grid1, imageRead1, panel1, text1);
+            imageControl1 = new ImageControls(this, grid1,gridUV1, imageRead1, panel1, text1);
             new Thread(imageControl1).start();
 
         }
@@ -280,11 +280,14 @@ public class MorphUI extends JFrame {
                 imageControl2.setDisplaying(false);
                 imageControl2.setRunning(false);
             }
-            imageControl2 = new ImageControls(this, grid2, imageRead2, panel2, text2);
+            initUv(gridUV2);
+            imageControl2 = new ImageControls(this, grid2,gridUV2, imageRead2, panel2, text2);
             new Thread(imageControl2).start();
         }
 
     }
+
+
 
     private void initialization() {
         if (imageRead1 != null)

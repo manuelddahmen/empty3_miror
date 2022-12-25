@@ -37,6 +37,10 @@ public class ColorTexture extends ITexture {
         }
     }
 
+    public ColorTexture(int colorAt) {
+        this(Lumiere.getColor(colorAt));
+    }
+
     public Color color() {
         return color.getElem();
     }

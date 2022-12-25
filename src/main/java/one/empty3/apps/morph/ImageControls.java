@@ -8,8 +8,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
-import java.util.List;
-import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -23,6 +21,8 @@ public class ImageControls implements Runnable {
     boolean dropped = false;
     boolean clicked = false;
     boolean drags = false;
+    RepresentableConteneur rc;
+    private StructureMatrix<Point3D> gridUv;
     private boolean isSelected;
     private boolean isPressed;
     private double RADIUS = 5;
@@ -31,16 +31,16 @@ public class ImageControls implements Runnable {
     private int yGrid;
     private boolean running = false;
     private Scene scene;
-    RepresentableConteneur rc;
     private Camera camera;
     private boolean displaying;
     private ZBuffer zBuffer;
 
     public ImageControls(JFrame jframe,
-                         StructureMatrix<Point3D> grid, BufferedImage image,
+                         StructureMatrix<Point3D> grid, StructureMatrix<Point3D> gridUv, BufferedImage image,
                          JPanel panelDisplay, ITexture texture) {
         this.jframe = jframe;
         this.grid = grid;
+        this.gridUv = gridUv;
         this.image = image;
         this.panelDisplay = panelDisplay;
         this.texture = texture;
@@ -88,6 +88,19 @@ public class ImageControls implements Runnable {
             public void mouseMoved(MouseEvent e) {
             }
         });
+    }
+
+    private void initUv(StructureMatrix<Point3D> gridUv2) {
+        gridUv.reset();
+        for (int i = 0; i < gridUv.getData2d().size(); i++) {
+            int sizeI = gridUv.getData2d().size();
+            for (int j = 0; j < gridUv.getData2d().get(j).size(); j++) {
+                int sizeJ = gridUv.getData2d().get(i).size();
+
+                gridUv.setElem(new Point3D(1.0 * i / sizeI,
+                        1.0 * j / sizeJ, 0.0), i, j);
+            }
+        }
     }
 
     public void setScene(Scene scene) {
@@ -147,7 +160,7 @@ public class ImageControls implements Runnable {
         selectedPoint = null;
         double minDist = Double.MAX_VALUE;
         Point3D point3D;
-        if((camera == null) || (zBuffer == null)) {
+        if ((camera == null) || (zBuffer == null)) {
             point3D = convertScreenCordToSceneCord(new Point3D((double) x, (double) y, 0d));
         } else {
             point3D = convertScreenCordToSceneCord(new Point3D((double) x, (double) y, 0d));
@@ -197,72 +210,81 @@ public class ImageControls implements Runnable {
     }
 
     public Point3D convertScreenCordToSceneCord(Point3D pScreen) {
-        double x = pScreen.getX() ;/// panelDisplay.getWidth() * image.getWidth();
-        double y = pScreen.getY() ;/// panelDisplay.getHeight() * image.getHeight();
+        double x = pScreen.getX();/// panelDisplay.getWidth() * image.getWidth();
+        double y = pScreen.getY();/// panelDisplay.getHeight() * image.getHeight();
 
         return new Point3D(x, y, 0d);
 
     }
 
     private void display() {
-            while(isDisplaying()) {
-                try {
-                    Thread.sleep(80);
-                    // Temps d'attente max? Tuer thread.
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
+        while (isDisplaying()) {
+            try {
+                Thread.sleep(80);
+                // Temps d'attente max? Tuer thread.
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
             }
-            displaying = true;
+        }
+        displaying = true;
 
-            int resX = 400;//imageRead1.getWidth();
-            int resY = 400;//imageRead1.getHeight();
+        int resX = 400;//imageRead1.getWidth();
+        int resY = 400;//imageRead1.getHeight();
 
 
-        if(texture==null) {
+        if (texture == null) {
             Logger.getLogger(this.getClass().getSimpleName()).log(Level.SEVERE, "Error texture Movie or Image is null");
             return;
         }
 
-        Polygons polygons = new Polygons();
-            polygons.setCoefficients(grid);
-            polygons.texture(texture);
+        PolygonsDistinctUV polygons = new PolygonsDistinctUV();
+        polygons.setCoefficients(grid);
+        polygons.texture(texture);
+        try {
+            polygons.setUvMap(grid.copy());
 
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        } catch (CopyRepresentableError e) {
+            throw new RuntimeException(e);
+        } catch (InstantiationException e) {
+            throw new RuntimeException(e);
+        }
 
-            scene = new Scene();
-            scene.add(polygons);
+        scene = new Scene();
+        scene.add(polygons);
 
-            addToScene(scene);
+        addToScene(scene);
 
-            Point3D plus = Point3D.X.mult(
-                    resX / 2.).plus(Point3D.Y.mult(resY / 2.));
+        Point3D plus = Point3D.X.mult(
+                resX / 2.).plus(Point3D.Y.mult(resY / 2.));
 
-            camera = new Camera(Point3D.Z.mult(
-                    -Math.max(resX, resY)).plus(plus), plus);
-            camera.declareProperties();
-            camera.calculerMatrice(Point3D.Y);
+        camera = new Camera(Point3D.Z.mult(
+                -Math.max(resX, resY)).plus(plus), plus);
+        camera.declareProperties();
+        camera.calculerMatrice(Point3D.Y);
 
-            zBuffer = new ZBufferImpl(resX, resY);
+        zBuffer = new ZBufferImpl(resX, resY);
 
-            zBuffer.scene(scene);
-            scene.cameraActive(camera);
+        zBuffer.scene(scene);
+        scene.cameraActive(camera);
 
-            zBuffer.draw();
+        zBuffer.draw();
 
-            BufferedImage image = zBuffer.image();
+        BufferedImage image = zBuffer.image();
 
-            ImageIcon imageIcon = new ImageIcon(image);
+        ImageIcon imageIcon = new ImageIcon(image);
 
-            JLabel jLabelResult = new JLabel(imageIcon);
+        JLabel jLabelResult = new JLabel(imageIcon);
 
-            if (panelDisplay.getComponents().length > 0) {
-                panelDisplay.remove(0);
-            }
-            panelDisplay.add(jLabelResult);
+        if (panelDisplay.getComponents().length > 0) {
+            panelDisplay.remove(0);
+        }
+        panelDisplay.add(jLabelResult);
 
-            jframe.pack();
+        jframe.pack();
 
-            displaying = false;
+        displaying = false;
     }
 
     public void addToScene(Scene scene) {
@@ -273,7 +295,7 @@ public class ImageControls implements Runnable {
                 Sphere sphere = new Sphere(new Axe(point3D.plus(Point3D.Y.mult(RADIUS / 2.)),
                         point3D.moins(Point3D.Y.mult(RADIUS / 2.))),
                         RADIUS);
-                if(point3D.equals(selectedPoint)) {
+                if (point3D.equals(selectedPoint)) {
                     sphere.texture(new ColorTexture(Color.RED));
                 } else {
                     sphere.texture(new ColorTexture(Color.BLACK));
