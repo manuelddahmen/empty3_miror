@@ -34,6 +34,7 @@ public class ImageControls implements Runnable {
     private Camera camera;
     private boolean displaying;
     private ZBuffer zBuffer;
+    private int loopIndex;
 
     public ImageControls(JFrame jframe,
                          StructureMatrix<Point3D> grid, StructureMatrix<Point3D> gridUv, BufferedImage image,
@@ -214,6 +215,9 @@ public class ImageControls implements Runnable {
                 throw new RuntimeException(e);
             }
         }
+        int time = 10000;
+        loopIndex++;
+
         displaying = true;
 
         int resX = 400;//imageRead1.getWidth();
@@ -225,17 +229,13 @@ public class ImageControls implements Runnable {
             return;
         }
 
-        PolygonsDistinctUV polygons = new PolygonsDistinctUV();
+        Polygons polygons = new PolygonsDistinctUV();
         polygons.setCoefficients(grid);
-        polygons.setUvMap(gridUv);
-        polygons.texture(null);
-        polygons.setTexture2(texture);
-
-        scene = new Scene();
-
-        scene.add(polygons);
-
-        addToScene(scene);
+        polygons.texture(texture);
+        if(polygons instanceof PolygonsDistinctUV) {
+            ((PolygonsDistinctUV)polygons).setUvMap(gridUv);
+            ((PolygonsDistinctUV)polygons).setTexture2(texture);
+        }
 
         Point3D plus = Point3D.X.mult(
                 resX / 2.).plus(Point3D.Y.mult(resY / 2.));
@@ -245,13 +245,48 @@ public class ImageControls implements Runnable {
         camera.declareProperties();
         camera.calculerMatrice(Point3D.Y);
 
+        scene = new Scene();
+
+
+        addToScene(scene);
+
+
+
         zBuffer = new ZBufferImpl(resX, resY);
 
         zBuffer.scene(scene);
         scene.cameraActive(camera);
 
-        zBuffer.draw();
+        //drawSceneOnScreen(scene);
 
+        scene.add(polygons);
+
+        long time0 = 10000;
+        if(((time * 1000) < 1) || (loopIndex % 20==0)) {
+            time0 = System.currentTimeMillis();
+            zBuffer.draw(scene);
+        }
+        long timeAfter = System.currentTimeMillis();
+
+        time = (int) (timeAfter - time0);
+
+        zBuffer = new ZBufferImpl(resX, resY);
+
+        zBuffer.scene(scene);
+        scene.cameraActive(camera);
+
+
+        scene = new Scene();
+        addToScene(scene);
+        zBuffer.draw(scene);
+
+
+        drawSceneOnScreen(scene);
+
+        displaying = false;
+    }
+
+    private void drawSceneOnScreen(Scene scene) {
         BufferedImage image = zBuffer.image();
 
         ImageIcon imageIcon = new ImageIcon(image);
@@ -265,7 +300,6 @@ public class ImageControls implements Runnable {
 
         jframe.pack();
 
-        displaying = false;
     }
 
     public void addToScene(Scene scene) {

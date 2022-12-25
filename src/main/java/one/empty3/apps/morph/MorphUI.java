@@ -135,7 +135,7 @@ public class MorphUI extends JFrame {
                 for (int i = 0; i <= i1; i++)
                     for (int j = 0; j <= j1; j++) {
                         grid.setElem(Point3D.n(1.0 * i / i1 * resX, 1.0 * j / j1 * resY, 0d), i, j);
-                        gridUV.setElem(Point3D.n(1.0 * i / i1 * resX, 1.0 * j / j1 * resY, 0d), i, j);
+                        gridUV.setElem(Point3D.n(1.0 * i / i1, 1.0 * j / j1, 0d), i, j);
                     }
             }
         } catch (NumberFormatException ex) {
