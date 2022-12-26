@@ -29,10 +29,13 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static org.jcodec.common.io.NIOUtils.*;
+
 /**
  * @author Manuel Dahmen
  */
 public class MorphUI extends JFrame {
+    private UUID uuid;
     private final StructureMatrix<Point3D> gridUV1;
     private final StructureMatrix<Point3D> gridUV2;
     private boolean computing = false;
@@ -318,10 +321,25 @@ public class MorphUI extends JFrame {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                for (int frame = 0; frame < getFps() * getSeconds(); frame++) {
-                    Logger.getAnonymousLogger()
-                            .log(Level.FINE, "FrameNo" + frame);
-                    computeFrame(frame);
+                File avif = new File("morphing-"+UUID.randomUUID()+".avi");
+                FileChannelWrapper out = null;
+                try {
+                    out = writableFileChannel(avif.getAbsolutePath());
+                    AWTSequenceEncoder encoder = new AWTSequenceEncoder(out, Rational.R(25, 1));
+
+                    for (int frame = 0; frame < getFps() * getSeconds(); frame++) {
+                        Logger.getAnonymousLogger()
+                                .log(Level.FINE, "FrameNo" + frame);
+                        encoder.encodeImage(computeFrame(frame));
+                    }
+
+                    encoder.finish();
+                    out.close();
+
+                } catch (FileNotFoundException ex) {
+                    throw new RuntimeException(ex);
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
                 }
             }
         }).start();
@@ -464,7 +482,7 @@ public class MorphUI extends JFrame {
 
         new Thread(() -> {
             try {
-                FileChannelWrapper out = NIOUtils.writableFileChannel(new File("Video--"+UUID.randomUUID()).getAbsolutePath());
+                FileChannelWrapper out = writableFileChannel(new File("Video--"+UUID.randomUUID()).getAbsolutePath());
                 AWTSequenceEncoder encoder = new AWTSequenceEncoder(out, Rational.R(25, 1));
                 for (int frame = 0; frame < getFps() * getSeconds(); frame++) {
                     Logger.getAnonymousLogger()
