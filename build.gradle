@@ -24,7 +24,7 @@ task FeatureAppGui(type: JavaExec) {
 }
 task MorphingAppGui(type: JavaExec) {
     classpath sourceSets.main.runtimeClasspath
-    mainClass = "one.empty3.apps.morph.MorphingMainWindow"
+    mainClass = "one.empty3.apps.morph.Main"
     args "arg1", "arg2"
 }
 task OpadGameGui(type: JavaExec) {
