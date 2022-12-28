@@ -72,19 +72,8 @@ public class MorphUI extends JFrame {
     private JButton button1;
     private JButton button2;
     private JSlider slider1;
-    private JPanel panel6;
-    private JLabel labelX;
-    private JTextField textFieldX;
-    private JLabel labelY;
-    private JTextField textFieldY;
-    private JButton button7;
-    private JButton buttonLoadPoint;
-    private JLabel labelU;
-    private JTextField textFieldU;
-    private JLabel labelV;
-    private JTextField textFieldV;
-    private JButton button8;
-    private JButton buttonSavePoint;
+    private PanelPoint3DUVGridIJ panelPoint3DUVGridIJ1;
+    private PanelPoint3DUVGridIJ panelPoint3DUVGridIJ2;
     private JPanel panel4;
     private JButton button5;
     private JButton button6;
@@ -213,7 +202,9 @@ public class MorphUI extends JFrame {
                 imageControl1.setRunning(false);
             }
         }
-        imageControl1 = new ImageControls(this, grid1,gridUV1, imageRead1, panel1, text1);
+        imageControl1 = new ImageControls(this, grid1,gridUV1,
+                imageRead1, panel1, text1, panelPoint3DUVGridIJ1);
+        imageControl1.setMorphUI(this);
         //imageControl1.initUv(gridUV1);
         new Thread(imageControl1).start();
 
@@ -284,7 +275,9 @@ public class MorphUI extends JFrame {
                 imageControl2.setRunning(false);
             }
         }
-        imageControl2 = new ImageControls(this, grid2,gridUV2, imageRead2, panel2, text2);
+        imageControl2 = new ImageControls(this, grid2,gridUV2, imageRead2,
+                panel2, text2, panelPoint3DUVGridIJ2);
+        imageControl2.setMorphUI(this);
         //imageControl2.initUv(gridUV2);
         new Thread(imageControl2).start();
 
@@ -573,19 +566,8 @@ public class MorphUI extends JFrame {
         button1 = new JButton();
         button2 = new JButton();
         slider1 = new JSlider();
-        panel6 = new JPanel();
-        labelX = new JLabel();
-        textFieldX = new JTextField();
-        labelY = new JLabel();
-        textFieldY = new JTextField();
-        button7 = new JButton();
-        buttonLoadPoint = new JButton();
-        labelU = new JLabel();
-        textFieldU = new JTextField();
-        labelV = new JLabel();
-        textFieldV = new JTextField();
-        button8 = new JButton();
-        buttonSavePoint = new JButton();
+        panelPoint3DUVGridIJ1 = new PanelPoint3DUVGridIJ();
+        panelPoint3DUVGridIJ2 = new PanelPoint3DUVGridIJ();
         panel4 = new JPanel();
         button5 = new JButton();
         button6 = new JButton();
@@ -780,62 +762,8 @@ public class MorphUI extends JFrame {
         //---- slider1 ----
         slider1.addChangeListener(e -> slider1StateChanged(e));
         contentPane.add(slider1, "cell 2 4");
-
-        //======== panel6 ========
-        {
-            panel6.setLayout(new MigLayout(
-                "fill,hidemode 3",
-                // columns
-                "[fill]" +
-                "[fill]" +
-                "[fill]" +
-                "[fill]" +
-                "[fill]" +
-                "[fill]",
-                // rows
-                "[]" +
-                "[]" +
-                "[]"));
-
-            //---- labelX ----
-            labelX.setText("X");
-            panel6.add(labelX, "cell 0 0");
-            panel6.add(textFieldX, "cell 1 0");
-
-            //---- labelY ----
-            labelY.setText("Y");
-            panel6.add(labelY, "cell 2 0");
-            panel6.add(textFieldY, "cell 3 0");
-
-            //---- button7 ----
-            button7.setText("X");
-            panel6.add(button7, "cell 4 0");
-
-            //---- buttonLoadPoint ----
-            buttonLoadPoint.setText("Load point");
-            buttonLoadPoint.addActionListener(e -> loadPoint(e));
-            panel6.add(buttonLoadPoint, "cell 5 0");
-
-            //---- labelU ----
-            labelU.setText("U");
-            panel6.add(labelU, "cell 0 1");
-            panel6.add(textFieldU, "cell 1 1");
-
-            //---- labelV ----
-            labelV.setText("V");
-            panel6.add(labelV, "cell 2 1");
-            panel6.add(textFieldV, "cell 3 1");
-
-            //---- button8 ----
-            button8.setText("Y");
-            panel6.add(button8, "cell 4 1");
-
-            //---- buttonSavePoint ----
-            buttonSavePoint.setText("Save point");
-            buttonSavePoint.addActionListener(e -> savePoint(e));
-            panel6.add(buttonSavePoint, "cell 5 1");
-        }
-        contentPane.add(panel6, "cell 0 5 2 1");
+        contentPane.add(panelPoint3DUVGridIJ1, "cell 0 5");
+        contentPane.add(panelPoint3DUVGridIJ2, "cell 1 5");
 
         //======== panel4 ========
         {
@@ -888,4 +816,5 @@ public class MorphUI extends JFrame {
         setLocationRelativeTo(getOwner());
         // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
     }
+
 }

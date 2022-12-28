@@ -17,6 +17,7 @@ public class ImageControls implements Runnable {
     private final StructureMatrix<Point3D> grid;
     private final JFrame jframe;
     private final ITexture texture;
+    private PanelPoint3DUVGridIJ point3Dedit;
     boolean moving = false;
     boolean dropped = false;
     boolean clicked = false;
@@ -35,16 +36,19 @@ public class ImageControls implements Runnable {
     private boolean displaying;
     private ZBuffer zBuffer;
     private int loopIndex;
+    private MorphUI morphUI;
 
     public ImageControls(JFrame jframe,
                          StructureMatrix<Point3D> grid, StructureMatrix<Point3D> gridUv, BufferedImage image,
-                         JPanel panelDisplay, ITexture texture) {
+                         JPanel panelDisplay, ITexture texture, PanelPoint3DUVGridIJ point3Dedit) {
         this.jframe = jframe;
         this.grid = grid;
         this.gridUv = gridUv;
         this.image = image;
         this.panelDisplay = panelDisplay;
         this.texture = texture;
+        this.point3Dedit = point3Dedit;
+        point3Dedit.setImageControls(this);
         setRunning(true);
         panelDisplay.addMouseListener(new MouseListener() {
 
@@ -165,6 +169,12 @@ public class ImageControls implements Runnable {
                     minDist = distanceActuelle;
                 }
             }
+        }
+        if(selectedPoint!=null) {
+            point3Dedit.getTextFieldI().setText(""+xGrid);
+            point3Dedit.getTextFieldJ().setText(""+yGrid);
+            point3Dedit.getTextFieldU().setText(""+(grid.getData2d().get(xGrid).get(yGrid).getX()));
+            point3Dedit.getTextFieldV().setText(""+(grid.getData2d().get(xGrid).get(yGrid).getY()));
         }
         return selectedPoint != null;
     }
@@ -327,4 +337,18 @@ public class ImageControls implements Runnable {
         this.displaying = displaying;
     }
 
+    public void setMorphUI(MorphUI morphUI) {
+        this.morphUI = morphUI;
+    }
+
+    public PanelPoint3DUVGridIJ getPointView() {
+        return point3Dedit;
+    }
+    public void setPointView(PanelPoint3DUVGridIJ point3Dedit) {
+        this.point3Dedit = point3Dedit;
+    }
+
+    public StructureMatrix<Point3D> getGrid() {
+        return grid;
+    }
 }
