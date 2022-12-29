@@ -261,7 +261,7 @@ public class ImageControls implements Runnable {
                 resX / 2.).plus(Point3D.Y.mult(resY / 2.));
 
         camera = new Camera(Point3D.Z.mult(
-                -Math.max(resX, resY)).plus(plus), plus);
+                Math.max(resX, resY)).plus(plus), plus);
         camera.declareProperties();
         camera.calculerMatrice(Point3D.Y);
 
