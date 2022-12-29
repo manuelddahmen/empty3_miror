@@ -1,4 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?><!DOCTYPE Representable [
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2022. Manuel Daniel Dahmen
+  -->
+
+<!DOCTYPE Representable [
         <!ELEMENT Representable (StructureMatrix)*>
         <!ATTLIST Representable
                 class CDATA #REQUIRED>

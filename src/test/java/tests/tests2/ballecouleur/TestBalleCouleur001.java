@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2022. Manuel Daniel Dahmen
+ */
+
 package tests.tests2.ballecouleur;
 
 import one.empty3.library.*;

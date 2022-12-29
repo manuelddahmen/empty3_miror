@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2022. Manuel Daniel Dahmen
+ */
+
 package one.empty3.testscopy.tests.tests2.simula;/*
  * Copyright (c) 2016. Tous les fichiers dans ce programme sont soumis à la License Publique Générale GNU créée par la Free Softxware Association, Boston.
  * La plupart des licenses de parties tièrces sont compatibles avec la license principale.

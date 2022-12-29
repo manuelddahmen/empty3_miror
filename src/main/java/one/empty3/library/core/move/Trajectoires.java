@@ -1,6 +1,10 @@
 
 
 /*
+ * Copyright (c) 2022. Manuel Daniel Dahmen
+ */
+
+/*
  *  This file is part of Empty3.
  *
  *     Empty3 is free software: you can redistribute it and/or modify

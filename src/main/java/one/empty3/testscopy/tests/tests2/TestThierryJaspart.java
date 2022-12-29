@@ -1,5 +1,5 @@
-/*__
- * ect 14-08-17 Copyright.
+/*
+ * Copyright (c) 2022. Manuel Daniel Dahmen
  */
 
 package one.empty3.testscopy.tests.tests2;

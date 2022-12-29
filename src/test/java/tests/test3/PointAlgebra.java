@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2022. Manuel Daniel Dahmen
+ */
+
 package tests.test3;
 import one.empty3.library.*;
 import org.junit.Test;

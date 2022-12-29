@@ -1,3 +1,7 @@
+<!--
+  - Copyright (c) 2022. Manuel Daniel Dahmen
+  -->
+
 <svg xmlns:xlink="http://www.w3.org/1999/xlink" width="55.072ex" height="9.509ex" style="vertical-align: -3.973ex; margin-bottom: -0.198ex;" viewBox="0 -2298.3 23711.4 4094.3" role="img" focusable="false" xmlns="http://www.w3.org/2000/svg" aria-labelledby="MathJax-SVG-1-Title">
 <title id="MathJax-SVG-1-Title">{\displaystyle Q={\begin{bmatrix}1-2y^{2}-2z^{2}&amp;2xy-2zw&amp;2xz+2yw\\2xy+2zw&amp;1-2x^{2}-2z^{2}&amp;2yz-2xw\\2xz-2yw&amp;2yz+2xw&amp;1-2x^{2}-2y^{2}\end{bmatrix}}.}</title>
 <defs aria-hidden="true">

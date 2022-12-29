@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2022. Manuel Daniel Dahmen
+ */
+
 package one.empty3.gui;
 
 import one.empty3.library.core.testing.TestObjetSub;

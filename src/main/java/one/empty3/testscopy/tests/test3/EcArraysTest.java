@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2022. Manuel Daniel Dahmen
+ */
+
 package one.empty3.testscopy.tests.test3;
 
 import one.empty3.library.Point3D;

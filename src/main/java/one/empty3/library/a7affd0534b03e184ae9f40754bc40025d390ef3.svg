@@ -1,3 +1,7 @@
+<!--
+  - Copyright (c) 2022. Manuel Daniel Dahmen
+  -->
+
 <svg xmlns:xlink="http://www.w3.org/1999/xlink" width="60.759ex" height="7.509ex" style="vertical-align: -3.171ex;" viewBox="0 -1867.7 26160 3233.2" role="img" focusable="false" xmlns="http://www.w3.org/2000/svg" aria-labelledby="MathJax-SVG-1-Title">
 <title id="MathJax-SVG-1-Title">{\displaystyle \forall x\in \mathbb {R} ,\ \beta ^{n}(x)=\sum _{k=0}^{n+1}(-1)^{k}{\frac {(n+1)}{(n+1-k)!k!}}\left(x-k+{\frac {n+1}{2}}\right)_{+}^{n}}</title>
 <defs aria-hidden="true">

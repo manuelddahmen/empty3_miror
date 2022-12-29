@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2022. Manuel Daniel Dahmen
+ */
+
 package one.empty3.library.shader.language.cpp;
 public class Operation {
     String [] uo = new String [] {"+", "-", "!" };

@@ -1,3 +1,7 @@
+<!--
+  ~ Copyright (c) 2022. Manuel Daniel Dahmen
+  -->
+
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="empty3-library-generic-generic-1.0.jar" type="JarApplication">
     <option name="JAR_PATH" value="$PROJECT_DIR$/build/libs/empty3-library-generic-generic-1.0.jar" />

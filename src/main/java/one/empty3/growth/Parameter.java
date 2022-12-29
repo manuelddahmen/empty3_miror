@@ -1,5 +1,9 @@
 
 /*
+ * Copyright (c) 2022. Manuel Daniel Dahmen
+ */
+
+/*
  * This file is part of Plants-Growth-2
  *     Plants-Growth-2 is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by

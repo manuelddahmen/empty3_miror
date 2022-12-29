@@ -1,4 +1,8 @@
 /*
+ * Copyright (c) 2022. Manuel Daniel Dahmen
+ */
+
+/*
  * Created by JFormDesigner on Sun Aug 02 12:12:22 CEST 2020
  */
 

@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2022. Manuel Daniel Dahmen
+ */
+
 package one.empty3.testscopy.tests.test3.xmlrepresentation;
 
 import junit.framework.TestCase;

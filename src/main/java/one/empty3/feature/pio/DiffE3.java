@@ -1,4 +1,8 @@
 /*
+ * Copyright (c) 2022. Manuel Daniel Dahmen
+ */
+
+/*
 comparaipar cerlcle d intensite et
 de lumierrs filtrers.
 */

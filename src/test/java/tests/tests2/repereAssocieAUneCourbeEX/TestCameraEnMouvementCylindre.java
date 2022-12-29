@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2022. Manuel Daniel Dahmen
+ */
+
 /*__
  * Importer une autre test: ah si ca pouvait être fait par classes!
  */

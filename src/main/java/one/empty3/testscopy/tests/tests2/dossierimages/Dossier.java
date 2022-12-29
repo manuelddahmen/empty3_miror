@@ -1,4 +1,8 @@
 /*
+ * Copyright (c) 2022. Manuel Daniel Dahmen
+ */
+
+/*
  * 2013 Manuel Dahmen
  */
 package one.empty3.testscopy.tests.tests2.dossierimages;

@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2022. Manuel Daniel Dahmen
+ */
+
 package tests.test3.xmlrepresentation;
 
 import junit.framework.TestCase;

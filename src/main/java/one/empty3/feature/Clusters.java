@@ -1,4 +1,8 @@
 /*
+ * Copyright (c) 2022. Manuel Daniel Dahmen
+ */
+
+/*
 DBSCAN(D, eps, MinPts)
    C = 0
    pour chaque point P non visité des données D

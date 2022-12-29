@@ -1,3 +1,7 @@
+<!--
+  ~ Copyright (c) 2022. Manuel Daniel Dahmen
+  -->
+
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="TestPolygons" type="Application" factoryName="Application" singleton="false" nameIsGenerated="true">
     <option name="MAIN_CLASS_NAME" value="one.empty3.testscopy.tests.test3.TestPolygons" />

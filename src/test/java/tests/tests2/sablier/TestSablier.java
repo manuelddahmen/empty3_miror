@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2022. Manuel Daniel Dahmen
+ */
+
 package tests.tests2.sablier;
 
 import one.empty3.library.Camera;
@@ -10,10 +14,6 @@ import one.empty3.library.core.testing.TestObjetSub;
 import java.awt.*;
 
 
-/*__
- * Created by manuel on 01-11-15.
- * Copyright Manuel Dahmen. 2017
- */
 public class TestSablier extends TestObjetSub {
     public static void main(String[] args) {
 

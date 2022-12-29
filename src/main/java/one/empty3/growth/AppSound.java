@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2022. Manuel Daniel Dahmen
+ */
+
 package one.empty3.growth;/*
  * This file is part of Plants-Growth-2
  *     Plants-Growth-2 is free software: you can redistribute it and/or modify

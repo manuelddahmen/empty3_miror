@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2022. Manuel Daniel Dahmen
+ */
+
 package tests.tests2.pieuvre;
 
 import one.empty3.library.*;import one.empty3.library.core.testing.TestObjetSub;

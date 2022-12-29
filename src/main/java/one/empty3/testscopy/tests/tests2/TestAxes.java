@@ -1,5 +1,5 @@
-/*__*
- * copyright 2011-2019 Manuel Dahmen
+/*
+ * Copyright (c) 2022. Manuel Daniel Dahmen
  */
 
 package one.empty3.testscopy.tests.tests2;

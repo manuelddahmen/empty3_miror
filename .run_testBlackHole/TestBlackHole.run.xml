@@ -1,3 +1,7 @@
+<!--
+  ~ Copyright (c) 2022. Manuel Daniel Dahmen
+  -->
+
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="TestBlackHole" type="Application" factoryName="Application" singleton="false" nameIsGenerated="true">
     <option name="MAIN_CLASS_NAME" value="tests.tests2.simula.TestBlackHole" />

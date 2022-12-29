@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2022. Manuel Daniel Dahmen
+ */
+
 package one.empty3.apps.newboardgames.boards;
 
 import one.empty3.apps.newboardgames.Board;

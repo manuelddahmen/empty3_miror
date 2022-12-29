@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2022. Manuel Daniel Dahmen
+ */
+
 package tests.tests2.simula;
 
 import one.empty3.feature.app.replace.java.awt.Color;

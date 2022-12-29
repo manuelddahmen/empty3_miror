@@ -1,3 +1,7 @@
+<!--
+  ~ Copyright (c) 2022. Manuel Daniel Dahmen
+  -->
+
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="ResolutionCharacter1" type="Application" factoryName="Application" singleton="false">
     <output_file path="C:\Users\manue\EmptyCanvasTest\logResolutionCharacter.log" is_save="true" />

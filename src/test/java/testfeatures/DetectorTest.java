@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2022. Manuel Daniel Dahmen
+ */
+
 package testfeatures;
 
 import one.empty3.feature.jviolajones.Detector;

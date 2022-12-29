@@ -1,9 +1,14 @@
 /*
+ * Copyright (c) 2022. Manuel Daniel Dahmen
+ */
+
+/*
  * Created by JFormDesigner on Wed Dec 28 14:10:32 CET 2022
  */
 
 package one.empty3.apps.morph;
 
+import java.awt.event.*;
 import java.beans.*;
 import javax.swing.*;
 
@@ -13,7 +18,7 @@ import one.empty3.library.LumiereElement;
 import one.empty3.library.Point3D;
 
 /**
- * @author manue
+ * @author manuel
  */
 public class PanelPoint3DUVGridIJ extends JPanel {
     private ImageControls imageControls;
@@ -160,6 +165,14 @@ public class PanelPoint3DUVGridIJ extends JPanel {
 
     }
 
+    private void comboBoxAction(ActionEvent e) {
+        switch (((JComboBox)(e.getSource())).getSelectedIndex()) {
+            case 0:
+                saveDataPoint();
+                break;
+        }
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
         // Generated using JFormDesigner non-commercial license
@@ -229,6 +242,7 @@ public class PanelPoint3DUVGridIJ extends JPanel {
             "Insert row after",
             "Insert column after"
         }));
+        comboBox1.addActionListener(e -> comboBoxAction(e));
         add(comboBox1, "cell 7 0");
 
         //---- label2 ----
