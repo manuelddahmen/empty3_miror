@@ -6,6 +6,8 @@ package one.empty3.apps.morph;
 
 import java.beans.*;
 import javax.swing.*;
+
+import com.android.tools.r8.graph.D;
 import net.miginfocom.swing.*;
 import one.empty3.library.LumiereElement;
 import one.empty3.library.Point3D;
@@ -22,6 +24,8 @@ public class PanelPoint3DUVGridIJ extends JPanel {
     }
 
     public void loadDataPoint() {
+        if(dataPoint==null)
+            dataPoint = new DataPoint();
         getDataPoint().point = imageControls.getGrid().getData2d()
                 .get(imageControls.getXgrid()).get(imageControls.getYgrid());
         getDataPoint().uv = new Point3D(imageControls.getGridUv().getData2d().get(
@@ -97,17 +101,27 @@ public class PanelPoint3DUVGridIJ extends JPanel {
     }
 
     private void textFieldIPropertyChange(PropertyChangeEvent e) {
+        saveDataPoint();
         loadDataPoint();
     }
 
-    private void textFieldJPropertyChange(PropertyChangeEvent e) {
-        loadDataPoint();
+    private void saveDataPoint() {
+        if(dataPoint!=null) {
+            imageControls.getGrid().setElem(dataPoint.point, dataPoint.i, dataPoint.j);
+            imageControls.getGridUv().setElem(dataPoint.uv, dataPoint.i, dataPoint.j);
+        }
+    }
 
+    private void textFieldJPropertyChange(PropertyChangeEvent e) {
+        saveDataPoint();
+        loadDataPoint();
     }
 
     private void textFieldUPropertyChange(PropertyChangeEvent e) {
         try {
-            dataPoint.uv.setX((double) Integer.parseInt(getTextFieldU().getText()));
+            dataPoint.uv = new Point3D((double) Double.parseDouble(getTextFieldU().getText()),
+                    dataPoint.uv.getY(), dataPoint.uv.getZ());
+            saveDataPoint();
         } catch (NumberFormatException ex) {
 
         }
@@ -115,7 +129,9 @@ public class PanelPoint3DUVGridIJ extends JPanel {
 
     private void textFieldVPropertyChange(PropertyChangeEvent e) {
         try {
-            dataPoint.uv.setY((double) Integer.parseInt(getTextFieldU().getText()));
+            dataPoint.uv = new Point3D(dataPoint.uv.getX(),
+                    (double) Double.parseDouble(getTextFieldU().getText()), dataPoint.uv.getZ());
+            saveDataPoint();
         } catch (NumberFormatException ex) {
 
         }
@@ -124,7 +140,9 @@ public class PanelPoint3DUVGridIJ extends JPanel {
 
     private void textFieldXPropertyChange(PropertyChangeEvent e) {
         try {
-            dataPoint.point.setX((double) Integer.parseInt(getTextFieldU().getText()));
+            dataPoint.point = new Point3D((double) Double.parseDouble(getTextFieldX().getText()),
+                    dataPoint.point.getY(), dataPoint.point.getZ());
+            saveDataPoint();
         } catch (NumberFormatException ex) {
 
         }
@@ -133,7 +151,9 @@ public class PanelPoint3DUVGridIJ extends JPanel {
 
     private void textFieldYPropertyChange(PropertyChangeEvent e) {
         try {
-            dataPoint.point.setY((double) Integer.parseInt(getTextFieldU().getText()));
+            dataPoint.point = new Point3D( dataPoint.point.getX(),
+                    (double) Double.parseDouble(getTextFieldY().getText()), dataPoint.point.getZ());
+            saveDataPoint();
         } catch (NumberFormatException ex) {
 
         }

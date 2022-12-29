@@ -171,7 +171,8 @@ public class ImageControls implements Runnable {
             }
         }
         if(selectedPoint!=null) {
-            if(selectedPoint!=point3Dedit.getDataPoint().point) {
+            if(point3Dedit.getDataPoint()==null||
+                    selectedPoint!=point3Dedit.getDataPoint().point) {
                 point3Dedit.loadDataPoint();
             }
             point3Dedit.getTextFieldI().setText(""+xGrid);
