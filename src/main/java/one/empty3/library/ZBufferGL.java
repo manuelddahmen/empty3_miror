@@ -84,6 +84,11 @@ public class ZBufferGL implements ZBuffer {
     }
 
     @Override
+    public ECBufferedImage imageInvX() {
+        return null;
+    }
+
+    @Override
     public boolean isLocked() {
         return false;
     }

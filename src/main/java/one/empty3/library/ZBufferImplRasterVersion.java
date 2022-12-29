@@ -417,6 +417,11 @@ public class ZBufferImplRasterVersion extends Representable implements ZBuffer {
         return imageFromRaster();
     }
 
+    @Override
+    public ECBufferedImage imageInvX() {
+        return null;
+    }
+
     /*__
      * @return hauteur du zbuffer
      */

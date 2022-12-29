@@ -261,7 +261,7 @@ public class ImageControls implements Runnable {
                 resX / 2.).plus(Point3D.Y.mult(resY / 2.));
 
         camera = new Camera(Point3D.Z.mult(
-                Math.max(resX, resY)).plus(plus), plus);
+                -Math.max(resX, resY)).plus(plus), plus);
         camera.declareProperties();
         camera.calculerMatrice(Point3D.Y);
 
@@ -271,8 +271,8 @@ public class ImageControls implements Runnable {
         addToScene(scene);
 
 
-
-        zBuffer = new ZBufferImpl(resX, resY);
+        if(zBuffer==null)
+            zBuffer = new ZBufferImpl(resX, resY);
 
         zBuffer.scene(scene);
         scene.cameraActive(camera);
@@ -297,13 +297,15 @@ public class ImageControls implements Runnable {
         zBuffer.scene(scene);
         scene.cameraActive(camera);
 
-        drawSceneOnScreen(scene);
+        drawSceneOnScreen();
 
         displaying = false;
     }
 
-    private void drawSceneOnScreen(Scene scene) {
-        BufferedImage image = zBuffer.image();
+    private void drawSceneOnScreen() {
+        BufferedImage image = zBuffer.imageInvX();
+
+
 
         ImageIcon imageIcon = new ImageIcon(image);
 

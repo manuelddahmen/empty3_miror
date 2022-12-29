@@ -476,6 +476,20 @@ public class ZBufferImpl extends Representable implements ZBuffer {
 
     }
 
+    @Override
+    public ECBufferedImage imageInvX() {
+        ECBufferedImage bi2 = new ECBufferedImage(la, ha, ECBufferedImage.TYPE_INT_RGB);
+        for (int i = 0; i < la; i++) {
+            for (int j = 0; j < ha; j++) {
+                int elementCouleur = ime.ime.getElementCouleur(i, j);
+                bi2.setRGB(la-i-1, j, elementCouleur);
+
+            }
+        }
+        this.bi = bi2;
+        return bi2;
+    }
+
     //??
     public ECBufferedImage image2() {
         //return image2();

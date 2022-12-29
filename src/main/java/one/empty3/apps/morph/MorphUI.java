@@ -421,7 +421,7 @@ public class MorphUI extends JFrame {
                             resX / 2.).plus(Point3D.Y.mult(resY / 2.));
 
                     Camera camera = new Camera(Point3D.Z.mult(
-                           Math.max(resX, resY)).plus(plus), plus);
+                           - Math.max(resX, resY)).plus(plus), plus);
                     camera.declareProperties();
                     camera.calculerMatrice(Point3D.Y);
 
@@ -436,7 +436,7 @@ public class MorphUI extends JFrame {
 
                     zBufferComputing.draw();
 
-                    image = zBufferComputing.image();
+                    image = zBufferComputing.imageInvX();
 
                     ImageIcon imageIcon = new ImageIcon(image);
 

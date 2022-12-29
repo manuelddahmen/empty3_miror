@@ -103,6 +103,7 @@ public interface ZBuffer {
      * @return image
      */
     ECBufferedImage image();
+    ECBufferedImage imageInvX();
 
     /*__
      * Verrou
