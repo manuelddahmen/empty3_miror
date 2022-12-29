@@ -171,10 +171,15 @@ public class ImageControls implements Runnable {
             }
         }
         if(selectedPoint!=null) {
+            if(selectedPoint!=point3Dedit.getDataPoint().point) {
+                point3Dedit.loadDataPoint();
+            }
             point3Dedit.getTextFieldI().setText(""+xGrid);
             point3Dedit.getTextFieldJ().setText(""+yGrid);
-            point3Dedit.getTextFieldU().setText(""+(grid.getData2d().get(xGrid).get(yGrid).getX()));
-            point3Dedit.getTextFieldV().setText(""+(grid.getData2d().get(xGrid).get(yGrid).getY()));
+            point3Dedit.getTextFieldX().setText(""+(grid.getData2d().get(xGrid).get(yGrid).getX()));
+            point3Dedit.getTextFieldY().setText(""+(grid.getData2d().get(xGrid).get(yGrid).getY()));
+            point3Dedit.getTextFieldU().setText(""+(gridUv.getData2d().get(xGrid).get(yGrid).getX()));
+            point3Dedit.getTextFieldV().setText(""+(gridUv.getData2d().get(xGrid).get(yGrid).getY()));
         }
         return selectedPoint != null;
     }
@@ -350,5 +355,17 @@ public class ImageControls implements Runnable {
 
     public StructureMatrix<Point3D> getGrid() {
         return grid;
+    }
+
+    public int getXgrid() {
+        return xGrid;
+    }
+
+    public int getYgrid() {
+        return yGrid;
+    }
+
+    public StructureMatrix<Point3D> getGridUv() {
+        return gridUv;
     }
 }

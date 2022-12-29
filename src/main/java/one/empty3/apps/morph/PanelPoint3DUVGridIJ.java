@@ -7,6 +7,7 @@ package one.empty3.apps.morph;
 import java.beans.*;
 import javax.swing.*;
 import net.miginfocom.swing.*;
+import one.empty3.library.LumiereElement;
 import one.empty3.library.Point3D;
 
 /**
@@ -14,10 +15,26 @@ import one.empty3.library.Point3D;
  */
 public class PanelPoint3DUVGridIJ extends JPanel {
     private ImageControls imageControls;
+    private DataPoint dataPoint;
+
+    public DataPoint getDataPoint() {
+        return dataPoint;
+    }
+
+    public void loadDataPoint() {
+        getDataPoint().point = imageControls.getGrid().getData2d()
+                .get(imageControls.getXgrid()).get(imageControls.getYgrid());
+        getDataPoint().uv = new Point3D(imageControls.getGridUv().getData2d().get(
+                imageControls.getXgrid()).get(imageControls.getYgrid()));
+        getDataPoint().i = imageControls.getXgrid();
+        getDataPoint().j = imageControls.getYgrid();
+
+    }
 
     class DataPoint {
         int i, j;
         Point3D point, uv;
+
     }
 
     public PanelPoint3DUVGridIJ() {
@@ -80,26 +97,46 @@ public class PanelPoint3DUVGridIJ extends JPanel {
     }
 
     private void textFieldIPropertyChange(PropertyChangeEvent e) {
-
+        loadDataPoint();
     }
 
     private void textFieldJPropertyChange(PropertyChangeEvent e) {
+        loadDataPoint();
 
     }
 
     private void textFieldUPropertyChange(PropertyChangeEvent e) {
-        // TODO add your code here
+        try {
+            dataPoint.uv.setX((double) Integer.parseInt(getTextFieldU().getText()));
+        } catch (NumberFormatException ex) {
+
+        }
     }
 
     private void textFieldVPropertyChange(PropertyChangeEvent e) {
+        try {
+            dataPoint.uv.setY((double) Integer.parseInt(getTextFieldU().getText()));
+        } catch (NumberFormatException ex) {
+
+        }
 
     }
 
     private void textFieldXPropertyChange(PropertyChangeEvent e) {
+        try {
+            dataPoint.point.setX((double) Integer.parseInt(getTextFieldU().getText()));
+        } catch (NumberFormatException ex) {
+
+        }
 
     }
 
     private void textFieldYPropertyChange(PropertyChangeEvent e) {
+        try {
+            dataPoint.point.setY((double) Integer.parseInt(getTextFieldU().getText()));
+        } catch (NumberFormatException ex) {
+
+        }
 
     }
 
