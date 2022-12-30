@@ -193,6 +193,7 @@ public class ImageControls implements Runnable {
 
 
     public void run() {
+        displayGrid();
         while (isRunning()) {
             display();
             try {
@@ -201,6 +202,26 @@ public class ImageControls implements Runnable {
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    private void displayGrid() {
+        Thread thread = new Thread(() -> {
+            while(zBuffer==null) {
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            while(isDisplaying()) {
+                Scene scene1 = new Scene();
+                addToScene(scene1);
+                zBuffer.scene(scene1);
+                drawPolygons(zBuffer, scene1);
+            }
+        });
+        thread.start();
+
     }
 
     private boolean isRunning() {
@@ -230,6 +251,7 @@ public class ImageControls implements Runnable {
 
     private void display() {
         while (isDisplaying()) {
+
             try {
                 Thread.sleep(80);
                 // Temps d'attente max? Tuer thread.
@@ -270,12 +292,22 @@ public class ImageControls implements Runnable {
         scene.add(polygons);
         addToScene(scene);
 
+        scene.add(polygons);
+
+        drawPolygons(zBuffer, scene);
+
+
+        displaying = false;
+    }
+
+    private void drawPolygons(ZBuffer zBuffer, Scene scene) {
 
         if(zBuffer==null)
             zBuffer = new ZBufferImpl(resX, resY);
         else {
             zBuffer.idzpp();
         }
+
         zBuffer.scene(scene);
         scene.cameraActive(camera);
 
@@ -284,42 +316,29 @@ public class ImageControls implements Runnable {
         //drawSceneOnScreen(scene);
 
 
-        //2
-        scene.add(polygons);
-
-        long time0 = 10000;
-        if(((time * 1000) < 1) || (loopIndex % 20==0)) {
-            time0 = System.currentTimeMillis();
-            //zBuffer.draw(scene);
-        }
-        long timeAfter = System.currentTimeMillis();
-
-        time = (int) (timeAfter - time0);
-
         zBuffer.scene(scene);
         scene.cameraActive(camera);
 
-        drawSceneOnScreen();
+        drawSceneOnScreen(zBuffer);
 
-        displaying = false;
     }
 
-    private void drawSceneOnScreen() {
-        BufferedImage image = zBuffer.imageInvX();
+    private void drawSceneOnScreen(ZBuffer zBuffer) {
+        if(zBuffer!=null) {
+            BufferedImage image = zBuffer.imageInvX();
 
 
+            ImageIcon imageIcon = new ImageIcon(image);
 
-        ImageIcon imageIcon = new ImageIcon(image);
+            JLabel jLabelResult = new JLabel(imageIcon);
 
-        JLabel jLabelResult = new JLabel(imageIcon);
+            if (panelDisplay.getComponents().length > 0) {
+                panelDisplay.remove(0);
+            }
+            panelDisplay.add(jLabelResult);
 
-        if (panelDisplay.getComponents().length > 0) {
-            panelDisplay.remove(0);
+            jframe.pack();
         }
-        panelDisplay.add(jLabelResult);
-
-        jframe.pack();
-
     }
 
     public void addToScene(Scene scene) {
