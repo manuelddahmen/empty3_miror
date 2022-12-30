@@ -42,6 +42,8 @@ public class ImageControls implements Runnable {
     private int loopIndex;
     private MorphUI morphUI;
 
+    int resX = 400;//imageRead1.getWidth();
+    int resY = 400;//imageRead1.getHeight();
     public ImageControls(JFrame jframe,
                          StructureMatrix<Point3D> grid, StructureMatrix<Point3D> gridUv, BufferedImage image,
                          JPanel panelDisplay, ITexture texture, PanelPoint3DUVGridIJ point3Dedit) {
@@ -240,8 +242,6 @@ public class ImageControls implements Runnable {
 
         displaying = true;
 
-        int resX = 400;//imageRead1.getWidth();
-        int resY = 400;//imageRead1.getHeight();
 
 
         if (texture == null) {
@@ -376,5 +376,12 @@ public class ImageControls implements Runnable {
 
     public StructureMatrix<Point3D> getGridUv() {
         return gridUv;
+    }
+
+    public int getResX() {
+        return resY;
+    }
+    public int getResY() {
+        return resY;
     }
 }

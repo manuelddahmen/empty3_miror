@@ -129,7 +129,11 @@ public class PanelPoint3DUVGridIJ extends JPanel {
             imageControls.getGridUv().getData2d().get(dataPoint.i).set(dataPoint.j, dataPoint.uv);
             try {
                 if(checkBoxUv.isSelected()) {
-                    imageControls.getGridUv().getData2d().get(dataPoint.i).set(dataPoint.j, (Point3D) dataPoint.point.copy());
+                    imageControls.getGridUv().getData2d().get(dataPoint.i)
+                            .set(dataPoint.j,
+                            ((Point3D) dataPoint.point.copy()).multDot(
+                                    new Point3D((double)imageControls.getResX(),
+                                            (double)imageControls.getResY(), 0d)));
                 }
             } catch (CopyRepresentableError e) {
                 throw new RuntimeException(e);
