@@ -273,7 +273,9 @@ public class ImageControls implements Runnable {
 
         if(zBuffer==null)
             zBuffer = new ZBufferImpl(resX, resY);
-
+        else {
+            zBuffer.idzpp();
+        }
         zBuffer.scene(scene);
         scene.cameraActive(camera);
 

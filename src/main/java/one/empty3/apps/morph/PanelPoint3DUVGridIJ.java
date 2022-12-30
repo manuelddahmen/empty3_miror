@@ -14,6 +14,7 @@ import javax.swing.*;
 
 import com.android.tools.r8.graph.D;
 import net.miginfocom.swing.*;
+import one.empty3.library.CopyRepresentableError;
 import one.empty3.library.LumiereElement;
 import one.empty3.library.Point3D;
 
@@ -106,21 +107,40 @@ public class PanelPoint3DUVGridIJ extends JPanel {
     }
 
     private void textFieldIPropertyChange(PropertyChangeEvent e) {
+        getTextFieldI().setText(""+Double.parseDouble(""+e.getOldValue()));
         saveDataPoint();
+        getTextFieldI().setText(""+Double.parseDouble(""+e.getNewValue()));
+        loadDataPoint();
+    }
+    private void textFieldJPropertyChange(PropertyChangeEvent e) {
+        getTextFieldJ().setText(""+Double.parseDouble(""+e.getOldValue()));
+        saveDataPoint();
+        getTextFieldJ().setText(""+Double.parseDouble(""+e.getNewValue()));
         loadDataPoint();
     }
 
     private void saveDataPoint() {
         if(dataPoint!=null) {
+            /*
             imageControls.getGrid().setElem(dataPoint.point, dataPoint.i, dataPoint.j);
             imageControls.getGridUv().setElem(dataPoint.uv, dataPoint.i, dataPoint.j);
+        */
+            imageControls.getGrid().getData2d().get(dataPoint.i).set(dataPoint.j, dataPoint.point);
+            imageControls.getGridUv().getData2d().get(dataPoint.i).set(dataPoint.j, dataPoint.uv);
+            try {
+                if(checkBoxUv.isSelected()) {
+                    imageControls.getGridUv().getData2d().get(dataPoint.i).set(dataPoint.j, (Point3D) dataPoint.point.copy());
+                }
+            } catch (CopyRepresentableError e) {
+                throw new RuntimeException(e);
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            } catch (InstantiationException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
-    private void textFieldJPropertyChange(PropertyChangeEvent e) {
-        saveDataPoint();
-        loadDataPoint();
-    }
 
     private void textFieldUPropertyChange(PropertyChangeEvent e) {
         try {
@@ -173,6 +193,10 @@ public class PanelPoint3DUVGridIJ extends JPanel {
         }
     }
 
+    public JCheckBox getCheckBoxUv() {
+        return checkBoxUv;
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
         // Generated using JFormDesigner non-commercial license
@@ -189,6 +213,7 @@ public class PanelPoint3DUVGridIJ extends JPanel {
         textFieldV = new JTextField();
         label7 = new JLabel();
         textFieldY = new JTextField();
+        checkBoxUv = new JCheckBox();
 
         //======== this ========
         setLayout(new MigLayout(
@@ -268,6 +293,10 @@ public class PanelPoint3DUVGridIJ extends JPanel {
         //---- textFieldY ----
         textFieldY.addPropertyChangeListener("changedY", e -> textFieldYPropertyChange(e));
         add(textFieldY, "cell 5 1");
+
+        //---- checkBoxUv ----
+        checkBoxUv.setText("Text (u,v)");
+        add(checkBoxUv, "cell 7 1");
         // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
     }
 
@@ -286,5 +315,6 @@ public class PanelPoint3DUVGridIJ extends JPanel {
     private JTextField textFieldV;
     private JLabel label7;
     private JTextField textFieldY;
+    private JCheckBox checkBoxUv;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 }
