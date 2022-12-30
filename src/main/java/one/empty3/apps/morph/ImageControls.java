@@ -384,4 +384,12 @@ public class ImageControls implements Runnable {
     public int getResY() {
         return resY;
     }
+
+    public void setYgrid(int y) {
+        this.yGrid = y;
+    }
+
+    public void setXgrid(int x) {
+        this.xGrid = x;
+    }
 }

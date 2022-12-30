@@ -46,8 +46,8 @@ import java.util.function.Consumer;
  * Created by manue on 07-09-19.
  */
 public class StructureMatrix<T> {
-    private static final int INSERT_ROW = 0;
-    private static final int INSERT_COL = 1;
+    public static final int INSERT_ROW = 0;
+    public static final int INSERT_COL = 1;
     private int dim;
     public T data0d;
     public List<T> data1d;

@@ -17,6 +17,7 @@ import net.miginfocom.swing.*;
 import one.empty3.library.CopyRepresentableError;
 import one.empty3.library.LumiereElement;
 import one.empty3.library.Point3D;
+import one.empty3.library.StructureMatrix;
 
 /**
  * @author manuel
@@ -191,8 +192,53 @@ public class PanelPoint3DUVGridIJ extends JPanel {
 
     private void comboBoxAction(ActionEvent e) {
         switch (((JComboBox)(e.getSource())).getSelectedIndex()) {
+            //Update
             case 0:
                 saveDataPoint();
+                break;
+//            Delete row
+            case 1:
+                imageControls.getGrid().delete(
+                        imageControls.getYgrid(), StructureMatrix.INSERT_ROW);
+                imageControls.getGridUv().delete(
+                        imageControls.getYgrid(), StructureMatrix.INSERT_ROW);
+                imageControls.setYgrid(imageControls.getYgrid()-1);
+                break;
+//            Delete column
+            case 2:
+                imageControls.getGrid().delete(
+                        imageControls.getXgrid(), StructureMatrix.INSERT_COL);
+                imageControls.getGridUv().delete(
+                        imageControls.getXgrid(), StructureMatrix.INSERT_COL);
+                imageControls.setXgrid(imageControls.getXgrid()-1);
+                break;
+//            Insert row before
+            case 3:
+                imageControls.getGrid().insert(
+                        imageControls.getYgrid(), StructureMatrix.INSERT_ROW, Point3D.O0);
+                imageControls.getGridUv().insert(
+                        imageControls.getYgrid(), StructureMatrix.INSERT_ROW, Point3D.O0);
+                break;
+//            Insert column before
+            case 4:
+                imageControls.getGrid().insert(
+                        imageControls.getXgrid(), StructureMatrix.INSERT_COL, Point3D.O0);
+                imageControls.getGridUv().insert(
+                        imageControls.getXgrid(), StructureMatrix.INSERT_COL, Point3D.O0);
+                break;
+//            Insert row after
+            case 5:
+                imageControls.getGrid().insert(
+                        imageControls.getYgrid(), StructureMatrix.INSERT_ROW, Point3D.O0);
+                imageControls.getGridUv().insert(
+                        imageControls.getYgrid(), StructureMatrix.INSERT_ROW, Point3D.O0);
+                break;
+//            Insert column after
+            case 6:
+                imageControls.getGrid().insert(
+                        imageControls.getXgrid(), StructureMatrix.INSERT_COL, Point3D.O0);
+                imageControls.getGridUv().insert(
+                        imageControls.getXgrid(), StructureMatrix.INSERT_COL, Point3D.O0);
                 break;
         }
     }
