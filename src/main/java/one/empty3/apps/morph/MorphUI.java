@@ -198,19 +198,19 @@ public class MorphUI extends JFrame {
                 throw new RuntimeException(ex);
             }
 
-        }
-        initGrids(grid1, gridUV1, imageRead1, panel1);
-        if (isLoaded) {
-            if (imageControl1 != null) {
-                imageControl1.setDisplaying(false);
-                imageControl1.setRunning(false);
+            initGrids(grid1, gridUV1, imageRead1, panel1);
+            if (isLoaded) {
+                if (imageControl1 != null) {
+                    imageControl1.setDisplaying(false);
+                    imageControl1.setRunning(false);
+                }
             }
+            imageControl1 = new ImageControls(this, grid1,gridUV1,
+                    imageRead1, panel1, text1, panelPoint3DUVGridIJ1);
+            imageControl1.setMorphUI(this);
+            //imageControl1.initUv(gridUV1);
+            new Thread(imageControl1).start();
         }
-        imageControl1 = new ImageControls(this, grid1,gridUV1,
-                imageRead1, panel1, text1, panelPoint3DUVGridIJ1);
-        imageControl1.setMorphUI(this);
-        //imageControl1.initUv(gridUV1);
-        new Thread(imageControl1).start();
 
     }
 
@@ -271,19 +271,19 @@ public class MorphUI extends JFrame {
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
-        }
-        initGrids(grid2, gridUV2, imageRead2, panel2);
-        if (isLoaded) {
-            if (imageControl2 != null) {
-                imageControl2.setDisplaying(false);
-                imageControl2.setRunning(false);
+            initGrids(grid2, gridUV2, imageRead2, panel2);
+            if (isLoaded) {
+                if (imageControl2 != null) {
+                    imageControl2.setDisplaying(false);
+                    imageControl2.setRunning(false);
+                }
             }
+            imageControl2 = new ImageControls(this, grid2,gridUV2, imageRead2,
+                    panel2, text2, panelPoint3DUVGridIJ2);
+            imageControl2.setMorphUI(this);
+            //imageControl2.initUv(gridUV2);
+            new Thread(imageControl2).start();
         }
-        imageControl2 = new ImageControls(this, grid2,gridUV2, imageRead2,
-                panel2, text2, panelPoint3DUVGridIJ2);
-        imageControl2.setMorphUI(this);
-        //imageControl2.initUv(gridUV2);
-        new Thread(imageControl2).start();
 
 
     }
