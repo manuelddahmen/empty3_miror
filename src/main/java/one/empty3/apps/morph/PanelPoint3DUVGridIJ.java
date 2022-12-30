@@ -191,6 +191,11 @@ public class PanelPoint3DUVGridIJ extends JPanel {
     }
 
     private void comboBoxAction(ActionEvent e) {
+        ImageControls imageControls1 = imageControls.getMorphUI().getImageControls1();
+        ImageControls imageControls2 = imageControls.getMorphUI().getImageControls2();
+        ImageControls[] imageControlsArr = new ImageControls[]{
+                imageControls1,
+                imageControls2};
         switch (((JComboBox)(e.getSource())).getSelectedIndex()) {
             //Update
             case 0:
@@ -198,49 +203,62 @@ public class PanelPoint3DUVGridIJ extends JPanel {
                 break;
 //            Delete row
             case 1:
-                imageControls.getGrid().delete(
-                        imageControls.getYgrid(), StructureMatrix.INSERT_ROW);
-                imageControls.getGridUv().delete(
-                        imageControls.getYgrid(), StructureMatrix.INSERT_ROW);
-                imageControls.setYgrid(imageControls.getYgrid()-1);
+                for(ImageControls imageControls : imageControlsArr) {
+                    imageControls.getGrid().delete(
+                            imageControls.getYgrid(), StructureMatrix.INSERT_ROW);
+                    imageControls.getGridUv().delete(
+                            imageControls.getYgrid(), StructureMatrix.INSERT_ROW);
+                    imageControls.setYgrid(imageControls.getYgrid() - 1);
+                }
                 break;
 //            Delete column
             case 2:
-                imageControls.getGrid().delete(
-                        imageControls.getXgrid(), StructureMatrix.INSERT_COL);
-                imageControls.getGridUv().delete(
-                        imageControls.getXgrid(), StructureMatrix.INSERT_COL);
-                imageControls.setXgrid(imageControls.getXgrid()-1);
+                for(ImageControls imageControls : imageControlsArr) {
+                    imageControls.getGrid().delete(
+                            imageControls.getXgrid(), StructureMatrix.INSERT_COL);
+                    imageControls.getGridUv().delete(
+                            imageControls.getXgrid(), StructureMatrix.INSERT_COL);
+                    imageControls.setXgrid(imageControls.getXgrid() - 1);
+                }
                 break;
 //            Insert row before
             case 3:
-                imageControls.getGrid().insert(
-                        imageControls.getYgrid(), StructureMatrix.INSERT_ROW, Point3D.O0);
-                imageControls.getGridUv().insert(
-                        imageControls.getYgrid(), StructureMatrix.INSERT_ROW, Point3D.O0);
+                for(ImageControls imageControls : imageControlsArr) {
+                    imageControls.getGrid().insert(
+                            imageControls.getYgrid(), StructureMatrix.INSERT_ROW, Point3D.O0);
+                    imageControls.getGridUv().insert(
+                            imageControls.getYgrid(), StructureMatrix.INSERT_ROW, Point3D.O0);
+                }
                 break;
 //            Insert column before
             case 4:
-                imageControls.getGrid().insert(
-                        imageControls.getXgrid(), StructureMatrix.INSERT_COL, Point3D.O0);
-                imageControls.getGridUv().insert(
-                        imageControls.getXgrid(), StructureMatrix.INSERT_COL, Point3D.O0);
+                for(ImageControls imageControls : imageControlsArr) {
+                    imageControls.getGrid().insert(
+                            imageControls.getXgrid(), StructureMatrix.INSERT_COL, Point3D.O0);
+                    imageControls.getGridUv().insert(
+                            imageControls.getXgrid(), StructureMatrix.INSERT_COL, Point3D.O0);
+                }
                 break;
 //            Insert row after
             case 5:
-                imageControls.getGrid().insert(
-                        imageControls.getYgrid(), StructureMatrix.INSERT_ROW, Point3D.O0);
-                imageControls.getGridUv().insert(
-                        imageControls.getYgrid(), StructureMatrix.INSERT_ROW, Point3D.O0);
+                for(ImageControls imageControls : imageControlsArr) {
+                    imageControls.getGrid().insert(
+                            imageControls.getYgrid(), StructureMatrix.INSERT_ROW, Point3D.O0);
+                    imageControls.getGridUv().insert(
+                            imageControls.getYgrid(), StructureMatrix.INSERT_ROW, Point3D.O0);
+                }
                 break;
 //            Insert column after
             case 6:
-                imageControls.getGrid().insert(
-                        imageControls.getXgrid(), StructureMatrix.INSERT_COL, Point3D.O0);
-                imageControls.getGridUv().insert(
-                        imageControls.getXgrid(), StructureMatrix.INSERT_COL, Point3D.O0);
+                for(ImageControls imageControls : imageControlsArr) {
+                    imageControls.getGrid().insert(
+                            imageControls.getXgrid(), StructureMatrix.INSERT_COL, Point3D.O0);
+                    imageControls.getGridUv().insert(
+                            imageControls.getXgrid(), StructureMatrix.INSERT_COL, Point3D.O0);
+                }
                 break;
         }
+        loadDataPoint();
     }
 
     public JCheckBox getCheckBoxUv() {

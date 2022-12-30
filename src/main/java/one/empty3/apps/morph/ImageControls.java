@@ -392,4 +392,8 @@ public class ImageControls implements Runnable {
     public void setXgrid(int x) {
         this.xGrid = x;
     }
+
+    public MorphUI getMorphUI() {
+        return this.morphUI;
+    }
 }

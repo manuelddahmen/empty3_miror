@@ -14,7 +14,6 @@ import net.miginfocom.swing.MigLayout;
 import one.empty3.library.*;
 import org.jcodec.api.awt.AWTSequenceEncoder;
 import org.jcodec.common.io.FileChannelWrapper;
-import org.jcodec.common.io.NIOUtils;
 import org.jcodec.common.model.Rational;
 
 import javax.imageio.ImageIO;
@@ -821,4 +820,10 @@ public class MorphUI extends JFrame {
         // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
     }
 
+    public ImageControls getImageControls1() {
+        return imageControl1;
+    }
+    public ImageControls getImageControls2() {
+        return imageControl2;
+    }
 }
