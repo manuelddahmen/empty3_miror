@@ -140,7 +140,10 @@ public class ImageControls implements Runnable {
             System.out.println("::update a point position");
             System.out.println(selectedPoint);
             grid.setElem(selectedPoint, this.xGrid, this.yGrid);
-            System.out.println(grid.getElem(xGrid, yGrid));
+            if(getPointView().getCheckBoxUv().isSelected()) {
+                getGridUv().setElem(selectedPoint.multDot(
+                        new Point3D(1./resX, 1./resY, 0d)), xGrid, yGrid);
+            }
         }
         initBools();
 
