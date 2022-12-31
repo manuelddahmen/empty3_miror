@@ -12,6 +12,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -420,5 +421,7 @@ public class ImageControls implements Runnable {
         this.grid = o;
     }
 
-
+    public BufferedImage getImage() {
+        return image;
+    }
 }

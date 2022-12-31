@@ -4,6 +4,7 @@
 
 package one.empty3.apps.morph;
 
+import one.empty3.feature.app.replace.javax.imageio.ImageIO;
 import one.empty3.library.Point3D;
 import one.empty3.library.StructureMatrix;
 import shadow.bundletool.com.android.tools.r8.origin.EmbeddedOrigin;
@@ -48,15 +49,24 @@ public class DataModel {
 
         }else {
             try {
-                File tmpGridXY1 = writeTextTmp();
-                saveObjectString(tmpGridXY1, morphUI.getImageControls1().getGrid().toString());
-                saveFile(file, tmpGridXY1, "gridXY1.txt");
-                saveObjectString(tmpGridXY1, morphUI.getImageControls1().getGrid().toString());
-                saveFile(file, tmpGridXY1, "gridXY2.txt");
-                saveObjectString(tmpGridXY1, morphUI.getImageControls1().getGrid().toString());
-                saveFile(file, tmpGridXY1, "gridUV1.txt");
-                saveObjectString(tmpGridXY1, morphUI.getImageControls1().getGrid().toString());
-                saveFile(file, tmpGridXY1, "gridUV2.txt");
+                File tmp = writeTextTmp();
+                saveObjectString(tmp, morphUI.getImageControls1().getGrid().toString());
+                saveFile(file, tmp, "gridXY1.txt");
+                tmp = writeTextTmp();
+                saveObjectString(tmp, morphUI.getImageControls1().getGrid().toString());
+                saveFile(file, tmp, "gridXY2.txt");
+                tmp = writeTextTmp();
+                saveObjectString(tmp, morphUI.getImageControls1().getGrid().toString());
+                saveFile(file, tmp, "gridUV1.txt");
+                tmp = writeTextTmp();
+                saveObjectString(tmp, morphUI.getImageControls1().getGrid().toString());
+                saveFile(file, tmp, "gridUV2.txt");
+                tmp = writeTextTmp();
+                ImageIO.write(morphUI.getImageControls1().getImage(), "jpg", tmp);
+                saveFile(file, tmp, "image1.bin");
+                tmp = writeTextTmp();
+                ImageIO.write(morphUI.getImageControls2().getImage(), "jpg", tmp);
+                saveFile(file, tmp, "image2.bin");
 
             } catch (IOException e) {
                 throw new RuntimeException(e);

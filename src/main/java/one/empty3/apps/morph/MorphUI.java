@@ -139,15 +139,16 @@ public class MorphUI extends JFrame {
             ex.printStackTrace();
         }
     }
+
     private void buttonLoadImage1(ActionEvent e) {
         boolean isLoaded = false;
         JFileChooser jFileChooser = new JFileChooser();
         jFileChooser.setFileFilter(new FileFilter() {
             @Override
             public boolean accept(File f) {
-                return f.getName().toLowerCase().endsWith(".jpg")||f.getName().toLowerCase().endsWith(".png")||
-                        f.getName().toLowerCase().endsWith(".mp4")||f.getName().toLowerCase().endsWith(".m4a")
-                ||f.getName().toLowerCase().endsWith(".avi")||f.isDirectory();
+                return f.getName().toLowerCase().endsWith(".jpg") || f.getName().toLowerCase().endsWith(".png") ||
+                        f.getName().toLowerCase().endsWith(".mp4") || f.getName().toLowerCase().endsWith(".m4a")
+                        || f.getName().toLowerCase().endsWith(".avi") || f.isDirectory();
             }
 
             @Override
@@ -158,9 +159,9 @@ public class MorphUI extends JFrame {
         jFileChooser.addChoosableFileFilter(new FileFilter() {
             @Override
             public boolean accept(File f) {
-                return f.getName().toLowerCase().endsWith(".jpg")||f.getName().toLowerCase().endsWith(".png")||
-                        f.getName().toLowerCase().endsWith(".mp4")||f.getName().toLowerCase().endsWith(".m4a")
-                        ||f.getName().toLowerCase().endsWith(".avi");
+                return f.getName().toLowerCase().endsWith(".jpg") || f.getName().toLowerCase().endsWith(".png") ||
+                        f.getName().toLowerCase().endsWith(".mp4") || f.getName().toLowerCase().endsWith(".m4a")
+                        || f.getName().toLowerCase().endsWith(".avi");
             }
 
             @Override
@@ -174,43 +175,48 @@ public class MorphUI extends JFrame {
         }
 
         if (jFileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-            this.image1 = jFileChooser.getSelectedFile();
+            chooseFile1(jFileChooser.getSelectedFile(), isLoaded);
+
+        }
+    }
+
+
+    private void chooseFile1(File selectedFile, boolean isLoaded) {
+        this.image1 = selectedFile;
+        try {
+            URL url = new URL("file:///" + image1.getAbsolutePath());
             try {
-                URL url = new URL("file:///" + image1.getAbsolutePath());
-                try {
-                    imageRead1 = ImageIO.read(url);
-                    isLoaded = true;
-                } catch (Exception ex) {
-                    isLoaded = false;
-                    vid1 = image1.getAbsolutePath();
-                    isLoaded = true;
-                    imageRead1 = null;
-                }
-                pack();
-
-
-                currentDirectory = jFileChooser.getCurrentDirectory();
-
-                initialization();
-
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
+                imageRead1 = ImageIO.read(url);
+                isLoaded = true;
+            } catch (Exception ex) {
+                isLoaded = false;
+                vid1 = image1.getAbsolutePath();
+                isLoaded = true;
+                imageRead1 = null;
             }
+            pack();
 
-            initGrids(grid1, gridUV1, imageRead1, panel1);
-            if (isLoaded) {
-                if (imageControl1 != null) {
-                    imageControl1.setDisplaying(false);
-                    imageControl1.setRunning(false);
-                }
-            }
-            imageControl1 = new ImageControls(this, grid1,gridUV1,
-                    imageRead1, panel1, text1, panelPoint3DUVGridIJ1);
-            imageControl1.setMorphUI(this);
-            //imageControl1.initUv(gridUV1);
-            new Thread(imageControl1).start();
+
+            currentDirectory = selectedFile.getParentFile();
+
+            initialization();
+
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
         }
 
+        initGrids(grid1, gridUV1, imageRead1, panel1);
+        if (isLoaded) {
+            if (imageControl1 != null) {
+                imageControl1.setDisplaying(false);
+                imageControl1.setRunning(false);
+            }
+        }
+        imageControl1 = new ImageControls(this, grid1,gridUV1,
+                imageRead1, panel1, text1, panelPoint3DUVGridIJ1);
+        imageControl1.setMorphUI(this);
+        //imageControl1.initUv(gridUV1);
+        new Thread(imageControl1).start();
     }
 
 
@@ -248,45 +254,48 @@ public class MorphUI extends JFrame {
         }
 
         if (jFileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-            this.image2 = jFileChooser.getSelectedFile();
-
-            try {
-                URL url = new URL("file:///" + image2.getAbsolutePath());
-                try {
-                    imageRead2 = ImageIO.read(url);
-                    isLoaded = true;
-                } catch (Exception ex) {
-                    isLoaded = false;
-                    vid2 = image2.getAbsolutePath();
-                    isLoaded = true;
-                    imageRead2 = null;
-                }
-                pack();
-
-                currentDirectory = jFileChooser.getCurrentDirectory();
-
-
-                initialization();
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
-            initGrids(grid2, gridUV2, imageRead2, panel2);
-            if (isLoaded) {
-                if (imageControl2 != null) {
-                    imageControl2.setDisplaying(false);
-                    imageControl2.setRunning(false);
-                }
-            }
-            imageControl2 = new ImageControls(this, grid2,gridUV2, imageRead2,
-                    panel2, text2, panelPoint3DUVGridIJ2);
-            imageControl2.setMorphUI(this);
-            //imageControl2.initUv(gridUV2);
-            new Thread(imageControl2).start();
+            chooseFile2(jFileChooser.getSelectedFile(), isLoaded);
         }
 
 
     }
 
+    private void chooseFile2(File selectedFile, boolean isLoaded) {
+        this.image2 = selectedFile;
+
+        try {
+            URL url = new URL("file:///" + image2.getAbsolutePath());
+            try {
+                imageRead2 = ImageIO.read(url);
+                isLoaded = true;
+            } catch (Exception ex) {
+                isLoaded = false;
+                vid2 = image2.getAbsolutePath();
+                isLoaded = true;
+                imageRead2 = null;
+            }
+            pack();
+
+            currentDirectory = selectedFile.getParentFile();
+
+
+            initialization();
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
+        initGrids(grid2, gridUV2, imageRead2, panel2);
+        if (isLoaded) {
+            if (imageControl2 != null) {
+                imageControl2.setDisplaying(false);
+                imageControl2.setRunning(false);
+            }
+        }
+        imageControl2 = new ImageControls(this, grid2,gridUV2, imageRead2,
+                panel2, text2, panelPoint3DUVGridIJ2);
+        imageControl2.setMorphUI(this);
+        //imageControl2.initUv(gridUV2);
+        new Thread(imageControl2).start();
+    }
 
 
     private void initialization() {
