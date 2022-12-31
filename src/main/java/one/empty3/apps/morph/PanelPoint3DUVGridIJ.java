@@ -364,6 +364,7 @@ public class PanelPoint3DUVGridIJ extends JPanel {
 
         //---- checkBoxUv ----
         checkBoxUv.setText("Text (u,v)");
+        checkBoxUv.setSelected(true);
         add(checkBoxUv, "cell 7 1");
         // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
     }
