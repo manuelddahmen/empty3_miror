@@ -4,7 +4,9 @@
 
 package one.empty3.apps.morph;
 
+import com.android.tools.r8.graph.O;
 import one.empty3.library.*;
+import one.empty3.library.core.lighting.Colors;
 
 import javax.swing.*;
 import java.awt.*;
@@ -139,7 +141,10 @@ public class ImageControls implements Runnable {
         if (!moving && !isPressed && isSelected) {
             System.out.println("::update a point position");
             System.out.println(selectedPoint);
-            grid.setElem(selectedPoint, this.xGrid, this.yGrid);
+            Point point = camera.coordonneesPoint2D(
+                    new Point3D(1.0*x, 1.0*y, 0d), zBuffer);
+            grid.setElem(new Point3D(resX-1.0*point.x, 1.0*point.y, 0d),
+                    this.xGrid, this.yGrid);
             if(getPointView().getCheckBoxUv().isSelected()) {
                 getGridUv().setElem(selectedPoint.multDot(
                         new Point3D(1./resX, 1./resY, 0d)), xGrid, yGrid);
@@ -353,7 +358,7 @@ public class ImageControls implements Runnable {
                 if (point3D.equals(selectedPoint)) {
                     sphere.texture(new ColorTexture(Color.RED));
                 } else {
-                    sphere.texture(new ColorTexture(Color.BLACK));
+                    sphere.texture(new ColorTexture(Color.GREEN));
                 }
                 sphere.setIncrU(0.4);
                 sphere.setIncrV(0.4);
