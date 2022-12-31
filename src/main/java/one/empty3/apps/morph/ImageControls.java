@@ -206,18 +206,12 @@ public class ImageControls implements Runnable {
 
     private void displayGrid() {
         Thread thread = new Thread(() -> {
-            while(zBuffer==null) {
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-            while(isDisplaying()) {
+            ZBufferImpl zBuffer1 = new ZBufferImpl(resX, resY);
+            while(isRunning()) {
+
                 Scene scene1 = new Scene();
                 addToScene(scene1);
-                zBuffer.scene(scene1);
-                drawPolygons(zBuffer, scene1);
+                //drawPolygons(zBuffer1, scene1);
             }
         });
         thread.start();
@@ -268,6 +262,7 @@ public class ImageControls implements Runnable {
 
         if (texture == null) {
             Logger.getLogger(this.getClass().getSimpleName()).log(Level.SEVERE, "Error texture Movie or Image is null");
+            displaying = false;
             return;
         }
 
@@ -292,7 +287,11 @@ public class ImageControls implements Runnable {
         scene.add(polygons);
         addToScene(scene);
 
-        scene.add(polygons);
+        if(zBuffer==null)
+            zBuffer = new ZBufferImpl(resX, resY);
+        else {
+            zBuffer.idzpp();
+        }
 
         drawPolygons(zBuffer, scene);
 
@@ -313,22 +312,20 @@ public class ImageControls implements Runnable {
 
         zBuffer.draw(scene);
 
-        //drawSceneOnScreen(scene);
-
-
-        zBuffer.scene(scene);
-        scene.cameraActive(camera);
-
         drawSceneOnScreen(zBuffer);
 
     }
 
     private void drawSceneOnScreen(ZBuffer zBuffer) {
         if(zBuffer!=null) {
-            BufferedImage image = zBuffer.imageInvX();
+           /* BufferedImage image = new BufferedImage(resX, resY, BufferedImage.TYPE_INT_ARGB);
 
-
-            ImageIcon imageIcon = new ImageIcon(image);
+            Graphics2D graphics = image.createGraphics();
+            Composite c = AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, .5f);
+            graphics.setComposite(c);
+            graphics.drawImage(zBuffer.imageInvX(), 0, 0,  resX, resY, null);
+            */
+            ImageIcon imageIcon = new ImageIcon(zBuffer.imageInvX());
 
             JLabel jLabelResult = new JLabel(imageIcon);
 
