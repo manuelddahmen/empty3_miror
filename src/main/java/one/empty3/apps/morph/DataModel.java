@@ -4,6 +4,10 @@
 
 package one.empty3.apps.morph;
 
+import one.empty3.library.Point3D;
+import one.empty3.library.StructureMatrix;
+import shadow.bundletool.com.android.tools.r8.origin.EmbeddedOrigin;
+
 import java.io.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -47,6 +51,12 @@ public class DataModel {
                 File tmpGridXY1 = writeTextTmp();
                 saveObjectString(tmpGridXY1, morphUI.getImageControls1().getGrid().toString());
                 saveFile(file, tmpGridXY1, "gridXY1.txt");
+                saveObjectString(tmpGridXY1, morphUI.getImageControls1().getGrid().toString());
+                saveFile(file, tmpGridXY1, "gridXY2.txt");
+                saveObjectString(tmpGridXY1, morphUI.getImageControls1().getGrid().toString());
+                saveFile(file, tmpGridXY1, "gridUV1.txt");
+                saveObjectString(tmpGridXY1, morphUI.getImageControls1().getGrid().toString());
+                saveFile(file, tmpGridXY1, "gridUV2.txt");
 
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -65,12 +75,29 @@ public class DataModel {
 
         ZipFile zipIn = new ZipFile(dataFile);
 
+        dataModel.morphUI = new MorphUI();
+
         while(zipIn.entries().hasMoreElements()) {
             ZipEntry zipEntry = zipIn.entries().nextElement();
             String name = zipEntry.getName();
             ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream(dataFile));
             ObjectInputStream objectInputStream = new ObjectInputStream(zipInputStream);
             Object o = objectInputStream.readObject();
+            switch (name) {
+                case "gridXY1.txt":
+                    dataModel.morphUI.getImageControls1().setGrid((StructureMatrix<Point3D>) o);
+                    break;
+                case "gridXY2.txt":
+                    dataModel.morphUI.getImageControls2().setGrid((StructureMatrix<Point3D>) o);
+                    break;
+                case "gridUV1.txt":
+                    dataModel.morphUI.getImageControls1().setGridUv((StructureMatrix<Point3D>) o);
+                    break;
+                case "gridUV2.txt":
+                    dataModel.morphUI.getImageControls2().setGridUv((StructureMatrix<Point3D>) o);
+                    break;
+
+            }
         }
 
         return dataModel;

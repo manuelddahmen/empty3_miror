@@ -18,7 +18,7 @@ import java.util.logging.Logger;
 public class ImageControls implements Runnable {
     private final JPanel panelDisplay;
     private final BufferedImage image;
-    private final StructureMatrix<Point3D> grid;
+    private StructureMatrix<Point3D> grid;
     private final JFrame jframe;
     private final ITexture texture;
     private PanelPoint3DUVGridIJ point3Dedit;
@@ -412,4 +412,13 @@ public class ImageControls implements Runnable {
     public MorphUI getMorphUI() {
         return this.morphUI;
     }
+
+    public void setGridUv(StructureMatrix<Point3D> o) {
+        this.gridUv = o;
+    }
+    public void setGrid(StructureMatrix<Point3D> o) {
+        this.grid = o;
+    }
+
+
 }
