@@ -6,12 +6,81 @@ package one.empty3.apps.morph;
 
 import one.empty3.library.*;
 
+import java.util.List;
+
 public class ShapeMorph extends ITexture {
+    private ITexture text1;
+    private ITexture text2;
     private StructureMatrix<Point3D> grid1 = new StructureMatrix<>(2, Point3D.class);
     private StructureMatrix<Point3D> grid2 = new StructureMatrix<>(2, Point3D.class);
     private int gridSizeX = 0;
     private int gridSizeY = 0;
     double t;
+
+    ShapeMorph(ITexture text1, ITexture text2, StructureMatrix<Point3D> grid1,
+               StructureMatrix<Point3D> grid2) {
+        this.text1 = text1;
+        this.text2 = text2;
+        this.grid1 = grid1;
+        this.grid2 = grid2;
+        this.t = 0;
+    }
+
+    public ITexture getText1() {
+        return text1;
+    }
+
+    public void setText1(ITexture text1) {
+        this.text1 = text1;
+    }
+
+    public ITexture getText2() {
+        return text2;
+    }
+
+    public void setText2(ITexture text2) {
+        this.text2 = text2;
+    }
+
+    public StructureMatrix<Point3D> getGrid1() {
+        return grid1;
+    }
+
+    public void setGrid1(StructureMatrix<Point3D> grid1) {
+        this.grid1 = grid1;
+    }
+
+    public StructureMatrix<Point3D> getGrid2() {
+        return grid2;
+    }
+
+    public void setGrid2(StructureMatrix<Point3D> grid2) {
+        this.grid2 = grid2;
+    }
+
+    public int getGridSizeX() {
+        return gridSizeX;
+    }
+
+    public void setGridSizeX(int gridSizeX) {
+        this.gridSizeX = gridSizeX;
+    }
+
+    public int getGridSizeY() {
+        return gridSizeY;
+    }
+
+    public void setGridSizeY(int gridSizeY) {
+        this.gridSizeY = gridSizeY;
+    }
+
+    public double getT() {
+        return t;
+    }
+
+    public void setT(double t) {
+        this.t = t;
+    }
 
     /**
      *
@@ -68,22 +137,7 @@ public class ShapeMorph extends ITexture {
         double distanceV1 = distance(u, v, 1, -Mu, bv1);
 
         return
-                new Point3D(distanceU0/(distanceU1-distanceU0), distanceV0/(distanceV1-distanceV0), 0d),
-
-
-        /*Yu0= Mu * Xu0 + bu0 point projeté de puv sur p0->p1
-                Yu1 = Mu* xu1 + bu1 point projeté de puv sur p3->p2
-
-        Du0 (Y0+y1)/2=Mu*(x0+x1)/2+b01 point milieu droite passant par de pente moyenne. => B01
-*/
-        //gridT[1].moins(gridT[0]).pro
-
-/*
-        Point3D xyInt = new Point3D((x-xGrid1)/(xGrid2-xGrid1),
-                    ((y-yGrid1)/(yGrid2-yGrid1)), 0d);
-*/
-
-
+                new Point3D(distanceU0/(distanceU1-distanceU0), distanceV0/(distanceV1-distanceV0), 0d);
     }
 
     /***
@@ -99,8 +153,29 @@ public class ShapeMorph extends ITexture {
         return null;
     }
 
+    public int colorMean(int color1, int color2) {
+        double[] doubles1 = Lumiere.getDoubles(color1);
+        double[] doubles2 = Lumiere.getDoubles(color2);
+        double[] d3 = new double[3];
+        for (int i = 0; i < d3.length; i++) {
+            d3[i] = doubles1[i]*t+doubles2[i]*(1-t);
+        }
+        return Lumiere.getInt(d3);
+    }
+
     @Override
     public int getColorAt(double x, double y) {
-        return 0;
+        List<Double> pText1 = coordText(x, y).multDot(
+                new Point3D(1. / grid1.getData2d().size(),
+                        1. / grid1.getData2d().get(0).size(),
+                        0d)).getCoordArr().getData1d();
+        List<Double> pText2 = coordText(x, y).multDot(
+                new Point3D(1. / grid1.getData2d().size(),
+                        1. / grid1.getData2d().get(0).size(),
+                        0d)).getCoordArr().getData1d();
+        int colorAt1 = text1.getColorAt(pText1.get(0), pText1.get(1));
+        int colorAt2 = text2.getColorAt(pText2.get(0), pText2.get(1));
+
+        return colorMean(colorAt1, colorAt2);
     }
 }
