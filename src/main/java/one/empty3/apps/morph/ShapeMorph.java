@@ -10,7 +10,7 @@ public class ShapeMorph extends ITexture {
     private StructureMatrix<Point3D> grid1 = new StructureMatrix<>(2, Point3D.class);
     private StructureMatrix<Point3D> grid2 = new StructureMatrix<>(2, Point3D.class);
     private int gridSizeX = 0;
-    private int gridSizeY = 0:
+    private int gridSizeY = 0;
     double t;
 
     /**
