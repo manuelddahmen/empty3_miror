@@ -778,7 +778,7 @@ public class MorphUI extends JFrame {
         contentPane.add(label1, "cell 3 1");
 
         //---- textFieldSeconds ----
-        textFieldSeconds.setText("1");
+        textFieldSeconds.setText("10");
         contentPane.add(textFieldSeconds, "cell 4 1");
 
         //---- label3 ----

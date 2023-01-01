@@ -277,7 +277,7 @@ public class StructureMatrix<T> {
         result = 31 * result + data2d.hashCode();
         return result;
     }
-
+    @Deprecated
     public int getDim() {
         return dim;
     }
