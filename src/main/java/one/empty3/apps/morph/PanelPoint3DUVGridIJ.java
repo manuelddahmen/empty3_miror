@@ -42,6 +42,10 @@ public class PanelPoint3DUVGridIJ extends JPanel {
 
     }
 
+    public boolean getCheckboxMorphing() {
+        return checkBoxMorphing.isSelected();
+    }
+
     class DataPoint {
         int i, j;
         Point3D point, uv;
@@ -265,6 +269,10 @@ public class PanelPoint3DUVGridIJ extends JPanel {
         return checkBoxUv;
     }
 
+    public JCheckBox getCheckBoxMorphing() {
+        return checkBoxMorphing;
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
         // Generated using JFormDesigner non-commercial license
@@ -282,6 +290,7 @@ public class PanelPoint3DUVGridIJ extends JPanel {
         label7 = new JLabel();
         textFieldY = new JTextField();
         checkBoxUv = new JCheckBox();
+        checkBoxMorphing = new JCheckBox();
 
         //======== this ========
         setLayout(new MigLayout(
@@ -366,6 +375,11 @@ public class PanelPoint3DUVGridIJ extends JPanel {
         checkBoxUv.setText("Text (u,v)");
         checkBoxUv.setSelected(true);
         add(checkBoxUv, "cell 7 1");
+
+        //---- checkBoxMorphing ----
+        checkBoxMorphing.setText("Morphing");
+        checkBoxMorphing.setSelected(true);
+        add(checkBoxMorphing, "cell 7 1");
         // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
     }
 
@@ -385,5 +399,6 @@ public class PanelPoint3DUVGridIJ extends JPanel {
     private JLabel label7;
     private JTextField textFieldY;
     private JCheckBox checkBoxUv;
+    private JCheckBox checkBoxMorphing;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 }

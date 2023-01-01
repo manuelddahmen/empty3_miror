@@ -56,6 +56,13 @@ public class Plan3D extends ParametricSurface {
         //setMaxX(1);
         //setMaxY(1);
     }
+    public Plan3D(Point3D p0, Point3D pX, Point3D pY) {
+        this.p0.setElem(p0);
+        this.vX.setElem(pX);
+        this.vY.setElem(pY);
+        //setMaxX(1);
+        //setMaxY(1);
+    }
 
     @Override
     public Point3D calculerPoint3D(double u, double v) {

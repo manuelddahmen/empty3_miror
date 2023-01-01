@@ -53,6 +53,8 @@ public class MorphUI extends JFrame {
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables  @formatter:off
     // Generated using JFormDesigner non-commercial license
     private JMenuBar menuBar1;
+    private JMenu menu1;
+    private JMenu menu2;
     private JPanel panel5;
     private JLabel label7;
     private JTextField textFieldResX;
@@ -386,19 +388,32 @@ public class MorphUI extends JFrame {
         try {
             int seconds = getSeconds();
             int fps = getFps();
+
+            ITexture textureMorphing = null;
             if (imageRead1 != null && imageRead2 != null && grid1 != null && grid2 != null && text1!=null && text2!=null) {
 
-                TextureMorphing textureMorphing = new TextureMorphing(text1, text2, fps * seconds);
 
-                if(text1 instanceof TextureMov) {
+                if(getImageControls1().getPointView().getCheckboxMorphing()&&
+                        getImageControls2().getPointView().getCheckboxMorphing()) {
+
+                    textureMorphing = new TextureMorphing(text1, text2, fps * seconds);
+                } else {
+                    textureMorphing = new ShapeMorph(text1, text2, grid1, grid2);
+
+                }
+                /*if (text1 instanceof TextureMov) {
                     new Thread(instance1).start();
                 }
-                if(text2 instanceof TextureMov) {
+                if (text2 instanceof TextureMov) {
                     new Thread(instance2).start();
+                }*/
+
+
+                if(textureMorphing instanceof TextureMorphing) {
+                    ((TextureMorphing)textureMorphing).setFrameNo(frameNo);
+                } else {
+                    ((ShapeMorph)textureMorphing).setT(1.0*frameNo/getFps()/getSeconds());
                 }
-
-
-                textureMorphing.setFrameNo(frameNo);
 
                 StructureMatrix<Point3D> copy = grid1.copy();
 
@@ -556,6 +571,8 @@ public class MorphUI extends JFrame {
         // Generated using JFormDesigner non-commercial license
         DefaultComponentFactory compFactory = DefaultComponentFactory.getInstance();
         menuBar1 = new JMenuBar();
+        menu1 = new JMenu();
+        menu2 = new JMenu();
         panel5 = new JPanel();
         label7 = new JLabel();
         textFieldResX = new JTextField();
@@ -610,6 +627,22 @@ public class MorphUI extends JFrame {
             "[]" +
             "[]" +
             "[]"));
+
+        //======== menuBar1 ========
+        {
+
+            //======== menu1 ========
+            {
+                menu1.setText("Fichier");
+            }
+            menuBar1.add(menu1);
+
+            //======== menu2 ========
+            {
+                menu2.setText("Propri\u00e9t\u00e9s");
+            }
+            menuBar1.add(menu2);
+        }
         setJMenuBar(menuBar1);
 
         //======== panel5 ========

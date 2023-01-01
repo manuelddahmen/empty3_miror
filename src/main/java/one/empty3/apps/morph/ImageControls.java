@@ -7,6 +7,7 @@ package one.empty3.apps.morph;
 import com.android.tools.r8.graph.O;
 import one.empty3.library.*;
 import one.empty3.library.core.lighting.Colors;
+import one.empty3.library.core.tribase.Plan3D;
 
 import javax.swing.*;
 import java.awt.*;
@@ -275,14 +276,24 @@ public class ImageControls implements Runnable {
             return;
         }
 
-        Polygons polygons = new PolygonsDistinctUV();
-        polygons.setCoefficients(grid);
-        polygons.texture(texture);
-        if(polygons instanceof PolygonsDistinctUV) {
-            ((PolygonsDistinctUV)polygons).setUvMap(gridUv);
-            ((PolygonsDistinctUV)polygons).setTexture2(texture);
-        }
+        scene = new Scene();
 
+        if(getPointView().getCheckboxMorphing()) {
+            Plan3D polygons = new Plan3D(Point3D.O0, Point3D.X.mult(resX), Point3D.Y.mult(resY));
+            //polygons.setCoefficients(grid);
+            polygons.texture(new ShapeMorph(texture, texture, grid, grid));
+            scene.add(polygons);
+        } else {
+            Polygons polygons = new PolygonsDistinctUV();
+            polygons.setCoefficients(grid);
+            polygons.texture(texture);
+            if (polygons instanceof PolygonsDistinctUV) {
+                ((PolygonsDistinctUV) polygons).setUvMap(gridUv);
+                ((PolygonsDistinctUV) polygons).setTexture2(texture);
+            }
+            scene.add(polygons);
+
+        }
         Point3D plus = Point3D.X.mult(
                 resX / 2.).plus(Point3D.Y.mult(resY / 2.));
 
@@ -291,9 +302,6 @@ public class ImageControls implements Runnable {
         camera.declareProperties();
         camera.calculerMatrice(Point3D.Y);
 
-        scene = new Scene();
-
-        scene.add(polygons);
         addToScene(scene);
 
         if(zBuffer==null)
