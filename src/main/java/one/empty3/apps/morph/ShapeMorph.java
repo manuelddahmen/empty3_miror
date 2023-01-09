@@ -102,7 +102,8 @@ public class ShapeMorph extends ITexture {
      * @param v coordonnée du point intersection texturé
      * @return u, v : coordonnées de texurée dans la case
      */
-    public Point3D coordText(double u, double v) {
+    @Override
+    public int getColorAt(double u, double v) {
         try {
 
             int sizeGridX = grid1.getData2d().size();
@@ -115,7 +116,7 @@ public class ShapeMorph extends ITexture {
             if (xGrid1 >= grid1.getData2d().size() || xGrid2 >= grid2.getData2d().size() ||
                     yGrid1 >= grid1.getData2d().get(xGrid1).size()
                     || yGrid2 >= grid2.getData2d().get(xGrid2).size()) {
-                return null;
+                return 0;
             } else {
 
                 Point3D[] gridP1 = new Point3D[]{
@@ -133,7 +134,7 @@ public class ShapeMorph extends ITexture {
                 Point3D[] gridT = new Point3D[4];
 
                 for (int i = 0; i < 4; i++) {
-                    gridT[i] = gridP1[i].plus(gridP2[i].moins(gridP1[i].mult(t)));
+                    gridT[i] = gridP1[i].plus(gridP2[i].moins(gridP1[i]).mult(t));
                 }
 
 
@@ -156,14 +157,43 @@ public class ShapeMorph extends ITexture {
                 double distanceV0 = distance(u, v, 1, -Mv, bv0);
                 double distanceV1 = distance(u, v, 1, -Mv, bv1);
 
-                return
-                        new Point3D(distanceU0 / (distanceU1 - distanceU0), distanceV0 / (distanceV1 - distanceV0), 0d);
+                Point3D paramT = calculerColorUVGridXY(gridT, u, v);
+
+                Point3D param1 = calculerColorUVGridXY(gridP1, paramT.getX(), paramT.getY());
+                Point3D param2 = calculerColorUVGridXY(gridP2, paramT.getX(), paramT.getY());
+
+                int c = colorMean(text1.getColorAt(param1.getX(), param1.getY()),
+                        text2.getColorAt(param2.getX(), param2.getY()));
+                return c;
             }
         } catch (NullPointerException | IndexOutOfBoundsException exception1) {
-            //exception1.printStackTrace();
-
+            exception1.printStackTrace();
+            return 0;
         }
-        return null;
+    }
+
+    private Point3D calculerColorUVGridXY(Point3D [] grid, double u, double v) {
+
+        double Mu0 = (grid[1].getY() - grid[0].getY()) / (grid[1].getX() - grid[0].getX());
+        double Mu1 = (grid[2].getY() - grid[3].getY()) / (grid[2].getX() - grid[3].getX());
+        double Mu = (Mu0 + Mu1) / 2;
+        double Mv0 = (grid[3].getY() - grid[0].getY()) / (grid[3].getX() - grid[0].getX());
+        double Mv1 = (grid[2].getY() - grid[1].getY()) / (grid[2].getX() - grid[1].getX());
+        double Mv = (Mv0 + Mv1) / 2;
+
+
+        // yP=Mu*xP+b
+        double bu0 = (grid[1].getY() + grid[0].getY()) / 2 - Mu * (grid[1].getX() + grid[0].getX());
+        double bu1 = (grid[3].getY() + grid[2].getY()) / 2 - Mu * (grid[3].getX() + grid[2].getX());
+        double bv0 = (grid[1].getY() + grid[2].getY()) / 2 - Mv * (grid[1].getX() + grid[2].getX());
+        double bv1 = (grid[3].getY() + grid[0].getY()) / 2 - Mv * (grid[3].getX() + grid[0].getX());
+
+        double distanceU0 = distance(u, v, 1, -Mu, bu0);
+        double distanceU1 = distance(u, v, 1, -Mu, bu1);
+        double distanceV0 = distance(u, v, 1, -Mv, bv0);
+        double distanceV1 = distance(u, v, 1, -Mv, bv1);
+
+        return new Point3D(distanceU0 / (distanceU1 - distanceU0), distanceV0 / (distanceV1 - distanceV0), 0d);
     }
 
     /***
@@ -189,26 +219,4 @@ public class ShapeMorph extends ITexture {
         return Lumiere.getInt(d3);
     }
 
-    @Override
-    public int getColorAt(double x, double y) {
-        Point3D point3D = coordText(x, y);
-        if(point3D==null)
-            return 0;
-        /*
-        List<Double> pText1 = point3D.multDot(
-                new Point3D(1. / grid1.getData2d().size(),
-                        1. / grid1.getData2d().get(0).size(),
-                        0d)).getCoordArr().getData1d();
-        List<Double> pText2 = point3D.multDot(
-                new Point3D(1. / grid1.getData2d().size(),
-                        1. / grid1.getData2d().get(0).size(),
-                        0d)).getCoordArr().getData1d();
-        */
-        List<Double> pText1 = point3D.getCoordArr().data1d;
-        List<Double> pText2 = point3D.getCoordArr().data1d;
-        int colorAt1 = text1.getColorAt(pText1.get(0), pText1.get(1));
-        int colorAt2 = text2.getColorAt(pText2.get(0), pText2.get(1));
-
-        return colorMean(colorAt1, colorAt2);
-    }
 }
