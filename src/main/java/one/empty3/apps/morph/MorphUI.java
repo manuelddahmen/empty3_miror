@@ -349,11 +349,15 @@ public class MorphUI extends JFrame {
                     out = writableFileChannel(avif.getAbsolutePath());
                     AWTSequenceEncoder encoder = new AWTSequenceEncoder(out, Rational.R(25, 1));
 
+                    Logger.getAnonymousLogger().log(Level.INFO, "STARTING. File = " + avif.getAbsolutePath());
+
                     for (int frame = 0; frame < getFps() * getSeconds(); frame++) {
                         Logger.getAnonymousLogger()
                                 .log(Level.FINE, "FrameNo" + frame);
-                        encoder.encodeImage(computeFrame(frame));
+                        BufferedImage bufferedImage = computeFrame(frame);
+                        encoder.encodeImage(bufferedImage);
                     }
+                    Logger.getAnonymousLogger().log(Level.INFO, "DONE. File = " + avif.getAbsolutePath());
 
                     encoder.finish();
                     out.close();
@@ -406,6 +410,7 @@ public class MorphUI extends JFrame {
 
             ITexture textureMorphing = null;
             if (imageRead1 != null && imageRead2 != null && grid1 != null && grid2 != null && text1!=null && text2!=null) {
+                Scene scene = new Scene();
 
 
                 if(getImageControls1().getPointView().getCheckboxMorphing()&&
@@ -413,7 +418,7 @@ public class MorphUI extends JFrame {
 
                     textureMorphing = new TextureMorphing(text1, text2, fps * seconds);
                 } else {
-                    textureMorphing = new ShapeMorph(text1, text2, grid1, grid2);
+                    textureMorphing = new TextureMorphing(text1, text2, fps*seconds);
 
                 }
                 /*if (text1 instanceof TextureMov) {
@@ -426,10 +431,7 @@ public class MorphUI extends JFrame {
 
                 if(textureMorphing instanceof TextureMorphing) {
                     ((TextureMorphing)textureMorphing).setFrameNo(frameNo);
-                } else {
-                    ((ShapeMorph)textureMorphing).setT(1.0*frameNo/getFps()/getSeconds());
                 }
-
                 StructureMatrix<Point3D> copy = grid1.copy();
 
                 if (copy != null) {
@@ -444,15 +446,20 @@ public class MorphUI extends JFrame {
                     int resX = getFinalResX();//imageRead1.getWidth();
                     int resY = getFinalResY();//imageRead1.getHeight();
 
+                    Representable polygons = null;
+                    if(imageControl1.getPointView().getCheckboxMorphing()&&imageControl2.getPointView().getCheckboxMorphing()) {
+                        polygons = new ShapeMorph(text1, text2, grid1, grid2);
+                        polygons.texture(textureMorphing);//???!!!!
+                        scene.add(polygons);
+                    } else {
+                        polygons = new Polygons();
+                        ((Polygons)polygons).setCoefficients(copy);
+                        scene.add(polygons);
+                    }
 
-                    Polygons polygons = new Polygons();
-                    polygons.setCoefficients(copy);
-                    polygons.texture(textureMorphing);
-
-
-
-                    Scene scene = new Scene();
-                    scene.add(polygons);
+                     if(polygons instanceof ShapeMorph){
+                        ((ShapeMorph)polygons).setT(1.0*frameNo/getFps()/getSeconds());
+                    }
 
 
                     Point3D plus = Point3D.X.mult(
@@ -468,6 +475,8 @@ public class MorphUI extends JFrame {
                     //if(zBufferComputing==null)
                     zBufferComputing
                             = new ZBufferImpl(resX, resY);
+
+                    zBufferComputing.setDisplayType(ZBufferImpl.DISPLAY_ALL);
 
                     zBufferComputing.scene(scene);
                     zBufferComputing.camera(camera);

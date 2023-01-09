@@ -290,13 +290,12 @@ public class ImageControls implements Runnable {
             displaying = false;
             return;
         }
-
         scene = new Scene();
 
         if(getPointView().getCheckboxMorphing()) {
-            Plan3D polygons = new Plan3D(Point3D.O0, Point3D.X.mult(resX), Point3D.Y.mult(resY));
-            //polygons.setCoefficients(grid);
-            polygons.texture(new ShapeMorph(texture, texture, grid, grid));
+            Polygons polygons = new Polygons();
+            polygons.setCoefficients(grid);
+            polygons.texture(texture);
             scene.add(polygons);
         } else {
             Polygons polygons = new PolygonsDistinctUV();

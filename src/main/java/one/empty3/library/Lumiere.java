@@ -30,9 +30,13 @@ public abstract class Lumiere  extends Representable{
 
     public static Color getColor(int colorAt) {
         int [] c = new int[3];
-        int res = 0xFF000000;
+        int res = 0x00000000;
         for(int i=0 ;i<3;i++) {
             c[i] = ((int)(float)(colorAt*0xff))<<((2-i)*8);
+            if(c[i]<0)
+                c[i] = 0;
+            if(c[i]>255)
+                c[i] = 255;
             res += c[i];
         }
         return new Color(c[0], c[1], c[2]);
