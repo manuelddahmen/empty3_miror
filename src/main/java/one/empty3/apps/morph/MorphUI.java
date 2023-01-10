@@ -428,10 +428,6 @@ public class MorphUI extends JFrame {
                     new Thread(instance2).start();
                 }*/
 
-
-                if(textureMorphing instanceof TextureMorphing) {
-                    ((TextureMorphing)textureMorphing).setFrameNo(frameNo);
-                }
                 StructureMatrix<Point3D> copy = grid1.copy();
 
                 if (copy != null) {
@@ -453,6 +449,7 @@ public class MorphUI extends JFrame {
                         scene.add(polygons);
                     } else {
                         polygons = new Polygons();
+                        polygons.texture(textureMorphing);
                         ((Polygons)polygons).setCoefficients(copy);
                         scene.add(polygons);
                     }
@@ -460,6 +457,9 @@ public class MorphUI extends JFrame {
                      if(polygons instanceof ShapeMorph){
                         ((ShapeMorph)polygons).setT(1.0*frameNo/getFps()/getSeconds());
                     }
+                     if(textureMorphing instanceof TextureMorphing) {
+                         ((TextureMorphing)textureMorphing).setFrameNo(frameNo);
+                     }
 
 
                     Point3D plus = Point3D.X.mult(
