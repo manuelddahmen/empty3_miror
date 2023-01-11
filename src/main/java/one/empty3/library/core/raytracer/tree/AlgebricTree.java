@@ -26,7 +26,7 @@ import java.util.Map;
 
 /*__
  * Created by Manuel Dahmen on 15-12-16.
- */
+ */z
 public class AlgebricTree extends Tree {
 
     private String formula = "0.0";
