@@ -71,6 +71,7 @@ public class MorphUI extends JFrame {
     private JMenu menu1;
     private JMenu menu2;
     private JPanel panel5;
+    private JComboBox<String> comboBoxMethod;
     private JLabel label7;
     private JTextField textFieldResX;
     private JLabel label8;
@@ -594,6 +595,33 @@ public class MorphUI extends JFrame {
         // TODO add your code here
     }
 
+    private void method(ActionEvent e) {
+        switch(getComboBoxMethod().getSelectedIndex()) {
+            case 0:
+                imageControl1.setMorphing(true);
+                imageControl2.setMorphing(true);
+                imageControl1.setXyUv(true);
+                imageControl2.setXyUv(true);
+                break;
+            case 1:
+                imageControl1.setMorphing(false);
+                imageControl2.setMorphing(false);
+                imageControl1.setXyUv(true);
+                imageControl2.setXyUv(true);
+                break;
+            case 2:
+                imageControl1.setMorphing(false);
+                imageControl2.setMorphing(false);
+                imageControl1.setXyUv(false);
+                imageControl2.setXyUv(false);
+                break;
+        }
+     }
+
+    public JComboBox<String> getComboBoxMethod() {
+        return comboBoxMethod;
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
         // Generated using JFormDesigner non-commercial license
@@ -602,6 +630,7 @@ public class MorphUI extends JFrame {
         menu1 = new JMenu();
         menu2 = new JMenu();
         panel5 = new JPanel();
+        comboBoxMethod = new JComboBox<>();
         label7 = new JLabel();
         textFieldResX = new JTextField();
         label8 = new JLabel();
@@ -639,22 +668,22 @@ public class MorphUI extends JFrame {
         //======== this ========
         var contentPane = getContentPane();
         contentPane.setLayout(new MigLayout(
-                "fill,hidemode 3",
-                // columns
-                "[fill]" +
-                        "[fill]" +
-                        "[fill]" +
-                        "[fill]" +
-                        "[fill]",
-                // rows
-                "[]" +
-                        "[]" +
-                        "[]" +
-                        "[]" +
-                        "[]" +
-                        "[]" +
-                        "[]" +
-                        "[]"));
+            "fill,hidemode 3",
+            // columns
+            "[fill]" +
+            "[fill]" +
+            "[fill]" +
+            "[fill]" +
+            "[fill]",
+            // rows
+            "[]" +
+            "[]" +
+            "[]" +
+            "[]" +
+            "[]" +
+            "[]" +
+            "[]" +
+            "[]"));
 
         //======== menuBar1 ========
         {
@@ -676,15 +705,25 @@ public class MorphUI extends JFrame {
         //======== panel5 ========
         {
             panel5.setLayout(new MigLayout(
-                    "hidemode 3",
-                    // columns
-                    "[fill]" +
-                            "[fill]" +
-                            "[fill]" +
-                            "[fill]" +
-                            "[fill]",
-                    // rows
-                    "[]"));
+                "hidemode 3",
+                // columns
+                "[fill]" +
+                "[fill]" +
+                "[fill]" +
+                "[fill]" +
+                "[fill]",
+                // rows
+                "[]" +
+                "[]"));
+
+            //---- comboBoxMethod ----
+            comboBoxMethod.setModel(new DefaultComboBoxModel<>(new String[] {
+                "Morphing",
+                "Tirer les points",
+                "Tirer et Stitch U,V"
+            }));
+            comboBoxMethod.addActionListener(e -> method(e));
+            panel5.add(comboBoxMethod, "cell 0 0");
 
             //---- label7 ----
             label7.setText("Grid X");
@@ -705,16 +744,16 @@ public class MorphUI extends JFrame {
             //======== panel3 ========
             {
                 panel3.setLayout(new MigLayout(
-                        "hidemode 3",
-                        // columns
-                        "[fill]" +
-                                "[fill]" +
-                                "[fill]" +
-                                "[fill]",
-                        // rows
-                        "[]" +
-                                "[]" +
-                                "[]"));
+                    "hidemode 3",
+                    // columns
+                    "[fill]" +
+                    "[fill]" +
+                    "[fill]" +
+                    "[fill]",
+                    // rows
+                    "[]" +
+                    "[]" +
+                    "[]"));
 
                 //---- labelFinalResX ----
                 labelFinalResX.setText("Final Res X");
@@ -752,14 +791,14 @@ public class MorphUI extends JFrame {
                 }
             });
             panel1.setLayout(new MigLayout(
-                    "hidemode 3",
-                    // columns
-                    "[fill]" +
-                            "[fill]",
-                    // rows
-                    "[]" +
-                            "[]" +
-                            "[]"));
+                "hidemode 3",
+                // columns
+                "[fill]" +
+                "[fill]",
+                // rows
+                "[]" +
+                "[]" +
+                "[]"));
         }
         contentPane.add(panel1, "cell 0 1 1 3");
 
@@ -774,14 +813,14 @@ public class MorphUI extends JFrame {
                 }
             });
             panel2.setLayout(new MigLayout(
-                    "hidemode 3",
-                    // columns
-                    "[fill]" +
-                            "[fill]",
-                    // rows
-                    "[]" +
-                            "[]" +
-                            "[]"));
+                "hidemode 3",
+                // columns
+                "[fill]" +
+                "[fill]",
+                // rows
+                "[]" +
+                "[]" +
+                "[]"));
         }
         contentPane.add(panel2, "cell 1 1 1 3");
 
@@ -790,14 +829,14 @@ public class MorphUI extends JFrame {
             panelResult.setMaximumSize(new Dimension(400, 400));
             panelResult.setMinimumSize(new Dimension(400, 400));
             panelResult.setLayout(new MigLayout(
-                    "fill,hidemode 3",
-                    // columns
-                    "[fill]" +
-                            "[fill]",
-                    // rows
-                    "[]" +
-                            "[]" +
-                            "[]"));
+                "fill,hidemode 3",
+                // columns
+                "[fill]" +
+                "[fill]",
+                // rows
+                "[]" +
+                "[]" +
+                "[]"));
         }
         contentPane.add(panelResult, "cell 2 1 1 3");
 
@@ -841,15 +880,15 @@ public class MorphUI extends JFrame {
         //======== panel4 ========
         {
             panel4.setLayout(new MigLayout(
-                    "fill,hidemode 3",
-                    // columns
-                    "[fill]" +
-                            "[fill]" +
-                            "[fill]" +
-                            "[fill]",
-                    // rows
-                    "[]" +
-                            "[]"));
+                "fill,hidemode 3",
+                // columns
+                "[fill]" +
+                "[fill]" +
+                "[fill]" +
+                "[fill]",
+                // rows
+                "[]" +
+                "[]"));
 
             //---- button5 ----
             button5.setText("Add col");

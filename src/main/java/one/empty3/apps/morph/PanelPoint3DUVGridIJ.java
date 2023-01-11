@@ -320,6 +320,7 @@ public class PanelPoint3DUVGridIJ extends JPanel {
             "[fill]" +
             "[fill]" +
             "[fill]" +
+            "[fill]" +
             "[fill]",
             // rows
             "[]" +

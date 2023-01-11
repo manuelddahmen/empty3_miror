@@ -12,9 +12,24 @@ new FormModel {
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class net.miginfocom.swing.MigLayout ) {
 				"$layoutConstraints": "hidemode 3"
 				"$columnConstraints": "[fill][fill][fill][fill][fill]"
-				"$rowConstraints": "[]"
+				"$rowConstraints": "[][]"
 			} ) {
 				name: "panel5"
+				add( new FormComponent( "javax.swing.JComboBox" ) {
+					name: "comboBoxMethod"
+					"model": new javax.swing.DefaultComboBoxModel {
+						selectedItem: "Morphing"
+						addElement( "Morphing" )
+						addElement( "Tirer les points" )
+						addElement( "Tirer et Stitch U,V" )
+					}
+					auxiliary() {
+						"JavaCodeGenerator.variableGetter": true
+					}
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "method", true ) )
+				}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+					"value": "cell 0 0"
+				} )
 				add( new FormComponent( "javax.swing.JLabel" ) {
 					name: "label7"
 					"text": "Grid X"

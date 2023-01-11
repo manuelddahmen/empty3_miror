@@ -454,4 +454,12 @@ public class ImageControls implements Runnable {
     public BufferedImage getImage() {
         return image;
     }
+
+    public void setXyUv(boolean b) {
+        point3Dedit.getCheckBoxUv().setSelected(b);
+    }
+
+    public void setMorphing(boolean b) {
+        point3Dedit.getCheckBoxMorphing().setSelected(b);
+    }
 }
