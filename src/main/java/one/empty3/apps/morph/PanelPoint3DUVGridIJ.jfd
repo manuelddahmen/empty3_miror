@@ -103,20 +103,26 @@ new FormModel {
 			add( new FormComponent( "javax.swing.JCheckBox" ) {
 				name: "checkBoxUv"
 				"text": "Text (u,v)"
-				"selected": true
 			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 				"value": "cell 7 1"
 			} )
 			add( new FormComponent( "javax.swing.JCheckBox" ) {
 				name: "checkBoxMorphing"
 				"text": "Morphing"
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 7 1"
+			} )
+			add( new FormComponent( "javax.swing.JCheckBox" ) {
+				name: "checkBoxNoDeformation"
+				"text": "Don't deform"
 				"selected": true
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "noDeformation", true ) )
 			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 				"value": "cell 7 1"
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )
-			"size": new java.awt.Dimension( 400, 300 )
+			"size": new java.awt.Dimension( 535, 300 )
 		} )
 	}
 }

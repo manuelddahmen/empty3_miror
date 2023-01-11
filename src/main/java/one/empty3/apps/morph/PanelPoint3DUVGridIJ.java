@@ -288,6 +288,20 @@ public class PanelPoint3DUVGridIJ extends JPanel {
         return checkBoxMorphing;
     }
 
+    public JCheckBox getCheckBoxNoDeformation() {
+        return checkBoxNoDeformation;
+    }
+
+    private void noDeformation(ActionEvent e) {
+        if(getCheckBoxNoDeformation().isSelected()) {
+            getCheckBoxMorphing().setSelected(false);
+            getCheckBoxUv().setSelected(false);
+        } else {
+            getCheckBoxMorphing().setSelected(true);
+            getCheckBoxUv().setSelected(true);
+        }
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
         // Generated using JFormDesigner non-commercial license
@@ -306,6 +320,7 @@ public class PanelPoint3DUVGridIJ extends JPanel {
         textFieldY = new JTextField();
         checkBoxUv = new JCheckBox();
         checkBoxMorphing = new JCheckBox();
+        checkBoxNoDeformation = new JCheckBox();
 
         //======== this ========
         setLayout(new MigLayout(
@@ -389,13 +404,17 @@ public class PanelPoint3DUVGridIJ extends JPanel {
 
         //---- checkBoxUv ----
         checkBoxUv.setText("Text (u,v)");
-        checkBoxUv.setSelected(true);
         add(checkBoxUv, "cell 7 1");
 
         //---- checkBoxMorphing ----
         checkBoxMorphing.setText("Morphing");
-        checkBoxMorphing.setSelected(true);
         add(checkBoxMorphing, "cell 7 1");
+
+        //---- checkBoxNoDeformation ----
+        checkBoxNoDeformation.setText("Don't deform");
+        checkBoxNoDeformation.setSelected(true);
+        checkBoxNoDeformation.addActionListener(e -> noDeformation(e));
+        add(checkBoxNoDeformation, "cell 7 1");
         // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
     }
 
@@ -416,5 +435,6 @@ public class PanelPoint3DUVGridIJ extends JPanel {
     private JTextField textFieldY;
     private JCheckBox checkBoxUv;
     private JCheckBox checkBoxMorphing;
+    private JCheckBox checkBoxNoDeformation;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 }

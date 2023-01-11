@@ -292,21 +292,31 @@ public class ImageControls implements Runnable {
         }
         scene = new Scene();
 
-        if(getPointView().getCheckboxMorphing()) {
-            Polygons polygons = new Polygons();
-            polygons.setCoefficients(grid);
+
+        if(getPointView().getCheckBoxNoDeformation().isSelected()) {
+            Plan3D polygons = new Plan3D();
+            polygons.getP0().setElem(Point3D.O0);
+            polygons.getvX().setElem(Point3D.X.mult(resX));
+            polygons.getvY().setElem(Point3D.Y.mult(resY));
             polygons.texture(texture);
             scene.add(polygons);
         } else {
-            Polygons polygons = new PolygonsDistinctUV();
-            polygons.setCoefficients(grid);
-            polygons.texture(texture);
-            if (polygons instanceof PolygonsDistinctUV) {
-                ((PolygonsDistinctUV) polygons).setUvMap(gridUv);
-                ((PolygonsDistinctUV) polygons).setTexture2(texture);
-            }
-            scene.add(polygons);
+            if (getPointView().getCheckboxMorphing()) {
+                Polygons polygons = new Polygons();
+                polygons.setCoefficients(grid);
+                polygons.texture(texture);
+                scene.add(polygons);
+            } else {
+                Polygons polygons = new PolygonsDistinctUV();
+                polygons.setCoefficients(grid);
+                polygons.texture(texture);
+                if (polygons instanceof PolygonsDistinctUV) {
+                    ((PolygonsDistinctUV) polygons).setUvMap(gridUv);
+                    ((PolygonsDistinctUV) polygons).setTexture2(texture);
+                }
+                scene.add(polygons);
 
+            }
         }
         Point3D plus = Point3D.X.mult(
                 resX / 2.).plus(Point3D.Y.mult(resY / 2.));
