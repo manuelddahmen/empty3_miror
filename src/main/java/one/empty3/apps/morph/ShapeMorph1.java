@@ -114,19 +114,6 @@ public class ShapeMorph1 extends ParametricSurface {
         return mult;
     }
 
-    /***
-     * Droite ax+by+c=0 et point p0
-     * @return distance
-     */
-    public double distance(double x0, double y0, double a, double b, double c) {
-        return Math.abs(a * x0 + b * y0 + c) / Math.sqrt(a * a + b * b);
-    }
-
-    @Override
-    public MatrixPropertiesObject copy() throws CopyRepresentableError, IllegalAccessException, InstantiationException {
-        return null;
-    }
-
     public int colorMean(int color1, int color2) {
         double[] doubles1 = Lumiere.getDoubles(color1);
         double[] doubles2 = Lumiere.getDoubles(color2);
@@ -156,8 +143,8 @@ public class ShapeMorph1 extends ParametricSurface {
             int xGrid2 = xGrid1+1;
             int yGrid2 = yGrid1+1;
 
-            double du = (u*(sizeGridX-1)-xGrid1)/sizeGridX;
-            double dv = (v*(sizeGridY-1)-yGrid1)/sizeGridY;
+            double du = (u*(sizeGridX-1)-xGrid1)*sizeGridX;
+            double dv = (v*(sizeGridY-1)-yGrid1)*sizeGridY;
 
 
             if (xGrid1 >= grid1.getData2d().size() || xGrid2 >= grid2.getData2d().size() ||
