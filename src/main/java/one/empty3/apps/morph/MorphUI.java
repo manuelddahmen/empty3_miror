@@ -391,7 +391,11 @@ public class MorphUI extends JFrame {
         JSlider source = (JSlider) e.getSource();
         int value = source.getValue();
         double v = 1.0 * value / (source.getMaximum() - source.getMinimum());
-        computeFrame((int) (v * getFps() * getSeconds()));
+        new Thread() {
+            public void run() {
+                computeFrame((int) (v * getFps() * getSeconds()));
+            }
+        }.start();
     }
 
 
@@ -408,7 +412,7 @@ public class MorphUI extends JFrame {
             int seconds = getSeconds();
             int fps = getFps();
 
-            ITexture textureMorphing = null;
+            TextureMorphing textureMorphing = null;
             if (imageRead1 != null && imageRead2 != null && grid1 != null && grid2 != null && text1 != null && text2 != null) {
                 Scene scene = new Scene();
 
@@ -421,12 +425,12 @@ public class MorphUI extends JFrame {
                     textureMorphing = new TextureMorphing(text1, text2, fps * seconds);
 
                 }
-                /*if (text1 instanceof TextureMov) {
+                if (text1 instanceof TextureMov) {
                     new Thread(instance1).start();
                 }
                 if (text2 instanceof TextureMov) {
                     new Thread(instance2).start();
-                }*/
+                }
 
                 StructureMatrix<Point3D> copy = grid1.copy();
 
@@ -458,7 +462,7 @@ public class MorphUI extends JFrame {
                         ((ShapeMorph1) polygons).setT(1.0 * frameNo / fps / seconds);
                     }
 
-                    ((TextureMorphing) textureMorphing).setFrameNo(frameNo);
+                    textureMorphing.setFrameNo(frameNo);
 
 
                     Point3D plus = Point3D.X.mult(

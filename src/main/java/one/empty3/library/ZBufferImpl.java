@@ -788,6 +788,8 @@ public class ZBufferImpl extends Representable implements ZBuffer {
     public void tracerTriangle(Point3D pp1, Point3D pp2, Point3D pp3,
                                ITexture t,
                                double u0, double v0, double u1, double v1) {
+        if(camera()==null||pp1==null||pp2==null||pp3==null)
+            return;
         Point p1 = camera().coordonneesPoint2D(pp1, this);
         Point p2 = camera().coordonneesPoint2D(pp2, this);
         Point p3 = camera().coordonneesPoint2D(pp3, this);

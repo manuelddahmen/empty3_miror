@@ -109,7 +109,7 @@ public class ShapeMorph1 extends ParametricSurface {
         Point3D pV = pV0.plus(pV1.moins(pV0).mult(du));
 
 
-        Point3D mult = pU.plus(pV).mult(0.5);
+        Point3D mult = pU;//.plus(pV).mult(0.5);
 
         return mult;
     }
@@ -138,13 +138,13 @@ public class ShapeMorph1 extends ParametricSurface {
 
             int sizeGridX = grid1.getData2d().size();
             int sizeGridY = grid1.getData2d().get(0).size();
-            int xGrid1 = (int) ((sizeGridX-1) * u);
-            int yGrid1 = (int) ((sizeGridY-1) * v);
+            int xGrid1 = (int) ((sizeGridX) * u);
+            int yGrid1 = (int) ((sizeGridY) * v);
             int xGrid2 = xGrid1+1;
             int yGrid2 = yGrid1+1;
 
-            double du = (u*(sizeGridX-1)-xGrid1)*sizeGridX;
-            double dv = (v*(sizeGridY-1)-yGrid1)*sizeGridY;
+            double du = (u*(sizeGridX)-xGrid1);
+            double dv = (v*(sizeGridY)-yGrid1);
 
 
             if (xGrid1 >= grid1.getData2d().size() || xGrid2 >= grid2.getData2d().size() ||
@@ -172,8 +172,12 @@ public class ShapeMorph1 extends ParametricSurface {
                 }
 
                 Point3D pT = calculerColorUVGridXY(gridT, du, dv);
-
-                Integer c = colorMean(text1.getColorAt(u, v),text2.getColorAt(u, v));
+                int c;
+                if(texture instanceof TextureMorphing) {
+                    c = texture.getColorAt(u, v);
+                } else
+                    c = colorMean(text1.getColorAt(u, v),
+                            text2.getColorAt(u, v));
 
                 pT.texture(new ColorTexture(c));
 
