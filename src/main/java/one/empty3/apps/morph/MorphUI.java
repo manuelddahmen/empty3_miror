@@ -596,6 +596,7 @@ public class MorphUI extends JFrame {
     }
 
     private void method(ActionEvent e) {
+        if(imageControl1!=null && imageControl2!=null)
         switch(getComboBoxMethod().getSelectedIndex()) {
             case 0:
                 imageControl1.setMorphing(true);
