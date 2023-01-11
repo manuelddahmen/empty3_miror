@@ -4,9 +4,9 @@ plugins {
     id 'java-library'
     id 'maven-publish'
 }
+Properties properties = new Properties()
 try {
     // Other configuration here
-    Properties properties = new Properties()
     File propertiesFile = new File('../private.properties/gradle.properties')
     propertiesFile.withInputStream {
         properties.load(it)
@@ -14,6 +14,7 @@ try {
 } catch(Exception ex) {
     ex.printStackTrace()
 }
+def load = properties
 java {
     withSourcesJar()
 }
@@ -162,8 +163,8 @@ publishing {
             credentials {
                 // Automation has a special account for authentication in Space
                 // account credentials are accessible via env vars
-                username = System.getenv("JB_SPACE_CLIENT_ID")
-                password = System.getenv("JB_SPACE_CLIENT_SECRET")
+                username = load.get("JB_SPACE_CLIENT_ID")
+                password = load.get("JB_SPACE_CLIENT_SECRET")
             }
 
             url = "https://maven.pkg.jetbrains.space/empty3/p/empty3/maven/maven"
@@ -172,8 +173,8 @@ publishing {
             name = "OSSRH"
             url = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
             credentials {
-                username = System.getenv("ossrhUsername")
-                password = System.getenv("ossrhPassword")
+                username = load.get("ossrhUsername")
+                password = load.get("ossrhPassword")
             }
 
         }
@@ -181,8 +182,8 @@ publishing {
             name = "GitHubPackages"
             url = uri("https://maven.pkg.github.com/manuelddahmne/empty3")
             credentials {
-                username = System.getenv("GITHUB_ACTOR")
-                password = System.getenv("GITHUB_TOKEN")
+                username = load.get("GITHUB_ACTOR")
+                password = load.get("GITHUB_TOKEN")
             }
         }
     }

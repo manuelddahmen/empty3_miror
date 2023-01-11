@@ -24,7 +24,7 @@ import one.empty3.library.core.nurbs.ParametricSurface;
 
 import java.util.List;
 
-public class ShapeMorph extends ParametricSurface {
+public class ShapeMorph1 extends ParametricSurface {
     double t;
     private ITexture text1;
     private ITexture text2;
@@ -34,7 +34,7 @@ public class ShapeMorph extends ParametricSurface {
     private int gridSizeY = 0;
     private ITexture textTexture;
 
-    ShapeMorph(ITexture text1, ITexture text2, StructureMatrix<Point3D> grid1,
+    ShapeMorph1(ITexture text1, ITexture text2, StructureMatrix<Point3D> grid1,
                StructureMatrix<Point3D> grid2) {
         this.text1 = text1;
         this.text2 = text2;
@@ -99,28 +99,19 @@ public class ShapeMorph extends ParametricSurface {
         this.t = t;
     }
 
-    private Point3D calculerColorUVGridXY(Point3D [] grid, double u, double v) {
+    private Point3D calculerColorUVGridXY(Point3D [] gridT, double du, double dv) {
+        Point3D pU0 = gridT[0].plus(gridT[1].moins(gridT[0]).mult(du));
+        Point3D pU1 = gridT[3].plus(gridT[2].moins(gridT[3]).mult(du));
+        Point3D pV0 = gridT[2].plus(gridT[1].moins(gridT[2]).mult(dv));
+        Point3D pV1 = gridT[3].plus(gridT[0].moins(gridT[3]).mult(dv));
 
-        double Mu0 = (grid[1].getY() - grid[0].getY()) / (grid[1].getX() - grid[0].getX());
-        double Mu1 = (grid[2].getY() - grid[3].getY()) / (grid[2].getX() - grid[3].getX());
-        double Mu = (Mu0 + Mu1) / 2;
-        double Mv0 = (grid[3].getY() - grid[0].getY()) / (grid[3].getX() - grid[0].getX());
-        double Mv1 = (grid[2].getY() - grid[1].getY()) / (grid[2].getX() - grid[1].getX());
-        double Mv = (Mv0 + Mv1) / 2;
+        Point3D pU = pU0.plus(pU1.moins(pU0).mult(dv));
+        Point3D pV = pV0.plus(pV1.moins(pV0).mult(du));
 
 
-        // yP=Mu*xP+b
-        double bu0 = (grid[1].getY() + grid[0].getY()) / 2 - Mu * (grid[1].getX() + grid[0].getX());
-        double bu1 = (grid[3].getY() + grid[2].getY()) / 2 - Mu * (grid[3].getX() + grid[2].getX());
-        double bv0 = (grid[1].getY() + grid[2].getY()) / 2 - Mv * (grid[1].getX() + grid[2].getX());
-        double bv1 = (grid[3].getY() + grid[0].getY()) / 2 - Mv * (grid[3].getX() + grid[0].getX());
+        Point3D mult = pU.plus(pV).mult(0.5);
 
-        double distanceU0 = distance(u, v, 1, -Mu, bu0);
-        double distanceU1 = distance(u, v, 1, -Mu, bu1);
-        double distanceV0 = distance(u, v, 1, -Mv, bv0);
-        double distanceV1 = distance(u, v, 1, -Mv, bv1);
-
-        return new Point3D(distanceU0 / (distanceU1 - distanceU0), distanceV0 / (distanceV1 - distanceV0), 0d);
+        return mult;
     }
 
     /***
@@ -193,28 +184,16 @@ public class ShapeMorph extends ParametricSurface {
                     gridT[i] = gridP1[i].plus(gridP2[i].moins(gridP1[i]).mult(t));
                 }
 
+                Point3D pT = calculerColorUVGridXY(gridT, du, dv);
+                Point3D p1 = calculerColorUVGridXY(gridP1, du, dv);
+                Point3D p2 = calculerColorUVGridXY(gridP2, du, dv);
 
-                Point3D paramT = calculerColorUVGridXY(gridT, u, v);
 
-                Point3D param1 = calculerColorUVGridXY(gridP1, u, v);
-                Point3D param2 = calculerColorUVGridXY(gridP2, u, v);
+                Integer c = colorMean(text1.getColorAt(u, v),text2.getColorAt(u, v));
 
-                Integer c = colorMean(text1.getColorAt(param1.getX()/grid1.getData2d().size(),
-                                param1.getY()/grid1.getData2d().get(0).size()),
-                        text2.getColorAt(param2.getX()/grid2.getData2d().size(),
-                                param2.getY()/grid2.getData2d().get(0).size()));
-                paramT.texture(new ITexture() {
-                    @Override
-                    public int getColorAt(double x, double y) {
-                        return c;
-                    }
+                pT.texture(new ColorTexture(c));
 
-                    @Override
-                    public MatrixPropertiesObject copy() throws CopyRepresentableError, IllegalAccessException, InstantiationException {
-                        return null;
-                    }
-                });
-                return paramT;
+                return pT;
             }
         } catch (NullPointerException | IndexOutOfBoundsException exception1) {
             exception1.printStackTrace();

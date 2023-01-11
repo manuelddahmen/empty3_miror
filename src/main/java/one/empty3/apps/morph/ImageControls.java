@@ -218,7 +218,7 @@ public class ImageControls implements Runnable {
 
 
     public void run() {
-        displayGrid();
+        //displayGrid();
         while (isRunning()) {
             display();
             try {

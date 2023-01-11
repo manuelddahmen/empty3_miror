@@ -148,7 +148,8 @@ public class ZBufferImpl extends Representable implements ZBuffer {
             Logger.getAnonymousLogger().log(Level.INFO, "r is null return");
             return;
         }
-        r.texture().timeNext();
+        if(r.texture()!=null)
+            r.texture().timeNext();
 
         if (r instanceof Scene) {
             Scene scene = (Scene) r;
