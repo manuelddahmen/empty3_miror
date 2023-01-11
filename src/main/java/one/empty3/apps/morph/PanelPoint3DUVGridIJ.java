@@ -393,6 +393,7 @@ public class PanelPoint3DUVGridIJ extends JPanel {
 
         //---- checkBoxMorphing ----
         checkBoxMorphing.setText("Morphing");
+        checkBoxMorphing.setSelected(true);
         add(checkBoxMorphing, "cell 7 1");
         // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
     }

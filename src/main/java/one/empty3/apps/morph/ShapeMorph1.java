@@ -153,11 +153,11 @@ public class ShapeMorph1 extends ParametricSurface {
             int sizeGridY = grid1.getData2d().get(0).size();
             int xGrid1 = (int) ((sizeGridX-1) * u);
             int yGrid1 = (int) ((sizeGridY-1) * v);
-            int xGrid2 = (int) ((sizeGridX-1) * (u))+1;
-            int yGrid2 = (int) ((sizeGridY-1) * (v))+1;
+            int xGrid2 = xGrid1+1;
+            int yGrid2 = yGrid1+1;
 
-            double du = (u*(grid1.getData2d().size()-1)-xGrid1)/(grid1.getData2d().size()-1);
-            double dv = (v*(grid1.getData2d().get(0).size()-1)-yGrid1)/(grid1.getData2d().size()-1);
+            double du = (u*(sizeGridX-1)-xGrid1)/sizeGridX;
+            double dv = (v*(sizeGridY-1)-yGrid1)/sizeGridY;
 
 
             if (xGrid1 >= grid1.getData2d().size() || xGrid2 >= grid2.getData2d().size() ||
@@ -185,9 +185,6 @@ public class ShapeMorph1 extends ParametricSurface {
                 }
 
                 Point3D pT = calculerColorUVGridXY(gridT, du, dv);
-                Point3D p1 = calculerColorUVGridXY(gridP1, du, dv);
-                Point3D p2 = calculerColorUVGridXY(gridP2, du, dv);
-
 
                 Integer c = colorMean(text1.getColorAt(u, v),text2.getColorAt(u, v));
 
@@ -202,25 +199,4 @@ public class ShapeMorph1 extends ParametricSurface {
 
     }
 
-    @Override
-    public ITexture texture() {
-        if(texture==null)
-        texture = new ITexture() {
-            @Override
-            public int getColorAt(double x, double y) {
-                Point3D point3D = calculerPoint3D(x, y);
-                return point3D.texture().getColorAt(x, y);
-            }
-
-            @Override
-            public MatrixPropertiesObject copy() throws CopyRepresentableError, IllegalAccessException, InstantiationException {
-                try {
-                    return (ITexture)(this.clone());
-                } catch (CloneNotSupportedException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        };
-        return texture;
-    }
 }

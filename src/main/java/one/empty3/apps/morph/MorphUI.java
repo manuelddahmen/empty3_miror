@@ -455,7 +455,7 @@ public class MorphUI extends JFrame {
                     }
 
                     if (polygons instanceof ShapeMorph1) {
-                        ((ShapeMorph) polygons).setT(1.0 * frameNo / getFps() / getSeconds());
+                        ((ShapeMorph1) polygons).setT(1.0 * frameNo / fps / seconds);
                     }
 
                     ((TextureMorphing) textureMorphing).setFrameNo(frameNo);
@@ -476,7 +476,7 @@ public class MorphUI extends JFrame {
                     else
                         zBufferComputing.idzpp();
 
-                    zBufferComputing.setDisplayType(ZBufferImpl.SURFACE_DISPLAY_TEXT_QUADS);
+                    //zBufferComputing.setDisplayType(ZBufferImpl.SURFACE_DISPLAY_TEXT_QUADS);
 
                     zBufferComputing.scene(scene);
                     zBufferComputing.camera(camera);
