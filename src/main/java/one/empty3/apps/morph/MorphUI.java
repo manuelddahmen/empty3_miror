@@ -71,6 +71,7 @@ public class MorphUI extends JFrame {
     private JMenu menu1;
     private JMenu menu2;
     private JPanel panel5;
+    private JComboBox<String> comboBoxShapeType;
     private JComboBox<String> comboBoxMethod;
     private JLabel label7;
     private JTextField textFieldResX;
@@ -631,6 +632,7 @@ public class MorphUI extends JFrame {
         menu1 = new JMenu();
         menu2 = new JMenu();
         panel5 = new JPanel();
+        comboBoxShapeType = new JComboBox<>();
         comboBoxMethod = new JComboBox<>();
         label7 = new JLabel();
         textFieldResX = new JTextField();
@@ -716,6 +718,15 @@ public class MorphUI extends JFrame {
                 // rows
                 "[]" +
                 "[]"));
+
+            //---- comboBoxShapeType ----
+            comboBoxShapeType.setModel(new DefaultComboBoxModel<>(new String[] {
+                "ShapeType",
+                "Surface Bezier MxN",
+                "Surface Polynomiale MxN",
+                "Polygones"
+            }));
+            panel5.add(comboBoxShapeType, "cell 0 0");
 
             //---- comboBoxMethod ----
             comboBoxMethod.setModel(new DefaultComboBoxModel<>(new String[] {

@@ -16,6 +16,18 @@ new FormModel {
 			} ) {
 				name: "panel5"
 				add( new FormComponent( "javax.swing.JComboBox" ) {
+					name: "comboBoxShapeType"
+					"model": new javax.swing.DefaultComboBoxModel {
+						selectedItem: "ShapeType"
+						addElement( "ShapeType" )
+						addElement( "Surface Bezier MxN" )
+						addElement( "Surface Polynomiale MxN" )
+						addElement( "Polygones" )
+					}
+				}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+					"value": "cell 0 0"
+				} )
+				add( new FormComponent( "javax.swing.JComboBox" ) {
 					name: "comboBoxMethod"
 					"model": new javax.swing.DefaultComboBoxModel {
 						selectedItem: "Morphing"
