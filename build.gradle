@@ -3,6 +3,7 @@ plugins {
     id("java")
     id 'java-library'
     id 'maven-publish'
+    id 'signing'
 }
 Properties properties = new Properties()
 try {
@@ -11,7 +12,7 @@ try {
     propertiesFile.withInputStream {
         properties.load(it)
     }
-} catch(Exception ex) {
+} catch (Exception ex) {
     ex.printStackTrace()
 }
 def load = properties
@@ -38,6 +39,16 @@ task BoardGameGui(type: JavaExec) {
     mainClass = "one.empty3.apps.newboardgames.WindowDrawing"
     args "arg1", "arg2"
 }
+signing {
+    def signingKey = load.get("signing.keyId")
+    def signingPassword = load.get("signing.password")
+
+    useGpgCmd()
+    //useInMemoryPgpKeys(signingKey, signingPassword)
+
+    sign publishing.publications
+}
+
 
 repositories {
     google()
@@ -152,11 +163,12 @@ publishing {
             pom {
                 name = 'My Empty3 Graphics Library'
                 description = 'Graphics, image processing'
+                packaging 'jar'
 
             }
         }
-    }
 
+    }
 
     repositories {
         maven {
