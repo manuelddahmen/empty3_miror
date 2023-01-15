@@ -4,7 +4,6 @@ plugins {
     id 'java-library'
     id 'maven-publish'
     id 'signing'
-
 }
 Properties properties = new Properties()
 try {
@@ -179,8 +178,8 @@ publishing {
 
                 licenses {
                     license {
-                        name = "Gnu Gpl 3"
-                        url = "http://www.fsf.org/licenses/gpl"
+                        name = "Apache version 2"
+                        url = "https://www.apache.org/licenses/LICENSE-2.0"
                         distribution = "repo"
                     }
                 }
