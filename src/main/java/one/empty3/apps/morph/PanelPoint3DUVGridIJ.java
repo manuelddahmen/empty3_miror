@@ -245,15 +245,55 @@ public class PanelPoint3DUVGridIJ extends JPanel {
                 for(ImageControls imageControls : imageControlsArr) {
                     imageControls.getGrid().insert(
                             imageControls.getYgrid(), StructureMatrix.INSERT_ROW, Point3D.O0);
+                    StructureMatrix<Point3D> grid = imageControls.getGrid();
+                    for(int x=0; x<grid.getData2d().size(); x++) {
+                        Point3D p1 = grid.getData2d().get(x).get(imageControls.getYgrid());
+                        Point3D p2 = grid.getData2d().get(x).get(imageControls.getYgrid()+1
+                        >=grid.getData2d().get(x).size()?imageControls.getYgrid():imageControls.getYgrid()+1);
+                        Point3D p = grid.getData2d().get(x).set(
+                                imageControls.getYgrid(), p1.plus(p2).mult(0.5));
+
+                    }
                     imageControls.getGridUv().insert(
                             imageControls.getYgrid(), StructureMatrix.INSERT_ROW, Point3D.O0);
+                    grid = imageControls.getGrid();
+                    for(int x=0; x<grid.getData2d().size(); x++) {
+                        Point3D p1 = grid.getData2d().get(x).get(imageControls.getYgrid());
+                        Point3D p2 = grid.getData2d().get(x).get(imageControls.getYgrid()+1
+                                >=grid.getData2d().get(x).size()?imageControls.getYgrid():imageControls.getYgrid()+1);
+                        Point3D p = grid.getData2d().get(x).set(
+                                imageControls.getYgrid(), p1.plus(p2).mult(0.5));
+
+                    }
                 }
                 break;
 //            Insert column before
             case 4:
                 for(ImageControls imageControls : imageControlsArr) {
                     imageControls.getGrid().insert(
+                            imageControls.getYgrid(), StructureMatrix.INSERT_ROW, Point3D.O0);
+                    StructureMatrix<Point3D> grid = imageControls.getGrid();
+                    for(int y=0; y<grid.getData2d().size(); y++) {
+                        int x = imageControls.getXgrid();
+                        Point3D p1 = grid.getData2d().get(x).get(imageControls.getYgrid());
+                        Point3D p2 = grid.getData2d().get(imageControls.getXgrid()+1
+                                >=grid.getData2d().get(x).size()?imageControls.getXgrid():imageControls.getXgrid()+1).get(imageControls.getYgrid()+1
+                                >=grid.getData2d().get(x).size()?imageControls.getXgrid():imageControls.getXgrid()+1);
+                        Point3D p = grid.getData2d().get(x).set(
+                                imageControls.getYgrid(), p1.plus(p2).mult(0.5));
+
+                    }
+                    imageControls.getGrid().insert(
                             imageControls.getXgrid(), StructureMatrix.INSERT_COL, Point3D.O0);
+                    grid = imageControls.getGrid();
+                    for(int x=0; x<grid.getData2d().size(); x++) {
+                        Point3D p1 = grid.getData2d().get(x).get(imageControls.getYgrid());
+                        Point3D p2 = grid.getData2d().get(x).get(imageControls.getYgrid()+1
+                                >=grid.getData2d().get(x).size()?imageControls.getYgrid():imageControls.getYgrid()+1);
+                        Point3D p = grid.getData2d().get(x).set(
+                                imageControls.getYgrid(), p1.plus(p2).mult(0.5));
+
+                    }
                     imageControls.getGridUv().insert(
                             imageControls.getXgrid(), StructureMatrix.INSERT_COL, Point3D.O0);
                 }

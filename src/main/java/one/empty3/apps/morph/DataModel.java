@@ -22,8 +22,12 @@ package one.empty3.apps.morph;
 import one.empty3.feature.app.replace.javax.imageio.ImageIO;
 import one.empty3.library.Point3D;
 import one.empty3.library.StructureMatrix;
+import one.empty3.library.core.script.InterpretePoint3D;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
@@ -64,16 +68,16 @@ public class DataModel {
         }else {
             try {
                 File tmp = writeTextTmp();
-                saveObjectString(tmp, morphUI.getImageControls1().getGrid().toString());
+                saveObjectArray2d(tmp, morphUI.getImageControls1().getGrid());
                 saveFile(file, tmp, "gridXY1.txt");
                 tmp = writeTextTmp();
-                saveObjectString(tmp, morphUI.getImageControls1().getGrid().toString());
+                saveObjectArray2d(tmp, morphUI.getImageControls1().getGrid());
                 saveFile(file, tmp, "gridXY2.txt");
                 tmp = writeTextTmp();
-                saveObjectString(tmp, morphUI.getImageControls1().getGrid().toString());
+                saveObjectArray2d(tmp, morphUI.getImageControls1().getGrid());
                 saveFile(file, tmp, "gridUV1.txt");
                 tmp = writeTextTmp();
-                saveObjectString(tmp, morphUI.getImageControls1().getGrid().toString());
+                saveObjectArray2d(tmp, morphUI.getImageControls1().getGrid());
                 saveFile(file, tmp, "gridUV2.txt");
                 tmp = writeTextTmp();
                 ImageIO.write(morphUI.getImageControls1().getImage(), "jpg", tmp);
@@ -88,13 +92,31 @@ public class DataModel {
         }
     }
 
-    private void saveObjectString(File tmpGridXY1, String toString) throws IOException {
+    private void saveObjectArray2d(File tmp, StructureMatrix<Point3D> grid) {
+        try {
+            PrintWriter printWriter = new PrintWriter(tmp);
+            printWriter.println(grid.getData2d().size());
+            grid.getData2d().forEach(point3DS -> {
+                printWriter.println(point3DS.size());
+                point3DS.forEach(point3D -> {
+                    for (int i = 0; i < 3; i++) {
+                        printWriter.println(point3D.get(i));
+                    }
+                });
+            });
+            printWriter.close();
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void saveObjectString(File tmpGridXY1, Object toString) throws IOException {
         ObjectOutputStream pw = new ObjectOutputStream(new FileOutputStream(tmpGridXY1));
         pw.writeObject(toString);
         pw.close();
     }
 
-    public static DataModel load(File dataFile) throws IOException, ClassNotFoundException {
+    public DataModel load(File dataFile) throws IOException, ClassNotFoundException {
         DataModel dataModel = new DataModel(null);
 
         ZipFile zipIn = new ZipFile(dataFile);
@@ -107,6 +129,8 @@ public class DataModel {
             ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream(dataFile));
             ObjectInputStream objectInputStream = new ObjectInputStream(zipInputStream);
             Object o = objectInputStream.readObject();
+            StructureMatrix<Point3D> structureMatrix = new StructureMatrix<Point3D>(2, Point3D.class);
+            loadObjectString(name, structureMatrix);
             switch (name) {
                 case "gridXY1.txt":
                     dataModel.morphUI.getImageControls1().setGrid((StructureMatrix<Point3D>) o);
@@ -125,5 +149,42 @@ public class DataModel {
         }
 
         return dataModel;
+    }
+
+    private void loadObjectString(String name, StructureMatrix<Point3D> structureMatrix) {
+        File file1 = new File(name);
+        if(file1.canRead()) {
+            try {
+                FileInputStream inputStreamReader = new FileInputStream(file1);
+                byte[] bytes = inputStreamReader.readAllBytes();
+                String s = new String(bytes);
+                String[] split = s.split("\n");
+
+                int j=0;
+                int x=0;
+                for(int i=1; i<split.length; i++) {
+                    int length = 0;
+                    String s1 = split[i];
+                    if(i==j && i<split.length) {
+                        length = Integer.parseInt(s1);
+                        structureMatrix.getData2d().add(new ArrayList<>());
+                        x++;
+                    } else if(i<split.length){
+                        double d1 = Double.parseDouble(split[i++]);
+                        double d2 = Double.parseDouble(split[i++]);
+                        double d3 = Double.parseDouble(split[i++]);
+                        structureMatrix.getData2d().get(x).add(new Point3D(d1, d2, d3));
+                        j++;
+                    }
+                    i++;
+                }
+
+            } catch (FileNotFoundException e) {
+
+                throw new RuntimeException(e);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 }
