@@ -55,10 +55,8 @@ new FormModel {
 					addElement( "Update" )
 					addElement( "Delete row" )
 					addElement( "Delete column" )
-					addElement( "Insert row before" )
-					addElement( "Insert column before" )
-					addElement( "Insert row after" )
-					addElement( "Insert column after" )
+					addElement( "Insert column" )
+					addElement( "Insert row" )
 				}
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "comboBoxAction", true ) )
 			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {

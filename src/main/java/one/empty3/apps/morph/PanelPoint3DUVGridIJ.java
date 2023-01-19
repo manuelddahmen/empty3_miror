@@ -23,16 +23,14 @@
 
 package one.empty3.apps.morph;
 
-import java.awt.event.*;
-import java.beans.*;
-import javax.swing.*;
-
-import com.android.tools.r8.graph.D;
-import net.miginfocom.swing.*;
+import net.miginfocom.swing.MigLayout;
 import one.empty3.library.CopyRepresentableError;
-import one.empty3.library.LumiereElement;
 import one.empty3.library.Point3D;
 import one.empty3.library.StructureMatrix;
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.beans.PropertyChangeEvent;
 
 /**
  * @author manuel
@@ -40,13 +38,35 @@ import one.empty3.library.StructureMatrix;
 public class PanelPoint3DUVGridIJ extends JPanel {
     private ImageControls imageControls;
     private DataPoint dataPoint;
+    // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables  @formatter:off
+    // Generated using JFormDesigner non-commercial license
+    private JLabel label1;
+    private JTextField textFieldI;
+    private JLabel label3;
+    private JTextField textFieldU;
+    private JLabel label5;
+    private JTextField textFieldX;
+    private JComboBox<String> comboBox1;
+    private JLabel label2;
+    private JTextField textFieldJ;
+    private JLabel label4;
+    private JTextField textFieldV;
+    private JLabel label7;
+    private JTextField textFieldY;
+    private JCheckBox checkBoxUv;
+    private JCheckBox checkBoxMorphing;
+    private JCheckBox checkBoxNoDeformation;
+
+    public PanelPoint3DUVGridIJ() {
+        initComponents();
+    }
 
     public DataPoint getDataPoint() {
         return dataPoint;
     }
 
     public void loadDataPoint() {
-        if(dataPoint==null)
+        if (dataPoint == null)
             dataPoint = new DataPoint();
         getDataPoint().point = imageControls.getGrid().getData2d()
                 .get(imageControls.getXgrid()).get(imageControls.getYgrid());
@@ -61,19 +81,10 @@ public class PanelPoint3DUVGridIJ extends JPanel {
         return checkBoxMorphing.isSelected();
     }
 
-    class DataPoint {
-        int i, j;
-        Point3D point, uv;
-
-    }
-
-    public PanelPoint3DUVGridIJ() {
-        initComponents();
-    }
-
     public void setImageControls(ImageControls imageControls) {
         this.imageControls = imageControls;
     }
+
     public JLabel getLabel1() {
         return label1;
     }
@@ -127,20 +138,21 @@ public class PanelPoint3DUVGridIJ extends JPanel {
     }
 
     private void textFieldIPropertyChange(PropertyChangeEvent e) {
-        getTextFieldI().setText(""+Double.parseDouble(""+e.getOldValue()));
+        getTextFieldI().setText("" + Double.parseDouble("" + e.getOldValue()));
         saveDataPoint();
-        getTextFieldI().setText(""+Double.parseDouble(""+e.getNewValue()));
+        getTextFieldI().setText("" + Double.parseDouble("" + e.getNewValue()));
         loadDataPoint();
     }
+
     private void textFieldJPropertyChange(PropertyChangeEvent e) {
-        getTextFieldJ().setText(""+Double.parseDouble(""+e.getOldValue()));
+        getTextFieldJ().setText("" + Double.parseDouble("" + e.getOldValue()));
         saveDataPoint();
-        getTextFieldJ().setText(""+Double.parseDouble(""+e.getNewValue()));
+        getTextFieldJ().setText("" + Double.parseDouble("" + e.getNewValue()));
         loadDataPoint();
     }
 
     private void saveDataPoint() {
-        if(dataPoint!=null) {
+        if (dataPoint != null) {
             /*
             imageControls.getGrid().setElem(dataPoint.point, dataPoint.i, dataPoint.j);
             imageControls.getGridUv().setElem(dataPoint.uv, dataPoint.i, dataPoint.j);
@@ -148,12 +160,12 @@ public class PanelPoint3DUVGridIJ extends JPanel {
             imageControls.getGrid().getData2d().get(dataPoint.i).set(dataPoint.j, dataPoint.point);
             imageControls.getGridUv().getData2d().get(dataPoint.i).set(dataPoint.j, dataPoint.uv);
             try {
-                if(checkBoxUv.isSelected()) {
+                if (checkBoxUv.isSelected()) {
                     imageControls.getGridUv().getData2d().get(dataPoint.i)
                             .set(dataPoint.j,
-                            ((Point3D) dataPoint.point.copy()).multDot(
-                                    new Point3D((double)imageControls.getResX(),
-                                            (double)imageControls.getResY(), 0d)));
+                                    ((Point3D) dataPoint.point.copy()).multDot(
+                                            new Point3D((double) imageControls.getResX(),
+                                                    (double) imageControls.getResY(), 0d)));
                 }
             } catch (CopyRepresentableError e) {
                 throw new RuntimeException(e);
@@ -164,7 +176,6 @@ public class PanelPoint3DUVGridIJ extends JPanel {
             }
         }
     }
-
 
     private void textFieldUPropertyChange(PropertyChangeEvent e) {
         try {
@@ -200,7 +211,7 @@ public class PanelPoint3DUVGridIJ extends JPanel {
 
     private void textFieldYPropertyChange(PropertyChangeEvent e) {
         try {
-            dataPoint.point = new Point3D( dataPoint.point.getX(),
+            dataPoint.point = new Point3D(dataPoint.point.getX(),
                     (double) Double.parseDouble(getTextFieldY().getText()), dataPoint.point.getZ());
             saveDataPoint();
         } catch (NumberFormatException ex) {
@@ -215,14 +226,14 @@ public class PanelPoint3DUVGridIJ extends JPanel {
         ImageControls[] imageControlsArr = new ImageControls[]{
                 imageControls1,
                 imageControls2};
-        switch (((JComboBox)(e.getSource())).getSelectedIndex()) {
+        switch (((JComboBox) (e.getSource())).getSelectedIndex()) {
             //Update
             case 0:
                 saveDataPoint();
                 break;
 //            Delete row
             case 1:
-                for(ImageControls imageControls : imageControlsArr) {
+                for (ImageControls imageControls : imageControlsArr) {
                     imageControls.getGrid().delete(
                             imageControls.getYgrid(), StructureMatrix.INSERT_ROW);
                     imageControls.getGridUv().delete(
@@ -232,7 +243,7 @@ public class PanelPoint3DUVGridIJ extends JPanel {
                 break;
 //            Delete column
             case 2:
-                for(ImageControls imageControls : imageControlsArr) {
+                for (ImageControls imageControls : imageControlsArr) {
                     imageControls.getGrid().delete(
                             imageControls.getXgrid(), StructureMatrix.INSERT_COL);
                     imageControls.getGridUv().delete(
@@ -242,57 +253,65 @@ public class PanelPoint3DUVGridIJ extends JPanel {
                 break;
             case 3:
 //            Insert row at
-                for(ImageControls imageControls : imageControlsArr) {
-                    imageControls.getGrid().insert(
-                            imageControls.getYgrid(), StructureMatrix.INSERT_ROW, Point3D.O0);
-                    StructureMatrix<Point3D> grid = imageControls.getGrid();
-                    int x = imageControls.getXgrid();
-                    for (int y = 0; y < grid.getData2d().get(y).size(); y++) {
-                        Point3D p1;
-                        Point3D p2;
-                        if (x == 0) {
-                            p1 = grid.getData2d().get(y).get(x);
-                            p2 = grid.getData2d().get(y + 1).get(x);
-                        } else if (y == grid.getData2d().size() - 1) {
-                            p1 = grid.getData2d().get(y - 1).get(x);
-                            p2 = grid.getData2d().get(grid.getData2d().size() - 1).get(x);
-                        } else {
-                            p1 = grid.getData2d().get(y - 1).get(x);
-                            p2 = grid.getData2d().get(y + 1).get(x);
+                try {
+                    for (ImageControls imageControls : imageControlsArr) {
+                        imageControls.getGrid().insert(
+                                imageControls.getYgrid(), StructureMatrix.INSERT_COL, Point3D.O0);
+                        StructureMatrix<Point3D> grid = imageControls.getGrid();
+                        int x = imageControls.getXgrid();
+                        for (int y = 0; y < grid.getData2d().get(y).size(); y++) {
+                            Point3D p1;
+                            Point3D p2;
+                            if (x == 0) {
+                                p1 = grid.getData2d().get(y).get(x);
+                                p2 = grid.getData2d().get(y + 1).get(x);
+                            } else if (y == grid.getData2d().size() - 1) {
+                                p1 = grid.getData2d().get(y - 1).get(x);
+                                p2 = grid.getData2d().get(grid.getData2d().size() - 1).get(x);
+                            } else {
+                                p1 = grid.getData2d().get(y - 1).get(x);
+                                p2 = grid.getData2d().get(y + 1).get(x);
+                            }
+                            Point3D p =
+                                    p1.plus(p2).mult(0.5);
+                            grid.setElem(p, y, x);
                         }
-                        Point3D p =
-                                p1.plus(p2).mult(0.5);
-                        grid.setElem(p, y, x);
                     }
+                } catch (IndexOutOfBoundsException ex) {
+                    ex.printStackTrace();
                 }
                 break;
-                    case 4:
+            case 4:
 //            Insert col at
-                        for(ImageControls imageControls : imageControlsArr) {
-                            imageControls.getGrid().insert(
-                                    imageControls.getYgrid(), StructureMatrix.INSERT_COL, Point3D.O0);
-                            StructureMatrix<Point3D> grid = imageControls.getGrid();
-                            for (int x = 0; x < grid.getData2d().size(); x++) {
-                                int y = imageControls.getYgrid();
-                                Point3D p1;
-                                Point3D p2;
-                                if (y == 0) {
-                                    p1 = grid.getData2d().get(y).get(x);
-                                    p2 = grid.getData2d().get(y + 1).get(x);
-                                } else if (y == grid.getData2d().size() - 1) {
-                                    p1 = grid.getData2d().get(y - 1).get(x);
-                                    p2 = grid.getData2d().get(grid.getData2d().size() - 1).get(x);
-                                } else {
-                                    p1 = grid.getData2d().get(y - 1).get(x);
-                                    p2 = grid.getData2d().get(y + 1).get(x);
-                                }
-                                Point3D p =
-                                        p1.plus(p2).mult(0.5);
-                                grid.setElem(p, y, x);
+                try {
+                    for (ImageControls imageControls : imageControlsArr) {
+                        imageControls.getGrid().insert(
+                                imageControls.getYgrid(), StructureMatrix.INSERT_ROW, Point3D.O0);
+                        StructureMatrix<Point3D> grid = imageControls.getGrid();
+                        for (int x = 0; x < grid.getData2d().size(); x++) {
+                            int y = imageControls.getYgrid();
+                            Point3D p1;
+                            Point3D p2;
+                            if (y == 0) {
+                                p1 = grid.getData2d().get(y).get(x);
+                                p2 = grid.getData2d().get(y + 1).get(x);
+                            } else if (y == grid.getData2d().size() - 1) {
+                                p1 = grid.getData2d().get(y - 1).get(x);
+                                p2 = grid.getData2d().get(grid.getData2d().size() - 1).get(x);
+                            } else {
+                                p1 = grid.getData2d().get(y - 1).get(x);
+                                p2 = grid.getData2d().get(y + 1).get(x);
                             }
+                            Point3D p =
+                                    p1.plus(p2).mult(0.5);
+                            grid.setElem(p, y, x);
                         }
+                    }
+                } catch (IndexOutOfBoundsException ex) {
+                    ex.printStackTrace();
+                }
 
-                        break;
+                break;
         }
         loadDataPoint();
     }
@@ -310,7 +329,7 @@ public class PanelPoint3DUVGridIJ extends JPanel {
     }
 
     private void noDeformation(ActionEvent e) {
-        if(getCheckBoxNoDeformation().isSelected()) {
+        if (getCheckBoxNoDeformation().isSelected()) {
             getCheckBoxMorphing().setSelected(false);
             getCheckBoxUv().setSelected(false);
         } else {
@@ -341,22 +360,22 @@ public class PanelPoint3DUVGridIJ extends JPanel {
 
         //======== this ========
         setLayout(new MigLayout(
-            "hidemode 3",
-            // columns
-            "[fill]" +
-            "[fill]" +
-            "[fill]" +
-            "[fill]" +
-            "[fill]" +
-            "[fill]" +
-            "[fill]" +
-            "[fill]" +
-            "[fill]" +
-            "[fill]" +
-            "[fill]",
-            // rows
-            "[]" +
-            "[]"));
+                "hidemode 3",
+                // columns
+                "[fill]" +
+                        "[fill]" +
+                        "[fill]" +
+                        "[fill]" +
+                        "[fill]" +
+                        "[fill]" +
+                        "[fill]" +
+                        "[fill]" +
+                        "[fill]" +
+                        "[fill]" +
+                        "[fill]",
+                // rows
+                "[]" +
+                        "[]"));
 
         //---- label1 ----
         label1.setText("i");
@@ -383,14 +402,12 @@ public class PanelPoint3DUVGridIJ extends JPanel {
         add(textFieldX, "cell 5 0");
 
         //---- comboBox1 ----
-        comboBox1.setModel(new DefaultComboBoxModel<>(new String[] {
-            "Update",
-            "Delete row",
-            "Delete column",
-            "Insert row before",
-            "Insert column before",
-            "Insert row after",
-            "Insert column after"
+        comboBox1.setModel(new DefaultComboBoxModel<>(new String[]{
+                "Update",
+                "Delete row",
+                "Delete column",
+                "Insert column",
+                "Insert row"
         }));
         comboBox1.addActionListener(e -> comboBoxAction(e));
         add(comboBox1, "cell 7 0");
@@ -435,23 +452,10 @@ public class PanelPoint3DUVGridIJ extends JPanel {
         // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
     }
 
-    // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables  @formatter:off
-    // Generated using JFormDesigner non-commercial license
-    private JLabel label1;
-    private JTextField textFieldI;
-    private JLabel label3;
-    private JTextField textFieldU;
-    private JLabel label5;
-    private JTextField textFieldX;
-    private JComboBox<String> comboBox1;
-    private JLabel label2;
-    private JTextField textFieldJ;
-    private JLabel label4;
-    private JTextField textFieldV;
-    private JLabel label7;
-    private JTextField textFieldY;
-    private JCheckBox checkBoxUv;
-    private JCheckBox checkBoxMorphing;
-    private JCheckBox checkBoxNoDeformation;
+    class DataPoint {
+        int i, j;
+        Point3D point, uv;
+
+    }
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 }

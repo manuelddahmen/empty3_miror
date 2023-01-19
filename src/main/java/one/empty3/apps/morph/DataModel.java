@@ -78,33 +78,36 @@ public class DataModel {
             return;
         }
         try {
-            File outputZip = file;
-            FileOutputStream fos = new FileOutputStream(outputZip);
-            ZipOutputStream zipOut = new ZipOutputStream(fos);
+            if(morphUI!=null && morphUI.getImageControls1()!=null && morphUI.getImageControls2()!=null) {
+                File outputZip = file;
+                FileOutputStream fos = new FileOutputStream(outputZip);
+                ZipOutputStream zipOut = new ZipOutputStream(fos);
 
-            File tmp = writeTextTmp();
-            saveObjectArray2d(tmp, morphUI.getImageControls1().getGrid());
-            saveFile(zipOut, fos, tmp, "gridXY1.txt");
-            tmp = writeTextTmp();
-            saveObjectArray2d(tmp, morphUI.getImageControls1().getGrid());
-            saveFile(zipOut, fos, tmp, "gridXY2.txt");
-            tmp = writeTextTmp();
-            saveObjectArray2d(tmp, morphUI.getImageControls1().getGridUv());
-            saveFile(zipOut, fos, tmp, "gridUV1.txt");
-            tmp = writeTextTmp();
-            saveObjectArray2d(tmp, morphUI.getImageControls1().getGridUv());
-            saveFile(zipOut, fos, tmp, "gridUV2.txt");
-            tmp = writeTextTmp();
-            ImageIO.write(morphUI.getImageControls1().getImage(), "jpg", tmp);
-            saveFile(zipOut, fos, tmp, "image1.jpg");
-            ImageIO.write(morphUI.getImageControls2().getImage(), "jpg", tmp);
-            saveFile(zipOut, fos, tmp, "image2.jpg");
+                File tmp = writeTextTmp();
+                saveObjectArray2d(tmp, morphUI.getImageControls1().getGrid());
+                saveFile(zipOut, fos, tmp, "gridXY1.txt");
+                tmp = writeTextTmp();
+                saveObjectArray2d(tmp, morphUI.getImageControls1().getGrid());
+                saveFile(zipOut, fos, tmp, "gridXY2.txt");
+                tmp = writeTextTmp();
+                saveObjectArray2d(tmp, morphUI.getImageControls1().getGridUv());
+                saveFile(zipOut, fos, tmp, "gridUV1.txt");
+                tmp = writeTextTmp();
+                saveObjectArray2d(tmp, morphUI.getImageControls1().getGridUv());
+                saveFile(zipOut, fos, tmp, "gridUV2.txt");
+                tmp = writeTextTmp();
+                ImageIO.write(morphUI.getImageControls1().getImage(), "jpg", tmp);
+                saveFile(zipOut, fos, tmp, "image1.jpg");
+                ImageIO.write(morphUI.getImageControls2().getImage(), "jpg", tmp);
+                saveFile(zipOut, fos, tmp, "image2.jpg");
 
-            zipOut.close();
-            fos.close();
+                zipOut.close();
+                fos.close();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
+            }
     }
 
     private void saveObjectArray2d(File tmp, StructureMatrix<Point3D> grid) {
@@ -225,7 +228,6 @@ public class DataModel {
             int length = 0;
             String s1 = split[i];
             if (j == length-1) {
-                x = 0;
                 length = Integer.parseInt(s1);
                 x++;
                 j = 0;

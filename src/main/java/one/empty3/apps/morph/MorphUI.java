@@ -670,6 +670,7 @@ public class MorphUI extends JFrame {
         }
         if(saveFile!=null) {
             dataModel.save(saveFile);
+            currentDirectory = saveFile.getParentFile();
         }
     }
 
