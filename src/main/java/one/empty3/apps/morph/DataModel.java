@@ -26,6 +26,8 @@ import one.empty3.library.StructureMatrix;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
@@ -41,12 +43,12 @@ public class DataModel {
 
     private BufferedImage [] bis = new BufferedImage[2];
     private File [] imagesFiles = new File[2];
-    private StructureMatrix [] grids = new StructureMatrix[4];
+    private StructureMatrix<Point3D> [] grids = new StructureMatrix[4];
 
     public void saveFile(ZipOutputStream zipOut, FileOutputStream fos,
                          File tmpFile, String filenameInZip) throws IOException {
         FileInputStream fis = new FileInputStream(tmpFile);
-        String sourceFile = filenameInZip;
+
         ZipEntry zipEntry = new ZipEntry(filenameInZip);
 
         zipOut.putNextEntry(zipEntry);
@@ -121,20 +123,12 @@ public class DataModel {
         }
     }
 
-    private void saveObjectString(File tmpGridXY1, Object toString) throws IOException {
-        ObjectOutputStream pw = new ObjectOutputStream(new FileOutputStream(tmpGridXY1));
-        pw.writeObject(toString);
-        pw.close();
-    }
-
     public DataModel load(File dataFile) throws IOException, ClassNotFoundException {
-        DataModel dataModel = new DataModel(null);
-
         ZipFile zipIn = new ZipFile(dataFile);
-
-        dataModel.morphUI = new MorphUI();
-        while (zipIn.entries().hasMoreElements()) {
-            ZipEntry zipEntry = zipIn.entries().nextElement();
+        file = dataFile;
+        Iterator<? extends ZipEntry> entries = zipIn.entries().asIterator();
+        while (entries.hasNext()) {
+            ZipEntry zipEntry = entries.next();
             String name = zipEntry.getName();
             ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream(dataFile));
             if (name.endsWith(".bin")) {
@@ -159,7 +153,7 @@ public class DataModel {
                 }
             } else {
                 StructureMatrix<Point3D> structureMatrix = new StructureMatrix<Point3D>(2, Point3D.class);
-                loadObjectString(name, structureMatrix);
+                loadObjectString(name, structureMatrix, zipInputStream);
                 switch (name) {
                     case "gridXY1.txt":
                         grids[0] =( structureMatrix);
@@ -176,51 +170,68 @@ public class DataModel {
                 }
             }
         }
-        dataModel.morphUI.chooseFile1(imagesFiles[0], false);
-        dataModel.morphUI.chooseFile2(imagesFiles[1], false);
+        morphUI.chooseFile1(imagesFiles[0], false);
+        morphUI.chooseFile2(imagesFiles[1], false);
 
-        dataModel.morphUI.getImageControls1().setGrid(grids[0]);
-        dataModel.morphUI.getImageControls2().setGrid(grids[1]);
-        dataModel.morphUI.getImageControls1().setGridUv(grids[2]);
-        dataModel.morphUI.getImageControls2().setGridUv(grids[3]);
+        morphUI.getImageControls1().setGrid(grids[0]);
+        morphUI.getImageControls2().setGrid(grids[1]);
+        morphUI.getImageControls1().setGridUv(grids[2]);
+        morphUI.getImageControls2().setGridUv(grids[3]);
 
-        return dataModel;
+        for (int i = 0; i < grids.length; i++) {
+            System.out.println(grids[i].getData2d().toString());
+        }
+        for (int i = 0; i < imagesFiles.length; i++) {
+            System.out.println(imagesFiles[i].getName());
+        }
+
+        return this;
     }
 
-    private void loadObjectString(String name, StructureMatrix<Point3D> structureMatrix) {
-        File file1 = new File(name);
-        if (file1.canRead()) {
-            try {
-                FileInputStream inputStreamReader = new FileInputStream(file1);
-                byte[] bytes = inputStreamReader.readAllBytes();
-                String s = new String(bytes);
-                String[] split = s.split("\n");
+    private void loadObjectString(String name, StructureMatrix<Point3D> structureMatrix, ZipInputStream zipInputStream) {
+        File tmpFile = null;
+        try {
+            tmpFile = File.createTempFile("tmp_open_file", "jpg");
+            byte[] bytes = zipInputStream.readAllBytes();
+            FileOutputStream fileOutputStream = new FileOutputStream(tmpFile);
+            fileOutputStream.write(bytes);
+            fileOutputStream.close();
+            if (tmpFile.canRead()) {
+                try {
+                    FileInputStream inputStreamReader = new FileInputStream(tmpFile);
+                    bytes = inputStreamReader.readAllBytes();
+                    String s = new String(bytes);
+                    String[] split = s.split("\n");
 
-                int j = 0;
-                int x = 0;
-                for (int i = 1; i < split.length; i++) {
-                    int length = 0;
-                    String s1 = split[i];
-                    if (i == j && i < split.length) {
-                        length = Integer.parseInt(s1);
-                        structureMatrix.getData2d().add(new ArrayList<>());
-                        x++;
-                    } else if (i < split.length) {
-                        double d1 = Double.parseDouble(split[i++]);
-                        double d2 = Double.parseDouble(split[i++]);
-                        double d3 = Double.parseDouble(split[i++]);
-                        structureMatrix.getData2d().get(x).add(new Point3D(d1, d2, d3));
-                        j++;
+                    int j = 0;
+                    int x = 0;
+                    for (int i = 1; i < split.length; i++) {
+                        int length = 0;
+                        String s1 = split[i];
+                        if (j==length) {
+                            x = 0;
+                            length = Integer.parseInt(s1);
+                            x++;
+                            j=0;
+                            structureMatrix.getData2d().add(new ArrayList<>());
+                        } else {
+                            double d1 = Double.parseDouble(split[i++]);
+                            double d2 = Double.parseDouble(split[i++]);
+                            double d3 = Double.parseDouble(split[i++]);
+                            structureMatrix.getData2d().get(x).add(new Point3D(d1, d2, d3));
+                            j++;
+                        }
                     }
-                    i++;
+
+                } catch (FileNotFoundException e) {
+
+                    throw new RuntimeException(e);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
                 }
-
-            } catch (FileNotFoundException e) {
-
-                throw new RuntimeException(e);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
             }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 

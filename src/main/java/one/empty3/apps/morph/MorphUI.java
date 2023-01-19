@@ -348,29 +348,31 @@ public class MorphUI extends JFrame {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                File avif = new File("morphing-" + UUID.randomUUID() + ".avi");
-                FileChannelWrapper out = null;
-                try {
-                    out = writableFileChannel(avif.getAbsolutePath());
-                    AWTSequenceEncoder encoder = new AWTSequenceEncoder(out, Rational.R(25, 1));
+                if (imageRead1 != null && imageRead2 != null) {
+                    File avif = new File("morphing-" + UUID.randomUUID() + ".avi");
+                    FileChannelWrapper out = null;
+                    try {
+                        out = writableFileChannel(avif.getAbsolutePath());
+                        AWTSequenceEncoder encoder = new AWTSequenceEncoder(out, Rational.R(25, 1));
 
-                    Logger.getAnonymousLogger().log(Level.INFO, "STARTING. File = " + avif.getAbsolutePath());
+                        Logger.getAnonymousLogger().log(Level.INFO, "STARTING. File = " + avif.getAbsolutePath());
 
-                    for (int frame = 0; frame < getFps() * getSeconds(); frame++) {
-                        Logger.getAnonymousLogger()
-                                .log(Level.FINE, "FrameNo" + frame);
-                        BufferedImage bufferedImage = computeFrame(frame);
-                        encoder.encodeImage(bufferedImage);
+                        for (int frame = 0; frame < getFps() * getSeconds(); frame++) {
+                            Logger.getAnonymousLogger()
+                                    .log(Level.FINE, "FrameNo" + frame);
+                            BufferedImage bufferedImage = computeFrame(frame);
+                            encoder.encodeImage(bufferedImage);
+                        }
+                        Logger.getAnonymousLogger().log(Level.INFO, "DONE. File = " + avif.getAbsolutePath());
+
+                        encoder.finish();
+                        out.close();
+
+                    } catch (FileNotFoundException ex) {
+                        throw new RuntimeException(ex);
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
                     }
-                    Logger.getAnonymousLogger().log(Level.INFO, "DONE. File = " + avif.getAbsolutePath());
-
-                    encoder.finish();
-                    out.close();
-
-                } catch (FileNotFoundException ex) {
-                    throw new RuntimeException(ex);
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
                 }
             }
         }).start();
@@ -642,18 +644,24 @@ public class MorphUI extends JFrame {
         });
         jFileChooser.showOpenDialog(this);
         File f = null;
+
         if((f = jFileChooser.getSelectedFile())!=null) {
+            File finalF = f;
             new Thread(() -> {
+                Logger.getAnonymousLogger().log(Level.INFO,
+                        "Create new GUI with loaded model = "+finalF.getAbsolutePath());
                 MorphUI morphUI = new MorphUI();
-                morphUI.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                morphUI.setVisible(true);
                 try {
                     DataModel dataModel = new DataModel(morphUI);
-                    dataModel.load(jFileChooser.getSelectedFile());
+                    dataModel.load(finalF);
+                    pack();
+                    Logger.getAnonymousLogger().log(Level.INFO,
+                            "Model created");
                 } catch (IOException | ClassNotFoundException ex) {
                     morphUI.dispose();
                     ex.printStackTrace();
                 }
+                morphUI.setVisible(true);
             }).start();
         }
 

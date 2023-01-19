@@ -24,7 +24,6 @@ import javax.swing.*;
 public class Main {
     public Main() {
         MorphUI morphUI = new MorphUI();
-        morphUI.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         morphUI.setVisible(true);
     }
 
