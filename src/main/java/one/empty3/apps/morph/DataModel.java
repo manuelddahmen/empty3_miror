@@ -28,6 +28,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Iterator;
+import java.util.UUID;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
@@ -131,16 +132,15 @@ public class DataModel {
             ZipEntry zipEntry = entries.next();
             String name = zipEntry.getName();
             ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream(dataFile));
-            if (name.endsWith(".bin")) {
-                File tmpFile = File.createTempFile("tmp_open_file", "jpg");
+            if (name.endsWith(".jpg")) {
+                File tmpFile = File.createTempFile("tmp_open_file_"+ UUID.randomUUID(), ".jpg");
                 byte[] bytes = zipInputStream.readAllBytes();
                 ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(
                         bytes);
                 FileOutputStream fileOutputStream = new FileOutputStream(tmpFile);
                 fileOutputStream.write(bytes);
                 fileOutputStream.close();
-                BufferedImage read = javax.imageio.ImageIO.read(byteArrayInputStream);
-                ImageIO.write(read, "jpg", tmpFile);
+                BufferedImage read = javax.imageio.ImageIO.read(tmpFile);
                 switch (name) {
                     case "image1.jpg":
                         imagesFiles[0] = tmpFile;
@@ -170,8 +170,8 @@ public class DataModel {
                 }
             }
         }
-        morphUI.chooseFile1(imagesFiles[0], false);
-        morphUI.chooseFile2(imagesFiles[1], false);
+        morphUI.chooseFile1(imagesFiles[0], true);
+        morphUI.chooseFile2(imagesFiles[1], true);
 
         morphUI.getImageControls1().setGrid(grids[0]);
         morphUI.getImageControls2().setGrid(grids[1]);

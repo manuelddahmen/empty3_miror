@@ -205,16 +205,15 @@ public class MorphUI extends JFrame {
 
     public void chooseFile1(File selectedFile, boolean isLoaded) {
         this.image1 = selectedFile;
-        try {
-            URL url = new URL("file:///" + image1.getAbsolutePath());
             try {
-                imageRead1 = ImageIO.read(url);
+                imageRead1 = ImageIO.read(image1);
                 isLoaded = true;
             } catch (Exception ex) {
                 isLoaded = false;
                 vid1 = image1.getAbsolutePath();
                 isLoaded = true;
                 imageRead1 = null;
+                throw new NullPointerException("Image1==null");
             }
             pack();
 
@@ -223,9 +222,6 @@ public class MorphUI extends JFrame {
 
             initialization();
 
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        }
 
         initGrids(grid1, gridUV1, imageRead1, panel1);
         if (isLoaded) {
@@ -285,16 +281,15 @@ public class MorphUI extends JFrame {
     public void chooseFile2(File selectedFile, boolean isLoaded) {
         this.image2 = selectedFile;
 
-        try {
-            URL url = new URL("file:///" + image2.getAbsolutePath());
             try {
-                imageRead2 = ImageIO.read(url);
+                imageRead2 = ImageIO.read(image2);
                 isLoaded = true;
             } catch (Exception ex) {
                 isLoaded = false;
                 vid2 = image2.getAbsolutePath();
                 isLoaded = true;
                 imageRead2 = null;
+                throw new NullPointerException("image2==null");
             }
             pack();
 
@@ -302,9 +297,6 @@ public class MorphUI extends JFrame {
 
 
             initialization();
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        }
         initGrids(grid2, gridUV2, imageRead2, panel2);
         if (isLoaded) {
             if (imageControl2 != null) {

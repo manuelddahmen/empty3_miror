@@ -39,7 +39,7 @@ public class ImageControls implements Runnable {
     private final BufferedImage image;
     private StructureMatrix<Point3D> grid;
     private final JFrame jframe;
-    private final ITexture texture;
+    private ITexture texture;
     private PanelPoint3DUVGridIJ point3Dedit;
     boolean moving = false;
     boolean dropped = false;
@@ -282,8 +282,6 @@ public class ImageControls implements Runnable {
         loopIndex++;
 
         displaying = true;
-
-
 
         if (texture == null) {
             Logger.getLogger(this.getClass().getSimpleName()).log(Level.SEVERE, "Error texture Movie or Image is null");
