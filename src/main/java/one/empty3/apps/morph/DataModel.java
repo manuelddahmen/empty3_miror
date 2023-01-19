@@ -22,75 +22,85 @@ package one.empty3.apps.morph;
 import one.empty3.feature.app.replace.javax.imageio.ImageIO;
 import one.empty3.library.Point3D;
 import one.empty3.library.StructureMatrix;
-import one.empty3.library.core.script.InterpretePoint3D;
 
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Consumer;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 public class DataModel {
+    protected File file;
     private MorphUI morphUI;
-    private File file;
+
     public DataModel(MorphUI mui) {
         this.morphUI = mui;
     }
-    public void saveFile(File outputZip, File tmpFile, String filenameInZip) throws IOException {
-        String sourceFile = filenameInZip;
-        FileOutputStream fos = new FileOutputStream(outputZip);
-        ZipOutputStream zipOut = new ZipOutputStream(fos);
 
-        File fileToZip = tmpFile;
-        FileInputStream fis = new FileInputStream(fileToZip);
+    private BufferedImage [] bis = new BufferedImage[2];
+    private File [] imagesFiles = new File[2];
+    private StructureMatrix [] grids = new StructureMatrix[4];
+
+    public void saveFile(ZipOutputStream zipOut, FileOutputStream fos,
+                         File tmpFile, String filenameInZip) throws IOException {
+        FileInputStream fis = new FileInputStream(tmpFile);
+        String sourceFile = filenameInZip;
         ZipEntry zipEntry = new ZipEntry(filenameInZip);
-        zipOut.putNextEntry(zipEntry);
 
         byte[] bytes = new byte[1024];
         int length;
-        while((length = fis.read(bytes)) >= 0) {
+        while ((length = fis.read(bytes)) >= 0) {
             zipOut.write(bytes, 0, length);
         }
 
-        zipOut.close();
+        zipOut.putNextEntry(zipEntry);
         fis.close();
-        fos.close();
     }
+
     public File writeTextTmp() throws IOException {
         return File.createTempFile("tmp", "txt");
     }
-    public void save() {
-        if(file == null) {
 
-        }else {
-            try {
+    public void save(File file) {
+        this.file = file;
+        save();
+    }
+
+    public void save() {
+        if (file == null) {
+            return ;
+        }
+        try {
+            File outputZip = file;
+            FileOutputStream fos = new FileOutputStream(outputZip);
+            ZipOutputStream zipOut = new ZipOutputStream(fos);
+
                 File tmp = writeTextTmp();
                 saveObjectArray2d(tmp, morphUI.getImageControls1().getGrid());
-                saveFile(file, tmp, "gridXY1.txt");
+                saveFile(zipOut,fos, tmp, "gridXY1.txt");
                 tmp = writeTextTmp();
                 saveObjectArray2d(tmp, morphUI.getImageControls1().getGrid());
-                saveFile(file, tmp, "gridXY2.txt");
+                saveFile(zipOut,fos, tmp, "gridXY2.txt");
                 tmp = writeTextTmp();
-                saveObjectArray2d(tmp, morphUI.getImageControls1().getGrid());
-                saveFile(file, tmp, "gridUV1.txt");
+                saveObjectArray2d(tmp, morphUI.getImageControls1().getGridUv());
+                saveFile(zipOut,fos, tmp, "gridUV1.txt");
                 tmp = writeTextTmp();
-                saveObjectArray2d(tmp, morphUI.getImageControls1().getGrid());
-                saveFile(file, tmp, "gridUV2.txt");
+                saveObjectArray2d(tmp, morphUI.getImageControls1().getGridUv());
+                saveFile(zipOut,fos, tmp, "gridUV2.txt");
                 tmp = writeTextTmp();
                 ImageIO.write(morphUI.getImageControls1().getImage(), "jpg", tmp);
-                saveFile(file, tmp, "image1.bin");
-                tmp = writeTextTmp();
+                saveFile(zipOut,fos, tmp, "image1.jpg");
                 ImageIO.write(morphUI.getImageControls2().getImage(), "jpg", tmp);
-                saveFile(file, tmp, "image2.bin");
+                saveFile(zipOut,fos, tmp, "image2.jpg");
 
+                zipOut.close();
+                fos.close();
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                e.printStackTrace();
             }
         }
-    }
 
     private void saveObjectArray2d(File tmp, StructureMatrix<Point3D> grid) {
         try {
@@ -122,54 +132,79 @@ public class DataModel {
         ZipFile zipIn = new ZipFile(dataFile);
 
         dataModel.morphUI = new MorphUI();
-
-        while(zipIn.entries().hasMoreElements()) {
+        while (zipIn.entries().hasMoreElements()) {
             ZipEntry zipEntry = zipIn.entries().nextElement();
             String name = zipEntry.getName();
             ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream(dataFile));
-            ObjectInputStream objectInputStream = new ObjectInputStream(zipInputStream);
-            Object o = objectInputStream.readObject();
-            StructureMatrix<Point3D> structureMatrix = new StructureMatrix<Point3D>(2, Point3D.class);
-            loadObjectString(name, structureMatrix);
-            switch (name) {
-                case "gridXY1.txt":
-                    dataModel.morphUI.getImageControls1().setGrid((StructureMatrix<Point3D>) o);
-                    break;
-                case "gridXY2.txt":
-                    dataModel.morphUI.getImageControls2().setGrid((StructureMatrix<Point3D>) o);
-                    break;
-                case "gridUV1.txt":
-                    dataModel.morphUI.getImageControls1().setGridUv((StructureMatrix<Point3D>) o);
-                    break;
-                case "gridUV2.txt":
-                    dataModel.morphUI.getImageControls2().setGridUv((StructureMatrix<Point3D>) o);
-                    break;
-
+            if (name.endsWith(".bin")) {
+                File tmpFile = File.createTempFile("tmp_open_file", "jpg");
+                byte[] bytes = zipInputStream.readAllBytes();
+                ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(
+                        bytes);
+                FileOutputStream fileOutputStream = new FileOutputStream(tmpFile);
+                fileOutputStream.write(bytes);
+                fileOutputStream.close();
+                BufferedImage read = javax.imageio.ImageIO.read(byteArrayInputStream);
+                ImageIO.write(read, "jpg", tmpFile);
+                switch (name) {
+                    case "image1.jpg":
+                        imagesFiles[0] = tmpFile;
+                        bis[0] = read;
+                        break;
+                    case "image2.jpg":
+                        imagesFiles[1] = tmpFile;
+                        bis[1] = read;
+                        break;
+                }
+            } else {
+                StructureMatrix<Point3D> structureMatrix = new StructureMatrix<Point3D>(2, Point3D.class);
+                loadObjectString(name, structureMatrix);
+                switch (name) {
+                    case "gridXY1.txt":
+                        grids[0] =( structureMatrix);
+                        break;
+                    case "gridXY2.txt":
+                        grids[1] =(structureMatrix);
+                        break;
+                    case "gridUV1.txt":
+                        grids[2] =(structureMatrix);
+                        break;
+                    case "gridUV2.txt":
+                        grids[3] =(structureMatrix);
+                        break;
+                }
             }
         }
+        dataModel.morphUI.chooseFile1(imagesFiles[0], false);
+        dataModel.morphUI.chooseFile2(imagesFiles[1], false);
+
+        dataModel.morphUI.getImageControls1().setGrid(grids[0]);
+        dataModel.morphUI.getImageControls2().setGrid(grids[1]);
+        dataModel.morphUI.getImageControls1().setGridUv(grids[2]);
+        dataModel.morphUI.getImageControls2().setGridUv(grids[3]);
 
         return dataModel;
     }
 
     private void loadObjectString(String name, StructureMatrix<Point3D> structureMatrix) {
         File file1 = new File(name);
-        if(file1.canRead()) {
+        if (file1.canRead()) {
             try {
                 FileInputStream inputStreamReader = new FileInputStream(file1);
                 byte[] bytes = inputStreamReader.readAllBytes();
                 String s = new String(bytes);
                 String[] split = s.split("\n");
 
-                int j=0;
-                int x=0;
-                for(int i=1; i<split.length; i++) {
+                int j = 0;
+                int x = 0;
+                for (int i = 1; i < split.length; i++) {
                     int length = 0;
                     String s1 = split[i];
-                    if(i==j && i<split.length) {
+                    if (i == j && i < split.length) {
                         length = Integer.parseInt(s1);
                         structureMatrix.getData2d().add(new ArrayList<>());
                         x++;
-                    } else if(i<split.length){
+                    } else if (i < split.length) {
                         double d1 = Double.parseDouble(split[i++]);
                         double d2 = Double.parseDouble(split[i++]);
                         double d3 = Double.parseDouble(split[i++]);
@@ -186,5 +221,13 @@ public class DataModel {
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    public File getFile() {
+        return file;
+    }
+
+    public void setFile(File file) {
+        this.file = file;
     }
 }

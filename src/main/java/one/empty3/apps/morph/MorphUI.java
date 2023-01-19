@@ -69,7 +69,9 @@ public class MorphUI extends JFrame {
     // Generated using JFormDesigner non-commercial license
     private JMenuBar menuBar1;
     private JMenu menu1;
-    private JMenu menu2;
+    private JMenuItem menuItemNew;
+    private JMenuItem menuItemOpen;
+    private JMenuItem menuItemSave;
     private JPanel panel5;
     private JComboBox<String> comboBoxShapeType;
     private JComboBox<String> comboBoxMethod;
@@ -107,8 +109,8 @@ public class MorphUI extends JFrame {
     private JTextField textFieldDelRow;
     private JLabel label6;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
-    private ImageControls imageControl1;
-    private ImageControls imageControl2;
+    ImageControls imageControl1;
+    ImageControls imageControl2;
     private ZBuffer zBuffer1;
     private ZBuffer zBuffer2;
     private ZBufferImpl zBufferComputing;
@@ -120,9 +122,10 @@ public class MorphUI extends JFrame {
     private VideoDecoder instance2;
     private int finalResY;
     private int finalResX;
+    private File saveFile;
 
     public MorphUI() {
-
+//
 
         initComponents();
 
@@ -200,7 +203,7 @@ public class MorphUI extends JFrame {
     }
 
 
-    private void chooseFile1(File selectedFile, boolean isLoaded) {
+    public void chooseFile1(File selectedFile, boolean isLoaded) {
         this.image1 = selectedFile;
         try {
             URL url = new URL("file:///" + image1.getAbsolutePath());
@@ -279,7 +282,7 @@ public class MorphUI extends JFrame {
 
     }
 
-    private void chooseFile2(File selectedFile, boolean isLoaded) {
+    public void chooseFile2(File selectedFile, boolean isLoaded) {
         this.image2 = selectedFile;
 
         try {
@@ -624,13 +627,75 @@ public class MorphUI extends JFrame {
         return comboBoxMethod;
     }
 
+    private void open(ActionEvent e) {
+        JFileChooser jFileChooser = new JFileChooser(currentDirectory);
+        jFileChooser.setFileFilter(new FileFilter() {
+            @Override
+            public boolean accept(File f) {
+                return f.getName().toLowerCase().endsWith(".morph");
+            }
+
+            @Override
+            public String getDescription() {
+                return "Fichiers de Morphing empty3";
+            }
+        });
+        jFileChooser.showOpenDialog(this);
+        File f = null;
+        if((f = jFileChooser.getSelectedFile())!=null) {
+            new Thread(() -> {
+                MorphUI morphUI = new MorphUI();
+                morphUI.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                morphUI.setVisible(true);
+                try {
+                    DataModel dataModel = new DataModel(morphUI);
+                    dataModel.load(jFileChooser.getSelectedFile());
+                } catch (IOException | ClassNotFoundException ex) {
+                    morphUI.dispose();
+                    ex.printStackTrace();
+                }
+            }).start();
+        }
+
+    }
+
+    private void save(ActionEvent e) {
+        DataModel dataModel = new DataModel(this);
+        saveFile = dataModel.file;
+        if(saveFile==null) {
+            JFileChooser jFileChooser = new JFileChooser(currentDirectory);
+            jFileChooser.setFileFilter(new FileFilter() {
+                @Override
+                public boolean accept(File f) {
+                    return f.getName().toLowerCase().endsWith(".morph");
+                }
+
+                @Override
+                public String getDescription() {
+                    return "Morph project file by Empty3";
+                }
+            });
+            jFileChooser.showSaveDialog(this);
+
+            if(jFileChooser.getSelectedFile()!=null) {
+                saveFile = jFileChooser.getSelectedFile();
+                dataModel.setFile(saveFile);
+            }
+        }
+        if(saveFile!=null) {
+            dataModel.save(saveFile);
+        }
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
         // Generated using JFormDesigner non-commercial license
         DefaultComponentFactory compFactory = DefaultComponentFactory.getInstance();
         menuBar1 = new JMenuBar();
         menu1 = new JMenu();
-        menu2 = new JMenu();
+        menuItemNew = new JMenuItem();
+        menuItemOpen = new JMenuItem();
+        menuItemSave = new JMenuItem();
         panel5 = new JPanel();
         comboBoxShapeType = new JComboBox<>();
         comboBoxMethod = new JComboBox<>();
@@ -693,15 +758,23 @@ public class MorphUI extends JFrame {
 
             //======== menu1 ========
             {
-                menu1.setText("Fichier");
+                menu1.setText("File");
+
+                //---- menuItemNew ----
+                menuItemNew.setText("New");
+                menu1.add(menuItemNew);
+
+                //---- menuItemOpen ----
+                menuItemOpen.setText("Open");
+                menuItemOpen.addActionListener(e -> open(e));
+                menu1.add(menuItemOpen);
+
+                //---- menuItemSave ----
+                menuItemSave.setText("Save");
+                menuItemSave.addActionListener(e -> save(e));
+                menu1.add(menuItemSave);
             }
             menuBar1.add(menu1);
-
-            //======== menu2 ========
-            {
-                menu2.setText("Propri\u00e9t\u00e9s");
-            }
-            menuBar1.add(menu2);
         }
         setJMenuBar(menuBar1);
 
