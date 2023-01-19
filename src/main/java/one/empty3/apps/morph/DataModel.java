@@ -31,10 +31,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
-import java.util.zip.ZipInputStream;
-import java.util.zip.ZipOutputStream;
+import java.util.zip.*;
 
 public class DataModel {
     protected File file;
@@ -107,8 +104,8 @@ public class DataModel {
         } catch (IOException e) {
             e.printStackTrace();
         }
-            }
     }
+
 
     private void saveObjectArray2d(File tmp, StructureMatrix<Point3D> grid) {
         try {
@@ -129,8 +126,15 @@ public class DataModel {
     }
 
     public DataModel load(File dataFile) throws IOException, ClassNotFoundException {
-        ZipFile zipIn = new ZipFile(dataFile);
-        ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream(dataFile));
+        ZipFile zipIn = null;
+        ZipInputStream zipInputStream;
+        try {
+            zipIn = new ZipFile(dataFile);
+            zipInputStream = new ZipInputStream(new FileInputStream(dataFile));
+        } catch (ZipException ex) {
+            ex.printStackTrace();
+            return null;
+        }
         file = dataFile;
         Iterator<? extends ZipEntry> entries = zipIn.entries().asIterator();
         while (entries.hasNext()) {

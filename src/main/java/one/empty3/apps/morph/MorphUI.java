@@ -123,6 +123,7 @@ public class MorphUI extends JFrame {
     private int finalResY;
     private int finalResX;
     private File saveFile;
+    private File currentProjectDirectory;
 
     public MorphUI() {
 //
@@ -608,7 +609,7 @@ public class MorphUI extends JFrame {
     }
 
     private void open(ActionEvent e) {
-        JFileChooser jFileChooser = new JFileChooser(currentDirectory);
+        JFileChooser jFileChooser = new JFileChooser(currentProjectDirectory==null?currentDirectory:currentProjectDirectory);
         jFileChooser.setFileFilter(new FileFilter() {
             @Override
             public boolean accept(File f) {
@@ -635,6 +636,8 @@ public class MorphUI extends JFrame {
                     pack();
                     Logger.getAnonymousLogger().log(Level.INFO,
                             "Model created");
+
+                    currentProjectDirectory = finalF.getParentFile();
                 } catch (IOException | ClassNotFoundException ex) {
                     morphUI.dispose();
                     ex.printStackTrace();
@@ -649,7 +652,7 @@ public class MorphUI extends JFrame {
         DataModel dataModel = new DataModel(this);
         saveFile = dataModel.file;
         if(saveFile==null) {
-            JFileChooser jFileChooser = new JFileChooser(currentDirectory);
+            JFileChooser jFileChooser = new JFileChooser(currentProjectDirectory==null?currentDirectory:currentProjectDirectory);
             jFileChooser.setFileFilter(new FileFilter() {
                 @Override
                 public boolean accept(File f) {
@@ -670,7 +673,7 @@ public class MorphUI extends JFrame {
         }
         if(saveFile!=null) {
             dataModel.save(saveFile);
-            currentDirectory = saveFile.getParentFile();
+            currentProjectDirectory = saveFile.getParentFile();
         }
     }
 
