@@ -81,6 +81,9 @@ public class DataModel {
                 ZipOutputStream zipOut = new ZipOutputStream(fos);
 
                 File tmp = writeTextTmp();
+                saveObjectArray2d(tmp, morphUI.getImageControls1().getXgrid());
+                saveFile(zipOut, fos, tmp, "params.txt");
+                tmp = writeTextTmp();
                 saveObjectArray2d(tmp, morphUI.getImageControls1().getGrid());
                 saveFile(zipOut, fos, tmp, "gridXY1.txt");
                 tmp = writeTextTmp();
@@ -104,6 +107,9 @@ public class DataModel {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void saveObjectArray2d(File tmp, int xgrid) {
     }
 
 
