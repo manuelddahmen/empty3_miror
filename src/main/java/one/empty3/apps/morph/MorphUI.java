@@ -197,26 +197,21 @@ public class MorphUI extends JFrame {
         }
 
         if (jFileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-            chooseFile1(jFileChooser.getSelectedFile(), isLoaded);
+            chooseFile1(jFileChooser.getSelectedFile());
 
         }
     }
 
 
-    public void chooseFile1(File selectedFile, boolean isLoaded) {
+    public void chooseFile1(File selectedFile) {
         this.image1 = selectedFile;
             try {
                 imageRead1 = ImageIO.read(image1);
-                isLoaded = true;
             } catch (Exception ex) {
-                isLoaded = false;
                 vid1 = image1.getAbsolutePath();
-                isLoaded = true;
                 imageRead1 = null;
                 throw new NullPointerException("Image1==null");
             }
-            pack();
-
 
             currentDirectory = selectedFile.getParentFile();
 
@@ -224,12 +219,10 @@ public class MorphUI extends JFrame {
 
 
         initGrids(grid1, gridUV1, imageRead1, panel1);
-        if (isLoaded) {
             if (imageControl1 != null) {
                 imageControl1.setDisplaying(false);
                 imageControl1.setRunning(false);
             }
-        }
         imageControl1 = new ImageControls(this, grid1, gridUV1,
                 imageRead1, panel1, text1, panelPoint3DUVGridIJ1);
         imageControl1.setMorphUI(this);
@@ -272,38 +265,31 @@ public class MorphUI extends JFrame {
         }
 
         if (jFileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-            chooseFile2(jFileChooser.getSelectedFile(), isLoaded);
+            chooseFile2(jFileChooser.getSelectedFile());
         }
 
 
     }
 
-    public void chooseFile2(File selectedFile, boolean isLoaded) {
+    public void chooseFile2(File selectedFile) {
         this.image2 = selectedFile;
 
             try {
                 imageRead2 = ImageIO.read(image2);
-                isLoaded = true;
             } catch (Exception ex) {
-                isLoaded = false;
                 vid2 = image2.getAbsolutePath();
-                isLoaded = true;
                 imageRead2 = null;
                 throw new NullPointerException("image2==null");
             }
-            pack();
-
             currentDirectory = selectedFile.getParentFile();
 
 
             initialization();
         initGrids(grid2, gridUV2, imageRead2, panel2);
-        if (isLoaded) {
             if (imageControl2 != null) {
                 imageControl2.setDisplaying(false);
                 imageControl2.setRunning(false);
             }
-        }
         imageControl2 = new ImageControls(this, grid2, gridUV2, imageRead2,
                 panel2, text2, panelPoint3DUVGridIJ2);
         imageControl2.setMorphUI(this);
