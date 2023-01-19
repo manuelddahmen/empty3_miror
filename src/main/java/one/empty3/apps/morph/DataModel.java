@@ -190,6 +190,9 @@ public class DataModel {
                     case "gridUV2.txt":
                         grids[3] = (structureMatrix);
                         break;
+                    case "params.txt":
+
+                        break;
                 }
             }
         }
