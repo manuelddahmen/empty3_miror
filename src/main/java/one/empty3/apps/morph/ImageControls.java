@@ -85,15 +85,15 @@ public class ImageControls implements Runnable {
 
             @Override
             public void mousePressed(MouseEvent e) {
-                if(grid.getData2d().size()>xGrid && grid.getData2d().get(xGrid).size()>yGrid) {
+                if (grid.getData2d().size() <= xGrid || grid.getData2d().get(xGrid).size() <= yGrid) {
+                    System.out.println("Merci les amis ?:)>");
+                    isSelected = false;
+                } else {
                     System.out.println("Pressed : " + (isPressed = true));
                     isSelected = selectPoint(e.getX(), e.getY());
                     System.out.println("Selected point: " + grid.getElem(xGrid, yGrid));
                     moving = true;
                     drags();
-                } else {
-                    System.out.println("Merci les amis ?:)>");
-                    isSelected = false;
                 }
             }
 

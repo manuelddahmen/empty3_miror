@@ -88,16 +88,16 @@ public class DataModel {
                 for (int i = 0; i < controls.length; i++) {
                     ImageControls imageControls = controls[i];
                     Properties properties = properties3[i];
-                    properties.put("xGrid", morphUI.getImageControls1().getXgrid());
-                    properties.put("yGrid", morphUI.getImageControls1().getYgrid());
-                    properties.put("resX", morphUI.getImageControls1().getResX());
-                    properties.put("resX", morphUI.getImageControls1().getResY());
+                    properties.put("xGrid", "" + morphUI.getImageControls1().getXgrid());
+                    properties.put("yGrid", "" + morphUI.getImageControls1().getYgrid());
+                    properties.put("resX", "" + morphUI.getImageControls1().getResX());
+                    properties.put("resX", "" + morphUI.getImageControls1().getResY());
                 }
                 properties3[1].save(new FileOutputStream(tmp), "ImageControls1 values");
-                saveFile(zipOut, fos, tmp, "params1.txt");
+                saveFile(zipOut, fos, tmp, "params1.properties");
                 tmp = writeTextTmp();
                 properties3[1].save(new FileOutputStream(tmp), "ImageControls2 values");
-                saveFile(zipOut, fos, tmp, "params2.txt");
+                saveFile(zipOut, fos, tmp, "params2.properties");
                 tmp = writeTextTmp();
                 saveObjectArray2d(tmp, morphUI.getImageControls1().getGrid());
                 saveFile(zipOut, fos, tmp, "gridXY1.txt");
@@ -191,7 +191,9 @@ public class DataModel {
                 }
             } else {
                 StructureMatrix<Point3D> structureMatrix = new StructureMatrix<Point3D>(2, Point3D.class);
-                loadObjectString(loadZipEntry(name, structureMatrix, zipIn, zipEntry), structureMatrix);
+                if(name.toLowerCase().endsWith(".txt")) {
+                    loadObjectString(loadZipEntry(name, structureMatrix, zipIn, zipEntry), structureMatrix);
+                }
                 switch (name) {
                     case "gridXY1.txt":
                         grids[0] = (structureMatrix);
@@ -205,16 +207,19 @@ public class DataModel {
                     case "gridUV2.txt":
                         grids[3] = (structureMatrix);
                         break;
-                    case "params1.txt", "param2.txt":
+                    case "params1.properties", "param2.properties":
                         int c = 0;
-                        if (name.equals("param2.txt"))
+                        if (name.equals("param2.properties"))
                             c = 1;
+                        String s = loadZipEntry(name, null, zipIn, zipEntry);
+                        Properties properties1 = new Properties();
+                        properties1.load(new StringReader(s));
                         ImageControls[] controls = new ImageControls[]{morphUI.getImageControls1(), morphUI.getImageControls2()};
                         ImageControls imageControls = controls[c];
-                        //imageControls.setXgrid(Integer.parseInt((String) properties.get("xGrid")));
-                        //imageControls.setYgrid(Integer.parseInt((String) properties.get("yGrid")));
-                        imageControls.setResX(Integer.parseInt((String) properties.get("resX")));
-                        imageControls.setResY(Integer.parseInt((String) properties.get("resX")));
+                        imageControls.setXgrid(Integer.parseInt((String) properties1.get("xGrid")));
+                        imageControls.setYgrid(Integer.parseInt((String) properties1.get("yGrid")));
+                        imageControls.setResX(Integer.parseInt((String) properties1.get("resX")));
+                        imageControls.setResY(Integer.parseInt((String) properties1.get("resX")));
 
                         break;
                 }
@@ -258,22 +263,32 @@ public class DataModel {
     private void loadObjectString(String txt, StructureMatrix<Point3D> structureMatrix) {
         String[] split = txt.split("\n");
 
+        for (int i = split.length - 1; i >= 0; i--) {
+            System.out.println(split[i]);
+        }
+
         int j = 0;
-        int x = 0;
-        structureMatrix.getData2d().add(new ArrayList<>());
-        for (int i = 1; i < split.length; i++) {
-            int length = 0;
-            String s1 = split[i];
-            if (j == length - 1) {
-                length = Integer.parseInt(s1);
-                x++;
-                j = 0;
-                structureMatrix.getData2d().add(new ArrayList<>());
-            } else {
-                double d1 = Double.parseDouble(split[i++]);
-                double d2 = Double.parseDouble(split[i++]);
-                double d3 = Double.parseDouble(split[i++]);
-                structureMatrix.getData2d().get(x).add(new Point3D(d1, d2, d3));
+        int length = 0;
+        int i=1;
+        while(i<split.length) {
+            try {
+                length = Integer.parseInt(split[i]);
+            } catch (NumberFormatException ex) {
+                System.out.println("Value: (" + split[i] + ")");
+                ex.printStackTrace();
+            }
+            i++;
+            j = 0;
+            structureMatrix.getData2d().add(new ArrayList<>());
+
+            while (j < length && i<split.length) {
+                double d1 = Double.parseDouble(split[i]);
+                i++;
+                double d2 = Double.parseDouble(split[i]);
+                i++;
+                double d3 = Double.parseDouble(split[i]);
+                i++;
+                structureMatrix.getData2d().get(structureMatrix.getData2d().size() - 1).add(new Point3D(d1, d2, d3));
                 j++;
             }
         }
