@@ -275,7 +275,7 @@ public class DataModel {
         while(i<split.length) {
             try {
                 Logger.getAnonymousLogger().log(Level.INFO, split[i]);
-                length = Integer.parseUnsignedInt(split[i]);
+                length = Integer.parseInt(split[i].trim());
             } catch (NumberFormatException ex) {
                 errors++;
             }
@@ -284,11 +284,11 @@ public class DataModel {
             structureMatrix.getData2d().add(new ArrayList<>());
 
             while (j < length && i<split.length) {
-                double d1 = Double.parseDouble(split[i]);
+                double d1 = Double.parseDouble(split[i].trim());
                 i++;
-                double d2 = Double.parseDouble(split[i]);
+                double d2 = Double.parseDouble(split[i].trim());
                 i++;
-                double d3 = Double.parseDouble(split[i]);
+                double d3 = Double.parseDouble(split[i].trim());
                 i++;
                 structureMatrix.getData2d().get(structureMatrix.getData2d().size() - 1).add(new Point3D(d1, d2, d3));
                 j++;
