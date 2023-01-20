@@ -470,4 +470,11 @@ public class ImageControls implements Runnable {
     public void setMorphing(boolean b) {
         point3Dedit.getCheckBoxMorphing().setSelected(b);
     }
+
+    public void setResX(int resX) {
+        this.resX = resX;
+    }
+    public void setResY(int resY) {
+        this.resY = resY;
+    }
 }

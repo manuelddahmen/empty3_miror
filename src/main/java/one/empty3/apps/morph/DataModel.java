@@ -25,10 +25,7 @@ import one.empty3.library.StructureMatrix;
 
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.*;
@@ -39,6 +36,7 @@ public class DataModel {
     private BufferedImage[] bis = new BufferedImage[2];
     private File[] imagesFiles = new File[2];
     private StructureMatrix<Point3D>[] grids = new StructureMatrix[4];
+    private HashMap<String, Object> properties = new HashMap<>();
 
     public DataModel(MorphUI mui) {
         this.morphUI = mui;
@@ -75,14 +73,31 @@ public class DataModel {
             return;
         }
         try {
-            if(morphUI!=null && morphUI.getImageControls1()!=null && morphUI.getImageControls2()!=null) {
+            if (morphUI != null && morphUI.getImageControls1() != null && morphUI.getImageControls2() != null) {
                 File outputZip = file;
                 FileOutputStream fos = new FileOutputStream(outputZip);
                 ZipOutputStream zipOut = new ZipOutputStream(fos);
 
                 File tmp = writeTextTmp();
-                saveObjectArray2d(tmp, morphUI.getImageControls1().getXgrid());
-                saveFile(zipOut, fos, tmp, "params.txt");
+                System.out.println("Merci Stéphanie");
+
+                Properties properties1 = new Properties();
+                Properties properties2 = new Properties();
+                Properties[] properties3 = {properties1, properties2};
+                ImageControls[] controls = new ImageControls[]{morphUI.getImageControls1(), morphUI.getImageControls2()};
+                for (int i = 0; i < controls.length; i++) {
+                    ImageControls imageControls = controls[i];
+                    Properties properties = properties3[i];
+                    properties.put("xGrid", morphUI.getImageControls1().getXgrid());
+                    properties.put("yGrid", morphUI.getImageControls1().getYgrid());
+                    properties.put("resX", morphUI.getImageControls1().getResX());
+                    properties.put("resX", morphUI.getImageControls1().getResY());
+                }
+                properties3[1].save(new FileOutputStream(tmp), "ImageControls1 values");
+                saveFile(zipOut, fos, tmp, "params1.txt");
+                tmp = writeTextTmp();
+                properties3[1].save(new FileOutputStream(tmp), "ImageControls2 values");
+                saveFile(zipOut, fos, tmp, "params2.txt");
                 tmp = writeTextTmp();
                 saveObjectArray2d(tmp, morphUI.getImageControls1().getGrid());
                 saveFile(zipOut, fos, tmp, "gridXY1.txt");
@@ -190,7 +205,16 @@ public class DataModel {
                     case "gridUV2.txt":
                         grids[3] = (structureMatrix);
                         break;
-                    case "params.txt":
+                    case "params1.txt", "param2.txt":
+                        int c = 0;
+                        if (name.equals("param2.txt"))
+                            c = 1;
+                        ImageControls[] controls = new ImageControls[]{morphUI.getImageControls1(), morphUI.getImageControls2()};
+                        ImageControls imageControls = controls[c];
+                        imageControls.setXgrid(Integer.parseInt((String) properties.get("xGrid")));
+                        imageControls.setYgrid(Integer.parseInt((String) properties.get("yGrid")));
+                        imageControls.setResX(Integer.parseInt((String) properties.get("resX")));
+                        imageControls.setResY(Integer.parseInt((String) properties.get("resX")));
 
                         break;
                 }
@@ -240,7 +264,7 @@ public class DataModel {
         for (int i = 1; i < split.length; i++) {
             int length = 0;
             String s1 = split[i];
-            if (j == length-1) {
+            if (j == length - 1) {
                 length = Integer.parseInt(s1);
                 x++;
                 j = 0;
