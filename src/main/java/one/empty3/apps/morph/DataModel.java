@@ -36,7 +36,7 @@ public class DataModel {
     private BufferedImage[] bis = new BufferedImage[2];
     private File[] imagesFiles = new File[2];
     private StructureMatrix<Point3D>[] grids = new StructureMatrix[4];
-    private HashMap<String, Object> properties = new HashMap<>();
+    private Properties [] properties = new Properties[2];
 
     public DataModel(MorphUI mui) {
         this.morphUI = mui;
@@ -191,8 +191,8 @@ public class DataModel {
                 }
             } else {
                 StructureMatrix<Point3D> structureMatrix = new StructureMatrix<Point3D>(2, Point3D.class);
-                if(name.toLowerCase().endsWith(".txt")) {
-                    loadObjectString(loadZipEntry(name, structureMatrix, zipIn, zipEntry), structureMatrix);
+                if(name.toLowerCase().startsWith("grid")) {
+                    loadObjectString(loadZipEntry(zipIn, zipEntry), structureMatrix);
                 }
                 switch (name) {
                     case "gridXY1.txt":
@@ -207,20 +207,14 @@ public class DataModel {
                     case "gridUV2.txt":
                         grids[3] = (structureMatrix);
                         break;
-                    case "params1.properties", "param2.properties":
+                    case "params1.properties":
+                    case "params2.properties":
                         int c = 0;
-                        if (name.equals("param2.properties"))
+                        if (name.equals("params2.properties"))
                             c = 1;
-                        String s = loadZipEntry(name, null, zipIn, zipEntry);
-                        Properties properties1 = new Properties();
-                        properties1.load(new StringReader(s));
-                        ImageControls[] controls = new ImageControls[]{morphUI.getImageControls1(), morphUI.getImageControls2()};
-                        ImageControls imageControls = controls[c];
-                        imageControls.setXgrid(Integer.parseInt((String) properties1.get("xGrid")));
-                        imageControls.setYgrid(Integer.parseInt((String) properties1.get("yGrid")));
-                        imageControls.setResX(Integer.parseInt((String) properties1.get("resX")));
-                        imageControls.setResY(Integer.parseInt((String) properties1.get("resX")));
-
+                        String s = loadZipEntry(zipIn, zipEntry);
+                        properties[c] = new Properties();
+                        properties[c].load(new StringReader(s));
                         break;
                 }
             }
@@ -239,11 +233,22 @@ public class DataModel {
         for (int i = 0; i < imagesFiles.length; i++) {
             System.out.println(imagesFiles[i].getName());
         }
+        ImageControls[] controls = new ImageControls[]{morphUI.getImageControls1(), morphUI.getImageControls2()};
+        for (int c = 0; c < controls.length; c++) {
+            ImageControls imageControls = controls[c];
+            if(properties[c]!=null) {
+                imageControls.setXgrid(Integer.parseInt((String) properties[c].get("xGrid")));
+                imageControls.setYgrid(Integer.parseInt((String) properties[c].get("yGrid")));
+                imageControls.setResX(Integer.parseInt((String) properties[c].get("resX")));
+                imageControls.setResY(Integer.parseInt((String) properties[c].get("resX")));
+            }
+        }
+
 
         return this;
     }
 
-    private String loadZipEntry(String name, StructureMatrix<Point3D> structureMatrix, ZipFile zipIn, ZipEntry zipEntry) {
+    private String loadZipEntry(ZipFile zipIn, ZipEntry zipEntry) {
         try {
             BufferedInputStream inputStream = new BufferedInputStream(zipIn.getInputStream(zipEntry));
             int i = 0;
@@ -263,19 +268,16 @@ public class DataModel {
     private void loadObjectString(String txt, StructureMatrix<Point3D> structureMatrix) {
         String[] split = txt.split("\n");
 
-        for (int i = split.length - 1; i >= 0; i--) {
-            System.out.println(split[i]);
-        }
-
         int j = 0;
         int length = 0;
         int i=1;
+        int errors = 0;
         while(i<split.length) {
             try {
-                length = Integer.parseInt(split[i]);
+                Logger.getAnonymousLogger().log(Level.INFO, split[i]);
+                length = Integer.parseUnsignedInt(split[i]);
             } catch (NumberFormatException ex) {
-                System.out.println("Value: (" + split[i] + ")");
-                ex.printStackTrace();
+                errors++;
             }
             i++;
             j = 0;
@@ -292,6 +294,7 @@ public class DataModel {
                 j++;
             }
         }
+        System.out.println(errors);
     }
 
     public File getFile() {
