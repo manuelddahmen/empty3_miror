@@ -85,11 +85,16 @@ public class ImageControls implements Runnable {
 
             @Override
             public void mousePressed(MouseEvent e) {
-                System.out.println("Pressed : " + (isPressed = true));
-                isSelected = selectPoint(e.getX(), e.getY());
-                System.out.println("Selected point: " + grid.getElem(xGrid, yGrid));
-                moving = true;
-                drags();
+                if(grid.getData2d().size()>xGrid && grid.getData2d().get(xGrid).size()>yGrid) {
+                    System.out.println("Pressed : " + (isPressed = true));
+                    isSelected = selectPoint(e.getX(), e.getY());
+                    System.out.println("Selected point: " + grid.getElem(xGrid, yGrid));
+                    moving = true;
+                    drags();
+                } else {
+                    System.out.println("Merci les amis ?:)>");
+                    isSelected = false;
+                }
             }
 
             @Override
@@ -191,10 +196,10 @@ public class ImageControls implements Runnable {
         }
         for (int i = 0; i < grid.data2d.size(); i++) {
             for (int j = 0; j < grid.data2d.get(i).size(); j++) {
-                Point3D point3D1 = grid.data2d.get(i).get(j);
-                double distanceActuelle = Point3D.distance(point3D, point3D1);
+                Point3D pointGrid = grid.data2d.get(i).get(j);
+                double distanceActuelle = Point3D.distance(point3D, pointGrid);
                 if (distanceActuelle < minDist) {
-                    selectedPoint = point3D;
+                    selectedPoint = pointGrid;
                     this.xGrid = i;
                     this.yGrid = j;
                     minDist = distanceActuelle;
