@@ -211,8 +211,8 @@ public class DataModel {
                             c = 1;
                         ImageControls[] controls = new ImageControls[]{morphUI.getImageControls1(), morphUI.getImageControls2()};
                         ImageControls imageControls = controls[c];
-                        imageControls.setXgrid(Integer.parseInt((String) properties.get("xGrid")));
-                        imageControls.setYgrid(Integer.parseInt((String) properties.get("yGrid")));
+                        //imageControls.setXgrid(Integer.parseInt((String) properties.get("xGrid")));
+                        //imageControls.setYgrid(Integer.parseInt((String) properties.get("yGrid")));
                         imageControls.setResX(Integer.parseInt((String) properties.get("resX")));
                         imageControls.setResY(Integer.parseInt((String) properties.get("resX")));
 

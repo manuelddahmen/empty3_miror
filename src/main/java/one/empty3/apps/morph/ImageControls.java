@@ -187,6 +187,8 @@ public class ImageControls implements Runnable {
 
     private boolean selectPoint(int x, int y) {
         selectedPoint = null;
+        xGrid = 0;
+        yGrid = 0;
         double minDist = Double.MAX_VALUE;
         Point3D point3D;
         if ((camera == null) || (zBuffer == null)) {
@@ -206,6 +208,7 @@ public class ImageControls implements Runnable {
                 }
             }
         }
+
         if(selectedPoint!=null) {
             if(point3Dedit.getDataPoint()==null||
                     selectedPoint!=point3Dedit.getDataPoint().point) {
