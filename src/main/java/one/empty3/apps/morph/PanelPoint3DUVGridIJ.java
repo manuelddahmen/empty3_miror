@@ -282,6 +282,7 @@ public class PanelPoint3DUVGridIJ extends JPanel {
                 break;
             case 4:
 //            Insert row at
+
                 try {
                     for (StructureMatrix<Point3D> grid : imageControlsArr) {
                         grid.insert(imageControls.getYgrid(), StructureMatrix.INSERT_ROW, Point3D.O0);
