@@ -239,17 +239,23 @@ public class DataModel {
         for (int c = 0; c < controls.length; c++) {
             ImageControls imageControls = controls[c];
             if(properties[c]!=null) {
+                if(properties[c].get("xGrid")!=null)
                 imageControls.setXgrid(Integer.parseInt((String) properties[c].get("xGrid")));
+                if(properties[c].get("yGrid")!=null)
                 imageControls.setYgrid(Integer.parseInt((String) properties[c].get("yGrid")));
+                if(properties[c].get("resX")!=null)
                 imageControls.setResX(Integer.parseInt((String) properties[c].get("resX")));
-                imageControls.setResY(Integer.parseInt((String) properties[c].get("resX")));
+                if(properties[c].get("resY")!=null)
+                imageControls.setResY(Integer.parseInt((String) properties[c].get("resY")));
+                if(properties[c].get("noDeformation")!=null)
                 imageControls.getPointView().getCheckBoxNoDeformation().setSelected(
                         Integer.parseInt((String) properties[c].get("noDeformation")) == 1);
+                if(properties[c].get("uv")!=null)
                 imageControls.getPointView().getCheckBoxUv().setSelected(
                         Integer.parseInt((String) properties[c].get("uv")) == 1);
+                if(properties[c].get("morphing")!=null)
                 imageControls.getPointView().getCheckBoxMorphing().setSelected(
                         Integer.parseInt((String) properties[c].get("morphing")) == 1);
-                imageControls.setResY(Integer.parseInt((String) properties[c].get("resX")));
             }
         }
 

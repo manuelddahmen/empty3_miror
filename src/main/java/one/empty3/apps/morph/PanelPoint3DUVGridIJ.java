@@ -259,7 +259,7 @@ public class PanelPoint3DUVGridIJ extends JPanel {
                         grid.insert(
                                 imageControls.getXgrid(), StructureMatrix.INSERT_COL, Point3D.O0);
                         int x = imageControls.getXgrid();
-                        for (int y = 0; y < grid.getData2d().size(); y++) {
+                        for (int y = 0; y < grid.getData2d().get(x).size(); y++) {
                             Point3D p1;
                             Point3D p2;
                             if (x == 0) {
@@ -285,14 +285,14 @@ public class PanelPoint3DUVGridIJ extends JPanel {
                 try {
                     for (StructureMatrix<Point3D> grid : imageControlsArr) {
                         grid.insert(imageControls.getYgrid(), StructureMatrix.INSERT_ROW, Point3D.O0);
+                        int y = imageControls.getYgrid();
                         for (int x = 0; x < grid.getData2d().size(); x++) {
-                            int y = imageControls.getYgrid();
                             Point3D p1;
                             Point3D p2;
                             if (y == 0) {
                                 p1 = grid.getElem(x, y + 1);
                                 p2 = grid.getElem(x, y + 1);
-                            } else if (y == grid.getData2d().size() - 1) {
+                            } else if (y == grid.getData2d().get(x).size() - 1) {
                                 p1 = grid.getElem(x, y - 1);
                                 p2 = grid.getElem(x, y - 1);
                             } else {

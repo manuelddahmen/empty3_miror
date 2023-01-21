@@ -164,15 +164,15 @@ public class StructureMatrix<T> {
         if (dim == 1)
             data1d.add(pos, value);
         if (dim == 2) {
-            if (rowCol == INSERT_ROW) {
+            if (rowCol == INSERT_COL) {
                 List<T> ins = Collections.synchronizedList(new ArrayList<T>());
                 for (int i = 0; i < data2d.get(0).size(); i++)
                     ins.add(value);
                 data2d.add(pos, ins);
 
-            } else if (rowCol == INSERT_COL) {
+            } else if (rowCol == INSERT_ROW) {
                 for (int i = 0; i < data2d.size(); i++) {
-                    data2d.get(pos).add(i, value);
+                    data2d.get(i).add(pos, value);
                 }
             }
         }
