@@ -263,8 +263,8 @@ public class PanelPoint3DUVGridIJ extends JPanel {
                             Point3D p1;
                             Point3D p2;
                             if (x == 0) {
-                                p1 = grid.getElem(x+ 1, y);
-                                p2 = grid.getElem(x+ 1, y);
+                                p1 = grid.getElem(x + 1, y);
+                                p2 = grid.getElem(x + 1, y);
                             } else if (x == grid.getData2d().size() - 1) {
                                 p1 = grid.getElem(x - 1, y);
                                 p2 = grid.getElem(x - 1, y);
@@ -292,11 +292,9 @@ public class PanelPoint3DUVGridIJ extends JPanel {
                             if (y == 0) {
                                 p1 = grid.getElem(x, y + 1);
                                 p2 = grid.getElem(x, y + 1);
-                                return;
                             } else if (y == grid.getData2d().size() - 1) {
                                 p1 = grid.getElem(x, y - 1);
                                 p2 = grid.getElem(x, y - 1);
-                                return;
                             } else {
                                 p1 = grid.getElem(x, y - 1);
                                 p2 = grid.getElem(x, y + 1);

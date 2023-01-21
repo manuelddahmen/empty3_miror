@@ -398,10 +398,10 @@ public class ImageControls implements Runnable {
                 } else {
                     sphere.texture(new ColorTexture(Color.BLUE));
                 }
-                if (i < grid.getData2d().size()-1) {
+                if (i < grid.getData2d().size()-1 && j<grid.getData2d().get(i+1).size()) {
                     rc.add(new LineSegment(point3D, grid.getElem(i + 1, j), new ColorTexture(Color.BLUE)));
                 }
-                if(j < grid.getData2d().get(i).size()-1) {
+                if(i < grid.getData2d().size() && j<grid.getData2d().get(i).size()-1) {
                     rc.add(new LineSegment(point3D, grid.getElem(i, j + 1), new ColorTexture(Color.BLUE)));
                 }
                 sphere.setIncrU(0.4);
