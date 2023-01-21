@@ -87,12 +87,15 @@ public class DataModel {
                 for (int i = 0; i < controls.length; i++) {
                     ImageControls imageControls = controls[i];
                     Properties properties = properties3[i];
-                    properties.put("xGrid", "" + morphUI.getImageControls1().getXgrid());
-                    properties.put("yGrid", "" + morphUI.getImageControls1().getYgrid());
-                    properties.put("resX", "" + morphUI.getImageControls1().getResX());
-                    properties.put("resX", "" + morphUI.getImageControls1().getResY());
+                    properties.put("xGrid", "" + imageControls.getXgrid());
+                    properties.put("yGrid", "" + imageControls.getYgrid());
+                    properties.put("resX", "" + imageControls.getResX());
+                    properties.put("resX", "" + imageControls.getResY());
+                    properties.put("noDeformation", imageControls.getPointView().getCheckBoxNoDeformation().isSelected());
+                    properties.put("morphing", imageControls.getPointView().getCheckBoxMorphing().isSelected());
+                    properties.put("uv", imageControls.getPointView().getCheckBoxUv().isSelected());
                 }
-                properties3[1].save(new FileOutputStream(tmp), "ImageControls1 values");
+                properties3[0].save(new FileOutputStream(tmp), "ImageControls1 values");
                 saveFile(zipOut, fos, tmp, "params1.properties");
                 tmp = writeTextTmp();
                 properties3[1].save(new FileOutputStream(tmp), "ImageControls2 values");
@@ -239,6 +242,13 @@ public class DataModel {
                 imageControls.setXgrid(Integer.parseInt((String) properties[c].get("xGrid")));
                 imageControls.setYgrid(Integer.parseInt((String) properties[c].get("yGrid")));
                 imageControls.setResX(Integer.parseInt((String) properties[c].get("resX")));
+                imageControls.setResY(Integer.parseInt((String) properties[c].get("resX")));
+                imageControls.getPointView().getCheckBoxNoDeformation().setSelected(
+                        Integer.parseInt((String) properties[c].get("noDeformation")) == 1);
+                imageControls.getPointView().getCheckBoxUv().setSelected(
+                        Integer.parseInt((String) properties[c].get("uv")) == 1);
+                imageControls.getPointView().getCheckBoxMorphing().setSelected(
+                        Integer.parseInt((String) properties[c].get("morphing")) == 1);
                 imageControls.setResY(Integer.parseInt((String) properties[c].get("resX")));
             }
         }
