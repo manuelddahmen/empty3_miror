@@ -154,7 +154,12 @@ public class StructureMatrix<T> {
     public List<List<T>> getData2d() {
         return data2d;
     }
-
+    public boolean inBounds(int i, int j) {
+        return dim==2 && i<getData2d().size() && j<getData2d().get(i).size();
+    }
+    public boolean inBounds(int i) {
+        return dim==1 && i<getData1d().size();
+    }
     public void insert(int pos, int rowCol, T value) {
         if (dim == 1)
             data1d.add(pos, value);
