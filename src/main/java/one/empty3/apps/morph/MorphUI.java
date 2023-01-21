@@ -438,9 +438,15 @@ public class MorphUI extends JFrame {
                         polygons.texture(textureMorphing);//???!!!!
                         scene.add(polygons);
                     } else {
-                        polygons = new Polygons();
+                        if(imageControl1.getPointView().getCheckBoxUv().isSelected()&&imageControl2.getPointView().getCheckBoxUv().isSelected()) {
+                            polygons = new PolygonsDistinctUV();
+                            ((PolygonsDistinctUV) polygons).setCoefficients(copy);
+                        } else {
+                            polygons = new Polygons();
+                            ((Polygons) polygons).setCoefficients(copy);
+                        }
+
                         polygons.texture(textureMorphing);
-                        ((Polygons) polygons).setCoefficients(copy);
                         scene.add(polygons);
                     }
 

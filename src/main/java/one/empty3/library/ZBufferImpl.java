@@ -375,7 +375,7 @@ public class ZBufferImpl extends Representable implements ZBuffer {
                         line(
                                 n.calculerPoint3D(u),
                                 n.calculerPoint3D(u + incr),
-                                n.texture(), u, u + incr, n);
+                                n.texture(), u,  u + incr, n);
                     } else {
                         ime.testDeep(n.calculerPoint3D(u), n.texture().getColorAt(0.5, 0.5));
                     }
@@ -531,12 +531,12 @@ public class ZBufferImpl extends Representable implements ZBuffer {
             return;
         }
         Point3D n = p1.moins(p2).norme1();
-        double itere = Math.max(Math.abs(x1.getX() - x2.getX()), Math.abs(x1.getY() - x2.getY())) * 4 + 1;
-        for (int i = 0; i < itere; i++) {
-            Point3D p = p1.plus(p2.moins(p1).mult(i / itere));
-            double u0 = i / itere;
+        double iterate = Math.max(Math.abs(x1.getX() - x2.getX()), Math.abs(x1.getY() - x2.getY())) * 4 + 1;
+        for (int i = 0; i < iterate; i++) {
+            Point3D p = p1.plus(p2.moins(p1).mult(i / iterate));
+            double u0 = i / iterate;
             if (curve != null)
-                p = rotate(curve.calculerPoint3D(u0), curve);
+                p = curve.calculerPoint3D(u0);
             ime.testDeep(p, t, u, 0.0, curve);
         }
 
@@ -1405,7 +1405,7 @@ public class ZBufferImpl extends Representable implements ZBuffer {
             int y = (int) ce.getY();
             double deep = camera().distanceCamera(x3d);
             if (x >= 0 & x < la & y >= 0 & y < ha
-                    && (deep < ime.getElementProf(x, y))) {
+                    && (deep <= ime.getElementProf(x, y))) {
                 Point3D n = x3d.getNormale();
                 // Vérifier : n.eye>0 sinon n = -n Avoir toutes les normales
                 // dans la même direction par rapport à la caméra.
@@ -1442,7 +1442,6 @@ public class ZBufferImpl extends Representable implements ZBuffer {
                 ime.getrMap()[x][y] = representable;
                 return true;
             }
-
             return false;
         }
 
