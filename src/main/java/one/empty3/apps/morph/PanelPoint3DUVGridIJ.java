@@ -29,6 +29,7 @@ import one.empty3.library.Point3D;
 import one.empty3.library.StructureMatrix;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 
@@ -223,9 +224,9 @@ public class PanelPoint3DUVGridIJ extends JPanel {
     private void comboBoxAction(ActionEvent e) {
         ImageControls imageControls1 = imageControls.getMorphUI().getImageControls1();
         ImageControls imageControls2 = imageControls.getMorphUI().getImageControls2();
-        ImageControls[] imageControlsArr = new ImageControls[]{
-                imageControls1,
-                imageControls2};
+        StructureMatrix<Point3D>[] imageControlsArr = new StructureMatrix[]{
+                imageControls1.getGrid(),imageControls1.getGridUv(),
+                imageControls2.getGrid(), imageControls2.getGridUv()};
         switch (((JComboBox) (e.getSource())).getSelectedIndex()) {
             //Update
             case 0:
@@ -233,48 +234,46 @@ public class PanelPoint3DUVGridIJ extends JPanel {
                 break;
 //            Delete row
             case 1:
-                for (ImageControls imageControls : imageControlsArr) {
-                    imageControls.getGrid().delete(
+                for (StructureMatrix<Point3D> grid : imageControlsArr) {
+                    grid.delete(
                             imageControls.getYgrid(), StructureMatrix.INSERT_ROW);
-                    imageControls.getGridUv().delete(
+                    grid.delete(
                             imageControls.getYgrid(), StructureMatrix.INSERT_ROW);
-                    imageControls.setYgrid(imageControls.getYgrid() - 1);
+                    imageControls1.setYgrid(imageControls.getYgrid() - 1);
+                    imageControls2.setYgrid(imageControls.getYgrid() - 1);
                 }
                 break;
 //            Delete column
             case 2:
-                for (ImageControls imageControls : imageControlsArr) {
-                    imageControls.getGrid().delete(
+                for (StructureMatrix<Point3D> grid : imageControlsArr) {
+                    grid.delete(
                             imageControls.getXgrid(), StructureMatrix.INSERT_COL);
-                    imageControls.getGridUv().delete(
-                            imageControls.getXgrid(), StructureMatrix.INSERT_COL);
-                    imageControls.setXgrid(imageControls.getXgrid() - 1);
                 }
+                imageControls1.setXgrid(imageControls.getXgrid() - 1);
+                imageControls2.setXgrid(imageControls.getXgrid() - 1);
                 break;
             case 3:
-//            Insert row at
+//            Insert col at
                 try {
-                    for (ImageControls imageControls : imageControlsArr) {
-                        imageControls.getGrid().insert(
-                                imageControls.getYgrid(), StructureMatrix.INSERT_COL, Point3D.O0);
-                        StructureMatrix<Point3D> grid = imageControls.getGrid();
+                    for (StructureMatrix<Point3D> grid : imageControlsArr) {
+                        grid.insert(
+                                imageControls.getXgrid(), StructureMatrix.INSERT_COL, Point3D.O0);
                         int x = imageControls.getXgrid();
-                        for (int y = 0; y < grid.getData2d().get(y).size(); y++) {
+                        for (int y = 0; y < grid.getData2d().size(); y++) {
                             Point3D p1;
                             Point3D p2;
                             if (x == 0) {
-                                p1 = grid.getData2d().get(y).get(x);
-                                p2 = grid.getData2d().get(y + 1).get(x);
-                            } else if (y == grid.getData2d().size() - 1) {
-                                p1 = grid.getData2d().get(y - 1).get(x);
-                                p2 = grid.getData2d().get(grid.getData2d().size() - 1).get(x);
+                                p1 = grid.getElem(x+ 1, y);
+                                p2 = grid.getElem(x+ 1, y);
+                            } else if (x == grid.getData2d().size() - 1) {
+                                p1 = grid.getElem(x - 1, y);
+                                p2 = grid.getElem(x - 1, y);
                             } else {
-                                p1 = grid.getData2d().get(y - 1).get(x);
-                                p2 = grid.getData2d().get(y + 1).get(x);
+                                p1 = grid.getElem(x - 1, y);
+                                p2 = grid.getElem(x + 1, y);
                             }
-                            Point3D p =
-                                    p1.plus(p2).mult(0.5);
-                            grid.setElem(p, y, x);
+                            Point3D p = p1.plus(p2).mult(0.5);
+                            grid.setElem(p, x, y);
                         }
                     }
                 } catch (IndexOutOfBoundsException ex) {
@@ -282,29 +281,28 @@ public class PanelPoint3DUVGridIJ extends JPanel {
                 }
                 break;
             case 4:
-//            Insert col at
+//            Insert row at
                 try {
-                    for (ImageControls imageControls : imageControlsArr) {
-                        imageControls.getGrid().insert(
-                                imageControls.getYgrid(), StructureMatrix.INSERT_ROW, Point3D.O0);
-                        StructureMatrix<Point3D> grid = imageControls.getGrid();
+                    for (StructureMatrix<Point3D> grid : imageControlsArr) {
+                        grid.insert(imageControls.getYgrid(), StructureMatrix.INSERT_ROW, Point3D.O0);
                         for (int x = 0; x < grid.getData2d().size(); x++) {
                             int y = imageControls.getYgrid();
                             Point3D p1;
                             Point3D p2;
                             if (y == 0) {
-                                p1 = grid.getData2d().get(y).get(x);
-                                p2 = grid.getData2d().get(y + 1).get(x);
+                                p1 = grid.getElem(x, y + 1);
+                                p2 = grid.getElem(x, y + 1);
+                                return;
                             } else if (y == grid.getData2d().size() - 1) {
-                                p1 = grid.getData2d().get(y - 1).get(x);
-                                p2 = grid.getData2d().get(grid.getData2d().size() - 1).get(x);
+                                p1 = grid.getElem(x, y - 1);
+                                p2 = grid.getElem(x, y - 1);
+                                return;
                             } else {
-                                p1 = grid.getData2d().get(y - 1).get(x);
-                                p2 = grid.getData2d().get(y + 1).get(x);
+                                p1 = grid.getElem(x, y - 1);
+                                p2 = grid.getElem(x, y + 1);
                             }
-                            Point3D p =
-                                    p1.plus(p2).mult(0.5);
-                            grid.setElem(p, y, x);
+                            Point3D p = p1.plus(p2).mult(0.5);
+                            grid.setElem(p, x, y);
                         }
                     }
                 } catch (IndexOutOfBoundsException ex) {

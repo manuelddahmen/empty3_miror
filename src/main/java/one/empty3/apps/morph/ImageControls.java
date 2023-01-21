@@ -19,9 +19,7 @@
 
 package one.empty3.apps.morph;
 
-import com.android.tools.r8.graph.O;
 import one.empty3.library.*;
-import one.empty3.library.core.lighting.Colors;
 import one.empty3.library.core.tribase.Plan3D;
 
 import javax.swing.*;
@@ -30,22 +28,23 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class ImageControls implements Runnable {
     private final JPanel panelDisplay;
     private final BufferedImage image;
-    private StructureMatrix<Point3D> grid;
     private final JFrame jframe;
-    private ITexture texture;
-    private PanelPoint3DUVGridIJ point3Dedit;
     boolean moving = false;
     boolean dropped = false;
     boolean clicked = false;
     boolean drags = false;
     RepresentableConteneur rc;
+    int resX = 400;//imageRead1.getWidth();
+    int resY = 400;//imageRead1.getHeight();
+    private StructureMatrix<Point3D> grid;
+    private ITexture texture;
+    private PanelPoint3DUVGridIJ point3Dedit;
     private StructureMatrix<Point3D> gridUv;
     private boolean isSelected;
     private boolean isPressed;
@@ -61,8 +60,6 @@ public class ImageControls implements Runnable {
     private int loopIndex;
     private MorphUI morphUI;
 
-    int resX = 400;//imageRead1.getWidth();
-    int resY = 400;//imageRead1.getHeight();
     public ImageControls(JFrame jframe,
                          StructureMatrix<Point3D> grid, StructureMatrix<Point3D> gridUv, BufferedImage image,
                          JPanel panelDisplay, ITexture texture, PanelPoint3DUVGridIJ point3Dedit) {
@@ -85,15 +82,18 @@ public class ImageControls implements Runnable {
 
             @Override
             public void mousePressed(MouseEvent e) {
-                if (grid.getData2d().size() <= xGrid || grid.getData2d().get(xGrid).size() <= yGrid) {
-                    System.out.println("Merci les amis ?:)>");
-                    isSelected = false;
-                } else {
+                if (grid.getData2d().size() > xGrid && grid.getData2d().get(xGrid).size() > yGrid) {
                     System.out.println("Pressed : " + (isPressed = true));
                     isSelected = selectPoint(e.getX(), e.getY());
-                    System.out.println("Selected point: " + grid.getElem(xGrid, yGrid));
-                    moving = true;
-                    drags();
+                    if (grid.getData2d().size() > xGrid && grid.getData2d().get(xGrid).size() > yGrid) {
+                        System.out.println("Selected point: " + grid.getElem(xGrid, yGrid));
+                        moving = true;
+                        drags();
+                    } else {
+                        isSelected = false;
+                    }
+                } else {
+                    isSelected = false;
                 }
             }
 
@@ -163,12 +163,12 @@ public class ImageControls implements Runnable {
             System.out.println("::update a point position");
             System.out.println(selectedPoint);
             Point point = camera.coordonneesPoint2D(
-                    new Point3D(1.0*x, 1.0*y, 0d), zBuffer);
-            grid.setElem(new Point3D(resX-1.0*point.x, 1.0*point.y, 0d),
+                    new Point3D(1.0 * x, 1.0 * y, 0d), zBuffer);
+            grid.setElem(new Point3D(resX - 1.0 * point.x, 1.0 * point.y, 0d),
                     this.xGrid, this.yGrid);
-            if(getPointView().getCheckBoxUv().isSelected()) {
+            if (getPointView().getCheckBoxUv().isSelected()) {
                 getGridUv().setElem(selectedPoint.multDot(
-                        new Point3D(1./resX, 1./resY, 0d)), xGrid, yGrid);
+                        new Point3D(1. / resX, 1. / resY, 0d)), xGrid, yGrid);
             }
         }
         initBools();
@@ -209,17 +209,17 @@ public class ImageControls implements Runnable {
             }
         }
 
-        if(selectedPoint!=null) {
-            if(point3Dedit.getDataPoint()==null||
-                    selectedPoint!=point3Dedit.getDataPoint().point) {
+        if (selectedPoint != null) {
+            if (point3Dedit.getDataPoint() == null ||
+                    selectedPoint != point3Dedit.getDataPoint().point) {
                 point3Dedit.loadDataPoint();
             }
-            point3Dedit.getTextFieldI().setText(""+xGrid);
-            point3Dedit.getTextFieldJ().setText(""+yGrid);
-            point3Dedit.getTextFieldX().setText(""+(grid.getData2d().get(xGrid).get(yGrid).getX()));
-            point3Dedit.getTextFieldY().setText(""+(grid.getData2d().get(xGrid).get(yGrid).getY()));
-            point3Dedit.getTextFieldU().setText(""+(gridUv.getData2d().get(xGrid).get(yGrid).getX()));
-            point3Dedit.getTextFieldV().setText(""+(gridUv.getData2d().get(xGrid).get(yGrid).getY()));
+            point3Dedit.getTextFieldI().setText("" + xGrid);
+            point3Dedit.getTextFieldJ().setText("" + yGrid);
+            point3Dedit.getTextFieldX().setText("" + (grid.getData2d().get(xGrid).get(yGrid).getX()));
+            point3Dedit.getTextFieldY().setText("" + (grid.getData2d().get(xGrid).get(yGrid).getY()));
+            point3Dedit.getTextFieldU().setText("" + (gridUv.getData2d().get(xGrid).get(yGrid).getX()));
+            point3Dedit.getTextFieldV().setText("" + (gridUv.getData2d().get(xGrid).get(yGrid).getY()));
         }
         return selectedPoint != null;
     }
@@ -240,7 +240,7 @@ public class ImageControls implements Runnable {
     private void displayGrid() {
         Thread thread = new Thread(() -> {
             ZBufferImpl zBuffer1 = new ZBufferImpl(resX, resY);
-            while(isRunning()) {
+            while (isRunning()) {
 
                 Scene scene1 = new Scene();
                 addToScene(scene1);
@@ -299,7 +299,7 @@ public class ImageControls implements Runnable {
         scene = new Scene();
 
 
-        if(getPointView().getCheckBoxNoDeformation().isSelected()) {
+        if (getPointView().getCheckBoxNoDeformation().isSelected()) {
             Plan3D polygons = new Plan3D();
             polygons.getP0().setElem(Point3D.O0);
             polygons.getvX().setElem(Point3D.X.mult(resX));
@@ -334,7 +334,7 @@ public class ImageControls implements Runnable {
 
         addToScene(scene);
 
-        if(zBuffer==null)
+        if (zBuffer == null)
             zBuffer = new ZBufferImpl(resX, resY);
         else {
             zBuffer.idzpp();
@@ -348,7 +348,7 @@ public class ImageControls implements Runnable {
 
     private void drawPolygons(ZBuffer zBuffer, Scene scene) {
 
-        if(zBuffer==null)
+        if (zBuffer == null)
             zBuffer = new ZBufferImpl(resX, resY);
         else {
             zBuffer.idzpp();
@@ -364,7 +364,7 @@ public class ImageControls implements Runnable {
     }
 
     private void drawSceneOnScreen(ZBuffer zBuffer) {
-        if(zBuffer!=null) {
+        if (zBuffer != null) {
            /* BufferedImage image = new BufferedImage(resX, resY, BufferedImage.TYPE_INT_ARGB);
 
             Graphics2D graphics = image.createGraphics();
@@ -396,7 +396,13 @@ public class ImageControls implements Runnable {
                 if (point3D.equals(selectedPoint)) {
                     sphere.texture(new ColorTexture(Color.RED));
                 } else {
-                    sphere.texture(new ColorTexture(Color.GREEN));
+                    sphere.texture(new ColorTexture(Color.BLUE));
+                }
+                if (i < grid.getData2d().size()-1) {
+                    rc.add(new LineSegment(point3D, grid.getElem(i + 1, j), new ColorTexture(Color.BLUE)));
+                }
+                if(j < grid.getData2d().get(i).size()-1) {
+                    rc.add(new LineSegment(point3D, grid.getElem(i, j + 1), new ColorTexture(Color.BLUE)));
                 }
                 sphere.setIncrU(0.4);
                 sphere.setIncrV(0.4);
@@ -414,13 +420,10 @@ public class ImageControls implements Runnable {
         this.displaying = displaying;
     }
 
-    public void setMorphUI(MorphUI morphUI) {
-        this.morphUI = morphUI;
-    }
-
     public PanelPoint3DUVGridIJ getPointView() {
         return point3Dedit;
     }
+
     public void setPointView(PanelPoint3DUVGridIJ point3Dedit) {
         this.point3Dedit = point3Dedit;
     }
@@ -429,42 +432,56 @@ public class ImageControls implements Runnable {
         return grid;
     }
 
+    public void setGrid(StructureMatrix<Point3D> o) {
+        this.grid = o;
+    }
+
     public int getXgrid() {
         return xGrid;
-    }
-
-    public int getYgrid() {
-        return yGrid;
-    }
-
-    public StructureMatrix<Point3D> getGridUv() {
-        return gridUv;
-    }
-
-    public int getResX() {
-        return resY;
-    }
-    public int getResY() {
-        return resY;
-    }
-
-    public void setYgrid(int y) {
-        this.yGrid = y;
     }
 
     public void setXgrid(int x) {
         this.xGrid = x;
     }
 
-    public MorphUI getMorphUI() {
-        return this.morphUI;
+    public int getYgrid() {
+        return yGrid;
+    }
+
+    public void setYgrid(int y) {
+        this.yGrid = y;
+    }
+
+    public StructureMatrix<Point3D> getGridUv() {
+        return gridUv;
     }
 
     public void setGridUv(StructureMatrix<Point3D> o) {
         this.gridUv = o;
     }
-    public void setGrid(StructureMatrix<Point3D> o) {
-        this.grid = o;
+
+    public int getResX() {
+        return resY;
+    }
+
+    public void setResX(int resX) {
+        this.resX = resX;
+    }
+
+    public int getResY() {
+        return resY;
+    }
+
+    public void setResY(int resY) {
+        this.resY = resY;
+    }
+
+    public MorphUI getMorphUI() {
+        return this.morphUI;
+    }
+
+    public void setMorphUI(MorphUI morphUI) {
+        this.morphUI = morphUI;
     }
 
     public BufferedImage getImage() {
@@ -477,12 +494,5 @@ public class ImageControls implements Runnable {
 
     public void setMorphing(boolean b) {
         point3Dedit.getCheckBoxMorphing().setSelected(b);
-    }
-
-    public void setResX(int resX) {
-        this.resX = resX;
-    }
-    public void setResY(int resY) {
-        this.resY = resY;
     }
 }

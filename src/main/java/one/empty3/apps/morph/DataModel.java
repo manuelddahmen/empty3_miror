@@ -79,7 +79,6 @@ public class DataModel {
                 ZipOutputStream zipOut = new ZipOutputStream(fos);
 
                 File tmp = writeTextTmp();
-                System.out.println("Merci Stéphanie");
 
                 Properties properties1 = new Properties();
                 Properties properties2 = new Properties();
