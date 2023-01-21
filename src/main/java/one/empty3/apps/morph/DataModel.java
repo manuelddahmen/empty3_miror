@@ -91,9 +91,9 @@ public class DataModel {
                     properties.put("yGrid", "" + imageControls.getYgrid());
                     properties.put("resX", "" + imageControls.getResX());
                     properties.put("resX", "" + imageControls.getResY());
-                    properties.put("noDeformation", imageControls.getPointView().getCheckBoxNoDeformation().isSelected());
-                    properties.put("morphing", imageControls.getPointView().getCheckBoxMorphing().isSelected());
-                    properties.put("uv", imageControls.getPointView().getCheckBoxUv().isSelected());
+                    properties.put("noDeformation", imageControls.getPointView().getCheckBoxNoDeformation().isSelected()?"1":"0");
+                    properties.put("morphing", imageControls.getPointView().getCheckBoxMorphing().isSelected()?"1":"0");
+                    properties.put("uv", imageControls.getPointView().getCheckBoxUv().isSelected()?"1":"0");
                 }
                 properties3[0].save(new FileOutputStream(tmp), "ImageControls1 values");
                 saveFile(zipOut, fos, tmp, "params1.properties");
