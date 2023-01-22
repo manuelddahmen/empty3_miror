@@ -153,7 +153,7 @@ public class Neuron implements Comparable {
             case Identity:
             case Linear:
                 return getOutput();
-            case Signmoid:
+            case Sigmoid:
                 break;
             case MinMax:
                 double min = Math.min(1.0, Math.max(0.0, function()));

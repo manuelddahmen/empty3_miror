@@ -104,13 +104,13 @@ public class DataModel {
                 saveObjectArray2d(tmp, morphUI.getImageControls1().getGrid());
                 saveFile(zipOut, fos, tmp, "gridXY1.txt");
                 tmp = writeTextTmp();
-                saveObjectArray2d(tmp, morphUI.getImageControls1().getGrid());
+                saveObjectArray2d(tmp, morphUI.getImageControls2().getGrid());
                 saveFile(zipOut, fos, tmp, "gridXY2.txt");
                 tmp = writeTextTmp();
                 saveObjectArray2d(tmp, morphUI.getImageControls1().getGridUv());
                 saveFile(zipOut, fos, tmp, "gridUV1.txt");
                 tmp = writeTextTmp();
-                saveObjectArray2d(tmp, morphUI.getImageControls1().getGridUv());
+                saveObjectArray2d(tmp, morphUI.getImageControls2().getGridUv());
                 saveFile(zipOut, fos, tmp, "gridUV2.txt");
                 tmp = writeTextTmp();
                 ImageIO.write(morphUI.getImageControls1().getImage(), "jpg", tmp);

@@ -160,7 +160,7 @@ publishing {
         maven(MavenPublication) {
             groupId = 'one.empty3'
             artifactId = 'empty3-library-generic'
-            version = "2023.1.5"
+            version = "2023.1.6"
             from components.java
 
             project.tasks.withType(Sign) {
@@ -226,14 +226,14 @@ publishing {
             }
 
         }
-        maven {
+        /*maven {
             name = "GitHubPackages"
             url = uri("https://maven.pkg.github.com/manuelddahmne/empty3")
             credentials {
                 username = load.get("GITHUB_ACTOR")
                 password = load.get("GITHUB_TOKEN")
             }
-        }
+        }*/
     }
 
 }

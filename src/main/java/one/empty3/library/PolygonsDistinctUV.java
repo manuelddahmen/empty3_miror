@@ -67,27 +67,23 @@ public class PolygonsDistinctUV extends Polygons {
                     if (indexV1 > uvMap.getData2d().size() - 1) {
                         indexV1 = uvMap.getData2d().size() - 1;
                     }
-                    Point3D[] uvQuad = new Point3D[]{
-                            uvMap.getElem(indexU0, indexV0), uvMap.getElem(indexU1, indexV0),
-                            uvMap.getElem(indexU1, indexV1), uvMap.getElem(indexU0, indexV1)
-                    };
-            /*//Sum ==>u0
-            //Sum ==>u1
-            //Sum ==>v0
-            //Sum ==>v1
-            Point3D[] uvElem = new Point3D[] {
-                    uvMap.getElem(indexU0, indexV0), uvMap.getElem(indexU1, indexV0),
-                    uvMap.getElem(indexU1, indexV1), uvMap.getElem(indexU0, indexV1)
-            };*/
-                    double U = u * (uvMap.getData2d().get(0).size()) - indexU0;
-                    double V = v * (uvMap.getData2d().size()) - indexV0;
-                    assert U>=0 && U<=1 && V>=0 && V<=1;
-                    Point3D pUv0 = uvQuad[0].plus(uvQuad[1].moins(uvQuad[0]).mult(U));
-                    Point3D pUv1 = uvQuad[3].plus(uvQuad[2].moins(uvQuad[3]).mult(U));
-                    Point3D pU0v = uvQuad[3].moins(uvQuad[0]).mult(V);
-                    Point3D pU1v = uvQuad[3].moins(uvQuad[2]).mult(V);
-                    Point3D plus = pUv0.plus(pUv1.moins(pUv0).mult(V));// Discutable
-                    return texture2.getColorAt(plus.getX(), plus.getY());
+                    if(coefficients.inBounds(indexU0, indexV0) && coefficients.inBounds(indexU1, indexV0)
+                            &&coefficients.inBounds(indexU1, indexV1) && coefficients.inBounds(indexU0, indexV1)) {
+                        Point3D[] uvQuad = new Point3D[]{
+                                uvMap.getElem(indexU0, indexV0), uvMap.getElem(indexU1, indexV0),
+                                uvMap.getElem(indexU1, indexV1), uvMap.getElem(indexU0, indexV1)
+                        };
+
+                        double U = u * (uvMap.getData2d().get(0).size()) - indexU0;
+                        double V = v * (uvMap.getData2d().size()) - indexV0;
+                        assert U >= 0 && U <= 1 && V >= 0 && V <= 1;
+                        Point3D pUv0 = uvQuad[0].plus(uvQuad[1].moins(uvQuad[0]).mult(U));
+                        Point3D pUv1 = uvQuad[3].plus(uvQuad[2].moins(uvQuad[3]).mult(U));
+                        Point3D pU0v = uvQuad[3].moins(uvQuad[0]).mult(V);
+                        Point3D pU1v = uvQuad[3].moins(uvQuad[2]).mult(V);
+                        Point3D plus = pUv0.plus(pUv1.moins(pUv0).mult(V));// Discutable
+                        return texture2.getColorAt(plus.getX(), plus.getY());
+                    }
                 } catch(Exception ex) {
                     ex.printStackTrace();
                 }
