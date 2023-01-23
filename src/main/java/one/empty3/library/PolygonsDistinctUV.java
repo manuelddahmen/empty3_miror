@@ -87,7 +87,7 @@ public class PolygonsDistinctUV extends Polygons {
                 } catch(Exception ex) {
                     ex.printStackTrace();
                 }
-                throw new UnsupportedOperationException("ex: should have a point color int ");
+                return Color.BLACK.getRGB();
             }
         };
     }

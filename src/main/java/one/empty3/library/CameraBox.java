@@ -37,7 +37,7 @@ public class CameraBox extends Representable {
     private int type = PERSPECTIVE_ISOMETRIQUE;
 
     public CameraBox() {
-        System.err.println("New camera box");
+        //System.err.println("New camera box");
         angleX.setElem(Math.PI *2/360*60);
         angleY.setElem(Math.PI *2/360*60);
     }

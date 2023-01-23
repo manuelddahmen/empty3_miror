@@ -313,12 +313,12 @@ public class ImageControls implements Runnable {
                 polygons.texture(texture);
                 scene.add(polygons);
             } else {
-                Polygons polygons = new PolygonsDistinctUV();
+                PolygonsDistinctUV polygons = new PolygonsDistinctUV();
                 polygons.setCoefficients(grid);
                 polygons.texture(texture);
                 if (polygons instanceof PolygonsDistinctUV) {
-                    ((PolygonsDistinctUV) polygons).setUvMap(gridUv);
-                    ((PolygonsDistinctUV) polygons).setTexture2(texture);
+                    polygons.setUvMap(gridUv);
+                    polygons.setTexture2(texture);
                 }
                 scene.add(polygons);
 

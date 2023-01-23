@@ -43,7 +43,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URL;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -58,6 +57,9 @@ public class MorphUI extends JFrame {
     private final StructureMatrix<Point3D> gridUV2;
     private final StructureMatrix<Point3D> grid1;
     private final StructureMatrix<Point3D> grid2;
+    // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
+    ImageControls imageControl1;
+    ImageControls imageControl2;
     private UUID uuid;
     private boolean computing = false;
     private File currentDirectory;
@@ -108,9 +110,6 @@ public class MorphUI extends JFrame {
     private JTextField textFieldAddRow;
     private JTextField textFieldDelRow;
     private JLabel label6;
-    // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
-    ImageControls imageControl1;
-    ImageControls imageControl2;
     private ZBuffer zBuffer1;
     private ZBuffer zBuffer2;
     private ZBufferImpl zBufferComputing;
@@ -206,24 +205,24 @@ public class MorphUI extends JFrame {
 
     public void chooseFile1(File selectedFile) {
         this.image1 = selectedFile;
-            try {
-                imageRead1 = ImageIO.read(image1);
-            } catch (Exception ex) {
-                vid1 = image1.getAbsolutePath();
-                imageRead1 = null;
-                throw new NullPointerException("Image1==null");
-            }
+        try {
+            imageRead1 = ImageIO.read(image1);
+        } catch (Exception ex) {
+            vid1 = image1.getAbsolutePath();
+            imageRead1 = null;
+            throw new NullPointerException("Image1==null");
+        }
 
-            currentDirectory = selectedFile.getParentFile();
+        currentDirectory = selectedFile.getParentFile();
 
-            initialization();
+        initialization();
 
 
         initGrids(grid1, gridUV1, imageRead1, panel1);
-            if (imageControl1 != null) {
-                imageControl1.setDisplaying(false);
-                imageControl1.setRunning(false);
-            }
+        if (imageControl1 != null) {
+            imageControl1.setDisplaying(false);
+            imageControl1.setRunning(false);
+        }
         imageControl1 = new ImageControls(this, grid1, gridUV1,
                 imageRead1, panel1, text1, panelPoint3DUVGridIJ1);
         imageControl1.setMorphUI(this);
@@ -275,22 +274,22 @@ public class MorphUI extends JFrame {
     public void chooseFile2(File selectedFile) {
         this.image2 = selectedFile;
 
-            try {
-                imageRead2 = ImageIO.read(image2);
-            } catch (Exception ex) {
-                vid2 = image2.getAbsolutePath();
-                imageRead2 = null;
-                throw new NullPointerException("image2==null");
-            }
-            currentDirectory = selectedFile.getParentFile();
+        try {
+            imageRead2 = ImageIO.read(image2);
+        } catch (Exception ex) {
+            vid2 = image2.getAbsolutePath();
+            imageRead2 = null;
+            throw new NullPointerException("image2==null");
+        }
+        currentDirectory = selectedFile.getParentFile();
 
 
-            initialization();
+        initialization();
         initGrids(grid2, gridUV2, imageRead2, panel2);
-            if (imageControl2 != null) {
-                imageControl2.setDisplaying(false);
-                imageControl2.setRunning(false);
-            }
+        if (imageControl2 != null) {
+            imageControl2.setDisplaying(false);
+            imageControl2.setRunning(false);
+        }
         imageControl2 = new ImageControls(this, grid2, gridUV2, imageRead2,
                 panel2, text2, panelPoint3DUVGridIJ2);
         imageControl2.setMorphUI(this);
@@ -438,7 +437,7 @@ public class MorphUI extends JFrame {
                         polygons.texture(textureMorphing);//???!!!!
                         scene.add(polygons);
                     } else {
-                        if(imageControl1.getPointView().getCheckBoxUv().isSelected()&&imageControl2.getPointView().getCheckBoxUv().isSelected()) {
+                        if (imageControl1.getPointView().getCheckBoxUv().isSelected() && imageControl2.getPointView().getCheckBoxUv().isSelected()) {
                             polygons = new PolygonsDistinctUV();
                             ((PolygonsDistinctUV) polygons).setCoefficients(copy);
                         } else {
@@ -477,27 +476,30 @@ public class MorphUI extends JFrame {
                     zBufferComputing.scene(scene);
                     zBufferComputing.camera(camera);
 
-                    zBufferComputing.draw();
+                    if (zBufferComputing != null) {
 
-                    image = zBufferComputing.imageInvX();
+                        zBufferComputing.draw();
 
-                    ImageIcon imageIcon = new ImageIcon(image);
+                        image = zBufferComputing.imageInvX();
+
+                        ImageIcon imageIcon = new ImageIcon(image);
 
 
-                    JLabel jLabelResult = new JLabel(imageIcon);
+                        JLabel jLabelResult = new JLabel(imageIcon);
 
-                    if (panelResult.getComponents().length > 0) {
-                        panelResult.remove(0);
+                        if (panelResult.getComponents().length > 0) {
+                            panelResult.remove(0);
+                        }
+
+                        panelResult.add(jLabelResult);
+
+                        pack();
+
+
+                        Logger.getLogger(this.getClass().getSimpleName())
+                                .log(Level.INFO, "Image " + frameNo + "\tEvolution: " + r);
+                        setComputing(false);
                     }
-
-                    panelResult.add(jLabelResult);
-
-                    pack();
-
-
-                    Logger.getLogger(this.getClass().getSimpleName())
-                            .log(Level.INFO, "Image " + frameNo + "\tEvolution: " + r);
-                    setComputing(false);
                 }
             }
         } catch (IllegalAccessException | CopyRepresentableError | InstantiationException e) {
@@ -587,35 +589,35 @@ public class MorphUI extends JFrame {
     }
 
     private void method(ActionEvent e) {
-        if(imageControl1!=null && imageControl2!=null)
-        switch(getComboBoxMethod().getSelectedIndex()) {
-            case 0:
-                imageControl1.setMorphing(true);
-                imageControl2.setMorphing(true);
-                imageControl1.setXyUv(true);
-                imageControl2.setXyUv(true);
-                break;
-            case 1:
-                imageControl1.setMorphing(false);
-                imageControl2.setMorphing(false);
-                imageControl1.setXyUv(true);
-                imageControl2.setXyUv(true);
-                break;
-            case 2:
-                imageControl1.setMorphing(false);
-                imageControl2.setMorphing(false);
-                imageControl1.setXyUv(false);
-                imageControl2.setXyUv(false);
-                break;
-        }
-     }
+        if (imageControl1 != null && imageControl2 != null)
+            switch (getComboBoxMethod().getSelectedIndex()) {
+                case 0:
+                    imageControl1.setMorphing(true);
+                    imageControl2.setMorphing(true);
+                    imageControl1.setXyUv(true);
+                    imageControl2.setXyUv(true);
+                    break;
+                case 1:
+                    imageControl1.setMorphing(false);
+                    imageControl2.setMorphing(false);
+                    imageControl1.setXyUv(true);
+                    imageControl2.setXyUv(true);
+                    break;
+                case 2:
+                    imageControl1.setMorphing(false);
+                    imageControl2.setMorphing(false);
+                    imageControl1.setXyUv(false);
+                    imageControl2.setXyUv(false);
+                    break;
+            }
+    }
 
     public JComboBox<String> getComboBoxMethod() {
         return comboBoxMethod;
     }
 
     private void open(ActionEvent e) {
-        JFileChooser jFileChooser = new JFileChooser(currentProjectDirectory==null?currentDirectory:currentProjectDirectory);
+        JFileChooser jFileChooser = new JFileChooser(currentProjectDirectory == null ? currentDirectory : currentProjectDirectory);
         jFileChooser.setFileFilter(new FileFilter() {
             @Override
             public boolean accept(File f) {
@@ -630,11 +632,11 @@ public class MorphUI extends JFrame {
         jFileChooser.showOpenDialog(this);
         File f = null;
 
-        if((f = jFileChooser.getSelectedFile())!=null) {
+        if ((f = jFileChooser.getSelectedFile()) != null) {
             File finalF = f;
             new Thread(() -> {
                 Logger.getAnonymousLogger().log(Level.INFO,
-                        "Create new GUI with loaded model = "+finalF.getAbsolutePath());
+                        "Create new GUI with loaded model = " + finalF.getAbsolutePath());
                 MorphUI morphUI = new MorphUI();
                 try {
                     DataModel dataModel = new DataModel(morphUI);
@@ -657,8 +659,8 @@ public class MorphUI extends JFrame {
     private void save(ActionEvent e) {
         DataModel dataModel = new DataModel(this);
         saveFile = dataModel.file;
-        if(saveFile==null) {
-            JFileChooser jFileChooser = new JFileChooser(currentProjectDirectory==null?currentDirectory:currentProjectDirectory);
+        if (saveFile == null) {
+            JFileChooser jFileChooser = new JFileChooser(currentProjectDirectory == null ? currentDirectory : currentProjectDirectory);
             jFileChooser.setFileFilter(new FileFilter() {
                 @Override
                 public boolean accept(File f) {
@@ -672,12 +674,12 @@ public class MorphUI extends JFrame {
             });
             jFileChooser.showSaveDialog(this);
 
-            if(jFileChooser.getSelectedFile()!=null) {
+            if (jFileChooser.getSelectedFile() != null) {
                 saveFile = jFileChooser.getSelectedFile();
                 dataModel.setFile(saveFile);
             }
         }
-        if(saveFile!=null) {
+        if (saveFile != null) {
             dataModel.save(saveFile);
             currentProjectDirectory = saveFile.getParentFile();
         }
@@ -732,22 +734,22 @@ public class MorphUI extends JFrame {
         //======== this ========
         var contentPane = getContentPane();
         contentPane.setLayout(new MigLayout(
-            "fill,hidemode 3",
-            // columns
-            "[fill]" +
-            "[fill]" +
-            "[fill]" +
-            "[fill]" +
-            "[fill]",
-            // rows
-            "[]" +
-            "[]" +
-            "[]" +
-            "[]" +
-            "[]" +
-            "[]" +
-            "[]" +
-            "[]"));
+                "fill,hidemode 3",
+                // columns
+                "[fill]" +
+                        "[fill]" +
+                        "[fill]" +
+                        "[fill]" +
+                        "[fill]",
+                // rows
+                "[]" +
+                        "[]" +
+                        "[]" +
+                        "[]" +
+                        "[]" +
+                        "[]" +
+                        "[]" +
+                        "[]"));
 
         //======== menuBar1 ========
         {
@@ -777,31 +779,31 @@ public class MorphUI extends JFrame {
         //======== panel5 ========
         {
             panel5.setLayout(new MigLayout(
-                "hidemode 3",
-                // columns
-                "[fill]" +
-                "[fill]" +
-                "[fill]" +
-                "[fill]" +
-                "[fill]",
-                // rows
-                "[]" +
-                "[]"));
+                    "hidemode 3",
+                    // columns
+                    "[fill]" +
+                            "[fill]" +
+                            "[fill]" +
+                            "[fill]" +
+                            "[fill]",
+                    // rows
+                    "[]" +
+                            "[]"));
 
             //---- comboBoxShapeType ----
-            comboBoxShapeType.setModel(new DefaultComboBoxModel<>(new String[] {
-                "ShapeType",
-                "Surface Bezier MxN",
-                "Surface Polynomiale MxN",
-                "Polygones"
+            comboBoxShapeType.setModel(new DefaultComboBoxModel<>(new String[]{
+                    "ShapeType",
+                    "Surface Bezier MxN",
+                    "Surface Polynomiale MxN",
+                    "Polygones"
             }));
             panel5.add(comboBoxShapeType, "cell 0 0");
 
             //---- comboBoxMethod ----
-            comboBoxMethod.setModel(new DefaultComboBoxModel<>(new String[] {
-                "Morphing",
-                "Tirer les points",
-                "Tirer et Stitch U,V"
+            comboBoxMethod.setModel(new DefaultComboBoxModel<>(new String[]{
+                    "Morphing",
+                    "Tirer les points",
+                    "Tirer et Stitch U,V"
             }));
             comboBoxMethod.addActionListener(e -> method(e));
             panel5.add(comboBoxMethod, "cell 0 0");
@@ -825,16 +827,16 @@ public class MorphUI extends JFrame {
             //======== panel3 ========
             {
                 panel3.setLayout(new MigLayout(
-                    "hidemode 3",
-                    // columns
-                    "[fill]" +
-                    "[fill]" +
-                    "[fill]" +
-                    "[fill]",
-                    // rows
-                    "[]" +
-                    "[]" +
-                    "[]"));
+                        "hidemode 3",
+                        // columns
+                        "[fill]" +
+                                "[fill]" +
+                                "[fill]" +
+                                "[fill]",
+                        // rows
+                        "[]" +
+                                "[]" +
+                                "[]"));
 
                 //---- labelFinalResX ----
                 labelFinalResX.setText("Final Res X");
@@ -872,14 +874,14 @@ public class MorphUI extends JFrame {
                 }
             });
             panel1.setLayout(new MigLayout(
-                "hidemode 3",
-                // columns
-                "[fill]" +
-                "[fill]",
-                // rows
-                "[]" +
-                "[]" +
-                "[]"));
+                    "hidemode 3",
+                    // columns
+                    "[fill]" +
+                            "[fill]",
+                    // rows
+                    "[]" +
+                            "[]" +
+                            "[]"));
         }
         contentPane.add(panel1, "cell 0 1 1 3");
 
@@ -894,14 +896,14 @@ public class MorphUI extends JFrame {
                 }
             });
             panel2.setLayout(new MigLayout(
-                "hidemode 3",
-                // columns
-                "[fill]" +
-                "[fill]",
-                // rows
-                "[]" +
-                "[]" +
-                "[]"));
+                    "hidemode 3",
+                    // columns
+                    "[fill]" +
+                            "[fill]",
+                    // rows
+                    "[]" +
+                            "[]" +
+                            "[]"));
         }
         contentPane.add(panel2, "cell 1 1 1 3");
 
@@ -910,14 +912,14 @@ public class MorphUI extends JFrame {
             panelResult.setMaximumSize(new Dimension(400, 400));
             panelResult.setMinimumSize(new Dimension(400, 400));
             panelResult.setLayout(new MigLayout(
-                "fill,hidemode 3",
-                // columns
-                "[fill]" +
-                "[fill]",
-                // rows
-                "[]" +
-                "[]" +
-                "[]"));
+                    "fill,hidemode 3",
+                    // columns
+                    "[fill]" +
+                            "[fill]",
+                    // rows
+                    "[]" +
+                            "[]" +
+                            "[]"));
         }
         contentPane.add(panelResult, "cell 2 1 1 3");
 
@@ -961,15 +963,15 @@ public class MorphUI extends JFrame {
         //======== panel4 ========
         {
             panel4.setLayout(new MigLayout(
-                "fill,hidemode 3",
-                // columns
-                "[fill]" +
-                "[fill]" +
-                "[fill]" +
-                "[fill]",
-                // rows
-                "[]" +
-                "[]"));
+                    "fill,hidemode 3",
+                    // columns
+                    "[fill]" +
+                            "[fill]" +
+                            "[fill]" +
+                            "[fill]",
+                    // rows
+                    "[]" +
+                            "[]"));
 
             //---- button5 ----
             button5.setText("Add col");
