@@ -28,7 +28,6 @@ import one.empty3.library.core.nurbs.ParametricSurface;
 public class MixPolygons extends ParametricSurface {
     private final ParametricSurface sb;
     private final ParametricSurface sa;
-    private double t;
     private double time;
 
     public MixPolygons(ParametricSurface sa, ParametricSurface sb,

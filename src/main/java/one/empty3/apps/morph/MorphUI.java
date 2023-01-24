@@ -468,8 +468,7 @@ public class MorphUI extends JFrame {
                             i++;
 
                         }
-                        mixPolygons = new MixPolygons(surfaces[0],
-                                surfaces[1], text1, text2);
+                        mixPolygons = new MixPolygons(surfaces[0], surfaces[1], text1, text2);
                     } else if (imageControl1.getPointView().getCheckBoxMorphing().isSelected()
                                 && imageControl2.getPointView().getCheckBoxMorphing().isSelected()
                                 && !imageControl1.getPointView().getCheckBoxUv().isSelected()
@@ -492,11 +491,12 @@ public class MorphUI extends JFrame {
                     //polygons.texture(textureMorphing);
                     //scene.add(polygons);
 
-//                    mixPolygons.texture(textureMorphing);
                     if(mixPolygons!=null) {
+                        mixPolygons.texture(textureMorphing);
                         mixPolygons.setTime(t);
                         scene.add(mixPolygons);
                     } else if(polygons!=null){
+                        polygons.texture(textureMorphing);
                         scene.add(polygons);
                     } else {
                         Logger.getAnonymousLogger().log(Level.SEVERE, "Polygons==null && mixPolygons==null");
