@@ -57,6 +57,8 @@ public class PanelPoint3DUVGridIJ extends JPanel {
     private JCheckBox checkBoxUv;
     private JCheckBox checkBoxMorphing;
     private JCheckBox checkBoxNoDeformation;
+    private JComboBox<String> comboBoxShape;
+    // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 
     public PanelPoint3DUVGridIJ() {
         initComponents();
@@ -352,6 +354,10 @@ public class PanelPoint3DUVGridIJ extends JPanel {
         }
     }
 
+    public JComboBox<String> getComboBoxShape() {
+        return comboBoxShape;
+    }
+
 
 
     private void initComponents() {
@@ -373,25 +379,26 @@ public class PanelPoint3DUVGridIJ extends JPanel {
         checkBoxUv = new JCheckBox();
         checkBoxMorphing = new JCheckBox();
         checkBoxNoDeformation = new JCheckBox();
+        comboBoxShape = new JComboBox<>();
 
         //======== this ========
         setLayout(new MigLayout(
-                "hidemode 3",
-                // columns
-                "[fill]" +
-                        "[fill]" +
-                        "[fill]" +
-                        "[fill]" +
-                        "[fill]" +
-                        "[fill]" +
-                        "[fill]" +
-                        "[fill]" +
-                        "[fill]" +
-                        "[fill]" +
-                        "[fill]",
-                // rows
-                "[]" +
-                        "[]"));
+            "hidemode 3",
+            // columns
+            "[fill]" +
+            "[fill]" +
+            "[fill]" +
+            "[fill]" +
+            "[fill]" +
+            "[fill]" +
+            "[fill]" +
+            "[fill]" +
+            "[fill]" +
+            "[fill]" +
+            "[fill]",
+            // rows
+            "[]" +
+            "[]"));
 
         //---- label1 ----
         label1.setText("i");
@@ -418,12 +425,12 @@ public class PanelPoint3DUVGridIJ extends JPanel {
         add(textFieldX, "cell 5 0");
 
         //---- comboBox1 ----
-        comboBox1.setModel(new DefaultComboBoxModel<>(new String[]{
-                "Update",
-                "Delete row",
-                "Delete column",
-                "Insert column",
-                "Insert row"
+        comboBox1.setModel(new DefaultComboBoxModel<>(new String[] {
+            "Update",
+            "Delete row",
+            "Delete column",
+            "Insert column",
+            "Insert row"
         }));
         comboBox1.addActionListener(e -> comboBoxAction(e));
         add(comboBox1, "cell 7 0");
@@ -465,6 +472,16 @@ public class PanelPoint3DUVGridIJ extends JPanel {
         checkBoxNoDeformation.setSelected(true);
         checkBoxNoDeformation.addActionListener(e -> noDeformation(e));
         add(checkBoxNoDeformation, "cell 7 1");
+
+        //---- comboBoxShape ----
+        comboBoxShape.setModel(new DefaultComboBoxModel<>(new String[] {
+            "1",
+            "2",
+            "3",
+            "4"
+        }));
+        comboBoxShape.addActionListener(e -> shape(e));
+        add(comboBoxShape, "cell 7 1");
         // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
     }
 
@@ -473,5 +490,4 @@ public class PanelPoint3DUVGridIJ extends JPanel {
         Point3D point, uv;
 
     }
-    // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 }

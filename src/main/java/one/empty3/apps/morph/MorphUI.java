@@ -440,10 +440,11 @@ public class MorphUI extends JFrame {
 
                     Representable polygons = null;
 
+                    MixPolygons mixPolygons = null;
 
-                    /*if (imageControl1.getPointView().getCheckBoxNoDeformation().isSelected()
+                    if (imageControl1.getPointView().getCheckBoxNoDeformation().isSelected()
                             && imageControl2.getPointView().getCheckBoxNoDeformation().isSelected()) {
-                    */
+
                     ImageControls [] imageControls = new ImageControls[]
                                 {imageControl1, imageControl2};
                         ParametricSurface[] surfaces = new ParametricSurface[2];
@@ -467,10 +468,9 @@ public class MorphUI extends JFrame {
                             i++;
 
                         }
-                        MixPolygons mixPolygons = new MixPolygons(surfaces[0],
+                        mixPolygons = new MixPolygons(surfaces[0],
                                 surfaces[1], text1, text2);
-                    //}
-                    /* else if (imageControl1.getPointView().getCheckBoxMorphing().isSelected()
+                    } else if (imageControl1.getPointView().getCheckBoxMorphing().isSelected()
                                 && imageControl2.getPointView().getCheckBoxMorphing().isSelected()
                                 && !imageControl1.getPointView().getCheckBoxUv().isSelected()
                                 && !imageControl1.getPointView().getCheckBoxUv().isSelected()) {
@@ -487,13 +487,20 @@ public class MorphUI extends JFrame {
                             ((PolygonsDistinctUV) polygons).setUvMap(imageControl1.getGridUv());
                             ((PolygonsDistinctUV) polygons).setCoefficients(copy);
                             ((PolygonsDistinctUV) polygons).setTexture2(textureMorphing);
-                    }*/
+                    }
 
                     //polygons.texture(textureMorphing);
                     //scene.add(polygons);
 
 //                    mixPolygons.texture(textureMorphing);
-                    mixPolygons.setTime(t);
+                    if(mixPolygons!=null) {
+                        mixPolygons.setTime(t);
+                        scene.add(mixPolygons);
+                    } else if(polygons!=null){
+                        scene.add(polygons);
+                    } else {
+                        Logger.getAnonymousLogger().log(Level.SEVERE, "Polygons==null && mixPolygons==null");
+                    }
 /*
                     if (polygons instanceof ShapeMorph1) {
                         ((ShapeMorph1) polygons).setT(1.0 * frameNo / fps / seconds);
