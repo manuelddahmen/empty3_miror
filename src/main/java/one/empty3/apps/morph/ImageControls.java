@@ -59,6 +59,7 @@ public class ImageControls implements Runnable {
     private ZBuffer zBuffer;
     private int loopIndex;
     private MorphUI morphUI;
+    private int index = 0;
 
     public ImageControls(JFrame jframe,
                          StructureMatrix<Point3D> grid, StructureMatrix<Point3D> gridUv, BufferedImage image,
@@ -494,5 +495,12 @@ public class ImageControls implements Runnable {
 
     public void setMorphing(boolean b) {
         point3Dedit.getCheckBoxMorphing().setSelected(b);
+    }
+
+    public void setModelIndex(int selectedIndex) {
+        this.index = selectedIndex;
+    }
+    public int getModelIndex() {
+        return index;
     }
 }

@@ -107,4 +107,11 @@ public class PolygonsDistinctUV extends Polygons {
     public void setUvMap(StructureMatrix<Point3D> uvMap) {
         this.uvMap = uvMap;
     }
+
+    @Override
+    public ITexture texture() {
+        if(texture==null)
+            texture(null);
+        return texture;
+    }
 }

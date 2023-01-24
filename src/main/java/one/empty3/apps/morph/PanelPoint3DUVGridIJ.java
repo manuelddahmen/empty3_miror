@@ -220,6 +220,23 @@ public class PanelPoint3DUVGridIJ extends JPanel {
         }
 
     }
+    private void shape(ActionEvent event) {
+        switch (((JComboBox) (event.getSource())).getSelectedIndex()) {
+            case 0:
+                System.out.println("Model 1");
+                break;
+            case 1:
+                System.out.println("Model 2");
+                break;
+            case 2:
+                System.out.println("Model 3");
+                break;
+            case 3:
+                System.out.println("Model 3");
+                break;
+        }
+        imageControls.setModelIndex((((JComboBox) (event.getSource())).getSelectedIndex()));
+    }
 
     private void comboBoxAction(ActionEvent e) {
         ImageControls imageControls1 = imageControls.getMorphUI().getImageControls1();
@@ -334,6 +351,8 @@ public class PanelPoint3DUVGridIJ extends JPanel {
             getCheckBoxUv().setSelected(true);
         }
     }
+
+
 
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off

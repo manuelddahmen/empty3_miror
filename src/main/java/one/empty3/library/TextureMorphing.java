@@ -22,20 +22,22 @@ package one.empty3.library;
 public class TextureMorphing extends ITexture {
     private final ITexture texture2;
     private final ITexture texture1;
-    private final int indexesIntermediates;
     private final LumiereIdent ident;
     private int frameNo;
+    private double t;
 
-    public TextureMorphing(ITexture imageRead1, ITexture imageRead2, int indexesIntermediates) {
+    public TextureMorphing(ITexture imageRead1, ITexture imageRead2) {
         super();
         this.texture1 = imageRead1;
         this.texture2 = imageRead2;
-        this.indexesIntermediates = indexesIntermediates;
         ident = new LumiereIdent();
     }
 
     public void setFrameNo(int frameNo) {
         this.frameNo = frameNo;
+    }
+    public void setT(double t) {
+        this.t = t;
     }
     @Override
     public void timeNext() {
@@ -43,8 +45,7 @@ public class TextureMorphing extends ITexture {
     }
     @Override
     public int getColorAt(double x, double y) {
-        double r = 1.0*frameNo/indexesIntermediates;
-
+        double r = t;
         int rgb1 = texture1.getColorAt(x, y);
         int rgb2 = texture2.getColorAt(x, y);
         double [] dRgb1 = Lumiere.getDoubles(rgb1);
@@ -60,7 +61,7 @@ public class TextureMorphing extends ITexture {
     public MatrixPropertiesObject copy() throws CopyRepresentableError, IllegalAccessException, InstantiationException {
         ITexture copy1 = (ITexture) texture1.copy();
         ITexture copy2 = (ITexture) texture2.copy();
-        TextureMorphing morphing = new TextureMorphing(copy1, copy2, indexesIntermediates);
+        TextureMorphing morphing = new TextureMorphing(copy1, copy2);
         morphing.setFrameNo(frameNo);
         return morphing;
     }

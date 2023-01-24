@@ -26,6 +26,8 @@ package one.empty3.apps.morph;
 import com.jgoodies.forms.factories.DefaultComponentFactory;
 import net.miginfocom.swing.MigLayout;
 import one.empty3.library.*;
+import one.empty3.library.core.nurbs.ParametricSurface;
+import one.empty3.library.core.tribase.Plan3D;
 import org.jcodec.api.awt.AWTSequenceEncoder;
 import org.jcodec.common.io.FileChannelWrapper;
 import org.jcodec.common.model.Rational;
@@ -397,17 +399,22 @@ public class MorphUI extends JFrame {
             int seconds = getSeconds();
             int fps = getFps();
 
+            double t = 1f*frameNo/seconds/fps;
+
             TextureMorphing textureMorphing = null;
-            if (imageRead1 != null && imageRead2 != null && grid1 != null && grid2 != null && text1 != null && text2 != null) {
+
+            if (imageRead1 != null && imageRead2 != null && grid1 != null
+                    && grid2 != null && text1 != null && text2 != null) {
+
                 Scene scene = new Scene();
 
 
                 if (getImageControls1().getPointView().getCheckboxMorphing() &&
                         getImageControls2().getPointView().getCheckboxMorphing()) {
 
-                    textureMorphing = new TextureMorphing(text1, text2, fps * seconds);
+                    textureMorphing = new TextureMorphing(text1, text2);
                 } else {
-                    textureMorphing = new TextureMorphing(text1, text2, fps * seconds);
+                    textureMorphing = new TextureMorphing(text1, text2);
 
                 }
                 if (text1 instanceof TextureMov) {
@@ -432,27 +439,66 @@ public class MorphUI extends JFrame {
                     int resY = getFinalResY();//imageRead1.getHeight();
 
                     Representable polygons = null;
-                    if (imageControl1.getPointView().getCheckboxMorphing() && imageControl2.getPointView().getCheckboxMorphing()) {
-                        polygons = new ShapeMorph1(text1, text2, grid1, grid2);
-                        polygons.texture(textureMorphing);//???!!!!
-                        scene.add(polygons);
-                    } else {
-                        if (imageControl1.getPointView().getCheckBoxUv().isSelected() && imageControl2.getPointView().getCheckBoxUv().isSelected()) {
-                            polygons = new PolygonsDistinctUV();
-                            ((PolygonsDistinctUV) polygons).setCoefficients(copy);
-                        } else {
+
+
+                    /*if (imageControl1.getPointView().getCheckBoxNoDeformation().isSelected()
+                            && imageControl2.getPointView().getCheckBoxNoDeformation().isSelected()) {
+                    */
+                    ImageControls [] imageControls = new ImageControls[]
+                                {imageControl1, imageControl2};
+                        ParametricSurface[] surfaces = new ParametricSurface[2];
+                        int i=0;
+                        for(ImageControls ic : imageControls) {
+                            switch (ic.getModelIndex()) {
+                                case 0:
+                                    surfaces[i] = new Polygons();
+                                    break;
+                                case 1:
+                                    surfaces[i] = new PolygonsDistinctUV();
+                                    break;
+                                case 2:
+                                case 3:
+                                    surfaces[i] = new Plan3D();
+                                    ((Plan3D)surfaces[i]).getP0().setElem(Point3D.O0);
+                                    ((Plan3D)surfaces[i]).getvX().setElem(Point3D.X.mult(resX));
+                                    ((Plan3D)surfaces[i]).getvY().setElem(Point3D.Y.mult(resY));
+                                    break;
+                            }
+                            i++;
+
+                        }
+                        MixPolygons mixPolygons = new MixPolygons(surfaces[0],
+                                surfaces[1], text1, text2);
+                    //}
+                    /* else if (imageControl1.getPointView().getCheckBoxMorphing().isSelected()
+                                && imageControl2.getPointView().getCheckBoxMorphing().isSelected()
+                                && !imageControl1.getPointView().getCheckBoxUv().isSelected()
+                                && !imageControl1.getPointView().getCheckBoxUv().isSelected()) {
                             polygons = new Polygons();
                             ((Polygons) polygons).setCoefficients(copy);
-                        }
+                    }else if (imageControl1.getPointView().getCheckBoxMorphing().isSelected()
+                            && imageControl2.getPointView().getCheckBoxMorphing().isSelected()
+                            && imageControl1.getPointView().getCheckBoxUv().isSelected()
+                            && imageControl1.getPointView().getCheckBoxUv().isSelected()) {
+                        polygons = new ShapeMorph1(text1, text2, grid1, grid2);
+                        ((ShapeMorph1) polygons).setT(t);
+                    } else {
+                            polygons = new PolygonsDistinctUV();
+                            ((PolygonsDistinctUV) polygons).setUvMap(imageControl1.getGridUv());
+                            ((PolygonsDistinctUV) polygons).setCoefficients(copy);
+                            ((PolygonsDistinctUV) polygons).setTexture2(textureMorphing);
+                    }*/
 
-                        polygons.texture(textureMorphing);
-                        scene.add(polygons);
-                    }
+                    //polygons.texture(textureMorphing);
+                    //scene.add(polygons);
 
+//                    mixPolygons.texture(textureMorphing);
+                    mixPolygons.setTime(t);
+/*
                     if (polygons instanceof ShapeMorph1) {
                         ((ShapeMorph1) polygons).setT(1.0 * frameNo / fps / seconds);
                     }
-
+*/
                     textureMorphing.setFrameNo(frameNo);
 
 
