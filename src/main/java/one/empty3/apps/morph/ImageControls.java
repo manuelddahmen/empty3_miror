@@ -282,7 +282,6 @@ public class ImageControls implements Runnable {
 
             try {
                 Thread.sleep(80);
-                // Temps d'attente max? Tuer thread.
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
@@ -341,19 +340,14 @@ public class ImageControls implements Runnable {
             zBuffer.idzpp();
         }
 
-        drawPolygons(zBuffer, scene);
+        drawPolygons(scene);
 
 
         displaying = false;
     }
 
-    private void drawPolygons(ZBuffer zBuffer, Scene scene) {
+    private void drawPolygons(Scene scene) {
 
-        if (zBuffer == null)
-            zBuffer = new ZBufferImpl(resX, resY);
-        else {
-            zBuffer.idzpp();
-        }
 
         zBuffer.scene(scene);
         scene.cameraActive(camera);

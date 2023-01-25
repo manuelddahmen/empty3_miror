@@ -27,6 +27,7 @@ import com.jgoodies.forms.factories.DefaultComponentFactory;
 import net.miginfocom.swing.MigLayout;
 import one.empty3.library.*;
 import one.empty3.library.core.nurbs.ParametricSurface;
+import one.empty3.library.core.nurbs.SurfaceParametriquePolynomiale;
 import one.empty3.library.core.tribase.Plan3D;
 import org.jcodec.api.awt.AWTSequenceEncoder;
 import org.jcodec.common.io.FileChannelWrapper;
@@ -409,14 +410,6 @@ public class MorphUI extends JFrame {
                 Scene scene = new Scene();
 
 
-                if (getImageControls1().getPointView().getCheckboxMorphing() &&
-                        getImageControls2().getPointView().getCheckboxMorphing()) {
-
-                    textureMorphing = new TextureMorphing(text1, text2);
-                } else {
-                    textureMorphing = new TextureMorphing(text1, text2);
-
-                }
                 if (text1 instanceof TextureMov) {
                     new Thread(instance1).start();
                 }
@@ -428,7 +421,12 @@ public class MorphUI extends JFrame {
 
                 if (copy != null) {
                     setComputing(true);
+
                     double r = 1.0 * frameNo / (getFps() * getSeconds());
+
+                    textureMorphing = new TextureMorphing(text1, text2);
+                    textureMorphing.setT(r);
+
 
                     for (int x = 0; x < copy.getData2d().size(); x++)
                         for (int y = 0; y < copy.getData2d().get(x).size(); y++) {
@@ -453,9 +451,15 @@ public class MorphUI extends JFrame {
                             switch (ic.getModelIndex()) {
                                 case 0:
                                     surfaces[i] = new Polygons();
+                                    ((SurfaceParametriquePolynomiale)(surfaces[i]))
+                                            .setCoefficients(ic.getGrid());
                                     break;
                                 case 1:
                                     surfaces[i] = new PolygonsDistinctUV();
+                                    ((PolygonsDistinctUV)(surfaces[i]))
+                                            .setCoefficients(ic.getGrid());
+                                    ((PolygonsDistinctUV)(surfaces[i]))
+                                            .setUvMap(ic.getGridUv());
                                     break;
                                 case 2:
                                 case 3:
@@ -707,6 +711,12 @@ public class MorphUI extends JFrame {
             }).start();
         }
 
+    }
+
+    public void dispose() {
+        super.dispose();
+        imageControl1.setDisplaying(false);
+        imageControl2.setDisplaying(false);
     }
 
     private void save(ActionEvent e) {
