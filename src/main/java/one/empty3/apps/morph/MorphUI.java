@@ -60,7 +60,6 @@ public class MorphUI extends JFrame {
     private final StructureMatrix<Point3D> gridUV2;
     private final StructureMatrix<Point3D> grid1;
     private final StructureMatrix<Point3D> grid2;
-    // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
     ImageControls imageControl1;
     ImageControls imageControl2;
     private UUID uuid;
@@ -113,6 +112,7 @@ public class MorphUI extends JFrame {
     private JTextField textFieldAddRow;
     private JTextField textFieldDelRow;
     private JLabel label6;
+    // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
     private ZBuffer zBuffer1;
     private ZBuffer zBuffer2;
     private ZBufferImpl zBufferComputing;
@@ -126,6 +126,7 @@ public class MorphUI extends JFrame {
     private int finalResX;
     private File saveFile;
     private File currentProjectDirectory;
+    private int shapeType;
 
     public MorphUI() {
 //
@@ -400,7 +401,7 @@ public class MorphUI extends JFrame {
             int seconds = getSeconds();
             int fps = getFps();
 
-            double t = 1f*frameNo/seconds/fps;
+            double t = 1f * frameNo / seconds / fps;
 
             TextureMorphing textureMorphing = null;
 
@@ -440,33 +441,36 @@ public class MorphUI extends JFrame {
 
                     MixPolygons mixPolygons = null;
 
+
+                    if(shapeType==0) {
+
                     if (imageControl1.getPointView().getCheckBoxNoDeformation().isSelected()
                             && imageControl2.getPointView().getCheckBoxNoDeformation().isSelected()) {
 
-                    ImageControls [] imageControls = new ImageControls[]
+                        ImageControls[] imageControls = new ImageControls[]
                                 {imageControl1, imageControl2};
                         ParametricSurface[] surfaces = new ParametricSurface[2];
-                        int i=0;
-                        for(ImageControls ic : imageControls) {
+                        int i = 0;
+                        for (ImageControls ic : imageControls) {
                             switch (ic.getModelIndex()) {
                                 case 0:
                                     surfaces[i] = new Polygons();
-                                    ((SurfaceParametriquePolynomiale)(surfaces[i]))
+                                    ((SurfaceParametriquePolynomiale) (surfaces[i]))
                                             .setCoefficients(ic.getGrid());
                                     break;
                                 case 1:
                                     surfaces[i] = new PolygonsDistinctUV();
-                                    ((PolygonsDistinctUV)(surfaces[i]))
+                                    ((PolygonsDistinctUV) (surfaces[i]))
                                             .setCoefficients(ic.getGrid());
-                                    ((PolygonsDistinctUV)(surfaces[i]))
+                                    ((PolygonsDistinctUV) (surfaces[i]))
                                             .setUvMap(ic.getGridUv());
                                     break;
                                 case 2:
                                 case 3:
                                     surfaces[i] = new Plan3D();
-                                    ((Plan3D)surfaces[i]).getP0().setElem(Point3D.O0);
-                                    ((Plan3D)surfaces[i]).getvX().setElem(Point3D.X.mult(resX));
-                                    ((Plan3D)surfaces[i]).getvY().setElem(Point3D.Y.mult(resY));
+                                    ((Plan3D) surfaces[i]).getP0().setElem(Point3D.O0);
+                                    ((Plan3D) surfaces[i]).getvX().setElem(Point3D.X.mult(resX));
+                                    ((Plan3D) surfaces[i]).getvY().setElem(Point3D.Y.mult(resY));
                                     break;
                             }
                             i++;
@@ -474,46 +478,51 @@ public class MorphUI extends JFrame {
                         }
                         mixPolygons = new MixPolygons(surfaces[0], surfaces[1], text1, text2);
                     } else if (imageControl1.getPointView().getCheckBoxMorphing().isSelected()
-                                && imageControl2.getPointView().getCheckBoxMorphing().isSelected()
-                                && !imageControl1.getPointView().getCheckBoxUv().isSelected()
-                                && !imageControl1.getPointView().getCheckBoxUv().isSelected()) {
-                            polygons = new Polygons();
-                            ((Polygons) polygons).setCoefficients(copy);
-                    }else if (imageControl1.getPointView().getCheckBoxMorphing().isSelected()
+                            && imageControl2.getPointView().getCheckBoxMorphing().isSelected()
+                            && !imageControl1.getPointView().getCheckBoxUv().isSelected()
+                            && !imageControl1.getPointView().getCheckBoxUv().isSelected()) {
+                        polygons = new Polygons();
+                        ((Polygons) polygons).setCoefficients(copy);
+                    } else if (imageControl1.getPointView().getCheckBoxMorphing().isSelected()
                             && imageControl2.getPointView().getCheckBoxMorphing().isSelected()
                             && imageControl1.getPointView().getCheckBoxUv().isSelected()
                             && imageControl1.getPointView().getCheckBoxUv().isSelected()) {
                         polygons = new ShapeMorph1(text1, text2, grid1, grid2);
                         ((ShapeMorph1) polygons).setT(t);
                     } else {
-                            polygons = new PolygonsDistinctUV();
-                            ((PolygonsDistinctUV) polygons).setUvMap(imageControl1.getGridUv());
-                            ((PolygonsDistinctUV) polygons).setCoefficients(copy);
-                            ((PolygonsDistinctUV) polygons).setTexture2(textureMorphing);
+                        polygons = new PolygonsDistinctUV();
+                        ((PolygonsDistinctUV) polygons).setUvMap(imageControl1.getGridUv());
+                        ((PolygonsDistinctUV) polygons).setCoefficients(copy);
+                        ((PolygonsDistinctUV) polygons).setTexture2(textureMorphing);
                     }
 
                     //polygons.texture(textureMorphing);
                     //scene.add(polygons);
 
-                    if(mixPolygons!=null) {
+                    if (mixPolygons != null) {
                         mixPolygons.texture(textureMorphing);
                         mixPolygons.setTime(t);
                         scene.add(mixPolygons);
-                    } else if(polygons!=null){
+                    } else if (polygons != null) {
                         polygons.texture(textureMorphing);
                         scene.add(polygons);
                     } else {
                         Logger.getAnonymousLogger().log(Level.SEVERE, "Polygons==null && mixPolygons==null");
                     }
-/*
+
+
+                    /*
                     if (polygons instanceof ShapeMorph1) {
                         ((ShapeMorph1) polygons).setT(1.0 * frameNo / fps / seconds);
                     }
 */
                     textureMorphing.setFrameNo(frameNo);
+                    } else {
+                        polygons = new ShapeMorph1(text1, text2, grid1, grid2);
+                        ((ShapeMorph1)polygons).setT(t);
+                    }
 
-
-                    Point3D plus = Point3D.X.mult(
+                        Point3D plus = Point3D.X.mult(
                             resX / 2.).plus(Point3D.Y.mult(resY / 2.));
 
                     Camera camera = new Camera(Point3D.Z.mult(
@@ -748,6 +757,14 @@ public class MorphUI extends JFrame {
         }
     }
 
+    private void shapeType(ActionEvent e) {
+        switch (((JComboBox)(e.getSource())).getSelectedIndex()) {
+            case 0 -> shapeType = 0;
+            case 1 -> shapeType = 1;
+            default -> throw new IllegalStateException("Unexpected value: " + ((JComboBox) (e.getSource())));
+        }
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
         // Generated using JFormDesigner non-commercial license
@@ -797,22 +814,22 @@ public class MorphUI extends JFrame {
         //======== this ========
         var contentPane = getContentPane();
         contentPane.setLayout(new MigLayout(
-                "fill,hidemode 3",
-                // columns
-                "[fill]" +
-                        "[fill]" +
-                        "[fill]" +
-                        "[fill]" +
-                        "[fill]",
-                // rows
-                "[]" +
-                        "[]" +
-                        "[]" +
-                        "[]" +
-                        "[]" +
-                        "[]" +
-                        "[]" +
-                        "[]"));
+            "fill,hidemode 3",
+            // columns
+            "[fill]" +
+            "[fill]" +
+            "[fill]" +
+            "[fill]" +
+            "[fill]",
+            // rows
+            "[]" +
+            "[]" +
+            "[]" +
+            "[]" +
+            "[]" +
+            "[]" +
+            "[]" +
+            "[]"));
 
         //======== menuBar1 ========
         {
@@ -842,33 +859,34 @@ public class MorphUI extends JFrame {
         //======== panel5 ========
         {
             panel5.setLayout(new MigLayout(
-                    "hidemode 3",
-                    // columns
-                    "[fill]" +
-                            "[fill]" +
-                            "[fill]" +
-                            "[fill]" +
-                            "[fill]",
-                    // rows
-                    "[]" +
-                            "[]"));
+                "hidemode 3",
+                // columns
+                "[fill]" +
+                "[fill]" +
+                "[fill]" +
+                "[fill]" +
+                "[fill]",
+                // rows
+                "[]" +
+                "[]"));
 
             //---- comboBoxShapeType ----
-            comboBoxShapeType.setModel(new DefaultComboBoxModel<>(new String[]{
-                    "ShapeType",
-                    "Surface Bezier MxN",
-                    "Surface Polynomiale MxN",
-                    "Polygones"
+            comboBoxShapeType.setModel(new DefaultComboBoxModel<>(new String[] {
+                "Polygons",
+                "ShapeMorph1"
             }));
             panel5.add(comboBoxShapeType, "cell 0 0");
 
             //---- comboBoxMethod ----
-            comboBoxMethod.setModel(new DefaultComboBoxModel<>(new String[]{
-                    "Morphing",
-                    "Tirer les points",
-                    "Tirer et Stitch U,V"
+            comboBoxMethod.setModel(new DefaultComboBoxModel<>(new String[] {
+                "Morphing",
+                "Tirer les points",
+                "Tirer et Stitch U,V"
             }));
-            comboBoxMethod.addActionListener(e -> method(e));
+            comboBoxMethod.addActionListener(e -> {
+			method(e);
+			shapeType(e);
+		});
             panel5.add(comboBoxMethod, "cell 0 0");
 
             //---- label7 ----
@@ -890,16 +908,16 @@ public class MorphUI extends JFrame {
             //======== panel3 ========
             {
                 panel3.setLayout(new MigLayout(
-                        "hidemode 3",
-                        // columns
-                        "[fill]" +
-                                "[fill]" +
-                                "[fill]" +
-                                "[fill]",
-                        // rows
-                        "[]" +
-                                "[]" +
-                                "[]"));
+                    "hidemode 3",
+                    // columns
+                    "[fill]" +
+                    "[fill]" +
+                    "[fill]" +
+                    "[fill]",
+                    // rows
+                    "[]" +
+                    "[]" +
+                    "[]"));
 
                 //---- labelFinalResX ----
                 labelFinalResX.setText("Final Res X");
@@ -937,14 +955,14 @@ public class MorphUI extends JFrame {
                 }
             });
             panel1.setLayout(new MigLayout(
-                    "hidemode 3",
-                    // columns
-                    "[fill]" +
-                            "[fill]",
-                    // rows
-                    "[]" +
-                            "[]" +
-                            "[]"));
+                "hidemode 3",
+                // columns
+                "[fill]" +
+                "[fill]",
+                // rows
+                "[]" +
+                "[]" +
+                "[]"));
         }
         contentPane.add(panel1, "cell 0 1 1 3");
 
@@ -959,14 +977,14 @@ public class MorphUI extends JFrame {
                 }
             });
             panel2.setLayout(new MigLayout(
-                    "hidemode 3",
-                    // columns
-                    "[fill]" +
-                            "[fill]",
-                    // rows
-                    "[]" +
-                            "[]" +
-                            "[]"));
+                "hidemode 3",
+                // columns
+                "[fill]" +
+                "[fill]",
+                // rows
+                "[]" +
+                "[]" +
+                "[]"));
         }
         contentPane.add(panel2, "cell 1 1 1 3");
 
@@ -975,14 +993,14 @@ public class MorphUI extends JFrame {
             panelResult.setMaximumSize(new Dimension(400, 400));
             panelResult.setMinimumSize(new Dimension(400, 400));
             panelResult.setLayout(new MigLayout(
-                    "fill,hidemode 3",
-                    // columns
-                    "[fill]" +
-                            "[fill]",
-                    // rows
-                    "[]" +
-                            "[]" +
-                            "[]"));
+                "fill,hidemode 3",
+                // columns
+                "[fill]" +
+                "[fill]",
+                // rows
+                "[]" +
+                "[]" +
+                "[]"));
         }
         contentPane.add(panelResult, "cell 2 1 1 3");
 
@@ -1026,15 +1044,15 @@ public class MorphUI extends JFrame {
         //======== panel4 ========
         {
             panel4.setLayout(new MigLayout(
-                    "fill,hidemode 3",
-                    // columns
-                    "[fill]" +
-                            "[fill]" +
-                            "[fill]" +
-                            "[fill]",
-                    // rows
-                    "[]" +
-                            "[]"));
+                "fill,hidemode 3",
+                // columns
+                "[fill]" +
+                "[fill]" +
+                "[fill]" +
+                "[fill]",
+                // rows
+                "[]" +
+                "[]"));
 
             //---- button5 ----
             button5.setText("Add col");

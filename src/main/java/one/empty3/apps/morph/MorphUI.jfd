@@ -18,11 +18,9 @@ new FormModel {
 				add( new FormComponent( "javax.swing.JComboBox" ) {
 					name: "comboBoxShapeType"
 					"model": new javax.swing.DefaultComboBoxModel {
-						selectedItem: "ShapeType"
-						addElement( "ShapeType" )
-						addElement( "Surface Bezier MxN" )
-						addElement( "Surface Polynomiale MxN" )
-						addElement( "Polygones" )
+						selectedItem: "Polygons"
+						addElement( "Polygons" )
+						addElement( "ShapeMorph1" )
 					}
 				}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 					"value": "cell 0 0"
@@ -39,6 +37,7 @@ new FormModel {
 						"JavaCodeGenerator.variableGetter": true
 					}
 					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "method", true ) )
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "shapeType", true ) )
 				}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 					"value": "cell 0 0"
 				} )

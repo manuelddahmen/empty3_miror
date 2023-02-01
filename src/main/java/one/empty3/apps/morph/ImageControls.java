@@ -276,7 +276,36 @@ public class ImageControls implements Runnable {
         return new Point3D(x, y, 0d);
 
     }
+    public Representable computeShapeT() {
+        if (getPointView().getCheckBoxNoDeformation().isSelected()) {
+            Plan3D polygons = new Plan3D();
+            polygons.getP0().setElem(Point3D.O0);
+            polygons.getvX().setElem(Point3D.X.mult(resX));
+            polygons.getvY().setElem(Point3D.Y.mult(resY));
+            polygons.texture(texture);
+            scene.add(polygons);
+            return polygons;
+        } else {
+            if (getPointView().getCheckboxMorphing()) {
+                Polygons polygons = new Polygons();
+                polygons.setCoefficients(grid);
+                polygons.texture(texture);
+                scene.add(polygons);
+                return polygons;
+            } else {
+                PolygonsDistinctUV polygons = new PolygonsDistinctUV();
+                polygons.setCoefficients(grid);
+                polygons.texture(texture);
+                if (polygons instanceof PolygonsDistinctUV) {
+                    polygons.setUvMap(gridUv);
+                    polygons.setTexture2(texture);
+                }
+                scene.add(polygons);
+                return polygons;
+            }
+        }
 
+    }
     private void display() {
         while (isDisplaying()) {
 
@@ -298,32 +327,8 @@ public class ImageControls implements Runnable {
         }
         scene = new Scene();
 
-
-        if (getPointView().getCheckBoxNoDeformation().isSelected()) {
-            Plan3D polygons = new Plan3D();
-            polygons.getP0().setElem(Point3D.O0);
-            polygons.getvX().setElem(Point3D.X.mult(resX));
-            polygons.getvY().setElem(Point3D.Y.mult(resY));
-            polygons.texture(texture);
-            scene.add(polygons);
-        } else {
-            if (getPointView().getCheckboxMorphing()) {
-                Polygons polygons = new Polygons();
-                polygons.setCoefficients(grid);
-                polygons.texture(texture);
-                scene.add(polygons);
-            } else {
-                PolygonsDistinctUV polygons = new PolygonsDistinctUV();
-                polygons.setCoefficients(grid);
-                polygons.texture(texture);
-                if (polygons instanceof PolygonsDistinctUV) {
-                    polygons.setUvMap(gridUv);
-                    polygons.setTexture2(texture);
-                }
-                scene.add(polygons);
-
-            }
-        }
+//
+        computeShapeT();
         Point3D plus = Point3D.X.mult(
                 resX / 2.).plus(Point3D.Y.mult(resY / 2.));
 
