@@ -20,6 +20,7 @@
 package one.empty3.apps.morph;
 
 import one.empty3.library.*;
+import one.empty3.library.core.nurbs.ParametricSurface;
 import one.empty3.library.core.tribase.Plan3D;
 
 import javax.swing.*;
@@ -276,7 +277,7 @@ public class ImageControls implements Runnable {
         return new Point3D(x, y, 0d);
 
     }
-    public Representable computeShapeT() {
+    public ParametricSurface computeShapeT() {
         if (getPointView().getCheckBoxNoDeformation().isSelected()) {
             Plan3D polygons = new Plan3D();
             polygons.getP0().setElem(Point3D.O0);
