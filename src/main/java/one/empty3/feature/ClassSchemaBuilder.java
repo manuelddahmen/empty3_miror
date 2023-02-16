@@ -911,6 +911,7 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
             listProcessClasses.add(Voronoi.class.newInstance());
             listProcessClasses.add(HighlightFeatures.class.newInstance());
             listProcessClasses.add(RunFeatures.class.newInstance());
+            listProcessClasses.add(GFG.class.newInstance());
             listProcessClasses.forEach(new Consumer<ProcessFile>() {
                 @Override
                 public void accept(ProcessFile processFile) {
