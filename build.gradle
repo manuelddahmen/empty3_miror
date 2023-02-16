@@ -4,8 +4,25 @@ plugins {
     id 'java-library'
     id 'maven-publish'
     id 'signing'
-    id 'org.jetbrains.kotlin.jvm' version '1.8.10'
+    //id 'org.jetbrains.kotlin.jvm' version '1.8.10'
+    id 'org.jetbrains.kotlin.multiplatform' version '1.8.10'
 }
+
+sourceSets {
+    commonTest {
+
+    }
+}
+
+kotlin {
+    //macosX64('native') { // on macOS
+   // linuxX64('native') // on Linux
+    mingwX64('native') // on Windows
+//        binaries {
+//            executable()
+//        }
+}
+
 Properties properties = new Properties()
 try {
     // Other configuration here
@@ -20,26 +37,32 @@ def load = properties
 java {
     withSourcesJar()
 }
-task FeatureAppGui(type: JavaExec) {
+tasks.register('FeatureAppGui', JavaExec) {
     classpath sourceSets.main.runtimeClasspath
     mainClass = "one.empty3.feature.ClassSchemaBuilder"
     args "arg1", "arg2"
 }
-task MorphingAppGui(type: JavaExec) {
+tasks.register('MorphingAppGui', JavaExec) {
     classpath sourceSets.main.runtimeClasspath
     mainClass = "one.empty3.apps.morph.Main"
     args "arg1", "arg2"
 }
-task OpadGameGui(type: JavaExec) {
+tasks.register('OpadGameGui', JavaExec) {
     classpath sourceSets.main.runtimeClasspath
     mainClass = "one.empty3.apps.opad.PanelGraphics"
     args "arg1", "arg2"
 }
-task BoardGameGui(type: JavaExec) {
+tasks.register('BoardGameGui', JavaExec) {
     classpath sourceSets.main.runtimeClasspath
     mainClass = "one.empty3.apps.newboardgames.WindowDrawing"
     args "arg1", "arg2"
 }
+tasks.register('ResolutionCharacter7', JavaExec) {
+    classpath sourceSets.main.runtimeClasspath
+    mainClass = "one.empty3.feature.tryocr.ResolutionCharacter7"
+    args "arg1", "arg2"
+}
+
 signing {
     def signingKey = load.get("signing.keyId")
     def signingPassword = load.get("signing.password")
@@ -124,18 +147,19 @@ test {
     testLogging.showStandardStreams = true
 }
 
-task sourceJar(type: Jar) {
+tasks.register('sourceJar', Jar) {
     classifier "sources"
     from sourceSets.main.allJava
 }
 
-task javadocJar(type: Jar, dependsOn: javadoc) {
+tasks.register('javadocJar', Jar) {
+    dependsOn javadoc
     classifier "javadoc"
     from javadoc.destinationDir
 }
 
 
-task copyTask(type: Copy) {
+tasks.register('copyTask', Copy) {
     from 'src/main/java/'
     into 'build/classes/java/main'
 }
@@ -239,17 +263,19 @@ publishing {
     }
 
 }
+/*
 compileKotlin {
     kotlinOptions {
-        jvmTarget = "1.8"
-    }
-}
-compileTestKotlin {
-    kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "19"
     }
 }
 
+compileTestKotlin {
+    kotlinOptions {
+        jvmTarget = "19"
+    }
+}
+*/
 
 /*
 uploadArchives {

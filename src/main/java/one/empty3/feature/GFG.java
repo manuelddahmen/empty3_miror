@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023. Manuel Daniel Dahmen
+ * Copyright (c) 2023. Manuel Daniel Dahmen
  *
  *
  *    Copyright 2012-2023 Manuel Daniel Dahmen
@@ -17,86 +17,149 @@
  *    limitations under the License.
  */
 
-package one.empty3.feature;
-// Implementing Coppersmith Winograd Algorithm in Java
+package one.empty3.feature;// Java program to perform a 2D FFT Inplace Given a Complex
+// 2D Array
 
-import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+// Declare the needed libraries
+import one.empty3.feature.app.replace.javax.imageio.ImageIO;
+import one.empty3.io.ProcessFile;
 
-class GFG {
-  
-    public static boolean coppersmithWinograd(double[][] M1,
-                                       double[][] M2,
-                                       double[][] M3, int n)
-    {
-        double[][] a = new double[n][1];
-        Random rand = new Random();
-        for (int i = 0; i < n; i++) {
-            a[i][0] = rand.nextInt() % 2;
-        }
-  
-        double[][] M2a = new double[n][1];
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < 1; j++) {
-                for (int k = 0; k < n; k++) {
-                    M2a[i][j]
-                        = M2a[i][j] + M2[i][k] * a[k][j];
-                }
-            }
-        }
-  
-        double[][] M3a = new double[n][1];
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < 1; j++) {
-                for (int k = 0; k < n; k++) {
-                    M3a[i][j]
-                        = M3a[i][j] + M3[i][k] * a[k][j];
-                }
-            }
-        }
-  
-        double[][] M12a = new double[n][1];
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < 1; j++) {
-                for (int k = 0; k < n; k++) {
-                    M12a[i][j]
-                        = M12a[i][j] + M1[i][k] * M2a[k][j];
-                }
-            }
-        }
-        for (int i = 0; i < n; i++) {
-            M12a[i][0] -= M3a[i][0];
-        }
-        boolean sameResultantMatrix = true;
-        for (int i = 0; i < n; i++) {
-            if (M12a[i][0] == 0)
-                continue;
-            else
-                sameResultantMatrix = false;
-        }
-        return sameResultantMatrix;
-    }
-  
-    // Driver's Function m1*m2==m3
-    public static void inv(double [] [] M2, int n)
-    {
-  
-        /// "Input the dimension of the matrices: "
-        
-        
-        // "Input the 1st or M1 matrix: "
-        double[][] M1 = { { 1, 2 }, { 3, 4 } };
-        // "Input the 2nd or M2 matrix: "
-  
-       // double[][] M2 = { { 2, 0 }, { 1, 2 } };
-  
-        // "Input the result or M3 matrix: "
-        double[][] M3 = { { 4, 4 }, { 10, 8 } };
-  
-        if (coppersmithWinograd(M1, M2, M3, n))
-            Logger.getAnonymousLogger().log(Level.INFO, "Resultant matrix is Matching");
-        else
-            Logger.getAnonymousLogger().log(Level.INFO, "Resultant matrix is not Matching");
-    }
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.Scanner;
+
+public class GFG extends ProcessFile {
+	@Override
+	public boolean process(File in, File out) {
+		PixM inPix = PixM.getPixM(ImageIO.read(in), maxRes);
+
+		int n = Math.max(inPix.getColumns(), inPix.getLines());
+
+		double[][] inPix2 = new double[n][n];
+		for(int i=0; i<n; i++)
+			for(int j=0; j<n; j++) {
+				inPix2[i][j] =  inPix.luminance(i, j);
+			}
+
+
+		// Declaring the matrices in double datatype
+		// Declaring the input variable where we take in the
+		// input
+		double[][] input = new double[n][n];
+
+		input = inPix2;
+
+		// Taking the matrices for real value
+		double[][] realOut = new double[n][n];
+
+		// Taking the matrices for imaginary output
+		double[][] imagOut = new double[n][n];
+
+		// Calling the function discrete
+		discrete(input, realOut, imagOut);
+
+		PixM pixM1 = new PixM(realOut);
+		PixM pixM2 = new PixM(imagOut);
+
+		try {
+			ImageIO.write(pixM1.getImage(), "jpg", out);
+
+			return true;
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	// Now by taking the discrete function
+	// This is the declaration of the function
+	// This function includes 4 parameters
+	// The parameters are the 4 matrices.
+	static void discrete(double[][] input,
+						double[][] realOut,
+						double[][] imagOut)
+	{
+
+		// Height is the variable of data type int
+		// the length of the input variable is stored in
+		// variable height
+		int height = input.length;
+
+		// The input of the first index length is stored in
+		// variable width
+		int width = input[0].length;
+
+		// Iterating the input till height stored in
+		// variable y
+		for (int y = 0; y < height; y++) {
+
+			// Taking the input iterating till width in
+			// variable x
+			for (int x = 0; x < width; x++) {
+
+				// Taking another variable y1 which will be
+				// the continuation of
+				// the variable y
+				// This y1 will be iterating till height
+				// This index of the variable starts at 0
+				for (int y1 = 0; y1 < height; y1++) {
+
+					// This index x1 iterates till width
+					// This x1 is continuation of x
+					// The variables y1 and x1 are the
+					// continuation of summable of x and y
+					for (int x1 = 0; x1 < width; x1++) {
+
+						// realOut is the variable which
+						// lets us know the real output as
+						// we do the summation of exponential
+						// signal
+						// we get cos as real term and sin
+						// as imaginary term
+						// so taking the consideration of
+						// above properties we write the
+						// formula of real as
+						// summing till x and y and
+						// multiplying it with cos2pie
+						// and then dividing it with width
+						// *height gives us the real term
+						realOut[y][x]
+							+= (input[y1][x1]
+								* Math.cos(
+									2 * Math.PI
+									* ((1.0 * x * x1
+										/ width)
+									+ (1.0 * y * y1
+										/ height))))
+							/ Math.sqrt(width * height);
+
+						// Now imagOut is the imaginary term
+						// That is the sine term
+						// This sine term can be obtained
+						// using sin2pie and then we divide
+						// it using width*height The
+						// formulae is same as real
+
+						imagOut[y][x]
+							-= (input[y1][x1]
+								* Math.sin(
+									2 * Math.PI
+									* ((1.0 * x * x1
+										/ width)
+									+ (1.0 * y * y1
+										/ height))))
+							/ Math.sqrt(width * height);
+					}
+
+					// Now we will print the value of
+					// realOut and imaginary outputn The
+					// ppoutput of imaginary output will end
+					// with value 'i'.
+					System.out.println(realOut[y][x] + " +"
+									+ imagOut[y][x]
+									+ "i");
+				}
+			}
+		}
+	}
 }
