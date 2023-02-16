@@ -8,6 +8,7 @@ plugins {
     id 'org.jetbrains.kotlin.multiplatform' version '1.8.10'
 }
 
+
 sourceSets {
     main {
         resources {
@@ -110,14 +111,18 @@ repositories {
     maven {
         url "https://www.jetbrains.com/intellij-repository/releases"
     }
+    jcenter {
+        url "http://jcenter.bintray.com/"
+    }
     flatDir dirs: "${rootDir}/lib"
 }
 
 dependencies {
-    implementation("com.metsci.ext.org.jogamp.gluegen:gluegen-rt:v2.4.0-rc4")
+    /*implementation("com.metsci.ext.org.jogamp.gluegen:gluegen-rt:v2.4.0-rc4")
     implementation("com.metsci.ext.org.jogamp.jogl:jogl-all:v2.4.0-rc4")
     implementation "com.metsci.ext.org.jogamp.gluegen:gluegen-rt:2.4.0-rc-20200202:natives-windows-amd64"
     implementation "com.metsci.ext.org.jogamp.jogl:jogl-all:2.4.0-rc-20200202:natives-windows-amd64"
+    */
     //implementation('org.tensorflow:tensorflow-core-platform:0.4.1')
     //implementation 'org.tensorflow:tensorflow-core-api:0.4.1:windows-x86_64${javacpp.platform.extension}'
 
@@ -126,7 +131,7 @@ dependencies {
     implementation group: 'org.jogamp.gluegen', name: 'gluegen-rt-main', version:"$jogl"
     implementation group: 'org.jogamp.jogl', name: 'jogl-all-main', version:"$jogl"
     implementation 'ai.djl:api:0.19.0'
-    implementation('com.android.tools.build:gradle:8.0.0-alpha11')
+    implementation('com.android.tools.build:gradle-api:8.1.0-alpha04')
     implementation("org.jcodec:jcodec-javase:0.2.5")
     implementation("org.jogamp.jogl:jogl-all-main:$jogl")
     implementation("com.miglayout:miglayout:3.7.4")
@@ -273,70 +278,4 @@ publishing {
             }
         }*/
     }
-
 }
-/*
-compileKotlin {
-    kotlinOptions {
-        jvmTarget = "19"
-    }
-}
-
-compileTestKotlin {
-    kotlinOptions {
-        jvmTarget = "19"
-    }
-}
-*/
-
-/*
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-
-            repository(url: "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/") {
-                authentication(userName: ossrhUsername, password: ossrhPassword)
-            }
-
-            snapshotRepository(url: "https://s01.oss.sonatype.org/content/repositories/snapshots/") {
-                authentication(userName: ossrhUsername, password: ossrhPassword)
-            }
-
-            pom.project {
-                name 'empty3-library-generic'
-                packaging 'jar'
-                // optionally artifactId can be defined here
-                description '3D rendering engine. Plus modeling. Expected glsl textures 3d and 2d rendering'
-                url 'https://github.com/manuelddahmen/empty3'
-
-                licenses {
-                    license {
-                        name = "Gnu Gpl 3"
-                        url = "http://www.fsf.org/licenses/gpl"
-                        distribution = "repo"
-                    }
-                }
-
-                scm {
-
-                    url = "https://github.com/manuelddahmen/empty3"
-                    connection = "scm:git:https://github.com/manuelddahmen/empty3.git"
-                    developerConnection = "scm:git:https://github.com/manuelddahmen/empty3.git"
-
-                }
-                developers {
-                    developer {
-                        email = "dathewolf@gmail.com"
-                        name = "Manuel Daniel Dahmen"
-
-                        url = "https://github.com/manuelddahmen"
-                        id = "manuelddahmen"
-                    }
-                }
-
-            }
-        }
-    }
-}
-*/

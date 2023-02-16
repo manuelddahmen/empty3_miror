@@ -343,12 +343,12 @@ public class PanelGraphics extends JDialog {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 PanelGraphics dialog = new PanelGraphics(new JFrame(), false);
-                dialog.addWindowListener(new WindowAdapter() {
+             /*   dialog.addWindowListener(new WindowAdapter() {
                     @Override
                     public void windowClosing(WindowEvent e) {
                         System.exit(0);
                     }
-                });
+                });*/
                 dialog.setVisible(true);
                 Sounds.playMusic();
             }

@@ -190,6 +190,7 @@ public class DataModel {
                         imagesFiles[1] = tmpFile;
                         bis[1] = read;
                     }
+                    default -> throw new IllegalStateException("Unexpected value: " + name);
                 }
             } else {
                 StructureMatrix<Point3D> structureMatrix = new StructureMatrix<Point3D>(2, Point3D.class);
