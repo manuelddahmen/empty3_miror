@@ -38,6 +38,13 @@ try {
 } catch (Exception ex) {
     ex.printStackTrace()
 }
+
+tasks.register('copyDeps', Copy) {
+    //from(configurations.compile + configurations.testCompile) {
+        include ".jar"
+        include ".so", "*.dll"
+    //}
+}
 def load = properties
 java {
     withSourcesJar()
@@ -55,7 +62,6 @@ tasks.register('MorphingAppGui', JavaExec) {
 tasks.register('OpadGameGui', JavaExec) {
     classpath sourceSets.main.runtimeClasspath
     mainClass = "one.empty3.apps.opad.PanelGraphics"
-    args "arg1", "arg2"
 }
 tasks.register('BoardGameGui', JavaExec) {
     classpath sourceSets.main.runtimeClasspath
@@ -116,13 +122,13 @@ dependencies {
     //implementation 'org.tensorflow:tensorflow-core-api:0.4.1:windows-x86_64${javacpp.platform.extension}'
 
     def jogl = '2.3.2'
-    implementation "org.jogamp.jogl:jogl-all:2.3.2"
-    implementation group: 'org.jogamp.gluegen', name: 'gluegen-rt-main', version:"2.3.2"
-    implementation group: 'org.jogamp.jogl', name: 'jogl-all-main', version:"2.3.2"
+    implementation "org.jogamp.jogl:jogl-all:$jogl"
+    implementation group: 'org.jogamp.gluegen', name: 'gluegen-rt-main', version:"$jogl"
+    implementation group: 'org.jogamp.jogl', name: 'jogl-all-main', version:"$jogl"
     implementation 'ai.djl:api:0.19.0'
     implementation('com.android.tools.build:gradle:8.0.0-alpha11')
     implementation("org.jcodec:jcodec-javase:0.2.5")
-    implementation("org.jogamp.jogl:jogl-all-main:2.3.2")
+    implementation("org.jogamp.jogl:jogl-all-main:$jogl")
     implementation("com.miglayout:miglayout:3.7.4")
     implementation('com.badlogicgames.gdx:gdx:1.11.0')
     implementation("xom:xom:1.3.8")
