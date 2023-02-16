@@ -1,0 +1,1 @@
+java --add-exports java.base/java.lang=ALL-UNNAMED --add-exports java.desktop/sun.awt=ALL-UNNAMED --add-exports java.desktop/sun.java2d=ALL-UNNAMED -cp build\libs\empty3-library-generic.jar;src\java\main one.empty3.apps.opad.PanelGraphics

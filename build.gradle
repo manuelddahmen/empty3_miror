@@ -116,8 +116,9 @@ dependencies {
     //implementation 'org.tensorflow:tensorflow-core-api:0.4.1:windows-x86_64${javacpp.platform.extension}'
 
     def jogl = '2.3.2'
-    implementation group: 'org.jogamp.gluegen', name: 'gluegen-rt-main', version:"$jogl"
-    implementation group: 'org.jogamp.jogl', name: 'jogl-all-main', version:"$jogl"
+    implementation "org.jogamp.jogl:jogl-all:2.3.2"
+    implementation group: 'org.jogamp.gluegen', name: 'gluegen-rt-main', version:"2.3.2"
+    implementation group: 'org.jogamp.jogl', name: 'jogl-all-main', version:"2.3.2"
     implementation 'ai.djl:api:0.19.0'
     implementation('com.android.tools.build:gradle:8.0.0-alpha11')
     implementation("org.jcodec:jcodec-javase:0.2.5")
