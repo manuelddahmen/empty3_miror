@@ -36,7 +36,7 @@ public class DataModel {
     private BufferedImage[] bis = new BufferedImage[2];
     private File[] imagesFiles = new File[2];
     private StructureMatrix<Point3D>[] grids = new StructureMatrix[4];
-    private Properties [] properties = new Properties[2];
+    private Properties[] properties = new Properties[2];
 
     public DataModel(MorphUI mui) {
         this.morphUI = mui;
@@ -91,9 +91,9 @@ public class DataModel {
                     properties.put("yGrid", "" + imageControls.getYgrid());
                     properties.put("resX", "" + imageControls.getResX());
                     properties.put("resX", "" + imageControls.getResY());
-                    properties.put("noDeformation", imageControls.getPointView().getCheckBoxNoDeformation().isSelected()?"1":"0");
-                    properties.put("morphing", imageControls.getPointView().getCheckBoxMorphing().isSelected()?"1":"0");
-                    properties.put("uv", imageControls.getPointView().getCheckBoxUv().isSelected()?"1":"0");
+                    properties.put("noDeformation", imageControls.getPointView().getCheckBoxNoDeformation().isSelected() ? "1" : "0");
+                    properties.put("morphing", imageControls.getPointView().getCheckBoxMorphing().isSelected() ? "1" : "0");
+                    properties.put("uv", imageControls.getPointView().getCheckBoxUv().isSelected() ? "1" : "0");
                 }
                 properties3[0].save(new FileOutputStream(tmp), "ImageControls1 values");
                 saveFile(zipOut, fos, tmp, "params1.properties");
@@ -182,19 +182,20 @@ public class DataModel {
                     System.exit(-1);
                 }
                 switch (name) {
-                    case "image1.jpg" -> {
+                    case "image1.jpg":
                         imagesFiles[0] = tmpFile;
                         bis[0] = read;
-                    }
-                    case "image2.jpg" -> {
+                        break;
+                    case "image2.jpg":
                         imagesFiles[1] = tmpFile;
                         bis[1] = read;
-                    }
-                    default -> throw new IllegalStateException("Unexpected value: " + name);
+                        break;
+                    default:
+                        throw new IllegalStateException("Unexpected value: " + name);
                 }
             } else {
                 StructureMatrix<Point3D> structureMatrix = new StructureMatrix<Point3D>(2, Point3D.class);
-                if(name.toLowerCase().startsWith("grid")) {
+                if (name.toLowerCase().startsWith("grid")) {
                     loadObjectString(loadZipEntry(zipIn, zipEntry), structureMatrix);
                 }
                 switch (name) {
@@ -239,24 +240,24 @@ public class DataModel {
         ImageControls[] controls = new ImageControls[]{morphUI.getImageControls1(), morphUI.getImageControls2()};
         for (int c = 0; c < controls.length; c++) {
             ImageControls imageControls = controls[c];
-            if(properties[c]!=null) {
-                if(properties[c].get("xGrid")!=null)
-                imageControls.setXgrid(Integer.parseInt((String) properties[c].get("xGrid")));
-                if(properties[c].get("yGrid")!=null)
-                imageControls.setYgrid(Integer.parseInt((String) properties[c].get("yGrid")));
-                if(properties[c].get("resX")!=null)
-                imageControls.setResX(Integer.parseInt((String) properties[c].get("resX")));
-                if(properties[c].get("resY")!=null)
-                imageControls.setResY(Integer.parseInt((String) properties[c].get("resY")));
-                if(properties[c].get("noDeformation")!=null)
-                imageControls.getPointView().getCheckBoxNoDeformation().setSelected(
-                        Integer.parseInt((String) properties[c].get("noDeformation")) == 1);
-                if(properties[c].get("uv")!=null)
-                imageControls.getPointView().getCheckBoxUv().setSelected(
-                        Integer.parseInt((String) properties[c].get("uv")) == 1);
-                if(properties[c].get("morphing")!=null)
-                imageControls.getPointView().getCheckBoxMorphing().setSelected(
-                        Integer.parseInt((String) properties[c].get("morphing")) == 1);
+            if (properties[c] != null) {
+                if (properties[c].get("xGrid") != null)
+                    imageControls.setXgrid(Integer.parseInt((String) properties[c].get("xGrid")));
+                if (properties[c].get("yGrid") != null)
+                    imageControls.setYgrid(Integer.parseInt((String) properties[c].get("yGrid")));
+                if (properties[c].get("resX") != null)
+                    imageControls.setResX(Integer.parseInt((String) properties[c].get("resX")));
+                if (properties[c].get("resY") != null)
+                    imageControls.setResY(Integer.parseInt((String) properties[c].get("resY")));
+                if (properties[c].get("noDeformation") != null)
+                    imageControls.getPointView().getCheckBoxNoDeformation().setSelected(
+                            Integer.parseInt((String) properties[c].get("noDeformation")) == 1);
+                if (properties[c].get("uv") != null)
+                    imageControls.getPointView().getCheckBoxUv().setSelected(
+                            Integer.parseInt((String) properties[c].get("uv")) == 1);
+                if (properties[c].get("morphing") != null)
+                    imageControls.getPointView().getCheckBoxMorphing().setSelected(
+                            Integer.parseInt((String) properties[c].get("morphing")) == 1);
             }
         }
 
@@ -286,9 +287,9 @@ public class DataModel {
 
         int j = 0;
         int length = 0;
-        int i=1;
+        int i = 1;
         int errors = 0;
-        while(i<split.length) {
+        while (i < split.length) {
             try {
                 Logger.getAnonymousLogger().log(Level.INFO, split[i]);
                 length = Integer.parseInt(split[i].trim());
@@ -299,7 +300,7 @@ public class DataModel {
             j = 0;
             structureMatrix.getData2d().add(new ArrayList<>());
 
-            while (j < length && i<split.length) {
+            while (j < length && i < split.length) {
                 double d1 = Double.parseDouble(split[i].trim());
                 i++;
                 double d2 = Double.parseDouble(split[i].trim());

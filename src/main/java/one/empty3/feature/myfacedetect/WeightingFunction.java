@@ -35,13 +35,15 @@ public class WeightingFunction extends FilterPixM {
         double ratioY = y / getLines();
         for (int c = 0; c < 3; c++) {
             switch (c) {
-                case 0, 1, 2 -> {
+                case 0:
+                case 1:
+                case  2:
                     //                   set((int) x, (int) y, ratioY <= MIN_START ? ratioY / MIN_START : (ratioY < 1 - MIN_START ? 1.0 :
                     //
                     return ratioY <= MIN_START ? ratioY / MIN_START : (ratioY < 1 - MIN_START ? 1.0 : ratioY * (1 - MIN_START));
                 }
             }
-        }
+
         return Double.NaN;
     }
 

@@ -759,9 +759,14 @@ public class MorphUI extends JFrame {
 
     private void shapeType(ActionEvent e) {
         switch (((JComboBox)(e.getSource())).getSelectedIndex()) {
-            case 0 -> shapeType = 0;
-            case 1 -> shapeType = 1;
-            default -> throw new IllegalStateException("Unexpected value: " + ((JComboBox) (e.getSource())));
+            case 0:
+                shapeType = 0;
+                break;
+            case 1:
+                shapeType = 1;
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + ((JComboBox) (e.getSource())));
         }
     }
 

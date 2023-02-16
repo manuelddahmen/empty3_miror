@@ -398,8 +398,10 @@ public class StructureMatrix<T> {
     public StructureMatrix<T> copy() throws IllegalAccessException, CopyRepresentableError, InstantiationException {
         StructureMatrix<T> tStructureMatrix = new StructureMatrix<T>(this.getDim(), this.classType);
         switch (getDim()) {
-            case 0 -> tStructureMatrix.data0d = cloneElement(data0d);
-            case 1 -> {
+            case 0:
+                tStructureMatrix.data0d = cloneElement(data0d);
+                break;
+            case 1:
                 tStructureMatrix.data1d = new ArrayList<>();
                 if (data1d != null)
                     data1d.forEach(new Consumer<T>() {
@@ -412,8 +414,9 @@ public class StructureMatrix<T> {
                             }
                         }
                     });
-            }
-            case 2 -> {
+                break;
+
+            case 2:
                 if (data2d != null) {
 
                     data2d.forEach(new Consumer<List<T>>() {
@@ -439,8 +442,8 @@ public class StructureMatrix<T> {
 
                     });
                 }
+                break;
             }
-        }
         return tStructureMatrix;
 
     }

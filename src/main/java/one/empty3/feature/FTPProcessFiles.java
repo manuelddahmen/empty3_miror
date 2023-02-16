@@ -180,18 +180,18 @@ public class FTPProcessFiles {
 
         currentDirin = settings.getProperty("in.directory").split(",");
         switch (settings.getProperty("in.device")) {
-            case "local" -> {
+            case "local":
                 server = "file";
                 port = 0;
                 username = "";
                 password = "";
-            }
-            default -> {
+            break;
+            default:
                 server = (String) settings.getProperty("host");
                 port = Integer.parseInt(settings.getProperty("port"));
                 username = (String) settings.getProperty("username");
                 password = (String) settings.getProperty("password");
-            }
+            break;
         }
 
         String maxFilesInDir0 = settings.getProperty("maxFilesInDir");
