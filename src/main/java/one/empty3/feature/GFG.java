@@ -24,11 +24,16 @@ package one.empty3.feature;// Java program to perform a 2D FFT Inplace Given a C
 
 import one.empty3.feature.app.replace.javax.imageio.ImageIO;
 import one.empty3.io.ProcessFile;
+import one.empty3.library.Point3D;
+import one.empty3.library.core.math.Matrix;
+import one.empty3.library.core.nurbs.F;
+import one.empty3.library.core.nurbs.Fct1D_1D;
 
 import java.io.File;
 import java.io.IOException;
 
 public class GFG extends ProcessFile {
+    Fct1D_1D fct1D1D;
     // Now by taking the discrete function
     // This is the declaration of the function
     // This function includes 4 parameters
@@ -116,10 +121,88 @@ public class GFG extends ProcessFile {
                 }
             }
         }
+
     }
 
+    /**
+     * "Calculate the Fourier series coefficients up to the Nth harmonic"
+     *
+     * @param N
+     * @return
+     */
+    public double[][] fourierSeries(double [] period, int N) {
+        double[][] result = new double[N][2];
+        int T = period.length;
+        double [] t = new double[T];
+        for(int i=0; i<T; i++)
+            t[i] = i;
+        double an=0, bn=0;
+        for (int n = 0; n < N + 1; n++) {
+            an += 2.0 / T * (period[n] * Math.cos(2 * Math.PI * n * t[n] / T));
+            bn += 2.0 / T * (period[n] * Math.sin(2 * Math.PI * n * t[n] / T));
+            result[n][0] = an;
+            result[n][1] = bn;
+        }
+        return result;
+    }
+
+    public double reconstruct(int P, double[][]  anbn) {
+        double result = 0.0;
+        double[] t = new double[P];
+        double a = 0, b;
+        for (int n = 0; n < anbn.length; n++) {
+            a = anbn[n][0];
+            b = anbn[n][1];
+            if (n == 0) {
+                a = a / 2;
+            }
+            result = result + a * Math.cos(2 * Math.PI * n * t[n] / P)
+                    + b * Math.sin(2 * Math.PI * n * t[n] / P);
+        }
+        return result;
+    }
     @Override
     public boolean process(File in, File out) {
+        PixM pix = new PixM(ImageIO.read(in));
+
+        int sizeT = pix.getColumns();
+        int n = 100;
+        double [] points = new double[sizeT];
+        double[] t_period = new double[sizeT];
+
+
+        for(int x=0; x<pix.getColumns(); x++) {
+            for(int y=0; x<pix.getLines(); y++) {
+                if(pix.luminance(x, y)>=0.5) {
+                    t_period[x] = x;
+                    points[x] = y;
+                }
+            }
+        }
+
+
+
+        double[] F = new double[sizeT];
+        for(int i = 0; i<t_period.length; i++) {
+            F[i] = points[i];
+        }
+        for(int i=0; i<t_period.length; i++) {
+            Point3D point = new Point3D();
+            double[][] anbn = fourierSeries(F, n);
+            double reconstruct = reconstruct(t_period.length, anbn);
+
+            pix.setValues(i, (int)reconstruct, 1, 1, 1);
+        }
+
+        try {
+            ImageIO.write(pix.normalize(0,1).getImage(), "jpg", out);
+            return true;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public boolean process2(File in, File out) {
         PixM inPix = PixM.getPixM(ImageIO.read(in), maxRes);
 
         int n = Math.max(inPix.getColumns(), inPix.getLines());
@@ -147,11 +230,16 @@ public class GFG extends ProcessFile {
         // Calling the function discrete
         discrete(input, realOut, imagOut);
 
-        PixM pixM1 = new PixM(realOut);
-        PixM pixM2 = new PixM(imagOut);
+        Matrix pixM1 = new Matrix(n, n, 1);
+        Matrix pixM2 = new Matrix(n, n, 1);
+        pixM1.forEach((row, col, index, value) -> pixM1.set(row, col, realOut[row][col]));
+        pixM2.forEach((row, col, index, value) -> pixM2.set(row, col, imagOut[row][col]));
+
+        Matrix multiply = pixM1.multiply(pixM2);
 
         try {
-            ImageIO.write(pixM1.getImage(), "jpg", out);
+            ImageIO.write(multiply.normalize(0, 1).getImage(), "jpg", out);
+
 
             return true;
         } catch (IOException e) {

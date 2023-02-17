@@ -180,7 +180,7 @@ public class PixM extends M {
         float[] rgba = new float[getCompCount()];
         for (int i = 0; i < image.getWidth(); i++) {
             for (int j = 0; j < image.getHeight(); j++) {
-                for (int comp = 0; comp < 3; comp++) {
+                for (int comp = 0; comp < getCompCount(); comp++) {
                     setCompNo(comp);
                     float value = (float) (get(i, j));
                     value = Math.max(value, 0f);
@@ -188,7 +188,8 @@ public class PixM extends M {
 
                     rgba[comp] = value;
                 }
-                image.setRGB(i, j, new Color(rgba[0], rgba[1], rgba[2]).getRGB());
+                image.setRGB(i, j, new Color(rgba[0], getCompCount()>=2?rgba[1]:0f,
+                        getCompCount()>=3?rgba[2]:0f).getRGB());
             }
         }
         return image;

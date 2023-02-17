@@ -85,11 +85,16 @@ public class Matrix extends PixM {
         int index = 0;
         for (int row = 0; row < result.lines; row++) {
             for (int col = 0; col < result.columns; col++) {
-                result.x[index] = 0.0;
-                for (int k = 0; k < columns; k++) {
-                    result.x[row * result.columns + col] += get(row, k) * get(k, col);
+                for (int c = 0; c < getCompCount(); c++) {
+                    this.compNo = c;
+                    m.setCompNo(c);
+                    result.setCompNo(c);
+                    for (int k = 0; k < columns; k++) {
+                        result.set(row, col, result.get(row, col) +
+                                get(row, k) * get(k, col));
+                    }
+
                 }
-                index++;
             }
         }
         return result;
