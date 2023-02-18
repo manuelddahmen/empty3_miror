@@ -166,7 +166,7 @@ public class GFG extends ProcessFile {
         PixM pix = new PixM(ImageIO.read(in));
 
         int sizeT = pix.getColumns();
-        int n = 100;
+        int n = 5;
         double [] points = new double[sizeT];
         double[] t_period = new double[sizeT];
 
@@ -183,12 +183,13 @@ public class GFG extends ProcessFile {
 
 
         double[] F = new double[sizeT];
-        for(int i = 0; i<t_period.length; i++) {
-            F[i] = points[i];
-        }
+
+        System.arraycopy(points, 0, F, 0, t_period.length);
+
         for(int i=0; i<t_period.length; i++) {
-            Point3D point = new Point3D();
+
             double[][] anbn = fourierSeries(F, n);
+
             double reconstruct = reconstruct(t_period.length, anbn);
 
             pix.setValues(i, (int)reconstruct, 1, 1, 1);
