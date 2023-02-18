@@ -19,6 +19,8 @@
 
 package one.empty3.tests;
 
+import one.empty3.library.Camera;
+import one.empty3.library.Point3D;
 import one.empty3.library.core.testing.TestObjetSub;
 
 import java.util.logging.Level;
@@ -28,6 +30,7 @@ public class TestVoiture extends TestObjetSub {
     public void ginit() {
         scene().add(new Voiture());
         setMaxFrames(1);
+        scene().cameraActive(new Camera(Point3D.Z.mult(1), Point3D.O0));
     }
 
     @Override

@@ -165,7 +165,7 @@ public class GFG extends ProcessFile {
     public boolean process(File in, File out) {
         PixM pix = new PixM(ImageIO.read(in));
 
-        int sizeT = pix.getColumns();
+        int sizeT = Math.max(pix.getColumns(), maxRes);
         int n = 5;
         double [] points = new double[sizeT];
         double[] t_period = new double[sizeT];

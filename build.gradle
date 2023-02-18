@@ -74,7 +74,11 @@ tasks.register('ResolutionCharacter7', JavaExec) {
     mainClass = "one.empty3.feature.tryocr.ResolutionCharacter7"
     args "arg1", "arg2"
 }
-
+tasks.register('RunEffect from sets directory', JavaExec) {
+    classpath sourceSets.main.runtimeClasspath
+    mainClass = "one.empty3.feature.Run"
+    args "fourier_series"
+}
 signing {
     def signingKey = load.get("signing.keyId")
     def signingPassword = load.get("signing.password")

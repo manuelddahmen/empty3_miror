@@ -280,7 +280,10 @@ public class StructureMatrix<T> {
         s.append("(dim:" + dim + ")");
         switch (dim) {
             case 0:
-                s.append("(data : {" + data0d.toString() + "} )");
+                if(data0d !=null)
+                    s.append("(data : {" + data0d.toString() + "} )");
+                else
+                    s.append("null 0d-data");
                 break;
             case 1:
                 s.append("(data : (");
