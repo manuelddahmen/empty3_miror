@@ -149,9 +149,8 @@ public class GFG extends ProcessFile {
         return result;
     }
 
-    public double reconstruct(double P, double[][] anbn, int N) {
+    public double reconstruct(double T, double t, double[][] anbn, int N) {
         double result = 0.0;
-        double[] t = new double[anbn.length];
         double a = 0, b;
         for (int n = 0; n < N; n++) {
             a = anbn[n][0];
@@ -159,9 +158,8 @@ public class GFG extends ProcessFile {
             if (n == 0) {
                 a = a / 2;
             }
-            double f = 2 * Math.PI * n * t[n] / P;
-            result = result + a * Math.cos(f)
-                    + b * Math.sin(f);
+            double f = 2 * Math.PI * n * t / T;
+            result = result + a * Math.cos(f) + b * Math.sin(f);
         }
         return result;
     }
@@ -200,7 +198,7 @@ public class GFG extends ProcessFile {
         double[][] anbn = fourierSeries(t_period, F, n);
 
         for (int i = 0; i < t_period.length; i++) {
-            double reconstruct = reconstruct(F[i], anbn, n);
+            double reconstruct = reconstruct(t_period[i], F[i], anbn, n);
             F2[i] = reconstruct;
 
         }
