@@ -29,8 +29,10 @@ import one.empty3.library.core.math.Matrix;
 import one.empty3.library.core.nurbs.F;
 import one.empty3.library.core.nurbs.Fct1D_1D;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 
 public class GFG extends ProcessFile {
     Fct1D_1D fct1D1D;
@@ -137,45 +139,50 @@ public class GFG extends ProcessFile {
         for(int i=0; i<T; i++)
             t[i] = i;
         double an=0, bn=0;
-        for (int n = 0; n < N + 1; n++) {
-            an += 2.0 / T * (period[n] * Math.cos(2 * Math.PI * n * t[n] / T));
-            bn += 2.0 / T * (period[n] * Math.sin(2 * Math.PI * n * t[n] / T));
+        for (int n = 0; n < N; n++) {
+            an += 2.0 / T * (period[n] * Math.cos(2. * Math.PI * n * t[n] / T));
+            bn += 2.0 / T * (period[n] * Math.sin(2. * Math.PI * n * t[n] / T));
             result[n][0] = an;
             result[n][1] = bn;
         }
         return result;
     }
 
-    public double reconstruct(int P, double[][]  anbn) {
+    public double reconstruct(double P, double[][]  anbn, int N) {
         double result = 0.0;
-        double[] t = new double[P];
+        double[] t = new double[anbn.length];
         double a = 0, b;
-        for (int n = 0; n < anbn.length; n++) {
+        for (int n = 0; n < N; n++) {
             a = anbn[n][0];
             b = anbn[n][1];
             if (n == 0) {
                 a = a / 2;
             }
-            result = result + a * Math.cos(2 * Math.PI * n * t[n] / P)
-                    + b * Math.sin(2 * Math.PI * n * t[n] / P);
+            double f = 2 * Math.PI * n * t[n] / P;
+            result = result + a * Math.cos(f)
+                    + b * Math.sin(f);
         }
         return result;
     }
     @Override
     public boolean process(File in, File out) {
-        PixM pix = new PixM(ImageIO.read(in));
+        BufferedImage read = ImageIO.read(in);
+        if(read==null)
+            return false;
+        PixM pix = new PixM(read).normalize(0.0, 0.1, 0.0, 1.0);
 
-        int sizeT = Math.max(pix.getColumns(), maxRes);
+        PixM pixOut = new PixM(pix.columns, pix.lines);
+        int sizeT = Math.max(pix.getColumns(),pix.getLines());
         int n = 5;
-        double [] points = new double[sizeT];
-        double[] t_period = new double[sizeT];
+        final double [] points = new double[sizeT];
+        final double[] t_period = new double[sizeT];
 
 
         for(int x=0; x<pix.getColumns(); x++) {
-            for(int y=0; x<pix.getLines(); y++) {
-                if(pix.luminance(x, y)>=0.5) {
+            for(int y=0; y<pix.getLines(); y++) {
+                if(pix.luminance(x, y)>=0.2) {
                     t_period[x] = x;
-                    points[x] = y;
+                    points[x]= y;
                 }
             }
         }
@@ -185,18 +192,36 @@ public class GFG extends ProcessFile {
         double[] F = new double[sizeT];
 
         System.arraycopy(points, 0, F, 0, t_period.length);
+        double[] F2 = new double[sizeT];
+        System.arraycopy(points, 0, F2, 0, t_period.length);
+        int P = pix.getColumns();
 
-        for(int i=0; i<t_period.length; i++) {
+        double[][] anbn = fourierSeries(F, n);
 
-            double[][] anbn = fourierSeries(F, n);
 
-            double reconstruct = reconstruct(t_period.length, anbn);
+        for(int i = 0; i<t_period.length; i++) {
 
-            pix.setValues(i, (int)reconstruct, 1, 1, 1);
+            double reconstruct = reconstruct(F[i], anbn, n);
+
+            F2[i] = reconstruct;
+
+        }
+        double F2min = pix.getLines();
+        double F2max = 0;
+        for(int i =0;i<P; i++) {
+            if(F2[i]<F2min)
+                F2min = F2[i];
+            if(F2[i]>F2max)
+                F2max = F2[i];
+        }
+        for(int i =0;i<P; i++) {
+            F2[i] = (F2[i]-F2min)/(F2max-F2min)*pixOut.getLines();
+            pixOut.setValues(i, (int)(F2[i]), 1, 1, 1);
         }
 
+
         try {
-            ImageIO.write(pix.normalize(0,1).getImage(), "jpg", out);
+            ImageIO.write(pixOut.normalize(0,1).getImage(), "jpg", out);
             return true;
         } catch (IOException e) {
             throw new RuntimeException(e);
