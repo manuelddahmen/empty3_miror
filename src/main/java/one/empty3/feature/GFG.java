@@ -24,18 +24,16 @@ package one.empty3.feature;// Java program to perform a 2D FFT Inplace Given a C
 
 import one.empty3.feature.app.replace.javax.imageio.ImageIO;
 import one.empty3.io.ProcessFile;
-import one.empty3.library.Point3D;
 import one.empty3.library.core.math.Matrix;
-import one.empty3.library.core.nurbs.F;
 import one.empty3.library.core.nurbs.Fct1D_1D;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.Objects;
 
 public class GFG extends ProcessFile {
     Fct1D_1D fct1D1D;
+
     // Now by taking the discrete function
     // This is the declaration of the function
     // This function includes 4 parameters
@@ -132,23 +130,26 @@ public class GFG extends ProcessFile {
      * @param N
      * @return
      */
-    public double[][] fourierSeries(double [] period, int N) {
+    public double[][] fourierSeries(double [] Ft, double[] period, int N) {
         double[][] result = new double[N][2];
         int T = period.length;
-        double [] t = new double[T];
-        for(int i=0; i<T; i++)
+        double[] t = new double[T];
+        for (int i = 0; i < T; i++)
             t[i] = i;
-        double an=0, bn=0;
         for (int n = 0; n < N; n++) {
-            an += 2.0 / T * (period[n] * Math.cos(2. * Math.PI * n * t[n] / T));
-            bn += 2.0 / T * (period[n] * Math.sin(2. * Math.PI * n * t[n] / T));
+            double an = 0, bn = 0;
+            for (int tt = 0; tt < T; tt++) {
+                double v = 2. * Math.PI * n * Ft[tt] / T;
+                an += 2.0 / T * (period[tt] * Math.cos(v));
+                bn += 2.0 / T * (period[tt] * Math.sin(v));
+            }
             result[n][0] = an;
             result[n][1] = bn;
         }
         return result;
     }
 
-    public double reconstruct(double P, double[][]  anbn, int N) {
+    public double reconstruct(double P, double[][] anbn, int N) {
         double result = 0.0;
         double[] t = new double[anbn.length];
         double a = 0, b;
@@ -164,29 +165,29 @@ public class GFG extends ProcessFile {
         }
         return result;
     }
+
     @Override
     public boolean process(File in, File out) {
         BufferedImage read = ImageIO.read(in);
-        if(read==null)
+        if (read == null)
             return false;
-        PixM pix = new PixM(read).normalize(0.0, 0.1, 0.0, 1.0);
+        PixM pix = new PixM(read);
 
         PixM pixOut = new PixM(pix.columns, pix.lines);
-        int sizeT = Math.max(pix.getColumns(),pix.getLines());
+        int sizeT = Math.max(pix.getColumns(), pix.getLines());
         int n = 5;
-        final double [] points = new double[sizeT];
+        final double[] points = new double[sizeT];
         final double[] t_period = new double[sizeT];
 
 
-        for(int x=0; x<pix.getColumns(); x++) {
-            for(int y=0; y<pix.getLines(); y++) {
-                if(pix.luminance(x, y)>=0.2) {
+        for (int x = 0; x < pix.getColumns(); x++) {
+            for (int y = 0; y < pix.getLines(); y++) {
+                if (pix.luminance(x, y) >= 0.2) {
                     t_period[x] = x;
-                    points[x]= y;
+                    points[x] = y;
                 }
             }
         }
-
 
 
         double[] F = new double[sizeT];
@@ -194,34 +195,31 @@ public class GFG extends ProcessFile {
         System.arraycopy(points, 0, F, 0, t_period.length);
         double[] F2 = new double[sizeT];
         System.arraycopy(points, 0, F2, 0, t_period.length);
-        int P = pix.getColumns();
-
-        double[][] anbn = fourierSeries(F, n);
 
 
-        for(int i = 0; i<t_period.length; i++) {
+        double[][] anbn = fourierSeries(t_period, F, n);
 
+        for (int i = 0; i < t_period.length; i++) {
             double reconstruct = reconstruct(F[i], anbn, n);
-
             F2[i] = reconstruct;
 
         }
-        double F2min = pix.getLines();
-        double F2max = 0;
-        for(int i =0;i<P; i++) {
-            if(F2[i]<F2min)
+        double F2min = Double.POSITIVE_INFINITY;
+        double F2max = Double.NEGATIVE_INFINITY;
+        for (int i = 0; i < sizeT; i++) {
+            if (F2[i] < F2min)
                 F2min = F2[i];
-            if(F2[i]>F2max)
+            if (F2[i] > F2max)
                 F2max = F2[i];
         }
-        for(int i =0;i<P; i++) {
-            F2[i] = (F2[i]-F2min)/(F2max-F2min)*pixOut.getLines();
-            pixOut.setValues(i, (int)(F2[i]), 1, 1, 1);
+        for (int i = 0; i < sizeT; i++) {
+            F2[i] = (F2[i] - F2min) / (F2max - F2min) * pixOut.getLines();
+            pixOut.setValues(i, (int) (F2[i]), 1, 1, 1);
         }
 
 
         try {
-            ImageIO.write(pixOut.normalize(0,1).getImage(), "jpg", out);
+            ImageIO.write(pixOut.normalize(0, 1).getImage(), "jpg", out);
             return true;
         } catch (IOException e) {
             throw new RuntimeException(e);
