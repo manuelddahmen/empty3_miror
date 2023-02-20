@@ -24,9 +24,11 @@ package one.empty3.feature;// Java program to perform a 2D FFT Inplace Given a C
 
 import one.empty3.feature.app.replace.javax.imageio.ImageIO;
 import one.empty3.io.ProcessFile;
+import one.empty3.library.*;
 import one.empty3.library.core.math.Matrix;
 import one.empty3.library.core.nurbs.Fct1D_1D;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -172,8 +174,10 @@ public class GFG extends ProcessFile {
         PixM pix = new PixM(read);
 
         PixM pixOut = new PixM(pix.columns, pix.lines);
+
+        pixOut = pix;
         int sizeT = Math.max(pix.getColumns(), pix.getLines());
-        int n = 5;
+        int n = 30;
         final double[] points = new double[sizeT];
         final double[] t_period = new double[sizeT];
 
@@ -212,9 +216,15 @@ public class GFG extends ProcessFile {
         }
         for (int i = 0; i < sizeT; i++) {
             F2[i] = (F2[i] - F2min) / (F2max - F2min) * pixOut.getLines();
-            pixOut.setValues(i, (int) (F2[i]), 1, 1, 1);
+            //pixOut.setValues(i, (int) (F2[i]), 0, 0, 1);
         }
 
+        ITexture blue = new ColorTexture(Color.BLUE);
+        for (int i = 0; i < sizeT-1; i++) {
+            pixOut.plotCurve(new LineSegment(new Point3D((double)i,
+                    (double)(int) (F2[i]), 0d),
+                    new Point3D((double)i, (double)(int) (F2[i+1]), 0d)), blue);
+        }
 
         try {
             ImageIO.write(pixOut.normalize(0, 1).getImage(), "jpg", out);

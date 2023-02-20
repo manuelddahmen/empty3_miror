@@ -124,6 +124,7 @@ targetCompatibility = JavaVersion.VERSION_11
 
 
 dependencies {
+    testImplementation project(path: ':')
     /*implementation("com.metsci.ext.org.jogamp.gluegen:gluegen-rt:v2.4.0-rc4")
     implementation("com.metsci.ext.org.jogamp.jogl:jogl-all:v2.4.0-rc4")
     implementation "com.metsci.ext.org.jogamp.gluegen:gluegen-rt:2.4.0-rc-20200202:natives-windows-amd64"
@@ -171,13 +172,13 @@ test {
 }
 
 tasks.register('sourceJar', Jar) {
-    classifier "sources"
+    //archiveClassifier "sourcesJar"
     from sourceSets.main.allJava
 }
 
 tasks.register('javadocJar', Jar) {
     dependsOn javadoc
-    classifier "javadoc"
+    //archiveClassifier "javadoc"
     from javadoc.destinationDir
 }
 
