@@ -20,12 +20,7 @@
 
 package one.empty3.feature20220726;
 
-import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.os.Build;
-
-import androidx.annotation.RequiresApi;
-
+import javaAnd.awt.Color;
 import javaAnd.awt.image.BufferedImage;
 import one.empty3.library.ITexture;
 import one.empty3.library.LineSegment;
@@ -33,7 +28,7 @@ import one.empty3.library.Lumiere;
 import one.empty3.library.Point3D;
 import one.empty3.library.core.nurbs.ParametricCurve;
 
-public class PixM extends MBitmap {
+public class PixM extends MBufferedImage {
     public static final int COMP_RED = 0;
     public static final int COMP_GREEN = 1;
     public static final int COMP_BLUE = 2;
@@ -41,14 +36,12 @@ public class PixM extends MBitmap {
     public static final int COMP_INTENSITY = 4;
     private int MAX_DISTANCE_ITERATIONS = 100;
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     public PixM(int l, int c) {
 
         super(l, c);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    public PixM(Bitmap image) {
+    public PixM(BufferedImage image) {
         super(image.getWidth(), image.getHeight());
         float[] colorComponents = new float[4];
         for (int i = 0; i < image.getWidth(); i++) {
@@ -63,8 +56,7 @@ public class PixM extends MBitmap {
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    public PixM(Bitmap image, boolean isBitmap) {
+    public PixM(BufferedImage image, boolean isBufferedImage) {
         super(image);
         /*
         float[] colorComponents = new float[4];
@@ -80,7 +72,6 @@ public class PixM extends MBitmap {
         }*/
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     public PixM(double[][] distances) {
         super(distances.length, distances[0].length);
         for (int i = 0; i < getColumns(); i++)
@@ -88,16 +79,11 @@ public class PixM extends MBitmap {
                 set(i, j, distances[i][j]);
     }
 
-    public PixM(BufferedImage read) {
-        this(read.bitmap);
-    }
-
-    public static <T> PixM getPixM(Bitmap bitmap) {
-        PixM pixM = new PixM(bitmap);
+    public static <T> PixM getPixM(BufferedImage BufferedImage) {
+        PixM pixM = new PixM(BufferedImage);
         return pixM;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     public Point3D getRgb(int i, int j) {
         setCompNo(0);
         double dr = get(i, j);
@@ -108,17 +94,11 @@ public class PixM extends MBitmap {
         return new Point3D(dr, dg, db);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    public static PixM getPixM(Bitmap image, double maxRes) {
-        return getPixM(image, (int) maxRes);
-    }
-
     public static PixM getPixM(BufferedImage image, double maxRes) {
-        return getPixM(image.bitmap, (int) maxRes);
+        return getPixM(image.bufferedImage, (int) maxRes);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    public static PixM getPixM(Bitmap image, int maxRes) {
+    public static PixM getPixM(BufferedImage image, int maxRes) {
         double f = 1.0;
         if (maxRes <= 0) {
             f = 1.0;
@@ -158,7 +138,6 @@ public class PixM extends MBitmap {
 
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     public PixM applyFilter(FilterPixM filter) {
         PixM c = new PixM(columns, lines);
         double sum;
@@ -202,7 +181,6 @@ public class PixM extends MBitmap {
         return c;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     public V derivative(int x, int y, int order, V originValue) {
         if (originValue == null) {
             originValue = new V(2, 1);
@@ -218,16 +196,15 @@ public class PixM extends MBitmap {
         return originValue;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     public BufferedImage getImage() {
 
-        float[] f = new float[getCompCount()];
+        double[] f = new double[getCompCount()];
 
-        Bitmap image = Bitmap.createBitmap(columns,
-                lines, Bitmap.Config.RGBA_F16);
+        BufferedImage image = new BufferedImage(columns,
+                lines, java.awt.image.BufferedImage.TYPE_INT_RGB);
 
 
-        float[] rgba = new float[getCompCount()];
+        double[] rgba = new double[getCompCount()];
         for (int i = 0; i < image.getWidth(); i++) {
             for (int j = 0; j < image.getHeight(); j++) {
                 for (int comp = 0; comp < 3; comp++) {
@@ -238,7 +215,7 @@ public class PixM extends MBitmap {
 
                     rgba[comp] = value;
                 }
-                image.setPixel(i, j, Color.valueOf(rgba[0], rgba[1], rgba[2]).toArgb());
+                image.setPixel(i, j, Lumiere.getInt(rgba));
             }
         }
         return new BufferedImage(image);
@@ -368,7 +345,6 @@ public class PixM extends MBitmap {
         return image;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     public PixM normalize(final double min, final double max) {
 
         double[] maxRgbai = new double[compCount];
@@ -424,7 +400,6 @@ public class PixM extends MBitmap {
         return image;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     public PixM subSampling(double div) {
         double columns2 = 1.0 * columns / div;
         double lines2 = 1.0 * lines / div;
@@ -443,7 +418,6 @@ public class PixM extends MBitmap {
         return pixM;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     public double mean(int i, int j, int w, int h) {
         double m = 0.0;
         int p = 0;
@@ -456,7 +430,6 @@ public class PixM extends MBitmap {
     }
 
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     public PixM copy() {
 
 
@@ -486,7 +459,6 @@ public class PixM extends MBitmap {
             return j;
         }
     */
-    @RequiresApi(api = Build.VERSION_CODES.N)
     public double distance(PixM p2) {
         double d = 0.0;
 
@@ -512,7 +484,6 @@ public class PixM extends MBitmap {
     }
 
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     public void colorsRegion(int x, int y, int w, int h, double[] comps) {
         for (int i = x; i < x + w; i++)
             for (int j = y; j < y + h; j++)
@@ -522,7 +493,6 @@ public class PixM extends MBitmap {
                 }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     public PixM getColorsRegion(int x, int y, int w, int h, int sizeX, int sizeY) {
         PixM subimage = new PixM(sizeX, sizeY);
         for (int i = x; i < x + w; i++)
@@ -537,7 +507,6 @@ public class PixM extends MBitmap {
         return subimage;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     public void colorsRegion(int x, int y, int w, int h, PixM subimage, int subImageCopyMode) {
         for (int i = x; i < x + w; i++)
             for (int j = y; j < y + h; j++)
@@ -549,7 +518,6 @@ public class PixM extends MBitmap {
                 }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     public boolean equals(Object compare) {
         if (compare instanceof PixM)
             //if (Arrays.equals((((PixM) compare).toGMatrix()).x, toGMatrix()))
@@ -559,11 +527,10 @@ public class PixM extends MBitmap {
     }
 
     private GMatrix toGMatrix() {
-        GMatrix gMatrix = new GMatrix(PixM.getPixM(bitmap));
+        GMatrix gMatrix = new GMatrix(PixM.getPixM(BufferedImage));
         return gMatrix;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     public double luminance(int x, int y) {
         double l = 0.0;
         setCompNo(0);
@@ -577,7 +544,6 @@ public class PixM extends MBitmap {
         return l;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     public double norme(int x, int y) {
         double l = 0.0;
         setCompNo(0);
@@ -591,17 +557,14 @@ public class PixM extends MBitmap {
         return l;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     public int getColumns() {
         return columns;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     public int getLines() {
         return lines;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     public void paintAll(double[] doubles) {
         for (int i = 0; i < getColumns(); i++)
             for (int j = 0; j < getLines(); j++)
@@ -616,7 +579,7 @@ public class PixM extends MBitmap {
 
         double[] rgba = new double[getCompCount()];
         for (double t = 0; t < 1.0; t += 0.001) {
-            rgba = Lumiere.getDoubles(Color.valueOf(curve.texture().getColorAt(t, 0.)).toArgb());
+            rgba = Lumiere.getDoubles(curve.texture().getColorAt(t, 0.));
             Point3D p = curve.calculerPoint3D(t);
             for (int c = 0; c < 3; c++) {
                 setCompNo(c);
@@ -630,7 +593,7 @@ public class PixM extends MBitmap {
         double[] rgba = new double[getCompCount()];
         for (double t = 0; t < 1.0; t += 0.001) {
             for (int c = 0; c < 3; c++) {
-                rgba = Lumiere.getDoubles(Color.valueOf(curve.texture().getColorAt(t, 0.)).toArgb());
+                rgba = Lumiere.getDoubles(curve.texture().getColorAt(t, 0.));
                 Point3D p = curve.calculerPoint3D(t);
                 setCompNo(c);
                 set((int) (double) p.getX(), (int) (double) p.getY(), rgba[c]);
@@ -720,8 +683,8 @@ public class PixM extends MBitmap {
                             vc[c] = copy.get(i, j);
                             set(i2, j2, vc[c]);
                         }
-                        if (bitmap != null) {
-                            bitmap.setPixel(i2, j2, Lumiere.getInt(vc));
+                        if (BufferedImage != null) {
+                            BufferedImage.setPixel(i2, j2, Lumiere.getInt(vc));
                         }
                     }
                 }

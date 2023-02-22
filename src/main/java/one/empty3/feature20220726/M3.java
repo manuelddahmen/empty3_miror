@@ -22,7 +22,6 @@ package one.empty3.feature20220726;
 
 import javaAnd.awt.*;
 
-import java.awt.Color;
 import javaAnd.awt.image.BufferedImage;
 import one.empty3.library.Lumiere;
 

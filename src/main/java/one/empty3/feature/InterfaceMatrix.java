@@ -23,8 +23,8 @@ package one.empty3.feature;
 public interface InterfaceMatrix {
 
     public void init(int columns, int lines);
-//    public void init(Bitmap bitmap);
-//    public void init(PixM bitmap);
+//    public void init(BufferedImage BufferedImage);
+//    public void init(PixM BufferedImage);
 
 
     public void setCompNo(int no);

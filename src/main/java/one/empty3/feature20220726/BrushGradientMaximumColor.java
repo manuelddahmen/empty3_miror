@@ -20,7 +20,7 @@
 
 package one.empty3.feature20220726;
 
-import android.graphics.BitmapFactory;
+import android.graphics.BufferedImageFactory;
 
 import java.io.File;
 
@@ -52,7 +52,7 @@ public class BrushGradientMaximumColor extends ProcessFile {
 
     @Override
     public boolean process(File in, File out) {
-        PixM pixM = new PixM(BitmapFactory.decodeFile(in.getAbsolutePath()));
+        PixM pixM = new PixM(BufferedImageFactory.decodeFile(in.getAbsolutePath()));
         PixM pixM2 = new PixM(pixM.getColumns(), pixM.getLines());
         for (int i = 0; i < pixM.getLines(); i++) {
             for (int j = 0; j < pixM.getColumns(); j++) {
@@ -68,7 +68,7 @@ public class BrushGradientMaximumColor extends ProcessFile {
                     }
             }
         }
-        ImageIO.write(pixM2.normalize(0, 1).bitmap, "jpg", out);
+        ImageIO.write(pixM2.normalize(0, 1).BufferedImage, "jpg", out);
         return true;
     }
 }

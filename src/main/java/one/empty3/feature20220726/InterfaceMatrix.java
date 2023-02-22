@@ -20,13 +20,13 @@
 
 package one.empty3.feature20220726;
 
-import android.graphics.Bitmap;
+import android.graphics.BufferedImage;
 
 public interface InterfaceMatrix {
 
     public void init(int columns, int lines);
-//    public void init(Bitmap bitmap);
-//    public void init(PixM bitmap);
+//    public void init(BufferedImage BufferedImage);
+//    public void init(PixM BufferedImage);
 
 
     public void setCompNo(int no);
@@ -41,5 +41,5 @@ public interface InterfaceMatrix {
 
     public double[] getValues(int column, int line);
 
-    Bitmap getBitmap();
+    BufferedImage getBufferedImage();
 }

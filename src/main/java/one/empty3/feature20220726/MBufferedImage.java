@@ -19,42 +19,40 @@
  */
 
 package one.empty3.feature20220726;
-
-import android.graphics.Bitmap;
-
 import java.util.PrimitiveIterator;
 import java.util.Random;
 
+import javaAnd.awt.image.BufferedImage;
 import one.empty3.library.Lumiere;
 import one.empty3.library.Point3D;
 
-public class MBitmap /*implements InterfaceMatrix*/ {
+public class MBufferedImage /*implements InterfaceMatrix*/ {
     public static PrimitiveIterator.OfDouble r = new Random().doubles().iterator();
     public static final Double noValue = r.next();
-    protected Bitmap bitmap = null;
+    protected BufferedImage BufferedImage = null;
     protected int columns;
     protected int lines;
     double[] x;
     protected int compNo;
     public int compCount = 3;
 
-    public MBitmap(int c, int l) {
-        this.bitmap = Bitmap.createBitmap(c, l, Bitmap.Config.RGB_565);
+    public MBufferedImage(int c, int l) {
+        this.BufferedImage = new BufferedImage(c, l, javaAnd.awt.image.BufferedImage.TYPE_INT_RGB);
         this.lines = l;
         this.columns = c;
     }
 
-    public MBitmap(Bitmap bitmap) {
-        this.bitmap = bitmap;
-        int l = bitmap.getHeight();
-        int c = bitmap.getWidth();
+    public MBufferedImage(BufferedImage BufferedImage) {
+        this.BufferedImage = BufferedImage;
+        int l = BufferedImage.getHeight();
+        int c = BufferedImage.getWidth();
         this.lines = l;
         this.columns = c;
 
     }
 
-    public MBitmap(Bitmap bitmap, int resMax) {
-        this.bitmap = bitmap;
+    public MBufferedImage(BufferedImage BufferedImage, int resMax) {
+        this.BufferedImage = BufferedImage;
     }
 
     public int getColumns() {
@@ -73,7 +71,7 @@ public class MBitmap /*implements InterfaceMatrix*/ {
         this.lines = lines;
     }
 
-    public MBitmap plus(M m2) {
+    public MBufferedImage plus(M m2) {
         for (int i = 0; i < lines; i++)
             for (int j = 0; j < columns; j++) {
                 set(i, j, get(i, j));
@@ -106,8 +104,8 @@ public class MBitmap /*implements InterfaceMatrix*/ {
         return v;
     }
 
-    public Bitmap getBitmap() {
-        return bitmap;
+    public BufferedImage getBufferedImage() {
+        return BufferedImage;
     }
 
     public static double[] getVector(int add, double[]... vectors) {
@@ -125,8 +123,8 @@ public class MBitmap /*implements InterfaceMatrix*/ {
     }
 
     public void setP(int i, int j, Point3D p) {
-        if (bitmap != null && i < bitmap.getWidth() && i >= 0 && j < bitmap.getHeight() && j >= 0) {
-            bitmap.setPixel(i, j, Lumiere.getInt(new double[]
+        if (BufferedImage != null && i < BufferedImage.getWidth() && i >= 0 && j < BufferedImage.getHeight() && j >= 0) {
+            BufferedImage.setPixel(i, j, Lumiere.getInt(new double[]
                     {p.get(0), p.get(1), p.get(2)}));
             return;
         }
@@ -138,9 +136,9 @@ public class MBitmap /*implements InterfaceMatrix*/ {
     }
 
     public Point3D getP(int i, int j) {
-        if (bitmap != null && i < bitmap.getWidth() && i >= 0 && j < bitmap.getHeight() && j >= 0) {
+        if (BufferedImage != null && i < BufferedImage.getWidth() && i >= 0 && j < BufferedImage.getHeight() && j >= 0) {
             if (i >= 0 && i < getColumns() && j >= 0 && j < getLines()) {
-                int pixel = bitmap.getPixel(i, j);
+                int pixel = BufferedImage.getPixel(i, j);
                 double[] p = Lumiere.getDoubles(pixel);
                 return new Point3D(p[0], p[1], p[2]);
             }
@@ -157,9 +155,9 @@ public class MBitmap /*implements InterfaceMatrix*/ {
     }
 
     public void setValues(int i, int j, double... v) {
-        if (bitmap != null) {
-            if (i >= 0 && i < bitmap.getWidth() && j >= 0 && j < bitmap.getHeight()) {
-                bitmap.setPixel(i, j, Lumiere.getInt(new double[]
+        if (BufferedImage != null) {
+            if (i >= 0 && i < BufferedImage.getWidth() && j >= 0 && j < BufferedImage.getHeight()) {
+                BufferedImage.setPixel(i, j, Lumiere.getInt(new double[]
                         {v[0], v[1], v[2]}));
             }
         }
@@ -172,7 +170,7 @@ public class MBitmap /*implements InterfaceMatrix*/ {
         }
     }
 
-    public MBitmap(PixM pix) {
+    public MBufferedImage(PixM pix) {
         this(pix.getLines(), pix.getColumns());
         this.lines = pix.getLines();
         this.columns = pix.getColumns();
@@ -196,14 +194,14 @@ public class MBitmap /*implements InterfaceMatrix*/ {
         x = new double[l * c * compCount];
     }
 
-    public MBitmap(int cl) {
+    public MBufferedImage(int cl) {
         this(cl, cl);
     }
 
     public double get(int column, int line) {
         if (column >= 0 && column < columns && line >= 0 && line < lines && compNo >= 0 && compNo < compCount) {
-            if (bitmap != null) {
-                return Lumiere.getDoubles(bitmap.getPixel(column, line))[compNo];
+            if (BufferedImage != null) {
+                return Lumiere.getDoubles(BufferedImage.getPixel(column, line))[compNo];
             }
 
             return x[index(column, line)];
@@ -244,12 +242,12 @@ public class MBitmap /*implements InterfaceMatrix*/ {
 
     public void set(int column, int line, double d) {
         if (column >= 0 && column < columns && line >= 0 && line < lines) {
-            if (bitmap != null) {
-                int pixel = bitmap.getPixel(column, line);
+            if (BufferedImage != null) {
+                int pixel = BufferedImage.getPixel(column, line);
                 double[] ps = new double[]{0, 0, 0};
                 ps[compNo] = d;
                 int p = pixel | Lumiere.getInt(ps);
-                bitmap.setPixel(column, line, p);
+                BufferedImage.setPixel(column, line, p);
                 return;
             }
             x[index(column, line)] = d;
@@ -261,8 +259,8 @@ public class MBitmap /*implements InterfaceMatrix*/ {
         setValues(column, line, values);
     }
 
-    public MBitmap tild() {
-        MBitmap m = new MBitmap(lines, columns);
+    public MBufferedImage tild() {
+        MBufferedImage m = new MBufferedImage(lines, columns);
         for (int i = 0; i < lines; i++)
             for (int j = 0; j < columns; j++)
                 for (int comp = 0; comp < getCompNo(); comp++)
@@ -290,10 +288,10 @@ public class MBitmap /*implements InterfaceMatrix*/ {
         return compCount;
     }
 
-    private MBitmap dot(MBitmap m) {
+    private MBufferedImage dot(MBufferedImage m) {
         if (!isSquare() || columns == m.getLines())
             throw new MatrixFormatException("determinant: not square matrix");
-        MBitmap res = new MBitmap(m.getColumns(), lines);
+        MBufferedImage res = new MBufferedImage(m.getColumns(), lines);
         for (int comp = 0; comp < getCompNo(); comp++) {
             res.setCompNo(comp);
             this.setCompNo(comp);
@@ -315,7 +313,7 @@ public class MBitmap /*implements InterfaceMatrix*/ {
             throw new MatrixFormatException("determinant: not square matrix");
         int i, j, j1, j2;
         double det = 0;
-        MBitmap m = null;
+        MBufferedImage m = null;
 
         if (lines < 1) { /* Error */
             throw new MatrixFormatException("<1 determinant");
@@ -326,7 +324,7 @@ public class MBitmap /*implements InterfaceMatrix*/ {
         } else {
             det = 0;
             for (j1 = 0; j1 < lines; j1++) {
-                m = new MBitmap(lines - 1);
+                m = new MBufferedImage(lines - 1);
                 for (i = 1; i < lines; i++) {
                     j2 = 0;
                     for (j = 0; j < lines; j++) {
@@ -349,12 +347,12 @@ public class MBitmap /*implements InterfaceMatrix*/ {
     /*
        Find the cofactor matrix of a square matrix
     */
-    public MBitmap CoFactor() {
+    public MBufferedImage CoFactor() {
         if (!isSquare())
             throw new MatrixFormatException("determinant: not square matrix");
         int n = lines;
-        MBitmap a = this;
-        MBitmap b = new MBitmap(lines - 1);
+        MBufferedImage a = this;
+        MBufferedImage b = new MBufferedImage(lines - 1);
 
 
         int i, j, ii, jj, i1, j1;

@@ -153,7 +153,7 @@ public class ModelingInterface extends JFrame {
                 zBuffer.texture(new ColorTexture(Color.WHITE));
                 zBuffer.backgroundTexture(new ColorTexture(Color.WHITE));
                 scene = new Scene();
-                tubulaire4.updateBitmap(image);
+                tubulaire4.updateBufferedImage(image);
                 scene.add(tubulaire4);
                 scene.cameraActive(camera);
                 zBuffer.scene(scene);
@@ -296,7 +296,7 @@ public class ModelingInterface extends JFrame {
         zBuffer.texture(new ColorTexture(Color.WHITE));
         zBuffer.backgroundTexture(new ColorTexture(Color.WHITE));
         scene = new Scene();
-        tubulaire4.updateBitmap(image);
+        tubulaire4.updateBufferedImage(image);
         scene.add(tubulaire4);
         scene.cameraActive(camera);
         zBuffer.scene(scene);

@@ -38,7 +38,7 @@ public class HeightMapSphere extends HeightMapSurface {
 
     @Override
     public Point3D calculerPoint3D(double u, double v) {
-        throw new UnsupportedOperationException("calculer point de la sphere + bitmap");
+        throw new UnsupportedOperationException("calculer point de la sphere + BufferedImage");
     }
 }
 

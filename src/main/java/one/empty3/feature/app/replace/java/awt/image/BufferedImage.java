@@ -19,9 +19,9 @@
 
 package one.empty3.feature.app.replace.java.awt.image;
 
-//import android.graphics.Bitmap;
+//import android.graphics.BufferedImage;
 
 public class BufferedImage {
-    //public Bitmap bitmap;
+    //public BufferedImage BufferedImage;
     public BufferedImage bufferedImage;
 }

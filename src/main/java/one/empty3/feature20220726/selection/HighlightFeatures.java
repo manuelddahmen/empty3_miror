@@ -147,7 +147,7 @@ public class HighlightFeatures extends ProcessFile {
     @Override
     public boolean process(File in, File out) {
         BufferedImage read = ImageIO.read(in);
-        PixM pixM = PixM.getPixM(read.bitmap);
+        PixM pixM = PixM.getPixM(read.bufferedImage);
         File stackItem = getStackItem(1);
         PixM original = new PixM(ImageIO.read(stackItem));
         int cadre = (int) Math.min((pixM.getColumns() + pixM.getLines()) / 2., 10.);

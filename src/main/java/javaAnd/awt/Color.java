@@ -69,6 +69,10 @@ public class Color extends java.awt.Color/*java.awt.Color*/ {
         return new Color(colorComponents[0], colorComponents[1], colorComponents[2]).getRGB();
     }
 
+    public static java.awt.Color valueOf(int rgb) {
+        return new Color(rgb);
+    }
+
     public java.awt.Color Color(int rgb) {
         return new Color(rgb);
     }

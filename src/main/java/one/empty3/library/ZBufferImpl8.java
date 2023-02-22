@@ -155,7 +155,7 @@ class Data {
         return null;
     }
 
-    public ECBufferedImage getBitmap() {
+    public ECBufferedImage getBufferedImage() {
         BufferedImage bi = new BufferedImage(la, ha, BufferedImage.TYPE_INT_RGB);
 
         int[] c = new int[4];
@@ -166,7 +166,7 @@ class Data {
                             dataP[9][j][i], dataP[10][j][i]);
                     bi.setRGB(i, j, i, j, c, 0, la);
                 } else
-                    Logger.getAnonymousLogger().log(Level.INFO, "error texture null Data.getBitmap");
+                    Logger.getAnonymousLogger().log(Level.INFO, "error texture null Data.getBufferedImage");
 
 
         return new ECBufferedImage(bi);
@@ -680,7 +680,7 @@ public class ZBufferImpl8 extends ZBufferImpl {
     }
 
     public ECBufferedImage image2() {
-        return data1.getBitmap();
+        return data1.getBufferedImage();
 
 
     }

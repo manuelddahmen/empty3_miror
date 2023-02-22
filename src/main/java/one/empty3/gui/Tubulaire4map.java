@@ -36,7 +36,7 @@ public class Tubulaire4map extends Tubulaire3 {
         super();
         mapVolume.setElem(new ECBufferedImage(100, 100, BufferedImage.TYPE_INT_ARGB));
     }
-    public void updateBitmap(BufferedImage bufferedImage) {
+    public void updateBufferedImage(BufferedImage bufferedImage) {
         this.mapVolume.setElem(new ECBufferedImage(bufferedImage));
     }
 

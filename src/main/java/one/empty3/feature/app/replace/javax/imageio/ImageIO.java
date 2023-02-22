@@ -19,8 +19,8 @@
 
 package one.empty3.feature.app.replace.javax.imageio;
 
-//import android.graphics.Bitmap;
-//import android.graphics.BitmapFactory;
+//import android.graphics.BufferedImage;
+//import android.graphics.BufferedImageFactory;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -32,9 +32,9 @@ public class ImageIO {
     public static java.awt.image.BufferedImage read(File file) {
         try {
             FileInputStream fileInputStream = new FileInputStream(file);
-            java.awt.image.BufferedImage bitmap2 = javax.imageio.ImageIO.read(fileInputStream);
+            java.awt.image.BufferedImage BufferedImage2 = javax.imageio.ImageIO.read(fileInputStream);
             fileInputStream.close();
-            return bitmap2;
+            return BufferedImage2;
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -49,21 +49,21 @@ public class ImageIO {
         return false;
     }
     /*
-    public static Bitmap read(File file) {
+    public static BufferedImage read(File file) {
         try {
             FileInputStream fileInputStream = new FileInputStream(file);
-            Bitmap bitmap = BitmapFactory.decodeStream(fileInputStream);
+            BufferedImage BufferedImage = BufferedImageFactory.decodeStream(fileInputStream);
             fileInputStream.close();
-            return bitmap;
+            return BufferedImage;
         } catch (IOException e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    public static boolean write(Bitmap imageOut, String jpg, File out) throws IOException {
+    public static boolean write(BufferedImage imageOut, String jpg, File out) throws IOException {
         FileOutputStream fileOutputStream = new FileOutputStream(out);
-        imageOut.compress(Bitmap.CompressFormat.JPEG, 10, fileOutputStream);
+        imageOut.compress(BufferedImage.CompressFormat.JPEG, 10, fileOutputStream);
         fileOutputStream.close();
         return false;
     }*/

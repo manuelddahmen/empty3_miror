@@ -21,7 +21,7 @@
 package one.empty3.feature20220726;
 
 
-import android.graphics.Bitmap;
+import android.graphics.BufferedImage;
 
 import one.empty3.library.Lumiere;
 import one.empty3.library.Point3D;
@@ -96,7 +96,7 @@ public class M implements InterfaceMatrix {
     }
 
     @Override
-    public Bitmap getBitmap() {
+    public BufferedImage getBufferedImage() {
         return null;
     }
 
