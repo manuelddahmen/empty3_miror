@@ -28,29 +28,30 @@ public class BufferedImage {
     public static final int TYPE_INT_RGB = 0;
     public static final int TYPE_INT_ARGB = 1;
     public static final int TYPE_BYTE_GRAY = 2;
-    public BufferedImage bufferedImage;
+    public java.awt.image.BufferedImage bufferedImage;
 
     public BufferedImage() {
     }
 
     public BufferedImage(int columns, int lines, int typeIntRgb) {
         this();
-        this.bufferedImage = new BufferedImage(columns, lines, bufferedImage.TYPE_INT_ARGB);
+        this.bufferedImage = new java.awt.image.BufferedImage(columns, lines, bufferedImage.TYPE_INT_ARGB);
     }
 
-    public BufferedImage(BufferedImage decodeStream) {
-        this.bufferedImage = decodeStream;
+
+    public BufferedImage(java.awt.image.BufferedImage read) {
+        this.bufferedImage = read;
     }
 
     public void setRGB(int i, int j, int anInt) {
-        bufferedImage.setPixel(i, j, anInt);
+        bufferedImage.setRGB(i, j, anInt);
     }
 
-    public void setPixel(int i, int j, int anInt) {
-
+    public void setRgb(int i, int j, int anInt) {
+        bufferedImage.setRGB(i, j, anInt);
     }
 
-    public BufferedImage getBufferedImage() {
+    public java.awt.image.BufferedImage getBufferedImage() {
         return bufferedImage;
     }
 
@@ -63,7 +64,7 @@ public class BufferedImage {
     }
 
     public int getRGB(int x, int y) {
-        return bufferedImage.getPixel(x, y);
+        return bufferedImage.getRGB(x, y);
     }
 
     public void drawImage(BufferedImage img, int x, int y, int w, int h) {
@@ -81,7 +82,7 @@ public class BufferedImage {
     }
 
     public void setColor(int x, int y, int color) {
-        bufferedImage.setPixel(x, y, color);
+        bufferedImage.setRGB(x, y, color);
     }
 
     public void drawLine(int x1, int y1, int x2, int y2, int color) {
@@ -89,7 +90,7 @@ public class BufferedImage {
         for (double i = 0; i < 1.0; i += 1. / dist) {
             double x = x1 + i * (x2 - x1);
             double y = y1 + i * (y2 - y1);
-            bufferedImage.setPixel((int) x, (int) y, color);
+            bufferedImage.setRGB((int) x, (int) y, color);
         }
     }
 
@@ -99,7 +100,7 @@ public class BufferedImage {
     public void drawRect(int x, int y1, int width, int height, ITexture texture) {
     }
 
-    public int getPixel(int i, int j) {
-        return bufferedImage.getPixel(i, j);
+    public int getRgb(int i, int j) {
+        return bufferedImage.getRGB(i, j);
     }
 }
