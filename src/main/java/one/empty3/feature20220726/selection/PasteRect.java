@@ -60,7 +60,7 @@ public class PasteRect extends ProcessFile {
             int rgb = col.getColorAt(
                     pi.getX() / img.getColumns(),
                     pi.getY() / img.getLines());
-            rgb = Color.BLACK;
+            rgb = Color.BLACK.getRGB();
             double[] rgbD = lookForColor(img, x, y, Lumiere.getDoubles(rgb));
             for (int comp = 0; comp < 3; comp++) {
                 img.setCompNo(comp);
@@ -148,19 +148,14 @@ public class PasteRect extends ProcessFile {
 
     @Override
     public boolean process(File in, File out) {
-        try {
-            if (!in.getAbsolutePath().endsWith("jpg"))
-                return false;
-            BufferedImage read = ImageIO.read(in);
-            PixM pixM = PixM.getPixM(read, maxRes);
-            getSource("paste");
-            PixM pixM1 = pasteList(pixM, new ColorTexture(Color.color(Color.BLACK)));
-            ImageIO.write(pixM1.normalize(0, 1).getImage(), "jpg", out);
-            return true;
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (!in.getAbsolutePath().endsWith("jpg"))
             return false;
-        }
+        BufferedImage read = ImageIO.read(in);
+        PixM pixM = PixM.getPixM(read, maxRes);
+        getSource("paste");
+        PixM pixM1 = pasteList(pixM, new ColorTexture(new Color(Color.BLACK.getRGB())));
+        ImageIO.write(pixM1.normalize(0, 1).getImage(), "jpg", out);
+        return true;
     }
 
 

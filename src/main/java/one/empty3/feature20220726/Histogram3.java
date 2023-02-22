@@ -156,37 +156,36 @@ public class Histogram3 extends ProcessFile {
 
         init();
 
-        try {
-            PixM m = new PixM(ImageIO.read(in));
-            BufferedImage image = m.getImage();
+        PixM m = new PixM(ImageIO.read(in));
+        BufferedImage image = m.getImage();
 
 
-            final double radiusIncr = 1;
+        final double radiusIncr = 1;
 
 
-            BufferedImage img2 = new javaAnd.awt.image.BufferedImage(image.getWidth(), image.getHeight(), javaAnd.awt.image.BufferedImage.TYPE_INT_RGB);
-            List<Circle> pointsOfInterest;
-            pointsOfInterest = getPointsOfInterest(m, radiusIncr, 0.5);
-            // grands;cercles = grandes iles les separer
-            // verifier les distances et constantes i
-            // petits cercles successifs entoures 
-            // de grands ou plus grands cercles = 
-            // coins, corners et possibles features.
+        BufferedImage img2 = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_RGB);
+        List<Circle> pointsOfInterest;
+        pointsOfInterest = getPointsOfInterest(m, radiusIncr, 0.5);
+        // grands;cercles = grandes iles les separer
+        // verifier les distances et constantes i
+        // petits cercles successifs entoures
+        // de grands ou plus grands cercles =
+        // coins, corners et possibles features.
 
-            System.out.println("getPointsOfInterest ");
+        System.out.println("getPointsOfInterest ");
 
 
-            double[] i_ir = new double[]{0, 0};
-            for (int i = 0; i < pointsOfInterest.size(); i++) {
-                Circle c1 = pointsOfInterest.get(i);
-                //if (c1.r <= 0 || c1.i <= 0)
-                //    pointsOfInterest.remove(i);
-                if (i_ir[0] < c1.i)
-                    i_ir[0] = c1.i;
-                if (i_ir[1] < c1.i / c1.r)
-                    i_ir[1] = c1.i / c1.r;
+        double[] i_ir = new double[]{0, 0};
+        for (int i = 0; i < pointsOfInterest.size(); i++) {
+            Circle c1 = pointsOfInterest.get(i);
+            //if (c1.r <= 0 || c1.i <= 0)
+            //    pointsOfInterest.remove(i);
+            if (i_ir[0] < c1.i)
+                i_ir[0] = c1.i;
+            if (i_ir[1] < c1.i / c1.r)
+                i_ir[1] = c1.i / c1.r;
 
-            }
+        }
 /*            pointsOfInterest.sort((o1, o2) -> {
                 double v = (o2.i/o2.r - o1.i/o1.r)/i_ir[1];
                 if (v < 0)
@@ -196,15 +195,15 @@ public class Histogram3 extends ProcessFile {
                 return (int) Math.signum((o2.i - o1.i) / Math.abs(o2.r - o1.r));
             });
 */
-            System.out.println("draw ");
+        System.out.println("draw ");
 
-            for (int i = 0; i < pointsOfInterest.size(); i++) {
-                Circle circle = pointsOfInterest.get(i);
-                double v = circle.i / circle.r / i_ir[1];
-                android.graphics.Color color = Color.color((float) (v), (float) (v), (float) (v));
-                img2.setRGB((int) (circle.x), (int) (circle.y), color.toArgb());
-            }
-            // grouper les points par similarités et distances
+        for (int i = 0; i < pointsOfInterest.size(); i++) {
+            Circle circle = pointsOfInterest.get(i);
+            double v = circle.i / circle.r / i_ir[1];
+            Color color = new Color((float) (v), (float) (v), (float) (v));
+            img2.setRGB((int) (circle.x), (int) (circle.y), color.getRGB());
+        }
+        // grouper les points par similarités et distances
               /*  group(pointsOfInterest);
                 File fileToWrite = new File(directory.getAbsolutePath()
                         + "level" + ".jpg");
@@ -213,7 +212,7 @@ public class Histogram3 extends ProcessFile {
                 File fileToWrite3 = new File(directory.getAbsolutePath()
                         + "level"+ "_NEW_RGB.jpg");
                 //fileToWrite.mkdirs();*/
-            ImageIO.write(new PixM(img2).normalize(0., 1.).getImage(), "JPEG", out);
+        ImageIO.write(new PixM(img2).normalize(0., 1.).getImage(), "JPEG", out);
                 /*
                 ImageIO.write(img, "JPEG", fileToWrite);
                 ImageIO.write(img, "JPEG", fileToWrite2);
@@ -221,10 +220,6 @@ public class Histogram3 extends ProcessFile {
 */
 
 
-        } catch (IOException exception) {
-            exception.printStackTrace();
-            return false;
-        }
         return true;
     }
 }

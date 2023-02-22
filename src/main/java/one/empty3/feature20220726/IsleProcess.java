@@ -20,7 +20,7 @@
 
 package one.empty3.feature20220726;
 
-import android.graphics.Color;
+import java.awt.Color;
 
 import one.empty3.io.ProcessFile;
 
@@ -58,7 +58,7 @@ public class IsleProcess extends ProcessFile {
 
         IsleFilterPixM il = new IsleFilterPixM
                 (pix);
-        il.setValues(Color.BLUE, Color.WHITE, 0.4);
+        il.setValues(Color.BLUE.getRGB(), Color.WHITE.getRGB(), 0.4);
         il.filter();
         try {
 

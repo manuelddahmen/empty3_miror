@@ -179,55 +179,54 @@ public class Histogram2 extends ProcessFile {
     }
 
     public boolean process(File in, File out) {
-        try {
-            File directory = new File(out.getParent());
-            PixM imageCoutours = new PixM(ImageIO.read(in));
-            this.m = imageCoutours;
-            BufferedImage file = m.getImage();
+        File directory = new File(out.getParent());
+        PixM imageCoutours = new PixM(ImageIO.read(in));
+        this.m = imageCoutours;
+        BufferedImage file = m.getImage();
 
-            int levels = 10;
-            double min = 0.0;
-            double radiusIncr = 2;
-
-
-            BufferedImage img = file;
-            BufferedImage img2 = new javaAnd.awt.image.BufferedImage(img.getWidth(), img.getHeight(), javaAnd.awt.image.BufferedImage.TYPE_INT_RGB);
-            BufferedImage img3 = new javaAnd.awt.image.BufferedImage(img.getWidth(), img.getHeight(), javaAnd.awt.image.BufferedImage.TYPE_INT_RGB);
+        int levels = 10;
+        double min = 0.0;
+        double radiusIncr = 2;
 
 
-            List<Circle> pointsOfInterest = getPointsOfInterest(4.0);
-            pointsOfInterest.stream().forEach(circle -> {
-                if (circle.i >= min && circle.r > 1.0) {
-                        /*
-                        Graphics graphics = img.getGraphics();
-                        graphics.setColor(Color.WHITE);
-                        graphics.drawOval((int) (circle.x - circle.r), (int) (circle.y - circle.r), (int) (circle.r * 2), (int) (circle.r * 2));
-                        graphics = img2.getGraphics();
-                        */
-                    android.graphics.Color color = Color.color((float) (circle.i < 1.0 ? (circle.i) : 1f), 0f, (float) (circle.i / circle.r < 1.0
-                            ? circle.i / circle.r : 1.0));
-                    //graphics.setColor(color);
-                    //graphics.drawOval((int) (circle.x - circle.r), (int) (circle.y - circle.r), (int) (circle.r * 2), (int) (circle.r * 2));
-                    img3.setRGB((int) (circle.x), (int) (circle.y), color.toArgb());
-                }
-            });
-            // grands;cercles = grandes iles les separer
-            // verifier les distances et constantes i
-            // petits cercles successifs entoures 
-            // de grands ou plus grands cercles = 
-            // coins, corners et possibles features.
-            pointsOfInterest.sort(new Comparator<Circle>() {
-                @Override
-                public int compare(Circle o1, Circle o2) {
-                    double v = o2.r - o1.r;
-                    if (v < 0)
-                        return -1;
-                    if (v > 0)
-                        return 1;
-                    return 0;
-                }
-            });
-            // grouper les points par similarites et distances
+        BufferedImage img = file;
+        BufferedImage img2 = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB);
+        BufferedImage img3 = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB);
+
+
+        List<Circle> pointsOfInterest = getPointsOfInterest(4.0);
+        pointsOfInterest.stream().forEach(circle -> {
+            if (circle.i >= min && circle.r > 1.0) {
+                    /*
+                    Graphics graphics = img.getGraphics();
+                    graphics.setColor(Color.WHITE);
+                    graphics.drawOval((int) (circle.x - circle.r), (int) (circle.y - circle.r), (int) (circle.r * 2), (int) (circle.r * 2));
+                    graphics = img2.getGraphics();
+                    */
+                Color color = new Color((float) (circle.i < 1.0 ? (circle.i) : 1f), 0f, (float) (circle.i / circle.r < 1.0
+                        ? circle.i / circle.r : 1.0));
+                //graphics.setColor(color);
+                //graphics.drawOval((int) (circle.x - circle.r), (int) (circle.y - circle.r), (int) (circle.r * 2), (int) (circle.r * 2));
+                img3.setRGB((int) (circle.x), (int) (circle.y), color.getRGB());
+            }
+        });
+        // grands;cercles = grandes iles les separer
+        // verifier les distances et constantes i
+        // petits cercles successifs entoures
+        // de grands ou plus grands cercles =
+        // coins, corners et possibles features.
+        pointsOfInterest.sort(new Comparator<Circle>() {
+            @Override
+            public int compare(Circle o1, Circle o2) {
+                double v = o2.r - o1.r;
+                if (v < 0)
+                    return -1;
+                if (v > 0)
+                    return 1;
+                return 0;
+            }
+        });
+        // grouper les points par similarites et distances
               /*  group(pointsOfInterest);
                 File fileToWrite = new File(directory.getAbsolutePath()
                         + "level" + ".jpg");
@@ -236,7 +235,7 @@ public class Histogram2 extends ProcessFile {
                 File fileToWrite3 = new File(directory.getAbsolutePath()
                         + "level"+ "_NEW_RGB.jpg");
                 //fileToWrite.mkdirs();*/
-            ImageIO.write(new PixM(img3).normalize(0., 1.).getImage(), "JPEG", out);
+        ImageIO.write(new PixM(img3).normalize(0., 1.).getImage(), "JPEG", out);
                 /*
                 ImageIO.write(img, "JPEG", fileToWrite);
                 ImageIO.write(img, "JPEG", fileToWrite2);
@@ -244,10 +243,6 @@ public class Histogram2 extends ProcessFile {
 */
 
 
-        } catch (IOException exception) {
-            exception.printStackTrace();
-            return false;
-        }
         return true;
     }
 }

@@ -233,9 +233,8 @@ public class DirestEffect extends JFrame {
     public void setFileIn(File fileOut) {
         try {
             threadEffectDisplay.setImageIn(ImageIO.read(fileOut));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        } catch (Exception ex) {}
+
     }
 
 

@@ -39,11 +39,10 @@ public class DiffEnergy extends ProcessFile {
         try {
             i1 = PixM.getPixM(ImageIO.read(getStackItem(img1)), maxRes);
             i2 = PixM.getPixM(ImageIO.read(getStackItem(img2)), maxRes);
+        } catch (Exception ex) {}
 
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        
 
     }
 

@@ -44,8 +44,6 @@ public class SimpleMap {
             File file = Seriald.newOutputFile("SimpleMap");
             file.mkdirs();
             ImageIO.write(pixeler.getImage(), "jpg", file);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        }catch (Exception ex) {}
     }
 }

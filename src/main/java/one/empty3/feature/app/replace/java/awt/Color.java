@@ -21,7 +21,7 @@ package one.empty3.feature.app.replace.java.awt;
 
 import java.awt.color.ColorSpace;
 
-public class Color extends java.awt.Color/*android.graphics.Color*/ {
+public class Color extends java.awt.Color/*Color*/ {
     public Color(int r, int g, int b) {
         super(r, g, b);
     }

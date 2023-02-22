@@ -228,9 +228,8 @@ public class Loader implements SceneLoader {
             while ((ligne = ds.readLine()) != null) {
                 texte += ligne;
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
+        } catch (Exception ex) {}
+        finally {
             try {
                 if (fis != null) {
                     fis.close();

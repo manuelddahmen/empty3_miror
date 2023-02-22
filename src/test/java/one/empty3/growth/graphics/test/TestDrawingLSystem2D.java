@@ -136,9 +136,7 @@ public class TestDrawingLSystem2D extends TestCaseExtended {
         try {
             File filename = getUniqueFilenameForProduction("testResults", "testDrawing", "jpg");
             ImageIO.write((RenderedImage) turtle2D.getZeImage(), "jpg", filename);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        
 
 
     }

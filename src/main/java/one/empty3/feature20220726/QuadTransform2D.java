@@ -32,9 +32,9 @@ public class QuadTransform2D {
 
     public class Inter {
         Point3D p;
-        android.graphics.Color c;
+        Color c;
 
-        public Inter(Point3D p, android.graphics.Color c) {
+        public Inter(Point3D p, Color c) {
             this.p = p;
             this.c = c;
         }
@@ -47,7 +47,7 @@ public class QuadTransform2D {
             this.p = p;
         }
 
-        public android.graphics.Color getC() {
+        public Color getC() {
             return c;
         }
 
@@ -88,10 +88,10 @@ public class QuadTransform2D {
         Point3D ca1 = new Point3D(i1.getRGB((int) (double) (pa0.getX()), (int) (double) pa0.getY()));
         Point3D pT = pT(pTemp, p1243, p1423);
         Point3D cAt = ca0.plus(ca1.moins(ca0).mult(t));
-        android.graphics.Color color = Color.color((float) (double) (cAt.get(0)),
+        Color color = new Color((float) (double) (cAt.get(0)),
                 (float) (double) (cAt.get(1)),
                 (float) (double) (cAt.get(2)));// p.toColor()
-        return new Inter(pT, new Color(color));
+        return new Inter(pT, color);
     }
 
 

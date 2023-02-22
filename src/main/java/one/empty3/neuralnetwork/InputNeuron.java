@@ -69,10 +69,8 @@ public class InputNeuron extends Neuron {
         } catch (IIOException exception) {
             Logger.getAnonymousLogger().log(Level.INFO, "Error reading image. Returns");
             throw new Exception(exception);
-        } catch (IOException e) {
-            e.printStackTrace();
+
         }
-        return false;
     }
 
     private int ordPix(int i, int j, int comp) {

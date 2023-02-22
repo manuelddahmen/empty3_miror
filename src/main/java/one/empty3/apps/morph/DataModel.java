@@ -121,9 +121,7 @@ public class DataModel {
                 zipOut.close();
                 fos.close();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        } catch (Exception ex) {}
     }
 
     private void saveObjectArray2d(File tmp, int xgrid) {

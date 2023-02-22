@@ -47,15 +47,13 @@ public class Classification extends ProcessFile {
         try {
             read = ImageIO.read(in);
             selectPointColorMassAglo = PixM.getPixM(read, maxRes);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        } catch (Exception ex) {}
+
         try {
             imageOut = ImageIO.read(in);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        assert selectPointColorMassAglo != null;
+        } catch (Exception ex) {}
+
+            assert selectPointColorMassAglo != null;
         SelectPointColorMassAglo selectPointColorMassAglo1 = new SelectPointColorMassAglo(read);
         int color = Color.WHITE.getRGB();
         for (int i = 0; i < selectPointColorMassAglo1.getColumns(); i += 1)
@@ -75,10 +73,9 @@ public class Classification extends ProcessFile {
 
         try {
             ImageIO.write(imageOut, "jpg", out);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return true;
+        } catch (Exception ex) {}
+
+            return true;
     }
 
     public double getThreshold() {

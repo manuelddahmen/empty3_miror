@@ -155,9 +155,8 @@ public class TextureImg extends ITexture {
             imageString = encoder.encodeToString(imageBytes);
 
             bos.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        } catch (Exception ex) {}
+
         String t  = "textureImg( filename:"+getFile()+"\n\tdata : { "+imageString+" } \n)";
         return t;
     }

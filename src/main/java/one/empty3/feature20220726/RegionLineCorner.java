@@ -20,7 +20,7 @@
 
 package one.empty3.feature20220726;
 
-import android.graphics.Color;
+import java.awt.Color;
 
 import one.empty3.io.ProcessFile;
 
@@ -270,83 +270,78 @@ public class RegionLineCorner extends ProcessFile {
     }
 
     public boolean process(File in, File out) {
-        try {
-            File directory = new File(out.getParent());
-            PixM imageCoutours = PixM.getPixM(ImageIO.read(in), 500.0);
-            this.m = imageCoutours;
-            BufferedImage file = m.getImage();
+        File directory = new File(out.getParent());
+        PixM imageCoutours = PixM.getPixM(ImageIO.read(in), 500.0);
+        this.m = imageCoutours;
+        BufferedImage file = m.getImage();
 
-            int levels = 10;
-            double min = 0.0;
-            double radiusIncr = 2;
-            for (int i = 0; i < levels; i++) {
+        int levels = 10;
+        double min = 0.0;
+        double radiusIncr = 2;
+        for (int i = 0; i < levels; i++) {
 
-                BufferedImage img = file;
-                BufferedImage img2 = new javaAnd.awt.image.BufferedImage(img.getWidth(), img.getHeight(), javaAnd.awt.image.BufferedImage.TYPE_INT_RGB);
-                BufferedImage img3 = new javaAnd.awt.image.BufferedImage(img.getWidth(), img.getHeight(), javaAnd.awt.image.BufferedImage.TYPE_INT_RGB);
-                BufferedImage img4 = new javaAnd.awt.image.BufferedImage(img.getWidth(), img.getHeight(), javaAnd.awt.image.BufferedImage.TYPE_INT_RGB);
+            BufferedImage img = file;
+            BufferedImage img2 = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB);
+            BufferedImage img3 = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB);
+            BufferedImage img4 = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB);
 
-                int finalI = i;
-                List<Circle> pointsOfInterest = getPointsOfInterest(levels);
-                
-            /*
-            
-            pointsOfInterest.stream().forEach(circle -> {
-                    if (circle.i >= min && circle.r>0) {
-                        Graphics graphics = img.getGraphics();
-                        graphics.setColor(Color.WHITE);
-                        graphics.drawOval((int) (circle.x - circle.r), (int) (circle.y - circle.r), (int) (circle.r * 2), (int) (circle.r * 2));
-                        graphics = img2.getGraphics();
-                        Color color = Color.color((float) circle.i, 0f, (float) (circle.i / circle.r));
-                        graphics.setColor(color);
-                        graphics.drawOval((int) (circle.x - circle.r), (int) (circle.y - circle.r), (int) (circle.r * 2), (int) (circle.r * 2));
-                        img3.setRGB((int) (circle.x), (int) (circle.y), color.getRGB());
-                    }
-                });*/
-                // grands;cercles = grandes iles les separer
-                // verifier les distances et constantes i
-                // petits cercles successifs entoures
-                // de grands ou plus grands cercles =
-                // coins, corners et possibles features.
-               /* pointsOfInterest.sort(new Comparator<Circle>() {
-                    @Override
-                    public int compare(Circle o1, Circle o2) {
-                        double v = o2.r - o1.r;
-                        if(v<0)
-                             return -1;
-                        if(v>0)
-                             return 1;
-                        return 0;
-                    }
-                });*/
-                // grouper les points par similarites et distances
-                List<List<Circle>> circles = group(pointsOfInterest);
-                for (List<Circle> lc : circles) {
-                    Color color = Colors.random();
-                    for (Circle c : lc) {
+            int finalI = i;
+            List<Circle> pointsOfInterest = getPointsOfInterest(levels);
 
-                        img4.setRGB((int) (c.x), (int) (c.y), color.toArgb());
-                    }
+        /*
+
+        pointsOfInterest.stream().forEach(circle -> {
+                if (circle.i >= min && circle.r>0) {
+                    Graphics graphics = img.getGraphics();
+                    graphics.setColor(Color.WHITE);
+                    graphics.drawOval((int) (circle.x - circle.r), (int) (circle.y - circle.r), (int) (circle.r * 2), (int) (circle.r * 2));
+                    graphics = img2.getGraphics();
+                    Color color = new Color((float) circle.i, 0f, (float) (circle.i / circle.r));
+                    graphics.setColor(color);
+                    graphics.drawOval((int) (circle.x - circle.r), (int) (circle.y - circle.r), (int) (circle.r * 2), (int) (circle.r * 2));
+                    img3.setRGB((int) (circle.x), (int) (circle.y), color.getRGB());
                 }
-                File fileToWrite = new File(directory.getAbsolutePath()
-                        + "level" + finalI + ".jpg");
-                File fileToWrite2 = new File(directory.getAbsolutePath()
-                        + "level" + finalI + "_NEW.jpg");
-                File fileToWrite3 = new File(directory.getAbsolutePath()
-                        + "level" + finalI + "_NEW_RGB.jpg");
-                //fileToWrite.mkdirs();
-                ImageIO.write(img4, "JPEG", out);
-                /*
-                ImageIO.write(img, "JPEG", fileToWrite);
-                ImageIO.write(img, "JPEG", fileToWrite2);
-                ImageIO.write(img, "JPEG", fileToWrite3);
-*/
-            }
+            });*/
+            // grands;cercles = grandes iles les separer
+            // verifier les distances et constantes i
+            // petits cercles successifs entoures
+            // de grands ou plus grands cercles =
+            // coins, corners et possibles features.
+           /* pointsOfInterest.sort(new Comparator<Circle>() {
+                @Override
+                public int compare(Circle o1, Circle o2) {
+                    double v = o2.r - o1.r;
+                    if(v<0)
+                         return -1;
+                    if(v>0)
+                         return 1;
+                    return 0;
+                }
+            });*/
+            // grouper les points par similarites et distances
+            List<List<Circle>> circles = group(pointsOfInterest);
+            for (List<Circle> lc : circles) {
+                Color color = Colors.random();
+                for (Circle c : lc) {
 
-        } catch (IOException exception) {
-            exception.printStackTrace();
-            return false;
+                    img4.setRGB((int) (c.x), (int) (c.y), color.getRGB());
+                }
+            }
+            File fileToWrite = new File(directory.getAbsolutePath()
+                    + "level" + finalI + ".jpg");
+            File fileToWrite2 = new File(directory.getAbsolutePath()
+                    + "level" + finalI + "_NEW.jpg");
+            File fileToWrite3 = new File(directory.getAbsolutePath()
+                    + "level" + finalI + "_NEW_RGB.jpg");
+            //fileToWrite.mkdirs();
+            ImageIO.write(img4, "JPEG", out);
+            /*
+            ImageIO.write(img, "JPEG", fileToWrite);
+            ImageIO.write(img, "JPEG", fileToWrite2);
+            ImageIO.write(img, "JPEG", fileToWrite3);
+*/
         }
+
         return true;
     }
 }

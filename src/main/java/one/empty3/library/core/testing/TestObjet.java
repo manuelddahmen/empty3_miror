@@ -316,10 +316,9 @@ public abstract class TestObjet implements Test, Runnable {
             out.close();
 
             zip.addFile(fichier.getName(), resultImageAsRawBytes);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        
         o.println(fichier.getAbsolutePath());
+        } catch (Exception ex) {}
 
     }
 
@@ -677,9 +676,8 @@ public abstract class TestObjet implements Test, Runnable {
 
             ECBufferedImage eci = new ECBufferedImage(bi);
             biic.setImage(eci);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        } catch (Exception ex1) {ex1.printStackTrace();}
+
         str.setMessage("ERROR EXCEPTION");
     }
 

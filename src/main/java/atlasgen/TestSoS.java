@@ -71,15 +71,13 @@ public class TestSoS extends TestObjetSub {
             bufferedImageHeightMap = ImageIO.read(new File("res/img/gebco_08_rev_elev_21600x10800.png"));
             bufferedImageTexture = ImageIO.read(new File("res/img/planets/" + list[planetNo]));
             TextureImg textureImg = new TextureImg(new ECBufferedImage(bufferedImageTexture));
-             textureOpSphere = new TextureOpSphere(textureImg);
+            textureOpSphere = new TextureOpSphere(textureImg);
 
-            if(frame()%361==360)
+            if (frame() % 361 == 360)
                 planetNo++;
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception ex) {
         }
     }
-
 
     public void finit() {
 

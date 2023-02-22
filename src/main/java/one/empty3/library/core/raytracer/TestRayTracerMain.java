@@ -90,9 +90,8 @@ public class TestRayTracerMain extends RtRaytracer {
         // On lance le rendu
         try {
             Render(myScene, 1920, 1080, "tests-results/raytracer-base" + ConsoleUtils.currentDate());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        } catch (Exception ex) {}
+
 
         return;
     }

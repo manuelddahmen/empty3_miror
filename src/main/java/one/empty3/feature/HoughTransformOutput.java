@@ -87,9 +87,8 @@ public class HoughTransformOutput {
         }
         try {
             ImageIO.write(in, "jpg", out);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
+        } catch (Exception ex) {}
 
     }
 

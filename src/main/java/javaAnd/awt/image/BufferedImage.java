@@ -103,4 +103,12 @@ public class BufferedImage {
     public int getRgb(int i, int j) {
         return bufferedImage.getRGB(i, j);
     }
+
+    public void setPixel(int i, int j, int anInt) {
+        bufferedImage.setRGB(i, j, anInt);
+    }
+
+    public int getPixel(int i, int j) {
+        return bufferedImage.getRGB(i, j);
+    }
 }

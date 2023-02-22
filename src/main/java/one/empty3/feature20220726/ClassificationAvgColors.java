@@ -84,11 +84,6 @@ public class ClassificationAvgColors extends ProcessFile {
         });
 
 
-        try {
-            return ImageIO.write(toProcess.getImage(), "jpg", out);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
+        return ImageIO.write(toProcess.getImage(), "jpg", out);
     }
 }

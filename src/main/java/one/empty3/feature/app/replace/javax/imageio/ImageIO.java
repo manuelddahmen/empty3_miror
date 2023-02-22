@@ -35,9 +35,8 @@ public class ImageIO {
             java.awt.image.BufferedImage BufferedImage2 = javax.imageio.ImageIO.read(fileInputStream);
             fileInputStream.close();
             return BufferedImage2;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        } catch (Exception ex) {}
+
         return null;
     }
 
@@ -55,9 +54,7 @@ public class ImageIO {
             BufferedImage BufferedImage = BufferedImageFactory.decodeStream(fileInputStream);
             fileInputStream.close();
             return BufferedImage;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        
         return null;
     }
 

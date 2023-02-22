@@ -31,17 +31,21 @@ public class DericheFilterProcess extends ProcessFile {
 
     @Override
     public boolean process(File in, File out) {
+        PixM pixM = null;
         try {
-            PixM pixM = PixM.getPixM( ImageIO.read(in), maxRes);
-
-
-
-            ImageIO.write(pixM.getImage(), "jpg", out);
-
-
+            pixM = PixM.getPixM( ImageIO.read(in), maxRes);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
+
+
+        try {
+            ImageIO.write(pixM.getImage(), "jpg", out);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+
         return false;
     }
 }

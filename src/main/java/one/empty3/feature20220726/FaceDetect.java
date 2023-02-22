@@ -54,9 +54,7 @@ public class FaceDetect extends ProcessFile {
             addSource(file);
 
             return res.size() > 0;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        
         return false;
     }
 

@@ -44,9 +44,8 @@ public class TourDeRevolution extends Representable {
         try {
             this.courbe = new CourbeDeImage(ImageIO.read(image));
             courbe.anayliserImage();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
+        } catch (Exception ex) {}
 
     }
 
@@ -67,9 +66,8 @@ public class TourDeRevolution extends Representable {
         try {
             ImageIO.write(z.image(), "png",
                     ImageIO.createImageOutputStream(new File("result2TR.png")));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        } catch (Exception ex) {}
+
     }
 
     // @Override

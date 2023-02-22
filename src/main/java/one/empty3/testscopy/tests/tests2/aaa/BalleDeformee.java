@@ -66,10 +66,9 @@ public class BalleDeformee extends TestObjetSub {
                                     new ECBufferedImage(
                                             ImageIO.read(
                                                     new File("samples/img/pink-watercolor-texture.jpg"))))));
+        } catch (Exception ex) {}
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        
         scene().add(balle);
         camera = new CameraInPath(new Circle(
                 new Axe(Point3D.O0.plus(Point3D.Y), Point3D.O0.moins(Point3D.Y)), 800 * 35));

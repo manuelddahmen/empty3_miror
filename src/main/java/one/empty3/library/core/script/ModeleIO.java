@@ -22,8 +22,8 @@
  */
 package one.empty3.library.core.script;
 
-import one.empty3.library.*;
-import one.empty3.library.*;
+import one.empty3.library.Representable;
+import one.empty3.library.Scene;
 
 import java.io.*;
 
@@ -39,12 +39,11 @@ public class ModeleIO {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
         try {
             dos.writeObject(o);
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception ex) {
         } finally {
             try {
                 dos.close();
@@ -74,12 +73,12 @@ public class ModeleIO {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
+
         try {
             dos.writeObject(sc);
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception ex) {
         } finally {
             try {
                 dos.close();
@@ -98,6 +97,7 @@ public class ModeleIO {
         return r;
     }
 
+
     public static boolean sauvergarderTXT(Scene sc, File file) {
         String txt = sc.toString();
         boolean r = false;
@@ -112,10 +112,12 @@ public class ModeleIO {
             r = true;
         } catch (FileNotFoundException e) {
             e.printStackTrace();
+
+            return r;
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
-        return r;
+        return false;
     }
 
     public Scene charger(Scene sc, File file) {
@@ -127,14 +129,14 @@ public class ModeleIO {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
         try {
             return (Scene) dos.readObject();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
         } finally {
             try {
                 dos.close();
@@ -145,4 +147,6 @@ public class ModeleIO {
         }
         return null;
     }
+
+
 }

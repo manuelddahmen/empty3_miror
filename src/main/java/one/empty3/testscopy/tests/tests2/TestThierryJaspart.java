@@ -56,9 +56,8 @@ public class TestThierryJaspart extends TestObjetSub {
         try {
             texture = new TextureImg(ECBufferedImage.getFromFile(
                     new File("resources/img/2018-03-31 11.51.58.jpg")));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        } catch (Exception ex) {}
+
         s.setIncrU(0.1);
         s.setIncrV(0.1);
         s.texture(texture);

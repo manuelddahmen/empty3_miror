@@ -40,9 +40,8 @@ public class ComposeNto1 extends ProcessFile {
             success = processMem(inpix, outpix);
             ImageIO.write(outpix.getImage(), "jpg", out);
             return success;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        } catch (Exception ex) {}
+
         return false;
     }
 

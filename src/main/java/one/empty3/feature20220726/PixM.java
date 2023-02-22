@@ -95,7 +95,7 @@ public class PixM extends MBufferedImage {
     }
 
     public static PixM getPixM(BufferedImage image, double maxRes) {
-        return getPixM(image.bufferedImage, (int) maxRes);
+        return getPixM(image, (int) maxRes);
     }
 
     public static PixM getPixM(BufferedImage image, int maxRes) {
@@ -218,7 +218,7 @@ public class PixM extends MBufferedImage {
                 image.setPixel(i, j, Lumiere.getInt(rgba));
             }
         }
-        return new BufferedImage(image);
+        return image;
 
     }
 /*

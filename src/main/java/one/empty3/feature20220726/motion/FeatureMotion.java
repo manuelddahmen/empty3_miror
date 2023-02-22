@@ -20,7 +20,7 @@
 
 package one.empty3.feature20220726.motion;
 
-import android.graphics.Color;
+import java.awt.Color;
 
 import one.empty3.feature20220726.FeatureMatch;
 import one.empty3.feature20220726.PixM;
@@ -48,7 +48,7 @@ public class FeatureMotion extends Motion {
             }
         }
         for (int i = 0; i < match.size(); i++) {
-            bufferedImage.setRGB((int) match.get(i)[0], (int) match.get(i)[1], Color.WHITE);
+            bufferedImage.setRGB((int) match.get(i)[0], (int) match.get(i)[1], Color.WHITE.getRGB());
         }
         return bufferedImage;
     }

@@ -457,9 +457,7 @@ public class FTPProcessFiles {
                     diffEnergy.filter(i, j);
                 }
             diffEnergy.end(image.getAbsolutePath());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        
 */
     }
 

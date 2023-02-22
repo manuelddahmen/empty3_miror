@@ -81,34 +81,28 @@ public class HoughTransform extends ProcessFile {
     public boolean process(File in, File out) {
         // load the file using Java's imageIO library
         BufferedImage image = null;
-        try {
-            image = ImageIO.read(in);
-            // create a hough transform object with the right dimensions
-            width = image.getWidth();
-            height = image.getHeight();
+        image = ImageIO.read(in);
+        // create a hough transform object with the right dimensions
+        width = image.getWidth();
+        height = image.getHeight();
 
-            initialise();
-            // add the points from the image (or call the addPoint method separately if your points are not in an image
-            addPoints(image);
+        initialise();
+        // add the points from the image (or call the addPoint method separately if your points are not in an image
+        addPoints(image);
 
-            // get the lines out
-            Vector<HoughLine> lines = getLines(NUM_LINES);
+        // get the lines out
+        Vector<HoughLine> lines = getLines(NUM_LINES);
 
-            lines.sort(Collections.reverseOrder());
+        lines.sort(Collections.reverseOrder());
 
-            // draw the lines back onto the image
-            for (int j = 0; j < maxDrawn && j < lines.size(); j++) {
-                HoughLine line = lines.elementAt(j);
-                line.draw(image, Color.RED);
-            }
-
-            ImageIO.write(image, "jpg", out);
-            return true;
-        } catch (IOException e) {
-            e.printStackTrace();
-
-            return false;
+        // draw the lines back onto the image
+        for (int j = 0; j < maxDrawn && j < lines.size(); j++) {
+            HoughLine line = lines.elementAt(j);
+            line.draw(image, Color.RED.getRGB());
         }
+
+        ImageIO.write(image, "jpg", out);
+        return true;
 
     }
 
@@ -299,7 +293,7 @@ public class HoughTransform extends ProcessFile {
             for (int r = 0; r < doubleHeight; r++) {
                 double value = 255 * ((double) houghArray[t][r]) / max;
                 int v = 255 - (int) value;
-                int c = Color.color(v, v, v).toArgb();
+                int c = new Color(v, v, v).getRGB();
                 image.setRGB(t, r, c);
             }
         }

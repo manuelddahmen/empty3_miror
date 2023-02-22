@@ -20,16 +20,14 @@
 
 package one.empty3.feature20220726;
 
-
-import android.graphics.BufferedImage;
-
 import one.empty3.library.Lumiere;
 import one.empty3.library.Point3D;
 
+import java.awt.image.BufferedImage;
 import java.util.PrimitiveIterator;
 import java.util.Random;
 
-public class M implements InterfaceMatrix {
+public class M  {
     public static PrimitiveIterator.OfDouble r = new Random().doubles().iterator();
     public static final Double noValue = r.next();
     protected int columns;
@@ -95,10 +93,8 @@ public class M implements InterfaceMatrix {
         return v;
     }
 
-    @Override
-    public BufferedImage getBufferedImage() {
-        return null;
-    }
+
+
 
     public static double[] getVector(int add, double[]... vectors) {
         int d = 0;
@@ -212,7 +208,6 @@ public class M implements InterfaceMatrix {
 
     }
 
-    @Override
     public void set(int column, int line, double... values) {
         setValues(column, line, values);
     }

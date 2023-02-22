@@ -62,9 +62,7 @@ public class Turtle2DTest extends TestCase {
                 , new Point2D(0.0, 0.0).plus(o).get3D());
         try {
             ImageIO.write(bufferedImage, "jpg", new java.io.File("testResults/testLineRotate.jpg"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        
 
 
     }

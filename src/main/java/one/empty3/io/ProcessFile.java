@@ -31,6 +31,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.*;
 
+import static one.empty3.Pojo.getProperty;
+
 public class ProcessFile {
     public ProcessBean bean;
     protected int maxRes = 400;
@@ -54,9 +56,8 @@ public class ProcessFile {
             BufferedImage read = null;
             read = ImageIO.read(file);
             return (new PixM(read));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        } catch (Exception ex) {}
+
         return null;
     }
 
@@ -97,10 +98,9 @@ public class ProcessFile {
             PixM outPix = inPix.copy();
 
             return processMem(inPix, outPix);
+        } catch (Exception ex) {}
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        
         return false;
     }
 

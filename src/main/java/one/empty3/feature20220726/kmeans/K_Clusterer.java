@@ -39,6 +39,7 @@ import java.util.Objects;
 import java.awt.Color;
 import javaAnd.awt.image.imageio.ImageIO;
 import one.empty3.feature20220726.PixM;
+import one.empty3.library.core.lighting.Colors;
 
 public class K_Clusterer /*extends ReadDataset*/ {
 
@@ -190,15 +191,15 @@ public class K_Clusterer /*extends ReadDataset*/ {
                 ex = 0;
             } while (ex == 1);
 
-            android.graphics.Color[] colors = new android.graphics.Color[k];
+            Color[] colors = new Color[k];
             for (int i = 0; i < k; i++)
-                colors[i] = Color.random();
+                colors[i] = Colors.random();
             clustersPrint = clusters;
 
             centroids.forEach((integer1, db1) -> clustersPrint.forEach((doubles, integer2) -> {
                 pix2.setValues((int) (float) (doubles[0]), (int) (float) (doubles[1]),
-                        colors[integer2].red(), colors[integer2].green(),
-                        colors[integer2].blue());
+                        colors[integer2].getRed(), colors[integer2].getGreen(),
+                        colors[integer2].getBlue());
 
             }));
 

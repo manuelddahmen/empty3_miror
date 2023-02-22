@@ -56,9 +56,8 @@ public class SelectColor extends ProcessFile {
         try {
             ImageIO.write(pixM2.getImage(), "jpg", out);
             return true;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        } catch (Exception ex) {}
+
         return false;
     }
 }

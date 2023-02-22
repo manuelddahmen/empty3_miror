@@ -96,9 +96,8 @@ public class ProcessBean extends Thread {
     public void setImage(File fo) {
         try {
             listImage.add(new PixM(ImageIO.read(fo)));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        } catch (Exception ex) {}
+
     }
     List<PixM> listImage = new ArrayList<>();
 

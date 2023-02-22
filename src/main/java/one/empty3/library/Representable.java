@@ -334,10 +334,9 @@ public class Representable /*extends RepresentableT*/ implements Serializable, C
                 fileOutputStream.write(bytes, 0, read);
             }
 
+        } catch (Exception ex) {}
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        
 
     }
 

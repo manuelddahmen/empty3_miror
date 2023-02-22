@@ -20,7 +20,7 @@
 
 package one.empty3.feature20220726;
 
-import android.graphics.Color;
+import java.awt.Color;
 
 public class IsleFilterPixM
         extends FilterPixM {

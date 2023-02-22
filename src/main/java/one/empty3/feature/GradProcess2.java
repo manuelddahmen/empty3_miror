@@ -47,9 +47,8 @@ public class GradProcess2 extends ProcessFile {
 
             ImageIO.write(pixMout.normalize(0,1).getImage(), "jpg", out);
             return true;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        } catch (Exception ex) {}
+
         return false;
     }
 }

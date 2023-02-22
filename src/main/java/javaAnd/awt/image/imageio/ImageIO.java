@@ -39,9 +39,7 @@ public class ImageIO {
             BufferedImage BufferedImage2 = ImageIO.read(fileInputStream);
             fileInputStream.close();
             return BufferedImage2;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        } catch (Exception ex) {}
         return null;
     }
 

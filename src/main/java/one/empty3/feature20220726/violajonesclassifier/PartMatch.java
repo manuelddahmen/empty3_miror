@@ -63,12 +63,8 @@ public class PartMatch extends ProcessFile {
                         double sign = Math.signum(prod2(pb.moins(pa), pb.moins(p)));
                         pixM.setValues(i, j, sign, sign, sign);
                     }
-                try {
-                    ImageIO.write(pixM.normalize(0, 1).getImage(), "jpg", new File("features/featureDesc_"
-                            + n + "_angle_" + a + ".jpg"));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                ImageIO.write(pixM.normalize(0, 1).getImage(), "jpg", new File("features/featureDesc_"
+                        + n + "_angle_" + a + ".jpg"));
 
                 featuresDescriptors.add(pixM);
             }
@@ -114,45 +110,39 @@ public class PartMatch extends ProcessFile {
     public boolean process(File in, File out) {
         featuresDescriptors = new ArrayList<>();
 
-        try {
-            PixM pix = PixM.getPixM(ImageIO.read(in), maxRes);
+        PixM pix = PixM.getPixM(ImageIO.read(in), maxRes);
 
-            BufferedImage outImg = pix.getImage();
+        BufferedImage outImg = pix.getImage();
 
-            int[][] largeurs = new int[pix.getColumns()][pix.getLines()];
-            double lastMatchScore = 0;
-            for (int n = 4; n < 128; n *= 2) {
-                double matchScoreMax;
-                for (int i = 0; i < pix.getColumns(); i++) {
-                    for (int j = 0; j < pix.getLines(); j++) {
-                        double m;
-                        double matchScoreMin = 0.6;
-                        int index = 0;
-                        for (index = 0; index < featuresDescriptors.size(); index++) {
-                            double intensity = intensity(pix, i, j, n);
-                            double intensityFD = intensity(featuresDescriptors.get(index), i, j, n);
-                            double matchScore = computeScore(pix, i, j, n, featuresDescriptors.get(index));
-                            if (matchScore >= Math.abs(intensity - intensityFD)
-                                    && matchScore >= matchScoreMin) {
+        int[][] largeurs = new int[pix.getColumns()][pix.getLines()];
+        double lastMatchScore = 0;
+        for (int n = 4; n < 128; n *= 2) {
+            double matchScoreMax;
+            for (int i = 0; i < pix.getColumns(); i++) {
+                for (int j = 0; j < pix.getLines(); j++) {
+                    double m;
+                    double matchScoreMin = 0.6;
+                    int index = 0;
+                    for (index = 0; index < featuresDescriptors.size(); index++) {
+                        double intensity = intensity(pix, i, j, n);
+                        double intensityFD = intensity(featuresDescriptors.get(index), i, j, n);
+                        double matchScore = computeScore(pix, i, j, n, featuresDescriptors.get(index));
+                        if (matchScore >= Math.abs(intensity - intensityFD)
+                                && matchScore >= matchScoreMin) {
 
-                                outImg.drawRect(i, j, n, n, null);
+                            outImg.drawRect(i, j, n, n, null);
 
-                                classify(matchScore, featuresDescriptors.get(index));
-                                lastMatchScore = matchScore;
-                            }
+                            classify(matchScore, featuresDescriptors.get(index));
+                            lastMatchScore = matchScore;
                         }
                     }
                 }
             }
-
-            ImageIO.write(outImg, "jpg", out);
-
-            return true;
-        } catch (IOException e) {
-            e.printStackTrace();
-
         }
-        return false;
+
+        ImageIO.write(outImg, "jpg", out);
+
+        return true;
     }
 
     private void classify(double m, PixM pixM) {

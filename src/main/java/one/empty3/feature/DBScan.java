@@ -138,10 +138,9 @@ public class DBScan extends ProcessFile implements Algorithm {
                 }
             }
             ImageIO.write(p.getImage(), "jpg", out);
+        } catch (Exception ex) {}
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        
         return true;
     }
 

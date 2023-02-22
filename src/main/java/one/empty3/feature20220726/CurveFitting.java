@@ -241,106 +241,105 @@ public class CurveFitting extends ProcessFile {
 
     @Override
     public boolean process(File in, File out) {
-        try {
-            pix = PixM.getPixM(ImageIO.read(in), maxRes);
+        pix = PixM.getPixM(ImageIO.read(in), maxRes);
 
 
-            init();
+        init();
 
 
-            inPix = new PixM(pix.getImage());
-            outPix = new PixM(pix.getImage());
+        inPix = new PixM(pix.getImage());
+        outPix = new PixM(pix.getImage());
 
-            curveInitial = new CourbeN11();
-
-
-            int imgX1;
-            int imgY1;
-            int imgX2;
-            int imgY2;
-            int moy = (pix.getColumns() + pix.getLines()) / 2;
-            int square;
-            if (pix.getColumns() > pix.getLines()) {
-                square = pix.getLines();
-                imgX1 = pix.getColumns() / 2 - square / 2;
-                imgY1 = 0;
-                imgX2 = pix.getColumns() / 2 + square / 2;
-                imgY2 = pix.getLines() - 1;
-            } else {
-                square = pix.getColumns();
-                imgX1 = 0;
-                imgY1 = pix.getLines() / 2 - square / 2;
-                imgX2 = pix.getColumns() - 1;
-                imgY2 = pix.getLines() / 2 + square / 2;
-            }
-
-            int N = 12;
-            for (int i = 0; i < N; i++) {
-                curveInitial.getCoefficients().getData1d().add(
-                        new Point3D(pix.getColumns() / 2
-                                + square / 2. * Math.cos(i * 2 * Math.PI / N),
-                                pix.getLines() / 2
-                                        + square / 2. * Math.sin(i * 2 * Math.PI / N),
-                                0.0));
-            }
-            Point3D center = new Point3D(pix.getColumns() / 2., pix.getLines() / 2., 0.0);
-            Circle circle = new Circle(new Axe(center.plus(Point3D.Z), center.plus(Point3D.Z.mult(-1))), square / 2.);
-            //System.out.printf("%s", curveInitial.toString());
-
-            //curveInitial = new Circle(new Axe(Point3D.Z.plus(Point3D.n(pix.getColumns()/2,
-            //        pix.getLines()/2, 0)), Point3D.Z.mult(-1)), (imgX2-imgX1)/3.*2);
-
-            inPix.paintAll(new double[]{0, 0, 0});
-            inPix.fillIn(curveInitial, new ColorTexture(Color.WHITE), new ColorTexture(Color.RED));
-            outPix.paintAll(new double[]{1, 1, 1});
-            outPix.fillIn(curveInitial, new ColorTexture(Color.BLACK), new ColorTexture(Color.RED));
-
-            curvePoints = approx();
-
-            curvePoints.getClosed().setElem(false);
-            //double[][] distances = distances();
-            //inPix.paintAll(new double[]{0, 0, 0});
-            //outPix.paintAll(new double[]{1, 1, 1});
-            inPix.fillIn(curvePoints, new ColorTexture(Color.WHITE), new ColorTexture(Color.WHITE));
-            outPix.fillIn(curvePoints, new ColorTexture(Color.BLACK), new ColorTexture(Color.BLACK));
-
-            double e = E();
-            //curveResult = modify();
-
-            PixM p = new PixM(pix.getColumns(), pix.getLines());
-
-            curvePoints.setIncrU(1. / maxRes / curvePoints.getCoefficients().data1d.size());
-
-            System.out.println("Courbe 4/5");
-            p.plotCurve(curvePoints, new ColorTexture(Color.WHITE));
-            System.out.println("Courbe 5/5");
-            p.plotCurve(circle, new ColorTexture(Color.BLUE));
-            for (Point3D c : curvePoints.getCoefficients().getData1d()) {
-                Rectangle rectangle = new Rectangle(c.getX() - 3, c.getY() - 3, 6, 6);
-                rectangle.setIncrU(0.1);
-            }
-
-            PixM normalize = p.normalize(0.0, 1.0, 0.0, 1.0);
-
-            // E = Sout + Sin + Scourbe :
-            // Convergence vers ?
-            // Changer l1,l2,l3
-            // Convergence de courbe . Modification de la courbe.
-            //normalize.plotCurve(courbeParametriquePolynomialeBezier, Color.GREEN);
-            //normalize.plotCurve(curvePoints, Color.BLUE);
-
-            //normalize.fillIn(courbeParametriquePolynomialeBezier, Color.BLACK, Color.WHITE);
-
-            System.out.printf("curveResult  %d\n", curveResult.getCoefficients().getData1d().size());
-            System.out.printf("curveInitial %d\n", ((CourbeParametriquePolynomialeBezier) curveInitial)
-                    .getCoefficients().getData1d().size());
-            System.out.printf("curvePoints  %d\n", curvePoints.getCoefficients().getData1d().size());
-            System.out.printf("Energy       %f\n", e);
+        curveInitial = new CourbeN11();
 
 
-            System.out.println(curvePoints);
+        int imgX1;
+        int imgY1;
+        int imgX2;
+        int imgY2;
+        int moy = (pix.getColumns() + pix.getLines()) / 2;
+        int square;
+        if (pix.getColumns() > pix.getLines()) {
+            square = pix.getLines();
+            imgX1 = pix.getColumns() / 2 - square / 2;
+            imgY1 = 0;
+            imgX2 = pix.getColumns() / 2 + square / 2;
+            imgY2 = pix.getLines() - 1;
+        } else {
+            square = pix.getColumns();
+            imgX1 = 0;
+            imgY1 = pix.getLines() / 2 - square / 2;
+            imgX2 = pix.getColumns() - 1;
+            imgY2 = pix.getLines() / 2 + square / 2;
+        }
 
-            BufferedImage image = normalize.getImage();
+        int N = 12;
+        for (int i = 0; i < N; i++) {
+            curveInitial.getCoefficients().getData1d().add(
+                    new Point3D(pix.getColumns() / 2
+                            + square / 2. * Math.cos(i * 2 * Math.PI / N),
+                            pix.getLines() / 2
+                                    + square / 2. * Math.sin(i * 2 * Math.PI / N),
+                            0.0));
+        }
+        Point3D center = new Point3D(pix.getColumns() / 2., pix.getLines() / 2., 0.0);
+        Circle circle = new Circle(new Axe(center.plus(Point3D.Z), center.plus(Point3D.Z.mult(-1))), square / 2.);
+        //System.out.printf("%s", curveInitial.toString());
+
+        //curveInitial = new Circle(new Axe(Point3D.Z.plus(Point3D.n(pix.getColumns()/2,
+        //        pix.getLines()/2, 0)), Point3D.Z.mult(-1)), (imgX2-imgX1)/3.*2);
+
+        inPix.paintAll(new double[]{0, 0, 0});
+        inPix.fillIn(curveInitial, new ColorTexture(Color.WHITE), new ColorTexture(Color.RED));
+        outPix.paintAll(new double[]{1, 1, 1});
+        outPix.fillIn(curveInitial, new ColorTexture(Color.BLACK), new ColorTexture(Color.RED));
+
+        curvePoints = approx();
+
+        curvePoints.getClosed().setElem(false);
+        //double[][] distances = distances();
+        //inPix.paintAll(new double[]{0, 0, 0});
+        //outPix.paintAll(new double[]{1, 1, 1});
+        inPix.fillIn(curvePoints, new ColorTexture(Color.WHITE), new ColorTexture(Color.WHITE));
+        outPix.fillIn(curvePoints, new ColorTexture(Color.BLACK), new ColorTexture(Color.BLACK));
+
+        double e = E();
+        //curveResult = modify();
+
+        PixM p = new PixM(pix.getColumns(), pix.getLines());
+
+        curvePoints.setIncrU(1. / maxRes / curvePoints.getCoefficients().data1d.size());
+
+        System.out.println("Courbe 4/5");
+        p.plotCurve(curvePoints, new ColorTexture(Color.WHITE));
+        System.out.println("Courbe 5/5");
+        p.plotCurve(circle, new ColorTexture(Color.BLUE));
+        for (Point3D c : curvePoints.getCoefficients().getData1d()) {
+            Rectangle rectangle = new Rectangle(c.getX() - 3, c.getY() - 3, 6, 6);
+            rectangle.setIncrU(0.1);
+        }
+
+        PixM normalize = p.normalize(0.0, 1.0, 0.0, 1.0);
+
+        // E = Sout + Sin + Scourbe :
+        // Convergence vers ?
+        // Changer l1,l2,l3
+        // Convergence de courbe . Modification de la courbe.
+        //normalize.plotCurve(courbeParametriquePolynomialeBezier, Color.GREEN);
+        //normalize.plotCurve(curvePoints, Color.BLUE);
+
+        //normalize.fillIn(courbeParametriquePolynomialeBezier, Color.BLACK, Color.WHITE);
+
+        System.out.printf("curveResult  %d\n", curveResult.getCoefficients().getData1d().size());
+        System.out.printf("curveInitial %d\n", ((CourbeParametriquePolynomialeBezier) curveInitial)
+                .getCoefficients().getData1d().size());
+        System.out.printf("curvePoints  %d\n", curvePoints.getCoefficients().getData1d().size());
+        System.out.printf("Energy       %f\n", e);
+
+
+        System.out.println(curvePoints);
+
+        BufferedImage image = normalize.getImage();
 //
 //            Graphics graphics = image.getGraphics();
 //
@@ -349,20 +348,16 @@ public class CurveFitting extends ProcessFile {
 //            graphics.drawArc(image.getWidth() / 2 - square / 2, image.getHeight() / 2 - square / 2,
 //                    square, square, 0, 360);
 
-            String absolutePath = out.getAbsolutePath();
-            absolutePath = absolutePath.substring(0, absolutePath.length() - 4);
-            ImageIO.write(image, "jpg", new File(absolutePath + ".jpg"));
-            ImageIO.write(outPix.normalize(0.0, 1.0, 0., 1.).getImage(), "jpg", new File(
-                    absolutePath + "-outPixels.jpg"));
-            ImageIO.write(inPix.normalize(0.0, 1.0, 0., 1.).getImage(), "jpg", new File(
-                    absolutePath + "-inPixels.jpg"));
+        String absolutePath = out.getAbsolutePath();
+        absolutePath = absolutePath.substring(0, absolutePath.length() - 4);
+        ImageIO.write(image, "jpg", new File(absolutePath + ".jpg"));
+        ImageIO.write(outPix.normalize(0.0, 1.0, 0., 1.).getImage(), "jpg", new File(
+                absolutePath + "-outPixels.jpg"));
+        ImageIO.write(inPix.normalize(0.0, 1.0, 0., 1.).getImage(), "jpg", new File(
+                absolutePath + "-inPixels.jpg"));
 
-            return true;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        return true;
 
-        return false;
     }
 
     private CourbeParametriquePolynomialeBezier modify() {

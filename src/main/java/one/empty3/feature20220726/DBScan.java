@@ -20,7 +20,7 @@
 
 package one.empty3.feature20220726;
 
-import android.graphics.Color;
+import java.awt.Color;
 
 import javaAnd.awt.image.imageio.ImageIO;
 import one.empty3.feature20220726.kmeans.MakeDataset;
@@ -135,15 +135,14 @@ public class DBScan extends ProcessFile {
                 Color colorCluster = (Color) Colors.random();
                 for (int i = 0; i < cluster.getPoints().size(); i++) {
                     DataPoint centroid = cluster.getPoints().get(i);
-                    p.setValues(centroid.getX(), centroid.getY(), colorCluster.red(),
-                            colorCluster.green(), colorCluster.blue());
+                    p.setValues(centroid.getX(), centroid.getY(), colorCluster.getRed(),
+                            colorCluster.getGreen(), colorCluster.getBlue());
                 }
             }
             ImageIO.write(p.getImage(), "jpg", out);
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        } catch (Exception ex) {}
+
         return true;
     }
 

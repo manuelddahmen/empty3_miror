@@ -184,9 +184,7 @@ class WindowC extends JFrame implements GLEventListener {
         
         try (Stream<String> stream = Files.lines(Paths.get(filename))) {
             stream.forEach(x -> lines.add(x  + "\n"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        
         
         // CONVERT VECTOR TO ARRAY
         Object[] objArray = lines.toArray();

@@ -73,8 +73,6 @@ public class Turtle3D_4Test extends TestCaseExtended {
             java.io.File imageFile = getUniqueFilenameForProduction("testResults", getClass().getCanonicalName() + "___test1", "jpg");
             ImageIO.write(z.image(), "jpg", imageFile);
             Logger.getAnonymousLogger().log(Level.INFO, imageFile + " written");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        
     }
 }

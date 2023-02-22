@@ -145,56 +145,52 @@ public class Histogram {
 
     public static void testCircleSelect(BufferedImage file, File directory, int levels, double min, double radiusIncr) {
         for (int i = 0; i < levels; i++) {
-            try {
-                BufferedImage img = file;
-                BufferedImage img2 = new javaAnd.awt.image.BufferedImage(img.getWidth(), img.getHeight(), javaAnd.awt.image.BufferedImage.TYPE_INT_RGB);
-                BufferedImage img3 = new javaAnd.awt.image.BufferedImage(img.getWidth(), img.getHeight(), javaAnd.awt.image.BufferedImage.TYPE_INT_RGB);
-                Histogram histogram = new Histogram(new PixM(img), levels, min, radiusIncr, 0.1);
-                int finalI = i;
-                List<Circle> pointsOfInterest = histogram.getPointsOfInterest(0.1);
-                pointsOfInterest.stream().forEach(circle -> {
-                    if (circle.i >= min /*<histogram.diffLevel* finalI*/) {
-                        img.drawOval((int) (circle.x - circle.r), (int) (circle.y - circle.r), (int) (circle.r * 2), (int) (circle.r * 2));
-                        android.graphics.Color color = Color.color((float) circle.i, 0f, (float) (circle.i / circle.r));
-                        img3.drawOval((int) (circle.x - circle.r), (int) (circle.y - circle.r), (int) (circle.r * 2), (int) (circle.r * 2));
-                        img3.setRGB((int) (circle.x), (int) (circle.y), color.toArgb());
-                    }
-                });
-                pointsOfInterest.sort(new Comparator<Circle>() {
-                    @Override
-                    public int compare(Circle o1, Circle o2) {
-                        double v = o1.y - o1.y;
-                        if (v < 0)
+            BufferedImage img = file;
+            BufferedImage img2 = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB);
+            BufferedImage img3 = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB);
+            Histogram histogram = new Histogram(new PixM(img), levels, min, radiusIncr, 0.1);
+            int finalI = i;
+            List<Circle> pointsOfInterest = histogram.getPointsOfInterest(0.1);
+            pointsOfInterest.stream().forEach(circle -> {
+                if (circle.i >= min /*<histogram.diffLevel* finalI*/) {
+                    img.drawOval((int) (circle.x - circle.r), (int) (circle.y - circle.r), (int) (circle.r * 2), (int) (circle.r * 2));
+                    Color color = new Color((float) circle.i, 0f, (float) (circle.i / circle.r));
+                    img3.drawOval((int) (circle.x - circle.r), (int) (circle.y - circle.r), (int) (circle.r * 2), (int) (circle.r * 2));
+                    img3.setRGB((int) (circle.x), (int) (circle.y), color.getRGB());
+                }
+            });
+            pointsOfInterest.sort(new Comparator<Circle>() {
+                @Override
+                public int compare(Circle o1, Circle o2) {
+                    double v = o1.y - o1.y;
+                    if (v < 0)
+                        return -1;
+                    if (v > 0)
+                        return 1;
+                    if (v == 0) {
+                        double v1 = o1.x - o1.x;
+                        if (v1 < 0)
                             return -1;
-                        if (v > 0)
+                        if (v1 > 0)
                             return 1;
-                        if (v == 0) {
-                            double v1 = o1.x - o1.x;
-                            if (v1 < 0)
-                                return -1;
-                            if (v1 > 0)
-                                return 1;
-                            if (v1 == 0)
-                                return 0;
-                        }
-                        return 0;
+                        if (v1 == 0)
+                            return 0;
                     }
-                });
+                    return 0;
+                }
+            });
 
-                File fileToWrite = new File(directory.getAbsolutePath()
-                        + "level" + finalI + ".jpg");
-                File fileToWrite2 = new File(directory.getAbsolutePath()
-                        + "level" + finalI + "_NEW.jpg");
-                File fileToWrite3 = new File(directory.getAbsolutePath()
-                        + "level" + finalI + "_NEW_RGB.jpg");
-                fileToWrite.mkdirs();
-                ImageIO.write(img, "JPEG", fileToWrite);
-                ImageIO.write(img, "JPEG", fileToWrite2);
-                ImageIO.write(img, "JPEG", fileToWrite3);
+            File fileToWrite = new File(directory.getAbsolutePath()
+                    + "level" + finalI + ".jpg");
+            File fileToWrite2 = new File(directory.getAbsolutePath()
+                    + "level" + finalI + "_NEW.jpg");
+            File fileToWrite3 = new File(directory.getAbsolutePath()
+                    + "level" + finalI + "_NEW_RGB.jpg");
+            fileToWrite.mkdirs();
+            ImageIO.write(img, "JPEG", fileToWrite);
+            ImageIO.write(img, "JPEG", fileToWrite2);
+            ImageIO.write(img, "JPEG", fileToWrite3);
 
-            } catch (IOException exception) {
-                exception.printStackTrace();
-            }
         }
     }
 

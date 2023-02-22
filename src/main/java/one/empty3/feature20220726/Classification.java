@@ -31,6 +31,7 @@ import javaAnd.awt.image.BufferedImage;
 import javaAnd.awt.image.imageio.ImageIO;
 import one.empty3.io.ProcessFile;
 import one.empty3.library.Lumiere;
+import one.empty3.library.core.lighting.Colors;
 
 public class Classification extends ProcessFile {
     Random random = new Random();
@@ -47,9 +48,8 @@ public class Classification extends ProcessFile {
             tempFile = File.createTempFile("effectClassification-", ".jpg");
             Lines7luckyLinesOutline lines7luckyLinesOutline = new Lines7luckyLinesOutline();
             lines7luckyLinesOutline.process(in, tempFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        } catch (Exception ex) {}
+
         //!!! Border effect
         in = tempFile;
         if (in == null) {
@@ -67,10 +67,10 @@ public class Classification extends ProcessFile {
         selectPointColorMassAglo = PixM.getPixM(read, maxRes);
         imageOut = ImageIO.read(in);
         SelectPointColorMassAglo selectPointColorMassAglo1 = new SelectPointColorMassAglo(read);
-        int color = Color.WHITE;
+        int color = Color.WHITE.getRGB();
         for (int i = 0; i < imageOut.getWidth(); i += 1)
             for (int j = 0; j < imageOut.getHeight(); j += 1) {
-                selectPointColorMassAglo1.setTmpColor(Color.random());
+                selectPointColorMassAglo1.setTmpColor(Colors.random());
                 double v = selectPointColorMassAglo1.averageCountMeanOf(i, j, SIZE, SIZE, threshold);
                 if (v > ratio) {
                     imageOut.setRGB(i, j, color);/*selectPointColorMassAglo.getChosenColor().getRGB()*/
@@ -83,11 +83,7 @@ public class Classification extends ProcessFile {
                 }
             }
 
-        try {
-            ImageIO.write(imageOut, "jpg", out);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        ImageIO.write(imageOut, "jpg", out);
         return true;
     }
 

@@ -47,9 +47,8 @@ public class BrowseScene {
     public void encode(Object r) throws IOException {
         try {
             write(r);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        } catch (Exception ex) {}
+
         if(r instanceof Representable) {
             ((Representable)r).declarations().forEach(new BiConsumer<String, Object>() {
                 @Override

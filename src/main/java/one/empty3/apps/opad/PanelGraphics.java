@@ -68,9 +68,7 @@ public class PanelGraphics extends JDialog {
         ArrayList<Player> localPlayers = new ArrayList();
         try {
             localPlayers = Game.getLocalPlayers();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        
         ArrayList<String> playersNames = new ArrayList<String>();
         for (Player localPlayer : localPlayers) {
             playersNames.add(localPlayer.getName());
@@ -100,6 +98,7 @@ public class PanelGraphics extends JDialog {
                 }
             };
         });
+        } catch (Exception ex) {}
 
     }
 
@@ -289,9 +288,8 @@ public class PanelGraphics extends JDialog {
         Player byName = null;
         try {
             byName = Player.getByName(jComboBoxNom.getSelectedItem().toString());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        } catch (Exception ex) {}
+
 
         Game game = new Game();
 

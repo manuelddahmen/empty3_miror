@@ -147,7 +147,7 @@ public class HighlightFeatures extends ProcessFile {
     @Override
     public boolean process(File in, File out) {
         BufferedImage read = ImageIO.read(in);
-        PixM pixM = PixM.getPixM(read.bufferedImage);
+        PixM pixM = PixM.getPixM(read);
         File stackItem = getStackItem(1);
         PixM original = new PixM(ImageIO.read(stackItem));
         int cadre = (int) Math.min((pixM.getColumns() + pixM.getLines()) / 2., 10.);
@@ -162,12 +162,7 @@ public class HighlightFeatures extends ProcessFile {
                         }
                 }
             }
-        try {
-            ImageIO.write(original.normalize(0., 1., 0., 1.).getImage(), "jpg", out);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
+        ImageIO.write(original.normalize(0., 1., 0., 1.).getImage(), "jpg", out);
 
         return true;
     }

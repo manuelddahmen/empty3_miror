@@ -160,9 +160,8 @@ public class Hist4Contour2 extends ProcessFile {
             ImageIO.write(outP.getImage(), "jpg", out);
             //ImageIO.write(outP0.normalize(0, 1).getImage(), "jpg", out);
             return true;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
+        } catch (Exception ex) {}
 
         return false;
 

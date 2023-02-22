@@ -55,9 +55,7 @@ public class Bras extends TestObjetSub {
             textureDefault = new TextureImg(
                     new ECBufferedImage(
                             ImageIO.read(new File("samples/img/herbe.jpg"))));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        
         ArrayList<Bille> allPoints = new ArrayList<>();
         for (int i = 0; i < nbrLines; i++) {
             PolyLine polyLine = new PolyLine();

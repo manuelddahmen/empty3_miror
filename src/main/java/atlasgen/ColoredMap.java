@@ -43,8 +43,7 @@ public class ColoredMap {
         csvReader.process();
         try {
             ImageIO.write(pixeler.getImage(), "jpg", Seriald.newOutputFile("ColoredMap"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        } catch (Exception ex) {}
+
     }
 }

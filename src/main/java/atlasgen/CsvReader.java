@@ -97,9 +97,9 @@ public class CsvReader {
                 }
 
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        } catch(IOException ex) {
+        ex.printStackTrace();
+            }
 
 
     }

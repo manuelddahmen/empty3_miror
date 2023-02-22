@@ -358,9 +358,8 @@ public class CurveFitting extends ProcessFile {
                     absolutePath + "-inPixels.jpg"));
 
             return true;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        } catch (Exception ex) {}
+
 
         return false;
     }

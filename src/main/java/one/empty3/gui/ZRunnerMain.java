@@ -181,18 +181,16 @@ public class ZRunnerMain extends Thread implements PropertyChangeListener {
         graphics.setColor(Color.GREEN);
         try {
             graphics.drawImage(ImageIO.read(new File("resources/img/RENDEREDOK.PNG")), 0, 0, 50, 50, null);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        } catch (Exception ex) {}
+
     }
     private void drawFailed() {
         Graphics graphics = updateViewMain.getGraphics();
         graphics.setColor(Color.RED);
         try {
             graphics.drawImage(ImageIO.read(new File("resources/img/FAILED.PNG")), 0, 0, 50, 50, null);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        } catch (Exception ex) {}
+
     }
 
     private void addRepere(Scene scene1) {

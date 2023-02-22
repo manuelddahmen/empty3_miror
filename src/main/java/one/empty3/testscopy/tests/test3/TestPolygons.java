@@ -68,9 +68,8 @@ public class TestPolygons extends TestObjetSub {
             texture = new TextureImg(ECBufferedImage.getFromFile(
                     new File("resources/img/2020-10-19 13.24.58.jpg")));
             texture = new TextureMov("resources/mov/VID_20200416_201314.mp4");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        } catch (Exception ex) {}
+
         s.texture(texture);
     }
 

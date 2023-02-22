@@ -21,7 +21,7 @@
 //        BufferedImage img = new javaAnd.awt.image.BufferedImage(imgWidth, imgHeight, javaAnd.awt.image.BufferedImage.TYPE_INT_ARGB);
 //        for (int i = 0; i < imgWidth; i++) {
 //            for (int j = 0; j < imgHeight; j++) {
-//                img.setRGB(i, j, Color.color(255, 255, 255, imgArray[i][j]).getRGB());
+//                img.setRGB(i, j, new Color(255, 255, 255, imgArray[i][j]).getRGB());
 //            }
 //        }
 //        ImageIO.write(img, "png", outFile);
@@ -112,7 +112,7 @@
 //        for (int i = 0; i < imgWidth; i++) {
 //            for (int j = 0; j < imgHeight; j++) {
 //                //maps every pixel to a grayscale value between 0 and 255 from between 0 and the max value in sobelTotal
-//                int rgb = Color.color((int) map(sobelTotal[i][j], 0, max, 0, 255),
+//                int rgb = new Color((int) map(sobelTotal[i][j], 0, max, 0, 255),
 //                        (int) map(sobelTotal[i][j], 0, max, 0, 255),
 //                        (int) map(sobelTotal[i][j], 0, max, 0, 255), 255).getRGB();
 //                total.setRGB(i, j, rgb);

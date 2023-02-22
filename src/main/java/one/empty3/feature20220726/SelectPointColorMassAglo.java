@@ -88,11 +88,7 @@ public class SelectPointColorMassAglo extends FilterPixM {
         return averageCountMeanOf((int) x, (int) y, 10, 10, 0.2);
     }
 
-    public android.graphics.Color getTmpColor() {
-        return Color.color((tmpColor[0]), (tmpColor[1]), (tmpColor[2]));
-    }
-
-    public void setTmpColor(android.graphics.Color tmpColor) {
-        this.tmpColor = new double[]{tmpColor.red(), tmpColor.green(), tmpColor.blue()};
+    public void setTmpColor(Color tmpColor) {
+        this.tmpColor = new double[]{tmpColor.getRed(), tmpColor.getGreen(), tmpColor.getBlue()};
     }
 }

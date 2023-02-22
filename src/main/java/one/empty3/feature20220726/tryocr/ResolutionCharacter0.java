@@ -149,7 +149,7 @@ public class ResolutionCharacter0 implements Runnable {
         for (int i = 0; i < input.getColumns(); i++)
             for (int j = 0; j < input.getLines(); j++) {
                 if (Arrays.equals(input.getValues(i, j), (Lumiere.getRgb(traceColor)))) {
-                    output.setValues(i, j, traceColor.red(), traceColor.green(), traceColor.blue());
+                    output.setValues(i, j, traceColor.getRed(), traceColor.getGreen(), traceColor.getBlue());
 
                 } else {
                     int neighbors = 0;
@@ -161,7 +161,7 @@ public class ResolutionCharacter0 implements Runnable {
                             for (int jj = 0; jj < n && cont; jj++) {
                                 double[] values = input.getValues(i + ii, j + jj);
                                 if (Arrays.equals(input.getValues(i, j), cl)) {
-                                    output.setValues(i, j, 1f * traceColor.red() / n, 1f * traceColor.green() / n, 1f * traceColor.blue() / n);
+                                    output.setValues(i, j, 1f * traceColor.getRed() / n, 1f * traceColor.getGreen() / n, 1f * traceColor.getBlue() / n);
                                     cont = true;
                                 }
                             }
@@ -613,7 +613,7 @@ public class ResolutionCharacter0 implements Runnable {
         State previousState;
         PixM input;
         PixM backgroundImage;
-        int textColor = Color.BLACK;
+        int textColor = Color.BLACK.getRGB();
         int dim;
 
         public State(PixM image, PixM backgroundImage, int i, int j, int step) {

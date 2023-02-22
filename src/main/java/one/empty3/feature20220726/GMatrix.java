@@ -20,17 +20,12 @@
 
 package one.empty3.feature20220726;
 
-import android.os.Build;
-
-import androidx.annotation.RequiresApi;
-
 import java.util.PrimitiveIterator;
 import java.util.Random;
 import java.util.Vector;
 
 import one.empty3.library.Point3D;
 
-@RequiresApi(api = Build.VERSION_CODES.N)
 public class GMatrix {
     public static PrimitiveIterator.OfDouble r = new Random().doubles().iterator();
     public static final Double noValue = r.next();
