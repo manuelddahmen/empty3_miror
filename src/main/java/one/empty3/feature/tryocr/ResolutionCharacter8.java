@@ -403,10 +403,15 @@ public class ResolutionCharacter8 implements Runnable {
     }
 
     class Trait {
+        public enum Traits {Up, UpUp, UpUpLeft, UpUpRight, DownDownRight, UpUpLeft, UpUpLeft, UpUpCenter, DownDownLeft
+        DownDownLeft, DownDownCenter, Left, Right, Center};
+
+        public enum TraitsType { Line, Round};
+
         public static final int length_line_trait_full   = 1;
         public static final int length_line_trait_semi   = 2;
         public static final int length_line_trait_single = 4;
-        public static final int curve = 128;
+        public static final int curve = 128*32;
         public static final int place_top   = 8;
         public static final int place_base  = 16;
         public static final int place_right = 32;
@@ -417,32 +422,75 @@ public class ResolutionCharacter8 implements Runnable {
         public static final int orientation_ur_bl = 128*8
         public static final int place_middle = 128*16;
 
-        private int value;
+        private Traits valueFrom;
+        private Traits valueTo;
+        private TraitsShape curveFrom;
+        private TraitsShape curveTo;
 
-        new Trait(int... types) {
-            value = 0;
-            for (int t : types) {
-                value += t;
-            }
-        }
-        public boolean hasType(int t) {
-            return t&value>0;
-        }
 
-        public int getValue() {
-            return value;
+        public Trait(Traits valueFrom, Traits valueTo, TraitsShape curveFrom, TraitsShape curveTo) {
+            this.valueFrom = valueFrom;
+            this.valueTo = valueTo;
+            this.curveFrom = curveFrom;
+            this.curveTo = curveTo;
         }
 
-        public void setValue(int value) {
-            this.value = value;
+        public Traits getValueFrom() {
+            return valueFrom;
+        }
+
+        public void setValueFrom(Traits valueFrom) {
+            this.valueFrom = valueFrom;
+        }
+
+        public Traits getValueTo() {
+            return valueTo;
+        }
+
+        public void setValueTo(Traits valueTo) {
+            this.valueTo = valueTo;
+        }
+
+        public TraitsShape getCurveFrom() {
+            return curveFrom;
+        }
+
+        public void setCurveFrom(TraitsShape curveFrom) {
+            this.curveFrom = curveFrom;
+        }
+
+        public TraitsShape getCurveTo() {
+            return curveTo;
+        }
+
+        public void setCurveTo(TraitsShape curveTo) {
+            this.curveTo = curveTo;
         }
     }
     class Letter {
         char x;
         List<Trait> traits = new ArrayList<Trait>();
+        public Letter(Trait... traits) {
+            for (Trait t:
+                 traits) {
+                this.traits.add(t);
+            }
+        }
+
+        public List<Trait> getTraits() {
+            return traits;
+        }
+
+        public void setTraits(List<Trait> traits) {
+            this.traits = traits;
+        }
     }
 
     HashMap<Character, Letter> letters = new HashMap<Character, Letter>();
+
+    {
+        //letters.put('a', new Letter(new Trait(Trait.)))
+    }
     /***
      *  Recherche par traits.
      *  Traits type = droit, courbe
