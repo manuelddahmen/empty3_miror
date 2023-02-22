@@ -36,21 +36,20 @@ public class TestHumainMarche2 extends TestObjetSub {
         setMaxFrames(180);
         z.setDisplayType(ZBufferImpl.DISPLAY_ALL);
         scene().lumieres().add(new LumierePonctuelle(new Point3D(10., 10., 2.), Color.BLUE));
+        c = new Camera(new Point3D(0.0, 10.0, 30.0), Point3D.O0, Point3D.Y);
+        c.calculerMatrice(Point3D.Y);
         humainMarche = new HumainMarche();
         scene().add(humainMarche);
-        humainMarche.setT(frame()/25.);
-        humainMarche.init();
     }
 
     public void finit() {
         z().idzpp();
         scene().cameras().clear();
-        Camera c = new Camera(Point3D.Z.mult(-80.), Point3D.O0, Point3D.Y);
         scene().cameras().add(c);
         c.declareProperties();
         scene().cameraActive(c);
         humainMarche.setT(frame()/25.);
-
+        humainMarche.init();
     }
 
     public static void main(String[] args) {
