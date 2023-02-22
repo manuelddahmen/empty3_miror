@@ -411,6 +411,11 @@ public class ResolutionCharacter8 implements Runnable {
         public static final int place_base  = 16;
         public static final int place_right = 32;
         public static final int place_left  = 64;
+        public static final int orientation_h = 128*1
+        public static final int orientation_v = 128*2
+        public static final int orientation_ul_br = 128*4
+        public static final int orientation_ur_bl = 128*8
+        public static final int place_middle = 128*16;
 
         private int value;
 
