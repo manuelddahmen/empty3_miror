@@ -133,9 +133,9 @@ public class ResolutionCharacter7 implements Runnable {
                         String name = file.getName();
 
 
-                        Logger.getAnonymousLogger().log(Level.INFO, "ResolutionCharacter6 : " + name);
+                        Logger.getAnonymousLogger().log(Level.INFO, "ResolutionCharacter7 : " + name);
 
-                        ResolutionCharacter6 resolutionCharacter6 = new ResolutionCharacter6(read, name, dirOut);
+                        ResolutionCharacter7 resolutionCharacter6 = new ResolutionCharacter7(read, name, dirOut);
                         dirOutDist = new File(dirOut.getAbsolutePath() + File.separator + name
                                 + "_images-distances.jpg");
                         dirOutGradient2 = new File(dirOut.getAbsolutePath() + File.separator + name

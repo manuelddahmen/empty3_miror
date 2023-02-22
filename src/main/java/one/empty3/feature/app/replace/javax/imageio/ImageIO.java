@@ -41,6 +41,10 @@ public class ImageIO {
     }
 
     public static boolean write(BufferedImage imageOut, String jpg, File out) throws IOException {
+        if(out.getAbsolutePath().endsWith("png"))
+            jpg = "png";
+        if(out.getAbsolutePath().endsWith("jpg"))
+            jpg = "jpg";
         FileOutputStream fileOutputStream = new FileOutputStream(out);
         // ???
         javax.imageio.ImageIO.write(imageOut, jpg, out);
