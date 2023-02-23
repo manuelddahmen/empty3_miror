@@ -550,7 +550,7 @@ public class Point3D extends Representable {
         for (int i = 0; i < 3; i++) {
             if (!(coordArr[i] - (point3D.get(i)) < 1E-10))
                 return false;
-            if(coordArr[i].equals(Double.NaN)|| coordArr[i].equals(Double.NaN)) {
+            if(coordArr[i].equals(Double.NaN)|| point3D.coordArr[i].equals(Double.NaN)) {
                 return false;
             }
         }

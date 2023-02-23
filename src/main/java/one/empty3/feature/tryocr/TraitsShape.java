@@ -19,4 +19,4 @@
 
 package one.empty3.feature.tryocr;
 
-public enum TraitsShape {Line, Round}
+public enum TraitsShape {Line, Round, Point, Corner2, Corner3}
