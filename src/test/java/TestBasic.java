@@ -17,7 +17,9 @@
 // *    limitations under the License.
 // */
 //
-//package one.empty3.test;
+//import static org.junit.jupiter.api.Assertions.assertTrue;
+//
+//import org.junit.jupiter.api.*;
 //
 //import one.empty3.growth.LSystem;
 //import one.empty3.growth.NotWellFormattedSystem;

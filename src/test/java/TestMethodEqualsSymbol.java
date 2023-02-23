@@ -17,8 +17,6 @@
  *    limitations under the License.
  */
 
-package one.empty3.test;
-
 import junit.framework.TestCase;
 import one.empty3.growth.Symbol;
 import one.empty3.growth.SymbolSequence;

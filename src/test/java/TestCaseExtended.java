@@ -17,7 +17,9 @@
 // *    limitations under the License.
 // */
 //
-//package one.empty3.test;
+//import static org.junit.jupiter.api.Assertions.assertTrue;
+//
+//import org.junit.jupiter.api.*;
 //
 //import one.empty3.library.Point3D;
 //import one.empty3.library.ZBuffer;
@@ -31,7 +33,6 @@
 //import java.util.Properties;
 //import java.util.logging.Level;
 //import java.util.logging.Logger;
-//
 //public class TestCaseExtended extends TestCase {
 //    private static boolean isInitialized = false;
 //    private static TestCaseExtended caseExtended;
@@ -49,6 +50,7 @@
 //        }
 //    }
 //
+//    @Test
 //    protected void assertEqualsNaNPoint3D(Point3D x) {
 //        TestCase.assertEquals(x.get(0) + x.get(1) + x.get(2), Double.NaN);
 //    }

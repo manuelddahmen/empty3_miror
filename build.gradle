@@ -69,9 +69,9 @@ tasks.register('BoardGameGui', JavaExec) {
     mainClass = "one.empty3.apps.newboardgames.WindowDrawing"
     args "arg1", "arg2"
 }
-tasks.register('ResolutionCharacter7', JavaExec) {
+tasks.register('ResolutionCharacter8', JavaExec) {
     classpath sourceSets.main.runtimeClasspath
-    mainClass = "one.empty3.feature.tryocr.ResolutionCharacter7"
+    mainClass8= "one.empty3.feature.tryocr.ResolutionCharacter8"
     args "arg1", "arg2"
 }
 tasks.register('RunEffect from sets directory', JavaExec) {
@@ -124,8 +124,11 @@ targetCompatibility = JavaVersion.VERSION_11
 
 
 dependencies {
-    implementation 'junit:junit:3.8.2'
+    implementation 'org.junit.jupiter:junit-jupiter:5.8.1'
+    implementation 'junit:junit:4.13.1'
     testImplementation project(path: ':')
+    testImplementation 'junit:junit:4.13.1'
+    testImplementation 'junit:junit:3.8.2'
     /*implementation("com.metsci.ext.org.jogamp.gluegen:gluegen-rt:v2.4.0-rc4")
     implementation("com.metsci.ext.org.jogamp.jogl:jogl-all:v2.4.0-rc4")
     implementation "com.metsci.ext.org.jogamp.gluegen:gluegen-rt:2.4.0-rc-20200202:natives-windows-amd64"
@@ -152,25 +155,23 @@ dependencies {
     implementation('xerces:xercesImpl:2.12.2')
     implementation('com.formdev:flatlaf:2.6')
     implementation("org.jdesktop:beansbinding:1.2.1")
-    implementation("junit:junit:4.13.2")
     implementation("com.github.sarxos:webcam-capture:0.3.12")
     // https://mvnrepository.com/artifact/commons-net/commons-net
     implementation group: 'commons-net', name: 'commons-net', version: '3.9.0'
 
     implementation("org.jdom:jdom2:2.0.6.1")
     implementation("org.apache.servicemix.bundles:org.apache.servicemix.bundles.jdom:2.0.6.1_1")
-    testImplementation("junit:junit:4.13.2")
-    testImplementation('org.junit.jupiter:junit-jupiter-api:5.9.0')
-    testRuntimeOnly('org.junit.jupiter:junit-jupiter-engine:5.9.0')
     implementation 'com.jetbrains.intellij.java:java-gui-forms-rt:203.7148.30'
-    //implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+
+
+
 }
 
-test {
-    // show standard out and standard error of the test JVM(s) on the console
-    useJUnitPlatform()
-    testLogging.showStandardStreams = true
+dependencies {
+    testImplementation project(path: ':')
+    testImplementation('org.junit.jupiter:junit-jupiter:5.5.2')
 }
+
 
 tasks.register('sourceJar', Jar) {
     //archiveClassifier "sourcesJar"

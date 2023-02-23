@@ -1,7 +1,7 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="ResolutionCharacter1" type="Application" factoryName="Application" singleton="false">
+  <configuration default="false" name="ResolutionCharacter8" type="Application" factoryName="Application" singleton="false">
     <output_file path="C:\Users\manue\EmptyCanvasTest\logResolutionCharacter.log" is_save="true" />
-    <option name="MAIN_CLASS_NAME" value="one.empty3.feature.tryocr.ResolutionCharacter7" />
+    <option name="MAIN_CLASS_NAME" value="one.empty3.feature.tryocr.ResolutionCharacter8" />
     <module name="empty3-library-generic.main" />
     <option name="VM_PARAMETERS" value="-Xmx2500M" />
     <extension name="coverage">

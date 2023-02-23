@@ -17,10 +17,27 @@
  *    limitations under the License.
  */
 
-package one.empty3.library;
+package one.empty3.feature.tryocr;
 
-/*
+import java.util.ArrayList;
+import java.util.List;
 
- Vous êtes libre de :
+class Letter {
+        char x;
+        List<Trait> traits = new ArrayList<Trait>();
 
- */
+        public Letter(Trait... traits) {
+            for (Trait t :
+                    traits) {
+                this.traits.add(t);
+            }
+        }
+
+        public List<Trait> getTraits() {
+            return traits;
+        }
+
+        public void setTraits(List<Trait> traits) {
+            this.traits = traits;
+        }
+    }

@@ -44,6 +44,7 @@ import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+
 public class ResolutionCharacter8 implements Runnable {
     public static final float MIN_DIFF = 0.6f;
     public static final int X_PLUS = 0;
@@ -77,6 +78,7 @@ public class ResolutionCharacter8 implements Runnable {
     boolean[] testedRectangleBorder = new boolean[4];
     int step = 1;// Searched Characters size.
     PixM outRecompose;
+    HashMap<Character, Letter> letters = new HashMap<Character, Letter>();
     private boolean isExporting = true;
     private BufferedImage read;
     private String name;
@@ -92,6 +94,14 @@ public class ResolutionCharacter8 implements Runnable {
     private List<Rectangle2> rectangles;
     private double STEPS_COMPARE_METHOD = 0.15;
 
+    {
+        letters.put('a', new Letter(
+                new Trait(TraitsY.Up, TraitsX.Left, TraitsY.Up, TraitsX.Right,
+                        TraitsShape.Round, TraitsShape.Round),
+                new Trait(TraitsY.Up, TraitsX.Right, TraitsY.Down, TraitsX.Right,
+                TraitsShape.Round, TraitsShape.Line)));
+    }
+
 
     public ResolutionCharacter8(BufferedImage read, String name) {
         this(read, name, new File("testsResults"));
@@ -103,7 +113,6 @@ public class ResolutionCharacter8 implements Runnable {
         this.dirOut = dirOut;
         countRects = 0;
     }
-
 
     public static void main(String[] args) {
 
@@ -123,7 +132,7 @@ public class ResolutionCharacter8 implements Runnable {
             writer.writeLine(new String[]{"filename", "x", "y", "w", "h", "chars"});
 
             for (File file : Objects.requireNonNull(dir.listFiles())) {
-                if (!file.isDirectory() && file.isFile() ) {
+                if (!file.isDirectory() && file.isFile()) {
                     String extension = file.getName().toLowerCase(Locale.ROOT);
                     if (!Arrays.stream(javax.imageio.ImageIO.getReaderFileSuffixes()).noneMatch(s -> s.equals(extension)))
                         continue;
@@ -265,7 +274,7 @@ public class ResolutionCharacter8 implements Runnable {
 
         try {
             pwTxt = new PrintWriter(dirOut.getAbsolutePath() + File.separator +
-                    name +  "output.txt");
+                    name + "output.txt");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -368,27 +377,27 @@ public class ResolutionCharacter8 implements Runnable {
                     matchingRects.get(iSlides).add(rectangle2);
                     dimensionTotal.setSize(dimensionTotal.getWidth() + rectangle2.getW(), dimensionTotal.getHeight() > rectangle2.getH() ?
                             dimensionTotal.getHeight() : rectangle2.getH());
-                    maxheight = Math.max((int)dimensionTotal.getHeight(), maxheight);
+                    maxheight = Math.max((int) dimensionTotal.getHeight(), maxheight);
                 }
             }
             maxLine = Math.max(maxLine, matchingRects.get(iSlides).size());
 
         }
-        PixM pSlide = new PixM((int) dimensionTotal.getWidth(), (int) maxheight*mean);
+        PixM pSlide = new PixM((int) dimensionTotal.getWidth(), (int) maxheight * mean);
         AtomicInteger iSlides = new AtomicInteger();
         int finalMaxheight = maxheight;
         iSlides.set(0);
-        matchingRects.forEach((idx, listOfRects)  -> {
+        matchingRects.forEach((idx, listOfRects) -> {
             listOfRects.forEach((rectangle2 -> {
-                int x = (iSlides.get() % mean)* finalMaxheight;
-                int y = (iSlides.get() / mean)* finalMaxheight;
+                int x = (iSlides.get() % mean) * finalMaxheight;
+                int y = (iSlides.get() / mean) * finalMaxheight;
                 pSlide.pasteSubImage(input.copySubImage(rectangle2.getX(), rectangle2.getY(), rectangle2.getW(), rectangle2.getH()),
                         x, y, rectangle2.getW(), rectangle2.getH());
                 iSlides.getAndIncrement();
 
             }));
         });
-        height+=maxheight;
+        height += maxheight;
         try {
             ImageIO.write(pSlide.getImage(), "jpg", new File(dirOutDist + "_matchingRects_" + pSlide + ".jpg"));
         } catch (IOException e) {
@@ -402,95 +411,6 @@ public class ResolutionCharacter8 implements Runnable {
         }
     }
 
-    class Trait {
-        public enum Traits {Up, UpUp, UpUpLeft, UpUpRight, DownDownRight, UpUpLeft, UpUpLeft, UpUpCenter, DownDownLeft
-        DownDownLeft, DownDownCenter, Left, Right, Center};
-
-        public enum TraitsType { Line, Round};
-
-        public static final int length_line_trait_full   = 1;
-        public static final int length_line_trait_semi   = 2;
-        public static final int length_line_trait_single = 4;
-        public static final int curve = 128*32;
-        public static final int place_top   = 8;
-        public static final int place_base  = 16;
-        public static final int place_right = 32;
-        public static final int place_left  = 64;
-        public static final int orientation_h = 128*1
-        public static final int orientation_v = 128*2
-        public static final int orientation_ul_br = 128*4
-        public static final int orientation_ur_bl = 128*8
-        public static final int place_middle = 128*16;
-
-        private Traits valueFrom;
-        private Traits valueTo;
-        private TraitsShape curveFrom;
-        private TraitsShape curveTo;
-
-
-        public Trait(Traits valueFrom, Traits valueTo, TraitsShape curveFrom, TraitsShape curveTo) {
-            this.valueFrom = valueFrom;
-            this.valueTo = valueTo;
-            this.curveFrom = curveFrom;
-            this.curveTo = curveTo;
-        }
-
-        public Traits getValueFrom() {
-            return valueFrom;
-        }
-
-        public void setValueFrom(Traits valueFrom) {
-            this.valueFrom = valueFrom;
-        }
-
-        public Traits getValueTo() {
-            return valueTo;
-        }
-
-        public void setValueTo(Traits valueTo) {
-            this.valueTo = valueTo;
-        }
-
-        public TraitsShape getCurveFrom() {
-            return curveFrom;
-        }
-
-        public void setCurveFrom(TraitsShape curveFrom) {
-            this.curveFrom = curveFrom;
-        }
-
-        public TraitsShape getCurveTo() {
-            return curveTo;
-        }
-
-        public void setCurveTo(TraitsShape curveTo) {
-            this.curveTo = curveTo;
-        }
-    }
-    class Letter {
-        char x;
-        List<Trait> traits = new ArrayList<Trait>();
-        public Letter(Trait... traits) {
-            for (Trait t:
-                 traits) {
-                this.traits.add(t);
-            }
-        }
-
-        public List<Trait> getTraits() {
-            return traits;
-        }
-
-        public void setTraits(List<Trait> traits) {
-            this.traits = traits;
-        }
-    }
-
-    HashMap<Character, Letter> letters = new HashMap<Character, Letter>();
-
-    {
-        //letters.put('a', new Letter(new Trait(Trait.)))
-    }
     /***
      *  Recherche par traits.
      *  Traits type = droit, courbe
@@ -501,10 +421,12 @@ public class ResolutionCharacter8 implements Runnable {
      */
     private List<Character> searchByTraits(PixM candidateChar) {
         List<Character> candidateTraits = new ArrayList<>();
-        for(Letter l : letters) {
-
+        for (Character character : letters.keySet()) {
+            Letter letter = letters.get(character);
         }
+        return candidateTraits;
     }
+
     private Point3D compare(Rectangle2 rect1, Rectangle2 rect2) {
         Point3D distTotale = Point3D.O0;
 
@@ -529,6 +451,24 @@ public class ResolutionCharacter8 implements Runnable {
         return distTotale;
     }
 
+    /***
+     La condition doit s'arrêter après les points quand les bords droits
+     et bas ont augmenté de manière que le caractère cherché soit mis en
+     évidence.
+     Bord haut et gauche restent blancs (pas toujours vrai dans les polices)
+     Balai vers la droite rencontrent une chose (points noirs) puis s'arrête
+     à blanc.
+     Balai vers le bas rencontre une chose aussi (points noirs puis s'arrête
+     à blanc.
+     Peut-il y avoir une confusion en passant 2 balais (peignes) perpendiculaires ?
+     Sans doute que oui, ils n'avancent pas au même pas. Quand le blanc est rencontré
+     après le noir, il y a arrêt du balai H (par exemple) donc le balai V continue
+     jusqu'au blanc. Là le balai H a-t-il rencontré quelque chose qui annule la
+     recherche croisée ? Si le balai H est en dessous des caractères il ne rencontre
+     plus rien jusqu'à ce que le balai V ait fini.
+     @param i column
+     @param j line
+     */
     private void exec2(int i, int j) {
         if (System.currentTimeMillis() % 100 == 0)
             System.gc();
@@ -536,20 +476,6 @@ public class ResolutionCharacter8 implements Runnable {
             int w = 0;
             int h = 0;
             boolean fail = false;
-            // La condition doit s'arrêter après les points quand les bords droits
-            // et bas ont augmenté de manière que le caractère cherché soit mis en
-            // évidence.
-            // Bord haut et gauche restent blancs (pas toujours vrai dans les polices)
-            // Balai vers la droite rencontrent une chose (points noirs) puis s'arrête
-            // à blanc.
-            // Balai vers le bas rencontre une chose aussi (points noirs puis s'arrête
-            // à blanc.
-            // Peut-il y avoir une confusion en passant 2 balais (peignes) perpendiculaires ?
-            // Sans doute que oui, ils n'avancent pas au même pas. Quand le blanc est rencontré
-            // après le noir, il y a arrêt du balai H (par exemple) donc le balai V continue
-            // jusqu'au blanc. Là le balai H a-t-il rencontré quelque chose qui annule la
-            // recherche croisée ? Si le balai H est en dessous des caractères il ne rencontre
-            // plus rien jusqu'à ce que le balai V ait fini.
             int heightBlackHistory = 0;
             int widthBlackHistory = 0;
             w = charMinWidth;
@@ -654,7 +580,7 @@ public class ResolutionCharacter8 implements Runnable {
                             System.err.println();
                             Logger.getAnonymousLogger().info("Characters {" + s[0] + "} (" + i + ", " + j + ")");
                         }
-                        if(s[0].length()>0)
+                        if (s[0].length() > 0)
                             pwTxt.println(s[0]);
                         Color random = Colors.random();
                         output.plotCurve(rectangle, new TextureCol(random));
@@ -790,8 +716,6 @@ public class ResolutionCharacter8 implements Runnable {
 
     }
 
-    //columns = trimArrayZeroes(columns, idx);
-
     /***
      * OCR: combien on voit d'inversion, de changements.
      * A (0,1) (1,2)+ (2, 1) (3,2)
@@ -918,6 +842,8 @@ public class ResolutionCharacter8 implements Runnable {
         return mapCharsAlphabetLines;
     }
 
+    //columns = trimArrayZeroes(columns, idx);
+
     public List<Character> recognizeV(PixM mat, int x, int y, int w, int h) {
 
         List<Character> retained = new ArrayList<>();
@@ -936,7 +862,7 @@ public class ResolutionCharacter8 implements Runnable {
                         && current == BLANK) {
                     ref.countOnColumnI++;
                     current = CHARS;
-                } else if(current==CHARS && mat.luminance(i, j)>=MAX_BLACK_VALUE){
+                } else if (current == CHARS && mat.luminance(i, j) >= MAX_BLACK_VALUE) {
                     current = BLANK;
                 }
             }
@@ -1012,7 +938,7 @@ public class ResolutionCharacter8 implements Runnable {
                     ref.countOnColumnI++;
                     current = CHARS;
 
-                } else if(current==CHARS && mat.luminance(i, j)>=MAX_BLACK_VALUE){
+                } else if (current == CHARS && mat.luminance(i, j) >= MAX_BLACK_VALUE) {
                     current = BLANK;
                 }
             }
@@ -1058,41 +984,39 @@ public class ResolutionCharacter8 implements Runnable {
     private Integer[] trimArrayZeroes(Integer[] lines) {
         Integer[] cut = new Integer[lines.length];
         boolean firstZeros = true;
-        boolean lastZeros = true
-                ;
+        boolean lastZeros = true;
         int j = 0;
         int size = 0;
         for (int i = 0; i < lines.length && (firstZeros); i++) {
             if (lines[i] == null || lines[i] == 0) {
                 size++;
-            }else {
+            } else {
                 firstZeros = false;
             }
 
         }
 
-        if(size==lines.length)
-            return new Integer[] {0};
+        if (size == lines.length)
+            return new Integer[]{0};
 
         cut = Arrays.copyOfRange(lines, size, lines.length);
 
         size = cut.length;
 
-        for (int i = cut.length - 1; i >=0  && (lastZeros); i--) {
+        for (int i = cut.length - 1; i >= 0 && (lastZeros); i--) {
             if (cut[i] == null || cut[i] == 0) {
                 size--;
-            }else {
+            } else {
                 lastZeros = false;
             }
 
         }
 
-        if(size>0)
+        if (size > 0)
             return Arrays.copyOfRange(cut, 0, size);
         else
-            return new Integer[] {0};
+            return new Integer[]{0};
     }
-
 
     public boolean reduce(PixM input, Rectangle2 rectangle2origin, Rectangle2 render) {
         boolean hasChanged = true;
@@ -1131,6 +1055,18 @@ public class ResolutionCharacter8 implements Runnable {
         return cEchoing;
     }
 
+    public PixM derivative(PixM input) {
+        PixM output = new PixM(input.getColumns(), input.getLines());
+
+        for (int i = 0; i < input.getColumns(); i++) {
+            for (int j = 0; j < input.getLines(); j++) {
+                output.setP(i, j, output.getP(i - 1, j)
+                        .plus(output.getP(i, j - 1))
+                        .plus(input.getP(i, j)));
+            }
+        }
+        return output.normalize(0., 1.);
+    }
     class State {
         public Point3D xyz;
         public double step;
@@ -1184,19 +1120,6 @@ public class ResolutionCharacter8 implements Runnable {
 
             return copy;
         }
-    }
-
-    public PixM derivative(PixM input) {
-        PixM output = new PixM(input.getColumns(), input.getLines());
-
-        for(int i=0; i<input.getColumns(); i++) {
-            for (int j = 0; j < input.getLines(); j++) {
-                output.setP(i, j, output.getP(i-1, j)
-                        .plus(output.getP(i, j-1))
-                        .plus(input.getP(i, j)));
-            }
-        }
-        return output.normalize(0., 1.);
     }
 }
 
