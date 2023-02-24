@@ -45,7 +45,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
-public class ResolutionCharacter8 implements Runnable {
+public class OCR1 implements Runnable {
     public static final float MIN_DIFF = 0.6f;
     public static final int X_PLUS = 0;
     public static final int Y_PLUS = 1;
@@ -93,21 +93,22 @@ public class ResolutionCharacter8 implements Runnable {
     private int countRects = 0;
     private List<Rectangle2> rectangles;
     private double STEPS_COMPARE_METHOD = 0.15;
+    private int steps;
 
     {
         letters.put('a', new Letter(
                 new Trait(TraitsY.Up, TraitsX.Left, TraitsY.Up, TraitsX.Right,
                         TraitsShape.Round, TraitsShape.Round),
                 new Trait(TraitsY.Up, TraitsX.Right, TraitsY.Down, TraitsX.Right,
-                TraitsShape.Round, TraitsShape.Line)));
+                        TraitsShape.Round, TraitsShape.Line)));
     }
 
 
-    public ResolutionCharacter8(BufferedImage read, String name) {
+    public OCR1(BufferedImage read, String name) {
         this(read, name, new File("testsResults"));
     }
 
-    public ResolutionCharacter8(BufferedImage read, String name, File dirOut) {
+    public OCR1(BufferedImage read, String name, File dirOut) {
         this.read = read;
         this.name = name;
         this.dirOut = dirOut;
@@ -142,9 +143,9 @@ public class ResolutionCharacter8 implements Runnable {
                         String name = file.getName();
 
 
-                        Logger.getAnonymousLogger().log(Level.INFO, "ResolutionCharacter8 : " + name);
+                        Logger.getAnonymousLogger().log(Level.INFO, "OCR1 : " + name);
 
-                        ResolutionCharacter8 resolutionCharacter6 = new ResolutionCharacter8(read, name, dirOut);
+                        OCR1 ocr1 = new OCR1(read, name, dirOut);
                         dirOutDist = new File(dirOut.getAbsolutePath() + File.separator + name
                                 + "_images-distances.jpg");
                         dirOutGradient2 = new File(dirOut.getAbsolutePath() + File.separator + name
@@ -152,10 +153,10 @@ public class ResolutionCharacter8 implements Runnable {
                         dirOutChars = dirOut.getAbsolutePath() + File.separator + name + File.separator + "char";
                         dirOutChars2 = dirOut.getAbsolutePath() + File.separator + name + File.separator + "char2";
 
-                        System.out.printf("%s", resolutionCharacter6.getClass().getSimpleName());
+                        System.out.printf("%s", ocr1.getClass().getSimpleName());
 
 
-                        Thread thread = new Thread(resolutionCharacter6);
+                        Thread thread = new Thread(ocr1);
 
 
                         thread.start();
@@ -293,9 +294,11 @@ public class ResolutionCharacter8 implements Runnable {
 
         final ITexture texture = new TextureCol(Color.BLACK);
 
-        for (int j = 0; j < input.getLines() - step; j += 1) {
+        for (int j = 0; j < input.getLines() - step; j += step) {
             if (j % (input.getLines() / 100) == 0)
                 System.out.printf("%d %%, Image %s, Count Rects : %d\n", (int) (100.0 * j / input.getLines()), name, countRects);
+            if (System.currentTimeMillis() % 10000 == 0)
+                System.gc();
 
             for (int i = 0; i < input.getColumns() - step; i += step) {
                 exec2(i, j);
@@ -470,20 +473,21 @@ public class ResolutionCharacter8 implements Runnable {
      @param j line
      */
     private void exec2(int i, int j) {
-        if (System.currentTimeMillis() % 100 == 0)
-            System.gc();
+        steps=0;
         if (arrayDiff(input.getValues(i, j), WHITE_DOUBLES) < MIN_DIFF) {
             int w = 0;
             int h = 0;
             boolean fail = false;
             int heightBlackHistory = 0;
             int widthBlackHistory = 0;
-            w = charMinWidth;
-            h = charMinWidth;
-            while (!(heightBlackHistory == 2 && widthBlackHistory == 2
-                    && i + w < input.getColumns() && j + h < input.getLines() && h > 0 && w > 0 && w < stepMax && h < stepMax
-                    && Arrays.equals(TRUE_BOOLEANS,
-                    testedRectangleBorder = testRectIs(input, i, j, w, h, testedRectangleBorder, WHITE_DOUBLES)))) {
+            w = 1;
+            h = 1;
+            while (!(heightBlackHistory == 2 && widthBlackHistory == 2)
+                    && (i + w < input.getColumns() && j + h < input.getLines() && h > 0 && w > 0 && w < stepMax && h < stepMax)
+                    || (w >= charMinWidth && h >= charMinWidth)) {
+                addStep();
+                if(steps==10000)
+                    break;
                 int w0;
                 int h0;
                 int wbhBak;
@@ -494,15 +498,14 @@ public class ResolutionCharacter8 implements Runnable {
                 wbhBak = widthBlackHistory;
 
                 testedRectangleBorder = testRectIs(input, i, j, w, h, testedRectangleBorder, WHITE_DOUBLES);
-                if (!testedRectangleBorder[X_PLUS] || !testedRectangleBorder[Y_MINUS]) {
-                    break;
-                }
+
+
                 if ((widthBlackHistory == 0 || heightBlackHistory == 0) && Arrays.equals(testedRectangleBorder, TRUE_BOOLEANS)) {
-                    if (widthBlackHistory == 0 && heightBlackHistory == 0) {
+                    /*if (widthBlackHistory == 0 && heightBlackHistory == 0) {
                         w++;
                         h++;
                         continue;
-                    } else if (widthBlackHistory == 0) {
+                    } else*/ if (widthBlackHistory == 0) {
                         w++;
                         continue;
                     } else if (heightBlackHistory == 0) {
@@ -512,15 +515,15 @@ public class ResolutionCharacter8 implements Runnable {
 
                 }
                 if ((widthBlackHistory == 1 || heightBlackHistory == 1) && !Arrays.equals(testedRectangleBorder, TRUE_BOOLEANS)) {
-                       /* if (!testedRectangleBorder[X_PLUS] && heightBlackHistory==1) {
-                            h++;
-                            continue;
-                        } else if(!testedRectangleBorder[Y_MINUS]&&widthBlackHistory) {
-                            w++;
-                            continue;
-                        }
-
-                        */
+                    if (testedRectangleBorder[X_PLUS] && widthBlackHistory == 2) {
+                        h++;
+                        heightBlackHistory = 1;//???
+                        continue;
+                    } else if (testedRectangleBorder[Y_MINUS] && heightBlackHistory == 2) {
+                        w++;
+                        widthBlackHistory = 1;//???
+                        continue;
+                    }
                 }
                 if (!testedRectangleBorder[X_MINUS] && heightBlackHistory == 0) {
                     heightBlackHistory = 1;
@@ -528,23 +531,26 @@ public class ResolutionCharacter8 implements Runnable {
                     continue;
                 } else if (!testedRectangleBorder[X_MINUS] && heightBlackHistory == 1) {
                     h++;
+                    continue;
                 } else if (testedRectangleBorder[X_MINUS] && heightBlackHistory == 1) {
                     heightBlackHistory = 2;
+                    continue;
                 }
 
                 if (!testedRectangleBorder[Y_PLUS] && widthBlackHistory == 0) {
                     widthBlackHistory = 1;
                     w++;
+                    continue;
                 } else if (!testedRectangleBorder[Y_PLUS] && widthBlackHistory == 1) {
                     w++;
+                    continue;
                 } else if (testedRectangleBorder[Y_PLUS] && widthBlackHistory == 1) {
                     widthBlackHistory = 2;
                     continue;
                 }
 
-                if ((h > stepMax || w > stepMax) || (((h0 == h) && (w0 == w)
-                        && hbhBak == heightBlackHistory && wbhBak == widthBlackHistory)
-                        || (heightBlackHistory > 2 && widthBlackHistory > 2))) {
+                if (h > stepMax || w > stepMax || (h0 == h && w0 == w && hbhBak == heightBlackHistory && wbhBak == widthBlackHistory)
+                        || i + w > input.getColumns() || j + h >= input.getLines()) {
                     break;
                 }
 
@@ -572,9 +578,6 @@ public class ResolutionCharacter8 implements Runnable {
                     //rectangle2 = new Rectangle2(rectangle);// PROVISOIRE
                     List<Character> candidates = recognize(input, rectangle2);
                     if (candidates.size() >= 1) {
-                        ///System.out.printf("In %s, Rectangle = (%d,%d,%d,%d) \t\tCandidates: ", name, i, j, w, h);
-                        //candidates.forEach(System.out::print);
-                        //
                         final String[] s = {""};
                         candidates.forEach(character -> s[0] += character);
                         if (candidates.size() > 1) {
@@ -587,26 +590,75 @@ public class ResolutionCharacter8 implements Runnable {
                         Color random = Colors.random();
                         output.plotCurve(rectangle, new TextureCol(random));
                         countRects++;
-                        rectangles.add(rectangle2);
-                        PixM outChar = input.copySubImage(rectangle2.getX(),
-                                rectangle2.getY(), rectangle2.getW(), rectangle2.getH());
-                        outRecompose.pasteSubImage(outChar,
-                                rectangle2.getX(), rectangle2.getY(), rectangle2.getW(), rectangle2.getH());
-                        if (isExporting()) {
-                            File file = new File(dirOutChars + "-" + j + "-" + i + "-" + w + "-" + h + "-" + s[0] + ".png");
-                            if (!file.getParentFile().exists() || file.getParentFile().isDirectory()) {
-                                file.getParentFile().mkdirs();
-                                try {
-                                    ImageIO.write(outChar.getImage(), "png", file);
-                                } catch (IOException e) {
-                                    throw new RuntimeException(e);
-                                }
+
+                        if (putAndRemoveIncludes(rectangles, rectangle2, true)) {
+
+                            PixM outChar = input.copySubImage(rectangle2.getX(),
+                                    rectangle2.getY(), rectangle2.getW(), rectangle2.getH());
+                            outRecompose.pasteSubImage(outChar,
+                                    rectangle2.getX(), rectangle2.getY(), rectangle2.getW(), rectangle2.getH());
+                            if (isExporting()) {
+                                export(true, i, j, w, h, s[0], rectangle2);
                             }
+                        } else {
+                            export(false, i, j, w, h, s[0], rectangle2);
                         }
+                    } else {
+                        if (isExporting()) {
+                            export(false, i, j, w, h, "notIdentified", rectangle2);
+                        }
+                    }
+                } else {
+                    if (isExporting()) {
+                        export(false, i, j, w, h, "notIdentified", rectangle2);
                     }
                 }
             }
         }
+    }
+
+    private void addStep() {
+        steps++;
+        if(steps==10000)
+            System.out.println("Step =" + 10000+" TOO LONG");
+    }
+
+    private void export(boolean identified, int i, int j, int w, int h, String s, Rectangle2 rectangle2) {
+        File file = new File((identified ? dirOutChars : dirOutChars2 + "/not_identified-") + "-" + j + "-" + i + "-" + w + "-" + h + "-" + s + ".png");
+        PixM outChar = input.copySubImage(rectangle2.getX(),
+                rectangle2.getY(), rectangle2.getW(), rectangle2.getH());
+        if (!file.getParentFile().exists() || file.getParentFile().isDirectory()) {
+            file.getParentFile().mkdirs();
+            try {
+                ImageIO.write(outChar.getImage(), "png", file);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+    private boolean putAndRemoveIncludes(List<Rectangle2> rectangles, Rectangle2 candidate, boolean onePass) {
+        boolean[] add = new boolean[]{true};
+        final boolean[] newTest = {true};
+        while (newTest[0]) {
+            for (Rectangle2 rectangle : rectangles) {
+                if (candidate.includes(rectangle)) {
+                    add[0] = false;
+                    return false;
+                } else if (rectangle.includes(candidate)) {
+                    rectangles.remove(rectangle);
+                    add[0] = true;
+                }
+
+            }
+            newTest[0] = !newTest[0];
+            if (onePass) newTest[0] = false;
+        }
+        rectangles.add(candidate);
+
+        return true;
+
     }
 
     private List<Character> recognize(PixM input, Rectangle2 rectangle2) {
@@ -884,7 +936,7 @@ public class ResolutionCharacter8 implements Runnable {
         columns = Arrays.copyOfRange(columns, 0, idx);
         columns = trimArrayZeroes(columns);
 
-        printIntegerArray(columns);
+        //printIntegerArray(columns);
 
         Integer[] compareA = columns;
         Iterator<Character> spliterator = characterMapV.keySet().stream().iterator();
@@ -964,7 +1016,7 @@ public class ResolutionCharacter8 implements Runnable {
         lines = trimArrayZeroes(integers1);
 
         //lines = trimArrayZeroes(lines, idx);
-        printIntegerArray(lines);
+        //printIntegerArray(lines);
 
         final Integer[] finalLines = lines;
 
@@ -1069,6 +1121,7 @@ public class ResolutionCharacter8 implements Runnable {
         }
         return output.normalize(0., 1.);
     }
+
     class State {
         public Point3D xyz;
         public double step;

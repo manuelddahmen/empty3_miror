@@ -96,4 +96,16 @@ public class Rectangle2 {
         result = 31 * result + h;
         return result;
     }
+
+    public boolean includes(Rectangle2 rectangle) {
+        int x2this = x+w-1;
+        int y2this = y+h-1;
+        int x2that = rectangle.y+rectangle.w-1;
+        int y2that = rectangle.y+rectangle.h-1;
+
+        if(x<= rectangle.x && y<= rectangle.y&&x2this>=x2that && y2this>=x2that) {
+            return true;
+        }
+        return false;
+    }
 }

@@ -71,8 +71,14 @@ tasks.register('BoardGameGui', JavaExec) {
 }
 tasks.register('ResolutionCharacter8', JavaExec) {
     classpath sourceSets.main.runtimeClasspath
-    mainClass8= "one.empty3.feature.tryocr.ResolutionCharacter8"
+    mainClass= "one.empty3.feature.tryocr.ResolutionCharacter8"
     args "arg1", "arg2"
+}
+tasks.register('OCR', JavaExec) {
+    classpath sourceSets.main.runtimeClasspath
+    mainClass= "one.empty3.feature.tryocr.OCR1"
+    args "arg1", "arg2"
+    dependsOn(jar)
 }
 tasks.register('RunEffect from sets directory', JavaExec) {
     classpath sourceSets.main.runtimeClasspath
