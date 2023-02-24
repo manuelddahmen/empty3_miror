@@ -402,13 +402,15 @@ public class OCR1 implements Runnable {
         });
         height += maxheight;
         try {
-            ImageIO.write(pSlide.getImage(), "jpg", new File(dirOutDist + "_matchingRects_" + pSlide + ".jpg"));
+            if(pSlide.getColumns()>0&&pSlide.getLines()>0)
+                ImageIO.write(pSlide.getImage(), "jpg", new File(dirOutDist + "_matchingRects_" + pSlide + ".jpg"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
         try {
-            ImageIO.write(distances.normalize(0, 1).getImage(), "jpg", dirOutDist);
+            if(distances.getColumns()>0&&distances.getLines()>0)
+                ImageIO.write(distances.normalize(0, 1).getImage(), "jpg", dirOutDist);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -482,9 +484,9 @@ public class OCR1 implements Runnable {
             int widthBlackHistory = 0;
             w = 1;
             h = 1;
-            while (!(heightBlackHistory == 2 && widthBlackHistory == 2)
-                    && (i + w < input.getColumns() && j + h < input.getLines() && h > 0 && w > 0 && w < stepMax && h < stepMax)
-                    || (w >= charMinWidth && h >= charMinWidth)) {
+            while ((!(heightBlackHistory == 2 && widthBlackHistory == 2)
+                    && (i + w < input.getColumns() && j + h < input.getLines() && h > 0 && w > 0 && w < stepMax && h < stepMax))
+                    || (w <= charMinWidth && h <= charMinWidth)) {
                 addStep();
                 if(steps==10000)
                     break;
@@ -517,11 +519,11 @@ public class OCR1 implements Runnable {
                 if ((widthBlackHistory == 1 || heightBlackHistory == 1) && !Arrays.equals(testedRectangleBorder, TRUE_BOOLEANS)) {
                     if (testedRectangleBorder[X_PLUS] && widthBlackHistory == 2) {
                         h++;
-                        heightBlackHistory = 1;//???
+                        //???
                         continue;
                     } else if (testedRectangleBorder[Y_MINUS] && heightBlackHistory == 2) {
                         w++;
-                        widthBlackHistory = 1;//???
+                        //???
                         continue;
                     }
                 }
@@ -551,7 +553,7 @@ public class OCR1 implements Runnable {
 
                 if (h > stepMax || w > stepMax || (h0 == h && w0 == w && hbhBak == heightBlackHistory && wbhBak == widthBlackHistory)
                         || i + w > input.getColumns() || j + h >= input.getLines()) {
-                    break;
+                    return;//??
                 }
 
             }
