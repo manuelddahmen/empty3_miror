@@ -71,7 +71,7 @@ public class OCR1 implements Runnable {
     final int epochs = 100;
     private final File dirOut;
     private final int stepMax = 80;
-    private final int charMinWidth = 11;
+    private final int charMinWidth = 5;
     private final double[] WHITE_DOUBLES = new double[]{1, 1, 1};
     private final double[] BLACK_DOUBLES = new double[]{0, 0, 0};
     public boolean cEchoing = true;
@@ -653,18 +653,15 @@ public class OCR1 implements Runnable {
         boolean[] add = new boolean[]{true};
         final boolean[] newTest = {true};
         while (newTest[0]) {
-            synchronized (rectangles) {
-                for (Rectangle2 rectangle : rectangles) {
+            for ( int i=0; i< rectangles.size(); ) {
+                Rectangle2 rectangle = rectangles.get(i);
                     if (candidate.includes(rectangle)) {
                         add[0] = false;
                         return false;
                     } else if (rectangle.includes(candidate)) {
                         rectangles.remove(rectangle);
                         add[0] = true;
-                    }
-
-                }
-
+                    } else i++;
             }
             newTest[0] = !newTest[0];
             if (onePass) newTest[0] = false;
