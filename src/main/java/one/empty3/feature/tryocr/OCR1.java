@@ -275,6 +275,9 @@ public class OCR1 implements Runnable {
         if (!dirOut.exists() || !dirOut.isDirectory())
             dirOut.mkdirs();
 
+
+
+
         input = new PixM(read);
 
 
@@ -608,7 +611,7 @@ public class OCR1 implements Runnable {
                                 export(true, i, j, w, h, s[0], rectangle2);
                             }
                         } else {
-                            export(false, i, j, w, h, s[0], rectangle2);
+                            export(true, i, j, w, h, s[0], rectangle2);
                         }
                     } else {
                         if (isExporting()) {
@@ -678,9 +681,9 @@ public class OCR1 implements Runnable {
         int w = rectangle2.getW();
         int h = rectangle2.getH();
 
-        Logger.getAnonymousLogger().info("Horizontal");
+        //Logger.getAnonymousLogger().info("Horizontal");
         List<Character> ch = recognizeH(input, i, j, w, h);
-        Logger.getAnonymousLogger().info("vertical");
+        //Logger.getAnonymousLogger().info("vertical");
         List<Character> cv = recognizeV(input, i, j, w, h);
 
         List<Character> allCharsPossible = new ArrayList<>();
