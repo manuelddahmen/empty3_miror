@@ -30,8 +30,8 @@ public class Force {
     private double distMinFusion;
     private boolean fusion;
     private double G = 10;
-    private ArrayList<Bille> courant = null;
-    private ArrayList<Bille> next = null;
+    private ArrayList<Bille> courant = new ArrayList<>();
+    private ArrayList<Bille> next = new ArrayList<>();
     private double dt = 1.0/25;
     private Point3D cm;
     private double cmd;

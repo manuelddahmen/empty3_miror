@@ -25,6 +25,8 @@ import one.empty3.library.core.physics.Bille;
 import one.empty3.library.core.physics.Force;
 import one.empty3.library.core.testing.TestObjetSub;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -43,13 +45,13 @@ public class TestGravity2 extends TestObjetSub {
         ttn.loop(true);
         ttn.setMaxFrames(10000);
         ttn.publishResult(true);
-        ttn.setFileExtension("jpg");
 
-        ttn.run();
+        new Thread(ttn).start();
 
     }
 
     public void ginit() {
+        billes = new Bille[X*Y*Z];
 
         for (int i = 0; i < X; i++) {
             for (int j = 0; j < Y; j++) {
@@ -71,11 +73,16 @@ public class TestGravity2 extends TestObjetSub {
             }
 
         }
-
+        f = new Force();
         f.setDt(0.001);
         f.setG(1000.0);
 
-        //f.configurer(billes);
+        ArrayList<Bille> billes1 = new ArrayList<>();
+        for (int i = 0; i < billes.length; i++) {
+            billes1.add(billes[i]);
+        }
+
+        f.configurer(billes1);
     }
 
     public void testScene() {
@@ -89,8 +96,8 @@ public class TestGravity2 extends TestObjetSub {
 
         //Polyhedron polyhedron = new Polyhedron();
         for (int i = 0; i < X * Y * Z; i++) {
-            Point3D pA = billes[i].position.plus(Point3D.X);
-            Point3D pB = billes[i].position.moins(Point3D.X);
+            Point3D pA = f.getCourant().get(i).position.plus(Point3D.X);
+            Point3D pB = f.getCourant().get(i).position.moins(Point3D.X);
             Axe axe = new Axe(pA, pB);
             Representable r = new Sphere(axe, f.dMin(i));
 
@@ -105,15 +112,13 @@ public class TestGravity2 extends TestObjetSub {
         }
 
         Camera camera = new Camera(f.centreMasse().plus(
-                new Point3D(0d, 0d, -f.getDistMax() / 4d)), f.centreMasse());
+                new Point3D(0d, 0d, f.getDistMax() / 4d)), f.centreMasse());
 
         Logger.getAnonymousLogger().log(Level.INFO,""+ rc.getListRepresentable().size());
 
         scene().cameraActive(camera);
 
-        // scene().add(rc);
-
-        //scene().add(polyhedron);
+        scene().add(rc);
 
     }
 
