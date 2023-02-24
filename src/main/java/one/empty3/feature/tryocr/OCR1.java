@@ -193,10 +193,15 @@ public class OCR1 implements Runnable {
         output.plotCurve(new Rectangle(10, 10, output.getColumns() - 20, output.getLines() - 20), texture);
 
         try {
-            ImageIO.write(input.getImage(), "jpg",
-                    new File(dirOut + File.separator + name.replace(' ', '_').replace(".jpg", "INPUT.jpg")));
+            String extension;
+            if(name.endsWith("jpg") || name.endsWith("png"))
+                extension = name.substring(-3);
+            else return;
+            ImageIO.write(input.getImage(), extension,
+                    new File(dirOut + File.separator + name.replace(' ', '_')
+                            .replace("."+extension, "INPUT."+extension)));
             ImageIO.write(output.getImage(), "jpg",
-                    new File(dirOut + File.separator + name.replace(' ', '_').replace(".jpg", "OUTPUT.jpg")));
+                    new File(dirOut + File.separator + name.replace(' ', '_').replace("."+extension, "OUTPUT."+extension)));
 
             ImageIO.write(outRecompose.getImage(), "jpg", new File(
                     dirOut + File.separator + name.replace(' ', '_').replace(".jpg", "RECOMPOSE.jpg")));
@@ -632,7 +637,8 @@ public class OCR1 implements Runnable {
         if (!file.getParentFile().exists() || file.getParentFile().isDirectory()) {
             file.getParentFile().mkdirs();
             try {
-                ImageIO.write(outChar.getImage(), "png", file);
+                if(outChar.getColumns()>0 && outChar.getLines()>0)
+                    ImageIO.write(outChar.getImage(), "png", file);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -644,13 +650,16 @@ public class OCR1 implements Runnable {
         boolean[] add = new boolean[]{true};
         final boolean[] newTest = {true};
         while (newTest[0]) {
-            for (Rectangle2 rectangle : rectangles) {
-                if (candidate.includes(rectangle)) {
-                    add[0] = false;
-                    return false;
-                } else if (rectangle.includes(candidate)) {
-                    rectangles.remove(rectangle);
-                    add[0] = true;
+            synchronized (rectangles) {
+                for (Rectangle2 rectangle : rectangles) {
+                    if (candidate.includes(rectangle)) {
+                        add[0] = false;
+                        return false;
+                    } else if (rectangle.includes(candidate)) {
+                        rectangles.remove(rectangle);
+                        add[0] = true;
+                    }
+
                 }
 
             }
