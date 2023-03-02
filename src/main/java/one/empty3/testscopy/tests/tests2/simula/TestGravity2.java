@@ -26,7 +26,6 @@ import one.empty3.library.core.physics.Force;
 import one.empty3.library.core.testing.TestObjetSub;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -36,7 +35,7 @@ public class TestGravity2 extends TestObjetSub {
     int Z = 3;
     Bille[] billes = new Bille[X * Y * Z];
     Force f = new Force();
-    double vOriginal = 100.0;
+    double vOriginal = 0.001;
 
     public static void main(String[] args) {
 
@@ -51,7 +50,7 @@ public class TestGravity2 extends TestObjetSub {
     }
 
     public void ginit() {
-        billes = new Bille[X*Y*Z];
+        billes = new Bille[X * Y * Z];
 
         for (int i = 0; i < X; i++) {
             for (int j = 0; j < Y; j++) {
@@ -62,11 +61,11 @@ public class TestGravity2 extends TestObjetSub {
                             (i - X / 2.), (j - Y / 2.),
                             (k - Z / 2.)).mult(Math.random() * vOriginal);
                     billes[k * Y * X + j * X + i].vitesse = new Point3D(
-                            (i - X / 2) / 1d, (j - Y / 2) / 1d,
-                            (k - Z / 2) / 1d);
+                            (i - X / 2.), (j - Y / 2.) / 1d,
+                            (k - Z / 2.) / 1d).mult((Math.random()-0.5) * 10.0);
                     billes[k * Y * X + j * X + i].color = Colors.random();
-                    billes[k * Y * X + j * X + i].masse = 1;
-                    billes[k * Y * X + j * X + i].attraction = 100;
+                    billes[k * Y * X + j * X + i].masse = 100;
+                    billes[k * Y * X + j * X + i].attraction = 1e10;
                     billes[k * Y * X + j * X + i].repulsion = 0.0;
                     billes[k * Y * X + j * X + i].amortissement = 0.0;
                 }
@@ -74,7 +73,7 @@ public class TestGravity2 extends TestObjetSub {
 
         }
         f = new Force();
-        f.setDt(0.001);
+        f.setDt(100);
         f.setG(1000.0);
 
         ArrayList<Bille> billes1 = new ArrayList<>();
@@ -96,10 +95,11 @@ public class TestGravity2 extends TestObjetSub {
 
         //Polyhedron polyhedron = new Polyhedron();
         for (int i = 0; i < X * Y * Z; i++) {
-            Point3D pA = f.getCourant().get(i).position.plus(Point3D.X);
-            Point3D pB = f.getCourant().get(i).position.moins(Point3D.X);
+            Point3D position = f.getCourant().get(i).position;
+            Point3D pA = position.plus(Point3D.X.mult(position.norme()));
+            Point3D pB = position.moins(Point3D.X.mult(-position.norme()));
             Axe axe = new Axe(pA, pB);
-            Representable r = new Sphere(axe, f.dMin(i));
+            Representable r = new Sphere(axe, f.dMin(i) / 5);
 
 //            ((TRISphere) r).setMaxX(7);
 //            ((TRISphere) r).setMaxY(7);
@@ -112,9 +112,9 @@ public class TestGravity2 extends TestObjetSub {
         }
 
         Camera camera = new Camera(f.centreMasse().plus(
-                new Point3D(0d, 0d, f.getDistMax() / 4d)), f.centreMasse());
+                new Point3D(0d, 0d, f.getDistMax())), f.centreMasse());
 
-        Logger.getAnonymousLogger().log(Level.INFO,""+ rc.getListRepresentable().size());
+        Logger.getAnonymousLogger().log(Level.INFO, "" + rc.getListRepresentable().size());
 
         scene().cameraActive(camera);
 

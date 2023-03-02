@@ -32,23 +32,24 @@ import java.util.logging.Logger;
 public class TestPlanets extends TestObjetSub {
     public static final int SECONDS = 3;
     public static final int FPS = 25;
-    private final File planets = new File("res\\img\\planets");
+    private final File planets = new File("res\\img\\planets2");
     private File[] planetsImagesFiles;
     private int i = -1;
     private BufferedImage image;
     private Sphere sphere;
     private Logger logger;
     private Point3D axe = Point3D.Z;
-    private Circle circle;
-
     @Override
     public void ginit() {
         logger = Logger.getLogger(this.getClass().getCanonicalName());
         planetsImagesFiles = planets.listFiles();
-        sphere = new Sphere(new Axe(axe.mult(1.0), axe.mult(-1)), 2.0);
+        sphere = new Sphere(new Axe(axe.mult(1.0), axe.mult(-1.0)), 2.0);
         sphere.texture(new ColorTexture(Color.WHITE));
 
-        z().setDisplayType(ZBufferImpl.SURFACE_DISPLAY_COL_QUADS);
+        setMaxFrames(planetsImagesFiles.length*FPS*SECONDS);
+
+
+        z().setDisplayType(ZBufferImpl.SURFACE_DISPLAY_TEXT_QUADS);
 
         z().texture(new ColorTexture(Color.BLACK));
         scene().texture(new ColorTexture(Color.BLACK));
@@ -64,11 +65,7 @@ public class TestPlanets extends TestObjetSub {
         sphere.setIncrU(.003);
         sphere.setIncrV(.003);
 
-        circle = sphere.getCircle();
-
-        //scene().add(circle);
-
-        frame = 420;
+        frame = 0;
         i = 4;
         incr();
     }
@@ -97,34 +94,29 @@ public class TestPlanets extends TestObjetSub {
         System.out.println("Planets:" + i + "/" + planetsImagesFiles.length);
     }
 
-    public void vectDirRotate(Point3D vectOrigX, Point3D vectOrigy, double ratio,
-                              Point3D outX, Point3D outY) {
-        outX.changeTo(vectOrigX.mult(Math.cos(2*Math.PI*ratio)).plus(
-                vectOrigy.mult(Math.sin(2*Math.PI*ratio))));
-        outY.changeTo(vectOrigX.mult(-Math.sin(2*Math.PI*ratio)).plus(
-                vectOrigy.mult(Math.cos(2*Math.PI*ratio))));
+    public void vecDirRotate(Point3D vecOrigX, Point3D vecOrigY, double ratio,
+                             Point3D outX, Point3D outY) {
+        outX.changeTo(vecOrigX.mult(Math.cos(2*Math.PI*ratio)).plus(
+                vecOrigY.mult(Math.sin(2*Math.PI*ratio))));
+        outY.changeTo(vecOrigX.mult(-Math.sin(2*Math.PI*ratio)).plus(
+                vecOrigY.mult(Math.cos(2*Math.PI*ratio))));
     }
 
     @Override
     public void finit() throws Exception {
+        Circle circle = sphere.getCircle();
         if ((frame() %( FPS * SECONDS) == 1)) {
             incr();
         }
         double v = (frame() % (FPS * SECONDS)) / (1.0 * FPS * SECONDS);
-        camera(new Camera(circle.calculerPoint3D
-                (v).mult(5.0),
-                Point3D.O0, axe));
+        camera(new Camera(Point3D.X.mult(10.0), Point3D.O0, Point3D.Z));
         camera().calculerMatrice(Point3D.Z);
-        circle.setVectX(Point3D.Z.mult(Math.cos(2*Math.PI*v)));
-        circle.setVectY(Point3D.X.mult(Math.sin(2*Math.PI*v)));
-        circle.setVectZ(Point3D.Y);
+        circle.setVectZ(Point3D.Z);
+        circle.setVectX(Point3D.X.mult(Math.cos(2*Math.PI*v))
+                .plus(Point3D.Y.mult(Math.sin(2*Math.PI*v))));
+        circle.setVectY(circle.getVectZ().prodVect(circle.getVectX()).norme1());
 
-        vectDirRotate(Point3D.Z, Point3D.X, v, circle.getVectX(), circle.getVectY());
-
-        camera().calculerMatrice(axe);
         System.out.println("Camera t : "+v);
-        scene().cameras().clear();
-        camera(camera());
         z().scene().cameraActive(camera());
         scene().cameraActive(camera());
         z().camera(camera());
@@ -139,7 +131,6 @@ public class TestPlanets extends TestObjetSub {
         TestPlanets testPlanets = new TestPlanets();
         testPlanets.loop(true);
         testPlanets.setResolution(1024, 768);
-        testPlanets.setMaxFrames(9*FPS*SECONDS);
         Thread thread = new Thread(testPlanets);
         thread.start();
     }

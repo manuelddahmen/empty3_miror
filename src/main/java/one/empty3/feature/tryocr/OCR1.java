@@ -812,9 +812,9 @@ public class OCR1 implements Runnable {
         mapCharsAlphabetLines.put('k', new Integer[]{2, 1, 2});
         mapCharsAlphabetLines.put('L', new Integer[]{1});
         mapCharsAlphabetLines.put('l', new Integer[]{1});
-        mapCharsAlphabetLines.put('M', new Integer[]{2, 3, 2});
+        mapCharsAlphabetLines.put('M', new Integer[]{2, 4, 3, 2});
         mapCharsAlphabetLines.put('m', new Integer[]{2, 3});
-        mapCharsAlphabetLines.put('N', new Integer[]{2});
+        mapCharsAlphabetLines.put('N', new Integer[]{2, 3, 2});
         mapCharsAlphabetLines.put('n', new Integer[]{2, 1, 2});
         mapCharsAlphabetLines.put('O', new Integer[]{1, 2, 1});
         mapCharsAlphabetLines.put('o', new Integer[]{1, 2, 1});

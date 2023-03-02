@@ -60,7 +60,7 @@ public class Force {
             if (r < distMin)
                 distMin = r;
 
-            Point3D vu = other.position.moins(p.position).norme1();
+            Point3D vu = other.position.moins(p.position);
             return vu.mult(
                     intensiteRepulsion * other.masse * p.masse / r / r / r
             )
@@ -68,7 +68,7 @@ public class Force {
                     .plus(
 
                             vu.mult(
-                                    G * other.masse * p.masse / r / r
+                                    getG() * other.masse * p.masse / r / r
                             )
                     );
         }

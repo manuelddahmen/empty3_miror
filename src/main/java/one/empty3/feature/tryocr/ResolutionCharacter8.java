@@ -493,7 +493,7 @@ public class ResolutionCharacter8 implements Runnable {
                 hbhBak = heightBlackHistory;
                 wbhBak = widthBlackHistory;
 
-                testedRectangleBorder = testRectIs(input, i, j, w, h, testedRectangleBorder, WHITE_DOUBLES);
+                testRectIs(input, i, j, w, h, testedRectangleBorder, WHITE_DOUBLES);
                 if (!testedRectangleBorder[X_PLUS] || !testedRectangleBorder[Y_MINUS]) {
                     break;
                 }
@@ -781,11 +781,6 @@ public class ResolutionCharacter8 implements Runnable {
         return mapCharsAlphabetLines;
     }
 
-    /***
-     * OCR: combien on voit d'inversion.
-     * A (0,1) (1,2)+ (2, 1) (3,2)
-     * a (0,2) (1,2)+ (2,1) (3,2)
-     */
     public Map<Character, Integer[]> initPatternsH() {
         Map<Character, Integer[]> mapCharsAlphabetLines = new HashMap<>();
         mapCharsAlphabetLines.put('A', new Integer[]{1, 2, 1});

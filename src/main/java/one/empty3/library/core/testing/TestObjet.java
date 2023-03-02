@@ -420,7 +420,23 @@ public abstract class TestObjet implements Test, Runnable {
                     + File.separator + "empty3.config"));
 
 
-        } catch (Exception ex) {
+        } catch (FileNotFoundException ex) {
+            Logger.getAnonymousLogger().log(Level.INFO, "userHome/empty3.config not found use default");
+            config = new Properties();
+            config.put("folderoutput",
+                    System.getProperty("user.home")
+                    + File.separator + "EmptyCanvasTest");
+            try {
+                config.store(new FileOutputStream(new File(System.getProperty("user.home")
+                        + File.separator + "empty3.config")),
+                        "Config file for empty3.one library");
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        catch (Exception ex) {
             config.setProperty("folderoutput", "./EmptyCanvasTests");
             Logger.getAnonymousLogger().log(Level.INFO, "userHome/empty3.config not found use default");
         }
