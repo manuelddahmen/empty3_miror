@@ -109,8 +109,8 @@ public class TestPlanets extends TestObjetSub {
             incr();
         }
         double v = (frame() % (FPS * SECONDS)) / (1.0 * FPS * SECONDS);
-        camera(new Camera(Point3D.X.mult(10.0), Point3D.O0, Point3D.Z));
-        camera().calculerMatrice(Point3D.Z);
+        camera(new Camera(Point3D.Y.mult(10.0), Point3D.O0, Point3D.Z));
+        //camera().calculerMatrice(Point3D.Z);
         circle.setVectZ(Point3D.Z);
         circle.setVectX(Point3D.X.mult(Math.cos(2*Math.PI*v))
                 .plus(Point3D.Y.mult(Math.sin(2*Math.PI*v))));
