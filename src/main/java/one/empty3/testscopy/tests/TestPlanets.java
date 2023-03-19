@@ -30,8 +30,9 @@ import java.io.File;
 import java.util.logging.Logger;
 
 public class TestPlanets extends TestObjetSub {
-    public static final int SECONDS = 10;
-    public static final int FPS = 25;
+    public static final int SECONDS = 4;
+    public static final int FPS = 15;
+    private static final int TURNS = 2;
     private final File planets = new File("res\\img\\planets2");
     private File[] planetsImagesFiles;
     private int i = -1;
@@ -47,7 +48,7 @@ public class TestPlanets extends TestObjetSub {
         logger = Logger.getLogger(this.getClass().getCanonicalName());
         planetsImagesFiles = planets.listFiles();
 
-        setMaxFrames(planetsImagesFiles.length*FPS*SECONDS);
+        setMaxFrames(planetsImagesFiles.length*FPS*SECONDS*TURNS);
 
 
         z().setDisplayType(ZBufferImpl.SURFACE_DISPLAY_TEXT_QUADS);
@@ -66,7 +67,8 @@ public class TestPlanets extends TestObjetSub {
         camera(c);
         i = -1;
 
-    }
+
+       }
 
     @Override
     public void testScene() throws Exception {
@@ -99,8 +101,8 @@ public class TestPlanets extends TestObjetSub {
     public void finit() throws Exception {
         sphere = new Sphere(new Axe(axeVerticalVideo.mult(1.0), axeVerticalVideo.mult(-1.0)), 2.0);
 
-        sphere.setIncrU(.03);
-        sphere.setIncrV(.03);
+        sphere.setIncrU(.003);
+        sphere.setIncrV(.003);
         scene().clear();
         scene().add(sphere);
 
@@ -110,7 +112,7 @@ public class TestPlanets extends TestObjetSub {
         TextureImg textureImg = new TextureImg(new ECBufferedImage(image));
         sphere.texture(textureImg);
 
-        double v = (frame() % (FPS * SECONDS)) / (3.0 * FPS * SECONDS);
+        double v = (frame() % (FPS * SECONDS)) / getaDouble();
 
         Circle circle = sphere.getCircle();
         circle.setVectZ(axeVerticalVideo);
@@ -118,11 +120,15 @@ public class TestPlanets extends TestObjetSub {
         circle.getAxis().getElem().getP2().setElem(axeVerticalVideo.mult(-1.0));
         circle.setVectX(axesSphereHorizontaux[0].mult(Math.cos(2*Math.PI*v))
                 .plus(axesSphereHorizontaux[1].mult(-Math.sin(2*Math.PI*v))).norme1());
-        circle.setVectY(axesSphereHorizontaux[0].mult(-Math.sin(2*Math.PI*v))
+        circle.setVectY(axesSphereHorizontaux[0].mult(Math.sin(2*Math.PI*v))
                 .plus(axesSphereHorizontaux[1].mult(Math.cos(2*Math.PI*v))).norme1());
         circle.setCalculerRepere1(true);
         sphere.setCircle(circle);
         System.out.println("Camera t : "+v);
+    }
+
+    private static double getaDouble() {
+        return 1.0 * TURNS * FPS * SECONDS;
     }
 
     @Override

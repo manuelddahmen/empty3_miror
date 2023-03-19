@@ -49,13 +49,14 @@ public class Sphere extends ParametricSurface {
         {
             c.calculerRepere1();
         }
+        double cos = Math.cos(-Math.PI / 2 + Math.PI * v);
         return c.getCenter().plus(
                 c.vectX.mult(
-                        Math.cos(2.0 * Math.PI * u) * Math.cos(-Math.PI / 2 + Math.PI * v)).plus(
+                        Math.cos(2.0 * Math.PI * u) * cos).plus(
                         c.vectY.mult(
-                                Math.sin(2.0 * Math.PI * u) * Math.cos(-Math.PI / 2 + Math.PI * v))
-                                .plus(c.vectZ.mult(Math.sin(-Math.PI / 2 + Math.PI * v)))
-                ).mult(c.radius.getElem()));
+                                Math.sin(2.0 * Math.PI * u) * cos))
+                                .plus(c.vectZ.mult(Math.sin(-Math.PI / 2 + Math.PI * v))
+                ).norme1().mult(c.radius.getElem()));
     }
 
     public Circle getCircle() {
