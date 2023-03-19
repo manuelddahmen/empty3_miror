@@ -108,6 +108,10 @@ public class Circle extends ParametricCurve {
         return isCalculerRepere1;
     }
 
+    public void setCalculerRepere1(boolean calculerRepere1) {
+        isCalculerRepere1 = calculerRepere1;
+    }
+
     @Override
     public Point3D calculerPoint3D(double t) {
         if (!isCalculerRepere1())

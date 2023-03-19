@@ -30,7 +30,7 @@ import java.io.File;
 import java.util.logging.Logger;
 
 public class TestPlanets extends TestObjetSub {
-    public static final int SECONDS = 3;
+    public static final int SECONDS = 10;
     public static final int FPS = 25;
     private final File planets = new File("res\\img\\planets2");
     private File[] planetsImagesFiles;
@@ -38,13 +38,14 @@ public class TestPlanets extends TestObjetSub {
     private BufferedImage image;
     private Sphere sphere;
     private Logger logger;
-    private Point3D axe = Point3D.Z;
+    private Point3D axeVerticalVideo = Point3D.Y;
+    private Point3D[] axeViseeVideo = new Point3D [] {Point3D.X, Point3D.Z};
+    private Point3D[] axesSphereHorizontaux = new Point3D[] {Point3D.X, Point3D.Z};
+
     @Override
     public void ginit() {
         logger = Logger.getLogger(this.getClass().getCanonicalName());
         planetsImagesFiles = planets.listFiles();
-        sphere = new Sphere(new Axe(axe.mult(1.0), axe.mult(-1.0)), 2.0);
-        sphere.texture(new ColorTexture(Color.WHITE));
 
         setMaxFrames(planetsImagesFiles.length*FPS*SECONDS);
 
@@ -55,19 +56,16 @@ public class TestPlanets extends TestObjetSub {
         scene().texture(new ColorTexture(Color.BLACK));
 
 
-        scene().add(sphere);
 
-        PcOnPs pcOnPs = new PcOnPs(sphere, new LineSegment(new Point3D(0., 0.5, 0.),
-                new Point3D(1., 0.5, 0.)));
-        pcOnPs.texture(new TextureCol(Color.GREEN));
 
-        //scene().add(pcOnPs);
-        sphere.setIncrU(.003);
-        sphere.setIncrV(.003);
+        Camera c = new Camera(axeViseeVideo[1].mult(10), Point3D.O0, axeVerticalVideo);
+        c.calculerMatrice(axeVerticalVideo);
+        z().scene().cameraActive(c);
+        scene().cameraActive(c);
+        z().camera(c);
+        camera(c);
+        i = -1;
 
-        frame = 0;
-        i = 4;
-        incr();
     }
 
     @Override
@@ -85,12 +83,7 @@ public class TestPlanets extends TestObjetSub {
         if (i < planetsImagesFiles.length)
             image = ImageIO.read(planetsImagesFiles[i]);
         else return;
-        TextureImg textureImg = new TextureImg(new ECBufferedImage(image));
-        sphere.texture(textureImg);
 
-        Point3D p1axe = axe;
-
-        //circle = new Circle(new Axe(p1axe.mult(1), p1axe.mult(-1)), 5.0);
         System.out.println("Planets:" + i + "/" + planetsImagesFiles.length);
     }
 
@@ -104,22 +97,32 @@ public class TestPlanets extends TestObjetSub {
 
     @Override
     public void finit() throws Exception {
-        Circle circle = sphere.getCircle();
+        sphere = new Sphere(new Axe(axeVerticalVideo.mult(1.0), axeVerticalVideo.mult(-1.0)), 2.0);
+
+        sphere.setIncrU(.03);
+        sphere.setIncrV(.03);
+        scene().clear();
+        scene().add(sphere);
+
         if ((frame() %( FPS * SECONDS) == 1)) {
             incr();
         }
-        double v = (frame() % (FPS * SECONDS)) / (1.0 * FPS * SECONDS);
-        camera(new Camera(Point3D.Y.mult(10.0), Point3D.O0, Point3D.Z));
-        //camera().calculerMatrice(Point3D.Z);
-        circle.setVectZ(Point3D.Z);
-        circle.setVectX(Point3D.X.mult(Math.cos(2*Math.PI*v))
-                .plus(Point3D.Y.mult(Math.sin(2*Math.PI*v))));
-        circle.setVectY(circle.getVectZ().prodVect(circle.getVectX()).norme1());
+        TextureImg textureImg = new TextureImg(new ECBufferedImage(image));
+        sphere.texture(textureImg);
 
+        double v = (frame() % (FPS * SECONDS)) / (3.0 * FPS * SECONDS);
+
+        Circle circle = sphere.getCircle();
+        circle.setVectZ(axeVerticalVideo);
+        circle.getAxis().getElem().getP1().setElem(axeVerticalVideo.mult(1.0));
+        circle.getAxis().getElem().getP2().setElem(axeVerticalVideo.mult(-1.0));
+        circle.setVectX(axesSphereHorizontaux[0].mult(Math.cos(2*Math.PI*v))
+                .plus(axesSphereHorizontaux[1].mult(-Math.sin(2*Math.PI*v))).norme1());
+        circle.setVectY(axesSphereHorizontaux[0].mult(-Math.sin(2*Math.PI*v))
+                .plus(axesSphereHorizontaux[1].mult(Math.cos(2*Math.PI*v))).norme1());
+        circle.setCalculerRepere1(true);
+        sphere.setCircle(circle);
         System.out.println("Camera t : "+v);
-        z().scene().cameraActive(camera());
-        scene().cameraActive(camera());
-        z().camera(camera());
     }
 
     @Override
@@ -130,7 +133,7 @@ public class TestPlanets extends TestObjetSub {
     public static void main(String[] args) {
         TestPlanets testPlanets = new TestPlanets();
         testPlanets.loop(true);
-        testPlanets.setResolution(1024, 768);
+        testPlanets.setResolution(320, 240);
         Thread thread = new Thread(testPlanets);
         thread.start();
     }

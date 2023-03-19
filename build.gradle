@@ -54,11 +54,13 @@ tasks.register('FeatureAppGui', JavaExec) {
     classpath sourceSets.main.runtimeClasspath
     mainClass = "one.empty3.feature.ClassSchemaBuilder"
     args "arg1", "arg2"
+    dependsOn(jar)
 }
 tasks.register('MorphingAppGui', JavaExec) {
     classpath sourceSets.main.runtimeClasspath
     mainClass = "one.empty3.apps.morph.Main"
     args "arg1", "arg2"
+    dependsOn(jar)
 }
 tasks.register('OpadGameGui', JavaExec) {
     classpath sourceSets.main.runtimeClasspath
@@ -68,11 +70,13 @@ tasks.register('BoardGameGui', JavaExec) {
     classpath sourceSets.main.runtimeClasspath
     mainClass = "one.empty3.apps.newboardgames.WindowDrawing"
     args "arg1", "arg2"
+    dependsOn(jar)
 }
 tasks.register('ResolutionCharacter8', JavaExec) {
     classpath sourceSets.main.runtimeClasspath
     mainClass= "one.empty3.feature.tryocr.ResolutionCharacter8"
     args "arg1", "arg2"
+    dependsOn(jar)
 }
 tasks.register('OCR', JavaExec) {
     classpath sourceSets.main.runtimeClasspath
@@ -84,7 +88,18 @@ tasks.register('RunEffect from sets directory', JavaExec) {
     classpath sourceSets.main.runtimeClasspath
     mainClass = "one.empty3.feature.Run"
     args "fourier_series"
+    dependsOn(jar)
 }
+
+
+tasks.register('TestObjet__TestPlanets', JavaExec) {
+    classpath sourceSets.main.runtimeClasspath
+    mainClass = "one.empty3.testscopy.tests.TestPlanets"
+    args "fourier_series"
+    dependsOn(jar)
+}
+
+
 signing {
     def signingKey = load.get("signing.keyId")
     def signingPassword = load.get("signing.password")

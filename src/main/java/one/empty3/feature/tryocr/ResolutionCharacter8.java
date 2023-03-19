@@ -46,7 +46,7 @@ import java.util.logging.Logger;
 
 
 public class ResolutionCharacter8 implements Runnable {
-    public static final float MIN_DIFF = 0.6f;
+    public static final float MIN_DIFF = 0.4f;
     public static final int X_PLUS = 0;
     public static final int Y_PLUS = 1;
     public static final int X_MINUS = 2;
@@ -60,7 +60,7 @@ public class ResolutionCharacter8 implements Runnable {
     private static final int BLANK = 0;
     private static final int CHARS = 1;
     private static final boolean[] TRUE_BOOLEANS = new boolean[]{true, true, true, true};
-    private static final double MAX_BLACK_VALUE = 0.9;
+    private static final double MAX_BLACK_VALUE = 0.5;
     private static int SHAKE_SIZE = 20;
     private static CsvWriter writer;
     private static String dirOutChars;
@@ -68,10 +68,11 @@ public class ResolutionCharacter8 implements Runnable {
     private static File dirOutDist;
     private static PrintWriter pwTxt;
     private static File dirOutGradient2;
+    private static String dirOutMethod3;
     final int epochs = 100;
     private final File dirOut;
     private final int stepMax = 80;
-    private final int charMinWidth = 11;
+    private final int charMinWidth = 10;
     private final double[] WHITE_DOUBLES = new double[]{1, 1, 1};
     private final double[] BLACK_DOUBLES = new double[]{0, 0, 0};
     public boolean cEchoing = true;
@@ -92,14 +93,17 @@ public class ResolutionCharacter8 implements Runnable {
     private Map<Character, Integer[]> characterMapV;
     private int countRects = 0;
     private List<Rectangle2> rectangles;
+    private List<Rectangle2> rectangles2;
     private double STEPS_COMPARE_METHOD = 0.15;
+    private PixM outRecompose2;
+    private PixM output2;
 
     {
         letters.put('a', new Letter(
                 new Trait(TraitsY.Up, TraitsX.Left, TraitsY.Up, TraitsX.Right,
                         TraitsShape.Round, TraitsShape.Round),
                 new Trait(TraitsY.Up, TraitsX.Right, TraitsY.Down, TraitsX.Right,
-                TraitsShape.Round, TraitsShape.Line)));
+                        TraitsShape.Round, TraitsShape.Line)));
     }
 
 
@@ -124,6 +128,7 @@ public class ResolutionCharacter8 implements Runnable {
 
         File dir = new File("C:\\Users\\manue\\EmptyCanvasTest\\ocr");
         File dirOut = new File("C:\\Users\\manue\\EmptyCanvasTest\\ocr\\TestsOutput");
+        File dirOut2 = new File("C:\\Users\\manue\\EmptyCanvasTest\\ocr\\TestsOutput");
 
         if (dir.exists() && dir.isDirectory()) {
 
@@ -144,25 +149,26 @@ public class ResolutionCharacter8 implements Runnable {
 
                         Logger.getAnonymousLogger().log(Level.INFO, "ResolutionCharacter8 : " + name);
 
-                        ResolutionCharacter8 resolutionCharacter6 = new ResolutionCharacter8(read, name, dirOut);
+                        ResolutionCharacter8 resolutionCharacter8 = new ResolutionCharacter8(read, name, dirOut);
                         dirOutDist = new File(dirOut.getAbsolutePath() + File.separator + name
                                 + "_images-distances.jpg");
                         dirOutGradient2 = new File(dirOut.getAbsolutePath() + File.separator + name
                                 + "gradient.jpg");
                         dirOutChars = dirOut.getAbsolutePath() + File.separator + name + File.separator + "char";
                         dirOutChars2 = dirOut.getAbsolutePath() + File.separator + name + File.separator + "char2";
+                        dirOutMethod3 = dirOut.getAbsolutePath() + File.separator + name+File.separator+"dirOut2";
+                        System.out.printf("%s", resolutionCharacter8.getClass().getSimpleName());
 
-                        System.out.printf("%s", resolutionCharacter6.getClass().getSimpleName());
 
-
-                        Thread thread = new Thread(resolutionCharacter6);
-
+                        Thread thread = new Thread(resolutionCharacter8);
 
                         thread.start();
 
 
                         try {
                             thread.join();
+
+
                         } catch (InterruptedException e) {
                             throw new RuntimeException(e);
                         }
@@ -188,7 +194,7 @@ public class ResolutionCharacter8 implements Runnable {
         return isExporting;
     }
 
-    public void exec(ITexture texture, PixM output, PixM input, File dirOut, String name) {
+    public void exec2(ITexture texture, PixM output, PixM input, File dirOut, String name) {
         output.plotCurve(new Rectangle(10, 10, output.getColumns() - 20, output.getLines() - 20), texture);
 
         try {
@@ -203,6 +209,33 @@ public class ResolutionCharacter8 implements Runnable {
             throw new RuntimeException(ex);
         }
 
+    }
+
+    public void exec3(ITexture texture, PixM output, PixM input, String dirOut, String name) {
+        output.plotCurve(new Rectangle(10, 10, output.getColumns() - 20, output.getLines() - 20), texture);
+
+        try {
+            ImageIO.write(input.getImage(), "jpg",
+                    new File(dirOut + File.separator + name.replace(' ', '_').replace(".jpg", "INPUT.jpg")));
+            ImageIO.write(output.getImage(), "jpg",
+                    new File(dirOut + File.separator + name.replace(' ', '_').replace(".jpg", "OUTPUT.jpg")));
+
+            ImageIO.write(outRecompose.getImage(), "jpg", new File(
+                    dirOut + File.separator + name.replace(' ', '_').replace(".jpg", "RECOMPOSE.jpg")));
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
+
+        CharacterIsolationMatching characterIsolationMatching2 = new CharacterIsolationMatching(
+                new File(dirOut + File.separator + name),
+                new File(dirOut + File.separator + name + File.separator + "_table_1.jpg"));
+        CharacterIsolationMatching characterIsolationMatching = new CharacterIsolationMatching(
+                new File(
+                        dirOut + File.separator + name),
+                new File(dirOut + File.separator + name + File.separator + "_table_2.jpg"));
+
+        characterIsolationMatching.start();
+        characterIsolationMatching2.start();
     }
 
     public void addRandomCurves(State state) {
@@ -261,6 +294,7 @@ public class ResolutionCharacter8 implements Runnable {
 
     public void run() {
         rectangles = new ArrayList<>();
+        rectangles2 = new ArrayList<>();
 
         characterMapH = initPatternsH();
         characterMapV = initPatternsV();
@@ -281,8 +315,10 @@ public class ResolutionCharacter8 implements Runnable {
 
 
         output = input.copy();
+        output2 = input.copy();
 
         outRecompose = new PixM(input.getColumns(), input.getLines());
+        outRecompose2 = new PixM(input.getColumns(), input.getLines());
         try {
             ImageIO.write(derivative(input).getImage(), "jpg", dirOutGradient2);
         } catch (IOException e) {
@@ -298,18 +334,23 @@ public class ResolutionCharacter8 implements Runnable {
                 System.out.printf("%d %%, Image %s, Count Rects : %d\n", (int) (100.0 * j / input.getLines()), name, countRects);
 
             for (int i = 0; i < input.getColumns() - step; i += step) {
-                exec2(i, j);
+                //exec2(i, j);
+                exec3(i, j);
             }
         }
-        exec(texture, output, input, dirOut, name);
+        Logger.getAnonymousLogger().log(Level.INFO, "" + this.getClass() + "End make Rectanles.");
+        //exec2(texture, output, input, dirOut, name);
+        exec3(texture, output, input, dirOutMethod3, name);
 
 
-        Logger.getAnonymousLogger().log(Level.INFO, "" + this.getClass() + "rectangles : " + rectangles.size());
-        deleteEquals(rectangles);
-        Logger.getAnonymousLogger().log(Level.INFO, "" + this.getClass() + "rectangles : " + rectangles.size());
+        Logger.getAnonymousLogger().log(Level.INFO, "" + this.getClass() + "rectangles : " + rectangles2.size());
+        //deleteEquals(rectangles);
+        deleteEquals(rectangles2);
+        Logger.getAnonymousLogger().log(Level.INFO, "" + this.getClass() + "rectangles : " + rectangles2.size());
         Logger.getAnonymousLogger().log(Level.INFO, "" + this.getClass() + "Compare Start");
 
-        compare(rectangles);
+        //compare(rectangles);
+        compare(rectangles2);
         Logger.getAnonymousLogger().log(Level.INFO, "" + this.getClass() + "Compare end");
     }
 
@@ -593,11 +634,180 @@ public class ResolutionCharacter8 implements Runnable {
                         outRecompose.pasteSubImage(outChar,
                                 rectangle2.getX(), rectangle2.getY(), rectangle2.getW(), rectangle2.getH());
                         if (isExporting()) {
-                            File file = new File(dirOutChars + "-" + j + "-" + i + "-" + w + "-" + h + "-" + s[0] + ".png");
+                            File file = new File(dirOutChars + "-" + j + "-" + i + "-" + w + "-" + h + "-" + s[0] + ".jpg");
                             if (!file.getParentFile().exists() || file.getParentFile().isDirectory()) {
                                 file.getParentFile().mkdirs();
                                 try {
-                                    ImageIO.write(outChar.getImage(), "png", file);
+                                    ImageIO.write(outChar.getImage(), "jpg", file);
+                                } catch (IOException e) {
+                                    throw new RuntimeException(e);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /***
+     La condition doit s'arrêter après les points quand les bords droits
+     et bas ont augmenté de manière que le caractère cherché soit mis en
+     évidence.
+     Bord haut et gauche restent blancs (pas toujours vrai dans les polices)
+     Balai vers la droite rencontrent une chose (points noirs) puis s'arrête
+     à blanc.
+     Balai vers le bas rencontre une chose aussi (points noirs puis s'arrête
+     à blanc.
+     Peut-il y avoir une confusion en passant 2 balais (peignes) perpendiculaires ?
+     Sans doute que oui, ils n'avancent pas au même pas. Quand le blanc est rencontré
+     après le noir, il y a arrêt du balai H (par exemple) donc le balai V continue
+     jusqu'au blanc. Là le balai H a-t-il rencontré quelque chose qui annule la
+     recherche croisée ? Si le balai H est en dessous des caractères il ne rencontre
+     plus rien jusqu'à ce que le balai V ait fini.
+     @param i column
+     @param j line
+     */
+    private void exec3(int i, int j) {
+        if (System.currentTimeMillis() % 100 == 0)
+            System.gc();
+        long timeStart = System.currentTimeMillis();
+        if (arrayDiff(input.getValues(i, j), WHITE_DOUBLES) < MIN_DIFF) {
+            int w = 0;
+            int h = 0;
+            boolean fail = false;
+            int heightBlackHistory = 0;
+            int widthBlackHistory = 0;
+            w = charMinWidth;
+            h = charMinWidth;
+            int w0 = charMinWidth;
+            int h0 = charMinWidth;
+            int hbhBak = 0;
+            while (!(heightBlackHistory == 2 && widthBlackHistory == 2
+                    && i + w < input.getColumns() && j + h < input.getLines() && h > 0 && w > 0 && w < stepMax && h < stepMax
+                    && Arrays.equals(TRUE_BOOLEANS,
+                    testedRectangleBorder = testRectIs(input, i, j, w, h, testedRectangleBorder, WHITE_DOUBLES)))) {
+                if(System.currentTimeMillis()-timeStart>20) {
+                    //Logger.getAnonymousLogger().info("recognize("+i+", "+j+") FAILED. Next!");
+                    return;
+                }
+                int wbhBak = w0;
+                hbhBak = h0;
+                h0 = h;
+                w0 = w;
+                hbhBak = heightBlackHistory;
+                wbhBak = widthBlackHistory;
+
+                int incrX = 0;
+                int incrY = 0;
+
+
+                testRectIs(input, i, j, w, h, testedRectangleBorder, WHITE_DOUBLES);
+                if (!testedRectangleBorder[X_PLUS] || !testedRectangleBorder[Y_MINUS]) {
+                    if (!testedRectangleBorder[X_PLUS] && heightBlackHistory>0) {
+                        if (w > 0) w--;
+                        else break;
+                        continue;
+                    } else if (!testedRectangleBorder[Y_MINUS] && widthBlackHistory>0) {
+                        if (h > 0) h--;
+                        else break;
+                        continue;
+                    }
+
+                }
+                if ((widthBlackHistory == 0 || heightBlackHistory == 0) && Arrays.equals(testedRectangleBorder, TRUE_BOOLEANS)) {
+                    if (widthBlackHistory == 0 && heightBlackHistory == 0) {
+                        w++;
+                        h++;
+                        continue;
+                    } else if (widthBlackHistory == 0) {
+                        w++;
+                        continue;
+                    } else if (heightBlackHistory == 0) {
+                        h++;
+                        continue;
+                    }
+
+                }
+                if (!testedRectangleBorder[X_MINUS] && heightBlackHistory == 0) {
+                    heightBlackHistory = 1;
+                    h++;
+                    continue;
+                } else if (!testedRectangleBorder[X_MINUS] && heightBlackHistory == 1) {
+                    h++;
+                } else if (testedRectangleBorder[X_MINUS] && heightBlackHistory == 1) {
+                    heightBlackHistory = 2;
+                }
+
+                if (!testedRectangleBorder[Y_PLUS] && widthBlackHistory == 0) {
+                    widthBlackHistory = 1;
+                    w++;
+                } else if (!testedRectangleBorder[Y_PLUS] && widthBlackHistory == 1) {
+                    w++;
+                } else if (testedRectangleBorder[Y_PLUS] && widthBlackHistory == 1) {
+                    widthBlackHistory = 2;
+                    continue;
+                }
+
+                if ((h > stepMax || w > stepMax) || (((h0 == h) && (w0 == w)
+                        && hbhBak == heightBlackHistory && wbhBak == widthBlackHistory)
+                        || (heightBlackHistory > 2 && widthBlackHistory > 2))) {
+                    break;
+                }
+
+                w0 = w;
+                h0 = h;
+
+            }
+            boolean succeded = false;
+            if (Arrays.equals(testRectIs(input, i, j, w, h, testedRectangleBorder, WHITE_DOUBLES), TRUE_BOOLEANS)) {
+                succeded = true;
+            } else if (heightBlackHistory == 2 && widthBlackHistory == 2 && !succeded) {
+                if (Arrays.equals(testRectIs(input, i, j, w - 1, h, testedRectangleBorder, WHITE_DOUBLES), TRUE_BOOLEANS)) {
+                    w = w - 1;
+                    succeded = true;
+                }
+                if (Arrays.equals(testRectIs(input, i, j, w, h - 1, testedRectangleBorder, WHITE_DOUBLES), TRUE_BOOLEANS)) {
+                    h = h - 1;
+                    succeded = true;
+                }
+            }
+            succeded = (heightBlackHistory >= 2) && (widthBlackHistory >= 2)
+                    && Arrays.equals(testRectIs(input, i, j, w, h, testedRectangleBorder, WHITE_DOUBLES), TRUE_BOOLEANS)
+                    && (h < stepMax) && (w < stepMax) && (h > charMinWidth) && (w > charMinWidth);
+            if (succeded) {
+                Rectangle rectangle = new Rectangle(i, j, w, h);
+                Rectangle2 rectangle3 = new Rectangle2(0, 0, 0, 0);
+                if (reduce(input, new Rectangle2(rectangle), rectangle3)) {
+                    //rectangle2 = new Rectangle2(rectangle);// PROVISOIRE
+                    List<Character> candidates = recognize(input, rectangle3);
+                    if (candidates.size() >= 1) {
+                        ///System.out.printf("In %s, Rectangle = (%d,%d,%d,%d) \t\tCandidates: ", name, i, j, w, h);
+                        //candidates.forEach(System.out::print);
+                        //
+                        final String[] s = {""};
+                        candidates.forEach(character -> s[0] += character);
+                        if (candidates.size() > 1) {
+                            writer.writeLine(new String[]{name, "" + i, "" + j, "" + w, "" + h, s[0], "\n"});
+                            System.err.println();
+                            Logger.getAnonymousLogger().info("Characters {" + s[0] + "} (" + i + ", " + j + ")");
+                        }
+                        if (s[0].length() > 0)
+                            pwTxt.println(s[0]);
+                        Color random = Colors.random();
+                        output.plotCurve(rectangle, new TextureCol(random));
+                        countRects++;
+                        rectangles2.add(rectangle3);
+                        PixM outChar = input.copySubImage(rectangle3.getX(),
+                                rectangle3.getY(), rectangle3.getW(), rectangle3.getH());
+                        outRecompose.pasteSubImage(outChar,
+                                rectangle3.getX(), rectangle3.getY(), rectangle3.getW(), rectangle3.getH());
+                        if (isExporting()) {
+                            File file = new File(dirOutChars + "-" + j + "-" + i + "-" + w + "-" + h + "-" + s[0] + ".jpg");
+                            if (!file.getParentFile().exists() || file.getParentFile().isDirectory()) {
+                                file.getParentFile().mkdirs();
+                                try {
+                                    ImageIO.write(outChar.getImage(), "jpg", file);
                                 } catch (IOException e) {
                                     throw new RuntimeException(e);
                                 }
@@ -1064,6 +1274,7 @@ public class ResolutionCharacter8 implements Runnable {
         }
         return output.normalize(0., 1.);
     }
+
     class State {
         public Point3D xyz;
         public double step;

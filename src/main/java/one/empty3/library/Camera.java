@@ -127,19 +127,15 @@ public class Camera extends CameraBox {
         if (!imposerMatrice.getElem()) {
             if (vertical == null) {
                 verticale.setElem( calculerVerticaleParDefaut(getLookat().moins(eye.getElem())) );
+            } else {
+                verticale.setElem(vertical);
             }
-///*
+
             Point3D z = getLookat().moins(getEye()).norme1();
             Point3D x = z.prodVect(verticale.getElem()).norme1();
-            Point3D y = z.prodVect(x).mult(-1.);//verticale;
-//*/
-/*
-            Point3D z = getLookat().moins(getEye()).norme1();
-            Point3D y = (verticale).norme1();
-            Point3D x = y.prodVect(z);//verticale;
-*/
+            Point3D y = z.prodVect(x);
+
             setMatrix(x, y, z);
-            //matrice.setElem(matrice.getElem().tild());
         }
     }
 

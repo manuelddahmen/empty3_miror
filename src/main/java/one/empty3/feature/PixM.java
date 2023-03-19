@@ -666,9 +666,11 @@ public class PixM extends M {
         for(int x=i; x<i+w; x++) {
             for(int y=j; y<j+h; y++) {
                 for(int c=0; c<3; c++) {
+                    int x0 =(int)( 1.0*(x-i)/w*copySubImage.getColumns());
+                    int y0 =(int)( 1.0*(y-j)/h*copySubImage.getLines());
                     setCompNo(c);
                     copySubImage.setCompNo(c);
-                    set(x, y, copySubImage.get(x-i, y-j));
+                    set(x, y, copySubImage.get(x0, y0));
                 }
             }
 
