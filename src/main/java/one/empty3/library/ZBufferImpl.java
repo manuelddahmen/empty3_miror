@@ -56,7 +56,7 @@ public class ZBufferImpl extends Representable implements ZBuffer {
     public static int CURVES_MAX_DEEP = 10;
     public static int SURFAS_MAX_DEEP = 10;
     // DEFINITIONS
-    public static double INFINITY_DEEP = 1E10;
+    public static double INFINITY_DEEP = -1E10;
     public static Point3D INFINITY = new Point3D(0d, 0d, INFINITY_DEEP);
     public ImageMap ime;
     public Box2D box;
@@ -417,7 +417,7 @@ public class ZBufferImpl extends Representable implements ZBuffer {
     }
 
     public int getColorAt(Point p) {
-        if (ime.getIME().getElementProf((int) p.getX(), (int) p.getY()) >= INFINITY_DEEP) {
+        if (ime.getIME().getElementProf((int) p.getX(), (int) p.getY()) <= INFINITY_DEEP) {
             return ime.getIME().getElementCouleur((int) p.getX(), (int) p.getY());
         } else {
             return Color.TRANSLUCENT;
@@ -1405,7 +1405,7 @@ public class ZBufferImpl extends Representable implements ZBuffer {
             int y = (int) ce.getY();
             double deep = camera().distanceCamera(x3d);
             if (x >= 0 & x < la & y >= 0 & y < ha
-                    && (deep <= ime.getElementProf(x, y))) {
+                    && (deep >= ime.getElementProf(x, y))) {
                 Point3D n = x3d.getNormale();
                 // Vérifier : n.eye>0 sinon n = -n Avoir toutes les normales
                 // dans la même direction par rapport à la caméra.
@@ -1564,7 +1564,7 @@ public class ZBufferImpl extends Representable implements ZBuffer {
         public int getElementCouleur(int x, int y) {
             if (checkCordinates(x, y)
                     && Simeid[x][y] == idImg
-                    && Simeprof[x][y] < INFINITY.getZ()) {
+                    && Simeprof[x][y] > INFINITY.getZ()) {
                 return getRGBInt(Scolor, x, y);
             } else {
                 return COULEUR_FOND_INT(x, y);

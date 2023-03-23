@@ -21,7 +21,6 @@ package one.empty3.testscopy.tests;
 
 import one.empty3.feature.app.replace.javax.imageio.ImageIO;
 import one.empty3.library.*;
-import one.empty3.library.core.nurbs.PcOnPs;
 import one.empty3.library.core.testing.TestObjetSub;
 
 import java.awt.*;
@@ -67,7 +66,6 @@ public class TestPlanets extends TestObjetSub {
         camera(c);
         i = -1;
 
-
        }
 
     @Override
@@ -84,7 +82,9 @@ public class TestPlanets extends TestObjetSub {
         i++;
         if (i < planetsImagesFiles.length)
             image = ImageIO.read(planetsImagesFiles[i]);
-        else return;
+        else {
+            i = 0;
+        };
 
         System.out.println("Planets:" + i + "/" + planetsImagesFiles.length);
     }
@@ -128,7 +128,7 @@ public class TestPlanets extends TestObjetSub {
     }
 
     private static double getaDouble() {
-        return 1.0 * TURNS * FPS * SECONDS;
+        return 1.0 * FPS * SECONDS;
     }
 
     @Override
