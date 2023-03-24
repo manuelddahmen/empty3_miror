@@ -51,11 +51,11 @@ public class Sphere extends ParametricSurface {
         }
         double cos = Math.cos(-Math.PI / 2 + Math.PI * v);
         return c.getCenter().plus(
-                c.vectX.mult(
+                c.getVectX().mult(
                         Math.cos(2.0 * Math.PI * u) * cos).plus(
-                        c.vectY.mult(
+                        c.getVectY().mult(
                                 Math.sin(2.0 * Math.PI * u) * cos))
-                                .plus(c.vectZ.mult(Math.sin(-Math.PI / 2 + Math.PI * v))
+                                .plus(c.getVectZ().mult(Math.sin(-Math.PI / 2 + Math.PI * v))
                 ).norme1().mult(c.radius.getElem()));
     }
 

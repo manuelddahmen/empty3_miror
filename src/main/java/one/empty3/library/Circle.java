@@ -38,6 +38,7 @@ public class Circle extends ParametricCurve {
     public Circle() {
         axis.setElem(new Axe());
         radius.setElem(10.0);
+        declareProperties();
     }
 
     public Circle(Axe axis, double radius) {

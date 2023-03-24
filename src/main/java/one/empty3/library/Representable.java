@@ -75,6 +75,10 @@ public class Representable /*extends RepresentableT*/ implements Serializable, C
     public Representable() {
         if (!(this instanceof Matrix33 || this instanceof Point3D || this instanceof Camera)) {
             rotation.setElem(new Rotation());
+            vectors = new StructureMatrix<>(1, Point3D.class);
+            vectors.setElem(Point3D.X);
+            vectors.setElem(Point3D.Y);
+            vectors.setElem(Point3D.Z);
             //scale = new Point3D(1d, 1d, 1d);
             //texture = new TextureCol(Colors.random());
 
