@@ -38,6 +38,7 @@ import java.util.logging.Logger;
 import java.util.logging.Level;
 public class Representable /*extends RepresentableT*/ implements Serializable, Comparable, XmlRepresentable, MatrixPropertiesObject, TemporalComputedObject3D {
 
+    protected StructureMatrix<Point3D> vectors;
 
     public static final int DISPLAY_ALL = 0;
     public static final int SURFACE_DISPLAY_TEXT_QUADS = 1;
@@ -286,6 +287,7 @@ public class Representable /*extends RepresentableT*/ implements Serializable, C
                 && getRotation().getElem() != null && !(this instanceof Point3D)) {
             getDeclaredDataStructure().put("rotation/Rotation", rotation);
         }
+        getDeclaredDataStructure().put("vectors/vectors", vectors);
     }
 
     public Map<String, StructureMatrix> declarations() {
@@ -584,7 +586,29 @@ public class Representable /*extends RepresentableT*/ implements Serializable, C
 
     }
 
-    
+    public Point3D getVectX() {
+        return vectors.getElem(0);
+    }
+
+    public void setVectX(Point3D vectX) {
+        this.vectors.setElem(vectX, 0);
+    }
+
+    public Point3D getVectY() {
+        return vectors.getElem(1);
+    }
+
+    public void setVectY(Point3D vectY) {
+        this.vectors.setElem(vectY, 1);
+    }
+
+    public Point3D getVectZ() {
+        return vectors.getElem(2);
+    }
+
+    public void setVectZ(Point3D vectZ) {
+        this.vectors.setElem(vectZ, 2);
+    }
 }
 
 

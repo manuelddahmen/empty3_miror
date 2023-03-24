@@ -32,9 +32,6 @@ public class Circle extends ParametricCurve {
     protected StructureMatrix<Axe> axis = new StructureMatrix<>(0, Axe.class);
     //public Point3D center;
     protected StructureMatrix<Double> radius = new StructureMatrix<>(0, Double.class);
-    protected Point3D vectX;
-    protected Point3D vectY;
-    protected Point3D vectZ;
     private boolean isCalculerRepere1 = false;
     private Point3D center;
 
@@ -83,15 +80,15 @@ public class Circle extends ParametricCurve {
                     .prodVect(axis.getElem().getVector().norme1()
                             .prodVect(pRef).norme1());
             double d = mult.prodScalaire(pRef);
-            vectY = axis.getElem().getVector().norme1();
-            vectZ = mult.norme1();
-            vectX = vectY.prodVect(vectZ);
-            success = (vectX.norme() > 0.8)
-                    && (vectY.norme() > 0.8)
-                    && (vectZ.norme() > 0.8)
-                    && (vectX.prodVect(vectY).norme() > 0.8)
-                    && (vectY.prodVect(vectZ).norme() > 0.8)
-                    && (vectZ.prodVect(vectX).norme() > 0.8);
+            setVectY(axis.getElem().getVector().norme1());
+            setVectZ(mult.norme1());
+            setVectX(getVectY().prodVect(getVectZ()));
+            success = (getVectX().norme() > 0.8)
+                    && (getVectY().norme() > 0.8)
+                    && (getVectZ().norme() > 0.8)
+                    && (getVectX().prodVect(getVectY()).norme() > 0.8)
+                    && (getVectY().prodVect(getVectZ()).norme() > 0.8)
+                    && (getVectZ().prodVect(getVectX()).norme() > 0.8);
             if (success)
                 break;
             i++;
@@ -118,10 +115,10 @@ public class Circle extends ParametricCurve {
             calculerRepere1();
         return getCenter().plus(
                 (
-                        vectX.mult(
+                        getVectX().mult(
                                 Math.cos(2.0 * Math.PI * t))
                                 .plus(
-                                        vectY.mult(
+                                        getVectY().mult(
                                                 Math.sin(2.0 * Math.PI * t)))
                 )
                         .mult(radius.getElem())
@@ -148,29 +145,6 @@ public class Circle extends ParametricCurve {
         this.radius.setElem(radius);
     }
 
-    public Point3D getVectX() {
-        return vectX;
-    }
-
-    public void setVectX(Point3D vectX) {
-        this.vectX = vectX;
-    }
-
-    public Point3D getVectY() {
-        return vectY;
-    }
-
-    public void setVectY(Point3D vectY) {
-        this.vectY = vectY;
-    }
-
-    public Point3D getVectZ() {
-        return vectZ;
-    }
-
-    public void setVectZ(Point3D vectZ) {
-        this.vectZ = vectZ;
-    }
 
     public Point3D getvAxis() {
         return axis.getElem().getVector();
