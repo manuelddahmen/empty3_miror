@@ -20,9 +20,11 @@
 package one.empty3.testscopy.tests;
 
 import one.empty3.library.Camera;
+import one.empty3.library.ColorTexture;
 import one.empty3.library.Point3D;
 import one.empty3.library.core.testing.TestObjetSub;
 
+import java.awt.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -31,8 +33,9 @@ public class TestVoiture extends TestObjetSub {
         scene().add(new Voiture());
         scene().cameraActive(new Camera());
         setMaxFrames(1);
-        scene().cameraActive(new Camera(new Point3D(0.0, 0.0, -1000.0),
+        scene().cameraActive(new Camera(new Point3D(0.0, 0.0, 5000.0),
                 new Point3D(0.0,0.0,0.0), Point3D.Y));
+        z().texture(new ColorTexture(Color.RED));
     }
     @Override
     public void finit() throws Exception {
