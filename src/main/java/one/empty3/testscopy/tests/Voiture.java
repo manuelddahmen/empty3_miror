@@ -191,7 +191,7 @@ public class Voiture extends RepresentableConteneur {
         }
 
         public Double getHauteurPorte() {
-                return 200.;
+                return 400.;
         }
 
         public double getHauteurBasCaisse() {
@@ -199,6 +199,6 @@ public class Voiture extends RepresentableConteneur {
         }
 
         public double getHauteurCoffre() {
-                return 100;
+                return 200;
         }
 }

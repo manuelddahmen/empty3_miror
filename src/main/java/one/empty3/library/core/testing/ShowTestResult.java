@@ -84,6 +84,7 @@ public final class ShowTestResult extends javax.swing.JFrame implements Runnable
      */
     public ShowTestResult() {
 
+
         initComponents();
 
         jPanel1.setSize(jPanel1.getWidth(), 200);

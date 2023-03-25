@@ -29,8 +29,8 @@ public class Chassis extends RepresentableConteneur {
     private double largeurMuseau;
     private double longueurArriere = 100.;
 
-    private double hauteur2 = 80.;
-    private double hauteur1 = 40;
+    private double hauteur2 = 200.;
+    private double hauteur1 = 10;
 
     public Chassis(Voiture voiture) {
         this.voiture = voiture;

@@ -24,16 +24,6 @@
  * 2013-2020 Manuel Dahmen
  */
 package one.empty3.library.core.testing;
-/*
-import one.empty3.library.objloader.ModelLoaderOBJ;
-import ru.sbtqa.monte.media.avi.AVIWriter;
-import ru.sbtqa.monte.media.Format;
-import ru.sbtqa.monte.media.FormatKeys;
-import ru.sbtqa.monte.media.FormatKeys.MediaType;
-import ru.sbtqa.monte.media.VideoFormatKeys;
-import ru.sbtqa.monte.media.avi.AVIWriter;
-import ru.sbtqa.monte.media.math.Rational;
-*/
 
 import one.empty3.gui.DataModel;
 import one.empty3.library.*;
@@ -96,7 +86,7 @@ public abstract class TestObjet implements Test, Runnable {
     protected ZBufferImpl z;
     AWTSequenceEncoder encoder;
     Properties properties = new Properties();
-    ShowTestResult str;
+    one.empty3.library.core.testing2.ShowTestResult str;
     private File avif;
     //private AVIWriter aw;
     private boolean aviOpen = false;
@@ -657,7 +647,7 @@ public abstract class TestObjet implements Test, Runnable {
     public void publishResult() {
         if (getPublish()) {
 
-            str = new ShowTestResult(ri);
+            str = new one.empty3.library.core.testing2.ShowTestResult(ri);
             str.setImageContainer(biic);
             str.setTestObjet(this);
             new Thread(str).start();
