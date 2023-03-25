@@ -22,9 +22,8 @@
  */
 package one.empty3.library.core.testing2;
 
-import java.awt.event.*;
-import javax.swing.table.*;
-import net.miginfocom.swing.*;
+import com.formdev.flatlaf.*;
+import net.miginfocom.swing.MigLayout;
 import one.empty3.library.ECBufferedImage;
 import one.empty3.library.core.testing.ImageContainer;
 import one.empty3.library.core.testing.TestObjet;
@@ -33,14 +32,15 @@ import one.empty3.library.core.testing.TextAreaOutputStream;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import com.formdev.flatlaf.FlatLightLaf;
+
 /*__
  * @author Manuel DAHMEN
  */
@@ -56,6 +56,12 @@ public final class ShowTestResult extends JFrame implements Runnable {
     private boolean stop = false;
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private JMenuBar menuBar1;
+    private JMenu menu1;
+    private JMenuItem menuItem4;
+    private JMenuItem menuItem1;
+    private JMenuItem menuItem2;
+    private JMenuItem menuItem3;
     private JSplitPane jSplitPane1;
     private JPanel jPanel1;
     private JSplitPane jSplitPane2;
@@ -70,6 +76,7 @@ public final class ShowTestResult extends JFrame implements Runnable {
     private JButton jButtonDemarrerNouveauFilm;
     private JTextField jTextField1;
     private JButton button4;
+    private JButton buttonShowModel;
     private JButton button2;
     // End of variables declaration//GEN-END:variables
     private TestObjet testRef;
@@ -83,9 +90,6 @@ public final class ShowTestResult extends JFrame implements Runnable {
      * Creates new form ShowTestResult
      */
     public ShowTestResult() {
-        com.formdev.flatlaf.FlatDarkLaf.setup();
-        JFrame.setDefaultLookAndFeelDecorated(true);
-
         initComponents();
 
         jPanel1.setSize(jPanel1.getWidth(), 200);
@@ -177,7 +181,7 @@ public final class ShowTestResult extends JFrame implements Runnable {
                         jPanel1.getGraphics().drawString(biic.getStr(), 10, 10);
                         jPanel1.getGraphics().drawString(" ? Pause ? " + testRef.isPause() + " ? Pause active ? " + testRef.isPauseActive(), 50, 10);
                         jLabelFrame.setText("f n°" + testRef.frame() + " / " + testRef.getMaxFrames());
-                        jTextField1.setText("Frame no" + (testRef.frame()+1));
+                        jTextField1.setText("Frame no" + (testRef.frame() + 1));
                     }
                     //Graphics gg = jPanel4.getGraphics();
                     //gimballs.draw(gg, new Rectangle(jPanel4.getWidth()-30, jPanel4.getHeight()-30, jPanel4.getWidth()-1,jPanel4.getHeight()-1));
@@ -263,6 +267,45 @@ public final class ShowTestResult extends JFrame implements Runnable {
         return this.button4;
     }
 
+    public JMenuBar getMenuBar1() {
+        return this.menuBar1;
+    }
+
+    public JMenu getMenu1() {
+        return this.menu1;
+    }
+
+    public JMenuItem getMenuItem1() {
+        return this.menuItem1;
+    }
+
+    public JMenuItem getMenuItem2() {
+        return this.menuItem2;
+    }
+
+    public JMenuItem getMenuItem3() {
+        return this.menuItem3;
+    }
+
+    public JMenuItem getMenuItem4() {
+        return this.menuItem4;
+    }
+
+    public JButton getButtonShowModel() {
+        return this.buttonShowModel;
+    }
+
+    private void showModel(ActionEvent e) {
+        File writtenFile = testRef.getWrittenFile();
+        if (writtenFile != null)
+            try {
+                Desktop.getDesktop().open(writtenFile);
+
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+    }
+
     public void exceptionReception(Exception t) {
         this.throwable = t;
         try {
@@ -286,6 +329,12 @@ public final class ShowTestResult extends JFrame implements Runnable {
     // <editor-fold defaultstate="collapsed"
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        this.menuBar1 = new JMenuBar();
+        this.menu1 = new JMenu();
+        this.menuItem4 = new JMenuItem();
+        this.menuItem1 = new JMenuItem();
+        this.menuItem2 = new JMenuItem();
+        this.menuItem3 = new JMenuItem();
         this.jSplitPane1 = new JSplitPane();
         this.jPanel1 = new JPanel();
         this.jSplitPane2 = new JSplitPane();
@@ -300,9 +349,17 @@ public final class ShowTestResult extends JFrame implements Runnable {
         this.jButtonDemarrerNouveauFilm = new JButton();
         this.jTextField1 = new JTextField();
         this.button4 = new JButton();
+        this.buttonShowModel = new JButton();
         this.button2 = new JButton();
 
         //======== this ========
+        try {
+            UIManager.setLookAndFeel(new FlatDarkLaf());
+        } catch (Exception ex) {
+            System.err.println("Failed to initialize LaF");
+        }
+
+        // create UI here...
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         setBackground(new Color(0xccccff));
         addWindowListener(new WindowAdapter() {
@@ -313,12 +370,26 @@ public final class ShowTestResult extends JFrame implements Runnable {
         });
         var contentPane = getContentPane();
 
+        //======== menuBar1 ========
+        {
+
+            //======== menu1 ========
+            {
+                this.menu1.add(this.menuItem4);
+                this.menu1.add(this.menuItem1);
+                this.menu1.add(this.menuItem2);
+                this.menu1.add(this.menuItem3);
+            }
+            this.menuBar1.add(this.menu1);
+        }
+        setJMenuBar(this.menuBar1);
+
         //======== jSplitPane1 ========
         {
             try {
-                UIManager.setLookAndFeel( new FlatLightLaf() );
-            } catch( Exception ex ) {
-                System.err.println( "Failed to initialize LaF" );
+                UIManager.setLookAndFeel(new FlatLightLaf());
+            } catch (Exception ex) {
+                System.err.println("Failed to initialize LaF");
             }
 
             // create UI here...
@@ -342,20 +413,20 @@ public final class ShowTestResult extends JFrame implements Runnable {
                 //======== jPanel2 ========
                 {
                     this.jPanel2.setLayout(new MigLayout(
-                        "insets 0,hidemode 3,gap 5 5",
-                        // columns
-                        "[fill]" +
-                        "[fill]" +
-                        "[fill]" +
-                        "[fill]" +
-                        "[fill]" +
-                        "[fill]" +
-                        "[fill]" +
-                        "[fill]",
-                        // rows
-                        "[fill]" +
-                        "[fill]" +
-                        "[fill]"));
+                            "insets 0,hidemode 3,gap 5 5",
+                            // columns
+                            "[fill]" +
+                                    "[fill]" +
+                                    "[fill]" +
+                                    "[fill]" +
+                                    "[fill]" +
+                                    "[fill]" +
+                                    "[fill]" +
+                                    "[fill]",
+                            // rows
+                            "[fill]" +
+                                    "[fill]" +
+                                    "[fill]"));
 
                     //---- jCheckBoxOGL ----
                     this.jCheckBoxOGL.setText("Open GL");
@@ -407,6 +478,10 @@ public final class ShowTestResult extends JFrame implements Runnable {
                     this.button4.setText("Quitter");
                     this.button4.addActionListener(e -> formWindowClosing1(e));
                     this.jPanel2.add(this.button4, "cell 1 2");
+
+                    //---- buttonShowModel ----
+                    this.buttonShowModel.addActionListener(e -> showModel(e));
+                    this.jPanel2.add(this.buttonShowModel, "cell 2 2");
                 }
                 this.jSplitPane2.setLeftComponent(this.jPanel2);
 
@@ -421,16 +496,18 @@ public final class ShowTestResult extends JFrame implements Runnable {
         GroupLayout contentPaneLayout = new GroupLayout(contentPane);
         contentPane.setLayout(contentPaneLayout);
         contentPaneLayout.setHorizontalGroup(
-            contentPaneLayout.createParallelGroup()
-                .addGroup(contentPaneLayout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(this.jSplitPane1, GroupLayout.DEFAULT_SIZE, 901, Short.MAX_VALUE)
-                    .addContainerGap())
+                contentPaneLayout.createParallelGroup()
+                        .addGroup(contentPaneLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(this.jSplitPane1, GroupLayout.DEFAULT_SIZE, 901, Short.MAX_VALUE)
+                                .addContainerGap())
         );
         contentPaneLayout.setVerticalGroup(
-            contentPaneLayout.createParallelGroup()
-                .addComponent(this.jSplitPane1, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 404, Short.MAX_VALUE)
+                contentPaneLayout.createParallelGroup()
+                        .addComponent(this.jSplitPane1, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 404, Short.MAX_VALUE)
         );
+
+        initComponentsI18n();
 
         pack();
         setLocationRelativeTo(getOwner());
@@ -563,5 +640,17 @@ public final class ShowTestResult extends JFrame implements Runnable {
         //jTextAreaMessage.setText(jTextAreaMessage.getText() + "\n" + message);
     }
 
+
+    private void initComponentsI18n() {
+        // JFormDesigner - Component i18n initialization - DO NOT MODIFY  //GEN-BEGIN:initI18n  @formatter:off
+        ResourceBundle bundle = ResourceBundle.getBundle("one.empty3.library.core.testing2.bundle");
+        this.menu1.setText(bundle.getString("ShowTestResult.menu1.text"));
+        this.menuItem4.setText(bundle.getString("ShowTestResult.menuItem4.text"));
+        this.menuItem1.setText(bundle.getString("ShowTestResult.menuItem1.text"));
+        this.menuItem2.setText(bundle.getString("ShowTestResult.menuItem2.text"));
+        this.menuItem3.setText(bundle.getString("ShowTestResult.menuItem3.text"));
+        this.buttonShowModel.setText(bundle.getString("ShowTestResult.buttonShowModel.text"));
+        // JFormDesigner - End of component i18n initialization  //GEN-END:initI18n  @formatter:on
+    }
 }
 

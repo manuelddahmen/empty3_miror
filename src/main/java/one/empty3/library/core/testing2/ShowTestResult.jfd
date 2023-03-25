@@ -19,6 +19,9 @@ new FormModel {
 			name: "this"
 			"defaultCloseOperation": 0
 			"background": new java.awt.Color( 204, 204, 255, 255 )
+			auxiliary() {
+				"JavaCodeGenerator.preInitCode": "try {\n    UIManager.setLookAndFeel( new FlatDarkLaf() );\n} catch( Exception ex ) {\n    System.err.println( \"Failed to initialize LaF\" );\n}\n\n// create UI here..."
+			}
 			addEvent( new FormEvent( "java.awt.event.WindowListener", "windowClosing", "formWindowClosing", true ) )
 			add( new FormContainer( "javax.swing.JSplitPane", new FormLayoutManager( class javax.swing.JSplitPane ) ) {
 				name: "jSplitPane1"
@@ -117,6 +120,13 @@ new FormModel {
 						}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 							"value": "cell 1 2"
 						} )
+						add( new FormComponent( "javax.swing.JButton" ) {
+							name: "buttonShowModel"
+							"text": new FormMessage( null, "ShowTestResult.buttonShowModel.text" )
+							addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "showModel", true ) )
+						}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+							"value": "cell 2 2"
+						} )
 					}, new FormLayoutConstraints( class java.lang.String ) {
 						"value": "left"
 					} )
@@ -131,6 +141,29 @@ new FormModel {
 					"value": "right"
 				} )
 			} )
+			menuBar: new FormContainer( "javax.swing.JMenuBar", new FormLayoutManager( class javax.swing.JMenuBar ) ) {
+				name: "menuBar1"
+				add( new FormContainer( "javax.swing.JMenu", new FormLayoutManager( class javax.swing.JMenu ) ) {
+					name: "menu1"
+					"text": new FormMessage( null, "ShowTestResult.menu1.text" )
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "menuItem4"
+						"text": new FormMessage( null, "ShowTestResult.menuItem4.text" )
+					} )
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "menuItem1"
+						"text": new FormMessage( null, "ShowTestResult.menuItem1.text" )
+					} )
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "menuItem2"
+						"text": new FormMessage( null, "ShowTestResult.menuItem2.text" )
+					} )
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "menuItem3"
+						"text": new FormMessage( null, "ShowTestResult.menuItem3.text" )
+					} )
+				} )
+			}
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )
 			"size": new java.awt.Dimension( 915, 435 )

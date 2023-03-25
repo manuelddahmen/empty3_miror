@@ -505,7 +505,7 @@ public final class ShowTestResult extends JFrame implements Runnable {
         try {
             runtime.exec("explorer \"" + testRef.getSubfolder().getAbsolutePath() + "\"");
         } catch (IOException ex) {
-            Logger.getLogger(one.empty3.library.core.testing.ShowTestResult.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ShowTestResult.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -587,7 +587,7 @@ public final class ShowTestResult extends JFrame implements Runnable {
             try {
                 Thread.sleep(100);
             } catch (InterruptedException ex) {
-                Logger.getLogger(one.empty3.library.core.testing.ShowTestResult.class.getName()).log(
+                Logger.getLogger(ShowTestResult.class.getName()).log(
                         Level.SEVERE, null, ex);
             }
         }

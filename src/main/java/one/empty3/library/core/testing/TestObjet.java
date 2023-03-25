@@ -150,6 +150,7 @@ public abstract class TestObjet implements Test, Runnable {
     private Resolution dimension = HD1080;
     private String name;
     private FileChannelWrapper out;
+    private File file0;
 
     public TestObjet() {
 
@@ -315,11 +316,11 @@ public abstract class TestObjet implements Test, Runnable {
     public void exportFrame(String format, String filename) throws IOException {
 
         STLExport.save(
-                new File(directory.getAbsolutePath() + File.separator + "stlExportFormatTXT" + filename + ".stl"),
+                file0=new File(directory.getAbsolutePath() + File.separator + "stlExportFormatTXT" + filename + ".stl"),
                 scene(),
                 false);
         ObjExport.save(
-                new File(directory.getAbsolutePath() + File.separator + "objExportFormatTXT" + filename + ".obj"),
+                file0=new File(directory.getAbsolutePath() + File.separator + "objExportFormatTXT" + filename + ".obj"),
                 scene(),
                 false);
     }
@@ -1156,5 +1157,9 @@ public abstract class TestObjet implements Test, Runnable {
 
     public Color v2main() {
         return null;
+    }
+
+    public File getWrittenFile() {
+        return file0;
     }
 }
