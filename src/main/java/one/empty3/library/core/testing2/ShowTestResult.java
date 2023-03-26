@@ -297,13 +297,26 @@ public final class ShowTestResult extends JFrame implements Runnable {
 
     private void showModel(ActionEvent e) {
         File writtenFile = testRef.getWrittenFile();
-        if (writtenFile != null)
-            try {
-                Desktop.getDesktop().open(writtenFile);
-
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
+        if (writtenFile != null) {
+            if (!Desktop.isDesktopSupported()) {
+                return;
             }
+
+            Desktop desktop = Desktop.getDesktop();
+            if (!desktop.isSupported(Desktop.Action.BROWSE)) {
+                return;
+            }
+
+            try {
+                desktop.browse(writtenFile.toURI());
+            } catch (IOException ex) {
+                // Log an error
+                ex.printStackTrace();
+                return;
+            }
+
+            return;
+        }
     }
 
     public void exceptionReception(Exception t) {
@@ -354,9 +367,9 @@ public final class ShowTestResult extends JFrame implements Runnable {
 
         //======== this ========
         try {
-            UIManager.setLookAndFeel(new FlatDarkLaf());
-        } catch (Exception ex) {
-            System.err.println("Failed to initialize LaF");
+            UIManager.setLookAndFeel( new FlatDarkLaf() );
+        } catch( Exception ex ) {
+            System.err.println( "Failed to initialize LaF" );
         }
 
         // create UI here...
@@ -387,9 +400,9 @@ public final class ShowTestResult extends JFrame implements Runnable {
         //======== jSplitPane1 ========
         {
             try {
-                UIManager.setLookAndFeel(new FlatLightLaf());
-            } catch (Exception ex) {
-                System.err.println("Failed to initialize LaF");
+                UIManager.setLookAndFeel( new FlatLightLaf() );
+            } catch( Exception ex ) {
+                System.err.println( "Failed to initialize LaF" );
             }
 
             // create UI here...
@@ -413,20 +426,20 @@ public final class ShowTestResult extends JFrame implements Runnable {
                 //======== jPanel2 ========
                 {
                     this.jPanel2.setLayout(new MigLayout(
-                            "insets 0,hidemode 3,gap 5 5",
-                            // columns
-                            "[fill]" +
-                                    "[fill]" +
-                                    "[fill]" +
-                                    "[fill]" +
-                                    "[fill]" +
-                                    "[fill]" +
-                                    "[fill]" +
-                                    "[fill]",
-                            // rows
-                            "[fill]" +
-                                    "[fill]" +
-                                    "[fill]"));
+                        "insets 0,hidemode 3,gap 5 5",
+                        // columns
+                        "[fill]" +
+                        "[fill]" +
+                        "[fill]" +
+                        "[fill]" +
+                        "[fill]" +
+                        "[fill]" +
+                        "[fill]" +
+                        "[fill]",
+                        // rows
+                        "[fill]" +
+                        "[fill]" +
+                        "[fill]"));
 
                     //---- jCheckBoxOGL ----
                     this.jCheckBoxOGL.setText("Open GL");
@@ -496,15 +509,15 @@ public final class ShowTestResult extends JFrame implements Runnable {
         GroupLayout contentPaneLayout = new GroupLayout(contentPane);
         contentPane.setLayout(contentPaneLayout);
         contentPaneLayout.setHorizontalGroup(
-                contentPaneLayout.createParallelGroup()
-                        .addGroup(contentPaneLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(this.jSplitPane1, GroupLayout.DEFAULT_SIZE, 901, Short.MAX_VALUE)
-                                .addContainerGap())
+            contentPaneLayout.createParallelGroup()
+                .addGroup(contentPaneLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(this.jSplitPane1, GroupLayout.DEFAULT_SIZE, 901, Short.MAX_VALUE)
+                    .addContainerGap())
         );
         contentPaneLayout.setVerticalGroup(
-                contentPaneLayout.createParallelGroup()
-                        .addComponent(this.jSplitPane1, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 404, Short.MAX_VALUE)
+            contentPaneLayout.createParallelGroup()
+                .addComponent(this.jSplitPane1, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 404, Short.MAX_VALUE)
         );
 
         initComponentsI18n();

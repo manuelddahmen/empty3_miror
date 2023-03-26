@@ -128,8 +128,8 @@ public class ObjExport extends Exporter {
 
     private static void traite(ParametricSurface r, PrintWriter pw) {
         print("", pw);
-        int countU = (int) ((r.getStartU() - r.getEndU()) / r.getIncrU());
-        int countV = (int) ((r.getStartV() - r.getEndV()) / r.getIncrV());
+        int countU = (int) ((r.getEndU()- r.getStartU() ) / r.getIncrU());
+        int countV = (int) ((r.getEndV() - r.getStartV()) / r.getIncrV());
         for (int i = 0; i < countU; i++) {
             for (int j = 0; j < countV; j++) {
                 double u = 1.0 * (1.0 * i / countU) * (r.getEndU() - r.getStartU()) + r.getStartU();

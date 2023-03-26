@@ -320,7 +320,7 @@ public abstract class TestObjet implements Test, Runnable {
                 scene(),
                 false);
         ObjExport.save(
-                file0=new File(directory.getAbsolutePath() + File.separator + "objExportFormatTXT" + filename + ".obj"),
+                /*file0=*/new File(directory.getAbsolutePath() + File.separator + "objExportFormatTXT" + filename + ".obj"),
                 scene(),
                 false);
     }
