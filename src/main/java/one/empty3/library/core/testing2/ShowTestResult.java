@@ -70,7 +70,6 @@ public final class ShowTestResult extends JFrame implements Runnable {
     private JCheckBox jCheckBoxModeles;
     private JCheckBox jCheckBoxFilmRec;
     private JCheckBox jCheckBoxImagesRec;
-    private JLabel jLabelFrame;
     private JTextField jTextField2;
     private JButton button3;
     private JButton jButtonDemarrerNouveauFilm;
@@ -78,6 +77,8 @@ public final class ShowTestResult extends JFrame implements Runnable {
     private JButton button4;
     private JButton buttonShowModel;
     private JButton button2;
+    private JScrollPane scrollPane1;
+    private JEditorPane editorPane1;
     // End of variables declaration//GEN-END:variables
     private TestObjet testRef;
 
@@ -180,7 +181,6 @@ public final class ShowTestResult extends JFrame implements Runnable {
                         // jPanel1.getGraphics().drawRect(0, 0, 400, 200);
                         jPanel1.getGraphics().drawString(biic.getStr(), 10, 10);
                         jPanel1.getGraphics().drawString(" ? Pause ? " + testRef.isPause() + " ? Pause active ? " + testRef.isPauseActive(), 50, 10);
-                        jLabelFrame.setText("f n°" + testRef.frame() + " / " + testRef.getMaxFrames());
                         jTextField1.setText("Frame no" + (testRef.frame() + 1));
                     }
                     //Graphics gg = jPanel4.getGraphics();
@@ -259,10 +259,6 @@ public final class ShowTestResult extends JFrame implements Runnable {
         return this.button3;
     }
 
-    public JLabel getJLabelFrame() {
-        return this.jLabelFrame;
-    }
-
     public JButton getButton4() {
         return this.button4;
     }
@@ -319,6 +315,14 @@ public final class ShowTestResult extends JFrame implements Runnable {
         }
     }
 
+    public JScrollPane getScrollPane1() {
+        return this.scrollPane1;
+    }
+
+    public JEditorPane getEditorPane1() {
+        return this.editorPane1;
+    }
+
     public void exceptionReception(Exception t) {
         this.throwable = t;
         try {
@@ -356,7 +360,6 @@ public final class ShowTestResult extends JFrame implements Runnable {
         this.jCheckBoxModeles = new JCheckBox();
         this.jCheckBoxFilmRec = new JCheckBox();
         this.jCheckBoxImagesRec = new JCheckBox();
-        this.jLabelFrame = new JLabel();
         this.jTextField2 = new JTextField();
         this.button3 = new JButton();
         this.jButtonDemarrerNouveauFilm = new JButton();
@@ -364,6 +367,8 @@ public final class ShowTestResult extends JFrame implements Runnable {
         this.button4 = new JButton();
         this.buttonShowModel = new JButton();
         this.button2 = new JButton();
+        this.scrollPane1 = new JScrollPane();
+        this.editorPane1 = new JEditorPane();
 
         //======== this ========
         try {
@@ -375,6 +380,7 @@ public final class ShowTestResult extends JFrame implements Runnable {
         // create UI here...
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         setBackground(new Color(0xccccff));
+        setIconImage(new ImageIcon(getClass().getResource("/one/empty3/library/mite.png")).getImage());
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -426,7 +432,7 @@ public final class ShowTestResult extends JFrame implements Runnable {
                 //======== jPanel2 ========
                 {
                     this.jPanel2.setLayout(new MigLayout(
-                        "insets 0,hidemode 3,gap 5 5",
+                        "fill,insets 0,hidemode 3,gap 5 5",
                         // columns
                         "[fill]" +
                         "[fill]" +
@@ -439,7 +445,8 @@ public final class ShowTestResult extends JFrame implements Runnable {
                         // rows
                         "[fill]" +
                         "[fill]" +
-                        "[fill]"));
+                        "[fill]" +
+                        "[]"));
 
                     //---- jCheckBoxOGL ----
                     this.jCheckBoxOGL.setText("Open GL");
@@ -464,10 +471,6 @@ public final class ShowTestResult extends JFrame implements Runnable {
                     this.jCheckBoxImagesRec.setSelectedIcon(new ImageIcon(getClass().getResource("/one/empty3/library/core/testing2/RESULT_SUCCESS.jpg")));
                     this.jCheckBoxImagesRec.addActionListener(e -> jCheckBoxImagesRecActionPerformed(e));
                     this.jPanel2.add(this.jCheckBoxImagesRec, "cell 2 0");
-
-                    //---- jLabelFrame ----
-                    this.jLabelFrame.setText("XXX");
-                    this.jPanel2.add(this.jLabelFrame, "cell 3 0");
 
                     //---- jTextField2 ----
                     this.jTextField2.setText("movie#no");
@@ -495,13 +498,19 @@ public final class ShowTestResult extends JFrame implements Runnable {
                     //---- buttonShowModel ----
                     this.buttonShowModel.addActionListener(e -> showModel(e));
                     this.jPanel2.add(this.buttonShowModel, "cell 2 2");
+
+                    //---- button2 ----
+                    this.button2.setText("Parcourir");
+                    this.button2.addActionListener(e -> parcourir(e));
+                    this.jPanel2.add(this.button2, "cell 0 3");
                 }
                 this.jSplitPane2.setLeftComponent(this.jPanel2);
 
-                //---- button2 ----
-                this.button2.setText("Parcourir");
-                this.button2.addActionListener(e -> parcourir(e));
-                this.jSplitPane2.setRightComponent(this.button2);
+                //======== scrollPane1 ========
+                {
+                    this.scrollPane1.setViewportView(this.editorPane1);
+                }
+                this.jSplitPane2.setRightComponent(this.scrollPane1);
             }
             this.jSplitPane1.setBottomComponent(this.jSplitPane2);
         }

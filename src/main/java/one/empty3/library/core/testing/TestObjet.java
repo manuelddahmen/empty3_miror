@@ -172,12 +172,6 @@ public abstract class TestObjet implements Test, Runnable {
         }
     }
 
-    public static void main(String[] args) {
-        TestObjet gui = new TestObjetSub();
-        gui.loop(true);
-        gui.setMaxFrames(2000);
-        new Thread(gui).start();
-    }
 
     protected ZBufferImpl z() {
         return z;
