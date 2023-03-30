@@ -17,22 +17,9 @@
  *    limitations under the License.
  */
 
-package one.empty3.feature;
+package one.empty3.library;
 
-import one.empty3.io.ProcessFile;
+import one.empty3.library.core.tribase.Plan3D;
 
-import java.io.File;
-
-public abstract class ProcessInMemory extends ProcessFile {
-
-
-    public PixM processInMemory(one.empty3.feature.PixM in) {
-        return in.copy();
-    }
-
-    @Deprecated
-    @Override
-    public boolean process(File in, File out) {
-        return super.process(in, out);
-    }
+public class Plane extends Plan3D {
 }

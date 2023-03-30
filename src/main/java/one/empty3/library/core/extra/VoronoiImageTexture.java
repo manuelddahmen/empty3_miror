@@ -21,22 +21,15 @@ package one.empty3.library.core.extra;
 
 import one.empty3.feature.PixM;
 import one.empty3.feature.ProcessInMemory;
-import one.empty3.io.ProcessFile;
-import one.empty3.library.ECBufferedImage;
-import one.empty3.library.ImageTexture;
-import one.empty3.library.Point3D;
+import one.empty3.library.*;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 public class VoronoiImageTexture extends ProcessInMemory {
-    public VoronoiImageTexture() {
-        super();
-    }
 
+
+    private static final double N = 50;
 
     private Point3D near(Point3D point3D, List<Point3D> p) {
         double dist = 1000000;
@@ -59,14 +52,14 @@ public class VoronoiImageTexture extends ProcessInMemory {
     }
 
 
-    public PixM ProcessInMemory(PixM in) {
-        PixM out = super.ProcessInMemory(in);
+    public PixM processInMemory(PixM in) {
+        PixM out = super.processInMemory(in);
         try {
             List<Point3D> points = new ArrayList<>();
             PixM pixM = in;
             for (int i = 0; i < pixM.getColumns(); i++) {
                 for (int j = 0; j < pixM.getLines(); j++) {
-                    if (pixM.luminance(i, j) > 0.4) {
+                    if (pixM.luminance(i, j) > 0.4 && Math.random()<(1.+N)/out.getColumns()/out.getLines()) {
                         points.add(new Point3D((double) i, (double) j, pixM.luminance(i, j)));
                     }
                 }
@@ -96,4 +89,5 @@ public class VoronoiImageTexture extends ProcessInMemory {
             return in;
         }
     }
+
 }
