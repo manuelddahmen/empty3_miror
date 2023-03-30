@@ -32,7 +32,7 @@ import one.empty3.growth.graphics.Turtle3D_1;
 import one.empty3.library.*;
 import one.empty3.library.core.testing.TestObjetStub;
 import one.empty3.library.core.tribase.TRISphere;
-import one.empty3.test.TestCaseExtended;
+import one.empty3.growth.test.TestCaseExtended;
 import org.junit.Test;
 
 import java.awt.*;

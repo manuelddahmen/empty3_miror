@@ -22,7 +22,7 @@ package one.empty3.growth.graphics.test;
 import one.empty3.growth.*;
 import one.empty3.growth.graphics.DrawingLSystem2D;
 import one.empty3.growth.graphics.Turtle2D;
-import one.empty3.test.TestCaseExtended;
+import one.empty3.growth.test.TestCaseExtended;
 import org.junit.Test;
 
 import javax.imageio.ImageIO;
@@ -136,7 +136,9 @@ public class TestDrawingLSystem2D extends TestCaseExtended {
         try {
             File filename = getUniqueFilenameForProduction("testResults", "testDrawing", "jpg");
             ImageIO.write((RenderedImage) turtle2D.getZeImage(), "jpg", filename);
-        
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
 
 
     }

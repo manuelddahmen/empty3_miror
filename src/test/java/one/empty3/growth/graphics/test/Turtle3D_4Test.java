@@ -21,7 +21,7 @@ package one.empty3.growth.graphics.test;
 
 import one.empty3.growth.graphics.Turtle3D_4;
 import one.empty3.library.*;
-import one.empty3.test.TestCaseExtended;
+import one.empty3.growth.test.TestCaseExtended;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -73,6 +73,10 @@ public class Turtle3D_4Test extends TestCaseExtended {
             java.io.File imageFile = getUniqueFilenameForProduction("testResults", getClass().getCanonicalName() + "___test1", "jpg");
             ImageIO.write(z.image(), "jpg", imageFile);
             Logger.getAnonymousLogger().log(Level.INFO, imageFile + " written");
-        
+          } catch (Exception ex) {
+          ex.printStackTrace();
+    }    
+    
+
     }
 }

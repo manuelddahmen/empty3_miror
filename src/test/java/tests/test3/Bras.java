@@ -80,6 +80,11 @@ public class Bras extends TestObjetSub {
             scene().add(polyLine);
             polyLine.texture(textureDefault);
         }
+          } catch (Exception ex) {
+          ex.printStackTrace();
+    }    
+    
+
     }
 
     public void finit() {

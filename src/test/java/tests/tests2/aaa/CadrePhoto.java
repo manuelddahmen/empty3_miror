@@ -63,7 +63,11 @@ public class CadrePhoto extends TestObjetSub {
                     new ECBufferedImage(
                             ImageIO.read(
                                     new File("samples/img/herbe.jpg")))));
-        
+          } catch (Exception ex) {
+          ex.printStackTrace();
+    }    
+    
+
         scene().add(balle);
     }
 

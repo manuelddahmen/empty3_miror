@@ -20,7 +20,9 @@
 package one.empty3.growth.graphics.test;
 
 import junit.framework.TestCase;
+
 import static org.junit.Assert.assertEquals;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Before;
@@ -62,7 +64,10 @@ public class Turtle2DTest extends TestCase {
                 , new Point2D(0.0, 0.0).plus(o).get3D());
         try {
             ImageIO.write(bufferedImage, "jpg", new java.io.File("testResults/testLineRotate.jpg"));
-        
+        } catch (Exception ex) {
+            ex.printStackTrace();
+
+        }
 
 
     }

@@ -122,7 +122,7 @@ public class Sunset extends TestObjetSub {
             scene().add(polygon);
             scene().add(polygon1);
             Point3D eye = new Point3D(5.0, 0.2, 5.0);
-            Point3D lookAt = new Point3D(0.0, 0.2, 5.0);
+            Point3D lookAt = new Point3D(-5.0, 0.2, 5.0);
             Point3D pos = eye.plus(lookAt.moins(eye).mult(1.0*frame() / (FPS * VUE_1)));
             Camera camera = new Camera(pos, lookAt, Point3D.Y);
             camera.calculerMatrice(Point3D.Y);

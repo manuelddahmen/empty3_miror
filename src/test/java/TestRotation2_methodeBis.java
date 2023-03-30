@@ -19,7 +19,7 @@
 
 import one.empty3.growth.graphics.Rotation2;
 import one.empty3.library.Point3D;
-
+import one.empty3.growth.test.TestCaseExtended;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 

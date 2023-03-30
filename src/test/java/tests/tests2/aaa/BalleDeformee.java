@@ -66,6 +66,10 @@ public class BalleDeformee extends TestObjetSub {
                                     new ECBufferedImage(
                                             ImageIO.read(
                                                     new File("samples/img/pink-watercolor-texture.jpg"))))));
+          } catch (Exception ex) {
+          ex.printStackTrace();
+    }    
+    
 
         
         scene().add(balle);

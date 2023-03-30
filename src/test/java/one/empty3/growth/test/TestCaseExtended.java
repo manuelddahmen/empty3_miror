@@ -68,13 +68,19 @@ public class TestCaseExtended extends TestCase {
             } else {
                 createNewId(null);
             }
-        
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
         properties.put(getClass().getCanonicalName(), ((Integer) getSerId()).toString());
         try {
             properties.store(new FileOutputStream(file), "Saved again");
-        
+          } catch (Exception ex) {
+          ex.printStackTrace();
+    }    
+    
 
-        return getSerId();
+
+            return getSerId();
     }
 
     private void createNewId(Class myClass) {
@@ -118,7 +124,9 @@ public class TestCaseExtended extends TestCase {
             File imageFile = getUniqueFilenameForProduction("testResults", getClass().getCanonicalName() + "___" + getClass().getEnclosingMethod(), "jpg");
             ImageIO.write(image, "jpg", imageFile);
             Logger.getAnonymousLogger().log(Level.INFO, imageFile + " written");
-        
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     protected void writeImage(ZBuffer z) {

@@ -63,6 +63,11 @@ public class TestThierryJaspart extends TestObjetSub {
         s.setIncrU(0.1);
         s.setIncrV(0.1);
         s.texture(texture);
+          } catch (Exception ex) {
+          ex.printStackTrace();
+    }    
+    
+
     }
 
 
