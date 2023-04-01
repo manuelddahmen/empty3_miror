@@ -23,7 +23,6 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 public class ColoredMap {
@@ -39,7 +38,7 @@ public class ColoredMap {
         Pixeler pixeler = new Pixeler(image);
         CsvReader csvReader = new CsvReader(new File("allCountries/allCountries.txt"),
                 "" + '\t', "" + '\n', false);
-        csvReader.setAction(new DrawPerCountryAction(pixeler));
+        csvReader.setAction(new DrawPerCountryCsvAction(pixeler));
         csvReader.process();
         try {
             ImageIO.write(pixeler.getImage(), "jpg", Seriald.newOutputFile("ColoredMap"));

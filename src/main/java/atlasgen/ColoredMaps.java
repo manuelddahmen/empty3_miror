@@ -75,7 +75,7 @@ public class ColoredMaps {
 
                 CsvReader csvReader1 = new CsvReader(new File("allCountries/allCountries.txt"),
                         "" + '\t', "" + '\n', false);
-                csvReader1.setAction(new DrawOneCountryAction(
+                csvReader1.setAction(new DrawOneCountryCsvAction(
                         pixeler,
                         myDim,
                         new ColorTexture(Colors.random())

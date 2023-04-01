@@ -30,7 +30,7 @@ import java.util.Map;
 /*__
  * Created by Manuel Dagmen on 29-06-18.
  */
-public class DrawOneCountryAction implements Action {
+public class DrawOneCountryCsvAction implements CsvAction {
     private final ITexture tex;
     private SetMinMax.MyDim dim;
     private String country;
@@ -39,9 +39,9 @@ public class DrawOneCountryAction implements Action {
 
     private Pixeler pixeler;
 
-    public DrawOneCountryAction(Pixeler pixeler,
-                                SetMinMax.MyDim dim,
-                                ITexture tex) {
+    public DrawOneCountryCsvAction(Pixeler pixeler,
+                                   SetMinMax.MyDim dim,
+                                   ITexture tex) {
         this.pixeler = pixeler;
         this.dim = dim;
         this.country = dim.getCountryCode();

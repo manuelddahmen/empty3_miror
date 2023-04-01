@@ -24,12 +24,12 @@ import java.awt.*;
 /*__
  * Created by manue on 19-06-18.
  */
-public class DrawAction implements Action {
+public class DrawCsvAction implements CsvAction {
 
     private Color color;
     private Pixeler pixeler;
 
-    public DrawAction(Pixeler pixeler, Color color) {
+    public DrawCsvAction(Pixeler pixeler, Color color) {
         this.pixeler = pixeler;
         this.color = color;
     }

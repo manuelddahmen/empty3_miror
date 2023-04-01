@@ -28,13 +28,13 @@ import java.util.Map;
 /*__
  * Created by Manuel Dagmen on 29-06-18.
  */
-public class DrawPerCountryAction implements Action {
+public class DrawPerCountryCsvAction implements CsvAction {
     private boolean firstPass = false;
     private Map<String, Color> colors = new HashMap<String, Color>();
 
     private Pixeler pixeler;
 
-    public DrawPerCountryAction(Pixeler pixeler) {
+    public DrawPerCountryCsvAction(Pixeler pixeler) {
         this.pixeler = pixeler;
     }
 

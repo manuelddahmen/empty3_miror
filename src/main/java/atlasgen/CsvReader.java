@@ -35,7 +35,7 @@ public class CsvReader {
     private File csvFile;
     private String csvLineSeparator;
     private List<String> columns = new ArrayList<>();
-    private Action action;
+    private CsvAction csvAction;
 
     public CsvReader(File csvFile, String csvFieldSeparator, String csvLineSeparator, boolean fileContainsFieldDescription) {
         this.csvFile = csvFile;
@@ -88,7 +88,7 @@ public class CsvReader {
 
 
                         // Traitement terminé. On passe à l'action
-                        action.processLine(new CsvLine(columns, split1));
+                        csvAction.processLine(new CsvLine(columns, split1));
                         countLines++;
                     }
                     // Reprendre ce qu'il reste pour la loop.
@@ -149,12 +149,12 @@ public class CsvReader {
         this.columns = columns;
     }
 
-    public Action getAction() {
-        return action;
+    public CsvAction getAction() {
+        return csvAction;
     }
 
-    public void setAction(Action action) {
-        this.action = action;
+    public void setAction(CsvAction csvAction) {
+        this.csvAction = csvAction;
     }
 }
 

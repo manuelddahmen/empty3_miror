@@ -34,7 +34,7 @@ import java.util.logging.Logger;
 /*__
  * Created by Manuel Dagmen on 29-06-18.
  */
-public class DrawPerCountryActionSphere implements Action {
+public class DrawPerCountryCsvActionSphere implements CsvAction {
     int countLine = 0;
     private final TestEarth testEarth;
     private boolean firstPass = false;
@@ -42,7 +42,7 @@ public class DrawPerCountryActionSphere implements Action {
 
     private Pixeler pixeler;
 
-    public DrawPerCountryActionSphere(TestEarth testEarth) {
+    public DrawPerCountryCsvActionSphere(TestEarth testEarth) {
         this.testEarth = testEarth;
     }
 
