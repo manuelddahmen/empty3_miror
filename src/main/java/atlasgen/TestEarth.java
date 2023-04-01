@@ -42,7 +42,7 @@ public class TestEarth extends TestSoS {
         setMaxFrames(360 * list.length);
         csvReader = new CsvReader(new File("allCountries/allCountries.txt"),
                 "" + '\t', "" + '\n', false);
-        csvReader.setAction(new DrawPerCountryActionSphere(this));
+        csvReader.setAction(new DrawPerCountryCsvActionSphere(this));
 
 
     }

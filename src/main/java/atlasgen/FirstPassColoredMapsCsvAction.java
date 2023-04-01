@@ -27,7 +27,7 @@ import java.util.HashMap;
 /*__
  * Created by Manuel Dahmen on 30-06-18.
  */
-public class FirstPassColoredMapsAction implements Action {
+public class FirstPassColoredMapsCsvAction implements CsvAction {
     private Pixeler pixeler;
     private HashMap<String, Color> colors = new HashMap<>();
 

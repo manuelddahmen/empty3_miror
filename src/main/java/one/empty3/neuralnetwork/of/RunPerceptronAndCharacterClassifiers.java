@@ -19,7 +19,7 @@
 
 package one.empty3.neuralnetwork.of;
 
-import atlasgen.Action;
+import atlasgen.CsvAction;
 import atlasgen.CsvLine;
 import atlasgen.CsvReader;
 import one.empty3.neuralnetwork.HiddenNeuron;
@@ -124,7 +124,7 @@ public class RunPerceptronAndCharacterClassifiers {
                     net.getHiddenLayerList().add(new HiddenNeuron(res* res));
                     net.getHiddenLayerList().add(new HiddenNeuron(res* res));
                     net.getOutputLayerList().add(new OutputNeuron(res* res));
-                    reader.setAction(new Action() {
+                    reader.setAction(new CsvAction() {
                         @Override
                         public void init() {
 

@@ -23,7 +23,6 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -38,7 +37,7 @@ public class SimpleMap {
         Pixeler pixeler = new Pixeler(new BufferedImage(1800, 1600, BufferedImage.TYPE_INT_RGB));
         CsvReader csvReader = new CsvReader(new File("allCountries/allCountries.txt"),
                 "" + '\t', "" + '\n', false);
-        csvReader.setAction(new DrawAction(pixeler, color));
+        csvReader.setAction(new DrawCsvAction(pixeler, color));
         csvReader.process();
         try {
             File file = Seriald.newOutputFile("SimpleMap");

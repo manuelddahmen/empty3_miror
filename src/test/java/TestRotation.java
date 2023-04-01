@@ -20,12 +20,11 @@
 import junit.framework.TestCase;
 import one.empty3.growth.graphics.Rotation2;
 import one.empty3.library.Point3D;
-import one.empty3.library.Rotation;
-import static one.empty3.growth.graphics.Rotation.rotate;
+import one.empty3.growth.graphics.Rotation;
 
 public class TestRotation extends TestCase {
 
-/*
+
     public void testRotationIdent1() {
         Point3D x = Rotation.rotate(Point3D.O0, Point3D.X,
                 2 * Math.PI, Point3D.Y);
@@ -140,5 +139,4 @@ public class TestRotation extends TestCase {
         assertEqualsPoint3D(intersection, new Point3D(1., 5., 0.), 0.001);
 
     }
-*/
 }

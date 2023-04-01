@@ -17,21 +17,17 @@
  *    limitations under the License.
  */
 
-package one.empty3.modeilling;
+package one.empty3.modelling;
 
 import one.empty3.feature.tryocr.Rectangle2;
 import one.empty3.library.Point3D;
-import one.empty3.library.Representable;
 import one.empty3.library.RepresentableConteneur;
 import one.empty3.library.Scene;
 import one.empty3.library.core.export.STLExport;
 import one.empty3.library.core.nurbs.SurfaceParametricPolygonalBezier;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.stream.Collectors;
 
 public class Face extends RepresentableConteneur {
     private Rectangle2 rectangle2 = new Rectangle2(-1, -1, 2, 2);

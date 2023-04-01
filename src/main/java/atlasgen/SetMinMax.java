@@ -31,7 +31,7 @@ import java.util.logging.Level;
 /*__
  * Created by Maauel Dahmen on 30-06-18.
  */
-public class SetMinMax implements Action {
+public class SetMinMax implements CsvAction {
     private HashMap<String, MyDim> colors = new HashMap<>();
 
     public HashMap<String, MyDim> getMyDims() {
