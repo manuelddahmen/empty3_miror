@@ -488,6 +488,7 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
                     }
                 }
             }
+            // Si la descendance est terminée
             if(currentSize==currentHead.size()) {
                 insertInTreeMap(lists, currentHead);
             }
@@ -495,9 +496,18 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
         return lists;
     }
 
+    /***
+     * ....????
+     *  insérer à la place de l'élément trouvé
+     *  sinon rechercher plus loin en amont dans la liste currentHead
+     *  et ajouter l'élément à l'emplacement trouvé
+     *  sinon ajouter comme branche principale
+     * @param lists arbre TreeMap
+     * @param currentHead liste n° des éléments du diagramme et en amont
+     */
     private void insertInTreeMap(TreeMap<ClassElement, ClassElement> lists, List<ClassElement> currentHead) {
-        //lists.descendingMap().currentHead.get(0));
-        lists.get(currentHead.get(0));
+        if(lists.containsKey(currentHead.get(0)))
+            lists.get(currentHead.get(0));
     }
 
     public void buttonGOActionPerformed(ActionEvent e) {
