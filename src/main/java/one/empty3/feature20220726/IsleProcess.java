@@ -23,9 +23,9 @@ import java.awt.Color;
 
 import one.empty3.io.ProcessFile;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 
-import javaAnd.awt.image.BufferedImage;
 import javaAnd.awt.image.imageio.ImageIO;
 
 public class IsleProcess extends ProcessFile {

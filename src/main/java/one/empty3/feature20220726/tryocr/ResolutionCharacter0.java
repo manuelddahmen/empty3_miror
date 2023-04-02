@@ -19,6 +19,7 @@
 
 package one.empty3.feature20220726.tryocr;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,7 +31,7 @@ import java.util.Objects;
 import java.util.function.Consumer;
 
 import java.awt.Color;
-import javaAnd.awt.image.BufferedImage;
+
 import javaAnd.awt.image.imageio.ImageIO;
 import one.empty3.feature20220726.Linear;
 import one.empty3.feature20220726.PixM;
@@ -62,7 +63,7 @@ public class ResolutionCharacter0 implements Runnable {
     private final int charMinWidth = 5;
     int step = 1;// Searched Characters size.
     private double[] WHITE_DOUBLES = new double[]{1, 1, 1};
-    private javaAnd.awt.image.BufferedImage read;
+    private BufferedImage read;
     private String name;
     private int shakeTimes;
     private double totalError;

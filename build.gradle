@@ -69,6 +69,7 @@ tasks.register('MorphingAppGui', JavaExec) {
 tasks.register('OpadGameGui', JavaExec) {
     classpath sourceSets.main.runtimeClasspath
     mainClass = "one.empty3.apps.opad.PanelGraphics"
+    dependsOn(jar)
 }
 tasks.register('BoardGameGui', JavaExec) {
     classpath sourceSets.main.runtimeClasspath

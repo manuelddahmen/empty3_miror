@@ -61,6 +61,7 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
     private int maxRes = 0;
     private String fileChooserDir = ".";
     public String tempDir;
+    private File fileOut;
 
     class DiagramElement implements Serializable {
         protected int x = getWidth() / 2;
@@ -503,15 +504,18 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
                     ProcessFile ce = processes.get(0);
                     int processNameOrder = listProcessClasses.indexOf(ce.getClass());
                     StringBuilder s = new StringBuilder();
-                    s.append("-").append(listProcessClasses.indexOf(ce));
+                    s.append("-").append(listProcessClasses.indexOf(ce)).append(UUID.randomUUID());
                     String s0 = "";
+                    fileOut = new File(tempDir + File.separator + f.getName() + s.toString() + ".jpg");
+
                     System.out.printf("Process %s \nfrom:  %s\n", processes.get(0).getClass().toString(), f.getAbsolutePath());
-                    File fileOut = new File(tempDir + File.separator + f.getName() + s + ".jpg");
+                    System.out.printf("Process %s \nto  :  %s\n", processes.get(0).getClass().toString(), fileOut.getAbsolutePath());
+
                     ce.process(f, fileOut);
                     for (int i = 1; i < processes.size(); i++) {
                         ce = processes.get(i);
                         s0 = s.toString();
-                        s.append("-").append(listProcessClasses.indexOf(ce));
+                        s.append("-").append(listProcessClasses.indexOf(ce)).append(UUID.randomUUID());
                         System.out.printf("Process %s \nfrom:  %s\n", ce.getClass().toString(), f.getName());
                         fileOut = new File(tempDir + File.separator + f.getName()
                                 + s + ".jpg");
@@ -519,8 +523,11 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
                                 + s0 + ".jpg");
                         ce.addSource(f);//???
                         ce.addSource(fileIn);//???
-                        ce.process(fileIn, fileOut);
-
+                        try {
+                            ce.process(fileIn, fileOut);
+                        } catch (NullPointerException ex) {
+                            ex.printStackTrace();
+                        }
                     }
 /*
                     if (imageSource == 1 && fileOut != f) {
@@ -543,15 +550,16 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
                     }
 
  */
+
                     Logger.getAnonymousLogger().log(Level.INFO, "fileOut : " + fileOut.getAbsolutePath());
                     Logger.getAnonymousLogger().log(Level.INFO, "Exists? : " + fileOut.exists());
-                    direstEffect.setFileIn(fileOut);
-
+                    if(fileOut.exists()) {
+                        direstEffect.setFileIn(fileOut);
+                        processed = true;
+                    }
                 }
             }
         }
-        processed = true;
-
     }
 
     private void buttonDeleteClassActionPerformed(ActionEvent e) {
@@ -697,10 +705,10 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
 
     private void buttonCamActionPerformed(ActionEvent e) {
         cam = ((JToggleButton) e.getSource()).isSelected();
-        if (direstEffect != null) {
-            direstEffect.setVisible(false);
+        if (direstEffect == null) {
+            direstEffect = new DirestEffect();
         }
-        direstEffect = new DirestEffect();
+        direstEffect.setVisible(true);
 
         direstEffect.setVisible(cam);
         direstEffect.setMainWindow(this);
@@ -710,7 +718,8 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
                 +/
          */
         files = new ArrayList<>();
-        files.add(new File[]{new File("webcam")});
+
+        direstEffect.setVisible(true);
     }
 
     private void buttonPictureRecodeActionPerformed(ActionEvent e) {
@@ -912,6 +921,7 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
             listProcessClasses.add(HighlightFeatures.class.newInstance());
             listProcessClasses.add(RunFeatures.class.newInstance());
             listProcessClasses.add(GFG.class.newInstance());
+            listProcessClasses.add(one.empty3.feature.Hist4Contour2.class.newInstance());
             listProcessClasses.forEach(new Consumer<ProcessFile>() {
                 @Override
                 public void accept(ProcessFile processFile) {

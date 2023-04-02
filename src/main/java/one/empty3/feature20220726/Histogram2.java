@@ -181,16 +181,16 @@ public class Histogram2 extends ProcessFile {
         File directory = new File(out.getParent());
         PixM imageCoutours = new PixM(ImageIO.read(in));
         this.m = imageCoutours;
-        BufferedImage file = m.getImage();
+        java.awt.image.BufferedImage file = m.getImage();
 
         int levels = 10;
         double min = 0.0;
         double radiusIncr = 2;
 
 
-        BufferedImage img = file;
+        java.awt.image.BufferedImage img = file;
         BufferedImage img2 = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB);
-        BufferedImage img3 = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB);
+        java.awt.image.BufferedImage img3 = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB);
 
 
         List<Circle> pointsOfInterest = getPointsOfInterest(4.0);

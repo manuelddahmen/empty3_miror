@@ -32,17 +32,19 @@ import java.io.IOException;
 import javaAnd.awt.image.BufferedImage;
 
 public class ImageIO {
-    public static BufferedImage read(File file) {
+    private static boolean isOverWrittable = true;
+
+    public static java.awt.image.BufferedImage read(File file) {
         try {
             FileInputStream fileInputStream = new FileInputStream(file);
-            BufferedImage BufferedImage2 = ImageIO.read(fileInputStream);
+            java.awt.image.BufferedImage BufferedImage2 = ImageIO.read(fileInputStream);
             fileInputStream.close();
             return BufferedImage2;
         } catch (Exception ex) {}
         return null;
     }
 
-    private static BufferedImage read(FileInputStream fileInputStream) {
+    private static java.awt.image.BufferedImage read(FileInputStream fileInputStream) {
         try {
             return new BufferedImage(javax.imageio.ImageIO.read(fileInputStream));
         } catch (IOException e) {
@@ -50,13 +52,13 @@ public class ImageIO {
         }
     }
 
-    public static boolean write(BufferedImage imageOut, String jpg, File out) {
+    public static boolean write(java.awt.image.BufferedImage imageOut, String jpg, File out) {
         boolean result;
-        if (!out.exists()) {
+        if (!out.exists() || isOverWrittable()) {
             try {
                 FileOutputStream fileOutputStream = null;
                 fileOutputStream = new FileOutputStream(out);
-                javax.imageio.ImageIO.write(imageOut.bufferedImage, jpg, out);
+                javax.imageio.ImageIO.write(imageOut.getBufferedImage(), jpg, out);
                 fileOutputStream.close();
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -67,6 +69,10 @@ public class ImageIO {
         }
 
         return result;
+    }
+
+    private static boolean isOverWrittable() {
+        return isOverWrittable;
     }
 
 

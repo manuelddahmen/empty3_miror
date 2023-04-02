@@ -32,6 +32,6 @@ public class DiffDensity extends ProcessFile {
     public boolean process(File in, File out) {
         //
 
-        return super.process(in, out);
+        return false;
     }
 }

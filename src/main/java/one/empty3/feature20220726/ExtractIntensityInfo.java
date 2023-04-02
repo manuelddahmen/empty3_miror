@@ -26,8 +26,8 @@ import one.empty3.library.core.lighting.Colors;
 import one.empty3.io.ProcessFile;
 
 import javaAnd.awt.*;
-import javaAnd.awt.image.BufferedImage;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
@@ -56,7 +56,7 @@ public class ExtractIntensityInfo extends
 
         PixM pixMOriginal = pix;
 
-        final javaAnd.awt.image.BufferedImage[] img3 = new javaAnd.awt.image.BufferedImage[]{pix.getImage()};
+        final BufferedImage[] img3 = new java.awt.image.BufferedImage[]{pix.getImage()};
 
 
         GradientFilter gradientMask = new GradientFilter(pixMOriginal.getColumns(), pixMOriginal.getLines());

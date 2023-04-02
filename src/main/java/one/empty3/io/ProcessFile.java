@@ -33,7 +33,7 @@ import java.util.*;
 
 import static one.empty3.Pojo.getProperty;
 
-public class ProcessFile {
+public abstract class ProcessFile {
     public ProcessBean bean;
     protected int maxRes = 400;
     private Properties property;
@@ -69,40 +69,7 @@ public class ProcessFile {
         this.property = property;
     }
 
-    public boolean process(File in, File out) {
-        // in
-        // ->
-        // out
-        // appeler la méthode processMem après avoir sorti
-        // de toutes les classes implantées
-        // la boucle infinie.
-        try {
-            boolean filesOk = in != null && in.exists() && out != null && !out.exists();
-            if (!filesOk) return false;
-            FileInputStream fileInputStream = new FileInputStream(in);
-            ImageReader ir = null;
-            Iterator<ImageReader> it = ImageIO.getImageReaders(fileInputStream);
-            if (it.hasNext())
-                ir = it.next();
-            else
-                return false;
-            ImageWriter iw = null;
-            Iterator<ImageWriter> itW = ImageIO.getImageWriters(
-                    javax.imageio.ImageTypeSpecifier.createFromBufferedImageType(BufferedImage.TYPE_4BYTE_ABGR),
-                    "jpg");
-            if (itW.hasNext())
-                iw = itW.next();
-            else
-                return false;
-            PixM inPix = PixM.getPixM(ir.read(0), maxRes);
-            PixM outPix = inPix.copy();
-
-            return processMem(inPix, outPix);
-        } catch (Exception ex) {}
-
-        
-        return false;
-    }
+    public abstract boolean process(File in, File out);
 
     public boolean processMem(PixM in, PixM out) {
         return in != null && out != null;

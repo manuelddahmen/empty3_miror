@@ -33,6 +33,6 @@ public abstract class ProcessInMemory extends ProcessFile {
     @Deprecated
     @Override
     public boolean process(File in, File out) {
-        return super.process(in, out);
+        return false;
     }
 }

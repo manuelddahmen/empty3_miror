@@ -34,7 +34,7 @@ import one.empty3.library.core.lighting.Colors;
 
 public class Classification extends ProcessFile {
     Random random = new Random();
-    private javaAnd.awt.image.BufferedImage imageOut;
+    private java.awt.image.BufferedImage imageOut;
     private int SIZE = 5;
     private double ratio = 0.3;
     private double threshold = 0.3;
@@ -61,7 +61,7 @@ public class Classification extends ProcessFile {
         if (!in.getName().endsWith(".jpg"))
             return false;
         PixM selectPointColorMassAglo = null;
-        BufferedImage read = null;
+        java.awt.image.BufferedImage read = null;
         read = new BufferedImage(Objects.requireNonNull(ImageIO.read(in)).bufferedImage);
         selectPointColorMassAglo = PixM.getPixM(read, maxRes);
         imageOut = ImageIO.read(in);

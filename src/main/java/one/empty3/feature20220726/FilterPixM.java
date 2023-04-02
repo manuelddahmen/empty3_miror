@@ -19,7 +19,7 @@
 
 package one.empty3.feature20220726;
 
-import javaAnd.awt.image.BufferedImage;
+import java.awt.image.BufferedImage;
 
 public abstract class FilterPixM extends PixM {
     public final static int NORM_NONE = 0;
@@ -44,7 +44,7 @@ public abstract class FilterPixM extends PixM {
         super(l, c);
     }
 
-    public FilterPixM(BufferedImage image) {
+    public FilterPixM(java.awt.image.BufferedImage image) {
         super(image);
     }
 

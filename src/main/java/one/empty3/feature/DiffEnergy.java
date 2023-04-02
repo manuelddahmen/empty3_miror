@@ -59,4 +59,9 @@ public class DiffEnergy extends ProcessFile {
                 }
         return energy[0]+energy[1]+energy[2];
     }
+
+    @Override
+    public boolean process(File in, File out) {
+        return false;
+    }
 }

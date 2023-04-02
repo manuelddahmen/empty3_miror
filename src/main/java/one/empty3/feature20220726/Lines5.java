@@ -187,7 +187,7 @@ public class Lines5 extends ProcessFile {
 
         }
         // d'après pcount x, y et curve xy supprimer les courbes en trop.
-        BufferedImage bLines = new BufferedImage(o.getColumns(), o.getLines(), BufferedImage.TYPE_INT_RGB);
+        java.awt.image.BufferedImage bLines = new BufferedImage(o.getColumns(), o.getLines(), BufferedImage.TYPE_INT_RGB);
 
         //bLines.setRGB(Color.RED);
         list3.forEach(point3DS -> {

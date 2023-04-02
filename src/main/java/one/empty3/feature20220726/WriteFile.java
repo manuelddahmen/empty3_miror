@@ -19,9 +19,9 @@
 
 package one.empty3.feature20220726;
 
-import javaAnd.awt.image.BufferedImage;
 import javaAnd.awt.image.imageio.ImageIO;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.logging.*;
 

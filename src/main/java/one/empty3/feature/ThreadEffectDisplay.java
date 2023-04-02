@@ -20,12 +20,9 @@
 package one.empty3.feature;
 
 import com.github.sarxos.webcam.Webcam;
-import com.github.sarxos.webcam.WebcamImageTransformer;
 import com.github.sarxos.webcam.WebcamLockException;
 import one.empty3.feature.gui.DirestEffect;
-import one.empty3.feature.motion.DiffMotion;
 import one.empty3.feature.motion.Motion;
-import one.empty3.io.ProcessFile;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -35,18 +32,20 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 public class ThreadEffectDisplay extends Thread {
     private static ThreadEffectDisplay uniqueObject;
+    public Webcam webcam;
+    public Motion motion = null;
     private BufferedImage image;
     private JPanel jPanel;
     private ClassSchemaBuilder main;
     private BufferedImage imageIn;
     private BufferedImage imageMotion;
-    public Webcam webcam;
     private DirestEffect directEffect;
-    public Motion motion = null;
     private RunEffect runEffect;
     private String tempDir;
     private BufferedImage imageIn2;
@@ -69,7 +68,7 @@ public class ThreadEffectDisplay extends Thread {
         if (uniqueObject == null)
             uniqueObject = this;
         else {
-            if(uniqueObject!=this)
+            if (uniqueObject != this)
                 System.err.println("Error duplicate class viewer (?)");
             //System.exit(-1);
         }
@@ -81,26 +80,26 @@ public class ThreadEffectDisplay extends Thread {
 
     @Override
     public void run() {
-            if (webcam != null && webcam.isOpen())
-                Webcam.getDefault().close();
+        if (webcam != null && webcam.isOpen())
+            Webcam.getDefault().close();
 
-            webcam = Webcam.getDefault();
-            while (directEffect == null ) {
-                try {
-                    Thread.sleep(200);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+        webcam = Webcam.getDefault();
+        while (directEffect == null) {
+            try {
+                Thread.sleep(200);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-            if (!webcam.isOpen()) {
-                webcam.setViewSize(new Dimension(directEffect.viewSizes[0]));
-                try {
-                    webcam.open();
-                } catch (WebcamLockException exception) {
-                    exception.printStackTrace();
-                }
+        }
+        if (!webcam.isOpen()) {
+            webcam.setViewSize(new Dimension(directEffect.viewSizes[0]));
+            try {
+                webcam.open();
+            } catch (WebcamLockException exception) {
+                exception.printStackTrace();
             }
-            webcam.setImageTransformer(bufferedImage -> {
+        }
+            /*webcam.setImageTransformer(bufferedImage -> {
 
                 BufferedImage bufferedImage1 = new BufferedImage(bufferedImage.getWidth(), bufferedImage.getHeight(),
                         BufferedImage.TYPE_INT_RGB);
@@ -110,52 +109,48 @@ public class ThreadEffectDisplay extends Thread {
                                 bufferedImage.getRGB(i, j));
                     }
                 return bufferedImage1;
-            });
-
-            do {
-                main.files.clear();
-                boolean add = main.files.add(new File[]{
-                        new File("./temp/webcam.jpg")
-                });
-                image = webcam.getImage();
+            });*/
 
 
-                try {
-                    if (image != null)
-                        ImageIO.write(image, "jpg", new File(tempDir + File.separator + "webcam.jpg"));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+        File fileOrigin = new File(tempDir + File.separator + "webcam.jpg");
+        main.files.clear();
+        boolean add = main.files.add(new File[]{fileOrigin});
+        do {
+            image = webcam.getImage();
+
+
+            try {
+                if (image != null)
+                    ImageIO.write(image, "jpg", fileOrigin);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
 
                 main.buttonGOActionPerformed(null);
-
-                while ((image = imageIn) == null) {
-                    try {
-                        Thread.sleep(10);
-                        main.buttonGOActionPerformed(null);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
+                try {
+                    Thread.sleep(200);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
                 }
-                imageIn = null;
+                image = getImageIn();
 
-                if (isMotionActive()) {
-                    motion.addFrame(image);
-                    imageIn = motion.processFrame();
+                if (image != null) {
+                    Graphics graphics = jPanel.getGraphics();
+                    graphics.drawImage(image, 0, 0, jPanel.getWidth(), jPanel.getHeight(), null);
                 } else {
-                    imageIn = image;
+                    Logger.getAnonymousLogger().log(Level.INFO, "No image to display: " + image);
                 }
-                Graphics graphics = jPanel.getGraphics();
-                if (imageIn != null) {
-                    graphics.drawImage(imageIn, 0, 0, jPanel.getWidth(), jPanel.getHeight(), null);
-                }
-
-            } while (directEffect.isVisible()&&!this.isInterrupted());
+        } while (directEffect.isVisible());
 
     }
 
     private boolean isMotionActive() {
         return motionActive;
+    }
+
+    public void setMotionActive(boolean b) {
+        this.motionActive = b;
     }
 
     public BufferedImage getImage() {
@@ -174,10 +169,6 @@ public class ThreadEffectDisplay extends Thread {
         this.main = main;
     }
 
-    public void setImageIn(BufferedImage read) {
-        imageIn = read;
-    }
-
     public void setImageMotion(BufferedImage process) {
         imageMotion = process;
     }
@@ -190,12 +181,12 @@ public class ThreadEffectDisplay extends Thread {
         this.runEffect = runEffect;
     }
 
-    public BufferedImage getImageIn() {
+    public synchronized BufferedImage getImageIn() {
         return imageIn;
     }
 
-    public void setMotionActive(boolean b) {
-        this.motionActive = b;
+    public synchronized void setImageIn(BufferedImage read) {
+        imageIn = read;
     }
 
     public void setEffectActive(boolean b) {

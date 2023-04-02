@@ -19,7 +19,7 @@
 
 package one.empty3.feature20220726;
 
-import javaAnd.awt.image.BufferedImage;
+import java.awt.image.BufferedImage;
 
 public class VectorsImage extends M3 {
     public VectorsImage(int columns, int lines, int columnsIn, int linesIn) {

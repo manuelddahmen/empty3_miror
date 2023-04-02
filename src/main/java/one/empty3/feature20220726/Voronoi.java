@@ -23,8 +23,8 @@ import one.empty3.io.ProcessFile;
 import one.empty3.library.Point3D;
 
 import javaAnd.awt.image.imageio.ImageIO;
-import javaAnd.awt.image.BufferedImage;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;

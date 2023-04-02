@@ -24,9 +24,8 @@ import javaAnd.awt.image.imageio.ImageIO;
 
 import one.empty3.io.ProcessFile;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
-
-import javaAnd.awt.image.BufferedImage;
 
 public class TrueHarrisProcess extends ProcessFile {
 

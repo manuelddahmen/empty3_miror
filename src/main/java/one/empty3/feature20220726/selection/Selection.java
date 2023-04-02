@@ -80,6 +80,6 @@ public abstract class Selection extends ProcessFile {
 
     @Override
     public boolean process(File in, File out) {
-        return super.process(in, out);
+        return false;
     }
 }

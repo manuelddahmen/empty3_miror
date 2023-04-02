@@ -38,6 +38,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /*
  * @author Manuel Dahmen
@@ -59,6 +61,10 @@ public class DirestEffect extends JFrame {
         threadEffectDisplay.start();
 
         viewSizes = Webcam.getDefault().getViewSizes();
+
+        threadEffectDisplay.motion = new DiffMotion();
+        threadEffectDisplay.setMotionActive(true);
+        threadEffectDisplay.setEffectActive(true);
 
         this.comboBoxDimenisions.setModel(new DefaultComboBoxModel(Webcam.getDefault().getViewSizes()));
         this.comboBoxDimenisions.addActionListener(new ActionListener() {
@@ -164,9 +170,9 @@ public class DirestEffect extends JFrame {
             }));
             comboBoxMotion.setDoubleBuffered(true);
             comboBoxMotion.addItemListener(e -> {
-			comboBoxMotionItemStateChanged(e);
-			comboBoxMotionItemStateChanged(e);
-		});
+                comboBoxMotionItemStateChanged(e);
+                comboBoxMotionItemStateChanged(e);
+            });
             scrollPane2.setViewportView(comboBoxMotion);
         }
         contentPane.add(scrollPane2, "cell 0 0 5 1");
@@ -217,12 +223,6 @@ public class DirestEffect extends JFrame {
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 
 
-    public static void main(String[] args) {
-        DirestEffect direstEffect = new DirestEffect();
-        direstEffect.setVisible(true);
-
-    }
-
     public void setMainWindow(ClassSchemaBuilder classSchemaBuilder) {
         this.main = classSchemaBuilder;
         threadEffectDisplay.setMain(main);
@@ -232,8 +232,19 @@ public class DirestEffect extends JFrame {
 
     public void setFileIn(File fileOut) {
         try {
-            threadEffectDisplay.setImageIn(ImageIO.read(fileOut));
-        } catch (Exception ex) {}
+            if(fileOut!=null) {
+                BufferedImage read = ImageIO.read(fileOut);
+                if(read!=null) {
+                    threadEffectDisplay.setImageIn(read);
+                } else {
+                    Logger.getAnonymousLogger().log(Level.INFO, "No image in set after ImageIO.read(fileOut)");
+                }
+            } else {
+                Logger.getAnonymousLogger().log(Level.INFO, "No image in set after processing files fileOut==null");
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
 
     }
 

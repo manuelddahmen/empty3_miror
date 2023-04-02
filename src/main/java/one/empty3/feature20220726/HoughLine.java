@@ -19,7 +19,7 @@
 
 package one.empty3.feature20220726;
 
-import javaAnd.awt.image.BufferedImage;
+import java.awt.image.BufferedImage;
 
 /*
  * Represents a linear line as detected by the hough transform.

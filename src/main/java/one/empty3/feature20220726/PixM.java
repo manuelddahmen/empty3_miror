@@ -40,7 +40,7 @@ public class PixM extends MBufferedImage {
         super(l, c);
     }
 
-    public PixM(BufferedImage image) {
+    public PixM(java.awt.image.BufferedImage image) {
         super(image.getWidth(), image.getHeight());
         float[] colorComponents = new float[4];
         for (int i = 0; i < image.getWidth(); i++) {
@@ -55,7 +55,7 @@ public class PixM extends MBufferedImage {
         }
     }
 
-    public PixM(BufferedImage image, boolean isBufferedImage) {
+    public PixM(java.awt.image.BufferedImage image, boolean isBufferedImage) {
         super(image);
         /*
         float[] colorComponents = new float[4];
@@ -78,7 +78,7 @@ public class PixM extends MBufferedImage {
                 set(i, j, distances[i][j]);
     }
 
-    public static <T> PixM getPixM(BufferedImage BufferedImage) {
+    public static <T> PixM getPixM(java.awt.image.BufferedImage BufferedImage) {
         PixM pixM = new PixM(BufferedImage);
         return pixM;
     }
@@ -93,11 +93,11 @@ public class PixM extends MBufferedImage {
         return new Point3D(dr, dg, db);
     }
 
-    public static PixM getPixM(BufferedImage image, double maxRes) {
+    public static PixM getPixM(java.awt.image.BufferedImage image, double maxRes) {
         return getPixM(image, (int) maxRes);
     }
 
-    public static PixM getPixM(BufferedImage image, int maxRes) {
+    public static PixM getPixM(java.awt.image.BufferedImage image, int maxRes) {
         double f = 1.0;
         if (maxRes <= 0) {
             f = 1.0;
@@ -195,11 +195,11 @@ public class PixM extends MBufferedImage {
         return originValue;
     }
 
-    public BufferedImage getImage() {
+    public java.awt.image.BufferedImage getImage() {
 
         double[] f = new double[getCompCount()];
 
-        BufferedImage image = new BufferedImage(columns,
+        java.awt.image.BufferedImage image = new BufferedImage(columns,
                 lines, java.awt.image.BufferedImage.TYPE_INT_RGB);
 
 

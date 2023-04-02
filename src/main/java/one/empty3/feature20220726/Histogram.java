@@ -142,9 +142,9 @@ public class Histogram {
         return circles;
     }
 
-    public static void testCircleSelect(BufferedImage file, File directory, int levels, double min, double radiusIncr) {
+    public static void testCircleSelect(java.awt.image.BufferedImage file, File directory, int levels, double min, double radiusIncr) {
         for (int i = 0; i < levels; i++) {
-            BufferedImage img = file;
+            java.awt.image.BufferedImage img = file;
             BufferedImage img2 = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB);
             BufferedImage img3 = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB);
             Histogram histogram = new Histogram(new PixM(img), levels, min, radiusIncr, 0.1);

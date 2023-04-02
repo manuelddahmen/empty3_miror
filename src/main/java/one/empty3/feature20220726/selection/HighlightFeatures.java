@@ -28,8 +28,8 @@ import one.empty3.library.Scene;
 import one.empty3.library.core.nurbs.ParametricCurve;
 
 import javaAnd.awt.image.imageio.ImageIO;
-import javaAnd.awt.image.BufferedImage;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;

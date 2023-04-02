@@ -81,9 +81,9 @@ public class ClassificationAvgColors extends ProcessFile {
                             sumI);
                 }
             });
-        } catch (Exception ex) {}
+        } catch (Exception ex) {ex.printStackTrace();}
 
         
-        return super.process(in, out);
+        return true;
     }
 }

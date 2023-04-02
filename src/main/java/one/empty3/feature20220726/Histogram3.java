@@ -156,13 +156,13 @@ public class Histogram3 extends ProcessFile {
         init();
 
         PixM m = new PixM(ImageIO.read(in));
-        BufferedImage image = m.getImage();
+        java.awt.image.BufferedImage image = m.getImage();
 
 
         final double radiusIncr = 1;
 
 
-        BufferedImage img2 = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_RGB);
+        java.awt.image.BufferedImage img2 = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_RGB);
         List<Circle> pointsOfInterest;
         pointsOfInterest = getPointsOfInterest(m, radiusIncr, 0.5);
         // grands;cercles = grandes iles les separer

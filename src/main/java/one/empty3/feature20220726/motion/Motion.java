@@ -41,7 +41,7 @@ public abstract class Motion /*extends ProcessFile */ {
         return frames.size() > BUFFER_MAX_FRAMES;
     }
 
-    public javaAnd.awt.image.BufferedImage processFrame() {
+    public java.awt.image.BufferedImage processFrame() {
         PixM frame1 = null;
         PixM frame2 = null;
         if (frames.size() == 0 || frames.get(0) == null)
@@ -62,6 +62,6 @@ public abstract class Motion /*extends ProcessFile */ {
         return process(frame1, frame2);
     }
 
-    public abstract javaAnd.awt.image.BufferedImage process(PixM frame1, PixM frame2);
+    public abstract java.awt.image.BufferedImage process(PixM frame1, PixM frame2);
 
 }

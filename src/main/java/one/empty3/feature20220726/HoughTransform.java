@@ -79,7 +79,7 @@ public class HoughTransform extends ProcessFile {
 
     public boolean process(File in, File out) {
         // load the file using Java's imageIO library
-        BufferedImage image = null;
+        java.awt.image.BufferedImage image = null;
         image = ImageIO.read(in);
         // create a hough transform object with the right dimensions
         width = image.getWidth();
@@ -177,7 +177,7 @@ public class HoughTransform extends ProcessFile {
      * Adds points from an image. The image is assumed to be greyscale black and white, so all pixels that are
      * not black are counted as edges. The image should have the same dimensions as the one passed to the constructor.
      */
-    public void addPoints(BufferedImage image) {
+    public void addPoints(java.awt.image.BufferedImage image) {
 
         // Now find edge points and update the hough array 
         for (int x = 0; x < image.getWidth(); x++) {
