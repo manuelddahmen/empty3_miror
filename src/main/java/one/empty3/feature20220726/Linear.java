@@ -52,7 +52,7 @@ public class Linear {
         Arrays.stream(bufferedImages).forEach(new Consumer<BufferedImage>() {
             @Override
             public void accept(BufferedImage bufferedImage) {
-                images[i[0]] = new PixM(bufferedImage);
+                images[i[0]] = new PixM(bufferedImage.bufferedImage);
                 i[0]++;
             }
         });

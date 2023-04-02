@@ -25,7 +25,6 @@ package javaAnd.awt.image.imageio;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
@@ -52,7 +51,7 @@ public class ImageIO {
         }
     }
 
-    public static boolean write(java.awt.image.BufferedImage imageOut, String jpg, File out) {
+    public static boolean write(BufferedImage imageOut, String jpg, File out) {
         boolean result;
         if (!out.exists() || isOverWrittable()) {
             try {
@@ -76,4 +75,23 @@ public class ImageIO {
     }
 
 
+    public static boolean write(java.awt.image.BufferedImage bufferedImage, String jpg, File out) {
+        boolean result;
+        if (!out.exists() || isOverWrittable()) {
+            try {
+                FileOutputStream fileOutputStream = null;
+                fileOutputStream = new FileOutputStream(out);
+                javax.imageio.ImageIO.write(bufferedImage, jpg, out);
+                fileOutputStream.close();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            result = true;
+        } else {
+            result = false;
+        }
+
+        return false;
+
+    }
 }

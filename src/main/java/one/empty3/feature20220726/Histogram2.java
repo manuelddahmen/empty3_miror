@@ -190,7 +190,7 @@ public class Histogram2 extends ProcessFile {
 
         java.awt.image.BufferedImage img = file;
         BufferedImage img2 = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB);
-        java.awt.image.BufferedImage img3 = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB);
+        BufferedImage img3 = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB);
 
 
         List<Circle> pointsOfInterest = getPointsOfInterest(4.0);
@@ -234,7 +234,7 @@ public class Histogram2 extends ProcessFile {
                 File fileToWrite3 = new File(directory.getAbsolutePath()
                         + "level"+ "_NEW_RGB.jpg");
                 //fileToWrite.mkdirs();*/
-        ImageIO.write(new PixM(img3).normalize(0., 1.).getImage(), "JPEG", out);
+        ImageIO.write(new PixM(img3.bufferedImage).normalize(0., 1.).getImage(), "JPEG", out);
                 /*
                 ImageIO.write(img, "JPEG", fileToWrite);
                 ImageIO.write(img, "JPEG", fileToWrite2);

@@ -37,7 +37,7 @@ public class FeatureMotion extends Motion {
 
         List<double[]> match = featureMatch.match(frame1, frame2);
 
-        java.awt.image.BufferedImage bufferedImage = new javaAnd.awt.image.BufferedImage(frame1.getColumns(), frame1.getLines(), javaAnd.awt.image.BufferedImage.TYPE_INT_RGB);
+        BufferedImage bufferedImage = new javaAnd.awt.image.BufferedImage(frame1.getColumns(), frame1.getLines(), javaAnd.awt.image.BufferedImage.TYPE_INT_RGB);
 
         for (int i = 0; i < frame1.getColumns(); i++) {
             for (int j = 0; j < frame1.getLines(); j++) {
@@ -49,6 +49,6 @@ public class FeatureMotion extends Motion {
         for (int i = 0; i < match.size(); i++) {
             bufferedImage.setRGB((int) match.get(i)[0], (int) match.get(i)[1], Color.WHITE.getRGB());
         }
-        return bufferedImage;
+        return bufferedImage.bufferedImage;
     }
 }

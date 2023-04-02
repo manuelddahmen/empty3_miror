@@ -67,7 +67,7 @@ public class BrushGradientMaximumColor extends ProcessFile {
                     }
             }
         }
-        ImageIO.write(pixM2.normalize(0, 1).BufferedImage, "jpg", out);
+        ImageIO.write(pixM2.normalize(0, 1).getBufferedImage(), "jpg", out);
         return true;
     }
 }

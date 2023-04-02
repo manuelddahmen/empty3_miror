@@ -62,7 +62,7 @@ public class Classification extends ProcessFile {
             return false;
         PixM selectPointColorMassAglo = null;
         java.awt.image.BufferedImage read = null;
-        read = new BufferedImage(Objects.requireNonNull(ImageIO.read(in)).bufferedImage);
+        read = Objects.requireNonNull(ImageIO.read(in));
         selectPointColorMassAglo = PixM.getPixM(read, maxRes);
         imageOut = ImageIO.read(in);
         SelectPointColorMassAglo selectPointColorMassAglo1 = new SelectPointColorMassAglo(read);

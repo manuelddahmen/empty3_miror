@@ -36,7 +36,7 @@ public class MBufferedImage /*implements InterfaceMatrix*/ {
     public int compCount = 3;
 
     public MBufferedImage(int c, int l) {
-        this.BufferedImage = new BufferedImage(c, l, javaAnd.awt.image.BufferedImage.TYPE_INT_RGB);
+        this.BufferedImage = new java.awt.image.BufferedImage(c, l, javaAnd.awt.image.BufferedImage.TYPE_INT_RGB);
         this.lines = l;
         this.columns = c;
     }
@@ -123,7 +123,7 @@ public class MBufferedImage /*implements InterfaceMatrix*/ {
 
     public void setP(int i, int j, Point3D p) {
         if (BufferedImage != null && i < BufferedImage.getWidth() && i >= 0 && j < BufferedImage.getHeight() && j >= 0) {
-            BufferedImage.setPixel(i, j, Lumiere.getInt(new double[]
+            BufferedImage.setRGB(i, j, Lumiere.getInt(new double[]
                     {p.get(0), p.get(1), p.get(2)}));
             return;
         }
@@ -137,7 +137,7 @@ public class MBufferedImage /*implements InterfaceMatrix*/ {
     public Point3D getP(int i, int j) {
         if (BufferedImage != null && i < BufferedImage.getWidth() && i >= 0 && j < BufferedImage.getHeight() && j >= 0) {
             if (i >= 0 && i < getColumns() && j >= 0 && j < getLines()) {
-                int pixel = BufferedImage.getPixel(i, j);
+                int pixel = BufferedImage.getRGB(i, j);
                 double[] p = Lumiere.getDoubles(pixel);
                 return new Point3D(p[0], p[1], p[2]);
             }
@@ -156,7 +156,7 @@ public class MBufferedImage /*implements InterfaceMatrix*/ {
     public void setValues(int i, int j, double... v) {
         if (BufferedImage != null) {
             if (i >= 0 && i < BufferedImage.getWidth() && j >= 0 && j < BufferedImage.getHeight()) {
-                BufferedImage.setPixel(i, j, Lumiere.getInt(new double[]
+                BufferedImage.setRGB(i, j, Lumiere.getInt(new double[]
                         {v[0], v[1], v[2]}));
             }
         }
@@ -200,7 +200,7 @@ public class MBufferedImage /*implements InterfaceMatrix*/ {
     public double get(int column, int line) {
         if (column >= 0 && column < columns && line >= 0 && line < lines && compNo >= 0 && compNo < compCount) {
             if (BufferedImage != null) {
-                return Lumiere.getDoubles(BufferedImage.getPixel(column, line))[compNo];
+                return Lumiere.getDoubles(BufferedImage.getRGB(column, line))[compNo];
             }
 
             return x[index(column, line)];
@@ -242,11 +242,11 @@ public class MBufferedImage /*implements InterfaceMatrix*/ {
     public void set(int column, int line, double d) {
         if (column >= 0 && column < columns && line >= 0 && line < lines) {
             if (BufferedImage != null) {
-                int pixel = BufferedImage.getPixel(column, line);
+                int pixel = BufferedImage.getRGB(column, line);
                 double[] ps = new double[]{0, 0, 0};
                 ps[compNo] = d;
                 int p = pixel | Lumiere.getInt(ps);
-                BufferedImage.setPixel(column, line, p);
+                BufferedImage.setRGB(column, line, p);
                 return;
             }
             x[index(column, line)] = d;

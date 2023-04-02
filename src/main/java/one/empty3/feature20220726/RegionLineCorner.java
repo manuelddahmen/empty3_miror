@@ -282,7 +282,7 @@ public class RegionLineCorner extends ProcessFile {
             java.awt.image.BufferedImage img = file;
             BufferedImage img2 = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB);
             BufferedImage img3 = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB);
-            java.awt.image.BufferedImage img4 = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB);
+            BufferedImage img4 = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB);
 
             int finalI = i;
             List<Circle> pointsOfInterest = getPointsOfInterest(levels);

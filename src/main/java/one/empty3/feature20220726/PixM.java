@@ -20,12 +20,13 @@
 package one.empty3.feature20220726;
 
 import javaAnd.awt.Color;
-import javaAnd.awt.image.BufferedImage;
 import one.empty3.library.ITexture;
 import one.empty3.library.LineSegment;
 import one.empty3.library.Lumiere;
 import one.empty3.library.Point3D;
 import one.empty3.library.core.nurbs.ParametricCurve;
+
+import java.awt.image.BufferedImage;
 
 public class PixM extends MBufferedImage {
     public static final int COMP_RED = 0;
@@ -45,7 +46,7 @@ public class PixM extends MBufferedImage {
         float[] colorComponents = new float[4];
         for (int i = 0; i < image.getWidth(); i++) {
             for (int j = 0; j < image.getHeight(); j++) {
-                int rgb = image.getPixel(i, j);
+                int rgb = image.getRGB(i, j);
                 colorComponents = Color.valueOf(rgb).getComponents(colorComponents);
                 for (int com = 0; com < getCompCount(); com++) {
                     setCompNo(com);
@@ -114,7 +115,7 @@ public class PixM extends MBufferedImage {
             for (int j = 0; j < (int) lines2; j++) {
 
 
-                int rgb = image.getPixel(
+                int rgb = image.getRGB(
                         (int) (1.0 * i / columns2 * image.getWidth())
 
 
@@ -214,7 +215,7 @@ public class PixM extends MBufferedImage {
 
                     rgba[comp] = value;
                 }
-                image.setPixel(i, j, Lumiere.getInt(rgba));
+                image.setRGB(i, j, Lumiere.getInt(rgba));
             }
         }
         return image;
@@ -683,7 +684,7 @@ public class PixM extends MBufferedImage {
                             set(i2, j2, vc[c]);
                         }
                         if (BufferedImage != null) {
-                            BufferedImage.setPixel(i2, j2, Lumiere.getInt(vc));
+                            BufferedImage.setRGB(i2, j2, Lumiere.getInt(vc));
                         }
                     }
                 }

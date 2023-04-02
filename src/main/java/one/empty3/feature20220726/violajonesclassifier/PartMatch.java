@@ -129,7 +129,7 @@ public class PartMatch extends ProcessFile {
                         if (matchScore >= Math.abs(intensity - intensityFD)
                                 && matchScore >= matchScoreMin) {
 
-                            outImg.drawRect(i, j, n, n, null);
+                            //outImg.drawRect(i, j, n, n, null);
 
                             classify(matchScore, featuresDescriptors.get(index));
                             lastMatchScore = matchScore;
