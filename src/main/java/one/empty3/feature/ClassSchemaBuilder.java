@@ -988,7 +988,7 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
             ArrayList<ProcessNFiles> listProcessClasses2process = new ArrayList<ProcessNFiles>();
             listProcessClasses2process.add(ProcessPlusNormalize.class.newInstance());
 
-            listProcessClasses2process.forEach(new Consumer<ProcesssX2Process>() {
+            listProcessClasses2process.forEach(new Consumer<ProcessNFiles>() {
                 @Override
                 public void accept(ProcessNFiles processsX2Process) {
                     comboBox2.addItem(processsX2Process);
