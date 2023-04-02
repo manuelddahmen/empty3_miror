@@ -990,7 +990,7 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
 
             listProcessClasses2process.forEach(new Consumer<ProcesssX2Process>() {
                 @Override
-                public void accept(ProcesssX2Process processsX2Process) {
+                public void accept(ProcessNFiles processsX2Process) {
                     comboBox2.addItem(processsX2Process);
                 }
             });
