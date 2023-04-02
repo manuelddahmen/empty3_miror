@@ -26,6 +26,7 @@ import one.empty3.feature.selection.HighlightFeatures;
 import one.empty3.feature.tryocr.ReadLines;
 import one.empty3.feature.tryocr.SelectColor;
 import one.empty3.io.ProcessFile;
+import one.empty3.io.ProcessNFiles;
 import one.empty3.library.Point2D;
 
 import javax.imageio.ImageIO;
@@ -243,6 +244,48 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
                     '}';
         }
     }
+    class ClassMultiFilterElement extends DiagramElement {
+        protected Class theClass;
+        private PartElement partAfter;
+        private File[] files;
+
+        public ClassMultiFilterElement() {
+            x = getWidth() / 2;
+            y = getHeight() / 2;
+            partAfter = new PartElement();
+            partAfter.setReferenceElement(this);
+            partElements.add(partAfter);
+        }
+
+        public Class getTheClass() {
+            return theClass;
+        }
+
+        public void setTheClass(Class theClass) {
+            this.theClass = theClass;
+        }
+
+        public PartElement getPartAfter() {
+            return partAfter;
+        }
+
+        public void setPartAfter(PartElement partAfter) {
+            this.partAfter = partAfter;
+        }
+
+        public void setInputFiles(File[] filesP) {
+            this.files = filesP;
+        }
+
+        @Override
+        public String toString() {
+            return "ClassElement{" +
+                    "theClass=" + theClass +
+                    ", partAfter=" + partAfter +
+                    ", files=" + Arrays.toString(files) +
+                    '}';
+        }
+    }
 
     class Then extends DiagramElement {
         ClassElement a, b;
@@ -418,6 +461,11 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
     private void buttonAddToActionPerformed(ActionEvent e) {
         ClassElement classElement = new ClassElement();
         classElement.theClass = comboBox1.getSelectedItem().getClass();
+        diagramElements.add(classElement);
+    }
+    private void buttonAdd2filters(ActionEvent e) {
+        ClassElement classElement = new ClassElement();
+        classElement.theClass = comboBox2.getSelectedItem().getClass();
         diagramElements.add(classElement);
     }
 
@@ -756,11 +804,13 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
         }
     }
 
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
-        // Generated using JFormDesigner non-commercial license
         comboBox1 = new JComboBox();
+        comboBox2 = new JComboBox();
         button2 = new JButton();
+        button3 = new JButton();
         buttonAddLink = new JButton();
         buttonFiles = new JButton();
         buttonDeleteClass = new JToggleButton();
@@ -778,18 +828,19 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setTitle("Filter stack constructor");
         setVisible(true);
-        Container contentPane = getContentPane();
+        var contentPane = getContentPane();
         contentPane.setLayout(new MigLayout(
-                "insets 0,hidemode 3,gap 5 5",
-                // columns
-                "[fill]" +
-                        "[fill]" +
-                        "[fill]",
-                // rows
-                "[fill]" +
-                        "[fill]" +
-                        "[fill]" +
-                        "[]"));
+            "insets 0,hidemode 3,gap 5 5",
+            // columns
+            "[fill]" +
+            "[fill]" +
+            "[fill]" +
+            "[fill]",
+            // rows
+            "[fill]" +
+            "[fill]" +
+            "[fill]" +
+            "[]"));
 
         //---- comboBox1 ----
         comboBox1.setMaximumRowCount(20);
@@ -797,65 +848,71 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
         comboBox1.setLightWeightPopupEnabled(false);
         comboBox1.setDoubleBuffered(true);
         contentPane.add(comboBox1, "cell 0 0");
+        contentPane.add(comboBox2, "cell 0 0");
 
         //---- button2 ----
         button2.setText("Add");
         button2.addActionListener(e -> buttonAddToActionPerformed(e));
         contentPane.add(button2, "cell 1 0");
 
+        //---- button3 ----
+        button3.setText("Add + filter");
+        button3.addActionListener(e -> buttonAdd2filters(e));
+        contentPane.add(button3, "cell 1 0");
+
         //---- buttonAddLink ----
         buttonAddLink.setText("Add link");
         buttonAddLink.addActionListener(e -> buttonAddLinkActionPerformed(e));
-        contentPane.add(buttonAddLink, "cell 2 0");
+        contentPane.add(buttonAddLink, "cell 3 0");
 
         //---- buttonFiles ----
         buttonFiles.setText("Add input files");
         buttonFiles.addActionListener(e -> buttonFilesActionPerformed(e));
-        contentPane.add(buttonFiles, "cell 2 0");
+        contentPane.add(buttonFiles, "cell 3 0");
 
         //---- buttonDeleteClass ----
         buttonDeleteClass.setText("Delete class");
         buttonDeleteClass.addActionListener(e -> buttonDeleteClassActionPerformed(e));
-        contentPane.add(buttonDeleteClass, "cell 2 0");
+        contentPane.add(buttonDeleteClass, "cell 3 0");
 
         //---- buttonDeleteLink ----
         buttonDeleteLink.setText("Delete link");
         buttonDeleteLink.addActionListener(e -> buttonDeleteLinkActionPerformed(e));
-        contentPane.add(buttonDeleteLink, "cell 2 0");
+        contentPane.add(buttonDeleteLink, "cell 3 0");
 
         //---- buttonGO ----
         buttonGO.setText("Process GO");
         buttonGO.addActionListener(e -> {
-            buttonThenActionPerformed(e);
-            button3ActionPerformed(e);
-            buttonGOActionPerformed(e);
-            buttonGOActionPerformed(e);
-        });
-        contentPane.add(buttonGO, "cell 2 0");
+			buttonThenActionPerformed(e);
+			button3ActionPerformed(e);
+			buttonGOActionPerformed(e);
+			buttonGOActionPerformed(e);
+		});
+        contentPane.add(buttonGO, "cell 3 0");
 
         //---- buttonLoad ----
         buttonLoad.setText("Load");
         buttonLoad.addActionListener(e -> buttonLoadActionPerformed(e));
-        contentPane.add(buttonLoad, "cell 2 0");
+        contentPane.add(buttonLoad, "cell 3 0");
 
         //---- buttonSave ----
         buttonSave.setText("Save");
         buttonSave.addActionListener(e -> buttonSaveActionPerformed(e));
-        contentPane.add(buttonSave, "cell 2 0");
+        contentPane.add(buttonSave, "cell 3 0");
 
         //======== panel1 ========
         {
             panel1.setLayout(new MigLayout(
-                    "hidemode 3",
-                    // columns
-                    "[fill]" +
-                            "[fill]",
-                    // rows
-                    "[]" +
-                            "[]" +
-                            "[]"));
+                "hidemode 3",
+                // columns
+                "[fill]" +
+                "[fill]",
+                // rows
+                "[]" +
+                "[]" +
+                "[]"));
         }
-        contentPane.add(panel1, "cell 0 1 3 2,dock center");
+        contentPane.add(panel1, "cell 0 1 4 2,dock center");
 
         //---- labelStatus ----
         labelStatus.setText("text");
@@ -863,18 +920,18 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
 
         //---- button1 ----
         button1.setText("Open movie/recode");
-        contentPane.add(button1, "cell 2 3");
+        contentPane.add(button1, "cell 3 3");
 
         //---- buttonPictureRecode ----
         buttonPictureRecode.setText("Open picture/recode");
         buttonPictureRecode.addActionListener(e -> buttonPictureRecodeActionPerformed(e));
-        contentPane.add(buttonPictureRecode, "cell 2 3");
+        contentPane.add(buttonPictureRecode, "cell 3 3");
 
         //---- buttonCam ----
         buttonCam.setText("Open webcam");
         buttonCam.addActionListener(e -> buttonCamActionPerformed(e));
-        contentPane.add(buttonCam, "cell 2 3");
-        setSize(955, 355);
+        contentPane.add(buttonCam, "cell 3 3");
+        setSize(1020, 540);
         setLocationRelativeTo(getOwner());
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
 
@@ -928,7 +985,15 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
                     comboBox1.addItem(processFile);
                 }
             });
+            ArrayList<ProcessNFiles> listProcessClasses2process = new ArrayList<ProcessNFiles>();
+            listProcessClasses2process.add(ProcessPlusNormalize.class.newInstance());
 
+            listProcessClasses2process.forEach(new Consumer<ProcesssX2Process>() {
+                @Override
+                public void accept(ProcesssX2Process processsX2Process) {
+                    comboBox2.addItem(processsX2Process);
+                }
+            });
 
         } catch (InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
@@ -1043,9 +1108,10 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
     }
     private JButton buttonStop;
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
-    // Generated using JFormDesigner non-commercial license
     private JComboBox comboBox1;
+    private JComboBox comboBox2;
     private JButton button2;
+    private JButton button3;
     private JButton buttonAddLink;
     private JButton buttonFiles;
     private JToggleButton buttonDeleteClass;

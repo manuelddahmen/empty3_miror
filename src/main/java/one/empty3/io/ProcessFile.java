@@ -33,7 +33,7 @@ import java.util.*;
 
 import static one.empty3.Pojo.getProperty;
 
-public abstract class ProcessFile {
+public abstract class ProcessFile extends ProcessNFiles{
     public ProcessBean bean;
     protected int maxRes = 400;
     private Properties property;

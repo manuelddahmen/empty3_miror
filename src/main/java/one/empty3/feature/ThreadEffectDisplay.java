@@ -99,7 +99,7 @@ public class ThreadEffectDisplay extends Thread {
                 exception.printStackTrace();
             }
         }
-            /*webcam.setImageTransformer(bufferedImage -> {
+            webcam.setImageTransformer(bufferedImage -> {
 
                 BufferedImage bufferedImage1 = new BufferedImage(bufferedImage.getWidth(), bufferedImage.getHeight(),
                         BufferedImage.TYPE_INT_RGB);
@@ -109,7 +109,7 @@ public class ThreadEffectDisplay extends Thread {
                                 bufferedImage.getRGB(i, j));
                     }
                 return bufferedImage1;
-            });*/
+            });
 
 
         File fileOrigin = new File(tempDir + File.separator + "webcam.jpg");
