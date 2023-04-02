@@ -465,6 +465,40 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
         return maxRes;
     }
 
+    protected TreeMap<ClassElement, ClassElement> searchForLists() {
+        TreeMap<ClassElement, ClassElement> lists = new TreeMap<ClassElement, ClassElement>();
+        List<ClassElement> processes = new ArrayList<>();
+        List<List<ClassElement>> heads = new ArrayList<>();
+        for (DiagramElement classElement : diagramElements) {
+            if (classElement instanceof ClassElement) {
+                heads.add(new ArrayList<>());
+                heads.get(heads.size()-1).add((ClassElement)classElement);
+            }
+        }
+        for(int i=0; i<heads.size(); i++) {
+            List<ClassElement> currentHead = heads.get(i);
+            ClassElement head = currentHead.get(currentHead.size()-1);
+            int currentSize = heads.size();
+            for (DiagramElement classElement : diagramElements) {
+                ClassElement ce;
+                if (classElement instanceof ClassElement) {
+                    ce = (ClassElement) classElement;
+                    if (ce.partAfter.element != null && ce.partAfter.element.equals(head)) {
+                        currentHead.add(0, ce);
+                    }
+                }
+            }
+            if(currentSize==currentHead.size()) {
+                insertInTreeMap(lists, currentHead);
+            }
+        }
+        return lists;
+    }
+
+    private void insertInTreeMap(TreeMap<ClassElement, ClassElement> lists, List<ClassElement> currentHead) {
+        //lists.descendingMap().currentHead.get(0));
+        lists.get(currentHead.get(0));
+    }
 
     public void buttonGOActionPerformed(ActionEvent e) {
         processed = false;
