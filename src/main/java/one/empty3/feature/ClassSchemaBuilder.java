@@ -204,8 +204,8 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
 
     class ClassElement extends DiagramElement {
         protected Class theClass;
-        private PartElement partAfter;
-        private File[] files;
+        protected PartElement partAfter;
+        protected File[] files;
 
         public ClassElement() {
             x = getWidth() / 2;
@@ -244,42 +244,10 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
                     '}';
         }
     }
-    class ClassMultiFilterElement extends DiagramElement {
-        protected Class theClass;
-        private PartElement partAfter;
-        private File[] files;
-
-        public ClassMultiFilterElement() {
-            x = getWidth() / 2;
-            y = getHeight() / 2;
-            partAfter = new PartElement();
-            partAfter.setReferenceElement(this);
-            partElements.add(partAfter);
-        }
-
-        public Class getTheClass() {
-            return theClass;
-        }
-
-        public void setTheClass(Class theClass) {
-            this.theClass = theClass;
-        }
-
-        public PartElement getPartAfter() {
-            return partAfter;
-        }
-
-        public void setPartAfter(PartElement partAfter) {
-            this.partAfter = partAfter;
-        }
-
-        public void setInputFiles(File[] filesP) {
-            this.files = filesP;
-        }
-
+    class ClassMultiInputElement extends ClassElement {
         @Override
         public String toString() {
-            return "ClassElement{" +
+            return "ClassMultiInputElement{" +
                     "theClass=" + theClass +
                     ", partAfter=" + partAfter +
                     ", files=" + Arrays.toString(files) +
@@ -387,12 +355,14 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
                         partElements.remove(((ClassElement) diagramElement).partAfter);
                         ((ClassElement) diagramElement).partAfter = new PartElement();
                         diagramElements.remove(diagramElement);
+                        buttonDeleteClass.setSelected(false);
                     } else if (selectedActionDeleteLink) {
                         DiagramElement diagramElement = selectFromPoint(e.getX(), e.getY());
                         PartElement partElement = selectPartFromPoint(e.getX(), e.getY());
                         if (diagramElement instanceof ClassElement && partElement != null && partElement instanceof PartElement) {
                             ((ClassElement) (diagramElement)).partAfter.referenceElement = null;
                             ((ClassElement) (diagramElement)).partAfter.element = null;
+                            buttonDeleteLink.setSelected(false);
                         }
                     }
                     if (currentAction == 0) {
@@ -407,6 +377,10 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
                     } else if (currentAction == ADD_1) {
                         DiagramElement diagramElement = selectFromPoint(e.getX(), e.getY());
                         if (diagramElement instanceof ClassElement && selectedElement instanceof ClassElement) {
+                            if(((ClassElement)diagramElement).partAfter.element!=null&&
+                                    ((ClassElement)diagramElement).partAfter.element.equals(selectedClassElement)) {
+                                ((ClassElement)diagramElement).partAfter.element = null;
+                            }
                             ((ClassElement) selectedElement).partAfter.referenceElement = diagramElement;
                             ((ClassElement) selectedElement).partAfter.element = diagramElement;
                             currentAction = 0;
@@ -491,9 +465,6 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
         return maxRes;
     }
 
-    private void button3ActionPerformed(ActionEvent e) {
-        // TODO add your code here
-    }
 
     public void buttonGOActionPerformed(ActionEvent e) {
         processed = false;
@@ -511,16 +482,34 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
                 ClassElement first = ce;
                 Class theClass = ce.getTheClass();
                 if (ce.partAfter.element != null && ce.partAfter.element != ce) {
-                    try {
-                        System.out.printf("Start process stack\n");
-                        int n = 1;
-                        while (ce.partAfter.element != null && ce.partAfter.element != ce) {
-                            ce = (ClassElement) ce.partAfter.element;
-                            processes.add((ProcessFile) ce.theClass.newInstance());
-                            processes.get(processes.size() - 1).setMaxRes(maxRes);
+                    if (theClass.isAssignableFrom(ProcessFile.class)) {
+                        try {
+                            System.out.printf("Start process stack\n");
+                            int n = 1;
+                            while (ce.partAfter.element != null && ce.partAfter.element != ce) {
+                                ce = (ClassElement) ce.partAfter.element;
+                                processes.add((ProcessFile)
+                                        ce.theClass.newInstance());
+                                processes.get(processes.size() - 1).setMaxRes(maxRes);
+                            }
+                        } catch (InstantiationException | IllegalAccessException instantiationException) {
+                            instantiationException.printStackTrace();
                         }
-                    } catch (InstantiationException | IllegalAccessException instantiationException) {
-                        instantiationException.printStackTrace();
+                    } else {
+                        if (theClass.isAssignableFrom(ProcessNFiles.class)) {
+                            try {
+                                System.out.printf("Start process stack\n");
+                                int n = 1;
+                                while (ce.partAfter.element != null && ce.partAfter.element != ce) {
+                                    ce = (ClassElement) ce.partAfter.element;
+                                    processes.add((ProcessFile)
+                                            ce.theClass.newInstance());
+                                    processes.get(processes.size() - 1).setMaxRes(maxRes);
+                                }
+                            } catch (InstantiationException | IllegalAccessException instantiationException) {
+                                instantiationException.printStackTrace();
+                            }
+                        }
                     }
                 }
             }
@@ -804,6 +793,10 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
         }
     }
 
+    private void button3ActionPerformed(ActionEvent e) {
+        // TODO add your code here
+    }
+
 
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
@@ -882,12 +875,7 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
 
         //---- buttonGO ----
         buttonGO.setText("Process GO");
-        buttonGO.addActionListener(e -> {
-			buttonThenActionPerformed(e);
-			button3ActionPerformed(e);
-			buttonGOActionPerformed(e);
-			buttonGOActionPerformed(e);
-		});
+        buttonGO.addActionListener(e -> buttonGOActionPerformed(e));
         contentPane.add(buttonGO, "cell 3 0");
 
         //---- buttonLoad ----
@@ -1004,6 +992,7 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
         g.drawString(diagramElement.label, diagramElement.x, diagramElement.y);
         if (diagramElement instanceof ClassElement) {
 
+            g.setColor(Color.WHITE);
             g.drawString(((ClassElement) diagramElement).theClass.getName(), diagramElement.x, diagramElement.y + 32);
 
         }
@@ -1011,8 +1000,10 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
             if (((ClassElement) diagramElement).partAfter.element != null) {
                 int x = ((ClassElement) diagramElement).partAfter.element.x;
                 int y = ((ClassElement) diagramElement).partAfter.element.y;
+                g.setColor(Color.GREEN);
+                g.fillOval(diagramElement.x+40, diagramElement.y+40, 10,10);
                 g.setColor(Color.GRAY);
-                g.drawLine(diagramElement.x, diagramElement.y, x, y);
+                g.drawLine(diagramElement.x+40, diagramElement.y+40, x, y);
             }
         }
     }

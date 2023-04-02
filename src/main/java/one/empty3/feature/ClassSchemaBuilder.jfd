@@ -72,9 +72,6 @@ new FormModel {
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "buttonGO"
 				"text": "Process GO"
-				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonThenActionPerformed", true ) )
-				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "button3ActionPerformed", true ) )
-				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonGOActionPerformed", true ) )
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonGOActionPerformed", true ) )
 			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 				"value": "cell 3 0"
