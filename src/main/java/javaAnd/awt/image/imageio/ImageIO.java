@@ -46,7 +46,7 @@ public class ImageIO {
 
     private static java.awt.image.BufferedImage read(FileInputStream fileInputStream) {
         try {
-            return new BufferedImage(javax.imageio.ImageIO.read(fileInputStream));
+            return javax.imageio.ImageIO.read(fileInputStream);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
