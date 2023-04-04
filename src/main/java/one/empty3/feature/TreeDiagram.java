@@ -40,12 +40,17 @@ public class TreeDiagram implements TreeNodeListener{
     }
 
     public void constructTreeReverseProcesses(List<ClassSchemaBuilder.DiagramElement> diagramElements) {
+        List<ClassSchemaBuilder.DiagramElement> diagramElements2 = new ArrayList<>();
+
+        diagramElements2.addAll(diagramElements);
+
+
         TreeMap<ClassSchemaBuilder.ClassElement, ClassSchemaBuilder.ClassElement> lists = new TreeMap<>();
         List<List<ClassSchemaBuilder.ClassElement>> heads = new ArrayList<>();
 
         List<ClassSchemaBuilder.DiagramElement> diagramElements1 = new ArrayList<>();
 
-        for (ClassSchemaBuilder.DiagramElement classElement : diagramElements) {
+        for (ClassSchemaBuilder.DiagramElement classElement : diagramElements2) {
             if (classElement instanceof ClassSchemaBuilder.ClassElement) {
                 heads.add(new ArrayList<>());
                 heads.get(heads.size() - 1).add((ClassSchemaBuilder.ClassElement) classElement);

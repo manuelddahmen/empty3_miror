@@ -63,6 +63,7 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
     private String fileChooserDir = ".";
     public String tempDir;
     private File fileOut;
+    private TreeDiagram treeDiagram;
 
     public class DiagramElement implements Serializable {
         protected int x = getWidth() / 2;
@@ -206,6 +207,8 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
         protected Class theClass;
         protected PartElement partAfter;
         protected File[] files;
+        protected String tmpFilename = tempDir+
+                File.separator+"temp-"+ UUID.randomUUID()+".jpg";
 
         public ClassElement() {
             x = getWidth() / 2;
@@ -1042,11 +1045,15 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
     }
 
     public void drawAllElements() {
+        trees();
+
         BufferedImage bi = new BufferedImage(panel1.getWidth(), panel1.getHeight(), BufferedImage.TYPE_INT_RGB);
         Graphics g = bi.getGraphics();
 
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, panel1.getWidth(), panel1.getHeight());
+
+
 
         Point location = MouseInfo.getPointerInfo().getLocation();
         DiagramElement selected = selectFromPoint(location.x, location.y);
@@ -1058,8 +1065,32 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
                 g.setColor(Color.BLUE);
             drawElement(g, diagramElement);
         }
+
+
         Graphics graphics = panel1.getGraphics();
         graphics.drawImage(bi, 0, 0, panel1.getWidth(), panel1.getHeight(), this);
+    }
+
+    private void trees() {
+        treeDiagram = new TreeDiagram(diagramElements);
+
+        treeDiagram.constructTreeReverseProcesses(diagramElements);
+
+        ArrayList<TreeNodeDiagram> diagramElements2 = new ArrayList<>();
+
+
+        List<TreeNodeDiagram> explore = new ArrayList<>();
+
+        List<TreeNodeDiagram> leaves = new ArrayList<>();
+
+        treeDiagram.head.searchForLeaves(explore, leaves);
+
+        leaves.forEach(treeNodeDiagram -> {
+            DiagramElement element = treeNodeDiagram.getElement();
+            if(element instanceof ClassElement) {
+                treeNodeDiagram.setFile(((ClassElement)(element)).files[0]);
+            }
+        });
     }
 
     public void addClassToSchema() {

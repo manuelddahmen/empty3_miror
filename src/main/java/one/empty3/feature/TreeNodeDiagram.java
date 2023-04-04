@@ -26,6 +26,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 public class TreeNodeDiagram implements TreeNodeListener{
     protected ClassSchemaBuilder.DiagramElement element;
@@ -34,7 +35,7 @@ public class TreeNodeDiagram implements TreeNodeListener{
     protected File file;
     List<TreeNodeDiagram> children;
     private TreeNodeListener treeNodeListener;
-
+    protected boolean executeIfExecuted = false;
     public TreeNodeDiagram() {
         children = new ArrayList<>();
     }
@@ -95,15 +96,20 @@ public class TreeNodeDiagram implements TreeNodeListener{
         isExecuted = executed;
     }
 
+
+
     public void execute() {
         int count = 0;
         List<TreeNodeDiagram> activeChildren = new ArrayList<>();
         for (TreeNodeDiagram element : children) {
-            if (element.isExecuted()) {
+            if (element.isExecuted()||executeIfExecuted) {
+                count++;
             } else {
-                activeChildren.add(element);
+                element.execute();
                 count++;
             }
+            activeChildren.add(element);
+
         }
 
         if (element instanceof ClassSchemaBuilder.ClassMultiInputElement) {
@@ -181,4 +187,12 @@ public class TreeNodeDiagram implements TreeNodeListener{
     public void listen(TreeDiagram treeDiagram, TreeNodeDiagram treeNodeDiagram, int code) {
 
     }
+
+    public File getFile() {
+        return file;
+    }
+    public void setFile(File file) {
+        this.file = file;
+    }
+
 }
