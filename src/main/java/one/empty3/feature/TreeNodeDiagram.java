@@ -48,11 +48,7 @@ public class TreeNodeDiagram {
 
     public void addToNode(List<ClassSchemaBuilder.DiagramElement> diagramElements1,
                           TreeNodeDiagram current,  List<ClassSchemaBuilder.ClassElement> removed ) {
-
         if (current != null) {
-            while (diagramElements1.size() > 0) {
-                removed = new ArrayList<>();
-                int j = 0;
                 for (int i = 0; i < diagramElements1.size(); i++) {
                     ClassSchemaBuilder.ClassElement ce = (ClassSchemaBuilder.ClassElement) diagramElements1.get(i);
                     if (ce.partAfter.element != null || ce.partAfter.element.equals(current)) {
@@ -62,14 +58,11 @@ public class TreeNodeDiagram {
                         current.getChildren().add(treeNodeDiagram);
                         diagramElements1.removeAll(removed);
                         removed.clear();
-                        current.getChildren().get(i).addToNode(diagramElements1, treeNodeDiagram,ce, removed);
-                        j++;
+                        current.getChildren().add(treeNodeDiagram);
+                        treeNodeDiagram.addToNode(diagramElements1, treeNodeDiagram, removed);
                     }
                 }
                 diagramElements1.removeAll(removed);
-            }
-            return;
         }
-    }
     }
 }
