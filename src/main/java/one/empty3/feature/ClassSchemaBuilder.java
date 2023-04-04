@@ -22,6 +22,9 @@ package one.empty3.feature;
 import net.miginfocom.swing.MigLayout;
 import one.empty3.feature.facemorph.RunFeatures;
 import one.empty3.feature.gui.DirestEffect;
+import one.empty3.feature.histograms.Hist4Contour;
+import one.empty3.feature.histograms.Histogram;
+import one.empty3.feature.histograms.Histogram1;
 import one.empty3.feature.selection.HighlightFeatures;
 import one.empty3.feature.tryocr.ReadLines;
 import one.empty3.feature.tryocr.SelectColor;
@@ -64,6 +67,15 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
     public String tempDir;
     private File fileOut;
     private TreeDiagram treeDiagram;
+    private File webcamFile;
+
+    public void setWebcamFile(File webcamFile) {
+        this.webcamFile = webcamFile;
+    }
+
+    public File getWebcamFile() {
+        return webcamFile;
+    }
 
     public class DiagramElement implements Serializable {
         protected int x = getWidth() / 2;
@@ -429,6 +441,9 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
             }
         });
         thread.start();
+
+
+        setWebcamFile(new File(tempDir + File.separator + "webcam.jpg"));
     }
 
 
@@ -537,7 +552,7 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
             for (File f : files) {
                 int imageSource = 0;
                 if (f.getName().contains("webcam")) {
-                    f = new File(tempDir + File.separator + "webcam.jpg");
+                    f = webcamFile;
                     imageSource = 1;
                 }
                 if (processes.size() > 0) {
@@ -704,14 +719,14 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
             try {
                 FileOutputStream fichier = new FileOutputStream(selectedFile);
                 oos = new ObjectOutputStream(fichier);
-                oos.writeObject(new java.util.Date());
+                oos.writeObject(new Date());
                 oos.writeObject(this.diagramElements);
                 oos.writeObject(this.files);
                 oos.writeObject(this.partElements);
                 oos.writeObject(this.listProcessClasses);
 
                 oos.flush();
-            } catch (final java.io.IOException ex) {
+            } catch (final IOException ex) {
                 ex.printStackTrace();
             } finally {
                 try {
@@ -921,9 +936,9 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
             listProcessClasses.add(GaussFilterProcess.class.newInstance());
             listProcessClasses.add(GradProcess.class.newInstance());
             listProcessClasses.add(HarrisProcess.class.newInstance());
-            listProcessClasses.add(one.empty3.feature.histograms.Histogram.class.newInstance());
-            listProcessClasses.add(one.empty3.feature.histograms.Histogram1.class.newInstance());
-            listProcessClasses.add(one.empty3.feature.histograms.Hist4Contour.class.newInstance());
+            listProcessClasses.add(Histogram.class.newInstance());
+            listProcessClasses.add(Histogram1.class.newInstance());
+            listProcessClasses.add(Hist4Contour.class.newInstance());
             listProcessClasses.add(one.empty3.feature.histograms.Hist4Contour2.class.newInstance());
             listProcessClasses.add(Histogram0.class.newInstance());
             listProcessClasses.add(Histogram2.class.newInstance());
@@ -952,7 +967,7 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
             listProcessClasses.add(HighlightFeatures.class.newInstance());
             listProcessClasses.add(RunFeatures.class.newInstance());
             listProcessClasses.add(GFG.class.newInstance());
-            listProcessClasses.add(one.empty3.feature.Hist4Contour2.class.newInstance());
+            listProcessClasses.add(Hist4Contour2.class.newInstance());
             listProcessClasses.forEach(new Consumer<ProcessFile>() {
                 @Override
                 public void accept(ProcessFile processFile) {

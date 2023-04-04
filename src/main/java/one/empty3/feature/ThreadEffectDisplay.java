@@ -120,7 +120,7 @@ public class ThreadEffectDisplay extends Thread {
 
 
             try {
-                if (image != null&&ImageIO.write(image, "jpg", main.files.get(0)[0])) {
+                if (image != null&&ImageIO.write(image, "jpg", main.getWebcamFile())) {
                     System.err.println("File not written");
                 }
             } catch (IOException e) {
@@ -129,12 +129,13 @@ public class ThreadEffectDisplay extends Thread {
 
 
                 main.buttonGOActionPerformed(null);
-                    while((image =getImageIn())==null) {
+                    if((image =getImageIn())==null) {
                         try {
                             Thread.sleep(20);
                         } catch (InterruptedException e) {
                             throw new RuntimeException(e);
                         }
+                        continue;
                     }
 
                 if (image != null) {
