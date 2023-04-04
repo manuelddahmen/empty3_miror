@@ -64,7 +64,7 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
     public String tempDir;
     private File fileOut;
 
-    class DiagramElement implements Serializable {
+    public class DiagramElement implements Serializable {
         protected int x = getWidth() / 2;
         protected int y = getHeight() / 2;
         protected String label = "DIAGRAM ELEMENT";
