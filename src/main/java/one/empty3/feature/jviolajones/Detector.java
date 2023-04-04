@@ -49,10 +49,6 @@ public class Detector {
         this(new FileInputStream(filename));
     }
 
-    public org.jdom2.Element getChild(Element element, String childName) {
-        return null;
-    }
-
     public Detector(InputStream input) {
         Document document = null;
         Element racine;
@@ -124,6 +120,10 @@ public class Detector {
             stages.add(st);
         }
         //Logger.getAnonymousLogger().log(Level.INFO, stages.size());
+    }
+
+    public org.jdom2.Element getChild(Element element, String childName) {
+        return null;
     }
 
     public List<java.awt.Rectangle> getFaces(String filename, float baseScale, float scale_inc, float increment, int min_neighbors, boolean doCannyPruning) throws java.io.FileNotFoundException, java.io.IOException {
@@ -306,12 +306,12 @@ public class Detector {
     public boolean equals(Rectangle r1, Rectangle r2) {
         int distance = (int) (r1.width * 0.2);
 
-	    /*return r2.x <= r1.x + distance &&
-	           r2.x >= r1.x - distance &&
-	           r2.y <= r1.y + distance &&
-	           r2.y >= r1.y - distance &&
-	           r2.width <= (int)( r1.width * 1.2 ) &&
-	           (int)( r2.width * 1.2 ) >= r1.width;*/
+        /*return r2.x <= r1.x + distance &&
+               r2.x >= r1.x - distance &&
+               r2.y <= r1.y + distance &&
+               r2.y >= r1.y - distance &&
+               r2.width <= (int)( r1.width * 1.2 ) &&
+               (int)( r2.width * 1.2 ) >= r1.width;*/
         if (r2.x <= r1.x + distance &&
                 r2.x >= r1.x - distance &&
                 r2.y <= r1.y + distance &&

@@ -23,22 +23,23 @@ import one.empty3.feature.PixM;
 import one.empty3.feature.ProcessBean;
 
 import javax.imageio.ImageIO;
-import javax.imageio.ImageReader;
-import javax.imageio.ImageWriter;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
 
-import static one.empty3.Pojo.getProperty;
-
-public abstract class ProcessFile extends ProcessNFiles{
+public abstract class ProcessFile extends ProcessNFiles {
     public ProcessBean bean;
     protected int maxRes = 400;
     private Properties property;
     private File outputDirectory = null;
     private List<File> imagesStack = new ArrayList<>();
+
+    protected static boolean isImage(File in) {
+        return in != null && (in.getAbsolutePath().toLowerCase().endsWith(".jpg")
+                || in.getAbsolutePath().toLowerCase().endsWith(".png"));
+    }
 
     public File getOutputDirectory() {
         return outputDirectory;
@@ -56,7 +57,8 @@ public abstract class ProcessFile extends ProcessNFiles{
             BufferedImage read = null;
             read = ImageIO.read(file);
             return (new PixM(read));
-        } catch (Exception ex) {}
+        } catch (Exception ex) {
+        }
 
         return null;
     }
@@ -90,12 +92,6 @@ public abstract class ProcessFile extends ProcessNFiles{
 
     public void addSource(File fo) {
         imagesStack.add(fo);
-    }
-
-
-    protected static boolean isImage(File in) {
-        return in!=null && (in.getAbsolutePath().toLowerCase().endsWith(".jpg")
-            || in.getAbsolutePath().toLowerCase().endsWith(".png"));
     }
 
 }

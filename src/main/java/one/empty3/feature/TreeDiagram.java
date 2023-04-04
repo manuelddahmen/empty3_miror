@@ -23,14 +23,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
 
-public class TreeDiagram {
+public class TreeDiagram implements TreeNodeListener{
     protected TreeNodeDiagram head = null;
+    private TreeNodeListener treeNodeListener;
 
+
+    /**
+     * Constructs tree of element, attached files and nodes' childre
+     * from head (last process, output=resulting image) to upper
+     * processes.
+     *
+     * @param diagramElements COPY of the diagram element List.
+     */
     public TreeDiagram(List<ClassSchemaBuilder.DiagramElement> diagramElements) {
-        head = constructTreeReverseProcesses(diagramElements);
+        constructTreeReverseProcesses(diagramElements);
     }
 
-    public TreeNodeDiagram constructTreeReverseProcesses(List<ClassSchemaBuilder.DiagramElement> diagramElements) {
+    public void constructTreeReverseProcesses(List<ClassSchemaBuilder.DiagramElement> diagramElements) {
         TreeMap<ClassSchemaBuilder.ClassElement, ClassSchemaBuilder.ClassElement> lists = new TreeMap<>();
         List<List<ClassSchemaBuilder.ClassElement>> heads = new ArrayList<>();
 
@@ -39,7 +48,7 @@ public class TreeDiagram {
         for (ClassSchemaBuilder.DiagramElement classElement : diagramElements) {
             if (classElement instanceof ClassSchemaBuilder.ClassElement) {
                 heads.add(new ArrayList<>());
-                heads.get(heads.size()-1).add((ClassSchemaBuilder.ClassElement)classElement);
+                heads.get(heads.size() - 1).add((ClassSchemaBuilder.ClassElement) classElement);
             }
             diagramElements1.add(classElement);
         }
@@ -48,7 +57,7 @@ public class TreeDiagram {
 
         for (int i = 0; i < heads.size(); i++) {
             ClassSchemaBuilder.ClassElement classElement = (ClassSchemaBuilder.ClassElement) (heads.get(i).get(0));
-            if (classElement instanceof ClassSchemaBuilder.ClassElement) {
+            if (classElement != null) {
                 if (classElement.partAfter.element == null || classElement.partAfter.element.equals(null)) {
                     head = new TreeNodeDiagram();
                     head.setElement(classElement);
@@ -59,31 +68,32 @@ public class TreeDiagram {
 
         addToNode(diagramElements1, head, new ArrayList<>());
         // Noeuds à tête children>=1
-        return null;
     }
 
     private void addToNode(List<ClassSchemaBuilder.DiagramElement> diagramElements1, TreeNodeDiagram current, List<ClassSchemaBuilder.ClassElement> removed) {
 
-        if(current!=null) {
-                for (int i = 0; i < diagramElements1.size(); i++) {
-                    ClassSchemaBuilder.ClassElement ce = (ClassSchemaBuilder.ClassElement) diagramElements1.get(i);
-                    if (ce.partAfter.element != null || ce.partAfter.element.equals(current)) {
-                        removed.add(ce);
-                        TreeNodeDiagram treeNodeDiagram = new TreeNodeDiagram();
-                        treeNodeDiagram.setElement(ce);
-                        diagramElements1.removeAll(removed);
-                        removed.clear();
-                        current.getChildren().add(treeNodeDiagram);
-                        treeNodeDiagram.addToNode(diagramElements1, treeNodeDiagram, removed);
-                    }
+        if (current != null) {
+            for (int i = 0; i < diagramElements1.size(); i++) {
+                ClassSchemaBuilder.ClassElement ce = (ClassSchemaBuilder.ClassElement) diagramElements1.get(i);
+                if (ce.partAfter.element != null || ce.partAfter.element.equals(current)) {
+                    removed.add(ce);
+                    TreeNodeDiagram treeNodeDiagram = new TreeNodeDiagram();
+                    treeNodeDiagram.setElement(ce);
+                    treeNodeDiagram.addListener(treeNodeListener);
+                    diagramElements1.removeAll(removed);
+                    removed.clear();
+                    current.getChildren().add(treeNodeDiagram);
+                    treeNodeDiagram.addToNode(diagramElements1, treeNodeDiagram, removed);
                 }
-                diagramElements1.removeAll(removed);
+            }
+            diagramElements1.removeAll(removed);
         }
     }
 
     public void executeOneStart() {
         ClassSchemaBuilder.DiagramElement element = head.getElement();
     }
+
     public void run() {
 
         // Trouver les fichiers attachés.
@@ -94,5 +104,19 @@ public class TreeDiagram {
         // Movie
 
     }
+    public void addListener(TreeNodeListener treeNodeListener) {
+        this.treeNodeListener = treeNodeListener;
+    }
+    @Override
+    public void listen(TreeDiagram treeDiagram, TreeNodeDiagram treeNodeDiagram, int code) {
 
+    }
+
+    public TreeNodeListener getTreeNodeListener() {
+        return treeNodeListener;
+    }
+
+    public void setTreeNodeListener(TreeNodeListener treeNodeListener) {
+        this.treeNodeListener = treeNodeListener;
+    }
 }

@@ -21,19 +21,19 @@ package one.empty3.feature;
 
 import one.empty3.io.ProcessFile;
 import one.empty3.io.ProcessNFiles;
-import one.empty3.library.core.nurbs.F;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class TreeNodeDiagram {
+public class TreeNodeDiagram implements TreeNodeListener{
     protected ClassSchemaBuilder.DiagramElement element;
     protected boolean isExecuted = false;
     protected TreeNodeDiagram parentNode;
     protected File file;
     List<TreeNodeDiagram> children;
+    private TreeNodeListener treeNodeListener;
 
     public TreeNodeDiagram() {
         children = new ArrayList<>();
@@ -57,6 +57,8 @@ public class TreeNodeDiagram {
 
     public void addToNode(List<ClassSchemaBuilder.DiagramElement> diagramElements1,
                           TreeNodeDiagram current, List<ClassSchemaBuilder.ClassElement> removed) {
+        if(treeNodeListener==null)
+            setTreeNodeListener(this);
         if (current != null) {
             for (int i = 0; i < diagramElements1.size(); i++) {
                 ClassSchemaBuilder.ClassElement ce = (ClassSchemaBuilder.ClassElement) diagramElements1.get(i);
@@ -65,6 +67,7 @@ public class TreeNodeDiagram {
                     TreeNodeDiagram treeNodeDiagram = new TreeNodeDiagram();
                     treeNodeDiagram.setElement(ce);
                     treeNodeDiagram.setParentNode(this);
+                    treeNodeDiagram.setTreeNodeListener(this.treeNodeListener);
                     current.getChildren().add(treeNodeDiagram);
                     diagramElements1.removeAll(removed);
                     removed.clear();
@@ -114,8 +117,8 @@ public class TreeNodeDiagram {
                         files1.addAll(Arrays.asList(activeChildrenFiles));
                     }
                 }
-                File [] input = new File[files1.size()];
-                if(files1.size()>0)
+                File[] input = new File[files1.size()];
+                if (files1.size() > 0)
                     pnf.processFiles(file, input);
             } catch (InstantiationException e) {
                 throw new RuntimeException(e);
@@ -126,12 +129,12 @@ public class TreeNodeDiagram {
             Class theClass = (((ClassSchemaBuilder.ClassElement) element).theClass);
             try {
                 ProcessFile pf = (ProcessFile) theClass.newInstance();
-                File [] activeChildrenFiles = new File[1];
+                File[] activeChildrenFiles = new File[1];
                 if (activeChildren.size() == 1) {
                     List<File> files = new ArrayList<>();
                     activeChildrenFiles[0] = children.get(0).file;
 
-                    File [] input = new File[] {activeChildrenFiles[0]};
+                    File[] input = new File[]{activeChildrenFiles[0]};
 
                     pf.processFiles(file, input);
                 }
@@ -143,25 +146,39 @@ public class TreeNodeDiagram {
             }
         }
     }
-}
 
-    }
 
-public List<TreeNodeDiagram> searchForLeaves(List<TreeNodeDiagram> explore,List<TreeNodeDiagram> leaves){
-        if(explore==null)
-        explore=new ArrayList<>();
-        if(leaves==null)
-        leaves=new ArrayList<>();
+    public List<TreeNodeDiagram> searchForLeaves(List<TreeNodeDiagram> explore, List<TreeNodeDiagram> leaves) {
+        if (explore == null)
+            explore = new ArrayList<>();
+        if (leaves == null)
+            leaves = new ArrayList<>();
 
-        if(children.size()>0){
-        for(TreeNodeDiagram tn:children){
-        searchForLeaves(explore,leaves);
-        }
-        }else{
-        leaves.add(this);
+        if (children.size() > 0) {
+            for (TreeNodeDiagram tn : children) {
+                searchForLeaves(explore, leaves);
+            }
+        } else {
+            leaves.add(this);
         }
 
         return leaves;
-        }
+    }
 
-        }
+    public void addListener(TreeNodeListener treeNodeListener) {
+        this.treeNodeListener = treeNodeListener;
+    }
+
+    public TreeNodeListener getTreeNodeListener() {
+        return treeNodeListener;
+    }
+
+    public void setTreeNodeListener(TreeNodeListener treeNodeListener) {
+        this.treeNodeListener = treeNodeListener;
+    }
+
+    @Override
+    public void listen(TreeDiagram treeDiagram, TreeNodeDiagram treeNodeDiagram, int code) {
+
+    }
+}
