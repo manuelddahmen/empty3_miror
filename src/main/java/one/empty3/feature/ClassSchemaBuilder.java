@@ -206,7 +206,8 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
     class ClassElement extends DiagramElement {
         protected Class theClass;
         protected PartElement partAfter;
-        protected File[] files;
+
+        protected File[] files = new File[1];
         protected String tmpFilename = tempDir+
                 File.separator+"temp-"+ UUID.randomUUID()+".jpg";
 
@@ -1074,23 +1075,24 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
     private void trees() {
         treeDiagram = new TreeDiagram(diagramElements);
 
-        treeDiagram.constructTreeReverseProcesses(diagramElements);
 
-        ArrayList<TreeNodeDiagram> diagramElements2 = new ArrayList<>();
+        if(treeDiagram.head!=null) {
+            ArrayList<TreeNodeDiagram> diagramElements2 = new ArrayList<>();
 
 
-        List<TreeNodeDiagram> explore = new ArrayList<>();
+            List<TreeNodeDiagram> explore = new ArrayList<>();
 
-        List<TreeNodeDiagram> leaves = new ArrayList<>();
+            List<TreeNodeDiagram> leaves = new ArrayList<>();
 
-        treeDiagram.head.searchForLeaves(explore, leaves);
+            treeDiagram.head.searchForLeaves(leaves);
 
-        leaves.forEach(treeNodeDiagram -> {
-            DiagramElement element = treeNodeDiagram.getElement();
-            if(element instanceof ClassElement) {
-                treeNodeDiagram.setFile(((ClassElement)(element)).files[0]);
-            }
-        });
+            leaves.forEach(treeNodeDiagram -> {
+                DiagramElement element = treeNodeDiagram.getElement();
+                if (element instanceof ClassElement) {
+                    treeNodeDiagram.setFile(((ClassElement) (element)).files[0]);
+                }
+            });
+        }
     }
 
     public void addClassToSchema() {

@@ -128,12 +128,13 @@ public class ThreadEffectDisplay extends Thread {
 
 
                 main.buttonGOActionPerformed(null);
-                try {
-                    Thread.sleep(200);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-                image = getImageIn();
+                    while((image =getImageIn())==null) {
+                        try {
+                            Thread.sleep(20);
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
 
                 if (image != null) {
                     Graphics graphics = jPanel.getGraphics();

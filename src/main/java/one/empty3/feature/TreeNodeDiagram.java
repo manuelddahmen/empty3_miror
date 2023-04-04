@@ -154,21 +154,20 @@ public class TreeNodeDiagram implements TreeNodeListener{
     }
 
 
-    public List<TreeNodeDiagram> searchForLeaves(List<TreeNodeDiagram> explore, List<TreeNodeDiagram> leaves) {
-        if (explore == null)
-            explore = new ArrayList<>();
+    public void searchForLeaves(List<TreeNodeDiagram> leaves) {
         if (leaves == null)
             leaves = new ArrayList<>();
 
         if (children.size() > 0) {
             for (TreeNodeDiagram tn : children) {
-                searchForLeaves(explore, leaves);
+                if(tn.equals(this)) {
+                    throw new RuntimeException("TreeNodeDiagram children==this");
+                }
+                tn.searchForLeaves(leaves);
             }
         } else {
             leaves.add(this);
         }
-
-        return leaves;
     }
 
     public void addListener(TreeNodeListener treeNodeListener) {
