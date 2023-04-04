@@ -422,7 +422,7 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
             while (true) {
                 drawAllElements();
                 try {
-                    Thread.sleep(200);
+                    Thread.sleep(20);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -569,36 +569,20 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
                             ex.printStackTrace();
                         }
                     }
-/*
-                    if (imageSource == 1 && fileOut != f) {
-                        File filePaste = new File(fileOut.getAbsolutePath() + "-paste.jpg");
-                        try {
-                            IdentNullProcess identNullProcess = new IdentNullProcess();
-                            identNullProcess.setMaxRes(getMaxRes());
-                            identNullProcess.process(f, filePaste);
-                            PixM original = new PixM(ImageIO.read(filePaste));
-                            try {
-                                original.colorsRegionWithMask(0, 0, original.getColumns(), original.getLines(),
-                                        new PixM(ImageIO.read(fileOut)), new PixM(ImageIO.read(fileOut)));
-                                ImageIO.write(original.normalize(0, 1).getImage(), "jpg", fileOut);
-                            } catch (NullPointerException exception) {
-                                exception.printStackTrace();
-                            }
-                        } catch (IOException ex) {
-                            ex.printStackTrace();
-                        }
-                    }
-
- */
-
                 }
             }
         }
-        Logger.getAnonymousLogger().log(Level.INFO, "fileOut : " + fileOut.getAbsolutePath());
-        Logger.getAnonymousLogger().log(Level.INFO, "Exists? : " + fileOut.exists());
-        if(fileOut.exists()) {
-            direstEffect.setFileIn(fileOut);
-            processed = true;
+        if(fileOut!=null) {
+            Logger.getAnonymousLogger().log(Level.INFO, "fileOut : " + fileOut.getAbsolutePath());
+            Logger.getAnonymousLogger().log(Level.INFO, "Exists? : " + fileOut.exists());
+            if (fileOut.exists()) {
+                direstEffect.setFileIn(fileOut);
+                processed = true;
+            } else {
+                System.err.println("Le fichier fileOut n'existe pas");
+            }
+        } else {
+            System.err.println("Le fichier fileOut est nul");
         }
     }
 
@@ -1055,20 +1039,25 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
 
 
 
-        Point location = MouseInfo.getPointerInfo().getLocation();
-        DiagramElement selected = selectFromPoint(location.x, location.y);
-        for (DiagramElement diagramElement : diagramElements) {
-            g.setColor(Color.WHITE);
-            if (diagramElement == selected)
-                g.setColor(Color.GREEN);
-            else if (selectedElement == diagramElement)
-                g.setColor(Color.BLUE);
-            drawElement(g, diagramElement);
+        try {
+            Point location = MouseInfo.getPointerInfo().getLocation();
+            DiagramElement selected = selectFromPoint(location.x, location.y);
+            for (DiagramElement diagramElement : diagramElements) {
+                g.setColor(Color.WHITE);
+                if (diagramElement == selected)
+                    g.setColor(Color.GREEN);
+                else if (selectedElement == diagramElement)
+                    g.setColor(Color.BLUE);
+                drawElement(g, diagramElement);
+            }
+
+
+            Graphics graphics = panel1.getGraphics();
+            graphics.drawImage(bi, 0, 0, panel1.getWidth(), panel1.getHeight(), this);
+
+        } catch (NullPointerException ex) {
+
         }
-
-
-        Graphics graphics = panel1.getGraphics();
-        graphics.drawImage(bi, 0, 0, panel1.getWidth(), panel1.getHeight(), this);
     }
 
     private void trees() {
