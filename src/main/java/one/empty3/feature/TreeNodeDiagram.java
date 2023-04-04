@@ -19,19 +19,25 @@
 
 package one.empty3.feature;
 
+import one.empty3.io.ProcessFile;
+import one.empty3.io.ProcessNFiles;
+import one.empty3.library.core.nurbs.F;
+
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.TreeMap;
 
 public class TreeNodeDiagram {
     protected ClassSchemaBuilder.DiagramElement element;
     protected boolean isExecuted = false;
     protected TreeNodeDiagram parentNode;
+    protected File file;
+    List<TreeNodeDiagram> children;
 
     public TreeNodeDiagram() {
         children = new ArrayList<>();
     }
-    List<TreeNodeDiagram> children;
 
     public List<TreeNodeDiagram> getChildren() {
         return children;
@@ -50,32 +56,32 @@ public class TreeNodeDiagram {
     }
 
     public void addToNode(List<ClassSchemaBuilder.DiagramElement> diagramElements1,
-                          TreeNodeDiagram current,  List<ClassSchemaBuilder.ClassElement> removed ) {
+                          TreeNodeDiagram current, List<ClassSchemaBuilder.ClassElement> removed) {
         if (current != null) {
-                for (int i = 0; i < diagramElements1.size(); i++) {
-                    ClassSchemaBuilder.ClassElement ce = (ClassSchemaBuilder.ClassElement) diagramElements1.get(i);
-                    if (ce.partAfter.element != null || ce.partAfter.element.equals(current)) {
-                        removed.add(ce);
-                        TreeNodeDiagram treeNodeDiagram = new TreeNodeDiagram();
-                        treeNodeDiagram.setElement(ce);
-                        treeNodeDiagram.setParentNode(this);
-                        current.getChildren().add(treeNodeDiagram);
-                        diagramElements1.removeAll(removed);
-                        removed.clear();
-                        current.getChildren().add(treeNodeDiagram);
-                        treeNodeDiagram.addToNode(diagramElements1, treeNodeDiagram, removed);
-                    }
+            for (int i = 0; i < diagramElements1.size(); i++) {
+                ClassSchemaBuilder.ClassElement ce = (ClassSchemaBuilder.ClassElement) diagramElements1.get(i);
+                if (ce.partAfter.element != null || ce.partAfter.element.equals(current)) {
+                    removed.add(ce);
+                    TreeNodeDiagram treeNodeDiagram = new TreeNodeDiagram();
+                    treeNodeDiagram.setElement(ce);
+                    treeNodeDiagram.setParentNode(this);
+                    current.getChildren().add(treeNodeDiagram);
+                    diagramElements1.removeAll(removed);
+                    removed.clear();
+                    current.getChildren().add(treeNodeDiagram);
+                    treeNodeDiagram.addToNode(diagramElements1, treeNodeDiagram, removed);
                 }
-                diagramElements1.removeAll(removed);
+            }
+            diagramElements1.removeAll(removed);
         }
-    }
-
-    private void setParentNode(TreeNodeDiagram treeNodeDiagram) {
-        this.parentNode = treeNodeDiagram;
     }
 
     public TreeNodeDiagram getParentNode() {
         return parentNode;
+    }
+
+    private void setParentNode(TreeNodeDiagram treeNodeDiagram) {
+        this.parentNode = treeNodeDiagram;
     }
 
     public boolean isExecuted() {
@@ -87,35 +93,75 @@ public class TreeNodeDiagram {
     }
 
     public void execute() {
-        for(TreeNodeDiagram treeNodeDiagram : children) {
-            if(treeNodeDiagram.isExecuted()) {
+        int count = 0;
+        List<TreeNodeDiagram> activeChildren = new ArrayList<>();
+        for (TreeNodeDiagram element : children) {
+            if (element.isExecuted()) {
             } else {
-                if(element instanceof ClassSchemaBuilder.ClassElement) {
-                    ClassSchemaBuilder.ClassElement classElement = (ClassSchemaBuilder.ClassElement) element;
+                activeChildren.add(element);
+                count++;
+            }
+        }
 
-                } else if(element instanceof ClassSchemaBuilder.ClassMultiInputElement) {
-                    ClassSchemaBuilder.ClassElement classElement = (ClassSchemaBuilder.ClassMultiInputElement) element;
+        if (element instanceof ClassSchemaBuilder.ClassMultiInputElement) {
+            Class theClass = (((ClassSchemaBuilder.ClassMultiInputElement) element).theClass);
+            try {
+                ProcessNFiles pnf = (ProcessNFiles) theClass.newInstance();
+                List<File> files1 = new ArrayList<>();
+                if (activeChildren.size() > 0) {
+                    for (TreeNodeDiagram tt : activeChildren) {
+                        File activeChildrenFiles = tt.file;
+                        files1.addAll(Arrays.asList(activeChildrenFiles));
+                    }
+                }
+                File [] input = new File[files1.size()];
+                if(files1.size()>0)
+                    pnf.processFiles(file, input);
+            } catch (InstantiationException e) {
+                throw new RuntimeException(e);
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
+        } else if (element instanceof ClassSchemaBuilder.ClassElement) {
+            Class theClass = (((ClassSchemaBuilder.ClassElement) element).theClass);
+            try {
+                ProcessFile pf = (ProcessFile) theClass.newInstance();
+                File [] activeChildrenFiles = new File[1];
+                if (activeChildren.size() == 1) {
+                    List<File> files = new ArrayList<>();
+                    activeChildrenFiles[0] = children.get(0).file;
+
+                    File [] input = new File[] {activeChildrenFiles[0]};
+
+                    pf.processFiles(file, input);
                 }
 
+            } catch (InstantiationException e) {
+                throw new RuntimeException(e);
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
             }
         }
     }
+}
 
-    public List<TreeNodeDiagram> searchForLeaves(List<TreeNodeDiagram> explore, List<TreeNodeDiagram> leaves) {
+    }
+
+public List<TreeNodeDiagram> searchForLeaves(List<TreeNodeDiagram> explore,List<TreeNodeDiagram> leaves){
         if(explore==null)
-            explore = new ArrayList<>();
+        explore=new ArrayList<>();
         if(leaves==null)
-            leaves = new ArrayList<>();
+        leaves=new ArrayList<>();
 
-        if(children.size()>0) {
-            for(TreeNodeDiagram tn : children) {
-                searchForLeaves(explore, leaves);
-            }
-        } else {
-            leaves.add(this);
+        if(children.size()>0){
+        for(TreeNodeDiagram tn:children){
+        searchForLeaves(explore,leaves);
+        }
+        }else{
+        leaves.add(this);
         }
 
         return leaves;
-    }
+        }
 
-}
+        }
