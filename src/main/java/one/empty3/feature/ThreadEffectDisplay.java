@@ -113,15 +113,16 @@ public class ThreadEffectDisplay extends Thread {
 
 
         File fileOrigin = new File(tempDir + File.separator + "webcam.jpg");
-        main.files.clear();
+
         boolean add = main.files.add(new File[]{fileOrigin});
         do {
             image = webcam.getImage();
 
 
             try {
-                if (image != null)
-                    ImageIO.write(image, "jpg", fileOrigin);
+                if (image != null&&ImageIO.write(image, "jpg", main.files.get(0)[0])) {
+                    System.err.println("File not written");
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }

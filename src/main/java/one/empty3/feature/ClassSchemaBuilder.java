@@ -591,14 +591,14 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
 
  */
 
-                    Logger.getAnonymousLogger().log(Level.INFO, "fileOut : " + fileOut.getAbsolutePath());
-                    Logger.getAnonymousLogger().log(Level.INFO, "Exists? : " + fileOut.exists());
-                    if(fileOut.exists()) {
-                        direstEffect.setFileIn(fileOut);
-                        processed = true;
-                    }
                 }
             }
+        }
+        Logger.getAnonymousLogger().log(Level.INFO, "fileOut : " + fileOut.getAbsolutePath());
+        Logger.getAnonymousLogger().log(Level.INFO, "Exists? : " + fileOut.exists());
+        if(fileOut.exists()) {
+            direstEffect.setFileIn(fileOut);
+            processed = true;
         }
     }
 
@@ -757,7 +757,6 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
                 direstEffect.threadEffectDisplay.start();
                 +/
          */
-        files = new ArrayList<>();
 
         direstEffect.setVisible(true);
     }
