@@ -99,17 +99,17 @@ public class ThreadEffectDisplay extends Thread {
                 exception.printStackTrace();
             }
         }
-            webcam.setImageTransformer(bufferedImage -> {
+        webcam.setImageTransformer(bufferedImage -> {
 
-                BufferedImage bufferedImage1 = new BufferedImage(bufferedImage.getWidth(), bufferedImage.getHeight(),
-                        BufferedImage.TYPE_INT_RGB);
-                for (int i = 0; i < bufferedImage.getWidth(); i++)
-                    for (int j = 0; j < bufferedImage.getHeight(); j++) {
-                        bufferedImage1.setRGB(bufferedImage.getWidth() - i - 1, j,
-                                bufferedImage.getRGB(i, j));
-                    }
-                return bufferedImage1;
-            });
+            BufferedImage bufferedImage1 = new BufferedImage(bufferedImage.getWidth(), bufferedImage.getHeight(),
+                    BufferedImage.TYPE_INT_RGB);
+            for (int i = 0; i < bufferedImage.getWidth(); i++)
+                for (int j = 0; j < bufferedImage.getHeight(); j++) {
+                    bufferedImage1.setRGB(bufferedImage.getWidth() - i - 1, j,
+                            bufferedImage.getRGB(i, j));
+                }
+            return bufferedImage1;
+        });
 
 
         File fileOrigin = new File(tempDir + File.separator + "webcam.jpg");
@@ -120,7 +120,7 @@ public class ThreadEffectDisplay extends Thread {
 
 
             try {
-                if (image != null&&ImageIO.write(image, "jpg", main.getWebcamFile())) {
+                if (image != null && ImageIO.write(image, "jpg", main.getWebcamFile())) {
                     System.err.println("File not written");
                 }
             } catch (IOException e) {
@@ -128,22 +128,22 @@ public class ThreadEffectDisplay extends Thread {
             }
 
 
-                main.buttonGOActionPerformed(null);
-                    if((image =getImageIn())==null) {
-                        try {
-                            Thread.sleep(20);
-                        } catch (InterruptedException e) {
-                            throw new RuntimeException(e);
-                        }
-                        continue;
-                    }
-
-                if (image != null) {
-                    Graphics graphics = jPanel.getGraphics();
-                    graphics.drawImage(image, 0, 0, jPanel.getWidth(), jPanel.getHeight(), null);
-                } else {
-                    Logger.getAnonymousLogger().log(Level.INFO, "No image to display: " + image);
+            main.buttonGOActionPerformed(null);
+            while ((image = getImageIn()) == null) {
+                try {
+                    Thread.sleep(20);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
                 }
+                continue;
+            }
+
+            if (image != null) {
+                Graphics graphics = jPanel.getGraphics();
+                graphics.drawImage(image, 0, 0, jPanel.getWidth(), jPanel.getHeight(), null);
+            } else {
+                Logger.getAnonymousLogger().log(Level.INFO, "No image to display: " + image);
+            }
         } while (directEffect.isVisible());
 
     }

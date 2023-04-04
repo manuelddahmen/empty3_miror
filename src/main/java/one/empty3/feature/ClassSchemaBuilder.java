@@ -64,7 +64,7 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
     private boolean cam;
     private int maxRes = 0;
     private String fileChooserDir = ".";
-    public String tempDir;
+    public String tempDir = "temp";
     private File fileOut;
     private TreeDiagram treeDiagram;
     private File webcamFile;
@@ -562,6 +562,9 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
                     s.append("-").append(listProcessClasses.indexOf(ce)).append(UUID.randomUUID());
                     String s0 = "";
                     fileOut = new File(tempDir + File.separator + f.getName() + s.toString() + ".jpg");
+                    if(!fileOut.exists()) {
+                        fileOut.mkdirs();
+                    }
 
                     System.out.printf("Process %s \nfrom:  %s\n", processes.get(0).getClass().toString(), f.getAbsolutePath());
                     System.out.printf("Process %s \nto  :  %s\n", processes.get(0).getClass().toString(), fileOut.getAbsolutePath());
@@ -579,6 +582,9 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
                         ce.addSource(f);//???
                         ce.addSource(fileIn);//???
                         try {
+                            if(!fileOut.exists()) {
+                                fileOut.mkdirs();
+                            }
                             ce.process(fileIn, fileOut);
                         } catch (NullPointerException ex) {
                             ex.printStackTrace();
