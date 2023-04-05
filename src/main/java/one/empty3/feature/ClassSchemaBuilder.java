@@ -661,13 +661,11 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
 
 
                 String maxFilesInDir0 = appFile.getProperty("maxFilesInDir");
-                maxRes = -1;
 
                 String maxResStr = appFile.getProperty("maxRes");
                 if (maxResStr != null)
                     maxRes = Integer.parseInt(maxResStr);
-                if (maxRes <= 0)
-                    maxRes = 200;
+
                 /* String*/
                 String classnames = (String) appFile.getProperty("classname");
                 String class0 = (String) appFile.getProperty("class0");

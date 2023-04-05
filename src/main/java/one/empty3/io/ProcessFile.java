@@ -31,7 +31,7 @@ import java.util.Properties;
 
 public abstract class ProcessFile extends ProcessNFiles {
     public ProcessBean bean;
-    protected int maxRes = 400;
+    protected int maxRes = 0;
     private Properties property;
     private File outputDirectory = null;
     private List<File> imagesStack = new ArrayList<>();
