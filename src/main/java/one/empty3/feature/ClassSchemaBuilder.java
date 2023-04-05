@@ -1054,8 +1054,11 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
     }
 
     public void drawAllElements() {
-        //trees();
-
+        try {
+            trees();
+        } catch (Throwable throwable) {
+            throwable.printStackTrace(System.out);
+        }
         BufferedImage bi = new BufferedImage(panel1.getWidth(), panel1.getHeight(), BufferedImage.TYPE_INT_RGB);
         Graphics g = bi.getGraphics();
 
