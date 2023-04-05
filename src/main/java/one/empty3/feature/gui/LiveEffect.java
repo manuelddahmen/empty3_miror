@@ -27,8 +27,6 @@ import com.github.sarxos.webcam.Webcam;
 import net.miginfocom.swing.MigLayout;
 import one.empty3.feature.*;
 import one.empty3.feature.motion.DiffMotion;
-import one.empty3.feature.motion.FeatureMotion;
-import one.empty3.feature.motion.Motion;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -36,20 +34,18 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
  * @author Manuel Dahmen
  */
-public class DirestEffect extends JFrame {
+public class LiveEffect extends JFrame {
     public ThreadEffectDisplay threadEffectDisplay;
     public Dimension[] viewSizes;
     private ClassSchemaBuilder main;
 
-    public DirestEffect() {
+    public LiveEffect() {
         initComponents();
         init();
     }

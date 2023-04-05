@@ -21,7 +21,7 @@ package one.empty3.feature;
 
 import net.miginfocom.swing.MigLayout;
 import one.empty3.feature.facemorph.RunFeatures;
-import one.empty3.feature.gui.DirestEffect;
+import one.empty3.feature.gui.LiveEffect;
 import one.empty3.feature.histograms.Hist4Contour;
 import one.empty3.feature.histograms.Histogram;
 import one.empty3.feature.histograms.Histogram1;
@@ -60,7 +60,7 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
     public List<File[]> files = new ArrayList<>();
     private boolean selectedActionDeleteClass = false;
     private boolean selectedActionDeleteLink;
-    private DirestEffect direstEffect;
+    private LiveEffect liveEffect;
     private boolean cam;
     private int maxRes = 0;
     private String fileChooserDir = ".";
@@ -500,7 +500,7 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
                 ClassElement first = ce;
                 Class theClass = ce.getTheClass();
                 if (ce.partAfter.element != null && ce.partAfter.element != ce) {
-                    if (theClass.isAssignableFrom(ProcessFile.class)) {
+                    if (ProcessFile.class.isAssignableFrom(theClass)) {
                         try {
                             System.out.printf("Start process stack\n");
                             int n = 1;
@@ -513,8 +513,7 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
                         } catch (InstantiationException | IllegalAccessException instantiationException) {
                             instantiationException.printStackTrace();
                         }
-                    } else {
-                        if (theClass.isAssignableFrom(ProcessNFiles.class)) {
+                    } else if (ProcessNFiles.class.isAssignableFrom(theClass)) {
                             try {
                                 System.out.printf("Start process stack\n");
                                 int n = 1;
@@ -527,7 +526,6 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
                             } catch (InstantiationException | IllegalAccessException instantiationException) {
                                 instantiationException.printStackTrace();
                             }
-                        }
                     }
                 }
             }
@@ -548,12 +546,12 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
             System.out.printf("Error first.files==null");
         }
 
+
         for (File[] files : this.files) {
             for (File f : files) {
-                int imageSource = 0;
+                System.out.printf("Run %d processes on file%s\n", processes.size(), f.getAbsolutePath());
                 if (f.getName().contains("webcam")) {
                     f = webcamFile;
-                    imageSource = 1;
                 }
                 if (processes.size() > 0) {
                     ProcessFile ce = processes.get(0);
@@ -569,14 +567,21 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
                     System.out.printf("Process %s \nfrom:  %s\n", processes.get(0).getClass().toString(), f.getAbsolutePath());
                     System.out.printf("Process %s \nto  :  %s\n", processes.get(0).getClass().toString(), fileOut.getAbsolutePath());
 
+                    System.out.printf("Run process %d/%d on file%s\n", 0, processes.size(), f.getAbsolutePath());
                     ce.process(f, fileOut);
                     for (int i = 1; i < processes.size(); i++) {
                         ce = processes.get(i);
                         s0 = s.toString();
                         s.append("-").append(listProcessClasses.indexOf(ce)).append(UUID.randomUUID());
                         System.out.printf("Process %s \nfrom:  %s\n", ce.getClass().toString(), f.getName());
-                        fileOut = new File(tempDir + File.separator + f.getName()
-                                + s + ".jpg");
+
+                        if(i==processes.size()-1 && f.getName().contains("webcam")) {
+                            fileOut = webcamFile;
+                        } else {
+                            fileOut = new File(tempDir + File.separator + f.getName()
+                                    + s + ".jpg");
+
+                        }
                         File fileIn = new File(tempDir + File.separator + f.getName() //+ (i - 1)
                                 + s0 + ".jpg");
                         ce.addSource(f);//???
@@ -585,6 +590,7 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
                             if(!fileOut.exists()) {
                                 fileOut.mkdirs();
                             }
+                            System.out.printf("Run process %d/%d on file%s\n", i, processes.size(), f.getAbsolutePath());
                             ce.process(fileIn, fileOut);
                         } catch (NullPointerException ex) {
                             ex.printStackTrace();
@@ -597,13 +603,13 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
             Logger.getAnonymousLogger().log(Level.INFO, "fileOut : " + fileOut.getAbsolutePath());
             Logger.getAnonymousLogger().log(Level.INFO, "Exists? : " + fileOut.exists());
             if (fileOut.exists()) {
-                direstEffect.setFileIn(fileOut);
+                liveEffect.setFileIn(fileOut);
                 processed = true;
             } else {
                 System.err.println("Le fichier fileOut n'existe pas");
             }
         } else {
-            System.err.println("Le fichier fileOut est nul");
+            System.err.println("Le fichier fileOut est null");
         }
     }
 
@@ -750,20 +756,20 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
 
     private void buttonCamActionPerformed(ActionEvent e) {
         cam = ((JToggleButton) e.getSource()).isSelected();
-        if (direstEffect == null) {
-            direstEffect = new DirestEffect();
+        if (liveEffect == null) {
+            liveEffect = new LiveEffect();
         }
-        direstEffect.setVisible(true);
+        liveEffect.setVisible(true);
 
-        direstEffect.setVisible(cam);
-        direstEffect.setMainWindow(this);
+        liveEffect.setVisible(cam);
+        liveEffect.setMainWindow(this);
         /*if (cam)
             if (!direstEffect.threadEffectDisplay.busy && direstEffect.threadEffectDisplay.isAlive())
                 direstEffect.threadEffectDisplay.start();
                 +/
          */
 
-        direstEffect.setVisible(true);
+        liveEffect.setVisible(true);
     }
 
     private void buttonPictureRecodeActionPerformed(ActionEvent e) {
@@ -1050,7 +1056,7 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
     }
 
     public void drawAllElements() {
-        trees();
+        //trees();
 
         BufferedImage bi = new BufferedImage(panel1.getWidth(), panel1.getHeight(), BufferedImage.TYPE_INT_RGB);
         Graphics g = bi.getGraphics();
