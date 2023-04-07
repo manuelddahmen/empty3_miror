@@ -44,8 +44,6 @@ public class TreeDiagram implements TreeNodeListener{
 
         diagramElements2.addAll(diagramElements);
 
-
-        TreeMap<ClassSchemaBuilder.ClassElement, ClassSchemaBuilder.ClassElement> lists = new TreeMap<>();
         List<List<ClassSchemaBuilder.ClassElement>> heads = new ArrayList<>();
 
         List<ClassSchemaBuilder.DiagramElement> diagramElements1 = new ArrayList<>();
@@ -123,5 +121,13 @@ public class TreeDiagram implements TreeNodeListener{
 
     public void setTreeNodeListener(TreeNodeListener treeNodeListener) {
         this.treeNodeListener = treeNodeListener;
+    }
+
+    @Override
+    public String toString() {
+        return "TreeDiagram{" +
+                "head=" + head +
+                ", treeNodeListener=" + treeNodeListener +
+                '}';
     }
 }

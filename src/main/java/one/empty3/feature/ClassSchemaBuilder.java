@@ -139,10 +139,10 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
         @Override
         public String toString() {
             return "ListFilesElement{" +
-                    "x=" + x +
+                    "files=" + (files==null?"":Arrays.toString(files)) +
+                    ", x=" + x +
                     ", y=" + y +
                     ", label='" + label + '\'' +
-                    ", files=" + Arrays.toString(files) +
                     '}';
         }
     }
@@ -211,6 +211,9 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
                     ", x=" + x +
                     ", y=" + y +
                     ", label='" + label + '\'' +
+                    ", x=" + x +
+                    ", y=" + y +
+                    ", label='" + label + '\'' +
                     '}';
         }
     }
@@ -219,7 +222,7 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
         protected Class theClass;
         protected PartElement partAfter;
 
-        protected File[] files = new File[1];
+        protected File[] files = new File[] {new File(".")};
         protected String tmpFilename = tempDir+
                 File.separator+"temp-"+ UUID.randomUUID()+".jpg";
 
@@ -256,18 +259,19 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
             return "ClassElement{" +
                     "theClass=" + theClass +
                     ", partAfter=" + partAfter +
-                    ", files=" + Arrays.toString(files) +
+                    ", files=" + (files==null?"":Arrays.toString(files)) +
+                    ", tmpFilename='" + tmpFilename + '\'' +
+                    ", x=" + x +
+                    ", y=" + y +
+                    ", label='" + label + '\'' +
                     '}';
         }
     }
     class ClassMultiInputElement extends ClassElement {
+
         @Override
         public String toString() {
-            return "ClassMultiInputElement{" +
-                    "theClass=" + theClass +
-                    ", partAfter=" + partAfter +
-                    ", files=" + Arrays.toString(files) +
-                    '}';
+            return super.toString();
         }
     }
 
@@ -1056,8 +1060,11 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
     public void drawAllElements() {
         try {
             trees();
+
+            //System.out.println(treeDiagram);
         } catch (Throwable throwable) {
             throwable.printStackTrace(System.out);
+            //throw throwable;
         }
         BufferedImage bi = new BufferedImage(panel1.getWidth(), panel1.getHeight(), BufferedImage.TYPE_INT_RGB);
         Graphics g = bi.getGraphics();

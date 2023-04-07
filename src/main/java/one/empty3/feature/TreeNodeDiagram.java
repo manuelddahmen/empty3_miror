@@ -194,4 +194,17 @@ public class TreeNodeDiagram implements TreeNodeListener{
         this.file = file;
     }
 
+
+    @Override
+    public String toString() {
+        return "TreeNodeDiagram{" +
+                "element=" + element +
+                ", isExecuted=" + isExecuted +
+                ", parentNode=" + parentNode +
+                ", file=" + file +
+                ", children=" + children +
+                ", treeNodeListener=" + treeNodeListener +
+                ", executeIfExecuted=" + executeIfExecuted +
+                '}';
+    }
 }
