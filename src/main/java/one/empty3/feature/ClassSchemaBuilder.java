@@ -77,6 +77,10 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
         return webcamFile;
     }
 
+    public DiagramElement getSelectedElement() {
+        return selectedElement;
+    }
+
     public class DiagramElement implements Serializable {
         protected int x = getWidth() / 2;
         protected int y = getHeight() / 2;
@@ -812,13 +816,19 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
         // TODO add your code here
     }
 
+    private void buttonParameters(ActionEvent e) {
+        DialogMultFrames dialogMultFrames = new DialogMultFrames(this);
+
+    }
+
 
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         comboBox1 = new JComboBox();
-        comboBox2 = new JComboBox();
         button2 = new JButton();
+        comboBox2 = new JComboBox();
         button3 = new JButton();
+        button4 = new JButton();
         buttonAddLink = new JButton();
         buttonFiles = new JButton();
         buttonDeleteClass = new JToggleButton();
@@ -843,6 +853,7 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
             "[fill]" +
             "[fill]" +
             "[fill]" +
+            "[fill]" +
             "[fill]",
             // rows
             "[fill]" +
@@ -856,52 +867,57 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
         comboBox1.setLightWeightPopupEnabled(false);
         comboBox1.setDoubleBuffered(true);
         contentPane.add(comboBox1, "cell 0 0");
-        contentPane.add(comboBox2, "cell 0 0");
 
         //---- button2 ----
         button2.setText("Add");
         button2.addActionListener(e -> buttonAddToActionPerformed(e));
-        contentPane.add(button2, "cell 1 0");
+        contentPane.add(button2, "cell 0 0");
+        contentPane.add(comboBox2, "cell 0 0");
 
         //---- button3 ----
         button3.setText("Add + filter");
         button3.addActionListener(e -> buttonAdd2filters(e));
-        contentPane.add(button3, "cell 1 0");
+        contentPane.add(button3, "cell 0 0");
+
+        //---- button4 ----
+        button4.setText("Properties");
+        button4.addActionListener(e -> buttonParameters(e));
+        contentPane.add(button4, "cell 3 0");
 
         //---- buttonAddLink ----
         buttonAddLink.setText("Add link");
         buttonAddLink.addActionListener(e -> buttonAddLinkActionPerformed(e));
-        contentPane.add(buttonAddLink, "cell 3 0");
+        contentPane.add(buttonAddLink, "cell 4 0");
 
         //---- buttonFiles ----
         buttonFiles.setText("Add input files");
         buttonFiles.addActionListener(e -> buttonFilesActionPerformed(e));
-        contentPane.add(buttonFiles, "cell 3 0");
+        contentPane.add(buttonFiles, "cell 4 0");
 
         //---- buttonDeleteClass ----
         buttonDeleteClass.setText("Delete class");
         buttonDeleteClass.addActionListener(e -> buttonDeleteClassActionPerformed(e));
-        contentPane.add(buttonDeleteClass, "cell 3 0");
+        contentPane.add(buttonDeleteClass, "cell 4 0");
 
         //---- buttonDeleteLink ----
         buttonDeleteLink.setText("Delete link");
         buttonDeleteLink.addActionListener(e -> buttonDeleteLinkActionPerformed(e));
-        contentPane.add(buttonDeleteLink, "cell 3 0");
+        contentPane.add(buttonDeleteLink, "cell 4 0");
 
         //---- buttonGO ----
         buttonGO.setText("Process GO");
         buttonGO.addActionListener(e -> buttonGOActionPerformed(e));
-        contentPane.add(buttonGO, "cell 3 0");
+        contentPane.add(buttonGO, "cell 4 0");
 
         //---- buttonLoad ----
         buttonLoad.setText("Load");
         buttonLoad.addActionListener(e -> buttonLoadActionPerformed(e));
-        contentPane.add(buttonLoad, "cell 3 0");
+        contentPane.add(buttonLoad, "cell 4 0");
 
         //---- buttonSave ----
         buttonSave.setText("Save");
         buttonSave.addActionListener(e -> buttonSaveActionPerformed(e));
-        contentPane.add(buttonSave, "cell 3 0");
+        contentPane.add(buttonSave, "cell 4 0");
 
         //======== panel1 ========
         {
@@ -915,7 +931,7 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
                 "[]" +
                 "[]"));
         }
-        contentPane.add(panel1, "cell 0 1 4 2,dock center");
+        contentPane.add(panel1, "cell 0 1 5 2,dock center");
 
         //---- labelStatus ----
         labelStatus.setText("text");
@@ -923,17 +939,17 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
 
         //---- button1 ----
         button1.setText("Open movie/recode");
-        contentPane.add(button1, "cell 3 3");
+        contentPane.add(button1, "cell 4 3");
 
         //---- buttonPictureRecode ----
         buttonPictureRecode.setText("Open picture/recode");
         buttonPictureRecode.addActionListener(e -> buttonPictureRecodeActionPerformed(e));
-        contentPane.add(buttonPictureRecode, "cell 3 3");
+        contentPane.add(buttonPictureRecode, "cell 4 3");
 
         //---- buttonCam ----
         buttonCam.setText("Open webcam");
         buttonCam.addActionListener(e -> buttonCamActionPerformed(e));
-        contentPane.add(buttonCam, "cell 3 3");
+        contentPane.add(buttonCam, "cell 4 3");
         setSize(1020, 540);
         setLocationRelativeTo(getOwner());
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
@@ -1155,9 +1171,10 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
     private JButton buttonStop;
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
     private JComboBox comboBox1;
-    private JComboBox comboBox2;
     private JButton button2;
+    private JComboBox comboBox2;
     private JButton button3;
+    private JButton button4;
     private JButton buttonAddLink;
     private JButton buttonFiles;
     private JToggleButton buttonDeleteClass;
@@ -1172,4 +1189,12 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
     private JToggleButton buttonCam;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 
+
+    public List<DiagramElement> getDiagramElements() {
+        return diagramElements;
+    }
+
+    public void setDiagramElements(List<DiagramElement> diagramElements) {
+        this.diagramElements = diagramElements;
+    }
 }

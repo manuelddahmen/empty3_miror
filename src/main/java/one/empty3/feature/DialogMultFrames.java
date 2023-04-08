@@ -23,18 +23,179 @@
 
 package one.empty3.feature;
 
-import java.awt.*;
-import java.util.*;
+import net.miginfocom.swing.MigLayout;
+
 import javax.swing.*;
-import net.miginfocom.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.util.List;
+import java.util.ResourceBundle;
 
 /**
  * @author manue
  */
 public class DialogMultFrames extends JDialog {
+    List<ClassSchemaBuilder.DiagramElement> diagramElements;
+    ClassSchemaBuilder.ClassElement currentElement = null;
+    private TreeDiagram treeDiagram = null;
+    // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables  @formatter:off
+    private JPanel dialogPane;
+    private JPanel contentPanel;
+    private JComboBox comboBox1;
+    private JButton buttonUpdate;
+    private JLabel labelR;
+    private JTextField textFieldR;
+    private JLabel labelX;
+    private JTextField textFieldX;
+    private JButton buttonApply;
+    private JLabel labelG;
+    private JTextField textFieldG;
+    private JLabel labelY;
+    private JTextField textFieldY;
+    private JLabel labelB;
+    private JTextField textFieldB;
+    private JLabel labelW;
+    private JTextField textFieldW;
+    private JLabel labelA;
+    private JTextField textFieldA;
+    private JLabel labelH;
+    private JTextField textFieldH;
+    private JPanel buttonBar;
+    private JButton okButton;
+    private JButton cancelButton;
+
     public DialogMultFrames(Window owner) {
         super(owner);
+
+        diagramElements = ((ClassSchemaBuilder) owner).getDiagramElements();
+
+        ClassSchemaBuilder.DiagramElement current = ((ClassSchemaBuilder)owner).getSelectedElement();
+
+        fillList();
+
+        updateData(null);
+
         initComponents();
+    }
+
+    public void fillList() {
+        /*int i = 0;
+        TreeNodeDiagram head = treeDiagram.head;
+        if(head!=null) {
+            TreeNodeDiagram current = head;
+            while(current!=null) {
+
+
+            }
+        }*/
+    }
+
+    private void updateData(ActionEvent e) {
+        treeDiagram = new TreeDiagram(diagramElements);
+
+        fillList();
+
+
+    }
+
+    private void applyChanges(ActionEvent e) {
+        // TODO add your code here
+    }
+
+    public JPanel getContentPanel() {
+        return contentPanel;
+    }
+
+    public JPanel getDialogPane() {
+        return dialogPane;
+    }
+
+    public JComboBox getComboBox1() {
+        return comboBox1;
+    }
+
+    public JButton getButtonUpdate() {
+        return buttonUpdate;
+    }
+
+    public JLabel getLabelR() {
+        return labelR;
+    }
+
+    public JTextField getTextFieldR() {
+        return textFieldR;
+    }
+
+    public JLabel getLabelX() {
+        return labelX;
+    }
+
+    public JTextField getTextFieldX() {
+        return textFieldX;
+    }
+
+    public JButton getButtonApply() {
+        return buttonApply;
+    }
+
+    public JLabel getLabelG() {
+        return labelG;
+    }
+
+    public JTextField getTextFieldG() {
+        return textFieldG;
+    }
+
+    public JLabel getLabelY() {
+        return labelY;
+    }
+
+    public JTextField getTextFieldY() {
+        return textFieldY;
+    }
+
+    public JLabel getLabelB() {
+        return labelB;
+    }
+
+    public JTextField getTextFieldB() {
+        return textFieldB;
+    }
+
+    public JLabel getLabelW() {
+        return labelW;
+    }
+
+    public JTextField getTextFieldW() {
+        return textFieldW;
+    }
+
+    public JLabel getLabelA() {
+        return labelA;
+    }
+
+    public JTextField getTextFieldA() {
+        return textFieldA;
+    }
+
+    public JLabel getLabelH() {
+        return labelH;
+    }
+
+    public JTextField getTextFieldH() {
+        return textFieldH;
+    }
+
+    public JPanel getButtonBar() {
+        return buttonBar;
+    }
+
+    public JButton getOkButton() {
+        return okButton;
+    }
+
+    public JButton getCancelButton() {
+        return cancelButton;
     }
 
     private void initComponents() {
@@ -43,24 +204,24 @@ public class DialogMultFrames extends JDialog {
         dialogPane = new JPanel();
         contentPanel = new JPanel();
         comboBox1 = new JComboBox();
-        button1 = new JButton();
-        label1 = new JLabel();
-        textField1 = new JTextField();
-        label5 = new JLabel();
-        textField5 = new JTextField();
-        button2 = new JButton();
-        label2 = new JLabel();
-        textField2 = new JTextField();
-        label6 = new JLabel();
-        textField6 = new JTextField();
-        label3 = new JLabel();
-        textField3 = new JTextField();
-        label7 = new JLabel();
-        textField7 = new JTextField();
-        label4 = new JLabel();
-        textField4 = new JTextField();
-        label8 = new JLabel();
-        textField8 = new JTextField();
+        buttonUpdate = new JButton();
+        labelR = new JLabel();
+        textFieldR = new JTextField();
+        labelX = new JLabel();
+        textFieldX = new JTextField();
+        buttonApply = new JButton();
+        labelG = new JLabel();
+        textFieldG = new JTextField();
+        labelY = new JLabel();
+        textFieldY = new JTextField();
+        labelB = new JLabel();
+        textFieldB = new JTextField();
+        labelW = new JLabel();
+        textFieldW = new JTextField();
+        labelA = new JLabel();
+        textFieldA = new JTextField();
+        labelH = new JLabel();
+        textFieldH = new JTextField();
         buttonBar = new JPanel();
         okButton = new JButton();
         cancelButton = new JButton();
@@ -89,56 +250,59 @@ public class DialogMultFrames extends JDialog {
                     "[]" +
                     "[]" +
                     "[]" +
+                    "[]" +
                     "[]"));
-                contentPanel.add(comboBox1, "cell 0 0 4 1");
+                contentPanel.add(comboBox1, "cell 0 1 4 1");
 
-                //---- button1 ----
-                button1.setText(bundle.getString("DialogMultFrames.button1.text"));
-                contentPanel.add(button1, "cell 4 0");
+                //---- buttonUpdate ----
+                buttonUpdate.setText(bundle.getString("DialogMultFrames.buttonUpdate.text"));
+                buttonUpdate.addActionListener(e -> updateData(e));
+                contentPanel.add(buttonUpdate, "cell 4 1");
 
-                //---- label1 ----
-                label1.setText(bundle.getString("DialogMultFrames.label1.text"));
-                contentPanel.add(label1, "cell 0 2");
-                contentPanel.add(textField1, "cell 1 2");
+                //---- labelR ----
+                labelR.setText(bundle.getString("DialogMultFrames.labelR.text"));
+                contentPanel.add(labelR, "cell 0 3");
+                contentPanel.add(textFieldR, "cell 1 3");
 
-                //---- label5 ----
-                label5.setText(bundle.getString("DialogMultFrames.label5.text"));
-                contentPanel.add(label5, "cell 2 2");
-                contentPanel.add(textField5, "cell 3 2");
+                //---- labelX ----
+                labelX.setText(bundle.getString("DialogMultFrames.labelX.text"));
+                contentPanel.add(labelX, "cell 2 3");
+                contentPanel.add(textFieldX, "cell 3 3");
 
-                //---- button2 ----
-                button2.setText(bundle.getString("DialogMultFrames.button2.text"));
-                contentPanel.add(button2, "cell 4 2");
+                //---- buttonApply ----
+                buttonApply.setText(bundle.getString("DialogMultFrames.buttonApply.text"));
+                buttonApply.addActionListener(e -> applyChanges(e));
+                contentPanel.add(buttonApply, "cell 4 3");
 
-                //---- label2 ----
-                label2.setText(bundle.getString("DialogMultFrames.label2.text"));
-                contentPanel.add(label2, "cell 0 3");
-                contentPanel.add(textField2, "cell 1 3");
+                //---- labelG ----
+                labelG.setText(bundle.getString("DialogMultFrames.labelG.text"));
+                contentPanel.add(labelG, "cell 0 4");
+                contentPanel.add(textFieldG, "cell 1 4");
 
-                //---- label6 ----
-                label6.setText(bundle.getString("DialogMultFrames.label6.text"));
-                contentPanel.add(label6, "cell 2 3");
-                contentPanel.add(textField6, "cell 3 3");
+                //---- labelY ----
+                labelY.setText(bundle.getString("DialogMultFrames.labelY.text"));
+                contentPanel.add(labelY, "cell 2 4");
+                contentPanel.add(textFieldY, "cell 3 4");
 
-                //---- label3 ----
-                label3.setText(bundle.getString("DialogMultFrames.label3.text"));
-                contentPanel.add(label3, "cell 0 4");
-                contentPanel.add(textField3, "cell 1 4");
+                //---- labelB ----
+                labelB.setText(bundle.getString("DialogMultFrames.labelB.text"));
+                contentPanel.add(labelB, "cell 0 5");
+                contentPanel.add(textFieldB, "cell 1 5");
 
-                //---- label7 ----
-                label7.setText(bundle.getString("DialogMultFrames.label7.text"));
-                contentPanel.add(label7, "cell 2 4");
-                contentPanel.add(textField7, "cell 3 4");
+                //---- labelW ----
+                labelW.setText(bundle.getString("DialogMultFrames.labelW.text"));
+                contentPanel.add(labelW, "cell 2 5");
+                contentPanel.add(textFieldW, "cell 3 5");
 
-                //---- label4 ----
-                label4.setText(bundle.getString("DialogMultFrames.label4.text"));
-                contentPanel.add(label4, "cell 0 5");
-                contentPanel.add(textField4, "cell 1 5");
+                //---- labelA ----
+                labelA.setText(bundle.getString("DialogMultFrames.labelA.text"));
+                contentPanel.add(labelA, "cell 0 6");
+                contentPanel.add(textFieldA, "cell 1 6");
 
-                //---- label8 ----
-                label8.setText(bundle.getString("DialogMultFrames.label8.text"));
-                contentPanel.add(label8, "cell 2 5");
-                contentPanel.add(textField8, "cell 3 5");
+                //---- labelH ----
+                labelH.setText(bundle.getString("DialogMultFrames.labelH.text"));
+                contentPanel.add(labelH, "cell 2 6");
+                contentPanel.add(textFieldH, "cell 3 6");
             }
             dialogPane.add(contentPanel, BorderLayout.CENTER);
 
@@ -167,31 +331,5 @@ public class DialogMultFrames extends JDialog {
         setLocationRelativeTo(getOwner());
         // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
     }
-
-    // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables  @formatter:off
-    private JPanel dialogPane;
-    private JPanel contentPanel;
-    private JComboBox comboBox1;
-    private JButton button1;
-    private JLabel label1;
-    private JTextField textField1;
-    private JLabel label5;
-    private JTextField textField5;
-    private JButton button2;
-    private JLabel label2;
-    private JTextField textField2;
-    private JLabel label6;
-    private JTextField textField6;
-    private JLabel label3;
-    private JTextField textField3;
-    private JLabel label7;
-    private JTextField textField7;
-    private JLabel label4;
-    private JTextField textField4;
-    private JLabel label8;
-    private JTextField textField8;
-    private JPanel buttonBar;
-    private JButton okButton;
-    private JButton cancelButton;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 }
