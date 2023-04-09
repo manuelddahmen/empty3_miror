@@ -60,12 +60,17 @@ public class DialogMultFrames extends JDialog {
             initComponents();
 
         }
+
+        fillList();
     }
 
     public void fillList() {
         int i = 0;
 
         ProcessFile pf = classInstance;
+        if(pf==null) {
+            return;
+        }
         classInstance.getProperties()
                 .getPropertyList()
                 .forEach(s -> {

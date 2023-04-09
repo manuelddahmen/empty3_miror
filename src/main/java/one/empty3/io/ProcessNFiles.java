@@ -31,7 +31,7 @@ import java.util.Properties;
 
 public class ProcessNFiles  {
     public static List<ProcessNFiles> processNFiles = new ArrayList<>();
-    public static ObjectWithProperties properties = new ObjectWithProperties();
+    public static ObjectWithProperties properties;
     public ProcessBean bean;
     protected int maxRes = 400;
     private Properties property;
@@ -40,6 +40,8 @@ public class ProcessNFiles  {
 
 
     public ProcessNFiles() {
+        if(properties==null)
+             properties = new ObjectWithProperties();
         this.processNFiles.add(this);
         getProperties().addProperty("maxRes", ObjectWithProperties.ClassTypes.AtomicInt, this.maxRes);
     }

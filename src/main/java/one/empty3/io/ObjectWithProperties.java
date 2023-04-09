@@ -54,8 +54,8 @@ public class ObjectWithProperties {
         values.remove(name);
         return true;
     }
-    public Double getProperty(String name) {
-        return (Double) values.get(name).getElem(0);
+    public Object getProperty(String name) {
+        return values.get(name).getElem();
     }
     public void updateProperty(String name, Object value) {
         StructureMatrix<Object> objectStructureMatrix = values.get(name);
