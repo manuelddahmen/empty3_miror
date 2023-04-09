@@ -39,7 +39,7 @@ import java.util.function.Consumer;
  * @author manue
  */
 public class DialogMultFrames extends JDialog {
-    private final ProcessFile classInstance;
+    private ProcessFile classInstance;
     private ClassSchemaBuilder.DiagramElement current = null;
     List<ClassSchemaBuilder.DiagramElement> diagramElements;
     ClassSchemaBuilder.ClassElement currentElement = null;
@@ -49,9 +49,17 @@ public class DialogMultFrames extends JDialog {
         super(owner);
         current = ((ClassSchemaBuilder)owner).getSelectedElement();
 
-        this.classInstance = ((ClassSchemaBuilder.ClassElement)current).getInstance();
+        if(current==null) {
+            dispose();
 
-        initComponents();
+            this.classInstance =  null;
+        } else {
+
+            this.classInstance = ((ClassSchemaBuilder.ClassElement) current).getInstance();
+
+            initComponents();
+
+        }
     }
 
     public void fillList() {

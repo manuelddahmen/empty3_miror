@@ -30,8 +30,8 @@ import java.util.List;
 import java.util.Properties;
 
 public class ProcessNFiles  {
-    private List<ProcessNFiles> processNFiles = new ArrayList<>();
-    public ObjectWithProperties properties = new ObjectWithProperties();
+    public static List<ProcessNFiles> processNFiles = new ArrayList<>();
+    public static ObjectWithProperties properties = new ObjectWithProperties();
     public ProcessBean bean;
     protected int maxRes = 400;
     private Properties property;

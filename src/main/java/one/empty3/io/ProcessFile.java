@@ -40,6 +40,9 @@ public abstract class ProcessFile extends ProcessNFiles {
         return in != null && (in.getAbsolutePath().toLowerCase().endsWith(".jpg")
                 || in.getAbsolutePath().toLowerCase().endsWith(".png"));
     }
+    public ProcessFile() {
+        super();
+    }
 
     public File getOutputDirectory() {
         return outputDirectory;
