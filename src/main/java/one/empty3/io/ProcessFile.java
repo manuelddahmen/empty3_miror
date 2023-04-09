@@ -94,4 +94,8 @@ public abstract class ProcessFile extends ProcessNFiles {
         imagesStack.add(fo);
     }
 
+    @Override
+    public boolean processFiles(File out, File... ins) {
+        return process(ins[0], out);
+    }
 }

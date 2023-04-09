@@ -229,6 +229,7 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
         protected File[] files = new File[] {new File(".")};
         protected String tmpFilename = tempDir+
                 File.separator+"temp-"+ UUID.randomUUID()+".jpg";
+        private ProcessFile instance;
 
         public ClassElement() {
             x = getWidth() / 2;
@@ -269,6 +270,21 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
                     ", y=" + y +
                     ", label='" + label + '\'' +
                     '}';
+        }
+
+        public ProcessFile getInstance() {
+            if(instance==null) {
+                try {
+                    instance = (ProcessFile) theClass.newInstance();
+
+
+                } catch (InstantiationException e) {
+                    throw new RuntimeException(e);
+                } catch (IllegalAccessException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            return instance;
         }
     }
     class ClassMultiInputElement extends ClassElement {

@@ -29,12 +29,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-public class ProcessNFiles {
+public class ProcessNFiles  {
+    private List<ProcessNFiles> processNFiles = new ArrayList<>();
+    public ObjectWithProperties properties = new ObjectWithProperties();
     public ProcessBean bean;
     protected int maxRes = 400;
     private Properties property;
     private File outputDirectory = null;
     private List<File> imagesStack = new ArrayList<>();
+
+
+    public ProcessNFiles() {
+        this.processNFiles.add(this);
+    }
 
     protected static boolean isImage(File in) {
         return in != null && (in.getAbsolutePath().toLowerCase().endsWith(".jpg")
@@ -79,11 +86,12 @@ public class ProcessNFiles {
         this.maxRes = maxRes;
     }
 
+    @Deprecated
     public File getStackItem(int index) {
         System.out.printf("STACK %d : %s", index, imagesStack.get(index));
         return imagesStack.get(index);
     }
-
+    @Deprecated
     public void setStack(List<File> files1) {
         this.imagesStack = files1;
     }
@@ -97,5 +105,25 @@ public class ProcessNFiles {
             return ((ProcessFile) this).process(ins[0], out);
         }
         return false;
+    }
+
+    public void addFilter(ProcessNFiles stackItem) {
+        this.processNFiles.add(stackItem);
+    }
+
+    public List<ProcessNFiles> getProcessNFiles() {
+        return processNFiles;
+    }
+
+    public void setProcessNFiles(List<ProcessNFiles> processNFiles) {
+        this.processNFiles = processNFiles;
+    }
+
+    public ObjectWithProperties getProperties() {
+        return properties;
+    }
+
+    public void setProperties(ObjectWithProperties properties) {
+        this.properties = properties;
     }
 }
