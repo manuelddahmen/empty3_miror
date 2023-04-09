@@ -26,14 +26,13 @@ package one.empty3.feature;
 import net.miginfocom.swing.MigLayout;
 import one.empty3.io.ObjectWithProperties;
 import one.empty3.io.ProcessFile;
-import one.empty3.library.StructureMatrix;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.function.Consumer;
 
 /**
  * @author manue
@@ -44,6 +43,9 @@ public class DialogMultFrames extends JDialog {
     List<ClassSchemaBuilder.DiagramElement> diagramElements;
     ClassSchemaBuilder.ClassElement currentElement = null;
     private TreeDiagram treeDiagram = null;
+    private String currentPropertyName;
+    private ObjectWithProperties.ClassTypes classType;
+
 
     public DialogMultFrames(Window owner) {
         super(owner);
@@ -62,33 +64,93 @@ public class DialogMultFrames extends JDialog {
         }
 
         fillList();
+        initComboBox();
+        updateForms();
+    }
+
+    private void updateForms() {
+        ProcessFile pf = classInstance;
+        if(pf==null) {
+            System.err.println("DialogMultFrames: pf==null ");
+            return;
+        }
+        Object o = getComboBox1().getSelectedItem();
+        if(o instanceof String) {
+            String s = (String) o;
+            ObjectWithProperties.ClassTypes types = pf.getProperties().getPropertyType(s);
+            Object value = pf.getProperties().getProperty(s);
+            textFieldName.setText(s);
+            textFieldClassname.setText(pf.getClass().getCanonicalName());
+            textFieldValue.setText(String.valueOf(value));
+            currentPropertyName = s;
+            pack();
+            this.classType = types;
+        } else {
+            System.err.println("Selected item is null or no string :" +o);
+        }
+
     }
 
     public void fillList() {
-        int i = 0;
+    }
+    public void initComboBox() {
 
-        ProcessFile pf = classInstance;
-        if(pf==null) {
-            return;
-        }
-        classInstance.getProperties()
-                .getPropertyList()
-                .forEach(s -> {
-                    String name = s;
-                    ObjectWithProperties.ClassTypes types = pf.getProperties().getPropertyType(s);
-                    Object value = pf.getProperties().getProperty(s);
+        List<String> model = new ArrayList<>(classInstance.getProperties()
+                .getPropertyList());
 
-                    textFieldName.setText( name);
-                    textFieldClassname.setText(pf.getClass().getCanonicalName());
-                    textFieldValue.setText(String.valueOf(value));
-                });
-}
+        DefaultComboBoxModel defaultComboBoxModel = new DefaultComboBoxModel();
+
+        defaultComboBoxModel.addAll(model);
+
+        getComboBox1().setModel(defaultComboBoxModel);
+
+
+    }
 
     private void updateData(ActionEvent e) {
-        fillList();
+        updateForms();
     }
 
     private void applyChanges(ActionEvent e) {
+        if(classInstance != null && getClassType()!=null) {
+            JTextField textFieldValue1 = getTextFieldValue();
+            String text = textFieldValue1.getText();
+
+            if(text!=null && text.length()>0) {
+
+            Object o = text;
+
+            switch (classType) {
+                case AtomicInt:
+                    o = Integer.parseInt(text);
+                    break;
+                case AtomicBoolean:
+                    o = Boolean.parseBoolean(text);
+                    break;
+
+                case String:
+                    o = text;
+                    break;
+                case AtomicChar :
+                    Character c = text.charAt(0);
+                    o = c;
+                    break;
+
+                case AtomicDouble :
+                    o = Double.parseDouble(text);
+                    break;
+                default:
+                    throw new IllegalStateException("Unexpected value: " + classType);
+            }
+            classInstance.getProperties()
+                    .updateProperty(currentPropertyName, o);
+        }
+        }
+
+    }
+
+    private ObjectWithProperties.ClassTypes getClassType() {
+        return classType;
     }
 
     public JPanel getDialogPane() {
@@ -151,6 +213,10 @@ public class DialogMultFrames extends JDialog {
         return textFieldClassname;
     }
 
+    private void comboBox1(ActionEvent e) {
+        updateForms();
+    }
+
 
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables  @formatter:off
     private JPanel dialogPane;
@@ -200,7 +266,7 @@ public class DialogMultFrames extends JDialog {
             //======== contentPanel ========
             {
                 contentPanel.setLayout(new MigLayout(
-                    "insets dialog,hidemode 3",
+                    "fill,insets dialog,hidemode 3",
                     // columns
                     "[fill]" +
                     "[fill]" +
@@ -220,6 +286,9 @@ public class DialogMultFrames extends JDialog {
                 //---- labelClassProperties ----
                 labelClassProperties.setText(bundle.getString("DialogMultFrames.labelClassProperties.text"));
                 contentPanel.add(labelClassProperties, "cell 0 1");
+
+                //---- comboBox1 ----
+                comboBox1.addActionListener(e -> comboBox1(e));
                 contentPanel.add(comboBox1, "cell 1 1 3 1");
 
                 //---- labelName ----

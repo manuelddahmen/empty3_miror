@@ -47,6 +47,7 @@ public class ObjectWithProperties {
     public void addProperty(String name, ClassTypes type, Object value) {
         types.put(name, type);
         StructureMatrix<Object> value2 = new StructureMatrix<>(0, Object.class);
+        value2.setElem(value);
         values.put(name, value2);
     }
     public boolean deleteProerty(String name) {
