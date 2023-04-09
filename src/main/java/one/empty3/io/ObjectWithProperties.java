@@ -57,12 +57,12 @@ public class ObjectWithProperties {
     public Double getProperty(String name) {
         return (Double) values.get(name).getElem(0);
     }
-    public void updateProerty(String name, Object value) {
+    public void updateProperty(String name, Object value) {
         StructureMatrix<Object> objectStructureMatrix = values.get(name);
         if(objectStructureMatrix!=null) {
             objectStructureMatrix.setElem(value);
         } else {
-            throw new UnsupportedOperationException("update without previous value")
+            throw new UnsupportedOperationException("update without previous value");
         }
     }
     public ClassTypes getPropertyType(String name) {

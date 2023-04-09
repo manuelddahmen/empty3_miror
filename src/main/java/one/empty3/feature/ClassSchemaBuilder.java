@@ -834,7 +834,7 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
 
     private void buttonParameters(ActionEvent e) {
         DialogMultFrames dialogMultFrames = new DialogMultFrames(this);
-
+        dialogMultFrames.setVisible(true);
     }
 
 

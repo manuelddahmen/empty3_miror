@@ -41,6 +41,7 @@ public class ProcessNFiles  {
 
     public ProcessNFiles() {
         this.processNFiles.add(this);
+        getProperties().addProperty("maxRes", ObjectWithProperties.ClassTypes.AtomicInt, this.maxRes);
     }
 
     protected static boolean isImage(File in) {

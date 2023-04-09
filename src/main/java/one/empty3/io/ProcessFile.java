@@ -49,27 +49,7 @@ public abstract class ProcessFile extends ProcessNFiles {
         this.outputDirectory = outputDirectory;
     }
 
-    public PixM getSource(String s) {
-        try {
-            Properties p = getProperty();
-            String property = p.getProperty(s);
-            File file = new File(property);
-            BufferedImage read = null;
-            read = ImageIO.read(file);
-            return (new PixM(read));
-        } catch (Exception ex) {
-        }
 
-        return null;
-    }
-
-    private Properties getProperty() {
-        return property;
-    }
-
-    public void setProperty(Properties property) {
-        this.property = property;
-    }
 
     public abstract boolean process(File in, File out);
 

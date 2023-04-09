@@ -102,26 +102,6 @@ public class DialogMultFrames extends JDialog {
         return textFieldValue;
     }
 
-    public JTextField getTextFieldY() {
-        return textFieldY;
-    }
-
-    public JTextField getTextFieldB() {
-        return textFieldB;
-    }
-
-    public JTextField getTextFieldW() {
-        return textFieldW;
-    }
-
-    public JTextField getTextFieldA() {
-        return textFieldA;
-    }
-
-    public JTextField getTextFieldH() {
-        return textFieldH;
-    }
-
     public JPanel getButtonBar() {
         return buttonBar;
     }
@@ -172,11 +152,6 @@ public class DialogMultFrames extends JDialog {
     private JButton buttonApply;
     private JLabel labelClassname;
     private JTextField textFieldClassname;
-    private JTextField textFieldY;
-    private JTextField textFieldB;
-    private JTextField textFieldW;
-    private JTextField textFieldA;
-    private JTextField textFieldH;
     private JPanel buttonBar;
     private JButton okButton;
     private JButton cancelButton;
@@ -197,11 +172,6 @@ public class DialogMultFrames extends JDialog {
         buttonApply = new JButton();
         labelClassname = new JLabel();
         textFieldClassname = new JTextField();
-        textFieldY = new JTextField();
-        textFieldB = new JTextField();
-        textFieldW = new JTextField();
-        textFieldA = new JTextField();
-        textFieldH = new JTextField();
         buttonBar = new JPanel();
         okButton = new JButton();
         cancelButton = new JButton();
@@ -242,32 +212,27 @@ public class DialogMultFrames extends JDialog {
                 //---- labelName ----
                 labelName.setText(bundle.getString("DialogMultFrames.labelName.text"));
                 contentPanel.add(labelName, "cell 0 2");
-                contentPanel.add(textFieldName, "cell 1 2");
+                contentPanel.add(textFieldName, "cell 1 2 2 1");
 
                 //---- buttonUpdate ----
                 buttonUpdate.setText(bundle.getString("DialogMultFrames.buttonUpdate.text"));
                 buttonUpdate.addActionListener(e -> updateData(e));
-                contentPanel.add(buttonUpdate, "cell 2 2");
+                contentPanel.add(buttonUpdate, "cell 3 2");
 
                 //---- labelVakue ----
                 labelVakue.setText(bundle.getString("DialogMultFrames.labelVakue.text"));
                 contentPanel.add(labelVakue, "cell 0 3");
-                contentPanel.add(textFieldValue, "cell 1 3");
+                contentPanel.add(textFieldValue, "cell 1 3 2 1");
 
                 //---- buttonApply ----
                 buttonApply.setText(bundle.getString("DialogMultFrames.buttonApply.text"));
                 buttonApply.addActionListener(e -> applyChanges(e));
-                contentPanel.add(buttonApply, "cell 2 3");
+                contentPanel.add(buttonApply, "cell 3 3");
 
                 //---- labelClassname ----
                 labelClassname.setText(bundle.getString("DialogMultFrames.labelClassname.text"));
                 contentPanel.add(labelClassname, "cell 0 4");
                 contentPanel.add(textFieldClassname, "cell 1 4 2 1");
-                contentPanel.add(textFieldY, "cell 3 4");
-                contentPanel.add(textFieldB, "cell 1 5");
-                contentPanel.add(textFieldW, "cell 3 5");
-                contentPanel.add(textFieldA, "cell 1 6");
-                contentPanel.add(textFieldH, "cell 3 6");
             }
             dialogPane.add(contentPanel, BorderLayout.CENTER);
 
