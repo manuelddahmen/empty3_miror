@@ -33,10 +33,13 @@ public class ObjectWithProperties {
         AtomicInt, AtomicDouble, AtomicChar, AtomicBoolean, String
     }
     public List<Class> realTypes = new ArrayList<>();
+    private HashMap<String, ProcessNFiles> propertyList = new HashMap<>();
     private HashMap<String, ClassTypes> types = new HashMap<>();
     private HashMap<String, StructureMatrix<Object>> values = new HashMap<>();
+    ProcessNFiles currentProcess;
 
-    public ObjectWithProperties() {
+    public ObjectWithProperties(ProcessNFiles currentProcess) {
+        this.currentProcess = currentProcess;
         realTypes.add(AtomicInteger.class);
         realTypes.add(Double.class);
         realTypes.add(Character.class);
@@ -45,32 +48,50 @@ public class ObjectWithProperties {
     }
 
     public void addProperty(String name, ClassTypes type, Object value) {
-        types.put(name, type);
-        StructureMatrix<Object> value2 = new StructureMatrix<>(0, Object.class);
-        value2.setElem(value);
-        values.put(name, value2);
+        if(currentProcess.equals(propertyList.get(name))) {
+            propertyList.putIfAbsent(name, currentProcess);
+            types.put(name, type);
+            StructureMatrix<Object> value2 = new StructureMatrix<>(0, Object.class);
+            value2.setElem(value);
+            values.put(name, value2);
+        }
     }
-    public boolean deleteProerty(String name) {
-        types.remove(name);
-        values.remove(name);
-        return true;
+    public boolean deleteProperty(String name) {
+        if(currentProcess.equals(propertyList.get(name))) {
+            types.remove(name);
+            values.remove(name);
+            return true;
+        }
+        return false;
     }
     public Object getProperty(String name) {
-        return values.get(name).getElem();
+        if(currentProcess.equals(propertyList.get(name))) {
+            return values.get(name).getElem();
+        }
+        throw new UnsupportedOperationException("property"+name+" not in "+currentProcess.toString()+" or not defined");
+
     }
     public void updateProperty(String name, Object value) {
-        StructureMatrix<Object> objectStructureMatrix = values.get(name);
-        if(objectStructureMatrix!=null) {
-            objectStructureMatrix.setElem(value);
-        } else {
-            throw new UnsupportedOperationException("update without previous value");
+        if(currentProcess.equals(propertyList.get(name))) {
+            StructureMatrix<Object> objectStructureMatrix = values.get(name);
+            if (objectStructureMatrix != null) {
+                objectStructureMatrix.setElem(value);
+            } else {
+                throw new UnsupportedOperationException("update without previous value");
+            }
         }
     }
     public ClassTypes getPropertyType(String name) {
-        return types.get(name);
+        if(currentProcess.equals(propertyList.get(name))) {
+            return types.get(name);
+        }
+        throw new UnsupportedOperationException("property"+name+" not in "+currentProcess.toString()+" or not defined");
     }
     public Class getPropertyClass(String name) {
-        return types.get(name).getClass();
+        if(currentProcess.equals(propertyList.get(name))) {
+            return types.get(name).getClass();
+        }
+        throw new UnsupportedOperationException("property"+name+" not in "+currentProcess.toString()+" or not defined");
     }
 
     public Object parseValue(String s) {

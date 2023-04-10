@@ -563,7 +563,7 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
                         }
                     }
                 }
-                ClassElement last = ce;
+                last = ce;
             }
         }
         //ResourceBundle globalSettings = ResourceBundle.getBundle("settings.properties");
