@@ -95,16 +95,17 @@ public class DialogMultFrames extends JDialog {
     }
     public void initComboBox() {
 
-        List<String> model = new ArrayList<>(classInstance.getProperties()
-                .getPropertyList());
+        if(classInstance!=null) {
+            List<String> model = new ArrayList<>(classInstance.getProperties()
+                    .getPropertyList());
 
-        DefaultComboBoxModel defaultComboBoxModel = new DefaultComboBoxModel();
+            DefaultComboBoxModel defaultComboBoxModel = new DefaultComboBoxModel();
 
-        defaultComboBoxModel.addAll(model);
+            defaultComboBoxModel.addAll(model);
 
-        getComboBox1().setModel(defaultComboBoxModel);
+            getComboBox1().setModel(defaultComboBoxModel);
 
-
+        }
     }
 
     private void updateData(ActionEvent e) {

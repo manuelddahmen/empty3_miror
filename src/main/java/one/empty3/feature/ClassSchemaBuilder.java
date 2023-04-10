@@ -396,6 +396,7 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
                         ((ClassElement) diagramElement).partAfter = new PartElement();
                         diagramElements.remove(diagramElement);
                         buttonDeleteClass.setSelected(false);
+                        selectedActionDeleteClass = false;
                     } else if (selectedActionDeleteLink) {
                         DiagramElement diagramElement = selectFromPoint(e.getX(), e.getY());
                         PartElement partElement = selectPartFromPoint(e.getX(), e.getY());
@@ -403,6 +404,7 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
                             ((ClassElement) (diagramElement)).partAfter.referenceElement = null;
                             ((ClassElement) (diagramElement)).partAfter.element = null;
                             buttonDeleteLink.setSelected(false);
+                            selectedActionDeleteLink = false;
                         }
                     }
                     if (currentAction == 0) {
@@ -412,7 +414,7 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
                             selectedElement = selectFromPoint(e.getX(), e.getY());
                             selectedPart = selectPartFromPoint(e.getX(), e.getY());
                             currentAction = ADD_1;
-                            labelStatus.setText("Selected element: " + selectedElement.label + " Mode: Select class2...");
+                            labelStatus.setText("Add link: Selected class : " + selectedElement.label + " Select class2 ...");
                         }
                     } else if (currentAction == ADD_1) {
                         DiagramElement diagramElement = selectFromPoint(e.getX(), e.getY());
@@ -424,7 +426,7 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
                             ((ClassElement) selectedElement).partAfter.referenceElement = diagramElement;
                             ((ClassElement) selectedElement).partAfter.element = diagramElement;
                             currentAction = 0;
-                            labelStatus.setText("Selected element: " + selectedElement.label + " Class 2 element:" + diagramElement.label);
+                            labelStatus.setText("LINK ADDED : Selected element: " + selectedElement.label + " Class 2 element:" + diagramElement.label);
                         }
 
 

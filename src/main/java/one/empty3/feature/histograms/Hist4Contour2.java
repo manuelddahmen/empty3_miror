@@ -20,6 +20,7 @@
 package one.empty3.feature.histograms;
 
 import one.empty3.feature.PixM;
+import one.empty3.io.ObjectWithProperties;
 import one.empty3.io.ProcessFile;
 import one.empty3.library.Point3D;
 
@@ -28,9 +29,14 @@ import java.io.File;
 import java.io.IOException;
 
 public class Hist4Contour2 extends ProcessFile {
-
     private int kMax = 3;
     private double fractMax = 0.05;
+    public Hist4Contour2() {
+        getProperties().addProperty("kMax", ObjectWithProperties.ClassTypes.AtomicInt,
+                kMax);
+        getProperties().addProperty("fractMax", ObjectWithProperties.ClassTypes.AtomicDouble,
+                fractMax);
+    }
 
     public static class Circle {
         public double x = 0.0, y = 0.0, r = 0.0;
@@ -106,6 +112,8 @@ public class Hist4Contour2 extends ProcessFile {
 
     @Override
     public boolean process(File in, File out) {
+        kMax = (Integer) getProperties().getProperty("kMax");
+        fractMax = (Double) getProperties().getProperty("fractMax");
         if (!isImage(in)) {
             return false;
         }
