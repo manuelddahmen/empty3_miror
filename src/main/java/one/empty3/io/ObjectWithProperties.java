@@ -77,7 +77,7 @@ public class ObjectWithProperties {
         return null;
     }
 
-    public void shareProperties(ObjectWithProperties bis) {
+    public void sharePropertiesWith(ObjectWithProperties bis) {
         bis.values = values;
         bis.types = types;
     }

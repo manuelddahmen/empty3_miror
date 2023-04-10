@@ -524,7 +524,19 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
             if (classElement instanceof ClassElement) {
                 ClassElement ce = (ClassElement) classElement;
                 ClassElement first = ce;
+                ClassElement last = ce;
                 Class theClass = ce.getTheClass();
+                try {
+                    if(ce.instance==null) {
+                        ce.instance = (ProcessFile) ce.theClass.newInstance();
+                    }
+                    processes.add(ce.instance);
+
+                } catch (InstantiationException ex) {
+                    throw new RuntimeException(ex);
+                } catch (IllegalAccessException ex) {
+                    throw new RuntimeException(ex);
+                }
                 if (ce.partAfter.element != null && ce.partAfter.element != ce) {
                     if (ProcessFile.class.isAssignableFrom(theClass)) {
                         try {
@@ -532,28 +544,26 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
                             int n = 1;
                             while (ce.partAfter.element != null && ce.partAfter.element != ce) {
                                 ce = (ClassElement) ce.partAfter.element;
-                                processes.add((ProcessFile)
-                                        ce.theClass.newInstance());
+                                if(ce.instance!=null) {
+                                    processes.add(ce.instance);
+                                    last = ce;
+                                }
+                                else {
+                                    ce.instance = (ProcessFile) ce.theClass.newInstance();
+                                    processes.add((ProcessFile)ce.instance);
+                                }
+
+                                last.instance.getProperties()
+                                        .sharePropertiesWith(ce.instance.getProperties());
+
                                 processes.get(processes.size() - 1).setMaxRes(maxRes);
                             }
                         } catch (InstantiationException | IllegalAccessException instantiationException) {
                             instantiationException.printStackTrace();
                         }
-                    } else if (ProcessNFiles.class.isAssignableFrom(theClass)) {
-                            try {
-                                System.out.printf("Start process stack\n");
-                                int n = 1;
-                                while (ce.partAfter.element != null && ce.partAfter.element != ce) {
-                                    ce = (ClassElement) ce.partAfter.element;
-                                    processes.add((ProcessFile)
-                                            ce.theClass.newInstance());
-                                    processes.get(processes.size() - 1).setMaxRes(maxRes);
-                                }
-                            } catch (InstantiationException | IllegalAccessException instantiationException) {
-                                instantiationException.printStackTrace();
-                            }
                     }
                 }
+                ClassElement last = ce;
             }
         }
         //ResourceBundle globalSettings = ResourceBundle.getBundle("settings.properties");

@@ -55,7 +55,9 @@ public class DiffEnergy extends ProcessFile {
                     i2.setCompNo(c);
                     energy[c] += Math.abs(
                             i1.get((int) i, (int)j) - i2.get((int)i, (int) j)
+
                     );
+                    energy[c] *= energy[c];
                 }
         return energy[0]+energy[1]+energy[2];
     }
