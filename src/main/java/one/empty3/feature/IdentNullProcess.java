@@ -27,6 +27,12 @@ import java.io.IOException;
 
 public class IdentNullProcess extends ProcessFile {
 
+
+    public IdentNullProcess() {
+        super();
+        initProperties(this);
+    }
+
     @Override
     public boolean process(File in, File out) {
         try {

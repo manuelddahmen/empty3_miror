@@ -662,7 +662,7 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
     }
 
     private void buttonAddLinkActionPerformed(ActionEvent e) {
-        buttonAddLink.setSelected(!buttonAddLink.isSelected());
+        //buttonAddLink.setSelected(!buttonAddLink.isSelected());
         if(buttonAddLink.isSelected()) {
             selectsAddLink = true;
             labelStatus.setText("Method: Use click on class1, then class2 ");

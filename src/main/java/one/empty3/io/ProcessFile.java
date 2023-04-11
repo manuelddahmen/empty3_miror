@@ -43,6 +43,15 @@ public abstract class ProcessFile extends ProcessNFiles {
         super();
         initProperties(this);
     }
+    public void initProperties(ProcessNFiles processFile) {
+        super.initProperties(processFile);
+        if(properties==null) {
+            properties = new ObjectWithProperties(processFile);
+        }
+        getProperties().addProperty("maxRes", ObjectWithProperties.ClassTypes.AtomicInt, this.maxRes);
+        this.processNFiles.add(this);
+
+    }
 
     public File getOutputDirectory() {
         return outputDirectory;

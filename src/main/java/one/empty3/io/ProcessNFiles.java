@@ -43,7 +43,9 @@ public class ProcessNFiles  {
         initProperties(this);
     }
     public void initProperties(ProcessNFiles processFile) {
-        properties = new ObjectWithProperties(processFile);
+        if(properties==null) {
+            properties = new ObjectWithProperties(processFile);
+        }
         getProperties().addProperty("maxRes", ObjectWithProperties.ClassTypes.AtomicInt, this.maxRes);
         this.processNFiles.add(this);
 
