@@ -59,7 +59,8 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
     private boolean selectAndClickClass = false;
     public List<File[]> files = new ArrayList<>();
     private boolean selectedActionDeleteClass = false;
-    private boolean selectedActionDeleteLink;
+    private boolean selectedActionDeleteLink = false;
+    private boolean selectsAddLink = false;
     private LiveEffect liveEffect;
     private boolean cam;
     private int maxRes = 0;
@@ -405,31 +406,33 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
                             ((ClassElement) (diagramElement)).partAfter.element = null;
                             buttonDeleteLink.setSelected(false);
                             selectedActionDeleteLink = false;
-                        }
-                    }
-                    if (currentAction == 0) {
-
-                        if (selectFromPoint(e.getX(), e.getY()) != null &&
-                                selectFromPoint(e.getX(), e.getY()).getClass().equals(ClassElement.class)) {
-                            selectedElement = selectFromPoint(e.getX(), e.getY());
-                            selectedPart = selectPartFromPoint(e.getX(), e.getY());
-                            currentAction = ADD_1;
-                            labelStatus.setText("Add link: Selected class : " + selectedElement.label + " Select class2 ...");
-                        }
-                    } else if (currentAction == ADD_1) {
-                        DiagramElement diagramElement = selectFromPoint(e.getX(), e.getY());
-                        if (diagramElement instanceof ClassElement && selectedElement instanceof ClassElement) {
-                            if(((ClassElement)diagramElement).partAfter.element!=null&&
-                                    ((ClassElement)diagramElement).partAfter.element.equals(selectedClassElement)) {
-                                ((ClassElement)diagramElement).partAfter.element = null;
-                            }
-                            ((ClassElement) selectedElement).partAfter.referenceElement = diagramElement;
-                            ((ClassElement) selectedElement).partAfter.element = diagramElement;
                             currentAction = 0;
-                            labelStatus.setText("LINK ADDED : Selected element: " + selectedElement.label + " Class 2 element:" + diagramElement.label);
                         }
+                    } else if(selectsAddLink) {
+                        if (currentAction == 0) {
+                            if (selectFromPoint(e.getX(), e.getY()) != null &&
+                                    selectFromPoint(e.getX(), e.getY()).getClass().equals(ClassElement.class)) {
+                                selectedElement = selectFromPoint(e.getX(), e.getY());
+                                selectedPart = selectPartFromPoint(e.getX(), e.getY());
+                                currentAction = ADD_1;
+                                labelStatus.setText("Add link: Selected class : " + selectedElement.label + " Select class2 ...");
+                            }
+                        } else if (currentAction == ADD_1) {
+                            DiagramElement diagramElement = selectFromPoint(e.getX(), e.getY());
+                            if (diagramElement instanceof ClassElement && selectedElement instanceof ClassElement) {
+                                if (((ClassElement) diagramElement).partAfter.element != null &&
+                                        ((ClassElement) diagramElement).partAfter.element.equals(selectedClassElement)) {
+                                    ((ClassElement) diagramElement).partAfter.element = null;
+                                }
+                                ((ClassElement) selectedElement).partAfter.referenceElement = diagramElement;
+                                ((ClassElement) selectedElement).partAfter.element = diagramElement;
+                                currentAction = 0;
+                                labelStatus.setText("LINK ADDED : Selected element: " + selectedElement.label + " Class 2 element:" + diagramElement.label);
+                                selectsAddLink = false;
+                            }
 
 
+                        }
                     }
                 } catch (NullPointerException ex) {
                     System.out.printf("Error : null");
@@ -658,7 +661,15 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
     }
 
     private void buttonAddLinkActionPerformed(ActionEvent e) {
-        labelStatus.setText("Method: Use click on class1, then class2 ");
+        if(buttonAddLink.isSelected()) {
+            currentAction = 0;
+            selectsAddLink = true;
+            labelStatus.setText("Method: Use click on class1, then class2 ");
+        } else if(!buttonAddLink.isSelected()){
+            currentAction = 0;
+            selectsAddLink = false;
+            labelStatus.setText("Do nothing");
+        }
     }
 
     private void buttonLoadActionPerformed(ActionEvent e) {

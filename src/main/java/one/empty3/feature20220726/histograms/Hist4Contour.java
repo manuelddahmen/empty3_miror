@@ -25,10 +25,27 @@ import java.util.Objects;
 
 import javaAnd.awt.image.imageio.ImageIO;
 import one.empty3.feature20220726.PixM;
+import one.empty3.io.ObjectWithProperties;
 import one.empty3.io.ProcessFile;
+import one.empty3.io.ProcessNFiles;
 import one.empty3.library.Point3D;
 
 public class Hist4Contour extends ProcessFile {
+
+    public Hist4Contour() {
+        super();
+        initProperties(this);
+    }
+
+    @Override
+    public void initProperties(ProcessNFiles processFile) {
+        super.initProperties(processFile);
+        getProperties().addProperty("kMax", ObjectWithProperties.ClassTypes.AtomicInt,
+                kMax);
+        getProperties().addProperty("fractMax", ObjectWithProperties.ClassTypes.AtomicDouble,
+                fractMax);
+
+    }
 
     private int kMax = 3;
     private double fractMax = 0.05;

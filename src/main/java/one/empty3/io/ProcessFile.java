@@ -41,6 +41,7 @@ public abstract class ProcessFile extends ProcessNFiles {
     }
     public ProcessFile() {
         super();
+        initProperties(this);
     }
 
     public File getOutputDirectory() {

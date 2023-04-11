@@ -104,9 +104,9 @@ public class ObjectWithProperties {
     public void sharePropertiesWith(ObjectWithProperties bis) {
         Collection<String> propertyListShared = getPropertyList();
         propertyListShared.forEach(s -> {
-            Object value = bis.getProperty(s);
-            Class propertyClass = bis.getPropertyClass(s);
-            ClassTypes propertyType = bis.getPropertyType(s);
+            Object value = getProperty(s);
+            Class propertyClass = getPropertyClass(s);
+            ClassTypes propertyType = getPropertyType(s);
             bis.addProperty(s, propertyType, value);
         });
     }
