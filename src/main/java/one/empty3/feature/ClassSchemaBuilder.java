@@ -429,6 +429,7 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
                                 currentAction = 0;
                                 labelStatus.setText("LINK ADDED : Selected element: " + selectedElement.label + " Class 2 element:" + diagramElement.label);
                                 selectsAddLink = false;
+                                buttonAddLink.setSelected(false);
                             }
 
 
@@ -661,12 +662,11 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
     }
 
     private void buttonAddLinkActionPerformed(ActionEvent e) {
+        buttonAddLink.setSelected(!buttonAddLink.isSelected());
         if(buttonAddLink.isSelected()) {
-            currentAction = 0;
             selectsAddLink = true;
             labelStatus.setText("Method: Use click on class1, then class2 ");
         } else if(!buttonAddLink.isSelected()){
-            currentAction = 0;
             selectsAddLink = false;
             labelStatus.setText("Do nothing");
         }
