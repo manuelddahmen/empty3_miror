@@ -546,15 +546,14 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
                                 ce = (ClassElement) ce.partAfter.element;
                                 if(ce.instance!=null) {
                                     processes.add(ce.instance);
-                                    last = ce;
                                 }
                                 else {
                                     ce.instance = (ProcessFile) ce.theClass.newInstance();
                                     processes.add((ProcessFile)ce.instance);
                                 }
+                                last.instance.getProperties().sharePropertiesWith(ce.instance.getProperties());
 
-                                last.instance.getProperties()
-                                        .sharePropertiesWith(ce.instance.getProperties());
+                                last = ce;
 
                                 processes.get(processes.size() - 1).setMaxRes(maxRes);
                             }

@@ -27,6 +27,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class ObjectWithProperties {
     public enum ClassTypes  {
@@ -99,10 +102,22 @@ public class ObjectWithProperties {
     }
 
     public void sharePropertiesWith(ObjectWithProperties bis) {
-        bis.values = values;
-        bis.types = types;
+        Collection<String> propertyListShared = getPropertyList();
+        propertyListShared.forEach(s -> {
+            Object value = bis.getProperty(s);
+            Class propertyClass = bis.getPropertyClass(s);
+            ClassTypes propertyType = bis.getPropertyType(s);
+            bis.addProperty(s, propertyType, value);
+        });
     }
     public Collection<String> getPropertyList() {
-        return values.keySet();
+        return
+                values.keySet().stream()
+                        .filter(new Predicate<String>() {
+                            @Override
+                            public boolean test(String s) {
+                                return !currentProcess.equals(propertyList.get(s));
+                            }
+                        }).collect(Collectors.toList());
     }
 }

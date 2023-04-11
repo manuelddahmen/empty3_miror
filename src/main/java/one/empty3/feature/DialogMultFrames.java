@@ -63,7 +63,6 @@ public class DialogMultFrames extends JDialog {
 
         }
 
-        fillList();
         initComboBox();
         updateForms();
     }
@@ -89,9 +88,6 @@ public class DialogMultFrames extends JDialog {
             System.err.println("Selected item is null or no string :" +o);
         }
 
-    }
-
-    public void fillList() {
     }
     public void initComboBox() {
 

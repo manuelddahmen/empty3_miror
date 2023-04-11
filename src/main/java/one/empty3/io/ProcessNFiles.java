@@ -31,7 +31,7 @@ import java.util.Properties;
 
 public class ProcessNFiles  {
     public List<ProcessNFiles> processNFiles = new ArrayList<>();
-    public ObjectWithProperties properties;
+    protected ObjectWithProperties properties;
     public ProcessBean bean;
     protected int maxRes = 400;
     private Properties property;
@@ -40,12 +40,13 @@ public class ProcessNFiles  {
 
 
     public ProcessNFiles() {
-        if(properties==null)
-             properties = new ObjectWithProperties(this);
-        this.processNFiles.add(this);
         getProperties().addProperty("maxRes", ObjectWithProperties.ClassTypes.AtomicInt, this.maxRes);
     }
+    public void initProperties(ProcessFile processFile) {
+        properties = new ObjectWithProperties(processFile);
+        this.processNFiles.add(this);
 
+    }
     protected static boolean isImage(File in) {
         return in != null && (in.getAbsolutePath().toLowerCase().endsWith(".jpg")
                 || in.getAbsolutePath().toLowerCase().endsWith(".png"));
@@ -123,6 +124,9 @@ public class ProcessNFiles  {
     }
 
     public ObjectWithProperties getProperties() {
+        if(properties==null) {
+            properties = new ObjectWithProperties(this);
+        }
         return properties;
     }
 

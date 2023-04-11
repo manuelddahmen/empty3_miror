@@ -28,6 +28,7 @@ import java.util.Objects;
 
 public class ProcessPlusNormalize extends ProcessNFiles {
 
+
     @Override
     public boolean processFiles(File out, File ... ins) {
         int n = ins.length;

@@ -27,14 +27,13 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 public abstract class ProcessFile extends ProcessNFiles {
     public ProcessBean bean;
     protected int maxRes = 0;
-    private Properties property;
     private File outputDirectory = null;
     private List<File> imagesStack = new ArrayList<>();
+
 
     protected static boolean isImage(File in) {
         return in != null && (in.getAbsolutePath().toLowerCase().endsWith(".jpg")
