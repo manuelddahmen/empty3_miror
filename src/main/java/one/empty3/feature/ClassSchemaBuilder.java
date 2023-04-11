@@ -867,7 +867,7 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
         comboBox2 = new JComboBox();
         button3 = new JButton();
         button4 = new JButton();
-        buttonAddLink = new JButton();
+        buttonAddLink = new JToggleButton();
         buttonFiles = new JButton();
         buttonDeleteClass = new JToggleButton();
         buttonDeleteLink = new JToggleButton();
@@ -1213,7 +1213,7 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
     private JComboBox comboBox2;
     private JButton button3;
     private JButton button4;
-    private JButton buttonAddLink;
+    private JToggleButton buttonAddLink;
     private JButton buttonFiles;
     private JToggleButton buttonDeleteClass;
     private JToggleButton buttonDeleteLink;
