@@ -81,6 +81,7 @@ public class Representable /*extends RepresentableT*/ implements Serializable, C
             vectors.setElem(Point3D.X, 0);
             vectors.setElem(Point3D.Y, 1);
             vectors.setElem(Point3D.Z, 2);
+            vectors.setElem(Point3D.O0, 3);
 
         }
     }
@@ -612,6 +613,9 @@ public class Representable /*extends RepresentableT*/ implements Serializable, C
 
     public void setVectZ(Point3D vectZ) {
         this.vectors.setElem(vectZ, 2);
+    }
+    public void setOrig(Point3D orig) {
+        this.vectors.setElem(orig, 3);
     }
 }
 
