@@ -34,9 +34,6 @@ public class OrientableParametricSurface extends ParametricSurface {
     }
     public Point3D calculerPoint3D(double u, double v) {
         Point3D point3D = ps.calculerPoint3D(u, v);
-        return vectors.getElem(3)
-                .plus(vectors.getElem(0).mult(point3D.get(0)))
-                .plus(vectors.getElem(1).mult(point3D.get(1)))
-                .plus(vectors.getElem(2).mult(point3D.get(2)));
+        return getOrientedPoint(point3D);
     }
 }
