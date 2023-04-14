@@ -157,6 +157,20 @@ public class Representable /*extends RepresentableT*/ implements Serializable, C
         this.texture = tc;
     }
 
+
+    public Point3D refPoint(Point3D x) {
+        if(!(this instanceof Point3D) && !(this instanceof Matrix33))
+            return getOrientedPoint(x);
+        else
+            return x;
+    }
+
+    public void setAxes(Point3D o, Point3D vx, Point3D vy, Point3D vz) {
+        setOrig(o);
+        setVectX(vx);
+        setVectY(vy);
+        setVectZ(vz);
+    }
     /*__
      * DOn't call ZBuffer dessiine methods here: it would loop.
      *
