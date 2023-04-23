@@ -30,7 +30,6 @@ import java.util.List;
 
 public abstract class ProcessFile extends ProcessNFiles {
     public ProcessBean bean;
-    protected int maxRes = 0;
     private File outputDirectory = null;
     private List<File> imagesStack = new ArrayList<>();
 
@@ -41,7 +40,6 @@ public abstract class ProcessFile extends ProcessNFiles {
     }
     public ProcessFile() {
         super();
-        initProperties(this);
     }
     public void initProperties(ProcessNFiles processFile) {
         super.initProperties(processFile);

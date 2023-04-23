@@ -51,8 +51,8 @@ public class ObjectWithProperties {
     }
 
     public void addProperty(String name, ClassTypes type, Object value) {
+        propertyList.putIfAbsent(name, currentProcess);
         if(currentProcess.equals(propertyList.get(name))) {
-            propertyList.putIfAbsent(name, currentProcess);
             types.put(name, type);
             StructureMatrix<Object> value2 = new StructureMatrix<>(0, Object.class);
             value2.setElem(value);

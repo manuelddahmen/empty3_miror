@@ -96,4 +96,7 @@ public class CameraBox extends Representable {
         getDeclaredDataStructure().put("angleY/angle vertical caméra", angleY);
 
     }
+    public void ratioHorizontalAngle(int dimx, int dimy) {
+        this.angleX.setElem(1.0*dimx/dimy*angleY.getElem());
+    }
 }

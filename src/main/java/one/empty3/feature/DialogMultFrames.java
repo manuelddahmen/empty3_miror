@@ -49,6 +49,11 @@ public class DialogMultFrames extends JDialog {
 
     public DialogMultFrames(Window owner) {
         super(owner);
+
+
+        initComponents();
+
+
         current = ((ClassSchemaBuilder)owner).getSelectedElement();
 
         if(current==null) {
@@ -56,21 +61,23 @@ public class DialogMultFrames extends JDialog {
 
             this.classInstance =  null;
         } else {
-
             this.classInstance = ((ClassSchemaBuilder.ClassElement) current).getInstance();
 
-            initComponents();
+            initComboBox();
+            updateForms();
+
+
 
         }
 
-        initComboBox();
-        updateForms();
     }
 
     private void updateForms() {
         ProcessFile pf = classInstance;
         if(pf==null) {
             System.err.println("DialogMultFrames: pf==null ");
+            dispose();
+            setVisible(false);
             return;
         }
         Object o = getComboBox1().getSelectedItem();

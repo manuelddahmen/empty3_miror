@@ -42,6 +42,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.*;
 import java.util.function.Consumer;
@@ -276,12 +277,10 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
         public ProcessFile getInstance() {
             if(instance==null) {
                 try {
-                    instance = (ProcessFile) theClass.newInstance();
-
-
-                } catch (InstantiationException e) {
-                    throw new RuntimeException(e);
-                } catch (IllegalAccessException e) {
+                    instance = (ProcessFile) theClass
+                            .getDeclaredConstructor().newInstance();
+                } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
+                         NoSuchMethodException e) {
                     throw new RuntimeException(e);
                 }
             }
@@ -530,39 +529,20 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
                 ClassElement first = ce;
                 ClassElement last = ce;
                 Class theClass = ce.getTheClass();
-                try {
-                    if(ce.instance==null) {
-                        ce.instance = (ProcessFile) ce.theClass.newInstance();
-                    }
-                    processes.add(ce.instance);
+                processes.add(ce.getInstance());
 
-                } catch (InstantiationException ex) {
-                    throw new RuntimeException(ex);
-                } catch (IllegalAccessException ex) {
-                    throw new RuntimeException(ex);
-                }
                 if (ce.partAfter.element != null && ce.partAfter.element != ce) {
                     if (ProcessFile.class.isAssignableFrom(theClass)) {
-                        try {
-                            System.out.printf("Start process stack\n");
-                            int n = 1;
-                            while (ce.partAfter.element != null && ce.partAfter.element != ce) {
-                                ce = (ClassElement) ce.partAfter.element;
-                                if(ce.instance!=null) {
-                                    processes.add(ce.instance);
-                                }
-                                else {
-                                    ce.instance = (ProcessFile) ce.theClass.newInstance();
-                                    processes.add((ProcessFile)ce.instance);
-                                }
-                                last.instance.getProperties().sharePropertiesWith(ce.instance.getProperties());
+                        System.out.printf("Start process stack\n");
+                        int n = 1;
+                        while (ce.partAfter.element != null && ce.partAfter.element != ce) {
+                            ce = (ClassElement) ce.partAfter.element;
+                                processes.add(ce.getInstance());
+                            last.getInstance().getProperties().sharePropertiesWith(ce.instance.getProperties());
 
-                                last = ce;
+                            last = ce;
 
-                                processes.get(processes.size() - 1).setMaxRes(maxRes);
-                            }
-                        } catch (InstantiationException | IllegalAccessException instantiationException) {
-                            instantiationException.printStackTrace();
+                            processes.get(processes.size() - 1).setMaxRes(maxRes);
                         }
                     }
                 }

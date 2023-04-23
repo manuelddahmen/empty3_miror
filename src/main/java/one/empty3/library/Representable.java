@@ -87,10 +87,12 @@ public class Representable /*extends RepresentableT*/ implements Serializable, C
     }
 
     public Point3D getOrientedPoint(Point3D a) {
-        return vectors.getElem(3)
+        Point3D oriented = vectors.getElem(3)
                 .plus(vectors.getElem(0).mult(a.get(0)))
                 .plus(vectors.getElem(1).mult(a.get(1)))
                 .plus(vectors.getElem(2).mult(a.get(2)));
+        oriented.texture(a.texture());
+        return oriented;
     }
     public static void setPaintingActForClass(ZBuffer z, Scene s, PaintingAct pa) {
         Painter p = null;

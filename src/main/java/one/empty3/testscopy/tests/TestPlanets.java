@@ -29,7 +29,7 @@ import java.io.File;
 import java.util.logging.Logger;
 
 public class TestPlanets extends TestObjetSub {
-    public static final int SECONDS = 4;
+    public static final int SECONDS = 8;
     public static final int FPS = 25;
     private static final int TURNS = 2;
     private final File planets = new File("res\\img\\planets2");
@@ -48,6 +48,8 @@ public class TestPlanets extends TestObjetSub {
         planetsImagesFiles = planets.listFiles();
 
         setMaxFrames(planetsImagesFiles.length*FPS*SECONDS*TURNS);
+
+        z().ratioVerticalAngle();
 
 
         z().setDisplayType(ZBufferImpl.SURFACE_DISPLAY_TEXT_QUADS);
@@ -139,7 +141,7 @@ public class TestPlanets extends TestObjetSub {
     public static void main(String[] args) {
         TestPlanets testPlanets = new TestPlanets();
         testPlanets.loop(true);
-        testPlanets.setResolution(1280, 720);
+        testPlanets.setResolution(1920, 1080);
         Thread thread = new Thread(testPlanets);
         thread.start();
     }

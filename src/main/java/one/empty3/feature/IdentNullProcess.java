@@ -30,7 +30,6 @@ public class IdentNullProcess extends ProcessFile {
 
     public IdentNullProcess() {
         super();
-        initProperties(this);
     }
 
     @Override

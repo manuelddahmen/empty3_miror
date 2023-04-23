@@ -221,8 +221,10 @@ public class Camera extends CameraBox {
 
             double x = Math.atan(x3d.getX() / x3d.getZ())/x3d.getZ()*la;
             double y = Math.atan(x3d.getX() / x3d.getZ())/x3d.getZ()*ha;
+
+            double r = (angleY.getElem()/angleX.getElem());
             return new Point(
-                    (int) ((   x3d.getX() * scale * la + la / 2)),
+                    (int) ((   x3d.getX() * scale * la * r + la / 2)),
                     (int) (( - x3d.getY() *scale * ha + ha / 2)));
 /*
             Point p = new Point((int) (x + la / 2), (int) (y + ha / 2));

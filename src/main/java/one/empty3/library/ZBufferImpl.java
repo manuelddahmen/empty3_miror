@@ -144,6 +144,7 @@ public class ZBufferImpl extends Representable implements ZBuffer {
         });
     }
     public synchronized void draw(Representable r) {
+        camera().ratioHorizontalAngle(dimx, dimy);
         if (r == null) {
             Logger.getAnonymousLogger().log(Level.INFO, "r is null return");
             return;
@@ -1655,5 +1656,9 @@ public class ZBufferImpl extends Representable implements ZBuffer {
 
     public void setFORCE_POSITIVE_NORMALS(boolean FORCE_POSITIVE_NORMALS) {
         this.FORCE_POSITIVE_NORMALS = FORCE_POSITIVE_NORMALS;
+    }
+
+    public void ratioVerticalAngle() {
+        this.angleY = 1.0*dimy/dimx*angleX;
     }
 }
