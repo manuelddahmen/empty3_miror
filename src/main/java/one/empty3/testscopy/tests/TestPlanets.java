@@ -58,8 +58,6 @@ public class TestPlanets extends TestObjetSub {
         scene().texture(new ColorTexture(Color.BLACK));
 
 
-
-
         Camera c = new Camera(axeViseeVideo[1].mult(10), Point3D.O0, axeVerticalVideo);
         c.calculerMatrice(axeVerticalVideo);
         z().scene().cameraActive(c);
@@ -68,6 +66,9 @@ public class TestPlanets extends TestObjetSub {
         camera(c);
         i = -1;
 
+        frame = 801;
+        i =  (frame() /( FPS * SECONDS))-1;
+        incr();
        }
 
     @Override
