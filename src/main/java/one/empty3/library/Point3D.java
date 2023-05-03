@@ -23,9 +23,7 @@ import one.empty3.library.core.nurbs.ParametricCurve;
 import one.empty3.library.core.nurbs.ParametricSurface;
 
 import java.awt.*;
-import java.nio.DoubleBuffer;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /*__
@@ -40,6 +38,23 @@ public class Point3D extends Representable {
     private Double tempz;
     private Double tempy;
     private Double tempx;
+    private StructureMatrix<Double> point3DStructureMatrix;
+    private final StructureMatrixListener setElem = new StructureMatrixListener() {
+        @Override
+        public void actionOnChange(Object oldValue, Object newValue, int dim, int posI, int posJ) {
+            switch (dim) {
+                case 0:
+                break;
+                case 1:
+                    if(posI>=0 && posI<3) {
+                        set(posI, (double)newValue);
+                    }
+                    break;
+                case 2:
+                    break;
+            }
+        }
+    };
 
     public static void start() {
     }
@@ -575,10 +590,12 @@ public class Point3D extends Representable {
             return i<coordArr.data1d.size()?coordArr.getElem(i):Double.NaN;
         }*/
     public StructureMatrix<Double> getCoordArr() {
-        StructureMatrix<Double> point3DStructureMatrix = new StructureMatrix<>(1, Double.class);
+        point3DStructureMatrix = new StructureMatrix<>(1, Double.class);
         point3DStructureMatrix.add(coordArr[0]);
         point3DStructureMatrix.add(coordArr[1]);
         point3DStructureMatrix.add(coordArr[2]);
+        point3DStructureMatrix.addListener(setElem);
+
         return point3DStructureMatrix;
     }
 

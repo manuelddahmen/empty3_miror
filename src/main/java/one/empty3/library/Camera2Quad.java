@@ -30,7 +30,12 @@ public class Camera2Quad extends Camera {
     protected final StructureMatrix<Polygon>  far = new StructureMatrix(0, Polygon.class);
     protected ZBuffer z;
 
-
+    /***
+     * near(pa1,nb1,pc1,pd1)-> far(pa2,pb2,pc2,pd2)
+     * @param z
+     * @param near quad 1
+     * @param far quad 2
+     */
     public Camera2Quad(ZBuffer z, Polygon near, Polygon far) {
         this.near.setElem(near);
         this.far.setElem(far);
@@ -39,7 +44,6 @@ public class Camera2Quad extends Camera {
         init();
     }
     public void init() {
-        //(pa1,nb1,pc1,pd1)->pa2,pb2,pc2,pd2
         Point3D pa1 = near.getElem().getPoints().getElem(0);
         Point3D pb1 = near.getElem().getPoints().getElem(1);
         Point3D pc1 = near.getElem().getPoints().getElem(2);

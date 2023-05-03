@@ -823,7 +823,6 @@ public abstract class TestObjet implements Test, Runnable {
                 try {
                     Thread.sleep(500);
                 } catch (InterruptedException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
             }
@@ -1086,9 +1085,7 @@ public abstract class TestObjet implements Test, Runnable {
             try {
                 new Loader().load(f, scene);
 
-            } catch (VersionNonSupporteeException ex) {
-                o.println(ex.getLocalizedMessage());
-            } catch (ExtensionFichierIncorrecteException ex) {
+            } catch (VersionNonSupporteeException | ExtensionFichierIncorrecteException ex) {
                 o.println(ex.getLocalizedMessage());
             }
         } else {
@@ -1155,5 +1152,13 @@ public abstract class TestObjet implements Test, Runnable {
 
     public File getWrittenFile() {
         return file0;
+    }
+
+    public int getFps() {
+        return fps;
+    }
+
+    public void setFps(int fps) {
+        this.fps = fps;
     }
 }
