@@ -43,7 +43,10 @@ public abstract class ITexture implements MatrixPropertiesObject{
     public static final int COLOR_ROT_180 = 16;
     public static final int COLOR_ROT_270 = 32;
     public int onTextureEnds = 0;
-    protected int colorMask = 0;
+    protected int colorMask = COLOR_IDENT;
+    protected int repeatX = 1;
+    protected int repeatY = 1;
+
     DeformMap dm;
 
     public int getColorMask() {
@@ -55,9 +58,11 @@ public abstract class ITexture implements MatrixPropertiesObject{
     }
 
     public Point2D getCoord(double x, double y) {
+
         Point2D p = new Point2D(x, y);
-        if (getColorMask() == COLOR_IDENT)
-            return p;
+        p = getRepeatCoord(p.x, p.y);
+        if ((getColorMask() == COLOR_IDENT))
+            p = p;
         if ((getColorMask() & COLOR_MIROR_X) > 0) {
             p = new Point2D(1.0 - p.x, p.y);
         }
@@ -77,6 +82,11 @@ public abstract class ITexture implements MatrixPropertiesObject{
             p = new Point2D(p.y, 1.0 - p.x);
         }
         return p;
+    }
+    public Point2D getRepeatCoord(double xr, double yr) {
+        return new Point2D(
+                Math.IEEEremainder(xr, repeatX),
+                Math.IEEEremainder(yr, repeatY));
     }
 
     public void setDeformMap(DeformMap map) {
@@ -119,5 +129,20 @@ public abstract class ITexture implements MatrixPropertiesObject{
         return null;
     }
 
+    public int getRepeatX() {
+        return repeatX;
+    }
+
+    public void setRepeatX(int repeatX) {
+        this.repeatX = repeatX;
+    }
+
+    public int getRepeatY() {
+        return repeatY;
+    }
+
+    public void setRepeatY(int repeatY) {
+        this.repeatY = repeatY;
+    }
 }
 

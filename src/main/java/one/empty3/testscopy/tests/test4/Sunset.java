@@ -17,12 +17,15 @@
  *    limitations under the License.
  */
 
-package one.empty3.testscopy.tests.test4;
+package one.empty3.sampleapp.tests;
 
 import one.empty3.feature.PixM;
 import one.empty3.feature.app.replace.javax.imageio.ImageIO;
 import one.empty3.library.*;
 import one.empty3.library.core.extra.VoronoiImageTexture;
+import one.empty3.library.core.nurbs.CourbeParametriquePolynomialeBezier;
+import one.empty3.library.core.nurbs.FctXY;
+import one.empty3.library.core.testing.Resolution;
 import one.empty3.library.core.testing.TestObjetSub;
 
 import java.awt.*;
@@ -30,15 +33,25 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 
 public class Sunset extends TestObjetSub {
+    class Tubulaire3 extends one.empty3.library.core.tribase.Tubulaire3 {
+        @Override
+        public Point3D calculerPoint3D(double u, double v) {
+            return super.calculerPoint3D(v, u);
+        }
+    }
     private static final int VUE_1 = 30;
     private static final int FPS = 50;
     Plane polygon = new Plane();
     Plane polygon1 = new Plane();
+    ImageTexture imageTextureTrunk;
+    private ITexture sol_sableux;
+    private ITexture ciel_ensolleille;
 
     public static void main(String[] args) {
         Sunset sunset = new Sunset();
         sunset.loop(true);
         sunset.setMaxFrames(VUE_1*FPS);
+        sunset.setDimension(new Resolution(1920, 1080));
         new Thread(sunset).start();
     }
 
@@ -54,11 +67,16 @@ public class Sunset extends TestObjetSub {
             ex.printStackTrace();
         }
 
+        imageTextureTrunk = new ImageTexture(new ECBufferedImage(ImageIO.read(new File("resources/dup12138.jpg"))));
+        ciel_ensolleille = new ImageTexture(new ECBufferedImage(ImageIO.read(new File("resources/ciel_ensolleille.jpg"))));
+        sol_sableux = new ImageTexture(new ECBufferedImage(ImageIO.read(new File("resources/sol_sableux.jpg"))));
     }
 
     @Override
     public void finit() throws Exception {
         super.finit();
+
+        z().setDisplayType(ZBufferImpl.DISPLAY_ALL);
 
         if (frame() < VUE_1 * FPS) {
             //z().setDisplayType(Representable.DISPLAY_ALL);
@@ -117,15 +135,41 @@ public class Sunset extends TestObjetSub {
             v1[1].setElem(vects[1].plus(Point3D.Y));
             v1[2].setElem(vects[2].plus(Point3D.Y));
 
+
+
             polygon1.setP0(v1[0]);
             polygon1.setvX(v1[1]);
             polygon1.setvY(v1[2]);
 
 
-            polygon.setIncrU(0.003);
-            polygon.setIncrU(0.003);
-            polygon1.setIncrV(0.003);
-            polygon1.setIncrV(0.003);
+            polygon.setIncrU(0.03);
+            polygon.setIncrU(0.03);
+            polygon1.setIncrV(0.03);
+            polygon1.setIncrV(0.03);
+
+            for(int i=0; i<10; i++)
+                for(int j=0; j<10; j++) {
+                    Point3D p1 = polygon.calculerPoint3D(1.0*i/10, 1.0*j/10);
+                    Point3D p2 = polygon1.calculerPoint3D(1.0*i/10, 1.0*j/10);
+
+                    Tubulaire3 t3 = new Tubulaire3();
+                    FctXY fctXY = new FctXY();
+                    fctXY.setFormulaX(String.valueOf(p1.moins(p2).norme() / 10));
+                    t3.getDiameterFunction().setElem(fctXY);
+                    CourbeParametriquePolynomialeBezier cppb = new CourbeParametriquePolynomialeBezier();
+                    cppb.getCoefficients().add(p1);
+                    cppb.getCoefficients().add(p2);
+                    t3.getSoulCurve().setElem(cppb);
+
+
+                    t3.texture(imageTextureTrunk);
+                    scene().add(t3);
+                }
+
+            polygon1.texture(sol_sableux);
+            sol_sableux.setRepeatX(30);
+            sol_sableux.setRepeatY(30);
+            polygon.texture(ciel_ensolleille);
 
             scene().add(polygon);
             scene().add(polygon1);

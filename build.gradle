@@ -227,7 +227,7 @@ publishing {
         maven(MavenPublication) {
             groupId = 'one.empty3'
             artifactId = 'empty3-library-3d'
-            version = "2023.5.1"
+            version = "2023.5.1-SNAPSHOT"
             from components.java
 
             project.tasks.withType(Sign) {
