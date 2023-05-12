@@ -31,7 +31,7 @@ public class Camera2Quad extends Camera {
     protected ZBuffer z;
 
     /***
-     * near(pa1,nb1,pc1,pd1)-> far(pa2,pb2,pc2,pd2)
+     * near(pa1,nb1,pc1,pd1)- far(pa2,pb2,pc2,pd2)
      * @param z
      * @param near quad 1
      * @param far quad 2

@@ -31,13 +31,29 @@ import java.io.File;
 
 public class Sunset extends TestObjetSub {
     private static final int VUE_1 = 30;
-    private static final int FPS = 25;
+    private static final int FPS = 50;
+    Plane polygon = new Plane();
+    Plane polygon1 = new Plane();
 
     public static void main(String[] args) {
         Sunset sunset = new Sunset();
         sunset.loop(true);
         sunset.setMaxFrames(VUE_1*FPS);
         new Thread(sunset).start();
+    }
+
+    @Override
+    public void ginit() {
+        super.ginit();
+        BufferedImage read = ImageIO.read(new File("resources/dup12138.jpg"));
+        VoronoiImageTexture voronoiImageTexture = new VoronoiImageTexture();
+        PixM image = voronoiImageTexture.processInMemory(new PixM(read));
+        try {
+            polygon1.texture(new ImageTexture(new ECBufferedImage(image.getImage())));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
     }
 
     @Override
@@ -111,14 +127,6 @@ public class Sunset extends TestObjetSub {
             polygon1.setIncrV(0.003);
             polygon1.setIncrV(0.003);
 
-            BufferedImage read = ImageIO.read(new File("resources/dup12138.jpg"));
-            VoronoiImageTexture voronoiImageTexture = new VoronoiImageTexture();
-            PixM image = voronoiImageTexture.processInMemory(new PixM(read));
-            try {
-                polygon1.texture(new ImageTexture(new ECBufferedImage(image.getImage())));
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
             scene().add(polygon);
             scene().add(polygon1);
             Point3D eye = new Point3D(5.0, 0.2, 5.0);

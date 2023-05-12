@@ -41,6 +41,7 @@ public class Sphere extends ParametricSurface {
         this();
         getCircle().getAxis().setElem(new Axe(center.plus(Point3D.Y.mult(radius)), center.plus(Point3D.Y.mult(-radius))));
         getCircle().setRadius(radius);
+
     }
 
     public Point3D calculerPoint3D(double u, double v) {

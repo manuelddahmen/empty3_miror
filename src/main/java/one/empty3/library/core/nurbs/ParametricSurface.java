@@ -52,7 +52,9 @@ public abstract class ParametricSurface extends Representable {
     private StructureMatrix<Double> endU = new StructureMatrix<>(0, Double.class);
     private StructureMatrix<Double> startV = new StructureMatrix<>(0, Double.class);
     private StructureMatrix<Double> endV = new StructureMatrix<>(0, Double.class);
-//    private ParametricSurface.Parameters parameters = new ParametricSurface.Parameters(true);
+    protected StructureMatrix<Boolean> terminalU = new StructureMatrix<>(0, Boolean.class);
+    protected StructureMatrix<Boolean> terminalV = new StructureMatrix<>(0, Boolean.class);
+    //    private ParametricSurface.Parameters parameters = new ParametricSurface.Parameters(true);
 
   /*  static {
         if(globals==null)
@@ -303,4 +305,20 @@ public abstract class ParametricSurface extends Representable {
         return calculerPoint3D(u, v);
     }
 
+
+    public StructureMatrix<Boolean> getTerminalU() {
+        return terminalU;
+    }
+
+    public void setTerminalU(StructureMatrix<Boolean> terminalU) {
+        this.terminalU = terminalU;
+    }
+
+    public StructureMatrix<Boolean> getTerminalV() {
+        return terminalV;
+    }
+
+    public void setTerminalV(StructureMatrix<Boolean> terminalV) {
+        this.terminalV = terminalV;
+    }
 }
