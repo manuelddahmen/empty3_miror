@@ -68,7 +68,7 @@ public class Sunset extends TestObjetSub {
         }
 
         imageTextureTrunk = new ImageTexture(new ECBufferedImage(ImageIO.read(new File("resources/dup12138.jpg"))));
-        ciel_ensolleille = new ImageTexture(new ECBufferedImage(ImageIO.read(new File("resources/ciel_ensolleille.jpg"))));
+        ciel_ensolleille = new ImageTexture(new ECBufferedImage(ImageIO.read(new File("resources/ciel_ensoleille.jpg"))));
         sol_sableux = new ImageTexture(new ECBufferedImage(ImageIO.read(new File("resources/sol_sableux.jpg"))));
     }
 

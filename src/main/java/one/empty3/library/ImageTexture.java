@@ -26,6 +26,8 @@ package one.empty3.library;
 
 //import org.monte.media.avi.AVIReader;
 
+import javaAnd.awt.image.imageio.ImageIO;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -52,6 +54,15 @@ public class ImageTexture extends ITexture {
     public ImageTexture(ECBufferedImage bi) {
         this.ecBufferedImageStructureMatrix.setElem(bi);
         image = bi;
+    }
+    public ImageTexture(File bif) {
+        try {
+            image = new ECBufferedImage(ImageIO.read(bif));
+            this.ecBufferedImageStructureMatrix.setElem(image);
+        } catch (RuntimeException ex) {
+            ex.printStackTrace();
+            System.err.println("Error constructor"+this.getClass()+"\n"+ex.getMessage());
+        }
     }
 
     @Override

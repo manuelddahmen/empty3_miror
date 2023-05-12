@@ -57,8 +57,9 @@ public class TextureMov extends ITexture {
 
 
     public int getColorAt(double u, double v) {
-        
-     
+        Point2D coord = getCoord(u, v);
+        u = coord.x;
+        v = coord.y;
         if(image==null)
             return 0;
 
