@@ -87,6 +87,7 @@ public class MorphUI extends JFrame {
     private JTextField textFieldFinalResX;
     private JLabel labelFinalResY;
     private JTextField textFieldFinalResY;
+    private JCheckBox checkBox2;
     private JCheckBox checkBox1;
     private JButton button4;
     private JPanel panel1;
@@ -125,6 +126,7 @@ public class MorphUI extends JFrame {
     private File saveFile;
     private File currentProjectDirectory;
     private int shapeType;
+    private boolean renderHd;
 
     public MorphUI() {
 //
@@ -789,6 +791,10 @@ public class MorphUI extends JFrame {
         }
     }
 
+    private void checkBoxHd(ActionEvent e) {
+        this.renderHd = true;
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
         DefaultComponentFactory compFactory = DefaultComponentFactory.getInstance();
@@ -809,6 +815,7 @@ public class MorphUI extends JFrame {
         textFieldFinalResX = new JTextField();
         labelFinalResY = new JLabel();
         textFieldFinalResY = new JTextField();
+        checkBox2 = new JCheckBox();
         checkBox1 = new JCheckBox();
         button4 = new JButton();
         panel1 = new JPanel();
@@ -938,6 +945,7 @@ public class MorphUI extends JFrame {
                     "[fill]" +
                     "[fill]" +
                     "[fill]" +
+                    "[fill]" +
                     "[fill]",
                     // rows
                     "[]" +
@@ -959,6 +967,11 @@ public class MorphUI extends JFrame {
                 //---- textFieldFinalResY ----
                 textFieldFinalResY.setText("400");
                 panel3.add(textFieldFinalResY, "cell 3 1");
+
+                //---- checkBox2 ----
+                checkBox2.setText("HD");
+                checkBox2.addActionListener(e -> checkBoxHd(e));
+                panel3.add(checkBox2, "cell 4 1");
             }
             panel5.add(panel3, "cell 4 0");
 
