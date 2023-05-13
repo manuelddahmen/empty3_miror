@@ -113,8 +113,6 @@ public class MorphUI extends JFrame {
     private JTextField textFieldDelRow;
     private JLabel label6;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
-    private ZBuffer zBuffer1;
-    private ZBuffer zBuffer2;
     private ZBufferImpl zBufferComputing;
     private ITexture text1;
     private ITexture text2;
@@ -528,7 +526,6 @@ public class MorphUI extends JFrame {
                     Camera camera = new Camera(Point3D.Z.mult(
                             -Math.max(resX, resY)).plus(plus), plus);
                     camera.declareProperties();
-                    camera.calculerMatrice(Point3D.Y);
 
                     scene.cameraActive(camera);
 
