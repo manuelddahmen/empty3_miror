@@ -123,6 +123,7 @@ public class Camera extends CameraBox {
         this.matrice.setElem(m.tild());
     }
 
+    @Deprecated
     public void calculerMatrice(Point3D vertical) {
         if (!imposerMatrice.getElem()) {
             if (vertical == null) {

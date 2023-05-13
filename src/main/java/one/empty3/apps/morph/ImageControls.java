@@ -336,7 +336,7 @@ public class ImageControls implements Runnable {
         camera = new Camera(Point3D.Z.mult(
                 -Math.max(resX, resY)).plus(plus), plus);
         camera.declareProperties();
-        camera.calculerMatrice(Point3D.Y);
+        //camera.calculerMatrice(Point3D.Y);
 
         addToScene(scene);
 
