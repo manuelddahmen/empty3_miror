@@ -87,7 +87,7 @@ public class MorphUI extends JFrame {
     private JTextField textFieldFinalResX;
     private JLabel labelFinalResY;
     private JTextField textFieldFinalResY;
-    private JCheckBox checkBox2;
+    private JCheckBox checkBoxHd;
     private JCheckBox checkBox1;
     private JButton button4;
     private JPanel panel1;
@@ -795,6 +795,174 @@ public class MorphUI extends JFrame {
         this.renderHd = true;
     }
 
+    public JMenuBar getMenuBar1() {
+        return menuBar1;
+    }
+
+    public JMenu getMenu1() {
+        return menu1;
+    }
+
+    public JMenuItem getMenuItemNew() {
+        return menuItemNew;
+    }
+
+    public JMenuItem getMenuItemOpen() {
+        return menuItemOpen;
+    }
+
+    public JMenuItem getMenuItemSave() {
+        return menuItemSave;
+    }
+
+    public JPanel getPanel5() {
+        return panel5;
+    }
+
+    public JComboBox<String> getComboBoxShapeType() {
+        return comboBoxShapeType;
+    }
+
+    public JLabel getLabel7() {
+        return label7;
+    }
+
+    public JTextField getTextFieldResX() {
+        return textFieldResX;
+    }
+
+    public JLabel getLabel8() {
+        return label8;
+    }
+
+    public JTextField getTextFieldResY() {
+        return textFieldResY;
+    }
+
+    public JPanel getPanel3() {
+        return panel3;
+    }
+
+    public JLabel getLabelFinalResX() {
+        return labelFinalResX;
+    }
+
+    public JTextField getTextFieldFinalResX() {
+        return textFieldFinalResX;
+    }
+
+    public JLabel getLabelFinalResY() {
+        return labelFinalResY;
+    }
+
+    public JTextField getTextFieldFinalResY() {
+        return textFieldFinalResY;
+    }
+
+    public JCheckBox getCheckBoxHd() {
+        return checkBoxHd;
+    }
+
+    public JCheckBox getCheckBox1() {
+        return checkBox1;
+    }
+
+    public JButton getButton4() {
+        return button4;
+    }
+
+    public JPanel getPanel1() {
+        return panel1;
+    }
+
+    public JPanel getPanel2() {
+        return panel2;
+    }
+
+    public JPanel getPanelResult() {
+        return panelResult;
+    }
+
+    public JLabel getLabel1() {
+        return label1;
+    }
+
+    public JTextField getTextFieldSeconds() {
+        return textFieldSeconds;
+    }
+
+    public JLabel getLabel3() {
+        return label3;
+    }
+
+    public JTextField getTextFieldFps() {
+        return textFieldFps;
+    }
+
+    public JButton getButton3() {
+        return button3;
+    }
+
+    public JButton getButton1() {
+        return button1;
+    }
+
+    public JButton getButton2() {
+        return button2;
+    }
+
+    public JSlider getSlider1() {
+        return slider1;
+    }
+
+    public PanelPoint3DUVGridIJ getPanelPoint3DUVGridIJ1() {
+        return panelPoint3DUVGridIJ1;
+    }
+
+    public PanelPoint3DUVGridIJ getPanelPoint3DUVGridIJ2() {
+        return panelPoint3DUVGridIJ2;
+    }
+
+    public JPanel getPanel4() {
+        return panel4;
+    }
+
+    public JButton getButton5() {
+        return button5;
+    }
+
+    public JButton getButton6() {
+        return button6;
+    }
+
+    public JButton getLabel4() {
+        return label4;
+    }
+
+    public JButton getLabel5() {
+        return label5;
+    }
+
+    public JTextField getTextFieldAddCol() {
+        return textFieldAddCol;
+    }
+
+    public JTextField getTextFieldDelCol() {
+        return textFieldDelCol;
+    }
+
+    public JTextField getTextFieldAddRow() {
+        return textFieldAddRow;
+    }
+
+    public JTextField getTextFieldDelRow() {
+        return textFieldDelRow;
+    }
+
+    public JLabel getLabel6() {
+        return label6;
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
         DefaultComponentFactory compFactory = DefaultComponentFactory.getInstance();
@@ -815,7 +983,7 @@ public class MorphUI extends JFrame {
         textFieldFinalResX = new JTextField();
         labelFinalResY = new JLabel();
         textFieldFinalResY = new JTextField();
-        checkBox2 = new JCheckBox();
+        checkBoxHd = new JCheckBox();
         checkBox1 = new JCheckBox();
         button4 = new JButton();
         panel1 = new JPanel();
@@ -968,10 +1136,10 @@ public class MorphUI extends JFrame {
                 textFieldFinalResY.setText("400");
                 panel3.add(textFieldFinalResY, "cell 3 1");
 
-                //---- checkBox2 ----
-                checkBox2.setText("HD");
-                checkBox2.addActionListener(e -> checkBoxHd(e));
-                panel3.add(checkBox2, "cell 4 1");
+                //---- checkBoxHd ----
+                checkBoxHd.setText("HD");
+                checkBoxHd.addActionListener(e -> checkBoxHd(e));
+                panel3.add(checkBoxHd, "cell 4 1");
             }
             panel5.add(panel3, "cell 4 0");
 

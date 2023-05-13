@@ -167,11 +167,11 @@ public class ImageControls implements Runnable {
             System.out.println(selectedPoint);
             Point point = camera.coordonneesPoint2D(
                     new Point3D(1.0 * x, 1.0 * y, 0d), zBuffer);
-            grid.setElem(new Point3D(resX - 1.0 * point.x, 1.0 * point.y, 0d),
+            grid.setElem(new Point3D(getResX() - 1.0 * point.x, 1.0 * point.y, 0d),
                     this.xGrid, this.yGrid);
             if (getPointView().getCheckBoxUv().isSelected()) {
                 getGridUv().setElem(selectedPoint.multDot(
-                        new Point3D(1. / resX, 1. / resY, 0d)), xGrid, yGrid);
+                        new Point3D(1. / getResX(), 1. / getResY(), 0d)), xGrid, yGrid);
             }
         }
         initBools();
@@ -268,8 +268,8 @@ public class ImageControls implements Runnable {
         if (getPointView().getCheckBoxNoDeformation().isSelected()) {
             Plan3D polygons = new Plan3D();
             polygons.getP0().setElem(Point3D.O0);
-            polygons.getvX().setElem(Point3D.X.mult(resX));
-            polygons.getvY().setElem(Point3D.Y.mult(resY));
+            polygons.getvX().setElem(Point3D.X.mult(getResX()));
+            polygons.getvY().setElem(Point3D.Y.mult(getResY()));
             polygons.texture(texture);
             scene.add(polygons);
             return polygons;
@@ -318,17 +318,17 @@ public class ImageControls implements Runnable {
 //
         computeShapeT();
         Point3D plus = Point3D.X.mult(
-                resX / 2.).plus(Point3D.Y.mult(resY / 2.));
+                getResX() / 2.).plus(Point3D.Y.mult(getResY() / 2.));
 
         camera = new Camera(Point3D.Z.mult(
-                -Math.max(resX, resY)).plus(plus), plus);
+                -Math.max(getResX(), getResY())).plus(plus), plus);
         camera.declareProperties();
         //camera.calculerMatrice(Point3D.Y);
 
         addToScene(scene);
 
         if (zBuffer == null)
-            zBuffer = new ZBufferImpl(resX, resY);
+            zBuffer = new ZBufferImpl(getResX(), getResY());
         else {
             zBuffer.idzpp();
         }
@@ -451,7 +451,14 @@ public class ImageControls implements Runnable {
     }
 
     public int getResX() {
-        return resY;
+        int finalResX = 0;
+        try {
+            finalResX = morphUI.getFinalResX();
+
+        } catch (RuntimeException ex) {}
+        if(morphUI.getCheckBoxHd().isSelected())
+            finalResX = 1920;
+        return finalResX;
     }
 
     public void setResX(int resX) {
@@ -459,7 +466,14 @@ public class ImageControls implements Runnable {
     }
 
     public int getResY() {
-        return resY;
+        int finalResY = 0;
+        try {
+            finalResY = morphUI.getFinalResY();
+
+        } catch (RuntimeException ex) {}
+        if(morphUI.getCheckBoxHd().isSelected())
+            finalResY = 1920;
+        return finalResY;
     }
 
     public void setResY(int resY) {
