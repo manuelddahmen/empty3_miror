@@ -95,10 +95,10 @@ public class DataModel {
                     properties.put("morphing", imageControls.getPointView().getCheckBoxMorphing().isSelected() ? "1" : "0");
                     properties.put("uv", imageControls.getPointView().getCheckBoxUv().isSelected() ? "1" : "0");
                 }
-                properties3[0].save(new FileOutputStream(tmp), "ImageControls1 values");
+                properties3[0].store(new FileOutputStream(tmp), "ImageControls1 values");
                 saveFile(zipOut, fos, tmp, "params1.properties");
                 tmp = writeTextTmp();
-                properties3[1].save(new FileOutputStream(tmp), "ImageControls2 values");
+                properties3[1].store(new FileOutputStream(tmp), "ImageControls2 values");
                 saveFile(zipOut, fos, tmp, "params2.properties");
                 tmp = writeTextTmp();
                 saveObjectArray2d(tmp, morphUI.getImageControls1().getGrid());

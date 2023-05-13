@@ -70,7 +70,6 @@ public class MorphUI extends JFrame {
     private BufferedImage imageRead1;
     private BufferedImage imageRead2;
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables  @formatter:off
-    // Generated using JFormDesigner non-commercial license
     private JMenuBar menuBar1;
     private JMenu menu1;
     private JMenuItem menuItemNew;
@@ -88,6 +87,7 @@ public class MorphUI extends JFrame {
     private JTextField textFieldFinalResX;
     private JLabel labelFinalResY;
     private JTextField textFieldFinalResY;
+    private JCheckBox checkBox1;
     private JButton button4;
     private JPanel panel1;
     private JPanel panel2;
@@ -336,12 +336,14 @@ public class MorphUI extends JFrame {
                         AWTSequenceEncoder encoder = new AWTSequenceEncoder(out, Rational.R(25, 1));
 
                         Logger.getAnonymousLogger().log(Level.INFO, "STARTING. File = " + avif.getAbsolutePath());
-
-                        for (int frame = 0; frame < getFps() * getSeconds(); frame++) {
+                        int frame = 0;
+                        while ( frame < getFps() * getSeconds()) {
                             Logger.getAnonymousLogger()
                                     .log(Level.FINE, "FrameNo" + frame);
                             BufferedImage bufferedImage = computeFrame(frame);
                             encoder.encodeImage(bufferedImage);
+
+                            frame++;
                         }
                         Logger.getAnonymousLogger().log(Level.INFO, "DONE. File = " + avif.getAbsolutePath());
 
@@ -380,6 +382,15 @@ public class MorphUI extends JFrame {
         double v = 1.0 * value / (source.getMaximum() - source.getMinimum());
         new Thread() {
             public void run() {
+                int attempts = 0;
+                while(isComputing() && attempts <3) {
+                    try {
+                        Thread.sleep(100);
+                        attempts++;
+                    } catch (InterruptedException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                }
                 computeFrame((int) (v * getFps() * getSeconds()));
             }
         }.start();
@@ -421,15 +432,14 @@ public class MorphUI extends JFrame {
                 if (copy != null) {
                     setComputing(true);
 
-                    double r = 1.0 * frameNo / (getFps() * getSeconds());
 
                     textureMorphing = new TextureMorphing(text1, text2);
-                    textureMorphing.setT(r);
+                    textureMorphing.setT(t);
 
 
                     for (int x = 0; x < copy.getData2d().size(); x++)
                         for (int y = 0; y < copy.getData2d().get(x).size(); y++) {
-                            copy.setElem(transitionPoint(grid1.getElem(x, y), grid2.getElem(x, y), r), x, y);
+                            copy.setElem(transitionPoint(grid1.getElem(x, y), grid2.getElem(x, y), t), x, y);
                         }
 
                     int resX = getFinalResX();//imageRead1.getWidth();
@@ -514,7 +524,6 @@ public class MorphUI extends JFrame {
                         ((ShapeMorph1) polygons).setT(1.0 * frameNo / fps / seconds);
                     }
 */
-                    textureMorphing.setFrameNo(frameNo);
                     } else {
                         polygons = new ShapeMorph1(text1, text2, grid1, grid2);
                         ((ShapeMorph1)polygons).setT(t);
@@ -529,19 +538,22 @@ public class MorphUI extends JFrame {
 
                     scene.cameraActive(camera);
 
-                    if (zBufferComputing == null)
+                    //if (zBufferComputing == null)
                         zBufferComputing = new ZBufferImpl(resX, resY);
-                    else
-                        zBufferComputing.idzpp();
+                    //else
+                    //    zBufferComputing.idzpp();
 
                     //zBufferComputing.setDisplayType(ZBufferImpl.SURFACE_DISPLAY_TEXT_QUADS);
 
                     zBufferComputing.scene(scene);
                     zBufferComputing.camera(camera);
 
+                    textureMorphing.setT(t);
+                    if(mixPolygons!=null)
+                        mixPolygons.setTime(t);
                     if (zBufferComputing != null) {
 
-                        zBufferComputing.draw();
+                        zBufferComputing.draw(scene);
 
                         image = zBufferComputing.imageInvX();
 
@@ -560,7 +572,7 @@ public class MorphUI extends JFrame {
 
 
                         Logger.getLogger(this.getClass().getSimpleName())
-                                .log(Level.INFO, "Image " + frameNo + "\tEvolution: " + r);
+                                .log(Level.INFO, "Image " + frameNo + "\tEvolution: " + t);
                         setComputing(false);
                     }
                 }
@@ -767,9 +779,18 @@ public class MorphUI extends JFrame {
         }
     }
 
+    private void checkBoxDisplayGrids(ActionEvent e) {
+        if(checkBox1.isSelected()) {
+            imageControl1.setDisplayGrids(true);
+            imageControl2.setDisplayGrids(true);
+        } else {
+            imageControl1.setDisplayGrids(false);
+            imageControl2.setDisplayGrids(false);
+        }
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
-        // Generated using JFormDesigner non-commercial license
         DefaultComponentFactory compFactory = DefaultComponentFactory.getInstance();
         menuBar1 = new JMenuBar();
         menu1 = new JMenu();
@@ -788,6 +809,7 @@ public class MorphUI extends JFrame {
         textFieldFinalResX = new JTextField();
         labelFinalResY = new JLabel();
         textFieldFinalResY = new JTextField();
+        checkBox1 = new JCheckBox();
         button4 = new JButton();
         panel1 = new JPanel();
         panel2 = new JPanel();
@@ -867,6 +889,7 @@ public class MorphUI extends JFrame {
                 "[fill]" +
                 "[fill]" +
                 "[fill]" +
+                "[fill]" +
                 "[fill]",
                 // rows
                 "[]" +
@@ -938,6 +961,11 @@ public class MorphUI extends JFrame {
                 panel3.add(textFieldFinalResY, "cell 3 1");
             }
             panel5.add(panel3, "cell 4 0");
+
+            //---- checkBox1 ----
+            checkBox1.setText("Display grid");
+            checkBox1.addActionListener(e -> checkBoxDisplayGrids(e));
+            panel5.add(checkBox1, "cell 5 0");
         }
         contentPane.add(panel5, "cell 0 0 2 1");
 

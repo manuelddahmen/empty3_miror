@@ -61,6 +61,7 @@ public class ImageControls implements Runnable {
     private int loopIndex;
     private MorphUI morphUI;
     private int index = 0;
+    private boolean displayGrids;
 
     public ImageControls(JFrame jframe,
                          StructureMatrix<Point3D> grid, StructureMatrix<Point3D> gridUv, BufferedImage image,
@@ -239,20 +240,6 @@ public class ImageControls implements Runnable {
         }
     }
 
-    private void displayGrid() {
-        Thread thread = new Thread(() -> {
-            ZBufferImpl zBuffer1 = new ZBufferImpl(resX, resY);
-            while (isRunning()) {
-
-                Scene scene1 = new Scene();
-                addToScene(scene1);
-                //drawPolygons(zBuffer1, scene1);
-            }
-        });
-        thread.start();
-
-    }
-
     private boolean isRunning() {
         return running;
     }
@@ -387,6 +374,7 @@ public class ImageControls implements Runnable {
     }
 
     public void addToScene(Scene scene) {
+        if(displayGrids) {
         rc = new RepresentableConteneur();
         for (int i = 0; i < grid.getData2d().size(); i++) {
             for (int j = 0; j < grid.getData2d().get(i).size(); j++) {
@@ -411,6 +399,7 @@ public class ImageControls implements Runnable {
             }
         }
         scene.add(rc);
+        }
     }
 
     public boolean isDisplaying() {
@@ -502,5 +491,9 @@ public class ImageControls implements Runnable {
     }
     public int getModelIndex() {
         return index;
+    }
+
+    public void setDisplayGrids(boolean b) {
+        displayGrids = b;
     }
 }

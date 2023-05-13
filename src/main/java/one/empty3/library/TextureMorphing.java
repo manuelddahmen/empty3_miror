@@ -23,7 +23,6 @@ public class TextureMorphing extends ITexture {
     private final ITexture texture2;
     private final ITexture texture1;
     private final LumiereIdent ident;
-    private int frameNo;
     private double t;
 
     public TextureMorphing(ITexture imageRead1, ITexture imageRead2) {
@@ -33,17 +32,9 @@ public class TextureMorphing extends ITexture {
         ident = new LumiereIdent();
     }
 
-    public void setFrameNo(int frameNo) {
-        this.frameNo = frameNo;
-    }
     public void setT(double t) {
         this.t = t;
     }
-    @Override
-    public void timeNext() {
-        setFrameNo(frameNo+1);
-    }
-    @Override
     public int getColorAt(double x, double y) {
         double r = t;
         int rgb1 = texture1.getColorAt(x, y);
@@ -52,7 +43,7 @@ public class TextureMorphing extends ITexture {
         double [] dRgb2 = Lumiere.getDoubles(rgb2);
         double[] d = new double[dRgb1.length];
         for(int i=0; i<dRgb1.length; i++) {
-            d[i] = (1-r)*dRgb1[i]+(r)*dRgb2[i];
+            d[i] = (1-t)*dRgb1[i]+(t)*dRgb2[i];
         }
         return Lumiere.getInt(d);
     }
@@ -62,7 +53,6 @@ public class TextureMorphing extends ITexture {
         ITexture copy1 = (ITexture) texture1.copy();
         ITexture copy2 = (ITexture) texture2.copy();
         TextureMorphing morphing = new TextureMorphing(copy1, copy2);
-        morphing.setFrameNo(frameNo);
         return morphing;
     }
 

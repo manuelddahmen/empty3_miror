@@ -86,7 +86,7 @@ public class LoadSave extends JPanel {
             Logger.getAnonymousLogger().log(Level.INFO, "Load file"+selectedFile.toString());
 
             main.setDataModel(new DataModel(selectedFile));
-           currentDirectory = jFileChooser.getCurrentDirectory();
+            currentDirectory = jFileChooser.getCurrentDirectory();
             reinit(main.getDataModel().getScene());
 
         }
