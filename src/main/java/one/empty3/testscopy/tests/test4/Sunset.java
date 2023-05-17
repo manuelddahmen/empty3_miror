@@ -45,7 +45,7 @@ public class Sunset extends TestObjetSub {
     Plane polygon1 = new Plane();
     ImageTexture imageTextureTrunk;
     private ITexture sol_sableux;
-    private ITexture ciel_ensolleille;
+    private ITexture ciel_ensoleille;
 
     public static void main(String[] args) {
         Sunset sunset = new Sunset();
@@ -68,7 +68,7 @@ public class Sunset extends TestObjetSub {
         }
 
         imageTextureTrunk = new ImageTexture(new ECBufferedImage(ImageIO.read(new File("resources/dup12138.jpg"))));
-        ciel_ensolleille = new ImageTexture(new ECBufferedImage(ImageIO.read(new File("resources/ciel_ensoleille.jpg"))));
+        ciel_ensoleille = new ImageTexture(new ECBufferedImage(ImageIO.read(new File("resources/ciel_ensoleille.jpg"))));
         sol_sableux = new ImageTexture(new ECBufferedImage(ImageIO.read(new File("resources/sol_sableux.jpg"))));
     }
 
@@ -167,9 +167,9 @@ public class Sunset extends TestObjetSub {
                 }
 
             polygon1.texture(sol_sableux);
-            sol_sableux.setRepeatX(30);
-            sol_sableux.setRepeatY(30);
-            polygon.texture(ciel_ensolleille);
+            sol_sableux.setRepeatX(100);
+            sol_sableux.setRepeatY(100);
+            polygon.texture(ciel_ensoleille);
 
             scene().add(polygon);
             scene().add(polygon1);

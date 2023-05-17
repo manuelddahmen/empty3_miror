@@ -30,6 +30,7 @@ import one.empty3.io.ProcessFile;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -38,6 +39,7 @@ import java.util.ResourceBundle;
  * @author manue
  */
 public class DialogMultFrames extends JDialog {
+    private final ClassSchemaBuilder owner;
     private ProcessFile classInstance;
     private ClassSchemaBuilder.DiagramElement current = null;
     List<ClassSchemaBuilder.DiagramElement> diagramElements;
@@ -49,30 +51,23 @@ public class DialogMultFrames extends JDialog {
 
     public DialogMultFrames(Window owner) {
         super(owner);
-
+        this.owner = (ClassSchemaBuilder) owner;
+        current = ((ClassSchemaBuilder)owner).getSelectedElement();
 
         initComponents();
 
-
-        current = ((ClassSchemaBuilder)owner).getSelectedElement();
-
-        if(current==null) {
-            dispose();
-
-            this.classInstance =  null;
-        } else {
-            this.classInstance = ((ClassSchemaBuilder.ClassElement) current).getInstance();
-
-            initComboBox();
-            updateForms();
-
-
-
-        }
-
+        updateForms();
+        initComboBox();
     }
 
     private void updateForms() {
+
+        if(current==null) {
+            dispose();
+            this.classInstance =  null;
+        } else {
+            this.classInstance = ((ClassSchemaBuilder.ClassElement) current).getInstance();
+        }
         ProcessFile pf = classInstance;
         if(pf==null) {
             System.err.println("DialogMultFrames: pf==null ");
@@ -80,20 +75,7 @@ public class DialogMultFrames extends JDialog {
             setVisible(false);
             return;
         }
-        Object o = getComboBox1().getSelectedItem();
-        if(o instanceof String) {
-            String s = (String) o;
-            ObjectWithProperties.ClassTypes types = pf.getProperties().getPropertyType(s);
-            Object value = pf.getProperties().getProperty(s);
-            textFieldName.setText(s);
-            textFieldClassname.setText(pf.getClass().getCanonicalName());
-            textFieldValue.setText(String.valueOf(value));
-            currentPropertyName = s;
-            pack();
-            this.classType = types;
-        } else {
-            System.err.println("Selected item is null or no string :" +o);
-        }
+        pack();
 
     }
     public void initComboBox() {
@@ -108,11 +90,40 @@ public class DialogMultFrames extends JDialog {
 
             getComboBox1().setModel(defaultComboBoxModel);
 
+            getComboBox1().addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    updateData(e);
+                }
+            });
         }
+        pack();
     }
 
     private void updateData(ActionEvent e) {
-        updateForms();
+        updateDataField();
+    }
+
+    private void updateDataField() {
+        Object o = getComboBox1().getSelectedItem();
+        if(o instanceof String) {
+            String s = (String) o;
+            ProcessFile instance = ((ClassSchemaBuilder.ClassElement) current).getInstance();
+            ObjectWithProperties.ClassTypes types =
+                    ((ClassSchemaBuilder.ClassElement) current).getInstance()
+                            .getProperties().getPropertyType(s);
+            Object value = instance.getProperties().getProperty(s);
+            textFieldName.setText(s);
+            textFieldClassname.setText(instance.getClass().getCanonicalName());
+            textFieldValue.setText(String.valueOf(value));
+            currentPropertyName = s;
+            this.classType = types;
+        } else {
+            System.err.println("Selected item is null or no string :" +o);
+        }
+        String property = (String)(comboBox1.getSelectedItem());
+
+        pack();
     }
 
     private void applyChanges(ActionEvent e) {
@@ -151,6 +162,7 @@ public class DialogMultFrames extends JDialog {
         }
         }
 
+        pack();
     }
 
     private ObjectWithProperties.ClassTypes getClassType() {

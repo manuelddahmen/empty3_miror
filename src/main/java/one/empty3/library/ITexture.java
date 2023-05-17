@@ -87,8 +87,8 @@ public abstract class ITexture implements MatrixPropertiesObject{
     }
     public Point2D getRepeatCords(double xr, double yr) {
         return new Point2D(
-                Math.IEEEremainder(xr, 1.0/repeatX)*repeatX,
-                Math.IEEEremainder(yr, 1.0/repeatY)*repeatY);
+                Math.IEEEremainder(xr/repeatX, 1.0/repeatX)*repeatX,
+                Math.IEEEremainder(yr/repeatY, 1.0/repeatY)*repeatY);
     }
 
     public void setDeformMap(DeformMap map) {

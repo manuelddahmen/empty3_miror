@@ -36,7 +36,7 @@ public class MBufferedImage /*implements InterfaceMatrix*/ {
     public int compCount = 3;
 
     public MBufferedImage(int c, int l) {
-        this.BufferedImage = new java.awt.image.BufferedImage(c, l, javaAnd.awt.image.BufferedImage.TYPE_INT_RGB);
+        this.BufferedImage = new java.awt.image.BufferedImage(c, l, javaAnd.awt.image.BufferedImage.TYPE_INT_ARGB);
         this.lines = l;
         this.columns = c;
     }

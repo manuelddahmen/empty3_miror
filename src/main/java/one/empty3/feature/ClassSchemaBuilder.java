@@ -579,7 +579,7 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
                     s.append("-").append(listProcessClasses.indexOf(ce)).append(UUID.randomUUID());
                     String s0 = "";
                     fileOut = new File(tempDir + File.separator + f.getName() + s.toString() + ".jpg");
-                    if(!fileOut.exists()) {
+                    if (!fileOut.exists()) {
                         fileOut.mkdirs();
                     }
 
@@ -587,32 +587,34 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
                     System.out.printf("Process %s \nto  :  %s\n", processes.get(0).getClass().toString(), fileOut.getAbsolutePath());
 
                     System.out.printf("Run process %d/%d on file%s\n", 0, processes.size(), f.getAbsolutePath());
-                    ce.process(f, fileOut);
-                    for (int i = 1; i < processes.size(); i++) {
-                        ce = processes.get(i);
-                        s0 = s.toString();
-                        s.append("-").append(listProcessClasses.indexOf(ce)).append(UUID.randomUUID());
-                        System.out.printf("Process %s \nfrom:  %s\n", ce.getClass().toString(), f.getName());
+                    if (f != null) {
+                        ce.process(f, fileOut);
+                        for (int i = 1; i < processes.size(); i++) {
+                            ce = processes.get(i);
+                            s0 = s.toString();
+                            s.append("-").append(listProcessClasses.indexOf(ce)).append(UUID.randomUUID());
+                            System.out.printf("Process %s \nfrom:  %s\n", ce.getClass().toString(), f.getName());
 
-                        if(i==processes.size()-1 && f.getName().contains("webcam")) {
-                            fileOut = webcamFile;
-                        } else {
-                            fileOut = new File(tempDir + File.separator + f.getName()
-                                    + s + ".jpg");
+                            if (i == processes.size() - 1 && f.getName().contains("webcam")) {
+                                fileOut = webcamFile;
+                            } else {
+                                fileOut = new File(tempDir + File.separator + f.getName()
+                                        + s + ".jpg");
 
-                        }
-                        File fileIn = new File(tempDir + File.separator + f.getName() //+ (i - 1)
-                                + s0 + ".jpg");
-                        ce.addSource(f);//???
-                        ce.addSource(fileIn);//???
-                        try {
-                            if(!fileOut.exists()) {
-                                fileOut.mkdirs();
                             }
-                            System.out.printf("Run process %d/%d on file%s\n", i, processes.size(), f.getAbsolutePath());
-                            ce.process(fileIn, fileOut);
-                        } catch (NullPointerException ex) {
-                            ex.printStackTrace();
+                            File fileIn = new File(tempDir + File.separator + f.getName() //+ (i - 1)
+                                    + s0 + ".jpg");
+                            ce.addSource(f);//???
+                            ce.addSource(fileIn);//???
+                            try {
+                                if (!fileOut.exists()) {
+                                    fileOut.mkdirs();
+                                }
+                                System.out.printf("Run process %d/%d on file%s\n", i, processes.size(), f.getAbsolutePath());
+                                ce.process(fileIn, fileOut);
+                            } catch (NullPointerException ex) {
+                                ex.printStackTrace();
+                            }
                         }
                     }
                 }
@@ -987,7 +989,7 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
             listProcessClasses.add(Histogram.class.newInstance());
             listProcessClasses.add(Histogram1.class.newInstance());
             listProcessClasses.add(Hist4Contour.class.newInstance());
-            listProcessClasses.add(one.empty3.feature.histograms.Hist4Contour2.class.newInstance());
+            listProcessClasses.add(one.empty3.feature20220726.histograms.Hist4Contour2.class.newInstance());
             listProcessClasses.add(Histogram0.class.newInstance());
             listProcessClasses.add(Histogram2.class.newInstance());
             listProcessClasses.add(Histogram3.class.newInstance());
