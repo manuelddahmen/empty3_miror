@@ -63,8 +63,6 @@ public class Hist4Contour2 extends ProcessFile {
         }
     }
 
-    //private final int[][][] levels;
-
 
     public void makeHistogram(double r) {
 
@@ -170,7 +168,9 @@ public class Hist4Contour2 extends ProcessFile {
             //ImageIO.write(outP0.normalize(0, 1).getImage(), "jpg", out);
             return true;
 
-        } catch (Exception ex) {}
+        } catch (Exception ignored) {
+            ignored.printStackTrace();
+        }
 
         return false;
 
