@@ -20,6 +20,7 @@
 package one.empty3.library;
 
 import one.empty3.library.core.nurbs.ParametricSurface;
+import one.empty3.library.core.nurbs.Point2Point;
 
 
 public class Sphere extends ParametricSurface {
@@ -41,6 +42,18 @@ public class Sphere extends ParametricSurface {
         this();
         getCircle().getAxis().setElem(new Axe(center.plus(Point3D.Y.mult(radius)), center.plus(Point3D.Y.mult(-radius))));
         getCircle().setRadius(radius);
+        terminalU.setElem(new Point2Point() {
+            @Override
+            public Point3D result(Point3D p) {
+                return new Point3D(0.0, p.get(1), p.get(2));
+            }
+        });
+        terminalV.setElem(new Point2Point() {
+            @Override
+            public Point3D result(Point3D p) {
+                return calculerPoint3D(p.get(0), Math.PI/2);
+            }
+        });
 
     }
 

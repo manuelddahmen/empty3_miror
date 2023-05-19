@@ -52,8 +52,8 @@ public abstract class ParametricSurface extends Representable {
     private StructureMatrix<Double> endU = new StructureMatrix<>(0, Double.class);
     private StructureMatrix<Double> startV = new StructureMatrix<>(0, Double.class);
     private StructureMatrix<Double> endV = new StructureMatrix<>(0, Double.class);
-    protected StructureMatrix<Boolean> terminalU = new StructureMatrix<>(0, Boolean.class);
-    protected StructureMatrix<Boolean> terminalV = new StructureMatrix<>(0, Boolean.class);
+    protected StructureMatrix<Point2Point> terminalU = new StructureMatrix<>(0, Point2Point.class);
+    protected StructureMatrix<Point2Point> terminalV = new StructureMatrix<>(0, Point2Point.class);
     //    private ParametricSurface.Parameters parameters = new ParametricSurface.Parameters(true);
 
   /*  static {
@@ -273,7 +273,8 @@ public abstract class ParametricSurface extends Representable {
         endV.setElem(1.0);
         incrVitesse.setElem(0.0001);
         incrNormale.setElem(0.000001);
-
+        terminalU.setElem(new Point2Point.I());
+        terminalV.setElem(new Point2Point.I());
     }
 
     @Override
@@ -306,19 +307,19 @@ public abstract class ParametricSurface extends Representable {
     }
 
 
-    public StructureMatrix<Boolean> getTerminalU() {
+    public StructureMatrix<Point2Point> getTerminalU() {
         return terminalU;
     }
 
-    public void setTerminalU(StructureMatrix<Boolean> terminalU) {
+    public void setTerminalU(StructureMatrix<Point2Point> terminalU) {
         this.terminalU = terminalU;
     }
 
-    public StructureMatrix<Boolean> getTerminalV() {
+    public StructureMatrix<Point2Point> getTerminalV() {
         return terminalV;
     }
 
-    public void setTerminalV(StructureMatrix<Boolean> terminalV) {
+    public void setTerminalV(StructureMatrix<Point2Point> terminalV) {
         this.terminalV = terminalV;
     }
 }

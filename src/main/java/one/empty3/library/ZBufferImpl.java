@@ -244,51 +244,66 @@ public class ZBufferImpl extends Representable implements ZBuffer {
                 // Logger.getAnonymousLogger().log(Level.INFO, "(u,v) = ("+u+","+")");
                 for (double v = n.getStartV(); v + n.getIncrV() <= n.getEndV(); v += n.getIncrV()) {
                     Point3D p1, p2, p3, p4;
-                    p1 = n.calculerPoint3D(u, v);
-                    p2 = n.calculerPoint3D(u + n.getIncrU(), v);
-                    p3 = n.calculerPoint3D(u + n.getIncrU(), v + n.getIncrV());
-                    p4 = n.calculerPoint3D(u, v + n.getIncrV());
+                    double u1 = u, u2 = u+n.getIncrU(), v1=v, v2=v+n.getIncrV();
+                    if(u>n.getEndU()-n.getIncrU()) {
+                        Point3D point3D = new Point3D(u2, v2, 0.0);
+                        point3D = n.getTerminalU().data0d.result(point3D);
+                        u2 = point3D.get(0);
+                        v2 = point3D.get(1);
+                    }
+                    if(u>n.getEndV()-n.getIncrV()) {
+                        Point3D point3D = new Point3D(u2, v2, 0.0);
+                        point3D = n.getTerminalU().data0d.result(point3D);
+                        u2 = point3D.get(0);
+                        v2 = point3D.get(1);
+                    }
+
+                    p1 = n.calculerPoint3D(u1, v1);
+                    p2 = n.calculerPoint3D(u2, v1);
+                    p3 = n.calculerPoint3D(u2, v2);
+                    p4 = n.calculerPoint3D(u1, v2);
                     if (n instanceof HeightMapSurface) {
                         Point3D n1, n2, n3, n4;
                         HeightMapSurface h = (HeightMapSurface) n;
-                        n1 = n.calculerNormale3D(u, v);
-                        n2 = n.calculerNormale3D(u + n.getIncrU(), v);
-                        n3 = n.calculerNormale3D(u + n.getIncrU(), v + n.getIncrV());
-                        n4 = n.calculerNormale3D(u, v + n.getIncrV());
-                        p1 = p1.plus(n1.norme1().mult(h.height(u, v)));
-                        p2 = p2.plus(n2.norme1().mult(h.height(u + n.getIncrU(), v)));
-                        p3 = p3.plus(n3.norme1().mult(h.height(u + n.getIncrU(), v + n.getIncrV())));
-                        p4 = p4.plus(n4.norme1().mult(h.height(u, v + n.getIncrV())));
+                        n1 = n.calculerNormale3D(u1, v1);
+                        n2 = n.calculerNormale3D(u2, v1);
+                        n3 = n.calculerNormale3D(u2, v2);
+                        n4 = n.calculerNormale3D(u1, v2);
+                        p1 = p1.plus(n1.norme1().mult(h.height(u1, v1)));
+                        p2 = p2.plus(n2.norme1().mult(h.height(u2, v1)));
+                        p3 = p3.plus(n3.norme1().mult(h.height(u2, v2)));
+                        p4 = p4.plus(n4.norme1().mult(h.height(u1, v2)));
                     }
                     if (displayType == SURFACE_DISPLAY_POINTS || displayType == SURFACE_DISPLAY_POINTS_DEEP) {
                         ime.testDeep(p1, n.texture(), u, v, n);
                         if (displayType == SURFACE_DISPLAY_POINTS_DEEP) {
-                            double v1 = maxDistance(camera().coordonneesPoint2D(p1, this), camera().coordonneesPoint2D(p2, this),
+                            double v1p = maxDistance(camera().coordonneesPoint2D(p1, this), camera().coordonneesPoint2D(p2, this),
                                     camera().coordonneesPoint2D(p3, this), camera().coordonneesPoint2D(p4, this));
-                            if (v1 > 1 && v1 < la && v1 < ha) {
+                            if (v1p > 1 && v1p < la && v1p < ha) {
                                 int i = 0;
                                 int j = 0;
-                                for (i = 0; i < v1; i += 1)
-                                    for (j = 0; j < v1; j += 1) {
-                                        double u2 = u + n.getIncrU() / (1 + v1) * i;
-                                        double v2 = v + n.getIncrV() / (1 + v1) * j;
-                                        ime.testDeep(n.calculerPoint3D(u2, v2), n.texture(), u2, v2, n);
+                                for (i = 0; i < v1p; i += 1)
+                                    for (j = 0; j < v1p; j += 1) {
+                                        double u2p = u2 / (1 + v1p) * i;
+                                        double v2p = v2 / (1 + v1p) * j;
+                                        ime.testDeep(n.calculerPoint3D(u2, v2),
+                                                n.texture(), u2, v2, n);
                                     }
                             }
                         } else if (displayType == SURFACE_DISPLAY_POINTS_LARGE) {
-                            tracerQuad(p1, p2, p3, p4, n.texture(), u, u + n.getIncrU(), v, v + n.getStartV(), n);
+                            tracerQuad(p1, p2, p3, p4, n.texture(), u1, u2, v1, v2, n);
                         }
                     } else if (displayType == SURFACE_DISPLAY_LINES) {
-                        tracerLines(p1, p2, p3, p4, n.texture(), u, u + n.getIncrU(), v, v + n.getIncrV(), n);
+                        tracerLines(p1, p2, p3, p4, n.texture(), u, u2, v1, v2, n);
                     } else if (displayType == SURFACE_DISPLAY_COL_TRI ||
                             displayType == SURFACE_DISPLAY_TEXT_TRI) {
-                        tracerTriangle(p1, p2, p3, n.texture(), u, v, u + n.getIncrU(), v + n.getIncrV());
-                        tracerTriangle(p3, p4, p1, n.texture(), u + n.getIncrU(), v + n.getIncrV(), u, v);
+                        tracerTriangle(p1, p2, p3, n.texture(), u1, v2, u2, v2);
+                        tracerTriangle(p3, p4, p1, n.texture(), u2, v2, u1, v1);
 
 
                     } else {
                         if (p1 != null && p2 != null && p3 != null && p4 != null) {
-                            tracerQuad(p1, p2, p3, p4, n.texture(), u, u + n.getIncrU(), v, v + n.getIncrV(), n);
+                            tracerQuad(p1, p2, p3, p4, n.texture(), u1, u2, v, v2, n);
                         }
                     }
                 }

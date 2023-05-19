@@ -25,6 +25,7 @@ import one.empty3.feature.ProcessBean;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,8 +36,16 @@ public abstract class ProcessFile extends ProcessNFiles {
 
 
     protected static boolean isImage(File in) {
-        return in != null && (in.getAbsolutePath().toLowerCase().endsWith(".jpg")
-                || in.getAbsolutePath().toLowerCase().endsWith(".png"));
+        if( in != null && (in.getAbsolutePath().toLowerCase().endsWith(".jpg")
+                || in.getAbsolutePath().toLowerCase().endsWith(".png")))
+            return true;
+        try {
+            BufferedImage read = ImageIO.read(in);
+            if(read!=null) return true;
+        } catch (IOException e) {
+
+        }
+        return false;
     }
     public ProcessFile() {
         super();
