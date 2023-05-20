@@ -71,9 +71,25 @@ public class ImageTexture extends ITexture {
     }
 
     @Override
+    public Point2D getCoord(double x, double y) {
+        if(repeatX<=1 && repeatY<=1) {
+            return super.getCoord(x, y);
+        } else {
+            Point2D coords = getRepeatCords(x, y);
+            return super.getCoord(coords.x, coords.y);
+        }
+    }
+
+    @Override
     public int getColorAt(double x, double y) {
         Point2D trans = getCoord(x, y);
         return couleur(trans.x, trans.y);
+    }
+    public Point2D getRepeatCords(double xr, double yr) {
+
+        return new Point2D(
+                Math.IEEEremainder(xr, 1.0/repeatX)*repeatX,
+                Math.IEEEremainder(yr, 1.0/repeatY)*repeatY);
     }
 
     protected int couleur(double rx, double ry) {

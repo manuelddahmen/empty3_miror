@@ -17,7 +17,7 @@
  *    limitations under the License.
  */
 
-package one.empty3.sampleapp.tests;
+package one.empty3.testscopy.tests.test4;
 
 import one.empty3.feature.PixM;
 import one.empty3.feature.app.replace.javax.imageio.ImageIO;
@@ -59,10 +59,9 @@ public class Sunset extends TestObjetSub {
     public void ginit() {
         super.ginit();
         BufferedImage read = ImageIO.read(new File("resources/dup12138.jpg"));
-        VoronoiImageTexture voronoiImageTexture = new VoronoiImageTexture();
-        PixM image = voronoiImageTexture.processInMemory(new PixM(read));
         try {
-            polygon1.texture(new ImageTexture(new ECBufferedImage(image.getImage())));
+            assert read != null;
+            polygon1.texture(new ImageTexture(new ECBufferedImage(read)));
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -142,10 +141,10 @@ public class Sunset extends TestObjetSub {
             polygon1.setvY(v1[2]);
 
 
-            polygon.setIncrU(0.03);
-            polygon.setIncrU(0.03);
-            polygon1.setIncrV(0.03);
-            polygon1.setIncrV(0.03);
+            polygon.setIncrU(0.1);
+            polygon.setIncrU(0.1);
+            polygon1.setIncrV(0.1);
+            polygon1.setIncrV(0.1);
 
             for(int i=0; i<10; i++)
                 for(int j=0; j<10; j++) {
@@ -161,14 +160,16 @@ public class Sunset extends TestObjetSub {
                     cppb.getCoefficients().add(p2);
                     t3.getSoulCurve().setElem(cppb);
 
+                    t3.setIncrU(0.1);
+                    t3.setIncrV(0.1);
 
                     t3.texture(imageTextureTrunk);
                     scene().add(t3);
                 }
 
             polygon1.texture(sol_sableux);
-            sol_sableux.setRepeatX(100);
-            sol_sableux.setRepeatY(100);
+            sol_sableux.setRepeatX(10);
+            sol_sableux.setRepeatY(10);
             polygon.texture(ciel_ensoleille);
 
             scene().add(polygon);
@@ -177,7 +178,7 @@ public class Sunset extends TestObjetSub {
             Point3D lookAt = new Point3D(-5.0, 0.2, 5.0);
             Point3D pos = eye.plus(lookAt.moins(eye).mult(1.0*frame() / (FPS * VUE_1)));
             Camera camera = new Camera(pos, lookAt, Point3D.Y);
-            camera.calculerMatrice(Point3D.Y);
+            //camera.calculerMatrice(Point3D.Y);
             scene().cameraActive(camera);
         }
 

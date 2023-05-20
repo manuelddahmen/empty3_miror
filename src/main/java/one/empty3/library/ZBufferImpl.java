@@ -528,7 +528,7 @@ public class ZBufferImpl extends Representable implements ZBuffer {
     public void line(Point3D p1, Point3D p2, ITexture t) {
         Point x1 = camera().coordonneesPoint2D(p1, this);
         Point x2 = camera().coordonneesPoint2D(p2, this);
-        if (x1 == null || x2 == null) {
+        if (x1 == null && x2 == null) {
             return;
         }
         Point3D n = p1.moins(p2).norme1();
@@ -543,7 +543,7 @@ public class ZBufferImpl extends Representable implements ZBuffer {
     public void line(Point3D p1, Point3D p2, ITexture t, double u, double u1, ParametricCurve curve) {
         Point x1 = camera().coordonneesPoint2D(p1, this);
         Point x2 = camera().coordonneesPoint2D(p2, this);
-        if (x1 == null || x2 == null) {
+        if (x1 == null && x2 == null) {
             return;
         }
         Point3D n = p1.moins(p2).norme1();
@@ -563,7 +563,7 @@ public class ZBufferImpl extends Representable implements ZBuffer {
         // TODO Check
         Point x1 = camera().coordonneesPoint2D(p1, this);
         Point x2 = camera().coordonneesPoint2D(p2, this);
-        if (x1 == null || x2 == null) {
+        if (x1 == null && x2 == null) {
             return;
         }
         Point3D n = p2.moins(p1).norme1();
@@ -862,13 +862,17 @@ public class ZBufferImpl extends Representable implements ZBuffer {
         p2 = camera().coordonneesPoint2D(pp2, this);
         p3 = camera().coordonneesPoint2D(pp3, this);
         p4 = camera().coordonneesPoint2D(pp4, this);
+
+        int checked = 0;
         if (!checkScreen(p1))
-            return;
+            checked++;
         if (!checkScreen(p2))
-            return;
+            checked++;
         if (!checkScreen(p3))
-            return;
+            checked++;
         if (!checkScreen(p4))
+            checked++;
+        if(checked==4)
             return;
         int col = texture.getColorAt(u0, v0);
 
@@ -922,9 +926,15 @@ public class ZBufferImpl extends Representable implements ZBuffer {
 
         Point3D n = (pp3.moins(pp1)).prodVect(pp2.moins(pp1)).norme1();
 
-        if (p1 == null || p2 == null || p3 == null) {
+        int checked = 0;
+        if (p1==null)
+            checked++;
+        if (p2==null)
+            checked++;
+        if (p3==null)
+            checked++;
+        if(checked==3)
             return;
-        }
         double iteres1 = 1.0 / (maxDistance(p1, p2, p3) + 1) / 3;
         for (double a = 0; a < 1.0; a += iteres1) {
             Point3D p11 = pp1.plus(pp1.mult(-1d).plus(pp2).mult(a));

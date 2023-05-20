@@ -105,6 +105,13 @@ tasks.register('TestObjet__TestPlanets', JavaExec) {
 }
 
 
+tasks.register('TestDupliquee', JavaExec) {
+    classpath sourceSets.main.runtimeClasspath
+    mainClass = "one.empty3.testscopy.tests.test4.Sunset"
+    args "one.empty3.testscopy.tests.test4.Sunset"
+    dependsOn(jar)
+}
+
 signing {
     def signingKey = load.get("signing.keyId")
     def signingPassword = load.get("signing.password")

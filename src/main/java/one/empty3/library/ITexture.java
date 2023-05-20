@@ -61,8 +61,6 @@ public abstract class ITexture implements MatrixPropertiesObject{
 
         Point2D p = new Point2D(x, y);
 
-        if(repeatX>1 && repeatY>1)
-            p = getRepeatCords(p.x, p.y);
         if ((getColorMask() == COLOR_IDENT))
             p = p;
         if ((getColorMask() & COLOR_MIROR_X) > 0) {
@@ -84,11 +82,6 @@ public abstract class ITexture implements MatrixPropertiesObject{
             p = new Point2D(p.y, 1.0 - p.x);
         }
         return p;
-    }
-    public Point2D getRepeatCords(double xr, double yr) {
-        return new Point2D(
-                Math.IEEEremainder(xr/repeatX, 1.0/repeatX)*repeatX,
-                Math.IEEEremainder(yr/repeatY, 1.0/repeatY)*repeatY);
     }
 
     public void setDeformMap(DeformMap map) {
