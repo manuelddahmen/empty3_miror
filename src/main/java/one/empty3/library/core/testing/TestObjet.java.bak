@@ -705,7 +705,7 @@ public abstract class TestObjet implements Test, Runnable {
     public void reportStop() {
     }
 
-    public void reportSucces(File film) {
+    public void reportSuccess(File film) {
         try {
             InputStream is = getClass().getResourceAsStream(
                     "/pouce-leve.jpg");

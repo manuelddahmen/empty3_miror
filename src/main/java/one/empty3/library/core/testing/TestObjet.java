@@ -665,7 +665,7 @@ public abstract class TestObjet implements Test, Runnable {
         ex.printStackTrace();
         try {
             InputStream is = getClass().getResourceAsStream(
-                    "/one/empty3/library/skull-cross-bones-evil.png");
+                    "/FAILED.png");
 
             if (is == null) {
                 o.println("Erreur d'initialisation: pas correct!");
@@ -676,7 +676,7 @@ public abstract class TestObjet implements Test, Runnable {
             BufferedImage bi = (BufferedImage) i;
 
             ECBufferedImage eci = new ECBufferedImage(bi);
-            biic.setImage(eci);
+            //biic.setImage(eci);
         } catch (Exception ex1) {ex1.printStackTrace();}
 
         str.setMessage("ERROR EXCEPTION");
@@ -688,10 +688,10 @@ public abstract class TestObjet implements Test, Runnable {
     public void reportStop() {
     }
 
-    public void reportSucces(File film) {
+    public void reportSuccess(File film) {
         try {
             InputStream is = getClass().getResourceAsStream(
-                    "/pouce-leve.jpg");
+                    "/RENDEREDOK.png");
 
             if (is == null) {
                 o.println("Erreur d'initialisation: pas correct!");
@@ -702,14 +702,16 @@ public abstract class TestObjet implements Test, Runnable {
             BufferedImage bi = (BufferedImage) i;
 
             ECBufferedImage eci = new ECBufferedImage(bi);
-            biic.setImage(eci);
+            //biic.setImage(eci);
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
         try {
-            Desktop dt = Desktop.getDesktop();
-            dt.open(file);
+            if(file.exists()) {
+                Desktop dt = Desktop.getDesktop();
+                dt.open(file);
+            }
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -840,7 +842,7 @@ public abstract class TestObjet implements Test, Runnable {
             } else {
                 try {
                     testScene();
-
+                    reportSuccess(null);
                 } catch (Exception e1) {
                     reportException(e1);
                     return;

@@ -27,18 +27,14 @@ import one.empty3.library.core.nurbs.CourbeParametriquePolynomialeBezier;
 import one.empty3.library.core.nurbs.FctXY;
 import one.empty3.library.core.testing.Resolution;
 import one.empty3.library.core.testing.TestObjetSub;
+import one.empty3.library.core.tribase.Tubulaire3;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
 public class Sunset extends TestObjetSub {
-    class Tubulaire3 extends one.empty3.library.core.tribase.Tubulaire3 {
-        @Override
-        public Point3D calculerPoint3D(double u, double v) {
-            return super.calculerPoint3D(v, u);
-        }
-    }
+
     private static final int VUE_1 = 30;
     private static final int FPS = 50;
     Plane polygon = new Plane();
@@ -174,8 +170,8 @@ public class Sunset extends TestObjetSub {
 
             scene().add(polygon);
             scene().add(polygon1);
-            Point3D eye = new Point3D(5.0, 0.2, 5.0);
-            Point3D lookAt = new Point3D(-5.0, 0.2, 5.0);
+            Point3D eye = new Point3D(-5.0, 0.2, 5.0);
+            Point3D lookAt = new Point3D(0.0, 0.0, 5.0);
             Point3D pos = eye.plus(lookAt.moins(eye).mult(1.0*frame() / (FPS * VUE_1)));
             Camera camera = new Camera(pos, lookAt, Point3D.Y);
             //camera.calculerMatrice(Point3D.Y);

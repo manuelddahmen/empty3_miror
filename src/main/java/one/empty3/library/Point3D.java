@@ -647,7 +647,8 @@ public class Point3D extends Representable {
         return new Color((float)(double)(get(0)), (float)(double)(get(1)), (float)(double)(get(2)));
     }
     public static Point3D fromColor(Color color) {
-        float[] colorComponents = color.getColorComponents(new float[3]);
+        float[] colorComponents = new float[4];
+        color.getColorComponents(colorComponents);
         Point3D point3D = new Point3D(3);
         for(int i=0; i< colorComponents.length; i++)
             point3D.set(i, (double)colorComponents[i]);

@@ -181,7 +181,7 @@ public final class ShowTestResult extends JFrame implements Runnable {
                         // jPanel1.getGraphics().drawRect(0, 0, 400, 200);
                         jPanel1.getGraphics().drawString(biic.getStr(), 10, 10);
                         jPanel1.getGraphics().drawString(" ? Pause ? " + testRef.isPause() + " ? Pause active ? " + testRef.isPauseActive(), 50, 10);
-                        jTextField1.setText("Frame no" + (testRef.frame() + 1));
+                        jTextField1.setText("Frame n° " + (testRef.frame() + 1)+"/"+testRef.getMaxFrames());
                     }
                     //Graphics gg = jPanel4.getGraphics();
                     //gimballs.draw(gg, new Rectangle(jPanel4.getWidth()-30, jPanel4.getHeight()-30, jPanel4.getWidth()-1,jPanel4.getHeight()-1));
@@ -627,7 +627,7 @@ public final class ShowTestResult extends JFrame implements Runnable {
         while (true && !stop) {
             dessine();
             try {
-                Thread.sleep(1000);
+                Thread.sleep(5000);
             } catch (InterruptedException ex) {
                 Logger.getLogger(ShowTestResult.class.getName()).log(
                         Level.SEVERE, null, ex);

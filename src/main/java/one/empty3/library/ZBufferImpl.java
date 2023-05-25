@@ -244,35 +244,35 @@ public class ZBufferImpl extends Representable implements ZBuffer {
                 // Logger.getAnonymousLogger().log(Level.INFO, "(u,v) = ("+u+","+")");
                 for (double v = n.getStartV(); v + n.getIncrV() <= n.getEndV(); v += n.getIncrV()) {
                     Point3D p1, p2, p3, p4;
-                    double u1 = u, u2 = u+n.getIncrU(), v1=v, v2=v+n.getIncrV();
+                    double u2 = u+n.getIncrU(), v2=v+n.getIncrV();
                     if(u>n.getEndU()-n.getIncrU()) {
                         Point3D point3D = new Point3D(u2, v2, 0.0);
                         point3D = n.getTerminalU().data0d.result(point3D);
                         u2 = point3D.get(0);
                         v2 = point3D.get(1);
                     }
-                    if(u>n.getEndV()-n.getIncrV()) {
+                    if(v>n.getEndV()-n.getIncrV()) {
                         Point3D point3D = new Point3D(u2, v2, 0.0);
                         point3D = n.getTerminalU().data0d.result(point3D);
                         u2 = point3D.get(0);
                         v2 = point3D.get(1);
                     }
 
-                    p1 = n.calculerPoint3D(u1, v1);
-                    p2 = n.calculerPoint3D(u2, v1);
+                    p1 = n.calculerPoint3D(u, v);
+                    p2 = n.calculerPoint3D(u2, v);
                     p3 = n.calculerPoint3D(u2, v2);
-                    p4 = n.calculerPoint3D(u1, v2);
+                    p4 = n.calculerPoint3D(u, v2);
                     if (n instanceof HeightMapSurface) {
                         Point3D n1, n2, n3, n4;
                         HeightMapSurface h = (HeightMapSurface) n;
-                        n1 = n.calculerNormale3D(u1, v1);
-                        n2 = n.calculerNormale3D(u2, v1);
+                        n1 = n.calculerNormale3D(u, v);
+                        n2 = n.calculerNormale3D(u2, v);
                         n3 = n.calculerNormale3D(u2, v2);
-                        n4 = n.calculerNormale3D(u1, v2);
-                        p1 = p1.plus(n1.norme1().mult(h.height(u1, v1)));
-                        p2 = p2.plus(n2.norme1().mult(h.height(u2, v1)));
+                        n4 = n.calculerNormale3D(u, v2);
+                        p1 = p1.plus(n1.norme1().mult(h.height(u, v)));
+                        p2 = p2.plus(n2.norme1().mult(h.height(u2, v)));
                         p3 = p3.plus(n3.norme1().mult(h.height(u2, v2)));
-                        p4 = p4.plus(n4.norme1().mult(h.height(u1, v2)));
+                        p4 = p4.plus(n4.norme1().mult(h.height(u, v2)));
                     }
                     if (displayType == SURFACE_DISPLAY_POINTS || displayType == SURFACE_DISPLAY_POINTS_DEEP) {
                         ime.testDeep(p1, n.texture(), u, v, n);
@@ -291,19 +291,19 @@ public class ZBufferImpl extends Representable implements ZBuffer {
                                     }
                             }
                         } else if (displayType == SURFACE_DISPLAY_POINTS_LARGE) {
-                            tracerQuad(p1, p2, p3, p4, n.texture(), u1, u2, v1, v2, n);
+                            tracerQuad(p1, p2, p3, p4, n.texture(), u, u2, v, v2, n);
                         }
                     } else if (displayType == SURFACE_DISPLAY_LINES) {
-                        tracerLines(p1, p2, p3, p4, n.texture(), u, u2, v1, v2, n);
+                        tracerLines(p1, p2, p3, p4, n.texture(), u, u2, v, v2, n);
                     } else if (displayType == SURFACE_DISPLAY_COL_TRI ||
                             displayType == SURFACE_DISPLAY_TEXT_TRI) {
-                        tracerTriangle(p1, p2, p3, n.texture(), u1, v2, u2, v2);
-                        tracerTriangle(p3, p4, p1, n.texture(), u2, v2, u1, v1);
+                        tracerTriangle(p1, p2, p3, n.texture(), u, v2, u2, v2);
+                        tracerTriangle(p3, p4, p1, n.texture(), u2, v2, u, v);
 
 
                     } else {
                         if (p1 != null && p2 != null && p3 != null && p4 != null) {
-                            tracerQuad(p1, p2, p3, p4, n.texture(), u1, u2, v, v2, n);
+                            tracerQuad(p1, p2, p3, p4, n.texture(), u, u2, v, v2, n);
                         }
                     }
                 }

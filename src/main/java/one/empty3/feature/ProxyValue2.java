@@ -20,6 +20,7 @@
 package one.empty3.feature;
 
 
+import one.empty3.io.ObjectWithProperties;
 import one.empty3.io.ProcessFile;
 import one.empty3.library.Point3D;
 
@@ -29,10 +30,19 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class ProxyValue2 extends ProcessFile {
+    private double min = 0.3;
+    int p = 0;
+    public ProxyValue2() {
+        getProperties().addProperty("min", ObjectWithProperties.ClassTypes.AtomicDouble,
+                min);
+        getProperties().addProperty("p", ObjectWithProperties.ClassTypes.AtomicDouble,
+                p);
+
+    }
 
     public boolean process(File in, File out) {
 
-        if (!in.getName().endsWith(".jpg"))
+        if (!isImage(in))
             return false;
         PixM original = null;
 
@@ -44,7 +54,6 @@ public class ProxyValue2 extends ProcessFile {
             // assertTrue(false);
 
         }
-        int p = 0;
         PixM copy = original.copy();
         for (int i = 0; i < original.columns; i++)
 

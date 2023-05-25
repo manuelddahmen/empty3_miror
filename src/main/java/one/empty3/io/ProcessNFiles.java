@@ -21,6 +21,8 @@ package one.empty3.io;
 
 import one.empty3.feature.PixM;
 import one.empty3.feature.ProcessBean;
+import one.empty3.feature.process.InProcessCode;
+import one.empty3.library.core.script.Code;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -30,6 +32,7 @@ import java.util.List;
 import java.util.Properties;
 
 public class ProcessNFiles  {
+    private InProcessCode code;
     public List<ProcessNFiles> processNFiles = new ArrayList<>();
     protected ObjectWithProperties properties;
     public ProcessBean bean;
@@ -135,5 +138,12 @@ public class ProcessNFiles  {
 
     public void setProperties(ObjectWithProperties properties) {
         this.properties = properties;
+    }
+
+    public InProcessCode getCode() {
+        return code;
+    }
+    public void setCode(InProcessCode inProcessCode) {
+        this.code = inProcessCode;
     }
 }

@@ -22,6 +22,7 @@ package one.empty3.feature;
 
 import java.io.File;
 
+import one.empty3.io.ObjectWithProperties;
 import one.empty3.library.Point3D;
 import one.empty3.io.ProcessFile;
 
@@ -33,13 +34,23 @@ import one.empty3.feature.*;
 import java.util.logging.*;
 
 public class ProxyValue extends ProcessFile {
+    private double min = 0.3;
+    private int p;
+    public ProxyValue() {
+        getProperties().addProperty("min", ObjectWithProperties.ClassTypes.AtomicDouble,
+                min);
+        getProperties().addProperty("p", ObjectWithProperties.ClassTypes.AtomicInt,
+                p);
+
+    }
 
     public boolean process(File in, File out) {
-        double min = 0.3;
-        if (!in.getName().endsWith(".jpg"))
+        if (!isImage(in))
             return false;
         File file = in;
         PixM original = null;
+
+        p = (int) getProperties().getProperty("p");
 
         try {
             original = PixM.getPixM(ImageIO.read(in), maxRes);
@@ -49,9 +60,10 @@ public class ProxyValue extends ProcessFile {
             // assertTrue(false);
 
         }
-        int p = 0;
         PixM copy = new PixM(original.columns, original.lines);
 
+
+        min = (double) getProperties().getProperty("min");
 
         for (int i = 0; i < original.columns; i++)
 
@@ -60,7 +72,8 @@ public class ProxyValue extends ProcessFile {
 
                 if (original.luminance(i, j) < min) {
 
-                    searchFromTo(original, copy, i, j, min * 2);
+                    searchFromTo(original, copy, i, j,
+                            min * 2);
                     p++;
 
                 } else {
@@ -84,7 +97,7 @@ public class ProxyValue extends ProcessFile {
 
     public void searchFromTo(
             PixM original, PixM copy, int i, int j, double min) {
-        Point3D p = null;
+        Point3D p1 = null;
         int i2 = i, j2 = j;
         
      /*   for(int k=0; k<original.columns*original.lines;k++)
@@ -115,7 +128,7 @@ public class ProxyValue extends ProcessFile {
                         pass++;
                         i2 = i + i3;
                         j2 = j + j3;
-                        p = null;
+                        p1 = null;
 
 
                         if (original.luminance(i2, j2) >= min) {

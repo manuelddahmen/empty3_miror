@@ -112,6 +112,10 @@ public class ThreadEffectDisplay extends Thread {
             }
             main.buttonGOActionPerformed(null);
 
+            if(image!=null) {
+                main.setMaxRes(Math.max(image.getWidth(), image.getHeight()));
+            }
+
             while ((image = getImageIn()) == null) {
                 main.buttonGOActionPerformed(null);
                 try {

@@ -30,7 +30,7 @@ import java.util.logging.Logger;
 
 public class TestPlanets extends TestObjetSub {
     public static final int SECONDS = 8;
-    public static final int FPS = 25;
+    public static final int FPS = 50;
     private static final int TURNS = 2;
     private final File planets = new File("res\\img\\planets2");
     private File[] planetsImagesFiles;
@@ -39,15 +39,27 @@ public class TestPlanets extends TestObjetSub {
     private Sphere sphere;
     private Logger logger;
     private Point3D axeVerticalVideo = Point3D.Y;
-    private Point3D[] axeViseeVideo = new Point3D [] {Point3D.X, Point3D.Z};
-    private Point3D[] axesSphereHorizontaux = new Point3D[] {Point3D.X, Point3D.Z};
+    private Point3D[] axeViseeVideo = new Point3D[]{Point3D.X, Point3D.Z};
+    private Point3D[] axesSphereHorizontaux = new Point3D[]{Point3D.X, Point3D.Z};
+
+    private static double getaDouble() {
+        return TURNS * FPS * SECONDS;
+    }
+
+    public static void main(String[] args) {
+        TestPlanets testPlanets = new TestPlanets();
+        testPlanets.loop(true);
+        testPlanets.setResolution(1920, 1080);
+        Thread thread = new Thread(testPlanets);
+        thread.start();
+    }
 
     @Override
     public void ginit() {
         logger = Logger.getLogger(this.getClass().getCanonicalName());
         planetsImagesFiles = planets.listFiles();
 
-        setMaxFrames(planetsImagesFiles.length*FPS*SECONDS*TURNS);
+        setMaxFrames(planetsImagesFiles.length * FPS * SECONDS);
 
         z().ratioVerticalAngle();
 
@@ -67,9 +79,9 @@ public class TestPlanets extends TestObjetSub {
         i = -1;
 
         frame = 0;
-        i =  (frame() /( FPS * SECONDS))-1;
+
         incr();
-       }
+    }
 
     @Override
     public void testScene() throws Exception {
@@ -82,26 +94,31 @@ public class TestPlanets extends TestObjetSub {
     }
 
     public void incr() {
-        i++;
-        if (i < planetsImagesFiles.length)
-            image = ImageIO.read(planetsImagesFiles[i]);
-        else {
-            i = 0;
-        };
+        int i1 = (frame() % (FPS * SECONDS)) / planetsImagesFiles.length;
+        if (i1 != i) {
+            i = i1;
+            if (i1 < planetsImagesFiles.length)
+                image = ImageIO.read(planetsImagesFiles[i1]);
+            else {
+                i1 = 0;
+            }
 
-        System.out.println("Planets:" + i + "/" + planetsImagesFiles.length);
+            System.out.println("Planets:" + i1 + "/" + planetsImagesFiles.length);
+        }
     }
 
     public void vecDirRotate(Point3D vecOrigX, Point3D vecOrigY, double ratio,
                              Point3D outX, Point3D outY) {
-        outX.changeTo(vecOrigX.mult(Math.cos(2*Math.PI*ratio)).plus(
-                vecOrigY.mult(Math.sin(2*Math.PI*ratio))));
-        outY.changeTo(vecOrigX.mult(-Math.sin(2*Math.PI*ratio)).plus(
-                vecOrigY.mult(Math.cos(2*Math.PI*ratio))));
+        outX.changeTo(vecOrigX.mult(Math.cos(2 * Math.PI * ratio)).plus(
+                vecOrigY.mult(Math.sin(2 * Math.PI * ratio))));
+        outY.changeTo(vecOrigX.mult(-Math.sin(2 * Math.PI * ratio)).plus(
+                vecOrigY.mult(Math.cos(2 * Math.PI * ratio))));
     }
 
     @Override
     public void finit() throws Exception {
+        incr();
+
         sphere = new Sphere(new Axe(axeVerticalVideo.mult(1.0), axeVerticalVideo.mult(-1.0)), 2.0);
 
         sphere.setIncrU(.003);
@@ -109,9 +126,7 @@ public class TestPlanets extends TestObjetSub {
         scene().clear();
         scene().add(sphere);
 
-        if ((frame() %( FPS * SECONDS) == 1)) {
-            incr();
-        }
+
         TextureImg textureImg = new TextureImg(new ECBufferedImage(image));
         sphere.texture(textureImg);
 
@@ -121,29 +136,17 @@ public class TestPlanets extends TestObjetSub {
         circle.setVectZ(axeVerticalVideo);
         circle.getAxis().getElem().getP1().setElem(axeVerticalVideo.mult(1.0));
         circle.getAxis().getElem().getP2().setElem(axeVerticalVideo.mult(-1.0));
-        circle.setVectX(axesSphereHorizontaux[0].mult(Math.cos(2*Math.PI*v))
-                .plus(axesSphereHorizontaux[1].mult(-Math.sin(2*Math.PI*v))).norme1());
-        circle.setVectY(axesSphereHorizontaux[0].mult(Math.sin(2*Math.PI*v))
-                .plus(axesSphereHorizontaux[1].mult(Math.cos(2*Math.PI*v))).norme1());
+        circle.setVectX(axesSphereHorizontaux[0].mult(Math.cos(2 * Math.PI * v))
+                .plus(axesSphereHorizontaux[1].mult(-Math.sin(2 * Math.PI * v))).norme1());
+        circle.setVectY(axesSphereHorizontaux[0].mult(Math.sin(2 * Math.PI * v))
+                .plus(axesSphereHorizontaux[1].mult(Math.cos(2 * Math.PI * v))).norme1());
         circle.setCalculerRepere1(true);
         sphere.setCircle(circle);
-        System.out.println("Camera t : "+v);
-    }
-
-    private static double getaDouble() {
-        return 1.0 * FPS * SECONDS;
+        System.out.println("Camera t : " + v);
     }
 
     @Override
     public void afterRender() {
 
-    }
-
-    public static void main(String[] args) {
-        TestPlanets testPlanets = new TestPlanets();
-        testPlanets.loop(true);
-        testPlanets.setResolution(1920, 1080);
-        Thread thread = new Thread(testPlanets);
-        thread.start();
     }
 }
