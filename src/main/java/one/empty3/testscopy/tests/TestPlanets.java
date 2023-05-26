@@ -78,7 +78,7 @@ public class TestPlanets extends TestObjetSub {
         camera(c);
         i = -1;
 
-        frame = 0;
+        frame = 350;
 
         incr();
     }
@@ -94,7 +94,7 @@ public class TestPlanets extends TestObjetSub {
     }
 
     public void incr() {
-        int i1 = (frame() % (FPS * SECONDS)) / planetsImagesFiles.length;
+        int i1 = (frame() / (FPS * SECONDS)) ;
         if (i1 != i) {
             i = i1;
             if (i1 < planetsImagesFiles.length)

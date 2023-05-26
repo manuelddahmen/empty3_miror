@@ -35,6 +35,7 @@ import java.util.List;
  * @author Manuel Dahmen
  */
 public class Point3D extends Representable {
+    private static Double DISTANCE_MIN = 0.0001;
     private Double tempz;
     private Double tempy;
     private Double tempx;
@@ -677,5 +678,15 @@ public class Point3D extends Representable {
 
     public void setTempx(Double tempx) {
         this.tempx = tempx;
+    }
+
+    public void rotate(Point3D point3D, Point3D ref, Point3D axe) {
+        if(Point3D.distance(point3D, ref)<Point3D.DISTANCE_MIN)
+            return;
+        Point3D moins = ref.moins(point3D);
+        Point3D y = moins.prodVect(axe);
+        Point3D x = y.prodVect(moins);
+        getRotation().setElem(new Rotation(new Matrix33(new Point3D[] {x, y, moins}), ref));
+        getRotation().getElem().rotation(ref);
     }
 }
