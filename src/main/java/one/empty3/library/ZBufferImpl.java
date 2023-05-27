@@ -528,7 +528,7 @@ public class ZBufferImpl extends Representable implements ZBuffer {
     public void line(Point3D p1, Point3D p2, ITexture t) {
         Point x1 = camera().coordonneesPoint2D(p1, this);
         Point x2 = camera().coordonneesPoint2D(p2, this);
-        if (x1 == null && x2 == null) {
+        if (x1 == null || x2 == null || (!checkScreen(x1)||!checkScreen(x2))) {
             return;
         }
         Point3D n = p1.moins(p2).norme1();
@@ -543,7 +543,7 @@ public class ZBufferImpl extends Representable implements ZBuffer {
     public void line(Point3D p1, Point3D p2, ITexture t, double u, double u1, ParametricCurve curve) {
         Point x1 = camera().coordonneesPoint2D(p1, this);
         Point x2 = camera().coordonneesPoint2D(p2, this);
-        if (x1 == null && x2 == null) {
+        if (x1 == null && x2 == null || (!checkScreen(x1)||!checkScreen(x2))) {
             return;
         }
         Point3D n = p1.moins(p2).norme1();
@@ -563,7 +563,7 @@ public class ZBufferImpl extends Representable implements ZBuffer {
         // TODO Check
         Point x1 = camera().coordonneesPoint2D(p1, this);
         Point x2 = camera().coordonneesPoint2D(p2, this);
-        if (x1 == null && x2 == null) {
+        if (x1 == null && x2 == null|| (!checkScreen(x1)||!checkScreen(x2))) {
             return;
         }
         Point3D n = p2.moins(p1).norme1();
@@ -765,7 +765,7 @@ public class ZBufferImpl extends Representable implements ZBuffer {
     private void tracerAretes(Point3D point3d, Point3D point3d2, Color c) {
         Point p1 = camera().coordonneesPoint2D(point3d, this);
         Point p2 = camera().coordonneesPoint2D(point3d2, this);
-        if (p1 == null || p2 == null) {
+        if (p1 == null || p2 == null|| (!checkScreen(p1)||!checkScreen(p2))) {
             return;
         }
         double iteres = Math.abs(p1.getX() - p2.getX()) + Math.abs(p1.getY() - p2.getY() + 1);
@@ -809,7 +809,8 @@ public class ZBufferImpl extends Representable implements ZBuffer {
         Point p1 = camera().coordonneesPoint2D(pp1, this);
         Point p2 = camera().coordonneesPoint2D(pp2, this);
         Point p3 = camera().coordonneesPoint2D(pp3, this);
-        if (p1 == null || p2 == null || p3 == null) {
+        if (p1 == null || p2 == null || p3 == null ||
+                !(checkScreen(p1)&&checkScreen(p2)&&checkScreen(p3))) {
             return;
         }
         Point3D [] uvs = new Point3D[]
@@ -872,11 +873,11 @@ public class ZBufferImpl extends Representable implements ZBuffer {
             checked++;
         if (!checkScreen(p4))
             checked++;
-        if(checked==4)
+        if(checked==2)
             return;
         int col = texture.getColorAt(u0, v0);
 
-        if (p1 == null || p2 == null || p3 == null || p4 == null)
+        if (p1 == null || p2 == null || p3 == null || p4 == null || checked<2)
             return;
         TRI triBas = new TRI(pp1, pp2, pp3, texture);
         Point3D normale = triBas.normale();
@@ -923,17 +924,21 @@ public class ZBufferImpl extends Representable implements ZBuffer {
         p1 = camera().coordonneesPoint2D(pp1, this);
         p2 = camera().coordonneesPoint2D(pp2, this);
         p3 = camera().coordonneesPoint2D(pp3, this);
+        if (p1 == null || p2 == null || p3 == null ||
+                !(checkScreen(p1)||checkScreen(p2)||checkScreen(p3))) {
+            return;
+        }
 
         Point3D n = (pp3.moins(pp1)).prodVect(pp2.moins(pp1)).norme1();
 
         int checked = 0;
-        if (p1==null)
+        if (p1==null || !checkScreen(p1))
             checked++;
-        if (p2==null)
+        if (p2==null || !checkScreen(p2))
             checked++;
-        if (p3==null)
+        if (p3==null || !checkScreen(p3))
             checked++;
-        if(checked==3)
+        if(checked<2)
             return;
         double iteres1 = 1.0 / (maxDistance(p1, p2, p3) + 1) / 3;
         for (double a = 0; a < 1.0; a += iteres1) {

@@ -236,7 +236,9 @@ public class TextureEditor extends JPanel {
 
     private void button2ActionPerformed(ActionEvent e) {
         try {
-            ((Representable) getMain().getREditor().getRepresentable()).setTexture(tableModelTexture.getLines().get(table1.getSelectedRow()).getiTexture());
+            if(table1.getSelectedRow()<table1.getRowCount()&&table1.getSelectedRow()>=0
+                    && table1.getSelectedRow()<tableModelTexture.getLines().size())
+                ((Representable) getMain().getREditor().getRepresentable()).setTexture(tableModelTexture.getLines().get(table1.getSelectedRow()).getiTexture());
         } catch(ArrayIndexOutOfBoundsException ex)
         {
 

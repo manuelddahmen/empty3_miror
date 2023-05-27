@@ -78,7 +78,11 @@ public class History {
         if (current >= history.size()-1)
             current = Math.max(history.size() - 1, 0);
 
-        return history.get(current);
+        try {
+            return history.get(current);
+        } catch (IndexOutOfBoundsException ex) {
+            return null;
+        }
     }
 
     public RPropertyDetailsRow get(int i) {

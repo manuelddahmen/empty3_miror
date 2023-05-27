@@ -111,10 +111,10 @@ public class RepresentableClassList {
         add("extrusion2+", ExtrusionB1B1.class);///???
         surfaces.add(ExtrusionB1B1.class);
         surfaces.add(ExtrusionCurveCurve.class);
-        add("carte de niveaux, surface déformable", HeightMapSurface.class);///???
-        surfaces.add(HeightMapSurface.class);
-        add("tour de revolution", TourRevolution.class);
-        surfaces.add(TourRevolution.class);
+        //add("carte de niveaux, surface déformable", HeightMapSurface.class);///???
+        //surfaces.add(HeightMapSurface.class);
+        //add("tour de revolution", TourRevolution.class);
+        //surfaces.add(TourRevolution.class);
         // courbe et surface par défaut à ajouter dans un objet.
         //add("move", Move.class);
         //add("paramCurve", ParametricCurve.class);
