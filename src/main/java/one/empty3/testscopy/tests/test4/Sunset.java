@@ -62,7 +62,7 @@ public class Sunset extends TestObjetSub {
             ex.printStackTrace();
         }
 
-        imageTextureTrunk = new ImageTexture(new ECBufferedImage(ImageIO.read(new File("resources/dup12138.jpg"))));
+        imageTextureTrunk = new ImageTexture(new ECBufferedImage(ImageIO.read(new File("resources/img/CIMG0454-modif-cs4.jpg"))));
         ciel_ensoleille = new ImageTexture(new ECBufferedImage(ImageIO.read(new File("resources/ciel_ensoleille.jpg"))));
         sol_sableux = new ImageTexture(new ECBufferedImage(ImageIO.read(new File("resources/sol_sableux.jpg"))));
     }
@@ -137,10 +137,10 @@ public class Sunset extends TestObjetSub {
             polygon1.setvY(v1[2]);
 
 
-            polygon.setIncrU(0.1);
-            polygon.setIncrU(0.1);
-            polygon1.setIncrV(0.1);
-            polygon1.setIncrV(0.1);
+            polygon.setIncrU(0.007);
+            polygon.setIncrU(0.007);
+            polygon1.setIncrV(0.007);
+            polygon1.setIncrV(0.007);
 
             for(int i=0; i<10; i++)
                 for(int j=0; j<10; j++) {
