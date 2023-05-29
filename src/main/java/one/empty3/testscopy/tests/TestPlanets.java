@@ -78,7 +78,7 @@ public class TestPlanets extends TestObjetSub {
         camera(c);
         i = -1;
 
-        frame = 350;
+        frame = 1360;
 
         incr();
     }
