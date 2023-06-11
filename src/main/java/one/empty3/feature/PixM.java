@@ -85,7 +85,7 @@ public class PixM extends M {
         }
         double columns2 = 1.0 * image.getWidth() * f;
         double lines2 = 1.0 * image.getHeight() * f;
-        Logger.getAnonymousLogger().log(Level.INFO, "PixM resizing init  --> (" + maxRes + ", " + maxRes + ")  (" + columns2 + ", " + lines2 + ")");
+        //Logger.getAnonymousLogger().log(Level.INFO, "PixM resizing init  --> (" + maxRes + ", " + maxRes + ")  (" + columns2 + ", " + lines2 + ")");
         PixM pixM = new PixM((int) (columns2), ((int) lines2));
 
 

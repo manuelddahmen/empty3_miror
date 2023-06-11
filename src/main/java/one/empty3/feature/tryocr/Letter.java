@@ -22,7 +22,7 @@ package one.empty3.feature.tryocr;
 import java.util.ArrayList;
 import java.util.List;
 
-class Letter {
+public class Letter {
         char x;
         List<Trait> traits = new ArrayList<Trait>();
 

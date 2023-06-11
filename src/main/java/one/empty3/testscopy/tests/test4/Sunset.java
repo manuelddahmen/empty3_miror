@@ -54,14 +54,6 @@ public class Sunset extends TestObjetSub {
     @Override
     public void ginit() {
         super.ginit();
-        BufferedImage read = ImageIO.read(new File("resources/dup12138.jpg"));
-        try {
-            assert read != null;
-            polygon1.texture(new ImageTexture(new ECBufferedImage(read)));
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-
         imageTextureTrunk = new ImageTexture(new ECBufferedImage(ImageIO.read(new File("resources/img/CIMG0454-modif-cs4.jpg"))));
         ciel_ensoleille = new ImageTexture(new ECBufferedImage(ImageIO.read(new File("resources/ciel_ensoleille.jpg"))));
         sol_sableux = new ImageTexture(new ECBufferedImage(ImageIO.read(new File("resources/sol_sableux.jpg"))));
@@ -76,8 +68,8 @@ public class Sunset extends TestObjetSub {
         if (frame() < VUE_1 * FPS) {
             //z().setDisplayType(Representable.DISPLAY_ALL);
             z().texture(new ColorTexture(Color.BLACK));
-            Plane polygon = new Plane();
-            Plane polygon1 = new Plane();
+            polygon = new Plane();
+            polygon1 = new Plane();
             StructureMatrix<Point3D> mat = new StructureMatrix<>(2, Point.class);
             mat.setElem(new Point3D(-10d, 0d, -10d), 0, 0);
             mat.setElem(new Point3D(10d, 0d, -10d), 1, 0);
@@ -137,10 +129,10 @@ public class Sunset extends TestObjetSub {
             polygon1.setvY(v1[2]);
 
 
-            polygon.setIncrU(0.007);
-            polygon.setIncrU(0.007);
-            polygon1.setIncrV(0.007);
-            polygon1.setIncrV(0.007);
+            polygon.setIncrU(0.01);
+            polygon.setIncrV(0.01);
+            polygon1.setIncrU(0.01);
+            polygon1.setIncrV(0.01);
 
             for(int i=0; i<10; i++)
                 for(int j=0; j<10; j++) {
@@ -164,8 +156,8 @@ public class Sunset extends TestObjetSub {
                 }
 
             polygon1.texture(sol_sableux);
-            sol_sableux.setRepeatX(10);
-            sol_sableux.setRepeatY(10);
+            sol_sableux.setRepeatX(100);
+            sol_sableux.setRepeatY(100);
             polygon.texture(ciel_ensoleille);
 
             scene().add(polygon);

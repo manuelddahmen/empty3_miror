@@ -19,7 +19,7 @@
 
 package one.empty3.feature.tryocr;
 
-class Trait {
+public class Trait {
         private TraitsY valueFrom1;
         private TraitsX valueFrom2;
 

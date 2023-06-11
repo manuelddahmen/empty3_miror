@@ -286,10 +286,10 @@ public class M3 {
                         }
                     }
                     meanRgbai[comp][ii][ij] /= (lines * columns);
-                    Logger.getAnonymousLogger().log(Level.INFO, "min/max/avg (ii, ij) (" + ii + ", " + ij + ")" + " " +
-                            "min: " + minRgbai[comp][ii][ij] +
-                            "max: " + maxRgbai[comp][ii][ij] +
-                            "avg: " + meanRgbai[comp][ii][ij]);
+//                    Logger.getAnonymousLogger().log(Level.INFO, "min/max/avg (ii, ij) (" + ii + ", " + ij + ")" + " " +
+//                            "min: " + minRgbai[comp][ii][ij] +
+//                            "max: " + maxRgbai[comp][ii][ij] +
+//                            "avg: " + meanRgbai[comp][ii][ij]);
                 }
             }
         }
@@ -320,7 +320,7 @@ public class M3 {
             }
         }
         //Logger.getAnonymousLogger().log(Level.INFO, "Outs : " + incrGetOut);
-        Logger.getAnonymousLogger().log(Level.INFO, "Points ok " + incrOK);
+        //Logger.getAnonymousLogger().log(Level.INFO, "Points ok " + incrOK);
         return res;
     }
 

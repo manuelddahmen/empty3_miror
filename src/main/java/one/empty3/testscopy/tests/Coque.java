@@ -20,7 +20,10 @@
 package one.empty3.testscopy.tests;
 
 import one.empty3.library.*;
+import one.empty3.library.Polygon;
 import one.empty3.library.core.lighting.Colors;
+
+import java.awt.*;
 
 public class Coque extends RepresentableConteneur {
     StructureMatrix<Point3D> pointsAccrocheLateraux = new StructureMatrix<Point3D>(1, Point3D.class);
@@ -54,7 +57,7 @@ public class Coque extends RepresentableConteneur {
         }
 
 
-        add( new Polygon(pointsAccrocheLateraux.getData1d().toArray(gauche), Colors.random()));
-        add( new Polygon(pointsAccrocheLateraux.getData1d().toArray(droit), Colors.random()));
+        add( new Polygon(pointsAccrocheLateraux.getData1d().toArray(gauche), Color.GRAY));
+        add( new Polygon(pointsAccrocheLateraux.getData1d().toArray(droit), Color.GRAY));
     }
 }

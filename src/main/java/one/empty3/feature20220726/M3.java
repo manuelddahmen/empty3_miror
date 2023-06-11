@@ -321,7 +321,7 @@ public class M3 {
             }
         }
         //System.out.println("Outs : " + incrGetOut);
-        System.out.println("Points ok " + incrOK);
+        //System.out.println("Points ok " + incrOK);
         return res;
     }
 

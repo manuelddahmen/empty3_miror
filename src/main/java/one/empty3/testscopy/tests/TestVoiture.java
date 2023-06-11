@@ -33,14 +33,15 @@ public class TestVoiture extends TestObjetSub {
         scene().add(new Voiture());
         scene().cameraActive(new Camera());
         setMaxFrames(1);
+        loop(false);
         scene().cameraActive(new Camera(new Point3D(0.0, 0.0, 5000.0),
-                new Point3D(0.0,0.0,0.0), Point3D.Y));
-        z().texture(new ColorTexture(Color.RED));
+                new Point3D(0.0,0.0,0.0), Point3D.Y.mult(1.)));
+        z().texture(new ColorTexture(Color.YELLOW));
     }
     @Override
     public void finit() throws Exception {
         super.finit();
-        Logger.getAnonymousLogger().log(Level.INFO,""+ scene());
+        Logger.getAnonymousLogger().log(Level.INFO, String.valueOf(scene()));
     }
     public static void main(String [] args) {
         TestVoiture testVoiture = new TestVoiture();

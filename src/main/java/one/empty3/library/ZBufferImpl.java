@@ -809,7 +809,7 @@ public class ZBufferImpl extends Representable implements ZBuffer {
         Point p1 = camera().coordonneesPoint2D(pp1, this);
         Point p2 = camera().coordonneesPoint2D(pp2, this);
         Point p3 = camera().coordonneesPoint2D(pp3, this);
-        if (p1 == null || p2 == null || p3 == null) {
+        if (!checkScreen(p1) || !checkScreen(p2) || !checkScreen(p3)) {
             return;
         }
         Point3D [] uvs = new Point3D[]
@@ -930,11 +930,11 @@ public class ZBufferImpl extends Representable implements ZBuffer {
         Point3D n = (pp3.moins(pp1)).prodVect(pp2.moins(pp1)).norme1();
 
         int checked = 0;
-        if (p1==null || !checkScreen(p1))
+        if (!checkScreen(p1))
             checked++;
-        if (p2==null || !checkScreen(p2))
+        if (!checkScreen(p2))
             checked++;
-        if (p3==null || !checkScreen(p3))
+        if (!checkScreen(p3))
             checked++;
         if(checked>0)
             return;

@@ -78,19 +78,9 @@ public class TestPlanets extends TestObjetSub {
         camera(c);
         i = -1;
 
-        frame = 1360;
+        frame = 3990;
 
         incr();
-    }
-
-    @Override
-    public void testScene() throws Exception {
-
-    }
-
-    @Override
-    public void afterRenderFrame() {
-
     }
 
     public void incr() {

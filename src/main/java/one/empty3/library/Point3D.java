@@ -359,12 +359,7 @@ public class Point3D extends Representable {
         return mult(p1);
     }
     public Point3D mult(Double d) {
-
-        Point3D p1 = new Point3D(this);
-        for (int i = 0; i < coordArr.length; i++)
-            p1.set(i, get(i) * d);
-
-        return p1;
+        return mult((double) d);
     }
 
     public Point3D mult(double d) {
@@ -462,7 +457,6 @@ public class Point3D extends Representable {
 
     public void set(int i, Double d) {
         coordArr[i] = d;
-
     }
 
     public String toLongString() {
@@ -586,10 +580,7 @@ public class Point3D extends Representable {
         getDeclaredDataStructure().put("coordArr/coordonnées", getCoordArr());
     }
 
-    /*
-        public Double get(int i) {
-            return i<coordArr.data1d.size()?coordArr.getElem(i):Double.NaN;
-        }*/
+
     public StructureMatrix<Double> getCoordArr() {
         point3DStructureMatrix = new StructureMatrix<>(1, Double.class);
         point3DStructureMatrix.add(coordArr[0]);

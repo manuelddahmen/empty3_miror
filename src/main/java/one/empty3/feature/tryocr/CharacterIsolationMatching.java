@@ -27,8 +27,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Objects;
-import java.util.function.Consumer;
-import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -41,6 +39,7 @@ public class CharacterIsolationMatching extends Thread {
         this.directoryIn = directoryIn;
         this.fileOut = fileOut;
     }
+
     public void run() {
         final int[] sumColumns = {0};
         final int[] sumLines = {0};
@@ -48,53 +47,56 @@ public class CharacterIsolationMatching extends Thread {
         File directoryOut = this.fileOut.getParentFile();
 
         PixM result = new PixM(5000, 5000);
-        Arrays.stream(Objects.requireNonNull(directoryIn.listFiles())).filter(file -> file.getAbsolutePath().toLowerCase().endsWith(".jpg")).forEach(file1 -> {
-            sumLinesI = 40;
-            Arrays.stream(Objects.requireNonNull(directoryIn.listFiles())).filter(file -> file.getAbsolutePath().toLowerCase().endsWith(".jpg")).forEach(file2 -> {
-                if(!file1.equals(file2)) {
-                    PixM file1m = new PixM(Objects.requireNonNull(ImageIO.read(file1)));
-                    PixM file2m = new PixM(Objects.requireNonNull(ImageIO.read(file1)));
+        File[] files = directoryIn.listFiles();
+        if (files != null) {
+            Arrays.stream(Objects.requireNonNull(files)).filter(file -> file.getAbsolutePath().toLowerCase().endsWith(".jpg")).forEach(file1 -> {
+                sumLinesI = 40;
+                Arrays.stream(Objects.requireNonNull(directoryIn.listFiles())).filter(file -> file.getAbsolutePath().toLowerCase().endsWith(".jpg")).forEach(file2 -> {
+                    if (!file1.equals(file2)) {
+                        PixM file1m = new PixM(Objects.requireNonNull(ImageIO.read(file1)));
+                        PixM file2m = new PixM(Objects.requireNonNull(ImageIO.read(file1)));
 
-                    PixM f1 = new PixM(Math.max(file1m.getColumns(), file2m.getColumns()),
-                            Math.max(file1m.getLines(), file2m.getLines()));
-                    PixM f2 = new PixM(Math.max(file1m.getColumns(), file2m.getColumns()),
-                            Math.max(file1m.getLines(), file2m.getLines()));
-                    f1.pasteSubImage(file1m, 0, 0, f1.getColumns(), f1.getLines());
-                    f2.pasteSubImage(file2m, 0, 0, f2.getColumns(), f2.getLines());
+                        PixM f1 = new PixM(Math.max(file1m.getColumns(), file2m.getColumns()),
+                                Math.max(file1m.getLines(), file2m.getLines()));
+                        PixM f2 = new PixM(Math.max(file1m.getColumns(), file2m.getColumns()),
+                                Math.max(file1m.getLines(), file2m.getLines()));
+                        f1.pasteSubImage(file1m, 0, 0, f1.getColumns(), f1.getLines());
+                        f2.pasteSubImage(file2m, 0, 0, f2.getColumns(), f2.getLines());
 
-                    Linear linear = new Linear(f1, f2, new PixM(f1.getColumns(), f2.getLines()));
+                        Linear linear = new Linear(f1, f2, new PixM(f1.getColumns(), f2.getLines()));
 
-                    linear.op2d2d(new char[] {'+'}, new int[][] {{0,1}}, new int[]{2});
+                        linear.op2d2d(new char[]{'+'}, new int[][]{{0, 1}}, new int[]{2});
 
-                    PixM sum = linear.getImages()[2];
+                        PixM sum = linear.getImages()[2];
 
-                    linear = new Linear(f1, f2, new PixM(f1.getColumns(), f2.getLines()));
+                        linear = new Linear(f1, f2, new PixM(f1.getColumns(), f2.getLines()));
 
-                    linear.op2d2d(new char[] {'-'}, new int[][] {{0,1}}, new int[]{2});
+                        linear.op2d2d(new char[]{'-'}, new int[][]{{0, 1}}, new int[]{2});
 
-                    PixM diff = linear.getImages()[2];
+                        PixM diff = linear.getImages()[2];
 
-                    Logger.getAnonymousLogger().log(Level.INFO, "Logged");
+                        Logger.getAnonymousLogger().log(Level.INFO, "Logged");
 
-                    result.pasteSubImage(diff, sumColumns[0], sumLines[0], diff.getColumns(), sumLines[0]);
-                    sumColumns[0] += diff.getColumns();
-                    result.pasteSubImage(sum, sumColumns[0], sumLines[0], sum.getColumns(), sumLines[0]);
-                    sumColumns[0] += sum.getColumns();
+                        result.pasteSubImage(diff, sumColumns[0], sumLines[0], diff.getColumns(), sumLines[0]);
+                        sumColumns[0] += diff.getColumns();
+                        result.pasteSubImage(sum, sumColumns[0], sumLines[0], sum.getColumns(), sumLines[0]);
+                        sumColumns[0] += sum.getColumns();
 
-                    linear = new Linear(f1, f2, new PixM(f1.getColumns(), f2.getLines()));
+                        linear = new Linear(f1, f2, new PixM(f1.getColumns(), f2.getLines()));
 
 
-                    sumLinesI = Math.max(sumLinesI, diff.getLines());
-                    sumLinesI = Math.max(sumLinesI, sum.getLines());
-                }
+                        sumLinesI = Math.max(sumLinesI, diff.getLines());
+                        sumLinesI = Math.max(sumLinesI, sum.getLines());
+                    }
+                });
+                sumLines[0] += sumLinesI;
             });
-            sumLines[0] += sumLinesI;
-        });
 
-        try {
-            ImageIO.write(result.normalize(0, 1).getImage(), "jpg", this.fileOut);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            try {
+                ImageIO.write(result.normalize(0, 1).getImage(), "jpg", this.fileOut);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 }
