@@ -135,7 +135,7 @@ public class ZRunnerMain extends Thread implements PropertyChangeListener {
                     zBuffer.scene(scene);
 
                     zBuffer.camera(scene.cameraActive());
-                    scene.cameraActive.getElem().calculerMatrice(scene.cameraActive.getElem().getVerticale().getElem());
+                    scene.cameraActive.getElem().calculerMatrice(scene.cameraActive.getElem().getVerticale());
                     zBuffer.setDisplayType(updateViewMain.getView().getzDiplayType());
                     showRepere(zBuffer);
                     zBuffer.next();

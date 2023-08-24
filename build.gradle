@@ -4,8 +4,6 @@ plugins {
     id 'java-library'
     id 'maven-publish'
     id 'signing'
-    //id 'org.jetbrains.kotlin.jvm' version '1.8.10'
-    //id 'org.jetbrains.kotlin.multiplatform' version '1.8.10'
 }
 
 
@@ -18,7 +16,10 @@ sourceSets {
             srcDirs "src/main/resources", "src/main/configs", "src/main/java"
             }
         }
-    commonTest {
+    test {
+        java {
+            srcDirs 'src/test/java'
+        }
 
     }
 }
@@ -96,21 +97,51 @@ tasks.register('RunEffect from sets directory', JavaExec) {
     dependsOn(jar)
 }
 
-
 tasks.register('TestObjet__TestPlanets', JavaExec) {
     classpath sourceSets.main.runtimeClasspath
     mainClass = "one.empty3.testscopy.tests.TestPlanets"
     args "fourier_series"
     dependsOn(jar)
 }
-
-
-tasks.register('TestDupliquee', JavaExec) {
+tasks.register('TestHumainMarche', JavaExec) {
     classpath sourceSets.main.runtimeClasspath
-    mainClass = "one.empty3.testscopy.tests.test4.Sunset"
-    args "one.empty3.testscopy.tests.test4.Sunset"
+    mainClass = "one.empty3.testscopy.tests.TestHumainMarche2"
+    args "fourier_series"
     dependsOn(jar)
 }
+
+
+tasks.register('Paysage', JavaExec) {
+    classpath sourceSets.main.runtimeClasspath
+    mainClass = "one.empty3.testscopy.tests.test4.Paysage"
+    args "one.empty3.testscopy.tests.test4.Paysage"
+    dependsOn(jar)
+}
+tasks.register('Balade', JavaExec) {
+    classpath sourceSets.main.runtimeClasspath
+    mainClass = "one.empty3.testscopy.tests.test4.Balade"
+    args "one.empty3.testscopy.tests.test4.Balade"
+    dependsOn(jar)
+}
+
+
+tasks.register('Balade1', JavaExec) {
+    classpath sourceSets.main.runtimeClasspath
+    mainClass = "one.empty3.testscopy.tests.test4.Balade1"
+    args "one.empty3.testscopy.tests.test4.Balade1"
+    dependsOn(jar)
+}
+/***
+ * Individial empty3 3d-object software tests.
+ */
+tasks.register('tests.tests2.texturevideo.PlansVideo', JavaExec) {
+    classpath sourceSets.test.runtimeClasspath
+    mainClass = "tests.tests2.texturevideo.PlansVideo"
+    args ""
+    dependsOn(jar)
+}
+
+
 
 signing {
     def signingKey = load.get("signing.keyId")
@@ -141,6 +172,9 @@ repositories {
     }
     maven {
         url = uri("https://maven.scijava.org/content/repositories/public/")
+    }
+    maven {
+        url = uri("https://plugins.gradle.org/m2/")
     }
     maven {
         url "https://maven.jzy3d.org/releases/"
@@ -187,10 +221,6 @@ dependencies {
     implementation("org.jdom:jdom2:2.0.6.1")
     implementation("org.apache.servicemix.bundles:org.apache.servicemix.bundles.jdom:2.0.6.1_1")
     implementation 'com.jetbrains.intellij.java:java-gui-forms-rt:203.7148.30'
-}
-
-dependencies {
-
     implementation 'org.jetbrains:annotations:24.0.0'
     testImplementation project(path: ':')
     testImplementation('org.junit.jupiter:junit-jupiter:5.9.2')
@@ -208,7 +238,7 @@ sourcesJar {
 }
 
 tasks.register('copyTask', Copy) {
-    duplicateStrategy = DuplicatesStrategy.EXCLUDE
+    //duplicateStrategy = DuplicatesStrategy.WARN
     from 'src/main/java/'
     into 'build/classes/java/main'
 }
@@ -238,7 +268,7 @@ publishing {
         maven(MavenPublication) {
             groupId = 'one.empty3'
             artifactId = 'empty3-library-3d'
-            version = "2023.5.24.1"
+            version = "2023.7-1"
             from components.java
 
             project.tasks.withType(Sign) {

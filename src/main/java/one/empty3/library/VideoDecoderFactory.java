@@ -30,7 +30,6 @@ public class VideoDecoderFactory {
       {
           VideoDecoder decode = 
      new DecodeJcodec(f, m);
-          decode.start();
           return decode;
       }
 

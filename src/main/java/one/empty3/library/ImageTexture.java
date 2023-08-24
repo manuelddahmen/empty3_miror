@@ -88,8 +88,8 @@ public class ImageTexture extends ITexture {
     public Point2D getRepeatCords(double xr, double yr) {
 
         return new Point2D(
-                Math.IEEEremainder(xr, 1.0/repeatX),
-                Math.IEEEremainder(yr, 1.0/repeatY));
+                Math.IEEEremainder(xr, 1.0/repeatX)*repeatX,
+                Math.IEEEremainder(yr, 1.0/repeatY)*repeatY);
     }
 
     protected int couleur(double rx, double ry) {

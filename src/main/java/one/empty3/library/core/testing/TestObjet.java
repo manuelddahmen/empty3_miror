@@ -41,6 +41,7 @@ import javax.imageio.ImageIO;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import java.awt.*;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.io.*;
@@ -301,16 +302,17 @@ public abstract class TestObjet implements Test, Runnable {
             out.close();
 
             zip.addFile(fichier.getName(), resultImageAsRawBytes);
-        
-        o.println(fichier.getAbsolutePath());
-        } catch (Exception ex) {}
+
+            o.println(fichier.getAbsolutePath());
+        } catch (Exception ex) {
+        }
 
     }
 
     public void exportFrame(String format, String filename) throws IOException {
 
         STLExport.save(
-                file0=new File(directory.getAbsolutePath() + File.separator + "stlExportFormatTXT" + filename + ".stl"),
+                file0 = new File(directory.getAbsolutePath() + File.separator + "stlExportFormatTXT" + filename + ".stl"),
                 scene(),
                 false);
         ObjExport.save(
@@ -410,18 +412,17 @@ public abstract class TestObjet implements Test, Runnable {
             config = new Properties();
             config.put("folderoutput",
                     System.getProperty("user.home")
-                    + File.separator + "EmptyCanvasTest");
+                            + File.separator + "EmptyCanvasTest");
             try {
                 config.store(new FileOutputStream(new File(System.getProperty("user.home")
-                        + File.separator + "empty3.config")),
+                                + File.separator + "empty3.config")),
                         "Config file for empty3.one library");
             } catch (FileNotFoundException e) {
                 throw new RuntimeException(e);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             config.setProperty("folderoutput", "./EmptyCanvasTests");
             Logger.getAnonymousLogger().log(Level.INFO, "userHome/empty3.config not found use default");
         }
@@ -677,7 +678,9 @@ public abstract class TestObjet implements Test, Runnable {
 
             ECBufferedImage eci = new ECBufferedImage(bi);
             //biic.setImage(eci);
-        } catch (Exception ex1) {ex1.printStackTrace();}
+        } catch (Exception ex1) {
+            ex1.printStackTrace();
+        }
 
         str.setMessage("ERROR EXCEPTION");
     }
@@ -708,7 +711,7 @@ public abstract class TestObjet implements Test, Runnable {
             e.printStackTrace();
         }
         try {
-            if(file.exists()) {
+            if (file.exists()) {
                 Desktop dt = Desktop.getDesktop();
                 dt.open(file);
             }
@@ -738,11 +741,12 @@ public abstract class TestObjet implements Test, Runnable {
             init();
 
 
-        z = ZBufferFactory.instance(resx, resy, D3);
+        z = ZBufferFactory.newInstance(resx, resy);
         z.scene(scene);
         //z.next();
-        timeStart = System.nanoTime();
-        lastInfoEllapsedMillis = System.nanoTime();
+        long timeStart = System.currentTimeMillis();
+
+        long lastInfoEllapsedMillis = System.currentTimeMillis();
         if ((generate & GENERATE_OPENGL) > 0) {
             throw new UnsupportedOperationException("No class for OpenGL here");
         }
@@ -841,15 +845,19 @@ public abstract class TestObjet implements Test, Runnable {
                 o.println("No OpenGL");
             } else {
                 try {
+                    timeStart = System.currentTimeMillis();
                     testScene();
+                    lastInfoEllapsedMillis = System.currentTimeMillis() - timeStart;
                     reportSuccess(null);
                 } catch (Exception e1) {
                     reportException(e1);
                     return;
                 }
             }
+            System.out.println("Time for frame°"+frame()+" (scene configuration: " + lastInfoEllapsedMillis/1000f);
 
             //Logger.getAnonymousLogger().log(Level.INFO, z.scene());
+            timeStart = System.currentTimeMillis();
 
             if ((generate & GENERATE_IMAGE) > 0) {
                 try {
@@ -863,30 +871,33 @@ public abstract class TestObjet implements Test, Runnable {
                     ex.printStackTrace();
                 }
 
+                if(getGenerate(TestObjet.GENERATE_IMAGE)) {
+                    ri = z.image2();
 
-                ri = z.image2();
+                    afterRenderFrame();
 
-                afterRenderFrame();
+                    // ri.getGraphics().drawString(description, 0, 0);
 
-                // ri.getGraphics().drawString(description, 0, 0);
+                    if ((generate & GENERATE_MOVIE) > 0 && encoder != null) {
 
-                if ((generate & GENERATE_MOVIE) > 0 && encoder != null) {
+                        try {
+                            encoder.encodeImage((BufferedImage) ri);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        o.println(
+                                "No file open for avi writing");
 
-                    try {
-                        encoder.encodeImage((BufferedImage) ri);
-                    } catch (IOException e) {
-                        e.printStackTrace();
                     }
-                } else {
-                    o.println(
-                            "No file open for avi writing");
+                    ecrireImage(ri, type, file);
 
+                    biic.setImage(ri != null ? ri : (frame % 2 == 0 ? riG : riD));
+                    biic.setStr("" + frame);
                 }
-                ecrireImage(ri, type, file);
-
-                biic.setImage(ri != null ? ri : (frame % 2 == 0 ? riG : riD));
-                biic.setStr("" + frame);
             }
+            lastInfoEllapsedMillis = System.currentTimeMillis() - timeStart;
+            System.out.println("Time for frame°"+frame()+" (scene rendering: " + lastInfoEllapsedMillis/1000f);
             try {
                 File foutm = new File(this.dir.getAbsolutePath()
                         + File.separator + filename + ".bmo");
@@ -926,6 +937,8 @@ public abstract class TestObjet implements Test, Runnable {
                 imageContainer.setImage(biic.getImage());
 
                 str.setImageContainer(imageContainer);
+
+                str.dessine();
             }
 
             z.idzpp();
@@ -1162,5 +1175,9 @@ public abstract class TestObjet implements Test, Runnable {
 
     public void setFps(int fps) {
         this.fps = fps;
+    }
+
+    public void setZ(ZBufferImpl z) {
+        this.z = z;
     }
 }

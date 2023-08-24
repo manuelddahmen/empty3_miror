@@ -29,12 +29,14 @@ package one.empty3.library;
 
 //import com.xuggle.mediatool.MediaListenerAdapter;
 
+import java.awt.*;
 import java.util.HashMap;
 
 /*__
  * @author manu
  */
 public abstract class ITexture implements MatrixPropertiesObject{
+    private int transparent = Color.BLACK.getRGB();
     public static final int COLOR_IDENT = 0;
     public static final int COLOR_MIROR_X = 1;
     public static final int COLOR_MIROR_Y = 2;
@@ -138,6 +140,14 @@ public abstract class ITexture implements MatrixPropertiesObject{
 
     public void setRepeatY(int repeatY) {
         this.repeatY = repeatY;
+    }
+
+    public int getTransparent() {
+        return transparent;
+    }
+
+    public void setTransparent(int transparent) {
+        this.transparent = transparent;
     }
 }
 

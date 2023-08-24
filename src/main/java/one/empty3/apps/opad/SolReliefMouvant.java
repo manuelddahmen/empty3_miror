@@ -31,7 +31,7 @@ public class SolReliefMouvant extends Terrain {
 
     protected Timer timer = new Timer();
 
-    public SolReliefMouvant(/*Game game*/) {
+    public SolReliefMouvant(/*Game Game*/) {
         setDessineMurs(true);
         timer.init();
         ps = new ParametricSurface() {

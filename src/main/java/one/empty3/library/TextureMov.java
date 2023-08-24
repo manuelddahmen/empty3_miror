@@ -24,14 +24,20 @@ package one.empty3.library;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.ArrayList;
 
 
 public class TextureMov extends ITexture {
     BufferedImage image;
     VideoDecoder defs;
     private File file = null;
-    private int transparent = Color.WHITE.getRGB();
+    private int transparent = Color.BLACK.getRGB();
+
+    public TextureMov() {
+    }
+
+    public TextureMov(String filename) {
+        init(filename);
+    }
 
     public File getFile() {
         return file;
@@ -42,26 +48,28 @@ public class TextureMov extends ITexture {
         init(file.getAbsolutePath());
     }
 
-    public TextureMov() {
-    }
-
-    public TextureMov(String filename) {
-        init(filename);
-    }
-    public void init(String filename)
-    {
+    public void init(String filename) {
         this.file = new File(filename);
         defs = VideoDecoderFactory.createInstance(file, this);
-        //defs.start();
+        defs.start();
     }
 
 
     public int getColorAt(double u, double v) {
-        Point2D coord = getCoord(u, v);
+        Point2D coord = super.getCoord(u, v);
         u = coord.x;
         v = coord.y;
+        if (image == null)
+            image = defs.current();
+                /*try {
+                    throw new EOFVideoException();
+                } catch (EOFVideoException e) {
+                    e.printStackTrace();
+                    System.err.println("Plus de frames");
+                }
+*/
         if(image==null)
-            return 0;
+            return transparent;
 
         int x = (int) (u * image.getWidth());
         int y = (int) (v * image.getHeight());
@@ -71,16 +79,16 @@ public class TextureMov extends ITexture {
             int r = rgb >> 16 & 0xFF;
             int g = rgb >> 8 & 0xFF;
             int b = rgb >> 0 & 0xFF;
-            return rgb&0x00FFFFFF;
+            return rgb & 0x00FFFFFF;
 
         } else
             return Color.TRANSLUCENT;
     }
 
     protected void current() {
-       
-     if(defs.size()>0)
-        image=defs.current();
+
+        if (defs.size() > 0)
+            image = defs.current();
     }
 
 
@@ -94,19 +102,19 @@ public class TextureMov extends ITexture {
         nextFrame();
     }
 
-    
+
     public String toString() {
-        return " texture ( \""+file.getAbsolutePath()+"\")";
+        return " texture ( \"" + file.getAbsolutePath() + "\")";
     }
-    
+
     public MatrixPropertiesObject copy() throws CopyRepresentableError, IllegalAccessException, InstantiationException {
         return null;
     }
 
 
     public boolean nextFrame() {
-        current();
-        return image!=null;
+        image = defs.current();
+        return image != null;
     }
 
     public void setTransparent(Color black) {

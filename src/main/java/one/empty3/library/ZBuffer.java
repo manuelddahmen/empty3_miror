@@ -212,7 +212,7 @@ public interface ZBuffer {
 
     int getDisplayType();
 
-    double maxDistance(Point p1, Point p2, Point p3, Point p4);
+    double maxDistance(Point... points);
 
     void testDeep(Point3D pFinal, ITexture texture, double u, double v, ParametricSurface n);
 

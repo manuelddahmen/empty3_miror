@@ -76,13 +76,14 @@ public void run() {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                assert frame != null;
-                imgBuf.add(new ECBufferedImage(frame));
+                if(frame!=null) {
+                    imgBuf.add(new ECBufferedImage(frame));
+                }
                 i++;
             } else {
                 try {
-                    Thread.sleep(100);
-                    j = -1;///????
+                    Thread.sleep(30);
+                    j = -1;
                 } catch (InterruptedException interruptedException) {
                     interruptedException.printStackTrace();
                 }

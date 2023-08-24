@@ -44,8 +44,6 @@ public abstract class VideoDecoder extends Thread {
     public VideoDecoder(File file, TextureMov refTextureMov) {
         this.file = file;
         this.text = refTextureMov;
-        // start();
-
     }
 
     public int size() {
@@ -58,9 +56,13 @@ public abstract class VideoDecoder extends Thread {
 
     public ECBufferedImage current() {
 
-        ECBufferedImage c = imgBuf.get(0);
-        imgBuf.remove(0);
-        return c;
+        if(!imgBuf.isEmpty()) {
+            ECBufferedImage c = imgBuf.get(0);
+            imgBuf.remove(0);
+            return c;
+        } else {
+            return null;
+        }
 
     }
 }

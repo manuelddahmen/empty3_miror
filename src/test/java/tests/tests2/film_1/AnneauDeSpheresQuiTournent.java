@@ -117,8 +117,9 @@ public class AnneauDeSpheresQuiTournent extends TestObjet {
             scene().add(centre);
             s1.setCentre(Trajectoires.sphere(longiI(i), latI(i), RI(i)));
         }
-        scene().cameraActive().setEye(Trajectoires.sphere(longiC(), latC(), RC()));
-        scene().cameraActive().calculerMatrice(null);
+       scene().cameraActive(new Camera(Trajectoires.sphere(longiC(), latC(), RC()),
+                camera().getLookat(), camera().getVerticale()));
+        camera().calculerMatrice(null);
     }
 
     public void afterRender() {

@@ -54,9 +54,9 @@ public class SolSphere extends Terrain {
 
     }
 
-    public SolSphere(/*Game game*/) {
+    public SolSphere(/*Game Game*/) {
         setDessineMurs(false);
-        //super(game);
+        //super(Game);
         ps = new Sphere(Point3D.O0, 10.);
         SolPP sol = new SolPP(ps);
         RepresentableConteneur generateWire = sol.generateWire();

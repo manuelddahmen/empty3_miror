@@ -116,10 +116,10 @@ public class EcDrawer extends Drawer implements Runnable {
                 Point3D pos = camera.getEye();
                 Point3D dir = camera.getLookat().moins(pos).norme1();
                 Point3D diff = dir.moins(pos).norme1();
-                Point3D up = camera.getVerticale().getElem();
+                Point3D up = camera.getVerticale();
 
                 Point3D posCam = pos;//.moins(dir.norme1());
-                Point3D vertical = camera.getVerticale().getElem().norme1();
+                Point3D vertical = camera.getVerticale().norme1();
                 Point3D vert2 = vertical.prodVect(dir).mult(-1);
                 Point3D positionCamRear = posCam
                         .plus(camera.getLookat().moins(posCam).mult(-0.05));

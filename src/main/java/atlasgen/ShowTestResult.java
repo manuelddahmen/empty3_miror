@@ -83,6 +83,7 @@ public final class ShowTestResult extends JFrame implements Runnable {
     private Throwable throwable;
     private int movieNo = 1;
     private int frameNo = 1;
+    private boolean displaying;
 
     /*__
      * Creates new form ShowTestResult
@@ -172,19 +173,18 @@ public final class ShowTestResult extends JFrame implements Runnable {
                 if (jPanel1 != null) {
                     Graphics g = jPanel1.getGraphics();
                     if (g != null) {
-                        jPanel1.getGraphics().drawImage(image, 0, 0,
-                                jPanel1.getWidth(), jPanel1.getHeight(), 0, 0,
-                                image.getWidth(), image.getHeight(), null);
-                        // jPanel1.getGraphics().setColor(Color.red);
-                        // jPanel1.getGraphics().drawRect(0, 0, 400, 200);
-                        jPanel1.getGraphics().drawString(biic.getStr(), 10, 10);
-                        jPanel1.getGraphics().drawString(" ? Pause ? " + testRef.isPause() + " ? Pause active ? " + testRef.isPauseActive(), 50, 10);
+                        if (isDisplaying()) {
+                            jPanel1.getGraphics().drawImage(image, 0, 0,
+                                    jPanel1.getWidth(), jPanel1.getHeight(), 0, 0,
+                                    image.getWidth(), image.getHeight(), null);
+                            // jPanel1.getGraphics().setColor(Color.red);
+                            // jPanel1.getGraphics().drawRect(0, 0, 400, 200);
+                            jPanel1.getGraphics().drawString(biic.getStr(), 10, 10);
+                            jPanel1.getGraphics().drawString(" ? Pause ? " + testRef.isPause() + " ? Pause active ? " + testRef.isPauseActive(), 50, 10);
+                        }
                         jLabelFrame.setText("f n°" + testRef.frame() + " / " + testRef.getMaxFrames());
                         jTextField1.setText("Frame no" + (testRef.frame() + 1));
                     }
-                    //Graphics gg = jPanel4.getGraphics();
-                    //gimballs.draw(gg, new Rectangle(jPanel4.getWidth()-30, jPanel4.getHeight()-30, jPanel4.getWidth()-1,jPanel4.getHeight()-1));
-
                 }
             }
         }
@@ -582,8 +582,11 @@ public final class ShowTestResult extends JFrame implements Runnable {
 
     @Override
     public void run() {
-        while (true && !stop) {
-            dessine();
+        while (!stop)
+        {
+            if(isDisplaying()) {
+                dessine();
+            }
             try {
                 Thread.sleep(100);
             } catch (InterruptedException ex) {
@@ -591,6 +594,10 @@ public final class ShowTestResult extends JFrame implements Runnable {
                         Level.SEVERE, null, ex);
             }
         }
+    }
+
+    private boolean isDisplaying() {
+        return displaying;
     }
 
     public void setImageContainer(ImageContainer ic) {
@@ -620,5 +627,8 @@ public final class ShowTestResult extends JFrame implements Runnable {
         jTextAreaMessage.setText(jTextAreaMessage.getText() + "\n" + message);
     }
 
+    public void setDisplaying(boolean displaying) {
+        this.displaying = displaying;
+    }
 }
 

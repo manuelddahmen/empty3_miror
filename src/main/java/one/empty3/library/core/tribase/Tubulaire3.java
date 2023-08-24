@@ -63,6 +63,7 @@ public class Tubulaire3 extends ParametricSurface {
         soulCurve.setElem(new CourbeParametriquePolynomialeBezier());
         diameterFunction.setElem(new FctXY());
         declareProperties();
+        this.quad_not_computed = 0;//QUAD_NOT_COMPUTE_U2|QUAD_NOT_COMPUTE_V2;
     }
 
     public Tubulaire3(ParametricCurve lineSegment, double rayonMembres) {
@@ -70,8 +71,9 @@ public class Tubulaire3 extends ParametricSurface {
         this.soulCurve.getElem().getCoefficients().setElem(lineSegment.calculerPoint3D(0.0), 0);
         this.soulCurve.getElem().getCoefficients().setElem(lineSegment.calculerPoint3D(1.0), 1);
         FctXY fctXY = new FctXY();
-        fctXY.setFormulaX(""+rayonMembres);
+        fctXY.setFormulaX("" + rayonMembres);
         this.diameterFunction.setElem(fctXY);
+        this.quad_not_computed = QUAD_NOT_COMPUTE_U2|QUAD_NOT_COMPUTE_V2;
     }
 
     public Point3D calculerNormale(double t) {
@@ -115,7 +117,7 @@ public class Tubulaire3 extends ParametricSurface {
             Point3D tangente = calculerTangente(t);
             if (tangente.equals(Point3D.O0) || tangente.isAnyNaN()) {
                 //TODO
-                tangente = lastTan==null? Point3D.X:lastTan;
+                tangente = lastTan == null ? Point3D.X : lastTan;
             } else {
                 lastTan = tangente;
             }
@@ -159,7 +161,7 @@ public class Tubulaire3 extends ParametricSurface {
             vecteurs[i][1] = px.norme1();
             vecteurs[i][2] = py.norme1();
 
-            minI = (px.prodVect(py).norme() - 1.0)*(px.prodVect(py).norme() - 1.0);
+            minI = (px.prodVect(py).norme() - 1.0) * (px.prodVect(py).norme() - 1.0);
 
             if (minI < min) {
                 min = minI;
@@ -176,7 +178,22 @@ public class Tubulaire3 extends ParametricSurface {
 
     @Override
     public Point3D calculerPoint3D(double v, double u) {
+        if (level == 0 && quad_not_computed > 0) {
+            super.calculerPoint3D(v, u);
+        }
         Point3D[] vectPerp = vectPerp(u, v);
+      /*  if(v==0) {
+            vectPerp1 = vectPerp(u, v);
+            vectPerp = vectPerp(u, v);
+        } else {
+            vectPerp1 = vectPerp(u, v);
+            Matrix33 matrix33 = new Matrix33(vectPerp);
+            double angle = Math.acos(vectPerp[0].prodScalaire(vectPerp1[0])/(vectPerp[0].norme()*vectPerp1[0].norme()));
+            Matrix33 mult = matrix33.mult(new Matrix33(new Point3D[]{Point3D.X, Point3D.Y, vectPerp[0]}));
+
+            vectPerp = mult.getColVectors();
+        }
+        */
         return soulCurve.getElem().calculerPoint3D(u).plus(
                 vectPerp[1].mult(diameterFunction.getElem().result(u) * Math.cos(2 * Math.PI * v))).plus(
                 vectPerp[2].mult(diameterFunction.getElem().result(u) * Math.sin(2 * Math.PI * v)));

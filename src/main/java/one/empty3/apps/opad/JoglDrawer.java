@@ -173,11 +173,11 @@ public class JoglDrawer extends Drawer implements GLEventListener {
         Point3D pos = camera.getEye();
         Point3D dir = camera.getLookat().moins(pos).norme1();
         diff = dir.moins(pos).norme1();
-        Point3D up = camera.getVerticale().getElem();
+        Point3D up = camera.getVerticale();
 
 
         Point3D posCam = pos;//.moins(dir.norme1());
-        Point3D vertical = camera.getVerticale().getElem().norme1();
+        Point3D vertical = camera.getVerticale().norme1();
         Point3D vert2 = vertical.prodVect(dir).mult(-1);
 
         posCam = posCam.plus(camera.getLookat().moins(posCam).mult(-0.05));

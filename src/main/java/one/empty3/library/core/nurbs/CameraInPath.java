@@ -67,7 +67,7 @@ public class CameraInPath extends Camera {
         setLookat(maCourbe.calculerPoint3D(0.1));
         t.setElem(0.0);
         this.curve.setElem(maCourbe);
-        this.getVerticale().setElem(vectVert);
+        this.setVerticale(vectVert);
     }
 
     public ParametricCurve getCurve() {

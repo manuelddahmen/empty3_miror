@@ -86,6 +86,7 @@ public final class ShowTestResult extends JFrame implements Runnable {
     private int movieNo = 1;
     private int frameNo = 1;
     private JTable jTableEquations = new JTable();
+    private boolean displaying = true;
 
     /*__
      * Creates new form ShowTestResult
@@ -93,7 +94,7 @@ public final class ShowTestResult extends JFrame implements Runnable {
     public ShowTestResult() {
         initComponents();
 
-        jPanel1.setSize(jPanel1.getWidth(), 200);
+        jPanel1.setSize(jPanel1.getWidth(), 300);
         setVisible(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 // Now create a new TextAreaOutputStream to write to our JTextArea control and wrap a
@@ -174,12 +175,11 @@ public final class ShowTestResult extends JFrame implements Runnable {
                 if (jPanel1 != null) {
                     Graphics g = jPanel1.getGraphics();
                     if (g != null) {
-                        jPanel1.getGraphics().drawImage(image, 0, 0,
-                                jPanel1.getWidth(), jPanel1.getHeight(), 0, 0,
-                                image.getWidth(), image.getHeight(), null);
-                        // jPanel1.getGraphics().setColor(Color.red);
-                        // jPanel1.getGraphics().drawRect(0, 0, 400, 200);
-                        jPanel1.getGraphics().drawString(biic.getStr(), 10, 10);
+                        if(isDisplaying()) {
+                            jPanel1.getGraphics().drawImage(image, 0, 0,
+                                    jPanel1.getWidth(), jPanel1.getHeight(), 0, 0,
+                                    image.getWidth(), image.getHeight(), null);
+                        }
                         jPanel1.getGraphics().drawString(" ? Pause ? " + testRef.isPause() + " ? Pause active ? " + testRef.isPauseActive(), 50, 10);
                         jTextField1.setText("Frame n° " + (testRef.frame() + 1)+"/"+testRef.getMaxFrames());
                     }
@@ -323,6 +323,13 @@ public final class ShowTestResult extends JFrame implements Runnable {
         return this.editorPane1;
     }
 
+    private void jPanelPreviewImageMouseClicked(MouseEvent e) {
+        displaying = !displaying;
+    }
+
+    private void editorPane1MouseClicked(MouseEvent e) {
+        // TODO add your code here
+    }
     public void exceptionReception(Exception t) {
         this.throwable = t;
         try {
@@ -381,12 +388,8 @@ public final class ShowTestResult extends JFrame implements Runnable {
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         setBackground(new Color(0xccccff));
         setIconImage(new ImageIcon(getClass().getResource("/one/empty3/library/mite.png")).getImage());
-        addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                formWindowClosing(e);
-            }
-        });
+        setUndecorated(false);
+        setPreferredSize(new Dimension(640, 800));
         var contentPane = getContentPane();
 
         //======== menuBar1 ========
@@ -422,6 +425,12 @@ public final class ShowTestResult extends JFrame implements Runnable {
                 this.jPanel1.setMinimumSize(new Dimension(200, 200));
                 this.jPanel1.setAlignmentX(0.0F);
                 this.jPanel1.setAlignmentY(0.0F);
+                this.jPanel1.addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mouseClicked(MouseEvent e) {
+                        jPanelPreviewImageMouseClicked(e);
+                    }
+                });
             }
             this.jSplitPane1.setTopComponent(this.jPanel1);
 
@@ -508,6 +517,14 @@ public final class ShowTestResult extends JFrame implements Runnable {
 
                 //======== scrollPane1 ========
                 {
+
+                    //---- editorPane1 ----
+                    this.editorPane1.addMouseListener(new MouseAdapter() {
+                        @Override
+                        public void mouseClicked(MouseEvent e) {
+                            editorPane1MouseClicked(e);
+                        }
+                    });
                     this.scrollPane1.setViewportView(this.editorPane1);
                 }
                 this.jSplitPane2.setRightComponent(this.scrollPane1);
@@ -521,7 +538,7 @@ public final class ShowTestResult extends JFrame implements Runnable {
             contentPaneLayout.createParallelGroup()
                 .addGroup(contentPaneLayout.createSequentialGroup()
                     .addContainerGap()
-                    .addComponent(this.jSplitPane1, GroupLayout.DEFAULT_SIZE, 901, Short.MAX_VALUE)
+                    .addComponent(this.jSplitPane1)
                     .addContainerGap())
         );
         contentPaneLayout.setVerticalGroup(
@@ -531,7 +548,7 @@ public final class ShowTestResult extends JFrame implements Runnable {
 
         initComponentsI18n();
 
-        pack();
+        setSize(915, 435);
         setLocationRelativeTo(getOwner());
     }// </editor-fold>//GEN-END:initComponents
 
@@ -624,10 +641,9 @@ public final class ShowTestResult extends JFrame implements Runnable {
 
     @Override
     public void run() {
-        while (true && !stop) {
-            dessine();
+        while (!stop) {
             try {
-                Thread.sleep(5000);
+                Thread.sleep(20);
             } catch (InterruptedException ex) {
                 Logger.getLogger(ShowTestResult.class.getName()).log(
                         Level.SEVERE, null, ex);
@@ -673,6 +689,15 @@ public final class ShowTestResult extends JFrame implements Runnable {
         this.menuItem3.setText(bundle.getString("ShowTestResult.menuItem3.text"));
         this.buttonShowModel.setText(bundle.getString("ShowTestResult.buttonShowModel.text"));
         // JFormDesigner - End of component i18n initialization  //GEN-END:initI18n  @formatter:on
+    }
+
+
+    private boolean isDisplaying() {
+        return true;
+    }
+
+    public void setDisplaying(boolean b) {
+        this.displaying = b;
     }
 }
 

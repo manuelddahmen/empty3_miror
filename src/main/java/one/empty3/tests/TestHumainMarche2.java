@@ -37,7 +37,6 @@ public class TestHumainMarche2 extends TestObjetSub {
         z.setDisplayType(ZBufferImpl.DISPLAY_ALL);
         scene().lumieres().add(new LumierePonctuelle(new Point3D(10., 10., 2.), Color.BLUE));
         c = new Camera(new Point3D(0.0, 10.0, 30.0), Point3D.O0, Point3D.Y);
-        c.calculerMatrice(Point3D.Y);
         humainMarche = new HumainMarche();
         scene().add(humainMarche);
     }

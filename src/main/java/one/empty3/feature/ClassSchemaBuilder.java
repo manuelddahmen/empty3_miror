@@ -54,6 +54,8 @@ import java.util.logging.Logger;
  */
 public class ClassSchemaBuilder extends JFrame implements Serializable {
 
+    private static UUID uuid = UUID.randomUUID();
+    private int idFrame = 0;
     public boolean processed = false;
     private PartElement selectedPart;
     private String directory = ".";
@@ -71,8 +73,8 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
     private TreeDiagram treeDiagram;
     private File webcamFile;
 
-    public void setWebcamFile(File webcamFile) {
-        this.webcamFile = webcamFile;
+    public void setWebcamFile() {
+        this.webcamFile = new File(tempDir + File.separator + getUuid() +"_"+(this.idFrame++)+"_"+"webcam.jpg");
     }
 
     public File getWebcamFile() {
@@ -230,7 +232,7 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
 
         protected File[] files = new File[] {new File(".")};
         protected String tmpFilename = tempDir+
-                File.separator+"temp-"+ UUID.randomUUID()+".jpg";
+                File.separator+"temp-"+ getUuid() +".jpg";
         private ProcessFile instance;
 
         public ClassElement() {
@@ -472,7 +474,11 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
         thread.start();
 
 
-        setWebcamFile(new File(tempDir + File.separator + "webcam.jpg"));
+        setWebcamFile();
+    }
+
+    private static UUID getUuid() {
+        return uuid;
     }
 
 
@@ -570,13 +576,13 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
             for (File f : files) {
                 System.out.printf("Run %d processes on file%s\n", processes.size(), f.getAbsolutePath());
                 if (f.getName().contains("webcam")) {
-                    f = webcamFile;
+                    f = getWebcamFile();
                 }
                 if (processes.size() > 0) {
                     ProcessFile ce = processes.get(0);
                     int processNameOrder = listProcessClasses.indexOf(ce.getClass());
                     StringBuilder s = new StringBuilder();
-                    s.append("-").append(listProcessClasses.indexOf(ce)).append(UUID.randomUUID());
+                    s.append("-").append(listProcessClasses.indexOf(ce)).append(getUuid());
                     String s0 = "";
                     fileOut = new File(tempDir + File.separator + f.getName() + s.toString() + ".jpg");
                     if (!fileOut.exists()) {
@@ -592,11 +598,12 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
                         for (int i = 1; i < processes.size(); i++) {
                             ce = processes.get(i);
                             s0 = s.toString();
-                            s.append("-").append(listProcessClasses.indexOf(ce)).append(UUID.randomUUID());
+                            s.append("-").append(listProcessClasses.indexOf(ce)).append(getUuid());
                             System.out.printf("Process %s \nfrom:  %s\n", ce.getClass().toString(), f.getName());
 
                             if (i == processes.size() - 1 && f.getName().contains("webcam")) {
-                                fileOut = webcamFile;
+                                setWebcamFile();
+                                fileOut = getWebcamFile();
                             } else {
                                 fileOut = new File(tempDir + File.separator + f.getName()
                                         + s + ".jpg");
@@ -1173,9 +1180,7 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
     public String toString() {
         List<File> f = new ArrayList<>();
         for (File[] files2 : files) {
-            for (File file : files2) {
-                f.add(file);
-            }
+            Collections.addAll(f, files2);
         }
         return "ClassSchemaBuilder{" +
                 "selectedPart=" + selectedPart +

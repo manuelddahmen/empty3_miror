@@ -29,11 +29,11 @@ import java.util.Iterator;
 @SuppressWarnings("serial")
 public class SolRelief extends Terrain {
 
-    public SolRelief(/*Game game*/) {
+    public SolRelief(/*Game Game*/) {
 
         setDessineMurs(false);
 
-        //super(game);
+        //super(Game);
         ps = new ParametricSurface() {
             @Override
             public Point3D calculerPoint3D(double u, double v) {

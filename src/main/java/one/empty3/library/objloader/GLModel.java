@@ -20,7 +20,10 @@
 package one.empty3.library.objloader;
 
 import com.jogamp.opengl.GL2;
+import one.empty3.library.*;
+import one.empty3.library.Polygon;
 
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -31,6 +34,9 @@ import java.util.logging.Logger;
 
 public class GLModel{
 
+    private static final int GL_TRIANGLES = 1;
+    private static final int GL_QUADS = 2;
+    private static final int GL_POLYGON = 4;
     private ArrayList vertexsets;
     private ArrayList vertexsetsnorms;
     private ArrayList vertexsetstexs;
@@ -70,9 +76,11 @@ public class GLModel{
         loadobject(ref);
         if(centerit)
             centerit();
-        opengldrawtolist(gl);
+        //opengldrawtolist(gl);
         numpolys = faces.size();
-        cleanup();
+        System.out.println("parsed poly count = " + numpolys);
+        //cleanup();
+        //System.out.println("parsed poly count after cleanup = " + numpolys);
     }
 
     private void cleanup(){
@@ -353,7 +361,104 @@ public class GLModel{
 		}
 		gl.glEndList();
 	}
-    
+    public void addToRepresentable(RepresentableConteneur representableConteneur){
+        ////////////////////////////////////////
+        /// With Materials if available ////////
+        ////////////////////////////////////////
+
+        int nextmat = -1;
+        int matcount = 0;
+        int totalmats = mattimings.size();
+        String[] nextmatnamearray = null;
+        String nextmatname = null;
+
+        if (totalmats > 0 && materials != null) {
+            nextmatnamearray = (String[])(mattimings.get(matcount));
+            nextmatname = nextmatnamearray[0];
+            nextmat = Integer.parseInt(nextmatnamearray[1]);
+        }
+
+
+        int rCount = 0;
+        for (int i=0;i<faces.size();i++) {
+
+            int faceLength =((int[])(faces.get(i))).length;
+            Color color = null;
+            if (i == nextmat) {
+                color = new Color((materials.getKd(nextmatname))[0],(materials.getKd(nextmatname))[1],(materials.getKd(nextmatname))[2],(materials.getd(nextmatname)));
+                matcount++;
+                if (matcount < totalmats) {
+                    nextmatnamearray = (String[])(mattimings.get(matcount));
+                    nextmatname = nextmatnamearray[0];
+                    nextmat = Integer.parseInt(nextmatnamearray[1]);
+                }
+            }
+
+            int[] tempfaces = (int[])(faces.get(i));
+            int[] tempfacesnorms = (int[])(facesnorms.get(i));
+            int[] tempfacestexs = (int[])(facestexs.get(i));
+
+            //// Quad Begin Header ////
+            int polytype;
+            if (tempfaces.length == 3) {
+                polytype = GL_TRIANGLES;
+            } else if (tempfaces.length == 4) {
+                polytype = GL_QUADS;
+            } else {
+                polytype = GL_POLYGON;
+            }
+            ////////////////////////////
+
+            Point3D normal;
+            Point3D[] face = new Point3D[faceLength];
+            for (int w=0;w<faceLength;w++) {
+                if (tempfacesnorms[w] != 0) {
+                    float normtempx = ((float[])vertexsetsnorms.get(tempfacesnorms[w] - 1))[0];
+                    float normtempy = ((float[])vertexsetsnorms.get(tempfacesnorms[w] - 1))[1];
+                    float normtempz = ((float[])vertexsetsnorms.get(tempfacesnorms[w] - 1))[2];
+                    normal = new Point3D(1.0d*normtempx, 1.0d*normtempy, 1.0d*normtempz);
+                }
+
+                Point3D textCoord;
+                if (tempfacestexs[w] != 0) {
+                    float textempx = ((float[])vertexsetstexs.get(tempfacestexs[w] - 1))[0];
+                    float textempy = ((float[])vertexsetstexs.get(tempfacestexs[w] - 1))[1];
+                    float textempz = ((float[])vertexsetstexs.get(tempfacestexs[w] - 1))[2];
+                    textCoord = new Point3D(0d+textempx,1d-textempy,0d+textempz);
+                }
+
+                float tempx = ((float[])vertexsets.get(tempfaces[w] - 1))[0];
+                float tempy = ((float[])vertexsets.get(tempfaces[w] - 1))[1];
+                float tempz = ((float[])vertexsets.get(tempfaces[w] - 1))[2];
+                face[w] = new Point3D(1.0*tempx,1.0*tempy,1.0*tempz);
+                face[w].texture(new ColorTexture((color!=null)?color:Color.WHITE));
+            }
+
+            if(color==null)
+                color = Color.WHITE;
+            Representable r = null;
+            if(faceLength>=4) {
+                r = new Polygon(face, color);
+            } else if(faceLength==3) {
+                r = new TRI(face[0], face[1], face[2], color);
+            } else if(faceLength==2) {
+                r = new LineSegment(face[0], face[1], new ColorTexture(color));
+            } else if(faceLength==1) {
+                r = face[0];
+            }
+
+            //// Quad End Footer /////
+
+            if(r!=null) {
+                representableConteneur.add(r);
+                rCount++;
+            }
+            ///////////////////////////
+
+
+        }
+        System.out.println("Num of poly = " + rCount);
+    }
     public void opengldraw(GL2 gl){
         gl.glCallList(objectlist);
         gl.glDisable(GL2.GL_COLOR_MATERIAL);

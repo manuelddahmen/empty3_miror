@@ -620,13 +620,6 @@ public class ZBufferImpl8 extends ZBufferImpl {
     }
 
 
-    private void tracerLines(Point3D p1, Point3D p2, Point3D p3, Point3D p4, ITexture texture, double u, double v,
-                             double u1, double v1, ParametricSurface n) {
-        line(p1, p2, texture, u, v, u + u1, v, n);
-        line(p2, p3, texture, u + u1, v, u + u1, v + v1, n);
-        line(p3, p4, texture, u + u1, v, u, v + v1, n);
-        line(p4, p1, texture, u, v + v1, u, v, n);
-    }
 
 
     public double echelleEcran() {
@@ -794,16 +787,6 @@ public class ZBufferImpl8 extends ZBufferImpl {
 
     }
 
-    private double maxDistance(Point p1, Point p2, Point p3) {
-        return Math.max(Math.max(Point.distance(p1.x, p1.y, p2.x, p2.y), Point.distance(p2.x, p2.y, p3.x, p3.y)),
-                Point.distance(p3.x, p3.y, p1.x, p1.y));
-    }
-
-    public double maxDistance(Point p1, Point p2, Point p3, Point p4) {
-        return Math
-                .max(Math.max(Math.max(Point.distance(p1.x, p1.y, p2.x, p2.y), Point.distance(p2.x, p2.y, p3.x, p3.y)),
-                        Point.distance(p3.x, p3.y, p4.x, p4.y)), Point.distance(p4.x, p4.y, p1.x, p1.y));
-    }
 
 
     public void plotPoint(Color color, Point3D p) {
@@ -894,23 +877,6 @@ public class ZBufferImpl8 extends ZBufferImpl {
         ime.testDeep(p, cc);
     }
 
-    private void tracerAretes(Point3D point3d, Point3D point3d2, Color c) {
-        Point p1 = camera().coordonneesPoint2D(point3d, this);
-        Point p2 = camera().coordonneesPoint2D(point3d2, this);
-        if (p1 == null || p2 == null) {
-            return;
-        }
-        double iteres = Math.abs(p1.getX() - p2.getX()) + Math.abs(p1.getY() - p2.getY() + 1);
-        for (double a = 0; a < 1.0; a += 1 / iteres) {
-            Point pp = new Point(p1);
-            Point3D p = point3d.mult(a).plus(point3d2.mult(1 - a));
-            pp.setLocation(p1.getX() + (int) (a * (p2.getX() - p1.getX())),
-                    p1.getY() + (int) (a * (p2.getY() - p1.getY())));
-            ime.testDeep(p, c.getRGB());
-
-        }
-
-    }
 
     public boolean add(Double px, Double py, Double pz, Double
             tx, Double ty, Double tz, Double nx, Double ny, Double nz,

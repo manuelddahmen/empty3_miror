@@ -308,6 +308,7 @@ public class MorphUI extends JFrame {
         else if (vid1 != null) {
             text1 = new TextureMov(vid1);
             instance1 = VideoDecoderFactory.createInstance(image1, (TextureMov) text1);
+            instance1.start();
         } else {
             text1 = null;
             imageRead1 = null;
@@ -318,6 +319,7 @@ public class MorphUI extends JFrame {
         else if (vid2 != null) {
             text2 = new TextureMov(vid2);
             instance2 = VideoDecoderFactory.createInstance(image2, (TextureMov) text2);
+            instance2.start();
         } else {
             text2 = null;
             imageRead2 = null;

@@ -35,7 +35,6 @@ public class BezierCubique2D extends Representable {
     private final int ordreV = 4;
     private final int ordre = 4;
     private String id;
-    private TextureCol color;
     /*__
      * *
      * 11 12 13 14 0123 21 22 23 24 4567 31 32 33 34 8901 41 42 43 44 2345
@@ -45,6 +44,7 @@ public class BezierCubique2D extends Representable {
     private Barycentre position;
 
     public BezierCubique2D() {
+        this.controle = new Point3D[4][4];
     }
 
     public BezierCubique2D(Point3D[][] controle) {
@@ -124,7 +124,7 @@ public class BezierCubique2D extends Representable {
     @Override
     public String toString() {
         String s = "bezier2d ( \n\t";
-        s += color.toString() + " \n\t\t(\n";
+        s += texture().toString() + " \n\t\t(\n";
         for (int l = 0; l < 4; l++) {
             for (int c = 0; c < 4; c++) {
                 s += "\t\t\t" + controle[l][c].toString() + " \n";

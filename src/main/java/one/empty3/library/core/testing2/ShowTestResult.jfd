@@ -1,4 +1,4 @@
-JFDML JFormDesigner: "8.0.3.0.246" Java: "17.0.6" encoding: "UTF-8"
+JFDML JFormDesigner: "8.1.0.0.283" Java: "17.0.7" encoding: "UTF-8"
 
 new FormModel {
 	"i18n.bundlePackage": "one.empty3.library.core.testing2"
@@ -13,17 +13,20 @@ new FormModel {
 			"JavaCodeGenerator.i18nInitMethod": true
 		}
 		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-			"$horizontalGroup": "par l {seq l {space :::p, comp jSplitPane1::::901:x, space :::p}}"
+			"$horizontalGroup": "par l {seq l {space :::p, comp jSplitPane1:::::x, space :::p}}"
 			"$verticalGroup": "par l {comp jSplitPane1::t::404:x}"
 		} ) {
 			name: "this"
 			"defaultCloseOperation": 0
 			"background": new java.awt.Color( 204, 204, 255, 255 )
 			"iconImage": new com.jformdesigner.model.SwingIcon( 0, "/one/empty3/library/mite.png" )
+			"undecorated": false
+			"$sizePolicy": 1
+			"preferredSize": new java.awt.Dimension( 640, 800 )
 			auxiliary() {
 				"JavaCodeGenerator.preInitCode": "try {\n    UIManager.setLookAndFeel( new FlatDarkLaf() );\n} catch( Exception ex ) {\n    System.err.println( \"Failed to initialize LaF\" );\n}\n\n// create UI here..."
+				"undecorated.forceValue": true
 			}
-			addEvent( new FormEvent( "java.awt.event.WindowListener", "windowClosing", "formWindowClosing", true ) )
 			add( new FormContainer( "javax.swing.JSplitPane", new FormLayoutManager( class javax.swing.JSplitPane ) ) {
 				name: "jSplitPane1"
 				"orientation": 0
@@ -38,6 +41,7 @@ new FormModel {
 					"minimumSize": new java.awt.Dimension( 200, 200 )
 					"alignmentX": 0.0f
 					"alignmentY": 0.0f
+					addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "jPanelPreviewImageMouseClicked", true ) )
 				}, new FormLayoutConstraints( class java.lang.String ) {
 					"value": "left"
 				} )
@@ -136,6 +140,7 @@ new FormModel {
 						name: "scrollPane1"
 						add( new FormComponent( "javax.swing.JEditorPane" ) {
 							name: "editorPane1"
+							addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "editorPane1MouseClicked", true ) )
 						} )
 					}, new FormLayoutConstraints( class java.lang.String ) {
 						"value": "right"

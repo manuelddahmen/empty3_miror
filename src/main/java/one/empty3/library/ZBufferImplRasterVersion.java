@@ -577,6 +577,9 @@ public class ZBufferImplRasterVersion extends Representable implements ZBuffer {
                 .max(Math.max(Math.max(Point.distance(p1.x, p1.y, p2.x, p2.y), Point.distance(p2.x, p2.y, p3.x, p3.y)),
                         Point.distance(p3.x, p3.y, p4.x, p4.y)), Point.distance(p4.x, p4.y, p1.x, p1.y));
     }
+    public double maxDistance(Point... points) {
+        return 0.0;
+    }
 
     @Override
     public void testDeep(Point3D pFinal, ITexture texture, double u, double v, ParametricSurface n) {

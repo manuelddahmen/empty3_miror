@@ -23,6 +23,8 @@ import one.empty3.library.Camera;
 import one.empty3.library.LumierePonctuelle;
 import one.empty3.library.Point3D;
 import one.empty3.library.ZBufferImpl;
+import one.empty3.library.core.testing.Resolution;
+import one.empty3.library.core.testing.TestObjet;
 import one.empty3.library.core.testing.TestObjetSub;
 import one.empty3.library.core.tribase.Tubulaire3;
 
@@ -47,8 +49,14 @@ public class TestHumainMarche2 extends TestObjetSub {
         c.declareProperties();
         scene().cameraActive(c);
 
+        Voiture voiture = new Voiture();
+
+
         HumainMarche humainMarche = new HumainMarche();
+
         scene().add(humainMarche);
+        scene().add(voiture);
+
         humainMarche.setT(frame()/25.);
         humainMarche.init();
     }
@@ -56,6 +64,7 @@ public class TestHumainMarche2 extends TestObjetSub {
     public static void main(String[] args) {
         TestHumainMarche2 testHumain = new TestHumainMarche2();
         testHumain.setPublish(true);
+        testHumain.setDimension(TestObjet.HD1080);
         testHumain.setGenerate(testHumain.getGenerate()|GENERATE_MODEL);
         new Thread(testHumain).start();
     }

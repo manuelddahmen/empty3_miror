@@ -32,7 +32,7 @@ import java.util.Iterator;
  * Created by manuel on 25-05-17.
  */
 public class SolTube extends Terrain  {
-    public SolTube(/*Game game*/) {
+    public SolTube(/*Game Game*/) {
         setDessineMurs(false);
         TubulaireN2 n2 = new TubulaireN2();
         CourbeParametriquePolynomialeBezier courbeParametriquePolynomialeBezier;

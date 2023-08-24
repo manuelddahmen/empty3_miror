@@ -84,13 +84,16 @@ public class Camera2Quad extends Camera {
         p2 = coordonneesPoint2D(pp2, z);
         p3 = coordonneesPoint2D(pp3, z);
         p4 = coordonneesPoint2D(pp4, z);
-        if (!z.checkScreen(p1))
+        /*if (!z.checkScreen(p1))
             return;
         if (!z.checkScreen(p2))
             return;
         if (!z.checkScreen(p3))
             return;
         if (!z.checkScreen(p4))
+            return;
+        */
+        if (!z.checkScreen(p1)&&!z.checkScreen(p2)&&!z.checkScreen(p3)&&!z.checkScreen(p4))
             return;
         int col = texture.getColorAt(u0, v0);
 

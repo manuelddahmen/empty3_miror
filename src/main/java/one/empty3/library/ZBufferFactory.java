@@ -56,4 +56,8 @@ public class ZBufferFactory {
         z.scene(s);
         return z;
     }
+
+    public static ZBufferImpl newInstance(int resx, int resy) {
+        return new ZBufferImpl(resx, resy);
+    }
 }

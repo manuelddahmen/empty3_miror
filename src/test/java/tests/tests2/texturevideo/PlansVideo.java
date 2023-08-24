@@ -19,11 +19,11 @@
 
 package tests.tests2.texturevideo;
 
-import one.empty3.library.Camera;
-import one.empty3.library.Point3D;
-import one.empty3.library.TextureMov;
+import one.empty3.library.*;
+import one.empty3.library.core.testing.Resolution;
 import one.empty3.library.core.testing.TestObjetStub;
 import one.empty3.library.core.tribase.Plan3D;
+import one.empty3.testscopy.tests.test4.Balade;
 
 /*__
  * @author Dahmen Manuel
@@ -36,6 +36,8 @@ public class PlansVideo extends TestObjetStub {
     private  String avi4;
 
     public void ginit() {
+
+        z().setDisplayType(ZBufferImpl.SURFACE_DISPLAY_TEXT_QUADS);
         this.avi1 = avi1;
         this.avi2 = avi2;
         this.avi3 = avi3;
@@ -44,19 +46,11 @@ public class PlansVideo extends TestObjetStub {
         String f1;
         String f2;
         String f3;
-        String f4;/*
-        if (args.length >= 4) {
-            f1 = args[0];
-            f2 = args[1];
-            f3 = args[2];
-            f4 = args[3];
-
-        } else {
-*/
-            f1 = "resources/mov/VID_20200528_105353.mp4";
-            f2 = f1; // "C:\\EmptyCanvas\\Textures\\Il embrasse sur la bouche.mp4";
-            f3 = f1;//"C:\\EmptyCanvas\\Textures\\03.mkv";
-            f4 = f1;//"C:\\EmptyCanvas\\Textures\\04.mkv";
+        String f4;
+            f1 = "resources/mov/file_example_AVI_480_750kB-mc.mp4";
+            f2 = "resources/mov/VID_20200528_105353.mp4";
+            f3 = "resources/mov/VID_20200416_201314.mp4";
+            f4 = "resources/mov/bulles.mp4";
        /*}
 
 
@@ -76,7 +70,7 @@ public class PlansVideo extends TestObjetStub {
     
 
     
-        TextureMov tc1, tc2, tc3, tc4;
+        ITexture tc1, tc2, tc3, tc4;
 
         tc1 = new TextureMov(f1);
         tc2 = new TextureMov(f2);
@@ -118,9 +112,24 @@ public class PlansVideo extends TestObjetStub {
     public void finit() {
         scene().cameraActive(
                 new Camera(
-                        new Point3D(0d, 0d, -1d),
-                        Point3D.O0
+                        new Point3D(0d, 0d, 2d),
+                        Point3D.O0,
+                        Point3D.Y
                 )
         );
+        z().camera(scene().cameraActive());
      }
+
+
+    public static void main(String[] args) {
+        PlansVideo plansVideo = new PlansVideo();
+        plansVideo.loop(true);
+        plansVideo.setMaxFrames(2000);
+        plansVideo.setDimension(new Resolution(1920, 1080));
+        //plansVideo.setDimension(new Resolution(640, 480));
+
+        new Thread(plansVideo).start();
+
+    }
+
 }
