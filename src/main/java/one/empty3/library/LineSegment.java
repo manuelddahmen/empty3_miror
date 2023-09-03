@@ -110,7 +110,7 @@ public class LineSegment extends ParametricCurve implements CurveElem {
         Point3D dir, w0, w; // ray vectors
         double r, a, b; // params to calc ray-plane intersect
 
-        Point3D I;
+        Point3D intersection;
         // get triangle edge vectors and plane normal
         u = T.getSommet().getElem(1).moins(T.getSommet().getElem(0));
         v = T.getSommet().getElem(2).moins(T.getSommet().getElem(0));
@@ -139,7 +139,7 @@ public class LineSegment extends ParametricCurve implements CurveElem {
             return Infini.Default; // => no intersect
         }        // for a segment, also test if (r > 1.0) => no intersect
 
-        I = ray.getOrigine().plus(dir.mult(r)); // intersect point of ray and
+        intersection = ray.getOrigine().plus(dir.mult(r)); // intersect point of ray and
         // plane
 
         // is I inside T?
@@ -147,7 +147,7 @@ public class LineSegment extends ParametricCurve implements CurveElem {
         uu = u.prodScalaire(u);
         uv = u.prodScalaire(v);
         vv = v.prodScalaire(v);
-        w = I.moins(T.getSommet().getElem(0));
+        w = intersection.moins(T.getSommet().getElem(0));
         wu = w.prodScalaire(u);
         wv = w.prodScalaire(v);
         D = uv * uv - uu * vv;
@@ -165,11 +165,73 @@ public class LineSegment extends ParametricCurve implements CurveElem {
             return Infini.Default;
         }
 
-        return I; // I is in T
+        return intersection; // I is in T
     }
 
     public Representable intersection(TRI tri) {
         return intersect3D_RayTriangle(this, tri);
+    }
+
+
+    /**
+     * Return the distance from a point to a segment
+     *
+     * @param ps,pe the start/end of the segment
+     * @param p the given point
+     * @return the distance from the given point to the segment
+     */
+    private static double distanceToSegment(Point ps, Point pe, Point p) {
+
+        if (ps.x==pe.x && ps.y==pe.y) return distance(ps,p);
+
+        int sx=pe.x-ps.x;
+        int sy=pe.y-ps.y;
+
+        int ux=p.x-ps.x;
+        int uy=p.y-ps.y;
+
+        int dp=sx*ux+sy*uy;
+        if (dp<0) return distance(ps,p);
+
+        int sn2 = sx*sx+sy*sy;
+        if (dp>sn2) return distance(pe,p);
+
+        double ah2 = dp*dp / sn2;
+        int un2=ux*ux+uy*uy;
+        return Math.sqrt(un2-ah2);
+    }
+
+    /**
+     * return the distance between two points
+     *
+     * @param p1,p2 the two points
+     * @return dist the distance
+     */
+    private static double distance(Point p1, Point p2) {
+        int d2 = (p2.x-p1.x)*(p2.x-p1.x)+(p2.y-p1.y)*(p2.y-p1.y);
+        return Math.sqrt(d2);
+    }
+
+    /** Methode qui calcule la projection orthogonale du point P sur une droite D representee par un point X et un vecteur V (P = X + kV).
+     *  ATTENTION : cette methode renvoit le coefficient k.
+     * @param X Un point de la droite D.
+     * @param V Le vecteur directeur de la droite D.
+     * @param P Le point dont on souhaite connaitre le projeté sur la droite D.
+     * @return Le coefficient de k de P = X + kV.*/
+    public static double IntersectionCoef(Point3D X, Point3D V, Point3D P)
+    {
+        int Size = 3 ;
+        double num = 0.0, den = 0.0 ;
+
+        for (int i=0 ; i < Size ; i++)
+        {
+            num += V.get(i) * (P.get(i)-X.get(i)) ;
+            den += Math.pow(V.get(i), 2.0) ;
+        }
+
+        if ( Math.abs(den) < 0.00001 )
+            throw new ArithmeticException("Denominator equal to zero => Vector V is a vector null.") ;
+        return num / den ;
     }
 
 

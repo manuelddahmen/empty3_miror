@@ -107,6 +107,8 @@ public final class LumierePonctuelle extends Lumiere {
         return (float) Math.max(1.0, Math.min(0.0, c));
     }
 
+
+
     public void declareProperties() {
         getDeclaredDataStructure().put("position/Position de la provenace lumineuse", position);
         getDeclaredDataStructure().put("color/Couleur de la lumière", couleurLumiere);

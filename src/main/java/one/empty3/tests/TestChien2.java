@@ -25,7 +25,12 @@ import one.empty3.library.core.nurbs.*;
 import one.empty3.library.core.testing.*;
 import java.awt.Color;
 import one.empty3.library.core.move.Trajectoires;
+import org.apache.xpath.operations.Bool;
+
 import java.awt.Color;
+import java.awt.Point;
+import java.awt.geom.Point2D;
+
 public class TestChien2 extends TestObjetSub {
 
     public void ginit() {
@@ -74,19 +79,31 @@ Tubulaire3 corp;
         } 
 //        scene().cameraActive().getEye().setZ(-10.)
 
-         scene().lumieres().add(new LumiereIdent()) ;
+        LumierePonctuelle lumierePonctuelle = new LumierePonctuelle();
+        StructureMatrix<Boolean> objectStructureMatrix = new StructureMatrix<>(0, Boolean.class);
+        objectStructureMatrix.setElem(true);
+        lumierePonctuelle.setDirectional(objectStructureMatrix);
+        lumierePonctuelle.setOrig(Point3D.O0);
+        scene().lumieres().add(lumierePonctuelle) ;
    }
     public void finit() {
         Point3D sphere = Trajectoires.sphere(/*Point3D.O0, Point3D.Z, Point3D.X,*/
-          1.0 * frame() / getMaxFrames(),
+          1.0 * frame() / 360,
                 0.0, 16.0);
-        Point3D circlePoint = P.n(Math.cos(1.0 * frame() / getMaxFrames()/10.),
-            Math.sin(1.0 * frame() / getMaxFrames()/10.), 
-            Math.cos(1.0*frame()/getMaxFrames())).mult(12.);
+        Point3D circlePoint = P.n(Math.cos(1.0 * frame() / 360),
+            Math.sin(1.0 * frame() / 360),
+            Math.cos(1.0*frame()/360)).mult(3.0);
         //scene().cameras().clear();
         Camera c = new Camera(circlePoint, Point3D.O0, Point3D.Y);
         //c.setMatrix(c.getMatrice().tild());
         c.declareProperties();
         scene().cameraActive(c);
+        z().camera(c);
+    }
+
+    public static void main(String [] args) {
+        TestChien2 testChien2 = new TestChien2();
+        testChien2.setMaxFrames(900);
+        new Thread(testChien2).start();
     }
 }
