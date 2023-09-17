@@ -100,10 +100,22 @@ public class Cube extends Representable implements TRIGenerable {
         ts.clear();
 
         for (int i = 0; i < coordCube.length; i++) {
+            Point3D [] coord  = new Point3D[] {new Point3D(coordCube[i][0]), new Point3D(coordCube[i][1]), new Point3D(coordCube[i][2])};
+
+            Point3D [] coord2 = new Point3D[3];
+
+            for (int j = 0; j < 3; j++) {
+                coord2[j] = new Point3D(0);
+                for (int k = 0; k < 3; k++) {
+                    coord2[j] = coord2[j].plus(vectors.getElem(j).mult(coord[j].get(k)));
+
+                }
+            }
+
             TRI t = new TRI(
-                    new Point3D(coordCube[i][0], texture()).mult(cote.getElem()/2).plus(position0.getElem()),
-                    new Point3D(coordCube[i][1], texture()).mult(cote.getElem()/2).plus(position0.getElem()),
-                    new Point3D(coordCube[i][2], texture()).mult(cote.getElem()/2).plus(position0.getElem()),
+                    coord2[0].mult(cote.getElem()/2).plus(position0.getElem()),
+                    coord2[1].mult(cote.getElem()/2).plus(position0.getElem()),
+                    coord2[2].mult(cote.getElem()/2).plus(position0.getElem()),
                     texture());
 
             ts.add(t);

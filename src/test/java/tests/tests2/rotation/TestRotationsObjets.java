@@ -34,6 +34,7 @@ import one.empty3.library.core.tribase.TRISphere;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
+import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -74,7 +75,7 @@ public class TestRotationsObjets extends TestObjetSub {
         Logger.getAnonymousLogger().log(Level.INFO, "Nombre de secondes de la vidéo par objet : " + globalTimeMillis / 1000.0 / nObjets);
         Logger.getAnonymousLogger().log(Level.INFO, "Nombre de secondes de la vidéo par action : " + globalTimeMillis / 1000.0 / nObjets / rotationsParObjets);
         try {
-            imageTexture = new TextureImg(new ECBufferedImage(ImageIO.read(this.getClass().getResourceAsStream("map2.png"))));
+            imageTexture = new TextureImg(new ECBufferedImage(ImageIO.read(new File("res/img/ESP_034572_1755-2.jpg"))));
         } catch (IOException e) {
             e.printStackTrace();
             System.err.print("Fichier non trouvé : texture. Choisir une autre texture ou retrouveer le fichier\nOu rrecompiler si fichier ressource");
@@ -116,14 +117,16 @@ public class TestRotationsObjets extends TestObjetSub {
 
                 scene().add(representable);
 
-                return representable;
+                break;
             case 1:
                 representable = new TRISphere(Point3D.O0, dim);
                 representable.texture();
                 scene().add(representable);
-                return representable;
+                break;
 
         }
+
+
         return representable;
     }
 
@@ -189,6 +192,15 @@ public class TestRotationsObjets extends TestObjetSub {
         Matrix33 rot = rotation(axe);
 
         initObjet(objetCourant);
+
+
+        Point3D[] colVectors = rot.getColVectors();
+
+        representable.setVectX(colVectors[0]);
+        representable.setVectY(colVectors[1]);
+        representable.setVectZ(colVectors[2]);
+
+
 
         //representable.setRotation(representable.new Rotation(rot, Point3D.O0));
         // Rotation autour de l'axe des X

@@ -34,8 +34,8 @@ import java.util.logging.Logger;
 
 public class TestPlanetDeformee extends TestObjetSub {
     public static final int SECONDS = 8;
-    public static final int FPS = 50;
-    private static final int TURNS = 2;
+    public static final int FPS = 25;
+    private static final int TURNS = 1;
     private final File planets = new File("res\\img\\planets2");
     private File[] planetsImagesFiles;
     private int i = -1;
@@ -82,7 +82,7 @@ public class TestPlanetDeformee extends TestObjetSub {
         logger = Logger.getLogger(this.getClass().getCanonicalName());
         planetsImagesFiles = planets.listFiles();
 
-        setMaxFrames(planetsImagesFiles.length * FPS * SECONDS * TURNS);
+        setMaxFrames(planetsImagesFiles.length * FPS * SECONDS );
 
         z().ratioVerticalAngle();
 

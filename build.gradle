@@ -134,12 +134,33 @@ tasks.register('Balade1', JavaExec) {
 /***
  * Individial empty3 3d-object software tests.
  */
-tasks.register('tests.tests2.texturevideo.PlansVideo', JavaExec) {
+tasks.register('tests.tests2.cadeau.SphereCube', JavaExec) {
     classpath sourceSets.test.runtimeClasspath
-    mainClass = "tests.tests2.texturevideo.PlansVideo"
+    mainClass = "tests.tests2.cadeau.SphereCube"
     args ""
     dependsOn(jar)
 }
+tasks.register('tests.tests2.cubes.TestCubes', JavaExec) {
+    classpath sourceSets.test.runtimeClasspath
+    mainClass = "tests.tests2.cubes.TestCubes"
+    args ""
+    dependsOn(jar)
+}
+
+tasks.register('tests.tests2.rotation.TestRotationsObjets', JavaExec) {
+    classpath sourceSets.test.runtimeClasspath
+    mainClass = "tests.tests2.rotation.TestRotationsObjets"
+    args ""
+    dependsOn(jar)
+}
+
+tasks.register('one.empty3.tests.TestPlanetEtLune', JavaExec) {
+    classpath sourceSets.test.runtimeClasspath
+    mainClass = "one.empty3.tests.TestPlanetEtLune"
+    args ""
+    dependsOn(jar)
+}
+
 
 
 

@@ -250,24 +250,23 @@ public class ZBufferImpl extends Representable implements ZBuffer {
             }
         } else if (r instanceof ParametricSurface) {
             ParametricSurface n = (ParametricSurface) r;
-            // Logger.getAnonymousLogger().log(Level.INFO, "Surface");
-            //Logger.getAnonymousLogger().log(Level.INFO, "class" + n.getClass());
-            // TODO Dessiner les bords
             if (n.getIncrU() > 0 && n.getIncrV() > 0) {
                 for (double u = n.getStartU(); u + n.getIncrU() <= n.getEndU(); u += n.getIncrU()) {
                     // Logger.getAnonymousLogger().log(Level.INFO, "(u,v) = ("+u+","+")");
                     for (double v = n.getStartV(); v + n.getIncrV() <= n.getEndV(); v += n.getIncrV()) {
                         Point3D p1, p2, p3, p4;
                         double u2 = u + n.getIncrU(), v2 = v + n.getIncrV();
-                        if (u > n.getEndU() - n.getIncrU()) {
+                        double texU2 = u + n.getIncrU(), texV2 = v + n.getIncrV();
+                        if (u2 >= n.getEndU() - n.getIncrU()) {
                             Point3D point3D = new Point3D(u2, v2, 0.0);
-                            point3D = n.getTerminalU().data0d.result(point3D);
+                            point3D = n.getTerminalU().getElem().result(point3D);
                             u2 = point3D.get(0);
                             v2 = point3D.get(1);
+
                         }
-                        if (v > n.getEndV() - n.getIncrV()) {
+                        if (v2 >= n.getEndV() - n.getIncrV()) {
                             Point3D point3D = new Point3D(u2, v2, 0.0);
-                            point3D = n.getTerminalU().data0d.result(point3D);
+                            point3D = n.getTerminalV().getElem().result(point3D);
                             u2 = point3D.get(0);
                             v2 = point3D.get(1);
                         }
@@ -340,7 +339,14 @@ public class ZBufferImpl extends Representable implements ZBuffer {
                                 tracerQuad(p1, p2, p3, p4, n.texture(), u, u2, v, v2, n);
                             }
                         }
-                    }
+                    }/*
+                    Point3D quad0 = n.calculerPoint3D(u, n.getEndV());
+                    Point3D quad1 =n.calculerPoint3D(u+n.getIncrU(), n.getEndV());
+                    Point3D quad2 =n.getTerminalV().getElem().result(new Point3D(u+n.getIncrU(), n.getStartV()));
+                    Point3D quad3 =n.getTerminalV().getElem().result(new Point3D(u, n.getStartV()));
+                    tracerQuad(quad0, quad1, quad2, quad3, n.texture(), u, u+n.getIncrU(),
+                            v.g, v2, n);
+*/
                 }
             }
         } else if (r instanceof TRIGenerable) {
