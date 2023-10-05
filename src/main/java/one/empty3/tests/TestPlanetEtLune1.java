@@ -30,10 +30,20 @@ import java.io.File;
 import java.util.logging.Logger;
 
 public class TestPlanetEtLune1 extends TestObjetSub {
-    public static final int SECONDS = 10;
-    public static final int FPS = 1;
+    static class TextureInvertU extends ImageTexture {
+        public TextureInvertU(ECBufferedImage ecBufferedImage) {
+            super(ecBufferedImage);
+        }
+
+        @Override
+        public Point2D getCoord(double x, double y) {
+            return super.getCoord(1.0-x, y);
+        }
+    }
+    public static final int SECONDS = 30;
+    public static final int FPS = 30;
     private static final int TURNS = 1;
-    private static final int REAL_DAYS = 1;
+    private static final int REAL_DAYS = 20;
     private final File planets = new File("res\\img\\planets2");
     private File earthFilename = new File(planets.getAbsolutePath()+
             File.separator+"_earth.jpg");
@@ -69,7 +79,7 @@ public class TestPlanetEtLune1 extends TestObjetSub {
     private Sphere moon;
 
     private static double getaDouble() {
-        return TURNS * FPS * SECONDS;
+        return REAL_DAYS * FPS * SECONDS;
     }
 
     public static void main(String[] args) {
@@ -86,9 +96,9 @@ public class TestPlanetEtLune1 extends TestObjetSub {
         earth = new Sphere(new Point3D(0., 0.,0.), earthRealSize);
         moon = new Sphere(new Point3D(0., moonDistance, 0.0), moonRealSize);
 
-        sun.texture(new ImageTexture(new ECBufferedImage(ImageIO.read(sunFilename))));
-        earth.texture(new ImageTexture(new ECBufferedImage(ImageIO.read(earthFilename))));
-        moon.texture(new ImageTexture(new ECBufferedImage(ImageIO.read(moonFilename))));
+        sun.texture(new TextureInvertU(new ECBufferedImage(ImageIO.read(sunFilename))));
+        earth.texture(new TextureInvertU(new ECBufferedImage(ImageIO.read(earthFilename))));
+        moon.texture(new TextureInvertU(new ECBufferedImage(ImageIO.read(moonFilename))));
 
         logger = Logger.getLogger(this.getClass().getCanonicalName());
         setMaxFrames( FPS * SECONDS * REAL_DAYS);
@@ -159,24 +169,24 @@ public class TestPlanetEtLune1 extends TestObjetSub {
             scene().add(sphere);
         }
 
-        double v = (frame() % (FPS * SECONDS)) / getaDouble();
+        double u = ((frame() +frame*2)% (FPS * SECONDS)) / getaDouble();
 
         Circle circle = earth.getCircle();
         earth.setVectZ(axeVerticalVideo);
         double lat = 0.0;
         circle.getAxis().getElem().getP1().setElem(axeVerticalVideo.mult(1.0));
         circle.getAxis().getElem().getP2().setElem(axeVerticalVideo.mult(-1.0));
-        earth.setVectX(axesSphereHorizontaux[0].mult(Math.cos(2 * Math.PI * v)
+        earth.setVectX(axesSphereHorizontaux[0].mult(Math.cos(2 * Math.PI * u+Math.PI/2)
                         * Math.cos(Math.PI/2*lat))
-                .plus(axesSphereHorizontaux[1].mult(-Math.sin(2 * Math.PI * v)
+                .plus(axesSphereHorizontaux[1].mult(-Math.sin(2 * Math.PI * u+Math.PI/2)
                         * Math.cos(Math.PI/2*lat))).norme1());
-        earth.setVectY(axesSphereHorizontaux[0].mult(Math.sin(2 * Math.PI * v)
+        earth.setVectY(axesSphereHorizontaux[0].mult(Math.sin(2 * Math.PI * u+Math.PI/2)
                         * Math.cos(Math.PI/2*lat))
-                .plus(axesSphereHorizontaux[1].mult(Math.cos(2 * Math.PI * v)
+                .plus(axesSphereHorizontaux[1].mult(Math.cos(2 * Math.PI * u+Math.PI/2)
                         * Math.cos(Math.PI/2*lat))).norme1());
         circle.setCalculerRepere1(true);
         earth.setCircle(circle);
-        System.out.println("Camera t : " + v);
+        System.out.println("Camera t : " + u);
 
 
         frame += 100;

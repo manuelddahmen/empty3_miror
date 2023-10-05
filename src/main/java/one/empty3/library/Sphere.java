@@ -63,7 +63,7 @@ public class Sphere extends ParametricSurface {
         {
             c.calculerRepere1();
         }
-        double u2 = 2.0 * Math.PI * u;
+        double u2 = - Math.PI + 2.0 * Math.PI * u;
         double v2 = - Math.PI / 2.0 + Math.PI * v;
         return c.getCenter().plus(
                 getVectX().mult(Math.cos(u2) * Math.cos(v2)).plus(
