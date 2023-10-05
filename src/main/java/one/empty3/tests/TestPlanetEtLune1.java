@@ -42,7 +42,7 @@ public class TestPlanetEtLune1 extends TestObjetSub {
     }
     public static final int SECONDS = 30;
     public static final int FPS = 30;
-    private static final int TURNS = 1;
+    private static final int TURNS = 2;
     private static final int REAL_DAYS = 20;
     private final File planets = new File("res\\img\\planets2");
     private File earthFilename = new File(planets.getAbsolutePath()+
@@ -79,13 +79,13 @@ public class TestPlanetEtLune1 extends TestObjetSub {
     private Sphere moon;
 
     private static double getaDouble() {
-        return  FPS * SECONDS;
+        return  FPS * SECONDS * REAL_DAYS;
     }
 
     public static void main(String[] args) {
         TestPlanetEtLune1 testPlanets = new TestPlanetEtLune1();
         testPlanets.loop(true);
-        testPlanets.setResolution(640, 400);
+        testPlanets.setResolution(Resolution.HD720RESOLUTION.x(), Resolution.HD720RESOLUTION.y());
         Thread thread = new Thread(testPlanets);
         thread.start();
     }
@@ -162,14 +162,15 @@ public class TestPlanetEtLune1 extends TestObjetSub {
         z().camera(c);
 
 
-        for(Sphere sphere :new Sphere[] {moon, sun, earth}) {
+        for(Sphere sphere :new Sphere[] {earth}) {
             sphere.setIncrU(.003);
             sphere.setIncrV(.003);
             scene().clear();
             scene().add(sphere);
         }
 
-        double u = ((frame() +frame*2)% (FPS * SECONDS)) / getaDouble();
+        double u =Math.IEEEremainder((frame() +getMaxFrames()),
+                (FPS * SECONDS)) / getaDouble();
 
         Circle circle = earth.getCircle();
         earth.setVectZ(axeVerticalVideo);
