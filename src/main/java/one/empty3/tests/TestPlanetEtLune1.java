@@ -30,7 +30,7 @@ import java.io.File;
 import java.util.logging.Logger;
 
 public class TestPlanetEtLune1 extends TestObjetSub {
-    public static final int SECONDS = 45;
+    public static final int SECONDS = 30;
     public static final int FPS = 25;
     private static final int TURNS = 1;
     private static final int REAL_DAYS = 28;
@@ -156,18 +156,18 @@ public class TestPlanetEtLune1 extends TestObjetSub {
             scene().add(sphere);
         }
 
-        double v = (frame() % (FPS * SECONDS * REAL_DAYS)) / getaDouble();
+        double v = (frame() % (FPS * SECONDS)) / getaDouble();
 
         Circle circle = earth.getCircle();
-        circle.setVectZ(axeVerticalVideo);
+        earth.setVectZ(axeVerticalVideo);
         double lat = 0.0;
         circle.getAxis().getElem().getP1().setElem(axeVerticalVideo.mult(1.0));
         circle.getAxis().getElem().getP2().setElem(axeVerticalVideo.mult(-1.0));
-        circle.setVectX(axesSphereHorizontaux[0].mult(Math.cos(2 * Math.PI * v)
+        earth.setVectX(axesSphereHorizontaux[0].mult(Math.cos(2 * Math.PI * v)
                         * Math.cos(Math.PI/2*lat))
                 .plus(axesSphereHorizontaux[1].mult(-Math.sin(2 * Math.PI * v)
                         * Math.cos(Math.PI/2*lat))).norme1());
-        circle.setVectY(axesSphereHorizontaux[0].mult(Math.sin(2 * Math.PI * v)
+        earth.setVectY(axesSphereHorizontaux[0].mult(Math.sin(2 * Math.PI * v)
                         * Math.cos(Math.PI/2*lat))
                 .plus(axesSphereHorizontaux[1].mult(Math.cos(2 * Math.PI * v)
                         * Math.cos(Math.PI/2*lat))).norme1());
