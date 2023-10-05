@@ -30,10 +30,10 @@ import java.io.File;
 import java.util.logging.Logger;
 
 public class TestPlanetEtLune1 extends TestObjetSub {
-    public static final int SECONDS = 30;
-    public static final int FPS = 25;
+    public static final int SECONDS = 10;
+    public static final int FPS = 1;
     private static final int TURNS = 1;
-    private static final int REAL_DAYS = 28;
+    private static final int REAL_DAYS = 1;
     private final File planets = new File("res\\img\\planets2");
     private File earthFilename = new File(planets.getAbsolutePath()+
             File.separator+"_earth.jpg");
@@ -137,6 +137,9 @@ public class TestPlanetEtLune1 extends TestObjetSub {
 
     @Override
     public void finit() throws Exception {
+
+
+
         Camera c = new Camera(axeViseeVideo[1].mult(Math.cos(2.0*Math.PI*frame()/getMaxFrames()))
                 .plus(axeViseeVideo[0].mult(Math.sin(2.0*Math.PI*frame()/getMaxFrames())))
                 .prodVect(axeVerticalVideo.mult(earthRealSize))
@@ -175,6 +178,8 @@ public class TestPlanetEtLune1 extends TestObjetSub {
         earth.setCircle(circle);
         System.out.println("Camera t : " + v);
 
+
+        frame += 100;
     }
 
 
