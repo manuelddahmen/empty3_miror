@@ -69,7 +69,7 @@ public class Sphere extends ParametricSurface {
                 getVectX().mult(Math.cos(u2) * Math.cos(v2)).plus(
                         getVectY().mult(Math.sin(u2) * Math.cos(v2)))
                                 .plus(getVectZ().mult(Math.sin(v2))
-                ).norme1().mult(c.radius.getElem()));
+                ).mult(c.radius.getElem()));
     }
 
     public Circle getCircle() {

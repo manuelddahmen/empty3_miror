@@ -79,7 +79,7 @@ public class TestPlanetEtLune1 extends TestObjetSub {
     private Sphere moon;
 
     private static double getaDouble() {
-        return REAL_DAYS * FPS * SECONDS;
+        return  FPS * SECONDS;
     }
 
     public static void main(String[] args) {
@@ -176,13 +176,13 @@ public class TestPlanetEtLune1 extends TestObjetSub {
         double lat = 0.0;
         circle.getAxis().getElem().getP1().setElem(axeVerticalVideo.mult(1.0));
         circle.getAxis().getElem().getP2().setElem(axeVerticalVideo.mult(-1.0));
-        earth.setVectX(axesSphereHorizontaux[0].mult(Math.cos(2 * Math.PI * u+Math.PI/2)
+        earth.setVectX(axesSphereHorizontaux[0].mult(Math.cos(2 * Math.PI * u)
                         * Math.cos(Math.PI/2*lat))
-                .plus(axesSphereHorizontaux[1].mult(-Math.sin(2 * Math.PI * u+Math.PI/2)
+                .plus(axesSphereHorizontaux[1].mult(Math.sin(2 * Math.PI * u)
                         * Math.cos(Math.PI/2*lat))).norme1());
-        earth.setVectY(axesSphereHorizontaux[0].mult(Math.sin(2 * Math.PI * u+Math.PI/2)
+        earth.setVectY(axesSphereHorizontaux[0].mult(Math.sin(2 * Math.PI * u)
                         * Math.cos(Math.PI/2*lat))
-                .plus(axesSphereHorizontaux[1].mult(Math.cos(2 * Math.PI * u+Math.PI/2)
+                .plus(axesSphereHorizontaux[1].mult(Math.cos(2 * Math.PI * u)
                         * Math.cos(Math.PI/2*lat))).norme1());
         circle.setCalculerRepere1(true);
         earth.setCircle(circle);
