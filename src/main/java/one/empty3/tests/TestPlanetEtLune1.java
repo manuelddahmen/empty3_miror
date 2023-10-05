@@ -29,10 +29,11 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.logging.Logger;
 
-public class TestPlanetEtLune extends TestObjetSub {
+public class TestPlanetEtLune1 extends TestObjetSub {
     public static final int SECONDS = 45;
     public static final int FPS = 25;
     private static final int TURNS = 1;
+    private static final int REAL_DAYS = 28;
     private final File planets = new File("res\\img\\planets2");
     private File earthFilename = new File(planets.getAbsolutePath()+
             File.separator+"_earth.jpg");
@@ -72,9 +73,9 @@ public class TestPlanetEtLune extends TestObjetSub {
     }
 
     public static void main(String[] args) {
-        TestPlanetEtLune testPlanets = new TestPlanetEtLune();
+        TestPlanetEtLune1 testPlanets = new TestPlanetEtLune1();
         testPlanets.loop(true);
-        testPlanets.setResolution(1920, 1080);
+        testPlanets.setResolution(640, 400);
         Thread thread = new Thread(testPlanets);
         thread.start();
     }
@@ -90,7 +91,7 @@ public class TestPlanetEtLune extends TestObjetSub {
         moon.texture(new ImageTexture(new ECBufferedImage(ImageIO.read(moonFilename))));
 
         logger = Logger.getLogger(this.getClass().getCanonicalName());
-        setMaxFrames( FPS * SECONDS );
+        setMaxFrames( FPS * SECONDS * REAL_DAYS);
 
         z().ratioVerticalAngle();
 
@@ -101,15 +102,20 @@ public class TestPlanetEtLune extends TestObjetSub {
         scene().texture(new ColorTexture(Color.BLACK));
 
 
-        Camera c = new Camera(axeViseeVideo[1].mult((double)  earthRealSize*1.4), Point3D.O0, axeVerticalVideo);
-        c.calculerMatrice(axeVerticalVideo);
-        z().scene().cameraActive(c);
-        scene().cameraActive(c);
-        z().camera(c);
+/*
+        Camera c = new Camera(axeViseeVideo[1].mult((double)  earthRealSize*1.4),
+                axeViseeVideo[1].mult((double)  earthRealSize*1.4)
+                        .prodVect(axeVerticalVideo.mult(earthRealSize))
+                        .mult(1./earthRealSize), axeVerticalVideo);
+*/
         camera(c);
         i = -1;
 
-        frame = 909;
+        LumierePointSimple lumierePointSimple = new LumierePointSimple(Color.YELLOW, sun.getCircle().getCenter(), 100000);
+
+        //scene().lumieres().add(lumierePointSimple);
+
+        frame = 0;
     }
 
     public Point3D positions() {
@@ -131,6 +137,17 @@ public class TestPlanetEtLune extends TestObjetSub {
 
     @Override
     public void finit() throws Exception {
+        Camera c = new Camera(axeViseeVideo[1].mult(Math.cos(2.0*Math.PI*frame()/getMaxFrames()))
+                .plus(axeViseeVideo[0].mult(Math.sin(2.0*Math.PI*frame()/getMaxFrames())))
+                .prodVect(axeVerticalVideo.mult(earthRealSize))
+                .mult(6), axeVerticalVideo);
+        c.calculerMatrice(axeVerticalVideo);
+        c.setAngleY(Math.PI/3);
+        c.setAngleX(Math.PI/3*z().la()/z().ha());
+        z().scene().cameraActive(c);
+        scene().cameraActive(c);
+        z().camera(c);
+
 
         for(Sphere sphere :new Sphere[] {moon, sun, earth}) {
             sphere.setIncrU(.003);
@@ -139,11 +156,11 @@ public class TestPlanetEtLune extends TestObjetSub {
             scene().add(sphere);
         }
 
-        double v = (frame() % (FPS * SECONDS)) / getaDouble();
+        double v = (frame() % (FPS * SECONDS * REAL_DAYS)) / getaDouble();
 
         Circle circle = earth.getCircle();
         circle.setVectZ(axeVerticalVideo);
-        double lat = 51./90;
+        double lat = 0.0;
         circle.getAxis().getElem().getP1().setElem(axeVerticalVideo.mult(1.0));
         circle.getAxis().getElem().getP2().setElem(axeVerticalVideo.mult(-1.0));
         circle.setVectX(axesSphereHorizontaux[0].mult(Math.cos(2 * Math.PI * v)

@@ -63,24 +63,19 @@ public abstract class ITexture implements MatrixPropertiesObject{
 
         Point2D p = new Point2D(x, y);
 
-        if ((getColorMask() == COLOR_IDENT))
-            p = p;
-        if ((getColorMask() & COLOR_MIROR_X) > 0) {
+        if ((getColorMask() == COLOR_IDENT)) {
+
+        } else if ((getColorMask() & COLOR_MIROR_X) > 0) {
             p = new Point2D(1.0 - p.x, p.y);
-        }
-        if ((getColorMask() & COLOR_MIROR_Y) > 0) {
+        } else if ((getColorMask() & COLOR_MIROR_Y) > 0) {
             p = new Point2D(p.x, 1.0 - p.y);
-        }
-        if ((getColorMask() & COLOR_MIROR_XY) > 0) {
+        }else if ((getColorMask() & COLOR_MIROR_XY) > 0) {
             p = new Point2D(p.y, p.x);
-        }
-        if ((getColorMask() & COLOR_ROT_090) > 0) {
+        }else if ((getColorMask() & COLOR_ROT_090) > 0) {
             p = new Point2D(1.0 - p.y, p.x);
-        }
-        if ((getColorMask() & COLOR_ROT_180) > 0) {
+        }else if ((getColorMask() & COLOR_ROT_180) > 0) {
             p = new Point2D(1.0 - p.x, 1.0 - p.x);
-        }
-        if ((getColorMask() & COLOR_ROT_270) > 0) {
+        }else if ((getColorMask() & COLOR_ROT_270) > 0) {
             p = new Point2D(p.y, 1.0 - p.x);
         }
         return p;

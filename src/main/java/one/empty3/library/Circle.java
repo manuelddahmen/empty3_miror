@@ -234,6 +234,6 @@ public class Circle extends ParametricCurve {
             axeSm.setElem(axe);
             setAxis(axeSm);
             setRadius(r);
-
         }
+
 }
