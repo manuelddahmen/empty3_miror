@@ -42,8 +42,8 @@ public class TestPlanetEtLune1 extends TestObjetSub {
     }
     public static final int SECONDS = 30;
     public static final int FPS = 30;
-    private static final int TURNS = 2;
-    private static final int REAL_DAYS = 20;
+    private static final int TURNS = 1;
+    private static final int REAL_DAYS = 4;
     private final File planets = new File("res\\img\\planets2");
     private File earthFilename = new File(planets.getAbsolutePath()+
             File.separator+"_earth.jpg");
@@ -188,9 +188,6 @@ public class TestPlanetEtLune1 extends TestObjetSub {
         circle.setCalculerRepere1(true);
         earth.setCircle(circle);
         System.out.println("Camera t : " + u);
-
-
-        frame += 100;
     }
 
 

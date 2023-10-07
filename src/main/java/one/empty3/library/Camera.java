@@ -296,7 +296,7 @@ public class Camera extends CameraBox {
             case PERSPECTIVE_ISOM:
                 return x3d.getZ() - eye.getElem().getZ();
             case PERSPECTIVE_OEIL:
-                return x3d.moins(eye.getElem()).norme();//.getZ();
+                return x3d.moins(eye.getElem()).getZ();
             default:
                 throw new UnsupportedOperationException("Type de perspective non reconnu");
         }

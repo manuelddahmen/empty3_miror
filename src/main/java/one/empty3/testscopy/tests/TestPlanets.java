@@ -49,7 +49,7 @@ public class TestPlanets extends TestObjetSub {
     public static void main(String[] args) {
         TestPlanets testPlanets = new TestPlanets();
         testPlanets.loop(true);
-        testPlanets.setResolution(1920, 1080);
+        testPlanets.setResolution(Resolution.XVGARESOLUTION.x(), Resolution.XVGARESOLUTION.y());
         Thread thread = new Thread(testPlanets);
         thread.start();
     }
@@ -78,7 +78,7 @@ public class TestPlanets extends TestObjetSub {
         camera(c);
         i = -1;
 
-        frame = 3990;
+       // frame = 3990;
 
         incr();
     }
