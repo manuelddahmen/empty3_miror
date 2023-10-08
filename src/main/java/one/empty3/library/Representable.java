@@ -55,7 +55,7 @@ public class Representable /*extends RepresentableT*/ implements Serializable, C
     public static final int PATH_ELEM_STRUCTURE_MATRIX = 1;
     public static int PATH_ELEM_DOUBLE_VALUES = 2;
     public static int PATH_ELEM_REPRESENTABLE = 4;
-    public StructureMatrix<Rotation> rotation = new StructureMatrix<>(0, Rotation.class);
+    public final StructureMatrix<Rotation> rotation = new StructureMatrix<Rotation>(0, Rotation.class);
     protected double NFAST = 100;
     protected RtMatiere materiau;
     protected ITexture CFAST = DEFAULT_TEXTURE;
@@ -112,7 +112,9 @@ public class Representable /*extends RepresentableT*/ implements Serializable, C
     }
 
     public void setRotation(StructureMatrix<Rotation> rotation) {
-        this.rotation = rotation;
+        if(rotation!=null && rotation.getElem()!=null){
+            this.rotation.setElem(rotation.getElem());
+        }
     }
 
     public Point3D rotate(Point3D p0, Representable ref) {
@@ -612,6 +614,28 @@ public class Representable /*extends RepresentableT*/ implements Serializable, C
 
     }
 
+    public Point3D computeSpherical(Point3D pxy, double scale) {
+        for (Point3D point3D : vectors.data1d) {
+            if(point3D==null)
+                return pxy;
+        }
+        double cos = Math.cos(-Math.PI / 2 + Math.PI * pxy.get(1));
+        return getOrig().plus(
+                 getVectX().mult(
+                                Math.cos(2.0 * Math.PI * pxy.get(0)) * cos).plus(
+                                getVectY().mult(
+                                        Math.sin(2.0 * Math.PI * pxy.get(1)) * cos))
+                        .plus(getVectZ().mult(Math.sin(-Math.PI / 2 + Math.PI * pxy.get(1)))
+                        ).norme1().mult(scale));
+    }
+
+    public Point3D computeCubic(Point3D pxy, double scale) {
+        for (Point3D point3D : vectors.data1d) {
+            if(point3D==null)
+                return pxy;
+        }
+        return getOrig().plus(getVectX().mult(pxy.get(0)).plus(getVectY().mult(pxy.get(1)).plus(getVectZ().mult(pxy.get(2)))).norme1().mult(scale));
+    }
     public Point3D getVectX() {
         return vectors.getElem(0);
     }
@@ -638,6 +662,10 @@ public class Representable /*extends RepresentableT*/ implements Serializable, C
     public void setOrig(Point3D orig) {
         this.vectors.setElem(orig, 3);
     }
+    public Point3D getOrig() {
+        return this.vectors.getElem(3);
+    }
+
 }
 
 

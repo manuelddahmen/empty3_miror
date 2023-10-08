@@ -257,14 +257,14 @@ public class ZBufferImpl extends Representable implements ZBuffer {
                         Point3D p1, p2, p3, p4;
                         double u2 = u + n.getIncrU(), v2 = v + n.getIncrV();
                         double texU2 = u + n.getIncrU(), texV2 = v + n.getIncrV();
-                        if (u2 > n.getEndU() - n.getIncrU()) {
+                        if (u2 >= n.getEndU() - n.getIncrU()) {
                             Point3D point3D = new Point3D(u2, v2, 0.0);
                             point3D = n.getTerminalU().getElem().result(point3D);
                             u2 = point3D.get(0);
                             v2 = point3D.get(1);
 
                         }
-                        if (v2 > n.getEndV() - n.getIncrV()) {
+                        if (v2 >= n.getEndV() - n.getIncrV()) {
                             Point3D point3D = new Point3D(u2, v2, 0.0);
                             point3D = n.getTerminalV().getElem().result(point3D);
                             u2 = point3D.get(0);
@@ -1526,7 +1526,7 @@ public class ZBufferImpl extends Representable implements ZBuffer {
             int y = (int) ce.getY();
             double deep = camera().distanceCamera(x3d);
             if (x >= 0 & x < la & y >= 0 & y < ha
-                    && (deep >= ime.getElementProf(x, y))) {
+                    && (deep<= ime.getElementProf(x, y))) {
                 Point3D n = x3d.getNormale();
                 // Vérifier : n.eye>0 sinon n = -n Avoir toutes les normales
                 // dans la même direction par rapport à la caméra.
@@ -1535,6 +1535,7 @@ public class ZBufferImpl extends Representable implements ZBuffer {
                 else if (FORCE_POSITIVE_NORMALS && n.norme1().dot(scene().cameraActive().getEye().norme1()) < 0)
                     n = n.mult(-1);
                 cc = scene().lumiereTotaleCouleur(c, x3d, n);
+                ime.setElementProf(x, y, deep);
                 ime.setElementID(x, y, idImg);
                 ime.setElementCouleur(x, y, cc);
                 ime.setDeep(x, y, deep);

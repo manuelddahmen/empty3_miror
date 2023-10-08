@@ -899,16 +899,16 @@ public abstract class TestObjet implements Test, Runnable {
             lastInfoEllapsedMillis = System.currentTimeMillis() - timeStart;
             System.out.println("Time for frame°"+frame()+" (scene rendering: " + lastInfoEllapsedMillis/1000f);
             try {
-                File foutm = new File(this.dir.getAbsolutePath()
+                File fout = new File(this.dir.getAbsolutePath()
                         + File.separator + filename + ".bmo");
-                new Loader().saveTxt(foutm, scene);
-                dataWriter.writeFrameData(frame(), "Save text file: " + foutm.getAbsolutePath());
-                foutm = new File(this.dir.getAbsolutePath()
+                new Loader().saveTxt(fout, scene);
+                dataWriter.writeFrameData(frame(), "Save text file: " + fout.getAbsolutePath());
+                fout = new File(this.dir.getAbsolutePath()
                         + File.separator + filename + "-description.xml");
                 DataModel dataModel = new DataModel();
                 dataModel.setScene(scene());
-                dataModel.save(foutm.getAbsolutePath());
-                dataWriter.writeFrameData(frame(), "Save bin: " + foutm.getAbsolutePath());
+                dataModel.save(fout.getAbsolutePath());
+                dataWriter.writeFrameData(frame(), "Save bin: " + fout.getAbsolutePath());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

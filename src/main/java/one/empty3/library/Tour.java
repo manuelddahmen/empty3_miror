@@ -96,7 +96,7 @@ public class Tour extends Representable implements Generator {
         this.dest = dest;
     }
 
-    public Point3D getOrig() {
+    public Point3D getOrig1() {
         return orig;
     }
 

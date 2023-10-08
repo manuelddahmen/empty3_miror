@@ -40,10 +40,10 @@ public class TestPlanetEtLune1 extends TestObjetSub {
             return super.getCoord(1.0-x, y);
         }
     }
-    public static final int SECONDS = 30;
+    public static final int SECONDS = 20;
     public static final int FPS = 30;
-    private static final int TURNS = 1;
-    private static final int REAL_DAYS = 4;
+    private static final int TURNS = 2;
+    private static final int REAL_DAYS = 1;
     private final File planets = new File("res\\img\\planets2");
     private File earthFilename = new File(planets.getAbsolutePath()+
             File.separator+"_earth.jpg");
@@ -107,7 +107,7 @@ public class TestPlanetEtLune1 extends TestObjetSub {
         z().ratioVerticalAngle();
 
 
-        z().setDisplayType(ZBufferImpl.SURFACE_DISPLAY_TEXT_QUADS);
+        z().setDisplayType(ZBufferImpl.DISPLAY_ALL);
 
         z().texture(new ColorTexture(Color.BLACK));
         scene().texture(new ColorTexture(Color.BLACK));
@@ -170,18 +170,20 @@ public class TestPlanetEtLune1 extends TestObjetSub {
             scene().add(sphere);
         }
 
-        double u =Math.IEEEremainder((frame()),
-                (FPS * SECONDS)) / (FPS*SECONDS);
+        double u =1.*(frame())% (FPS * SECONDS) / (FPS*SECONDS*REAL_DAYS);
 
         Circle circle = earth.getCircle();
         earth.setVectZ(axeVerticalVideo);
 
         circle.getAxis().getElem().getP1().setElem(axeVerticalVideo.mult(1.0));
         circle.getAxis().getElem().getP2().setElem(axeVerticalVideo.mult(-1.0));
-        earth.setVectX(axesSphereHorizontaux[0].mult(Math.cos(2 * Math.PI * u))
-                .plus(axesSphereHorizontaux[1].mult(Math.sin(2 * Math.PI * u))).norme1());
-        earth.setVectY(axesSphereHorizontaux[0].mult(Math.cos(2 * Math.PI * u+Math.PI/2))
-                .plus(axesSphereHorizontaux[1].mult(Math.sin(2 * Math.PI * u+Math.PI/2))).norme1());
+        earth.setVectX(axesSphereHorizontaux[0].mult(Math.cos(2 * Math.PI * u)).
+                plus(axesSphereHorizontaux[1].mult(Math.sin(2 * Math.PI * u))));
+/*
+        earth.setVectY(axesSphereHorizontaux[0].mult(-Math.sin(2 * Math.PI * u))
+                .plus(axesSphereHorizontaux[1].mult(Math.cos(2 * Math.PI * u))));
+*/
+        earth.setVectY(earth.getVectZ().prodVect(earth.getVectX()));
         circle.setCalculerRepere1(true);
         earth.setCircle(circle);
         System.out.println("Camera t : " + u);

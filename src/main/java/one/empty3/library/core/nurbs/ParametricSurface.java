@@ -58,6 +58,22 @@ public static final  int QUAD_NOT_COMPUTE_V2 = 2;
     protected StructureMatrix<Point2Point> terminalV = new StructureMatrix<>(0, Point2Point.class);
     protected Point3D[] vectorsBak;
     protected int level = 0;
+    {
+        terminalU.setElem(new Point2Point() {
+            @Override
+            public Point3D result(Point3D p) {
+                return new Point3D(p.get(0), p.get(1), p.get(2));
+            }
+        });
+        terminalV.setElem(new Point2Point() {
+            @Override
+            public Point3D result(Point3D p) {
+                return new Point3D(p.get(0), p.get(1), p.get(2));
+            }
+        });
+
+    }
+
     //    private ParametricSurface.Parameters parameters = new ParametricSurface.Parameters(true);
 
   /*  static {

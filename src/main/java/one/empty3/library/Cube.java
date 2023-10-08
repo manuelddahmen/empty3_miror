@@ -28,7 +28,7 @@ public class Cube extends Representable implements TRIGenerable {
     private StructureMatrix<Double> cote = new StructureMatrix<>(0, Double.class);
     private StructureMatrix<Point3D> position0 = new StructureMatrix<>(0, Point3D.class);
     private TRIObject ts = new TRIObject();
-    private static Double[][][] coordCube = new Double[][][]{
+    private static Double[][][] cordCube = new Double[][][]{
             {
                     {1.0, -1.0, -1.0},
                     {1.0, 1.0, -1.0},
@@ -99,8 +99,8 @@ public class Cube extends Representable implements TRIGenerable {
     public TRIObject generate() {
         ts.clear();
 
-        for (int i = 0; i < coordCube.length; i++) {
-            Point3D [] coord  = new Point3D[] {new Point3D(coordCube[i][0]), new Point3D(coordCube[i][1]), new Point3D(coordCube[i][2])};
+        for (int i = 0; i < cordCube.length; i++) {
+            Point3D [] coord  = new Point3D[] {new Point3D(cordCube[i][0]), new Point3D(cordCube[i][1]), new Point3D(cordCube[i][2])};
 
             Point3D [] coord2 = new Point3D[3];
 
@@ -113,9 +113,9 @@ public class Cube extends Representable implements TRIGenerable {
             }
 
             TRI t = new TRI(
-                    coord2[0].mult(cote.getElem()/2).plus(position0.getElem()),
-                    coord2[1].mult(cote.getElem()/2).plus(position0.getElem()),
-                    coord2[2].mult(cote.getElem()/2).plus(position0.getElem()),
+                    computeCubic(coord2[0], cote.getElem()/2),
+                    computeCubic(coord2[1], cote.getElem()/2),
+                    computeCubic(coord2[2], cote.getElem()/2),
                     texture());
 
             ts.add(t);
@@ -146,7 +146,7 @@ public class Cube extends Representable implements TRIGenerable {
     }
 
     public static Double[][][] getData() {
-        return coordCube;
+        return cordCube;
     }
 
     public StructureMatrix<Double> getCote() {
@@ -165,12 +165,12 @@ public class Cube extends Representable implements TRIGenerable {
         this.ts = ts;
     }
 
-    public static Double[][][] getCoordCube() {
-        return coordCube;
+    public static Double[][][] getCordCube() {
+        return cordCube;
     }
 
-    public static void setCoordCube(Double[][][] coordCube) {
-        Cube.coordCube = coordCube;
+    public static void setCordCube(Double[][][] cordCube) {
+        Cube.cordCube = cordCube;
     }
 
 

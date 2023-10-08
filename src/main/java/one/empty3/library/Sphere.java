@@ -26,53 +26,57 @@ import one.empty3.library.core.nurbs.Point2Point;
 public class Sphere extends ParametricSurface {
     protected StructureMatrix<Circle> circle = new StructureMatrix<>(0, Circle.class);
 
-    public Sphere()
-    {
+    public Sphere() {
         super();
         circle.setElem(new Circle());
 
 
     }
+
     public Sphere(Axe axis, double radius) {
         this();
-        circle .setElem(new Circle(axis, radius));
+        circle.setElem(new Circle(axis, radius));
     }
 
     public Sphere(Point3D center, double radius) {
         this();
         getCircle().getAxis().setElem(new Axe(center.plus(Point3D.Y.mult(radius)), center.plus(Point3D.Y.mult(-radius))));
         getCircle().setRadius(radius);
-
-    }
-    {
         terminalU.setElem(new Point2Point() {
             @Override
             public Point3D result(Point3D p) {
-                return new Point3D(p.get(0), p.get(1), p.get(2));
+                return new Point3D(1.0, p.get(1), p.get(2));
             }
         });
         terminalV.setElem(new Point2Point() {
             @Override
             public Point3D result(Point3D p) {
-                return new Point3D(p.get(0), p.get(1), p.get(2));
+                return new Point3D(p.get(0), 1.0, 0.0);
             }
         });
 
     }
+
     public Point3D calculerPoint3D(double u, double v) {
+        for (Point3D point3D : vectors.data1d) {
+            if (point3D == null)
+                return Point3D.O0;
+        }
         Circle c = circle.getData0d();
-        if (!c.isCalculerRepere1())
-        {
+        if (!c.isCalculerRepere1()) {
             c.calculerRepere1();
         }
         double cos = Math.cos(-Math.PI / 2 + Math.PI * v);
-        return c.getCenter().plus(
-                c.getVectX().mult(
+        Point3D mult = c.getVectX().mult(
                         Math.cos(2.0 * Math.PI * u) * cos).plus(
                         c.getVectY().mult(
                                 Math.sin(2.0 * Math.PI * u) * cos))
-                                .plus(c.getVectZ().mult(Math.sin(-Math.PI / 2 + Math.PI * v))
-                ).norme1().mult(c.radius.getElem()));
+                .plus(c.getVectZ().mult(Math.sin(-Math.PI / 2 + Math.PI * v))
+                );
+        if (mult.norme() <= Double.MIN_VALUE) {
+            return c.getCenter();
+        } else
+            return mult.norme1().mult(c.radius.getElem());
     }
 
     public Circle getCircle() {
@@ -92,7 +96,7 @@ public class Sphere extends ParametricSurface {
 
     @Override
     public String toString() {
-        return "sphere (\n\t"+circle.toString()+"\n\t"+texture.toString()+"\n)\t";
+        return "sphere (\n\t" + circle.toString() + "\n\t" + texture.toString() + "\n)\t";
     }
 
     @Override
