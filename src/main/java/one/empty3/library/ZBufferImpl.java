@@ -257,14 +257,14 @@ public class ZBufferImpl extends Representable implements ZBuffer {
                         Point3D p1, p2, p3, p4;
                         double u2 = u + n.getIncrU(), v2 = v + n.getIncrV();
                         double texU2 = u + n.getIncrU(), texV2 = v + n.getIncrV();
-                        if (u2 >= n.getEndU() - n.getIncrU()) {
+                        if (u2 > n.getEndU() - n.getIncrU()) {
                             Point3D point3D = new Point3D(u2, v2, 0.0);
                             point3D = n.getTerminalU().getElem().result(point3D);
                             u2 = point3D.get(0);
                             v2 = point3D.get(1);
 
                         }
-                        if (v2 >= n.getEndV() - n.getIncrV()) {
+                        if (v2 > n.getEndV() - n.getIncrV()) {
                             Point3D point3D = new Point3D(u2, v2, 0.0);
                             point3D = n.getTerminalV().getElem().result(point3D);
                             u2 = point3D.get(0);

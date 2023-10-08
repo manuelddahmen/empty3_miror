@@ -44,6 +44,7 @@ public class Circle extends ParametricCurve {
     }
 
     public Circle(Axe axis, double radius) {
+        this();
         this.axis.setElem(axis);
         this.radius.setElem(radius);
 

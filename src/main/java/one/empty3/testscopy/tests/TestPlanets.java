@@ -41,6 +41,7 @@ public class TestPlanets extends TestObjetSub {
     private Point3D axeVerticalVideo = Point3D.Y;
     private Point3D[] axeViseeVideo = new Point3D[]{Point3D.X, Point3D.Z};
     private Point3D[] axesSphereHorizontaux = new Point3D[]{Point3D.X, Point3D.Z};
+    private TextureImg textureImg;
 
     private static double getaDouble() {
         return TURNS * FPS * SECONDS;
@@ -49,7 +50,7 @@ public class TestPlanets extends TestObjetSub {
     public static void main(String[] args) {
         TestPlanets testPlanets = new TestPlanets();
         testPlanets.loop(true);
-        testPlanets.setResolution(Resolution.XVGARESOLUTION.x(), Resolution.XVGARESOLUTION.y());
+        testPlanets.setResolution(320, 240);
         Thread thread = new Thread(testPlanets);
         thread.start();
     }
@@ -81,15 +82,17 @@ public class TestPlanets extends TestObjetSub {
        // frame = 3990;
 
         incr();
+
     }
 
     public void incr() {
         int i1 = (frame() / (FPS * SECONDS)) ;
         if (i1 != i) {
             i = i1;
-            if (i1 < planetsImagesFiles.length)
+            if (i1 < planetsImagesFiles.length) {
                 image = ImageIO.read(planetsImagesFiles[i1]);
-            else {
+                textureImg = new TextureImg(new ECBufferedImage(image));
+            } else {
                 i1 = 0;
             }
 
@@ -117,19 +120,21 @@ public class TestPlanets extends TestObjetSub {
         scene().add(sphere);
 
 
-        TextureImg textureImg = new TextureImg(new ECBufferedImage(image));
         sphere.texture(textureImg);
 
         double v = (frame() % (FPS * SECONDS)) / getaDouble();
+
+
+        //setZ(new ZBufferImpl(getResx(), getResy()));
 
         Circle circle = sphere.getCircle();
         circle.setVectZ(axeVerticalVideo);
         circle.getAxis().getElem().getP1().setElem(axeVerticalVideo.mult(1.0));
         circle.getAxis().getElem().getP2().setElem(axeVerticalVideo.mult(-1.0));
         circle.setVectX(axesSphereHorizontaux[0].mult(Math.cos(2 * Math.PI * v))
-                .plus(axesSphereHorizontaux[1].mult(-Math.sin(2 * Math.PI * v))).norme1());
-        circle.setVectY(axesSphereHorizontaux[0].mult(Math.sin(2 * Math.PI * v))
-                .plus(axesSphereHorizontaux[1].mult(Math.cos(2 * Math.PI * v))).norme1());
+                .plus(axesSphereHorizontaux[1].mult(Math.sin(2 * Math.PI * v))));
+        circle.setVectY(axesSphereHorizontaux[0].mult(-Math.sin(2 * Math.PI * v))
+                .plus(axesSphereHorizontaux[1].mult(Math.cos(2 * Math.PI * v))));
         circle.setCalculerRepere1(true);
         sphere.setCircle(circle);
         System.out.println("Camera t : " + v);

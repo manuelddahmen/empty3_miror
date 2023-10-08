@@ -86,6 +86,7 @@ public class TestPlanetEtLune1 extends TestObjetSub {
         TestPlanetEtLune1 testPlanets = new TestPlanetEtLune1();
         testPlanets.loop(true);
         testPlanets.setResolution(Resolution.HD720RESOLUTION.x(), Resolution.HD720RESOLUTION.y());
+        testPlanets.setResolution(320, 240);
         Thread thread = new Thread(testPlanets);
         thread.start();
     }
@@ -169,22 +170,18 @@ public class TestPlanetEtLune1 extends TestObjetSub {
             scene().add(sphere);
         }
 
-        double u =Math.IEEEremainder((frame() +getMaxFrames()),
-                (FPS * SECONDS)) / getaDouble();
+        double u =Math.IEEEremainder((frame()),
+                (FPS * SECONDS)) / (FPS*SECONDS);
 
         Circle circle = earth.getCircle();
         earth.setVectZ(axeVerticalVideo);
-        double lat = 0.0;
+
         circle.getAxis().getElem().getP1().setElem(axeVerticalVideo.mult(1.0));
         circle.getAxis().getElem().getP2().setElem(axeVerticalVideo.mult(-1.0));
-        earth.setVectX(axesSphereHorizontaux[0].mult(Math.cos(2 * Math.PI * u)
-                        * Math.cos(Math.PI/2*lat))
-                .plus(axesSphereHorizontaux[1].mult(Math.sin(2 * Math.PI * u)
-                        * Math.cos(Math.PI/2*lat))).norme1());
-        earth.setVectY(axesSphereHorizontaux[0].mult(Math.sin(2 * Math.PI * u)
-                        * Math.cos(Math.PI/2*lat))
-                .plus(axesSphereHorizontaux[1].mult(Math.cos(2 * Math.PI * u)
-                        * Math.cos(Math.PI/2*lat))).norme1());
+        earth.setVectX(axesSphereHorizontaux[0].mult(Math.cos(2 * Math.PI * u))
+                .plus(axesSphereHorizontaux[1].mult(Math.sin(2 * Math.PI * u))).norme1());
+        earth.setVectY(axesSphereHorizontaux[0].mult(Math.cos(2 * Math.PI * u+Math.PI/2))
+                .plus(axesSphereHorizontaux[1].mult(Math.sin(2 * Math.PI * u+Math.PI/2))).norme1());
         circle.setCalculerRepere1(true);
         earth.setCircle(circle);
         System.out.println("Camera t : " + u);

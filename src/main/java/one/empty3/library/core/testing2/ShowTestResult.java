@@ -324,7 +324,7 @@ public final class ShowTestResult extends JFrame implements Runnable {
     }
 
     private void jPanelPreviewImageMouseClicked(MouseEvent e) {
-        displaying = !displaying;
+        dessine();
     }
 
     private void editorPane1MouseClicked(MouseEvent e) {
@@ -693,7 +693,7 @@ public final class ShowTestResult extends JFrame implements Runnable {
 
 
     private boolean isDisplaying() {
-        return true;
+        return displaying;
     }
 
     public void setDisplaying(boolean b) {
