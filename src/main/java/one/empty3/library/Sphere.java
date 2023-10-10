@@ -42,6 +42,9 @@ public class Sphere extends ParametricSurface {
         this();
         getCircle().getAxis().setElem(new Axe(center.plus(Point3D.Y.mult(radius)), center.plus(Point3D.Y.mult(-radius))));
         getCircle().setRadius(radius);
+
+    }
+    {
         terminalU.setElem(new Point2Point() {
             @Override
             public Point3D result(Point3D p) {
@@ -56,13 +59,12 @@ public class Sphere extends ParametricSurface {
         });
 
     }
-
     public Point3D calculerPoint3D(double u, double v) {
-        for (Point3D point3D : vectors.data1d) {
+        for (Point3D point3D : getCircle().vectors.data1d) {
             if (point3D == null)
                 return Point3D.O0;
         }
-        Circle c = circle.getData0d();
+        Circle c = getCircle();
         if (!c.isCalculerRepere1()) {
             c.calculerRepere1();
         }
@@ -72,14 +74,14 @@ public class Sphere extends ParametricSurface {
                         c.getVectY().mult(
                                 Math.sin(2.0 * Math.PI * u) * cos))
                 .plus(c.getVectZ().mult(Math.sin(-Math.PI / 2 + Math.PI * v)));
-        if (multi.norme() <= Double.MIN_VALUE) {
-            return c.getCenter();
-        } else
-            return c.getCenter().plus(multi.norme1().mult(c.radius.getElem()));
+        //if (multi.norme() <= Double.MIN_VALUE) {
+        //    return c.getCenter();
+        //} else
+        return c.getCenter().plus(multi.norme1().mult(c.radius.getElem()));
     }
 
     public Circle getCircle() {
-        return circle.getData0d();
+        return circle.getElem();
     }
 
     public void setCircle(Circle circle) {

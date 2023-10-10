@@ -162,6 +162,13 @@ tasks.register('one.empty3.tests.TestPlanetEtLune', JavaExec) {
 }
 
 
+tasks.register('one.empty3.tests.TestPlanetEtLune1', JavaExec) {
+    classpath sourceSets.test.runtimeClasspath
+    mainClass = "one.empty3.tests.TestPlanetEtLune1"
+    args ""
+    dependsOn(jar)
+}
+
 
 
 signing {

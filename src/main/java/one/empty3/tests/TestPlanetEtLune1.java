@@ -120,7 +120,6 @@ public class TestPlanetEtLune1 extends TestObjetSub {
                         .prodVect(axeVerticalVideo.mult(earthRealSize))
                         .mult(1./earthRealSize), axeVerticalVideo);
 */
-        camera(c);
         i = -1;
 
         LumierePointSimple lumierePointSimple = new LumierePointSimple(Color.YELLOW, sun.getCircle().getCenter(), 100000);
@@ -160,6 +159,7 @@ public class TestPlanetEtLune1 extends TestObjetSub {
         z().scene().cameraActive(c);
         scene().cameraActive(c);
         z().camera(c);
+        camera(c);
 
 
         for(Sphere sphere :new Sphere[] {earth}) {
@@ -169,7 +169,7 @@ public class TestPlanetEtLune1 extends TestObjetSub {
             scene().add(sphere);
         }
         final int i1 = FPS * SECONDS * REAL_DAYS;
-        double u =  1.0* frame() / getMaxFrames();
+        double u =  (1.0* frame()) / getMaxFrames();
 
         Circle circle = earth.getCircle();
         circle.getAxis().getElem().getP1().setElem(axeVerticalVideo.mult(radius));
@@ -181,7 +181,7 @@ public class TestPlanetEtLune1 extends TestObjetSub {
                 .plus(axesSphereHorizontaux[1].mult(Math.sin(2 * Math.PI * u))).norme1());
         */
 
-        Matrix33 matrixRotVerticale = Matrix33.rotationX(Math.PI/2).mult(Matrix33.rotationZ(2*Math.PI*u));
+        Matrix33 matrixRotVerticale = Matrix33.rotationZ(2.0*Math.PI*u).mult(Matrix33.rotationX(Math.PI/2));
 
         Matrix33 matriceB =
                 new Matrix33(new Point3D[]{axesSphereHorizontaux[0], axesSphereHorizontaux[1], axeVerticalVideo})
@@ -198,5 +198,8 @@ public class TestPlanetEtLune1 extends TestObjetSub {
         scene().add(circle);
         System.out.println("Camera u : " + u);
         frame+=10;
+
+        z().idzpp();
+
     }
 }

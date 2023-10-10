@@ -82,7 +82,7 @@ public class ZBufferImpl extends Representable implements ZBuffer {
     protected double[][] Simeprof;
     protected Scene currentScene;
     protected int displayType = SURFACE_DISPLAY_TEXT_TRI;
-    protected boolean FORCE_POSITIVE_NORMALS = false;
+    protected boolean FORCE_POSITIVE_NORMALS = true;
     ZBufferImpl that;
     protected StructureMatrix<Double> scale = new StructureMatrix(0, Double.class);
     public ZBufferImpl() {
