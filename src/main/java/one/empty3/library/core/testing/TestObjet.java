@@ -857,7 +857,6 @@ public abstract class TestObjet implements Test, Runnable {
             System.out.println("Time for frame°"+frame()+" (scene configuration: " + lastInfoEllapsedMillis/1000f);
 
             //Logger.getAnonymousLogger().log(Level.INFO, z.scene());
-            timeStart = System.currentTimeMillis();
 
             if ((generate & GENERATE_IMAGE) > 0) {
                 try {

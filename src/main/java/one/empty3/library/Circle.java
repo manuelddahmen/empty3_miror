@@ -23,20 +23,12 @@ import one.empty3.library.core.nurbs.ParametricCurve;
 
 import java.text.DecimalFormat;
 
-/*__*
- *
- * TODO Check all the constructors.
- *
- */
-
 
 public class Circle extends ParametricCurve {
     protected StructureMatrix<Axe> axis = new StructureMatrix<>(0, Axe.class);
     //public Point3D center;
     protected StructureMatrix<Double> radius = new StructureMatrix<>(0, Double.class);
     private boolean isCalculerRepere1 = false;
-    private Point3D center;
-
     public Circle() {
         axis.setElem(new Axe());
         radius.setElem(10.0);
@@ -124,8 +116,7 @@ public class Circle extends ParametricCurve {
                                 .plus(
                                         getVectY().mult(
                                                 Math.sin(2.0 * Math.PI * t)))
-                )
-                        .mult(radius.getElem())
+                ).norme1().mult(radius.getElem())
         );
     }
 
@@ -164,10 +155,6 @@ public class Circle extends ParametricCurve {
     @Override
     public String toString() {
         return "circle (\n" + axis.toString() + "\n";
-    }
-
-    public void setCenter(Point3D center) {
-        this.center = center;
     }
 
 

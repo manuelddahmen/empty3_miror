@@ -76,7 +76,7 @@ public class Sphere extends ParametricSurface {
         if (mult.norme() <= Double.MIN_VALUE) {
             return c.getCenter();
         } else
-            return mult.norme1().mult(c.radius.getElem());
+            return c.getCenter().plus(mult.norme1().mult(c.radius.getElem()));
     }
 
     public Circle getCircle() {
@@ -135,6 +135,6 @@ public class Sphere extends ParametricSurface {
     @Override
     public void setOrig(Point3D orig) {
         super.setOrig(orig);
-        getCircle().setCenter(orig);
+        getCircle().setOrig(orig);
     }
 }

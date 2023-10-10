@@ -92,7 +92,7 @@ public class SphereCube12 extends TestObjetSub {
         double TT;
         TT = t0 + (t1 - t0) * pc;
 
-        s.getCircle().setCenter(Point3D.X.mult(TT * d));
+        s.getCircle().getAxis().getElem().setCenter(Point3D.X.mult(TT * d));
 
         cam.setLookat(s.getCircle().getCenter());
         cam.setEye(Point3D.Z.mult(d / 3));
