@@ -1535,11 +1535,11 @@ public class ZBufferImpl extends Representable implements ZBuffer {
                 else if (FORCE_POSITIVE_NORMALS && n.norme1().dot(scene().cameraActive().getEye().norme1()) < 0)
                     n = n.mult(-1);
                 cc = scene().lumiereTotaleCouleur(c, x3d, n);
-                ime.setElementProf(x, y, deep);
                 ime.setElementID(x, y, idImg);
                 ime.setElementCouleur(x, y, cc);
                 ime.setDeep(x, y, deep);
                 ime.setElementPoint(x, y, x3d);
+                ime.setElementProf(x, y, deep);
                 return true;
             }
             return false;

@@ -67,16 +67,15 @@ public class Sphere extends ParametricSurface {
             c.calculerRepere1();
         }
         double cos = Math.cos(-Math.PI / 2 + Math.PI * v);
-        Point3D mult = c.getVectX().mult(
+        Point3D multi = c.getVectX().mult(
                         Math.cos(2.0 * Math.PI * u) * cos).plus(
                         c.getVectY().mult(
                                 Math.sin(2.0 * Math.PI * u) * cos))
-                .plus(c.getVectZ().mult(Math.sin(-Math.PI / 2 + Math.PI * v))
-                );
-        if (mult.norme() <= Double.MIN_VALUE) {
+                .plus(c.getVectZ().mult(Math.sin(-Math.PI / 2 + Math.PI * v)));
+        if (multi.norme() <= Double.MIN_VALUE) {
             return c.getCenter();
         } else
-            return c.getCenter().plus(mult.norme1().mult(c.radius.getElem()));
+            return c.getCenter().plus(multi.norme1().mult(c.radius.getElem()));
     }
 
     public Circle getCircle() {

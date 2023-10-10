@@ -40,7 +40,7 @@ public class TestPlanetEtLune1 extends TestObjetSub {
             return super.getCoord(1.0-x, y);
         }
     }
-    public static final int SECONDS = 5;
+    public static final int SECONDS = 4;
     public static final int FPS = 25;
     private static final int TURNS = 2;
     private static final int REAL_DAYS = 1;
@@ -169,7 +169,7 @@ public class TestPlanetEtLune1 extends TestObjetSub {
             scene().add(sphere);
         }
         final int i1 = FPS * SECONDS * REAL_DAYS;
-        double u =  (frame() % i1) /((double)i1);
+        double u =  1.0* frame() / getMaxFrames();
 
         Circle circle = earth.getCircle();
         circle.getAxis().getElem().getP1().setElem(axeVerticalVideo.mult(radius));
@@ -196,6 +196,7 @@ public class TestPlanetEtLune1 extends TestObjetSub {
         earth.setCircle(circle);
         earth.setQuad_not_computed(0);
         scene().add(circle);
-        System.out.println("Camera t : " + u);
+        System.out.println("Camera u : " + u);
+        frame+=10;
     }
 }
