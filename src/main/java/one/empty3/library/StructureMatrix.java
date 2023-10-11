@@ -399,12 +399,16 @@ public class StructureMatrix<T> implements Serializable, Serialisable {
         data1d = Collections.synchronizedList(new ArrayList<>());
         switch (dim) {
             case 1:
+                data1d.clear();
+                int i=0;
                 for (T t : all) {
                     if (t != null)
-                        data1d.add(t);
+                        setElem(t, i);
                     else
                         throw new NullPointerException("setAll elem == null");
+                    i++;
                 }
+                break;
         }
     }
 

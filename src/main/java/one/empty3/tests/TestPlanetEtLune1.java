@@ -40,9 +40,9 @@ public class TestPlanetEtLune1 extends TestObjetSub {
             return super.getCoord(1.0-x, y);
         }
     }
-    public static final int SECONDS = 4;
+    public static final int SECONDS = 35;
     public static final int FPS = 25;
-    private static final int TURNS = 2;
+    private static final int TURNS = 1;
     private static final int REAL_DAYS = 1;
     private final File planets = new File("res\\img\\planets2");
     private final File earthFilename = new File(planets.getAbsolutePath()+
@@ -87,8 +87,8 @@ public class TestPlanetEtLune1 extends TestObjetSub {
         TestPlanetEtLune1 testPlanets = new TestPlanetEtLune1();
         testPlanets.loop(true);
         testPlanets.setResolution(Resolution.HD720RESOLUTION.x(), Resolution.HD720RESOLUTION.y());
-        testPlanets.setResolution(320, 240);
-        testPlanets.setResolution(160, 90);
+        //testPlanets.setResolution(320, 240);
+        //testPlanets.setResolution(160, 90);
         Thread thread = new Thread(testPlanets);
         thread.start();
     }
@@ -164,8 +164,8 @@ public class TestPlanetEtLune1 extends TestObjetSub {
 
 
         for(Sphere sphere :new Sphere[] {earth}) {
-            sphere.setIncrU(.003);
-            sphere.setIncrV(.003);
+            sphere.setIncrU(.05);
+            sphere.setIncrV(.05);
             scene().clear();
             scene().add(sphere);
         }
@@ -175,33 +175,30 @@ public class TestPlanetEtLune1 extends TestObjetSub {
         Circle circle = earth.getCircle();
         circle.getAxis().getElem().getP1().setElem(axeVerticalVideo.mult(radius));
         circle.getAxis().getElem().getP2().setElem(axeVerticalVideo.mult(-radius));
-        /*earth.setVectZ(axeVerticalVideo);
-        earth.setVectX(axesSphereHorizontaux[0].mult(Math.cos(2 * Math.PI * u)).
-                plus(axesSphereHorizontaux[0].mult(Math.sin(2 * Math.PI * u))).norme1());
-        earth.setVectY(axesSphereHorizontaux[1].mult(Math.cos(2 * Math.PI * u))
-                .plus(axesSphereHorizontaux[1].mult(Math.sin(2 * Math.PI * u))).norme1());
-        */
-
-        Matrix33 matrixB =Matrix33.ZXY.mult(Matrix33.rotationZ(2.0*Math.PI*u))
-                .mult(Matrix33.rotationX(Math.PI/2));
-
+        earth.setVectZ(axeVerticalVideo);
+        earth.setVectX(axesSphereHorizontaux[0].mult(Math.cos(2 * Math.PI * u))
+                        .plus(axesSphereHorizontaux[1].mult(Math.sin(2 * Math.PI * u))));
+        earth.setVectY(axesSphereHorizontaux[0].mult(-Math.sin(2 * Math.PI * u))
+                .plus(axesSphereHorizontaux[1].mult(Math.cos(2 * Math.PI * u))));
+        /*
+        Matrix33 matrixB = Matrix33.ZXY.mult(Matrix33.rotationZ(2.0*Math.PI*u))
+                .mult(Matrix33.rotationX(Math.PI));
         Point3D[] colVectors = matrixB.getColVectors();//Matrix33.ZXY.mult(matriceB).getRowVectors();
         earth.setVectX(colVectors[0]);
         earth.setVectY(colVectors[1]);
         earth.setVectZ(colVectors[2]);
-
         int i = 0;
         for(Point3D v : colVectors) {
             System.out.println("P3 ["+i+"] = " + v);
             i++;
         }
         System.out.println(matrixB);
+*/
 
         earth.setCircle(circle);
         circle.setCalculerRepere1(true);
         earth.setQuad_not_computed(0);
         scene().add(circle);
         System.out.println("Camera u : " + u);
-        frame+=10;
     }
 }

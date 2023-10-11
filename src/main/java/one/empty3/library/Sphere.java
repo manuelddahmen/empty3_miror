@@ -99,43 +99,4 @@ public class Sphere extends ParametricSurface {
     public String toString() {
         return "sphere (\n\t" + circle.toString() + "\n\t" + texture.toString() + "\n)\t";
     }
-
-    @Override
-    public Point3D getVectX() {
-        return super.getVectX();
-    }
-
-    @Override
-    public void setVectX(Point3D vectX) {
-        super.setVectX(vectX);
-        getCircle().setVectX(vectX);
-    }
-
-    @Override
-    public Point3D getVectY() {
-        return super.getVectY();
-    }
-
-    @Override
-    public void setVectY(Point3D vectY) {
-        super.setVectY(vectY);
-        getCircle().setVectY(vectY);
-    }
-
-    @Override
-    public Point3D getVectZ() {
-        return super.getVectZ();
-    }
-
-    @Override
-    public void setVectZ(Point3D vectZ) {
-        super.setVectZ(vectZ);
-        getCircle().setVectZ(vectZ);
-    }
-
-    @Override
-    public void setOrig(Point3D orig) {
-        super.setOrig(orig);
-        getCircle().setOrig(orig);
-    }
 }

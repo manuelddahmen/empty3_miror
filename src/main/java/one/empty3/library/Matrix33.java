@@ -74,6 +74,9 @@ public class Matrix33 extends Representable {
             Logger.getAnonymousLogger().log(Level.INFO, "Erreur dans Matrix33 . 9 éléments requis");
             throw new IndexOutOfBoundsException("Matrix33 9 " + d.length);
         }
+        for (int i = 0; i < d.length; i++) {
+            d[i] = d[i]==null?0.0:d[i];
+        }
         this.d.setAll(d);
     }
 
@@ -84,8 +87,8 @@ public class Matrix33 extends Representable {
         }
         dim1 = dim2 = (int) Math.sqrt(d.length);
         Double[] D = new Double[9];
-        for (int i = 0; i < 9; i++) {
-            D[i] = d[i];
+        for (int i = 0; i < d.length; i++) {
+            d[i] = d[i];
         }
         this.d.setAll(D);
     }
@@ -93,9 +96,11 @@ public class Matrix33 extends Representable {
     public Matrix33(Point3D[] p) {
         this();
         for (int i = 0; i < 3; i++) {
-
+            if(p[i]==null)
+                p[i] = Point3D.O0;
             for (int j = 0; j < 3; j++) {
-
+                if(p[i].get(j)==null)
+                    p[i].set(j, 0.0);
                 d.setElem(p[i].get(j), i * 3 + j);
             }
         }
@@ -166,12 +171,12 @@ public class Matrix33 extends Representable {
     }
 
     public Matrix33 mult(Matrix33 mult) {
-        Matrix33 r = new Matrix33();
+        Matrix33 r = new Matrix33(new Double[d.getData1d().size()]);
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 double d0 = 0;
                 for (int k = 0; k < 3; k++) {
-                    d0 += get(i, k) * get(k, j);
+                    d0 += get(i, k) * mult.get(k, j);
                 }
                 r.set(i, j, d0);
             }
@@ -194,10 +199,10 @@ public class Matrix33 extends Representable {
     }
 
     public Matrix33 plus(Matrix33 m) {
-        Matrix33 mres = new Matrix33(this);
+        Matrix33 mres = new Matrix33(new Double[d.getData1d().size()]);
 
         for (int i = 0; i < d.getData1d().size(); i++) {
-            double value = mres.d.getElem(i);
+            double value = m.d.getElem(i);
             mres.d.setElem(d.getElem(i) + value);
         }
         return mres;
