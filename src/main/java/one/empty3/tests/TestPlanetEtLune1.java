@@ -88,6 +88,7 @@ public class TestPlanetEtLune1 extends TestObjetSub {
         testPlanets.loop(true);
         testPlanets.setResolution(Resolution.HD720RESOLUTION.x(), Resolution.HD720RESOLUTION.y());
         testPlanets.setResolution(320, 240);
+        testPlanets.setResolution(160, 90);
         Thread thread = new Thread(testPlanets);
         thread.start();
     }
@@ -169,7 +170,7 @@ public class TestPlanetEtLune1 extends TestObjetSub {
             scene().add(sphere);
         }
         final int i1 = FPS * SECONDS * REAL_DAYS;
-        double u =  (1.0* frame()) / getMaxFrames();
+        double u =  (1.0 * frame()) / getMaxFrames();
 
         Circle circle = earth.getCircle();
         circle.getAxis().getElem().getP1().setElem(axeVerticalVideo.mult(radius));
@@ -181,25 +182,26 @@ public class TestPlanetEtLune1 extends TestObjetSub {
                 .plus(axesSphereHorizontaux[1].mult(Math.sin(2 * Math.PI * u))).norme1());
         */
 
-        Matrix33 matrixRotVerticale = Matrix33.rotationZ(2.0*Math.PI*u).mult(Matrix33.rotationX(Math.PI/2));
+        Matrix33 matrixB =Matrix33.ZXY.mult(Matrix33.rotationZ(2.0*Math.PI*u))
+                .mult(Matrix33.rotationX(Math.PI/2));
 
-        Matrix33 matriceB =
-                new Matrix33(new Point3D[]{axesSphereHorizontaux[0], axesSphereHorizontaux[1], axeVerticalVideo})
-                        .mult(matrixRotVerticale);
-        Point3D[] colVectors = matriceB.getColVectors();
+        Point3D[] colVectors = matrixB.getColVectors();//Matrix33.ZXY.mult(matriceB).getRowVectors();
         earth.setVectX(colVectors[0]);
         earth.setVectY(colVectors[1]);
         earth.setVectZ(colVectors[2]);
 
+        int i = 0;
+        for(Point3D v : colVectors) {
+            System.out.println("P3 ["+i+"] = " + v);
+            i++;
+        }
+        System.out.println(matrixB);
 
-        circle.setCalculerRepere1(true);
         earth.setCircle(circle);
+        circle.setCalculerRepere1(true);
         earth.setQuad_not_computed(0);
         scene().add(circle);
         System.out.println("Camera u : " + u);
         frame+=10;
-
-        z().idzpp();
-
     }
 }

@@ -336,7 +336,7 @@ public class Matrix33 extends Representable {
             for(int j=0; j<getDim2(); j++) {
                 det += cofactor(i, j).determinant()*(d.getElem(j*getDim1()+j));
             }
-        return determinant();
+        return det;
     }
 
     private Matrix33 subMatrice(int i, int j) {

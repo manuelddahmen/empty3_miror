@@ -40,7 +40,7 @@ public abstract class ParametricSurface extends Representable {
 
 public static final int QUAD_NOT_COMPUTE_U2 = 1;
 public static final  int QUAD_NOT_COMPUTE_V2 = 2;
-    protected int quad_not_computed = 0;
+    protected int quad_not_computed = 3;
     private static final double MIN_NORMGT0 = 0.000000001;
     private static final double TANGENT_INCR = 0.00000001;
 //    private static Globals globals;
