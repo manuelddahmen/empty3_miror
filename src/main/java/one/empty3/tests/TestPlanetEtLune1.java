@@ -123,7 +123,7 @@ public class TestPlanetEtLune1 extends TestObjetSub {
 */
         i = -1;
 
-        LumierePointSimple lumierePointSimple = new LumierePointSimple(Color.YELLOW, sun.getCircle().getCenter(), 100000);
+        LumierePonctuelle lumierePointSimple = new LumierePonctuelle(Point3D.X.mult(1000.0), Color.BLACK);
 
         //scene().lumieres().add(lumierePointSimple);
 
