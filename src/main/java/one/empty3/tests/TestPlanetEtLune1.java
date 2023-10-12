@@ -170,7 +170,7 @@ public class TestPlanetEtLune1 extends TestObjetSub {
             scene().add(sphere);
         }
         final int i1 = FPS * SECONDS * REAL_DAYS;
-        double u =  (1.0 * frame()) / getMaxFrames();
+        double u =   ((double) getMaxFrames() - frame()) / getMaxFrames();
 
         Circle circle = earth.getCircle();
         circle.getAxis().getElem().getP1().setElem(axeVerticalVideo.mult(radius));
