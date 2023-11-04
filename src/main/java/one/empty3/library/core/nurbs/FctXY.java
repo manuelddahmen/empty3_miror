@@ -23,6 +23,7 @@ import one.empty3.library.StructureMatrix;
 import one.empty3.library.core.raytracer.tree.AlgebraicFormulaSyntaxException;
 import one.empty3.library.core.raytracer.tree.AlgebricTree;
 import one.empty3.library.core.raytracer.tree.TreeNodeEvalException;
+import org.jetbrains.annotations.NotNull;
 
 /*__
  * Created by manue on 28-05-19.
@@ -39,7 +40,7 @@ public class FctXY extends Fct1D_1D {
 
     }
 
-    public void setFormulaX(String formulaX)
+    public @NotNull FctXY setFormulaX(String formulaX)
     {
         this.formulaX.setElem(formulaX);
 
@@ -50,6 +51,7 @@ public class FctXY extends Fct1D_1D {
         } catch (AlgebraicFormulaSyntaxException e) {
             e.printStackTrace();
         }
+        return this;
     }
 
     public String getFormulaX() {

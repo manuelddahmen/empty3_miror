@@ -666,6 +666,9 @@ public class Representable /*extends RepresentableT*/ implements Serializable, C
         return this.vectors.getElem(3);
     }
 
+    public StructureMatrix<Point3D> getVectors() {
+        return vectors;
+    }
 }
 
 

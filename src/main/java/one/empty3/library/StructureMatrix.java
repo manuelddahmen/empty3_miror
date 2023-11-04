@@ -137,7 +137,7 @@ public class StructureMatrix<T> implements Serializable, Serialisable {
             if(data0d!=null) {
                 return this.data0d;
             } else {
-                System.out.println("null structureMatrix elem dim=0");
+                //System.out.println("null structureMatrix elem dim=0");
                 return null;
             }
         }
