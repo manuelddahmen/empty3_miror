@@ -51,7 +51,7 @@ public class TestPlanets9 extends TestObjetSub {
     public static final int SECONDS = 17;
     public static final int FPS = 50;
     private static final int TURNS = 3;
-    private static final int REAL_DAYS = 1;
+    private static final int REAL_DAYS = 365;
     private final File earthFilename = new File(planets.getAbsolutePath()+
             File.separator+"_earth.jpg");
     private final File moonFilename = new File(planets.getAbsolutePath()+
@@ -126,7 +126,7 @@ public class TestPlanets9 extends TestObjetSub {
 
         list();
 
-        setMaxFrames( FPS * SECONDS * REAL_DAYS *images.size());
+        setMaxFrames( FPS * SECONDS * REAL_DAYS *1);//images.size());
 
         z().ratioVerticalAngle();
 
@@ -208,13 +208,14 @@ public class TestPlanets9 extends TestObjetSub {
     @Override
     public void finit() throws Exception {
         int palier = (frame() / (int) (getaDouble())) % images.size();
+        palier = 0;
         earth.texture(new TextureInvertU(
                 new ECBufferedImage(Objects.requireNonNull(ImageIO.read(images
                         .get(palier))))));
 
         System.out.println("Palier:  "+palier+" "+images.get(palier).getName());
 
-        double angleCamera = 0; //2.0 * Math.PI * frame() / getMaxFrames();
+        double angleCamera = 0.0; //2.0 * Math.PI * frame() / FPS / SECONDS * 3.156E7;
         c = new Camera(axeViseeVideo[0].mult(Math.cos(angleCamera))
                 .plus(axeViseeVideo[0].mult(Math.sin(angleCamera))).mult(radius*4), Point3D.O0);
         c.calculerMatrice(axeVerticalVideo);
@@ -246,7 +247,7 @@ public class TestPlanets9 extends TestObjetSub {
         Point3D newX = new Point3D();
         Point3D newY = new Point3D();
         Point3D newZ = new Point3D();
-        vecDirRotate(earth.getVectY(), earth.getVectZ(), 33.0/180, newY, newZ);
+        vecDirRotate(earth.getVectY(), earth.getVectZ(),  23.4/360.0, newY, newZ);
         newX = newZ.prodVect(newY);
         earth.setVectX(newX.norme1().mult(earth.getVectX().norme()));
         earth.setVectY(newY.norme1().mult(earth.getVectY().norme()));
