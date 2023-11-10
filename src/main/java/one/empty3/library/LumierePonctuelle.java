@@ -32,12 +32,13 @@ import java.awt.*;
 /*__
  * @author Manuel Dahmen _manuel.dahmen@gmx.com_
  */
-public final class LumierePonctuelle extends Lumiere {
+public class LumierePonctuelle extends Lumiere {
 
-    double minThreshold = 0.0, maxThreshold = 1.0;
+    protected double minThreshold = 0.0;
+    double maxThreshold = 1.0;
 
     private StructureMatrix<ITexture> couleurLumiere = new StructureMatrix<>(0, ITexture.class);
-    private StructureMatrix<Point3D> position = new StructureMatrix<>(0, Point3D.class);
+    protected StructureMatrix<Point3D> position = new StructureMatrix<>(0, Point3D.class);
     private double r0 = 100.0;
     private StructureMatrix<Boolean> directional = new StructureMatrix<>(0, Boolean.class);
 

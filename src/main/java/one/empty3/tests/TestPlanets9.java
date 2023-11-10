@@ -19,6 +19,7 @@
 
 package one.empty3.tests;
 
+import jogamp.opengl.glu.nurbs.BezierArc;
 import one.empty3.feature.app.replace.javax.imageio.ImageIO;
 import one.empty3.library.*;
 import one.empty3.library.core.testing.TestObjetSub;
@@ -48,8 +49,8 @@ public class TestPlanets9 extends TestObjetSub {
         }
     }
     public static final int SECONDS = 17;
-    public static final int FPS = 25;
-    private static final int TURNS = 1;
+    public static final int FPS = 50;
+    private static final int TURNS = 3;
     private static final int REAL_DAYS = 1;
     private final File earthFilename = new File(planets.getAbsolutePath()+
             File.separator+"_earth.jpg");
@@ -131,10 +132,13 @@ public class TestPlanets9 extends TestObjetSub {
 
         z().setFORCE_POSITIVE_NORMALS(false);
 
-        z().setDisplayType(ZBufferImpl.SURFACE_DISPLAY_TEXT_QUADS);
+        z().setDisplayType(ZBufferImpl.DISPLAY_ALL);
 
-        z().texture(new ColorTexture(Color.BLACK));
-        scene().texture(new ColorTexture(Color.BLACK));
+        ImageTexture imageTexture = new ImageTexture(new ECBufferedImage(Objects.requireNonNull(ImageIO.read(
+                new File("res/img/planets2/others/8k_stars_milky_way.jpg")))));
+
+        z().texture(imageTexture);
+        scene().texture(imageTexture);
 
 
 /*
@@ -145,7 +149,35 @@ public class TestPlanets9 extends TestObjetSub {
 */
         i = -1;
 
-        LumierePonctuelle lumierePointSimple = new LumierePonctuelle(Point3D.Z.mult(1000.0), Color.WHITE);
+        LumierePonctuelle lumierePointSimple = new LumierePonctuelle(Point3D.X.mult(1000.0), Color.BLACK) {
+
+            @Override
+            public int getCouleur(int base, Point3D p, Point3D n) {
+                if (n == null)
+                    return base;
+                //double x = Math.asin(p.moins(position.getElem()).norme1().dot(n.norme1())) / 2 / Math.PI;
+                Point3D moins = p.moins(position.getElem());
+                Point3D l = moins.norme1();
+
+                Double dot = l.dot(n.norme1());
+
+
+                double angle = dot>0?0.0: 1.0;
+
+
+                double[] couleurObjet = getDoubles(base);
+                double[] res = new double[3];
+                double[] Lsa = getRgb(Ls);
+                double[] Laa = getRgb(La);
+                for (int i = 0; i < 3; i++) {
+                    double x = (1-angle)*couleurObjet[i]
+                            + (angle) * Lsa[i];
+                    res[i] = x;
+
+                }
+                return getInt(res);
+            }
+        };
 
         scene().lumieres().add(lumierePointSimple);
 
@@ -200,7 +232,7 @@ public class TestPlanets9 extends TestObjetSub {
         //scene().add(cheval);
 
         final int i1 = FPS * SECONDS * REAL_DAYS;
-        double u =   ((1.0*frame()/i1));
+        double u =   ((1.0*frame()/i1)*TURNS);
 
         Circle circle = earth.getCircle();
         circle.getAxis().getElem().getP1().setElem(axeVerticalVideo.mult(radius));
@@ -210,6 +242,15 @@ public class TestPlanets9 extends TestObjetSub {
                 .plus(axesSphereHorizontaux[1].mult(Math.sin(2 * Math.PI * u))));
         earth.setVectY(axesSphereHorizontaux[0].mult(-Math.sin(2 * Math.PI * u))
                 .plus(axesSphereHorizontaux[1].mult(Math.cos(2 * Math.PI * u))));
+
+        Point3D newX = new Point3D();
+        Point3D newY = new Point3D();
+        Point3D newZ = new Point3D();
+        vecDirRotate(earth.getVectY(), earth.getVectZ(), 33.0/180, newY, newZ);
+        newX = newZ.prodVect(newY);
+        earth.setVectX(newX.norme1().mult(earth.getVectX().norme()));
+        earth.setVectY(newY.norme1().mult(earth.getVectY().norme()));
+        earth.setVectZ(newZ.norme1().mult(earth.getVectZ().norme()));
         /*
         Matrix33 matrixB = Matrix33.ZXY.mult(Matrix33.rotationZ(2.0*Math.PI*u))
                 .mult(Matrix33.rotationX(Math.PI));
@@ -225,7 +266,7 @@ public class TestPlanets9 extends TestObjetSub {
         System.out.println(matrixB);
 */
         earth.setIncrU(0.015);
-        earth.setIncrU(0.015);
+        earth.setIncrV(0.015);
         scene().clear();
         scene().add(earth);
         earth.setCircle(circle);
