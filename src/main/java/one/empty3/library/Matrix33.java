@@ -127,8 +127,8 @@ public class Matrix33 extends Representable {
     public static Matrix33 rotationX(double a) {
         return new Matrix33(
                 new Double[]{1d, 0d, 0d,
-                        Math.cos(a), -Math.sin(a), 0d,
-                        Math.sin(a), Math.cos(a), 0d}).tild();
+                        0d, Math.cos(a), -Math.sin(a),
+                        0d, Math.sin(a), Math.cos(a)}).tild();
     }
 
     public static Matrix33 rotationY(double a) {

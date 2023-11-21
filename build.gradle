@@ -154,9 +154,9 @@ tasks.register('tests.tests2.rotation.TestRotationsObjets', JavaExec) {
     dependsOn(jar)
 }
 
-tasks.register('one.empty3.tests.TestPlanetEtLune', JavaExec) {
-    classpath sourceSets.test.runtimeClasspath
-    mainClass = "one.empty3.tests.TestPlanetEtLune"
+tasks.register('one.empty3.lasttests.TestTubeVisit', JavaExec) {
+    classpath sourceSets.main.runtimeClasspath
+    mainClass = "one.empty3.testtests.TestTubeVisit"
     args ""
     dependsOn(jar)
 }
@@ -296,7 +296,7 @@ publishing {
         maven(MavenPublication) {
             groupId = 'one.empty3'
             artifactId = 'empty3-library-3d'
-            version = "2023.10-1"
+            version = "2023.11"
             from components.java
 
             project.tasks.withType(Sign) {

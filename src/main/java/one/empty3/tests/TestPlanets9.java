@@ -19,6 +19,7 @@
 
 package one.empty3.tests;
 
+import one.empty3.feature.M;
 import one.empty3.feature.app.replace.javax.imageio.ImageIO;
 import one.empty3.library.*;
 import one.empty3.library.core.testing.TestObjetSub;
@@ -47,8 +48,8 @@ public class TestPlanets9 extends TestObjetSub {
             return super.getCoord(1.0-x, y);
         }
     }
-    public static final int SECONDS = 17;
-    public static final int FPS = 50;
+    public static final int SECONDS = 8;
+    public static final int FPS = 35;
     private static final int TURNS = 3;
     private static final int REAL_DAYS = 365;
     private final File earthFilename = new File(planets.getAbsolutePath()+
@@ -196,17 +197,36 @@ public class TestPlanets9 extends TestObjetSub {
         return p;
     }
 
-    public void vecDirRotate(Point3D vecOrigX, Point3D vecOrigY, double ratio,
+    public void vecDirRotate(Point3D vecOrigX, Point3D vecOrigY, Point3D vecOrigZ, double ratio,
                              Point3D outX, Point3D outY, Point3D outZ) {
         outX.changeTo(vecOrigX.mult(Math.cos(2 * Math.PI * ratio)).plus(
                 vecOrigY.mult(Math.sin(2 * Math.PI * ratio))));
         outY.changeTo(vecOrigX.mult(-Math.sin(2 * Math.PI * ratio)).plus(
                 vecOrigY.mult(Math.cos(2 * Math.PI * ratio))));
-        outZ.changeTo(vecOrigX.mult(Math.cos(2 * Math.PI * ratio)).plus(
-                vecOrigY.mult(Math.sin(2 * Math.PI * ratio)))
-                .plus(outZ.mult(outZ)));
+        outZ.changeTo(vecOrigZ.mult(1.0));
     }
-
+    public Matrix33 vecDirRotate2(Matrix33 matrixOrigRotation, double angleRad,
+                                  Point3D vecAxesX, Point3D vecAxesY, Point3D vecAxesZ) {
+        Point3D[] rowVectors = matrixOrigRotation.getRowVectors();
+        vecAxesX = (rowVectors[0].mult(Math.cos(2 * Math.PI * angleRad)).plus(
+                rowVectors[1].mult(Math.sin(2 * Math.PI * angleRad))));
+        vecAxesY = (rowVectors[0].mult(-Math.sin(2 * Math.PI * angleRad)).plus(
+                rowVectors[1].mult(Math.cos(2 * Math.PI * angleRad))));
+        vecAxesZ = rowVectors[2];
+        Matrix33 mult = matrixOrigRotation.mult(new Matrix33(new Point3D[
+                ]{vecAxesX, vecAxesY, vecAxesZ}));
+    return mult;
+    }
+    private Matrix33 vecDirRotate3(Matrix33 matrix33, double angleRad) {
+        Point3D[] rowVectors = matrix33.getRowVectors();
+        Point3D vecAxesX = (rowVectors[0].mult(Math.cos(2 * Math.PI * angleRad)).plus(
+                rowVectors[1].mult(Math.sin(2 * Math.PI * angleRad))));
+        Point3D vecAxesY = (rowVectors[0].mult(-Math.sin(2 * Math.PI * angleRad)).plus(
+                rowVectors[1].mult(Math.cos(2 * Math.PI * angleRad))));
+        Point3D vecAxesZ = rowVectors[2];
+        Matrix33 mult = new Matrix33(new Point3D[]{vecAxesX, vecAxesY, vecAxesZ});
+        return mult;
+    }
     @Override
     public void finit() throws Exception {
         int palier = (frame() / (int) (getaDouble())) % images.size();
@@ -238,44 +258,34 @@ public class TestPlanets9 extends TestObjetSub {
         double u =   ((1.0*frame()/i1)*TURNS);
 
 
-        Point3D[] origins = new Point3D[] {
-                earth.getVectX(),
-                earth.getVectY(),
-                earth.getVectZ(),
-        };
+        Point3D[] origins = new Point3D[3];
 
         Matrix33 matrixSphereVert = new Matrix33(new Point3D[] {origins[0],origins[1],origins[2]});
 
         Circle circle = earth.getCircle();
         circle.getAxis().getElem().getP1().setElem(axeVerticalVideo.mult(radius));
         circle.getAxis().getElem().getP2().setElem(axeVerticalVideo.mult(-radius));
-        origins[2] = (axeVerticalVideo);
+
         origins[0] = (axesSphereHorizontaux[0].mult(Math.cos(2 * Math.PI * u))
                 .plus(axesSphereHorizontaux[1].mult(Math.sin(2 * Math.PI * u))));
         origins[1] = (axesSphereHorizontaux[0].mult(-Math.sin(2 * Math.PI * u))
                 .plus(axesSphereHorizontaux[1].mult(Math.cos(2 * Math.PI * u))));
+        origins[2] = (axeVerticalVideo);
 
-        Matrix33 matrixRotationTerre = new Matrix33(new Point3D[]{origins[0], origins[1], origins[2]});
-
-        Point3D newX = origins[0];
-        Point3D newY = origins[1];
-        Point3D newZ = origins[2];
-        vecDirRotate(origins[1], origins[2],  23.4/360.0, newY, newZ, newX);
-        //newX = newZ.prodVect(newY);
-        origins[0] = newX.norme1().mult(earth.getVectX().norme());
-        origins[1] = newY.norme1().mult(earth.getVectY().norme());
-        origins[2] = newZ.norme1().mult(earth.getVectZ().norme());
-
-        Matrix33 matrixAxeTerreOrbite = new Matrix33(new Point3D[]{origins[0], origins[1], origins[2]});
+        Matrix33 matrixRotationTerre = new Matrix33(new Point3D[]{origins[0], origins[1], origins[2]})
+                .tild();
 
 
-        Matrix33 mult = matrixRotationTerre.mult(matrixAxeTerreOrbite).mult(matrixSphereVert).inverse();
 
-        Point3D[] colVectors = mult.getRowVectors();
+        Matrix33 formule2 = Matrix33.rotationX( 2*Math.PI*23.4 / 360.0).mult(Matrix33.XYZ);
 
-        earth.setVectX(colVectors[0]);
-        earth.setVectY(colVectors[1]);
-        earth.setVectZ(colVectors[2]);
+        Matrix33 formule3 = Matrix33.rotationY(2*Math.PI*frame()/getMaxFrames()).mult(Matrix33.YZX);
+
+        Point3D[] rowVectors = matrixRotationTerre.mult(formule3).mult(formule2).getColVectors();
+
+        earth.setVectX(rowVectors[0]);
+        earth.setVectY(rowVectors[1]);
+        earth.setVectZ(rowVectors[2]);
 
         earth.setIncrU(0.003);
         earth.setIncrV(0.003);
@@ -286,4 +296,6 @@ public class TestPlanets9 extends TestObjetSub {
         earth.setQuad_not_computed(0);
         System.out.println("Camera u : " + u);
     }
+
+
 }

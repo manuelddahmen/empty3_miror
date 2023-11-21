@@ -29,9 +29,8 @@ import one.empty3.library.core.testing.TestObjetSub;
 
 import java.awt.*;
 import java.io.File;
-import java.io.IOException;
 
-public class TestThierryJaspart extends TestObjetSub {
+public class TestBezierSurface extends TestObjetSub {
     private final Point3D[][] coeff = new Point3D[][]{
             {Point3D.n(2, -2, 0), Point3D.n(2, -1, 0), Point3D.n(2, 0, 0), Point3D.n(2, 1, 0), Point3D.n(2, 2, 0)},
             {Point3D.n(1, -2, 0), Point3D.n(1, -1, 0), Point3D.n(1, 0, 0), Point3D.n(1, 1, 0), Point3D.n(1, 2, 0)},
@@ -42,7 +41,7 @@ public class TestThierryJaspart extends TestObjetSub {
     ITexture texture;
     private SurfaceParametricPolygonalBezier s = new SurfaceParametricPolygonalBezier(coeff);
 
-    public TestThierryJaspart() {
+    public TestBezierSurface() {
         setMaxFrames(25 * 60 * 5);
     }
 
@@ -90,7 +89,7 @@ public class TestThierryJaspart extends TestObjetSub {
     }
 
     public static void main(String[] args) {
-        new Thread(new TestThierryJaspart()).start();
+        new Thread(new TestBezierSurface()).start();
 
 
     }

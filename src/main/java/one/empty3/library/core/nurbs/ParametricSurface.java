@@ -31,21 +31,22 @@ import one.empty3.library.Point3D;
 import one.empty3.library.Polygon;
 import one.empty3.library.Representable;
 import one.empty3.library.StructureMatrix;
-import one.empty3.library.core.tribase.TRIObjetGenerateurAbstract;
 
 /*__
  * @author Manuel Dahmen _manuel.dahmen@gmx.com_
  */
 public abstract class ParametricSurface extends Representable {
 
-public static final int QUAD_NOT_COMPUTE_U2 = 1;
-public static final  int QUAD_NOT_COMPUTE_V2 = 2;
-    protected int quad_not_computed = 3;
+    public static final int QUAD_NOT_COMPUTE_U2 = 1;
+    public static final int QUAD_NOT_COMPUTE_V2 = 2;
     private static final double MIN_NORMGT0 = 0.000000001;
     private static final double TANGENT_INCR = 0.00000001;
+    protected int quad_not_computed = 3;
 //    private static Globals globals;
-
-
+    protected StructureMatrix<Point2Point> terminalU = new StructureMatrix<>(0, Point2Point.class);
+    protected StructureMatrix<Point2Point> terminalV = new StructureMatrix<>(0, Point2Point.class);
+    protected Point3D[] vectorsBak;
+    protected int level = 0;
     private StructureMatrix<Double> incrU = new StructureMatrix<>(0, Double.class);
     private StructureMatrix<Double> incrV = new StructureMatrix<>(0, Double.class);
     private StructureMatrix<Double> incrVitesse = new StructureMatrix<>(0, Double.class);
@@ -54,10 +55,7 @@ public static final  int QUAD_NOT_COMPUTE_V2 = 2;
     private StructureMatrix<Double> endU = new StructureMatrix<>(0, Double.class);
     private StructureMatrix<Double> startV = new StructureMatrix<>(0, Double.class);
     private StructureMatrix<Double> endV = new StructureMatrix<>(0, Double.class);
-    protected StructureMatrix<Point2Point> terminalU = new StructureMatrix<>(0, Point2Point.class);
-    protected StructureMatrix<Point2Point> terminalV = new StructureMatrix<>(0, Point2Point.class);
-    protected Point3D[] vectorsBak;
-    protected int level = 0;
+
     {
         terminalU.setElem(new Point2Point() {
             @Override
@@ -100,8 +98,21 @@ public static final  int QUAD_NOT_COMPUTE_V2 = 2;
 */
 
 
+    public ParametricSurface() {
+        startU.setElem(0.0);
+        startV.setElem(0.0);
+        incrU.setElem(0.1);
+        incrV.setElem(0.1);
+        endU.setElem(1.0);
+        endV.setElem(1.0);
+        incrVitesse.setElem(0.0001);
+        incrNormale.setElem(0.000001);
+        terminalU.setElem(new Point2Point.I());
+        terminalV.setElem(new Point2Point.I());
+    }
+
     public Double getIncrU() {
-       return incrU.getElem();
+        return incrU.getElem();
     }
 
     public void setIncrU(Double incr1) {
@@ -112,29 +123,29 @@ public static final  int QUAD_NOT_COMPUTE_V2 = 2;
 //        }
         this.incrU.setElem(incr1);
     }
+
+    public Double getIncrV() {
+        return incrV.getElem();
+    }
+
     public void setIncrV(Double incr2) {
 //        if (parameters.isGlobal()) {
 //            parameters.setIncrV(incr2);
 //        } else {
 //            globals.setIncrV(incr2);
 //        }
-        this.incrV .setElem(incr2);
+        this.incrV.setElem(incr2);
     }
-
-    public Double getIncrV() {
-        return incrV.getElem();
-    }
-
 
     public Point3D calculerPoint3D(double u, double v) {
-        if(getQuad_not_computed()>0) {
-            if(level==0) {
+        if (getQuad_not_computed() > 0) {
+            if (level == 0) {
                 level++;
                 vectorsBak = new Point3D[]{calculerPoint3D(u + getIncrU(), v),
                         calculerPoint3D(u + getIncrU(), v + getIncrV()),
                         calculerPoint3D(u, v + getIncrV())};
             }
-            if(level>0)
+            if (level > 0)
                 level = 0;
         }
         return Point3D.O0;
@@ -164,13 +175,14 @@ public static final  int QUAD_NOT_COMPUTE_V2 = 2;
 
     public Point3D calculerNormalePerp(double u, double v) {
 
-        Point3D mult = calculerTangenteU(u+TANGENT_INCR, v).prodVect(calculerTangenteV(u, v+TANGENT_INCR)).mult(1.0);
-        if(mult.norme()<=MIN_NORMGT0) {
+        Point3D mult = calculerTangenteU(u + TANGENT_INCR, v).prodVect(calculerTangenteV(u, v + TANGENT_INCR)).mult(1.0);
+        if (mult.norme() <= MIN_NORMGT0) {
             return mult;
         } else {
             return mult;
         }
     }
+
     public Double incr1() {
         return incrU.getElem();
     }
@@ -184,7 +196,7 @@ public static final  int QUAD_NOT_COMPUTE_V2 = 2;
     }
 
     public void setStartU(Double s1) {
-        this.startU.setElem(  s1);
+        this.startU.setElem(s1);
     }
 
     public Double getStartV() {
@@ -192,7 +204,7 @@ public static final  int QUAD_NOT_COMPUTE_V2 = 2;
     }
 
     public void setStartV(Double s2) {
-        this.startV .setElem(  s2);
+        this.startV.setElem(s2);
     }
 
     public Double getEndU() {
@@ -200,7 +212,7 @@ public static final  int QUAD_NOT_COMPUTE_V2 = 2;
     }
 
     public void setEndU(Double e1) {
-        this.endU .setElem(  e1);
+        this.endU.setElem(e1);
     }
 
     public Double getEndV() {
@@ -208,7 +220,7 @@ public static final  int QUAD_NOT_COMPUTE_V2 = 2;
     }
 
     public void setEndV(Double e2) {
-        this.endV.setElem( e2);
+        this.endV.setElem(e2);
     }
 
     public Point3D velocity(Double u1, Double v1, Double u2, Double v2) {
@@ -236,17 +248,74 @@ public static final  int QUAD_NOT_COMPUTE_V2 = 2;
     }
 
     public Point3D getNextU(double u2, double v) {
-        return vectorsBak!=null?vectorsBak[0]:null;
+        return vectorsBak != null ? vectorsBak[0] : null;
 
     }
-
 
     public Point3D getNextUV(double u2, double v) {
-        return vectorsBak!=null?vectorsBak[1]:null;
+        return vectorsBak != null ? vectorsBak[1] : null;
 
     }
+
     public Point3D getNextV(double u, double v) {
-        return vectorsBak!=null?vectorsBak[2]:null;
+        return vectorsBak != null ? vectorsBak[2] : null;
+    }
+
+    @Override
+    public void declareProperties() {
+        super.declareProperties();
+        getDeclaredDataStructure().put("startU/startU", startU);
+        getDeclaredDataStructure().put("startV/startV", startV);
+        getDeclaredDataStructure().put("incrU/incrU", incrU);
+        getDeclaredDataStructure().put("incrV/incrV", incrV);
+        getDeclaredDataStructure().put("endU/endU", endU);
+        getDeclaredDataStructure().put("endV/endV", endV);
+    }
+
+    @Override
+    public String toString() {
+        return "ParametricSurface()\n";
+    }
+
+    @Override
+    public Point3D calculerSurfaceT(double u, double v, double t) {
+        return calculerPoint3D(u, v);
+    }
+
+//    public Parameters getParameters() {
+//        return parameters;
+//    }
+//
+//    public void setParameters(Parameters parameters) {
+//        this.parameters = parameters;
+//    }
+
+    public StructureMatrix<Point2Point> getTerminalU() {
+        level++;
+        return terminalU;
+    }
+
+    public void setTerminalU(StructureMatrix<Point2Point> terminalU) {
+        level++;
+        this.terminalU = terminalU;
+    }
+
+    public StructureMatrix<Point2Point> getTerminalV() {
+        level++;
+        return terminalV;
+    }
+
+    public void setTerminalV(StructureMatrix<Point2Point> terminalV) {
+        level++;
+        this.terminalV = terminalV;
+    }
+
+    public int getQuad_not_computed() {
+        return quad_not_computed;
+    }
+
+    public void setQuad_not_computed(int quad_not_computed) {
+        this.quad_not_computed = quad_not_computed;
     }
 
     public static class Globals {
@@ -308,76 +377,5 @@ public static final  int QUAD_NOT_COMPUTE_V2 = 2;
         public void setGlobal(boolean global) {
             this.isGlobal = global;
         }
-    }
-    public ParametricSurface ()
-    {
-        startU.setElem(0.0);
-        startV.setElem(0.0);
-        incrU.setElem(0.1);
-        incrV.setElem(0.1);
-        endU.setElem(1.0);
-        endV.setElem(1.0);
-        incrVitesse.setElem(0.0001);
-        incrNormale.setElem(0.000001);
-        terminalU.setElem(new Point2Point.I());
-        terminalV.setElem(new Point2Point.I());
-    }
-
-    @Override
-    public void declareProperties() {
-        super.declareProperties();
-        getDeclaredDataStructure().put("startU/startU", startU);
-        getDeclaredDataStructure().put("startV/startV", startV);
-        getDeclaredDataStructure().put("incrU/incrU", incrU);
-        getDeclaredDataStructure().put("incrV/incrV", incrV);
-        getDeclaredDataStructure().put("endU/endU", endU);
-        getDeclaredDataStructure().put("endV/endV", endV);
-    }
-
-//    public Parameters getParameters() {
-//        return parameters;
-//    }
-//
-//    public void setParameters(Parameters parameters) {
-//        this.parameters = parameters;
-//    }
-
-    @Override
-    public String toString() {
-        return "ParametricSurface()\n";
-    }
-
-    @Override
-    public Point3D calculerSurfaceT(double u, double v, double t) {
-        return calculerPoint3D(u, v);
-    }
-
-
-    public StructureMatrix<Point2Point> getTerminalU() {
-        level++;
-        return terminalU;
-    }
-
-    public void setTerminalU(StructureMatrix<Point2Point> terminalU) {
-        level++;
-        this.terminalU = terminalU;
-    }
-
-    public StructureMatrix<Point2Point> getTerminalV() {
-        level++;
-        return terminalV;
-    }
-
-    public void setTerminalV(StructureMatrix<Point2Point> terminalV) {
-        level++;
-        this.terminalV = terminalV;
-    }
-
-    public int getQuad_not_computed() {
-        return quad_not_computed;
-    }
-
-    public void setQuad_not_computed(int quad_not_computed) {
-        this.quad_not_computed = quad_not_computed;
     }
 }
