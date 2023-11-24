@@ -79,8 +79,9 @@ public class ZBufferImpl extends Representable implements ZBuffer {
     protected Scene currentScene;
     protected int displayType = SURFACE_DISPLAY_TEXT_TRI;
     protected boolean FORCE_POSITIVE_NORMALS = true;
+    protected StructureMatrix<Double> scale = new StructureMatrix<>(0, Double.class);
     ZBufferImpl that;
-    protected StructureMatrix<Double> scale = new StructureMatrix(0, Double.class);
+
     public ZBufferImpl() {
         that = this;
         scene = new Scene();
@@ -94,7 +95,7 @@ public class ZBufferImpl extends Representable implements ZBuffer {
         dimx = la;
         dimy = ha;
         Logger.getAnonymousLogger().log(Level.INFO, "width,height(" + la + ", " + ha + ")");
-        this.ime = new ImageMapElement();
+        this.ime = new ImageMap(la, ha).getIme();
     }
 
 
@@ -144,7 +145,7 @@ public class ZBufferImpl extends Representable implements ZBuffer {
     }
 
     public synchronized void draw(Representable r) {
-        if(r instanceof Precomputable) {
+        if (r instanceof Precomputable) {
             ((Precomputable) r).precompute();
         }
 
@@ -158,7 +159,7 @@ public class ZBufferImpl extends Representable implements ZBuffer {
             r.texture().timeNext();
 
         if (r instanceof Scene) {
-            Scene scene = (Scene)r;
+            Scene scene = (Scene) r;
             scene.getObjets().getData1d().forEach(representable -> draw(representable));
             return;
         } else if (r instanceof RepresentableConteneur) {
@@ -166,7 +167,7 @@ public class ZBufferImpl extends Representable implements ZBuffer {
             return;
         }
 
-        if(r.texture() instanceof TextureMov) {
+        if (r.texture() instanceof TextureMov) {
             ((TextureMov) r.texture()).nextFrame();
         }
 
@@ -214,7 +215,7 @@ public class ZBufferImpl extends Representable implements ZBuffer {
                             );
                             break;
                         case SURFACE_DISPLAY_LINES:
-                            tracerLines(p1, p2, p3, p4, n.texture(), u, v , u + n.getIncrU(), v + n.getIncrV(), n);
+                            tracerLines(p1, p2, p3, p4, n.texture(), u, v, u + n.getIncrU(), v + n.getIncrV(), n);
                             break;
                         case SURFACE_DISPLAY_POINTS:
                             testDeep(p1);
@@ -268,24 +269,24 @@ public class ZBufferImpl extends Representable implements ZBuffer {
                         }
 
                         p1 = n.calculerPoint3D(u, v);
-                        if((n.getQuad_not_computed()&ParametricSurface.QUAD_NOT_COMPUTE_U2)==0) {
+                        if ((n.getQuad_not_computed() & ParametricSurface.QUAD_NOT_COMPUTE_U2) == 0) {
                             p2 = n.calculerPoint3D(u2, v);
                         } else {
                             Point3D next = n.getNextV(u2, v);
-                            p2 = next!=null?next:n.calculerPoint3D(u2, v);
+                            p2 = next != null ? next : n.calculerPoint3D(u2, v);
                         }
-                        if((n.getQuad_not_computed()&ParametricSurface.QUAD_NOT_COMPUTE_U2)==0
-                                || (n.getQuad_not_computed()&ParametricSurface.QUAD_NOT_COMPUTE_V2)==0)
+                        if ((n.getQuad_not_computed() & ParametricSurface.QUAD_NOT_COMPUTE_U2) == 0
+                                || (n.getQuad_not_computed() & ParametricSurface.QUAD_NOT_COMPUTE_V2) == 0)
                             p3 = n.calculerPoint3D(u2, v2);
                         else {
                             Point3D next = n.getNextUV(u2, v2);
-                            p3 = next!=null?next:n.calculerPoint3D(u2, v2);
+                            p3 = next != null ? next : n.calculerPoint3D(u2, v2);
                         }
-                        if((n.getQuad_not_computed()&ParametricSurface.QUAD_NOT_COMPUTE_V2)==0) {
+                        if ((n.getQuad_not_computed() & ParametricSurface.QUAD_NOT_COMPUTE_V2) == 0) {
                             p4 = n.calculerPoint3D(u, v2);
                         } else {
                             Point3D next = n.getNextV(u, v2);
-                            p4 = next!=null?next:n.calculerPoint3D(u, v2);
+                            p4 = next != null ? next : n.calculerPoint3D(u, v2);
                         }
                         if (n instanceof HeightMapSurface) {
                             HeightMapSurface h = (HeightMapSurface) n;
@@ -369,7 +370,7 @@ public class ZBufferImpl extends Representable implements ZBuffer {
                 Point3D p = ((Point3DS) r).calculerPoint3D(0);
                 testDeep(rotate(p, r), r.texture());
             } else if (r instanceof LineSegment) {
-                LineSegment s = (LineSegment)r;
+                LineSegment s = (LineSegment) r;
                 Point3D pO = s.getOrigine();
                 Point3D pE = s.getExtremite();
                 line(pO, pE, s.texture());
@@ -461,10 +462,10 @@ public class ZBufferImpl extends Representable implements ZBuffer {
 
     protected void tracerLines(Point3D p1, Point3D p2, Point3D p3, Point3D p4, ITexture texture, double u1, double v1,
                                double u2, double v2, ParametricSurface n) {
-        line(p1, p2, n!=null?n.texture():texture, u1, v1, u2, v1, n);
-        line(p2, p3, n!=null?n.texture():texture, u2, v1, u2, v2, n);
-        line(p3, p4, n!=null?n.texture():texture, u2, v2, u1, v2, n);
-        line(p4, p1, n!=null?n.texture():texture, u1, v2, u1, v1, n);
+        line(p1, p2, n != null ? n.texture() : texture, u1, v1, u2, v1, n);
+        line(p2, p3, n != null ? n.texture() : texture, u2, v1, u2, v2, n);
+        line(p3, p4, n != null ? n.texture() : texture, u2, v2, u1, v2, n);
+        line(p4, p1, n != null ? n.texture() : texture, u1, v2, u1, v1, n);
     }
 
 
@@ -481,7 +482,7 @@ public class ZBufferImpl extends Representable implements ZBuffer {
     }
 
     public int[] getData() {
-        return ime.Scolor;
+        return ime.color;
     }
 
     public ZBuffer getInstance(int x, int y) {
@@ -572,7 +573,7 @@ public class ZBufferImpl extends Representable implements ZBuffer {
             return;
         }
         Point3D n = p1.moins(p2).norme1();
-        double iterate = Math.max(maxDistance(x1, x2) * 4 + 1, 1/MIN_INCR);
+        double iterate = Math.max(maxDistance(x1, x2) * 4 + 1, 1 / MIN_INCR);
         for (int i = 0; i < iterate; i++) {
             Point3D p = p1.plus(p2.moins(p1).mult(i / iterate));
             testDeep(p, t.getColorAt(0.5, 0.5));
@@ -610,10 +611,10 @@ public class ZBufferImpl extends Representable implements ZBuffer {
         double iterate = Math.sqrt((x1.getX() - x2.getX()) * (x1.getX() - x2.getX())
                 + (x1.getY() - x2.getY()) * (x1.getY() - x2.getY())) + 1;
         for (int i = 0; i < iterate; i++) {
-            Point3D p = p1.plus(n.mult(i / iterate*d));
+            Point3D p = p1.plus(n.mult(i / iterate * d));
             double u = u1 + i / iterate * (u2 - u1);
             double v = v1 + i / iterate * (v2 - v1);
-            if (surface != null && surface.texture()!=null) {
+            if (surface != null && surface.texture() != null) {
                 //p = surface.calculerPoint3D(u2, v2);
                 testDeep(p, surface.texture(), u, v, surface);
             } else {
@@ -729,7 +730,7 @@ public class ZBufferImpl extends Representable implements ZBuffer {
 
     public void plotPoint(Point3D p) {
         if (p != null && p.texture() != null) {
-            ime.dessine(p, p.texture().getColorAt(0,0));
+            ime.dessine(p, p.texture().getColorAt(0, 0));
         }
     }
 
@@ -779,19 +780,18 @@ public class ZBufferImpl extends Representable implements ZBuffer {
     }
 
     @Override
+    public void testDeep(Point3D point3D) {
+        ime.testDeep(point3D);
+    }
+
+    @Override
     public void testDeep(Point3D p, Color c) {
-        testDeep(p, c.getRGB());
+        ime.testDeep(p, c);
     }
 
     @Override
     public void testDeep(Point3D p, int c) {
         ime.testDeep(p, c);
-    }
-
-    public void testDeep(Point3D p) {
-        if (p != null && p.texture() != null) {
-            testDeep(p, p.texture().getColorAt(0., 0.));
-        }
     }
 
     public void testPoint(Point3D p, Color c) {
@@ -856,7 +856,7 @@ public class ZBufferImpl extends Representable implements ZBuffer {
         if (!checkScreen(p3) || isOccupied(pp3))
             checkedFalse++;
 
-        if (checkedFalse>=CHECKED_POINT_SIZE_TRI) {
+        if (checkedFalse >= CHECKED_POINT_SIZE_TRI) {
             return;
         }
 
@@ -893,6 +893,7 @@ public class ZBufferImpl extends Representable implements ZBuffer {
             }
         }
     }
+
     @Override
     public boolean checkScreen(Point p1) {
         return p1 != null && p1.getX() >= 0d && p1.getX() < la
@@ -921,7 +922,6 @@ public class ZBufferImpl extends Representable implements ZBuffer {
             checkedFalse++;
 
 
-
         if (p1 == null || p2 == null || p3 == null || p4 == null || checkedFalse >= CHECKED_POINT_SIZE_QUADS)
             return;
 
@@ -932,38 +932,38 @@ public class ZBufferImpl extends Representable implements ZBuffer {
         Point3D normale = triBas.normale();
         double inter = Math.max(1 / (maxDistance(p1, p2, p3, p4) + 1) / 3, MIN_INCR);
         //if (inter > MIN_INCR) {
-            for (double a = 0; a < 1.0; a += inter) {
-                Point3D pElevation1 = pp1.plus(pp1.mult(-1d).plus(pp2).mult(a));
-                Point3D pElevation2 = pp4.plus(pp4.mult(-1d).plus(pp3).mult(a));
+        for (double a = 0; a < 1.0; a += inter) {
+            Point3D pElevation1 = pp1.plus(pp1.mult(-1d).plus(pp2).mult(a));
+            Point3D pElevation2 = pp4.plus(pp4.mult(-1d).plus(pp3).mult(a));
 
 
-                double inter2 = Math.max(1. / (maxDistance(camera().coordonneesPoint2D(pElevation1, this),
-                        camera().coordonneesPoint2D(pElevation2, this)) + 1.) / 3., MIN_INCR);
-                //if (inter2 > MIN_INCR)
-                for (double b = 0; b < 1.0; b += inter2) {
-                    Point3D pFinal = (pElevation1.plus(pElevation1.mult(-1d).plus(pElevation2).mult(b)));
-                    double uPoint = u0 + (u1 - u0) * a;
-                    double vPoint = v0 + (v1 - v0) * b;
-                    pFinal.setNormale(normale);
-                    pFinal.texture(texture);
-                    pFinal.setNormale(n.calculerNormale3D(uPoint, vPoint));
-                    if (n != null) {
-                        if (displayType == DISPLAY_ALL) {
-                            pFinal = n.calculerPoint3D(uPoint, vPoint);
-                            pFinal.texture(texture);
-                        } else {
-                            pFinal.setNormale(normale);
-                            pFinal.texture(texture);
-
-                        }
-                    }
-                    if (displayType <= SURFACE_DISPLAY_TEXT_QUADS) {
-                        testDeep(pFinal, n.texture().getColorAt(uPoint, vPoint));
+            double inter2 = Math.max(1. / (maxDistance(camera().coordonneesPoint2D(pElevation1, this),
+                    camera().coordonneesPoint2D(pElevation2, this)) + 1.) / 3., MIN_INCR);
+            //if (inter2 > MIN_INCR)
+            for (double b = 0; b < 1.0; b += inter2) {
+                Point3D pFinal = (pElevation1.plus(pElevation1.mult(-1d).plus(pElevation2).mult(b)));
+                double uPoint = u0 + (u1 - u0) * a;
+                double vPoint = v0 + (v1 - v0) * b;
+                pFinal.setNormale(normale);
+                pFinal.texture(texture);
+                pFinal.setNormale(n.calculerNormale3D(uPoint, vPoint));
+                if (n != null) {
+                    if (displayType == DISPLAY_ALL) {
+                        pFinal = n.calculerPoint3D(uPoint, vPoint);
+                        pFinal.texture(texture);
                     } else {
-                        testDeep(pFinal, col);
+                        pFinal.setNormale(normale);
+                        pFinal.texture(texture);
+
                     }
                 }
+                if (displayType <= SURFACE_DISPLAY_TEXT_QUADS) {
+                    testDeep(pFinal, n.texture().getColorAt(uPoint, vPoint));
+                } else {
+                    testDeep(pFinal, col);
+                }
             }
+        }
 
         //}
     }
@@ -1189,18 +1189,7 @@ public class ZBufferImpl extends Representable implements ZBuffer {
 
     public void idzpp() {
         idImg++;
-        ime = new ImageMapElement();
-/*        for(int i=0;i<la; i++)
-            for(int j=0;j<ha; j++) {
-                Scolor[j * la + i] = texture().getColorAt(1. * i / la, 1. * j / ha);
-                ime.setElementPoint(i, j, Point3D.INFINI);
-                ime.setDeep(i, j, INFINITY_DEEP);
-                ime.setElementID(i, j, idImg());
-                ime.setElementCouleur(i, j, Scolor[j*la+i]);
-                ime.setElementProf(i, j, INFINITY_DEEP);
-                ime = new ImageMap(la, ha);
-            }
-  */
+        ime = new ImageMap(la, ha).getIme();
     }
 
     public boolean isFORCE_POSITIVE_NORMALS() {
@@ -1250,6 +1239,14 @@ public class ZBufferImpl extends Representable implements ZBuffer {
 //            }
 //        }
 //    }
+
+    public double getScale() {
+        return scale.getElem();
+    }
+
+    public void setScale(double scale) {
+        this.scale.setElem(scale);
+    }
 
     public class Box2D {
 
@@ -1509,6 +1506,230 @@ public class ZBufferImpl extends Representable implements ZBuffer {
             ime.setElementID(x, y, idImg);
         }
 
+
+        public void testDeep(Point3D p, Point3D n, Color c) {
+            // Color cc = c.getCouleur();
+            p.setNormale(n);
+            ime.testDeep(p, c.getRGB());
+        }
+
+        public void testDeep(Point3D p, Point3D n, int c) {
+            testDeep(p, n, new Color(c));
+        }
+
+        public boolean testDeep(Point3D p, ITexture texture, double u, double v, Representable representable) {
+            if (texture.getColorAt(u, v) != texture.getTransparent()
+                    && ime.testDeep(p, texture.getColorAt(u, v))) {
+                Point point = camera().coordonneesPoint2D(p, that);
+                int x = point.x, y = point.y;
+                ime.getuMap()[x][y] = u;
+                ime.getvMap()[x][y] = v;
+                ime.getrMap()[x][y] = representable;
+                return true;
+            }
+            return false;
+        }
+
+        public void testDeep(Point3D pFinal, Point3D point3D, int colorAt, Representable n) {
+            testDeep(pFinal, point3D, colorAt);
+            Point point = camera().coordonneesPoint2D(pFinal, that);
+            if (ime != null && point != null) {
+                ime.setElementRepresentable((int) point.getX(), (int) point.getY(), n);
+            }
+        }
+
+        public void testDeep(Point3D pFinal, int colorAt, Representable n) {
+            testDeep(pFinal, pFinal.getNormale(), colorAt, n);
+        }
+
+        public ImageMapElement getIme() {
+            return new ImageMapElement();
+        }
+    }
+
+    public class ImageMapElement {
+
+        int couleur_fond_int = -1;
+        ImageMapElement instance;
+        Representable[][] imeRepresentable;
+        double[][] uMap;
+        double[][] vMap;
+        Representable[][] rMap;
+        Point3D[][] coordinate;
+        int[] color;
+        long[][] imeId;
+        double[][] imeProf;
+
+
+        public ImageMapElement() {
+            this.coordinate = new Point3D[la][ha];
+            this.color = new int[la * ha];
+            this.imeId = new long[la][ha];
+            this.imeProf = new double[la][ha];
+            this.imeRepresentable = new Representable[la][ha];
+            this.uMap = new double[la][ha];
+            this.vMap = new double[la][ha];
+            this.rMap = new Representable[la][ha];
+            for (int i = 0; i < la; i++) {
+                for (int j = 0; j < ha; j++) {
+                    this.imeProf[i][j] = INFINITY.getZ();
+                    this.imeId[i][j] = idImg;
+                    this.color[j * la + i] = COULEUR_FOND_INT(i, j);
+                    this.imeRepresentable[i][j] = null;
+                }
+            }
+        }
+
+        public Representable getElementRepresentable(int x, int y) {
+            if (checkCoordinates(x, y)) {
+                return imeRepresentable[x][y];
+            }
+            return null;
+        }
+
+        public void setElementRepresentable(int x, int y, Representable representable) {
+            imeRepresentable[x][y] = representable;
+        }
+
+        public boolean checkCoordinates(int x, int y) {
+            return x >= 0 && x < la && y >= 0 && y < ha;
+        }
+
+        public int COULEUR_FOND_INT(int x, int y) {
+            couleur_fond_int = texture().getColorAt(1.0 * x / largeur(), 1.0 * y / hauteur());
+            return couleur_fond_int;
+        }
+
+        public int getElementCouleur(int x, int y) {
+            if (checkCoordinates(x, y)
+                    && ime.imeId[x][y] == idImg
+                    && ime.imeProf[x][y] > INFINITY.getZ()) {
+                return getRGBInt(ime.color, x, y);
+            } else {
+                return COULEUR_FOND_INT(x, y);
+            }
+        }
+
+        public long getElementID(int x, int y) {
+            return ime.imeId[x][y];
+        }
+
+        public Point3D getElementPoint(int x, int y) {
+            return ime.coordinate[x][y];
+        }
+
+        protected double getElementProf(int x, int y) {
+            return ime.imeProf[x][y];
+        }
+
+        public ImageMapElement getInstance(int x, int y) {
+            if (ime.instance == null) {
+                ime.instance = this;
+            }
+            return instance;
+        }
+
+        protected int getRGBInt(int[] sc, int x, int y) {
+            return color[x + y * la];
+
+        }
+
+        public void setElementCouleur(int x, int y, int pc) {
+            setElementID(x, y, idImg);
+            setRGBInts(pc, ime.color, x, y);
+        }
+
+        public void setElementID(int x, int y, long id) {
+            ime.imeId[x][y] = idImg;
+        }
+
+        public void setElementPoint(int x, int y, Point3D px) {
+            setElementID(x, y, idImg);
+            ime.coordinate[x][y] = px;
+        }
+
+        public double[][] getuMap() {
+            return uMap;
+        }
+
+        public void setuMap(double[][] uMap) {
+            this.uMap = uMap;
+        }
+
+        public double[][] getvMap() {
+            return vMap;
+        }
+
+        public void setvMap(double[][] vMap) {
+            this.vMap = vMap;
+        }
+
+        public Representable[][] getrMap() {
+            return rMap;
+        }
+
+        public void setrMap(Representable[][] rMap) {
+            this.rMap = rMap;
+        }
+
+        protected void setDeep(int x, int y, double d) {
+            if (checkCoordinates(x, y)) {
+                ime.imeProf[x][y] = (float) d;
+            }
+        }
+
+        protected void setRGBInts(int rgb, int[] sc, int x, int y) {
+            color[x + y * la] = rgb;
+        }
+
+        public void setElementProf(int i, int j, double pr) {
+            ime.imeProf[i][j] = pr;
+        }
+
+        public void dessine(Point3D p, Color colorAt) {
+            dessine(p, colorAt.getRGB());
+        }
+
+        public void dessine(Point3D x3d, int c1) {
+            double[] c = Lumiere.getDoubles(c1);
+            Point ce = camera().coordonneesPoint2D(x3d, that);
+            if (ce == null) {
+                return;
+            }
+            double prof = -1000;
+            int x = (int) ce.getX();
+            int y = (int) ce.getY();
+            if (x >= 0 & x < la & y >= 0 & y < ha && c[3] == 255) {
+                ime.setElementID(x, y, idImg);
+                ime.setElementPoint(x, y, x3d);
+                ime.setElementCouleur(x, y, c1);
+                ime.setDeep(x, y, prof);
+            } else if (checkScreen(ce)) {
+                int elementCouleur = ime.getElementCouleur(x, y);
+                double[] nc = c;
+                double[] ac = Lumiere.getDoubles(elementCouleur);
+                double[] b = new double[3];
+                for (int i = 0; i < 3; i++) {
+                    b[i] = nc[i] * c[3] / 255. + (1 - c[3] / 255.) * ac[i];
+                }
+                int anInt = Lumiere.getInt(b);
+                ime.setElementID(x, y, idImg);
+                ime.setElementPoint(x, y, x3d);
+                ime.setElementCouleur(x, y, anInt);
+                ime.setDeep(x, y, prof);
+
+            }
+        }
+
+        public void testDeep(Point3D p, Color c) {
+            testDeep(p, c.getRGB());
+        }
+
+        public void testDeep(Point3D p) {
+            if (p != null && p.texture() != null) {
+                testDeep(p, p.texture().getColorAt(0., 0.));
+            }
+        }
         public boolean testDeep(Point3D x3d, int c) {
             if (x3d == null)
                 return false;
@@ -1541,245 +1762,5 @@ public class ZBufferImpl extends Representable implements ZBuffer {
             }
             return false;
         }
-
-        public void testDeep(Point3D p, Point3D n, Color c) {
-            // Color cc = c.getCouleur();
-            p.setNormale(n);
-            testDeep(p, c.getRGB());
-        }
-
-        public void testDeep(Point3D p, Point3D n, int c) {
-            testDeep(p, n, new Color(c));
-        }
-
-        public boolean testDeep(Point3D p, ITexture texture, double u, double v, Representable representable) {
-            if (texture.getColorAt(u, v) != texture.getTransparent()
-                    && testDeep(p, texture.getColorAt(u, v))) {
-                Point point = camera().coordonneesPoint2D(p, that);
-                int x = point.x, y = point.y;
-                ime.getuMap()[x][y] = u;
-                ime.getvMap()[x][y] = v;
-                ime.getrMap()[x][y] = representable;
-                return true;
-            }
-            return false;
-        }
-
-        public boolean testDeep(Point3D p, ITexture texture) {
-            return testDeep(p, texture.getColorAt(0.5, 0.5));
-        }
-
-        public void dessine(Point3D p, ITexture texture) {
-            ime.dessine(p, texture.getColorAt(0.5, 0.5));
-
-        }
-
-        public void testDeep(Point3D p) {
-            testDeep(p, (p != null && p.texture() != null) ? p.texture() : CFAST);//WTF
-        }
-
-        public void testDeep(Point3D p, Color c) {
-            testDeep(p, p.getNormale(), c);
-        }
-
-        public void testDeep(Point3D pFinal, Point3D point3D, int colorAt, Representable n) {
-            testDeep(pFinal, point3D, colorAt);
-            Point point = camera().coordonneesPoint2D(pFinal, that);
-            if (ime != null && point != null) {
-                ime.setElementRepresentable((int) point.getX(), (int) point.getY(), n);
-            }
-        }
-
-        public void testDeep(Point3D pFinal, int colorAt, Representable n) {
-            testDeep(pFinal, pFinal.getNormale(), colorAt, n);
-        }
-    }
-
-    public class ImageMapElement {
-
-         int couleur_fond_int = -1;
-         ImageMapElement instance;
-         Representable[][] Simerepresentable;
-         double[][] uMap;
-         double[][] vMap;
-         Representable[][] rMap;
-         Point3D[][] Scordinate;
-         int[] Scolor;
-         long[][] Simeid;
-         double[][] Simeprof;
-
-
-        public ImageMapElement() {
-            ime = this;
-            ime.Scordinate = new Point3D[la][ha];
-            ime.Scolor = new int[la * ha];
-            ime.Simeid = new long[la][ha];
-            ime. Simeprof = new double[la][ha];
-            ime.Simerepresentable = new Representable[la][ha];
-            uMap = new double[la][ha];
-            vMap = new double[la][ha];
-            rMap = new Representable[la][ha];
-            for (int i = 0; i < la; i++) {
-                for (int j = 0; j < ha; j++) {
-                    ime.Simeprof[i][j] = INFINITY.getZ();
-                    ime.Simeid[i][j] = idImg;
-                    ime.Scolor[j * la + i] = COULEUR_FOND_INT(i, j);
-                    Simerepresentable[i][j] = null;
-                }
-            }
-        }
-
-        public Representable getElementRepresentable(int x, int y) {
-            if (checkCordinates(x, y)) {
-                return Simerepresentable[x][y];
-            }
-            return null;
-        }
-
-        public void setElementRepresentable(int x, int y, Representable representable) {
-            Simerepresentable[x][y] = representable;
-        }
-
-        public boolean checkCordinates(int x, int y) {
-            return x >= 0 && x < la && y >= 0 && y < ha;
-        }
-
-        public int COULEUR_FOND_INT(int x, int y) {
-            couleur_fond_int = texture().getColorAt(1.0 * x / largeur(), 1.0 * y / hauteur());
-            return couleur_fond_int;
-        }
-
-        public int getElementCouleur(int x, int y) {
-            if (checkCordinates(x, y)
-                    && ime.Simeid[x][y] == idImg
-                    && ime.Simeprof[x][y] > INFINITY.getZ()) {
-                return getRGBInt(ime.Scolor, x, y);
-            } else {
-                return COULEUR_FOND_INT(x, y);
-            }
-        }
-
-        public long getElementID(int x, int y) {
-            return ime.Simeid[x][y];
-        }
-
-        public Point3D getElementPoint(int x, int y) {
-            return ime.Scordinate[x][y];
-        }
-
-        protected double getElementProf(int x, int y) {
-            return ime.Simeprof[x][y];
-        }
-
-        public ImageMapElement getInstance(int x, int y) {
-            if (instance == null) {
-                instance = new ImageMapElement();
-            }
-            return instance;
-        }
-
-        protected int getRGBInt(int[] sc, int x, int y) {
-            return sc[x + y * la];
-
-        }
-
-        public void setElementCouleur(int x, int y, int pc) {
-            setElementID(x, y, idImg);
-            setRGBInts(pc, ime.Scolor, x, y);
-        }
-
-        public void setElementID(int x, int y, long id) {
-            ime.Simeid[x][y] = idImg;
-        }
-
-        public void setElementPoint(int x, int y, Point3D px) {
-            setElementID(x, y, idImg);
-            ime.Scordinate[x][y] = px;
-        }
-
-        public double[][] getuMap() {
-            return uMap;
-        }
-
-        public void setuMap(double[][] uMap) {
-            this.uMap = uMap;
-        }
-
-        public double[][] getvMap() {
-            return vMap;
-        }
-
-        public void setvMap(double[][] vMap) {
-            this.vMap = vMap;
-        }
-
-        public Representable[][] getrMap() {
-            return rMap;
-        }
-
-        public void setrMap(Representable[][] rMap) {
-            this.rMap = rMap;
-        }
-
-        protected void setDeep(int x, int y, double d) {
-            if (checkCordinates(x, y)) {
-                ime.Simeprof[x][y] = (float) d;
-            }
-
-        }
-
-        protected void setRGBInts(int rgb, int[] sc, int x, int y) {
-            sc[x + y * la] = rgb;
-        }
-
-        public void setElementProf(int i, int j, double pr) {
-            ime.Simeprof[i][j] = pr;
-        }
-
-        public void dessine(Point3D p, Color colorAt) {
-            dessine(p, colorAt.getRGB());
-        }
-
-        public void dessine(Point3D x3d, int c1) {
-            double [] c = Lumiere.getDoubles(c1);
-            Point ce = camera().coordonneesPoint2D(x3d, that);
-            if (ce == null) {
-                return;
-            }
-            double prof = -1000;
-            int x = (int) ce.getX();
-            int y = (int) ce.getY();
-            if (x >= 0 & x < la & y >= 0 & y < ha && c[3] == 255) {
-                ime.setElementID(x, y, idImg);
-                ime.setElementPoint(x, y, x3d);
-                ime.setElementCouleur(x, y, c1);
-                ime.setDeep(x, y, prof);
-            } else if (checkScreen(ce)) {
-                int elementCouleur = ime.getElementCouleur(x, y);
-                double[] nc = c;
-                double[] ac = Lumiere.getDoubles(elementCouleur);
-                double[] b = new double[3];
-                for (int i = 0; i < 3; i++) {
-                    b[i] = nc[i] * c[3] / 255. + (1 - c[3] / 255.) * ac[i];
-                }
-                int anInt = Lumiere.getInt(b);
-                ime.setElementID(x, y, idImg);
-                ime.setElementPoint(x, y, x3d);
-                ime.setElementCouleur(x, y, anInt);
-                ime.setDeep(x, y, prof);
-
-            }
-        }
-
-        public void testDeep(Point3D p, int c) {
-        }
-    }
-
-    public double getScale() {
-        return scale.getElem();
-    }
-
-    public void setScale(double scale) {
-        this.scale.setElem(scale);
     }
 }
