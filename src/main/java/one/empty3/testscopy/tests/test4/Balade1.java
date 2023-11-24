@@ -91,10 +91,8 @@ public class Balade1 extends TestObjetSub {
     public void finit() throws Exception {
         super.finit();
 
-        if(!(z() instanceof ZBufferImplRecursive) && useRecursive()) {
-            setZ(new ZBufferImplRecursive(z.la(), z.ha()));
+            setZ(new ZBufferImpl(z.la(), z.ha()));
             z().scene(scene());
-        }
         //z().setDisplayType(ZBufferImpl.SURFACE_DISPLAY_LINES);
         z().setDisplayType(ZBufferImpl.SURFACE_DISPLAY_COL_QUADS);
         if (frame() < VUE_1 * FPS) {

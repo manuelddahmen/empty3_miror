@@ -30,6 +30,7 @@ import java.awt.*;
 import java.io.File;
 
 public class TestTubeVisit extends TestObjetSub {
+    private static final int NUM_FRAMES_1PTS = 100;
     private static int TOTAL_POINTS = 30;
     private static int ACTUAL_POINTS = 8;
     private final Tubulaire3 tubulaire3refined= new Tubulaire3();
@@ -37,7 +38,7 @@ public class TestTubeVisit extends TestObjetSub {
 
     public static void main(String[] args) throws Exception {
         TestTubeVisit testTubeVisit = new TestTubeVisit();
-        testTubeVisit.setMaxFrames(1000);
+        testTubeVisit.setMaxFrames(1);
         testTubeVisit.setResolution(Resolution.HD1080RESOLUTION.x(), Resolution.HD1080RESOLUTION.y());
         testTubeVisit.loop(true);
 
@@ -52,9 +53,10 @@ public class TestTubeVisit extends TestObjetSub {
         z().setFORCE_POSITIVE_NORMALS(true);
         z().setDisplayType(ZBufferImpl.SURFACE_DISPLAY_LINES);
         CourbeParametriquePolynomialeBezier elem = tubulaire3refined.getSoulCurve().getElem();
-        for(int i=0; i<8; i++) {
+        for(int i=0; i<10; i++) {
             elem.getCoefficients().setElem(Point3D.random(1000.0), i);
             currentPoint++;
+            setMaxFrames(getMaxFrames()+NUM_FRAMES_1PTS);
         }
         tubulaire3refined.texture(new ImageTexture(new File("resources/sol_sableux.jpg")));
         tubulaire3refined.getDiameterFunction().setElem(new FctXY() {
@@ -63,8 +65,8 @@ public class TestTubeVisit extends TestObjetSub {
                 return 100.0;
             }
         });
-        tubulaire3refined.setIncrU(0.001);
-        tubulaire3refined.setIncrV(0.001);
+        tubulaire3refined.setIncrU(0.004);
+        tubulaire3refined.setIncrV(0.004);
 
     }
 
@@ -74,10 +76,12 @@ public class TestTubeVisit extends TestObjetSub {
 
         double t = 1.0*frame()/getMaxFrames();
 
-        if(t>1.*(ACTUAL_POINTS/TOTAL_POINTS) && currentPoint<TOTAL_POINTS) {
-            //ourbeParametriquePolynomialeBezier elem = tubulaire3refined.getSoulCurve().getElem();
-            //elem.getCoefficients().setElem(Point3D.random(1000.0), elem.getCoefficients().getData1d().size());
-            //elem.getCoefficients().delete(0);
+        if(t>1.*ACTUAL_POINTS/TOTAL_POINTS*2 && currentPoint<TOTAL_POINTS) {
+            /*CourbeParametriquePolynomialeBezier elem = tubulaire3refined.getSoulCurve().getElem();
+            elem.getCoefficients().setElem(Point3D.random(1000.0), elem.getCoefficients().getData1d().size());
+            elem.getCoefficients().delete(0);
+            setMaxFrames(getMaxFrames()+NUM_FRAMES_1PTS);
+            currentPoint++;*/
         }
 
         scene().clear();

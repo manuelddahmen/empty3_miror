@@ -64,10 +64,9 @@ public class Paysage extends TestObjetSub {
     public void finit() throws Exception {
         super.finit();
 
-        if(!(z() instanceof ZBufferImplRecursive) && useRecursive()) {
-            setZ(new ZBufferImplRecursive(z.la(), z.ha()));
+            setZ(new ZBufferImpl(z.la(), z.ha()));
             z().scene(scene());
-        }
+
         z().setDisplayType(ZBufferImpl.SURFACE_DISPLAY_TEXT_QUADS);
 
         if (frame() < VUE_1 * FPS) {

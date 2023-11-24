@@ -86,10 +86,8 @@ public class Balade extends TestObjetSub {
 
         scene().add(polygonSol);
 
-        if(!(z() instanceof ZBufferImplRecursive) && useRecursive()) {
-            setZ(new ZBufferImplRecursive(z.la(), z.ha()));
+            setZ(new ZBufferImpl(z.la(), z.ha()));
             z().scene(scene());
-        }
         z().texture(new ColorTexture(Color.blue));
         //z().setDisplayType(ZBufferImpl.SURFACE_DISPLAY_LINES);
         z().setDisplayType(ZBufferImpl.DISPLAY_ALL);
