@@ -47,7 +47,6 @@ public class Vec {
         for (int i = 0; i < d; d++)
             vecVal.getData1d().add(0.0);
     }
-
     public Vec(Double... comps) {
         for (int i = 0; i < comps.length; i++) {
             Double d = comps[i];

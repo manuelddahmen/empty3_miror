@@ -4,6 +4,7 @@ plugins {
     id 'java-library'
     id 'maven-publish'
     id 'signing'
+    id 'org.jetbrains.kotlin.jvm' version '1.9.20'
 }
 
 
@@ -213,12 +214,9 @@ repositories {
     flatDir dirs: "${rootDir}/lib"
 }
 
-sourceCompatibility = JavaVersion.VERSION_11
-targetCompatibility = JavaVersion.VERSION_11
-
-
 
 dependencies {
+//    implementation(kotlin("stdlib"))
     implementation 'org.junit.jupiter:junit-jupiter:5.9.2'
     implementation 'junit:junit:4.13.2'
     testImplementation project(path: ':')
@@ -229,7 +227,6 @@ dependencies {
     implementation group: 'org.jogamp.gluegen', name: 'gluegen-rt-main', version:"$jogl"
     implementation group: 'org.jogamp.jogl', name: 'jogl-all-main', version:"$jogl"
     implementation 'ai.djl:api:0.21.0'
-    //implementation('com.android.tools.build:gradle-api:4.0.2')
     implementation("org.jcodec:jcodec-javase:0.2.5")
     implementation("org.jcodec:jcodec-javase:0.2.5")
     implementation("org.jogamp.jogl:jogl-all-main:$jogl")
@@ -238,20 +235,17 @@ dependencies {
     implementation("xom:xom:1.3.8")
     implementation("com.jgoodies:jgoodies-common:1.8.1")
     implementation("com.jgoodies:jgoodies-forms:1.9.0")
-    // https://mvnrepository.com/artifact/com.google.android/android
-    //compileOnly group: 'com.google.android', name: 'android', version: '4.1.1.4'
     implementation('xerces:xercesImpl:2.12.2')
     implementation 'com.formdev:flatlaf:3.0'
     implementation("org.jdesktop:beansbinding:1.2.1")
     implementation("com.github.sarxos:webcam-capture:0.3.12")
-    // https://mvnrepository.com/artifact/commons-net/commons-net
     implementation group: 'commons-net', name: 'commons-net', version: '3.9.0'
     implementation("org.jdom:jdom2:2.0.6.1")
     implementation("org.apache.servicemix.bundles:org.apache.servicemix.bundles.jdom:2.0.6.1_1")
     implementation 'com.jetbrains.intellij.java:java-gui-forms-rt:203.7148.30'
     implementation 'org.jetbrains:annotations:24.0.0'
-    testImplementation project(path: ':')
     testImplementation('org.junit.jupiter:junit-jupiter:5.9.2')
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 }
 
 
@@ -333,7 +327,7 @@ publishing {
                         email = "dathewolf@gmail.com"
                         name = "Manuel Daniel Dahmen"
 
-                        url = "https://github.com/manuelddahmen"
+                        url = "https://empty3.one"
                         id = "manuelddahmen"
                     }
                 }
@@ -373,4 +367,7 @@ publishing {
             }
         }*/
     }
+}
+kotlin {
+    jvmToolchain(11)
 }
