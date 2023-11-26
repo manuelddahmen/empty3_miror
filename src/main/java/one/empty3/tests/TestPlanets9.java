@@ -279,9 +279,9 @@ public class TestPlanets9 extends TestObjetSub {
 
         Matrix33 formule2 = Matrix33.rotationX( 2*Math.PI*23.4 / 360.0).mult(Matrix33.XYZ);
 
-        Matrix33 formule3 = Matrix33.rotationY(2*Math.PI*frame()/getMaxFrames()).mult(Matrix33.YZX);
+        Matrix33 formule3 = Matrix33.YZX.mult(Matrix33.rotationY(2*Math.PI*frame()/getMaxFrames()));
 
-        Point3D[] rowVectors = matrixRotationTerre.mult(formule3).mult(formule2).getColVectors();
+        Point3D[] rowVectors = matrixRotationTerre.mult(formule2).mult(formule3).getColVectors();
 
         earth.setVectX(rowVectors[0]);
         earth.setVectY(rowVectors[1]);

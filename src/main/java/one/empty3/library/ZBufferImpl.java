@@ -81,6 +81,7 @@ public class ZBufferImpl extends Representable implements ZBuffer {
     protected boolean FORCE_POSITIVE_NORMALS = true;
     protected StructureMatrix<Double> scale = new StructureMatrix<>(0, Double.class);
     ZBufferImpl that;
+    private boolean isCheckedOccupied = false;
 
     public ZBufferImpl() {
         that = this;
@@ -969,8 +970,9 @@ public class ZBufferImpl extends Representable implements ZBuffer {
     }
 
     private boolean isOccupied(Point3D newValue) {
-        return false;
-        /*
+        if(!isCheckedOccupied()) {
+            return false;
+        }
         double newCandidateDeep = camera().distanceCamera(newValue);
         if(newValue!=null) {
             Point point = camera().coordonneesPoint2D(newValue, this);
@@ -986,7 +988,10 @@ public class ZBufferImpl extends Representable implements ZBuffer {
             }
         }
         return false;
-*/
+    }
+
+    private boolean isCheckedOccupied() {
+        return isCheckedOccupied;
     }
 
     public void tracerTriangle(Point3D pp1, Point3D pp2, Point3D pp3, ITexture c) {
@@ -1763,4 +1768,10 @@ public class ZBufferImpl extends Representable implements ZBuffer {
             return false;
         }
     }
+
+    public void setCheckedOccupied(boolean checkedOccupied) {
+        isCheckedOccupied = checkedOccupied;
+    }
+
+
 }

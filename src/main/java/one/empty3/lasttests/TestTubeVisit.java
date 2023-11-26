@@ -51,7 +51,7 @@ public class TestTubeVisit extends TestObjetSub {
 
         z().texture(new ColorTexture(Color.BLACK.getRGB()));
         z().setFORCE_POSITIVE_NORMALS(true);
-        z().setDisplayType(ZBufferImpl.SURFACE_DISPLAY_LINES);
+        z().setDisplayType(ZBufferImpl.SURFACE_DISPLAY_TEXT_QUADS );
         CourbeParametriquePolynomialeBezier elem = tubulaire3refined.getSoulCurve().getElem();
         for(int i=0; i<10; i++) {
             elem.getCoefficients().setElem(Point3D.random(1000.0), i);
@@ -65,8 +65,8 @@ public class TestTubeVisit extends TestObjetSub {
                 return 100.0;
             }
         });
-        tubulaire3refined.setIncrU(0.004);
-        tubulaire3refined.setIncrV(0.004);
+        tubulaire3refined.setIncrU(0.01);
+        tubulaire3refined.setIncrV(0.01);
 
     }
 
