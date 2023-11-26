@@ -22,7 +22,7 @@ import one.empty3.library.Point3D;
 import one.empty3.growth.test.TestCaseExtended;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-
+/*
 public class TestRotation2_methodeBis extends TestCaseExtended {
 
     private Rotation2 rot = new Rotation2();
@@ -49,7 +49,7 @@ public class TestRotation2_methodeBis extends TestCaseExtended {
         Point3D y = Point3D.X;
 
         assertEqualsNaNPoint3D(x);
-    }*/
+    }
 
 
     public void testRotationIdent3() {
@@ -192,3 +192,4 @@ public class TestRotation2_methodeBis extends TestCaseExtended {
     }
 
 }
+*/

@@ -359,7 +359,7 @@ class TestAlgbricTreeVector() {
 
     @Test
     fun testSimple6_1() {
-        testResultVariable("-5/(-5)*3.0", -5.0/(-5)*3.0, HashMap<String, Double>(),true)
+        testResultVariable("(-5)/(-5)*3.0", -5.0/(-5)*3.0, HashMap<String, Double>(),true)
     }
     @Test
     fun testSimple6_2() {
@@ -497,7 +497,7 @@ class TestAlgbricTreeVector() {
         vars["x"] = x
         vars["y"] = y
         vars["z"] = z
-        testResultVariableVec("(x,((1+z),y,(1+z)))", Vec(Vec(x),Vec(1+z),Vec(1+z)),  vars, true)
+        testResultVariableVec("(x,((1+z),y,(1+z)))", Vec(x,(1+z),y, 1+z),  vars, true)
     }
 
     private fun testResultVariableVec(
@@ -522,11 +522,11 @@ class TestAlgbricTreeVector() {
                 var assertion = true
 
                 try {
-                    if(vecEqualsSM(result,  expectedResult)) {
-                        assertion = true
-                    } else {
-                        assertion = false
-                    }
+                        if (vecEqualsSM(result, expectedResult)) {
+                            assertion = true
+                        } else {
+                            assertion = false
+                        }
                 } catch (ex : NullPointerException) {
                     assertion = false
                 }

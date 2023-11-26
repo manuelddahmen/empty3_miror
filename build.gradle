@@ -7,7 +7,6 @@ plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.9.20'
 }
 
-
 sourceSets {
     main {
         java {
@@ -245,7 +244,7 @@ dependencies {
     implementation 'com.jetbrains.intellij.java:java-gui-forms-rt:203.7148.30'
     implementation 'org.jetbrains:annotations:24.0.0'
     testImplementation('org.junit.jupiter:junit-jupiter:5.9.2')
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.20"
 }
 
 
