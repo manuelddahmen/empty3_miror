@@ -22,9 +22,8 @@ package one.empty3.feature;
 import net.miginfocom.swing.MigLayout;
 import one.empty3.feature.facemorph.RunFeatures;
 import one.empty3.feature.gui.LiveEffect;
-import one.empty3.feature.histograms.Hist4Contour;
+import one.empty3.feature.histograms.*;
 import one.empty3.feature.histograms.Histogram;
-import one.empty3.feature.histograms.Histogram1;
 import one.empty3.feature.selection.HighlightFeatures;
 import one.empty3.feature.tryocr.ReadLines;
 import one.empty3.feature.tryocr.SelectColor;
@@ -572,29 +571,34 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
         }
 
 
-        for (File[] files : this.files) {
-            for (File f : files) {
+        for (File[] filess : this.files) {
+            for (File f : filess) {
                 System.out.printf("Run %d processes on file%s\n", processes.size(), f.getAbsolutePath());
                 if (f.getName().contains("webcam")) {
-                    f = getWebcamFile();
+                    //f = getWebcamFile();
                 }
-                if (processes.size() > 0) {
+                if (!processes.isEmpty() && f!=null) {
                     ProcessFile ce = processes.get(0);
                     int processNameOrder = listProcessClasses.indexOf(ce.getClass());
                     StringBuilder s = new StringBuilder();
                     s.append("-").append(listProcessClasses.indexOf(ce)).append(getUuid());
                     String s0 = "";
                     fileOut = new File(tempDir + File.separator + f.getName() + s.toString() + ".jpg");
-                    if (!fileOut.exists()) {
-                        fileOut.mkdirs();
+                    if (!fileOut.getParentFile().exists()) {
+                        fileOut.getParentFile().mkdirs();
                     }
 
                     System.out.printf("Process %s \nfrom:  %s\n", processes.get(0).getClass().toString(), f.getAbsolutePath());
                     System.out.printf("Process %s \nto  :  %s\n", processes.get(0).getClass().toString(), fileOut.getAbsolutePath());
 
                     System.out.printf("Run process %d/%d on file%s\n", 0, processes.size(), f.getAbsolutePath());
-                    if (f != null) {
-                        ce.process(f, fileOut);
+
+                    File fileIn = null;
+
+                    if (ce.process(f, fileOut)) {
+                        liveEffect.setFileIn(fileOut);
+                        Logger.getAnonymousLogger().log(Level.INFO, "Fichier IN mis à jour");
+                        fileIn = fileOut;
                         for (int i = 1; i < processes.size(); i++) {
                             ce = processes.get(i);
                             s0 = s.toString();
@@ -607,38 +611,41 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
                             } else {
                                 fileOut = new File(tempDir + File.separator + f.getName()
                                         + s + ".jpg");
-
                             }
-                            File fileIn = new File(tempDir + File.separator + f.getName() //+ (i - 1)
-                                    + s0 + ".jpg");
                             ce.addSource(f);//???
                             ce.addSource(fileIn);//???
                             try {
                                 if (!fileOut.exists()) {
-                                    fileOut.mkdirs();
+                                    //fileOut.mkdirs();
                                 }
                                 System.out.printf("Run process %d/%d on file%s\n", i, processes.size(), f.getAbsolutePath());
                                 ce.process(fileIn, fileOut);
+                                liveEffect.setFileIn(fileOut);
+
+                                fileIn = fileOut;
+
+                                Logger.getAnonymousLogger().log(Level.INFO, "Fichier IN mis à jour");
                             } catch (NullPointerException ex) {
                                 ex.printStackTrace();
                             }
+
                         }
                     }
                 }
             }
         }
-        if(fileOut!=null) {
+/*        if(fileOut!=null) {
             Logger.getAnonymousLogger().log(Level.INFO, "fileOut : " + fileOut.getAbsolutePath());
             Logger.getAnonymousLogger().log(Level.INFO, "Exists? : " + fileOut.exists());
             if (fileOut.exists()) {
-                liveEffect.setFileIn(fileOut);
+                //liveEffect.setFileIn(fileOut);
                 processed = true;
             } else {
                 System.err.println("Le fichier fileOut n'existe pas");
             }
         } else {
             System.err.println("Le fichier fileOut est null");
-        }
+        }*/
     }
 
     private void buttonDeleteClassActionPerformed(ActionEvent e) {
@@ -997,6 +1004,8 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
             listProcessClasses.add(Histogram1.class.newInstance());
             listProcessClasses.add(Hist4Contour.class.newInstance());
             listProcessClasses.add(one.empty3.feature20220726.histograms.Hist4Contour2.class.newInstance());
+            listProcessClasses.add(Hist1Votes.class.newInstance());
+            listProcessClasses.add(Hist4Contour3.class.newInstance());
             listProcessClasses.add(Histogram0.class.newInstance());
             listProcessClasses.add(Histogram2.class.newInstance());
             listProcessClasses.add(Histogram3.class.newInstance());

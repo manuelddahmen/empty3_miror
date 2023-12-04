@@ -42,7 +42,7 @@ public class Cheval extends RepresentableConteneur {
         coefficients.add(new Point3D(0.0, -50.0, 0.0));
         coefficients.add(new Point3D(-50.0, -50.0, 0.0));
         coefficients.add(new Point3D(-100.0, -50.0, 0.0));
-        corps.getElem().getDiameterFunction().setElem(new FctXY().setFormulaX("30*x"));
+        corps.getElem().getDiameterFunction().setElem(new FctXY().setFormulaX("20*abs(x*(x-1))+10"));
 
         pattes.setElem(new TubulaireN2(), 0);
         pattes.setElem(new TubulaireN2(), 1);

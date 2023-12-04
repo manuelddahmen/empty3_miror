@@ -35,6 +35,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -76,9 +77,13 @@ public class LiveEffect extends JFrame {
         this.comboBoxDimenisions.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                threadEffectDisplay.webcam
-                        .setViewSize((Dimension) comboBoxDimenisions
-                                .getItemAt(comboBoxDimenisions.getSelectedIndex()));
+                try {
+                    threadEffectDisplay.webcam
+                            .setViewSize((Dimension) comboBoxDimenisions
+                                    .getItemAt(comboBoxDimenisions.getSelectedIndex()));
+                } catch (RuntimeException ignored) {
+
+                }
             }
         });
 
@@ -218,9 +223,10 @@ public class LiveEffect extends JFrame {
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 
     public void setFileIn(File fileOut) {
+        BufferedImage read = null;
         try {
             if (fileOut != null) {
-                BufferedImage read = ImageIO.read(fileOut);
+                read = ImageIO.read(fileOut);
                 if (read != null) {
                     threadEffectDisplay.setImageIn(read);
                 } else {
@@ -229,8 +235,8 @@ public class LiveEffect extends JFrame {
             } else {
                 Logger.getAnonymousLogger().log(Level.INFO, "No image in set after processing files fileOut==null");
             }
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        } catch (RuntimeException | IOException ex) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Fichier non trouvé");
         }
 
     }
@@ -245,4 +251,5 @@ public class LiveEffect extends JFrame {
         threadEffectDisplay.setDirectEffect(this);
         //main.setMaxRes(100);
     }
+
 }

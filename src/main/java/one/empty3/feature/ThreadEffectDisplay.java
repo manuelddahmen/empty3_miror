@@ -81,55 +81,43 @@ public class ThreadEffectDisplay extends Thread {
     @Override
     public void run() {
 
-        /*
-        webcam.setImageTransformer(bufferedImage -> {
-
-            BufferedImage bufferedImage1 = new BufferedImage(bufferedImage.getWidth(), bufferedImage.getHeight(),
-                    BufferedImage.TYPE_INT_RGB);
-            for (int i = 0; i < bufferedImage.getWidth(); i++)
-                for (int j = 0; j < bufferedImage.getHeight(); j++) {
-                    bufferedImage1.setRGB(bufferedImage.getWidth() - i - 1, j,
-                            bufferedImage.getRGB(i, j));
-                }
-            return bufferedImage1;
-        });
-*/
         init();
 
-        File fileOrigin = new File(tempDir + File.separator + "webcam.jpg");
 
-        boolean add = main.files.add(new File[]{fileOrigin});
         do {
+            File fileOrigin = new File(tempDir + File.separator + "webcam.jpg");
+
+            main.files.clear();
+            main.files.add(new File[]{fileOrigin});
+
             image = webcam.getImage();
-
-
             try {
-                if (image != null && ImageIO.write(image, "jpg", main.getWebcamFile())) {
+                if (image != null && ImageIO.write(image, "jpg", fileOrigin)) {
+
                     System.err.println("File written");
+
+                    main.setMaxRes(Math.max(image.getWidth(), image.getHeight()));
+
+                    main.buttonGOActionPerformed(null);
+
+                    while ((imageIn2 = getImageIn()) == null) {
+                        try {
+                            Thread.sleep(20);
+                        } catch (InterruptedException ignored) {
+
+                        }
+                        main.buttonGOActionPerformed(null);
+                    }
+
+                    if (imageIn2 != null) {
+                        jPanel.setMinimumSize(new Dimension(imageIn2.getWidth(), imageIn2.getHeight()));
+                        Graphics graphics = jPanel.getGraphics();
+                        graphics.drawImage(imageIn2, 0, 0, jPanel.getWidth(), jPanel.getHeight(), null);
+                    } else {
+                        Logger.getAnonymousLogger().log(Level.INFO, "No image to display: " + imageIn2);
+                    }
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            main.buttonGOActionPerformed(null);
-
-            if(image!=null) {
-                main.setMaxRes(Math.max(image.getWidth(), image.getHeight()));
-            }
-
-            while ((image = getImageIn()) == null) {
-                main.buttonGOActionPerformed(null);
-                try {
-                    Thread.sleep(20);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-
-            if (image != null) {
-                Graphics graphics = jPanel.getGraphics();
-                graphics.drawImage(image, 0, 0, jPanel.getWidth(), jPanel.getHeight(), null);
-            } else {
-                Logger.getAnonymousLogger().log(Level.INFO, "No image to display: " + image);
+            } catch (IOException ignored) {
             }
         } while (directEffect.isVisible());
 
