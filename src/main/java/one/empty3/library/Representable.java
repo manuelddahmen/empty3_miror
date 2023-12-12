@@ -637,7 +637,8 @@ public class Representable /*extends RepresentableT*/ implements Serializable, C
         return getOrig().plus(getVectX().mult(pxy.get(0)).plus(getVectY().mult(pxy.get(1)).plus(getVectZ().mult(pxy.get(2)))).norme1().mult(scale));
     }
     public Point3D getVectX() {
-        return vectors.getElem(0);
+        Point3D elem = vectors.getElem(0);
+        return elem==null?Point3D.X:elem;
     }
 
     public void setVectX(Point3D vectX) {
@@ -645,7 +646,8 @@ public class Representable /*extends RepresentableT*/ implements Serializable, C
     }
 
     public Point3D getVectY() {
-        return vectors.getElem(1);
+        Point3D elem = vectors.getElem(1);
+        return elem==null?Point3D.Y:elem;
     }
 
     public void setVectY(Point3D vectY) {
@@ -653,17 +655,19 @@ public class Representable /*extends RepresentableT*/ implements Serializable, C
     }
 
     public Point3D getVectZ() {
-        return vectors.getElem(2);
+        Point3D elem = vectors.getElem(2);
+        return elem==null?Point3D.Y:elem;
     }
 
     public void setVectZ(Point3D vectZ) {
         this.vectors.setElem(vectZ, 2);
     }
     public void setOrig(Point3D orig) {
-        this.vectors.setElem(orig, 3);
+
     }
     public Point3D getOrig() {
-        return this.vectors.getElem(3);
+        Point3D elem = vectors.getElem(3);
+        return elem==null?Point3D.O0:elem;
     }
 
     public StructureMatrix<Point3D> getVectors() {

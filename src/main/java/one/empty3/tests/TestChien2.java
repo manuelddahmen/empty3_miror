@@ -25,8 +25,6 @@ import one.empty3.library.core.nurbs.*;
 import one.empty3.library.core.testing.*;
 import java.awt.Color;
 import one.empty3.library.core.move.Trajectoires;
-import org.apache.xpath.operations.Bool;
-
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.geom.Point2D;

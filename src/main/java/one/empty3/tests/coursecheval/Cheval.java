@@ -19,6 +19,7 @@
 
 package one.empty3.tests.coursecheval;
 
+import one.empty3.growth.graphics.Axis;
 import one.empty3.library.*;
 import one.empty3.library.core.nurbs.CourbeParametriquePolynomiale;
 import one.empty3.library.core.nurbs.FctXY;
@@ -29,20 +30,26 @@ import java.lang.reflect.Method;
 import java.util.function.Consumer;
 
 public class Cheval extends RepresentableConteneur {
+    private final StructureMatrix<ParametricSurface> psGround = new StructureMatrix<ParametricSurface>(0, ParametricSurface.class);
+    private final StructureMatrix<Sphere> tete = new StructureMatrix<>(0, Sphere.class);
+    private final StructureMatrix<Sphere> queue = new StructureMatrix<>(0, Sphere.class);
     private StructureMatrix<TubulaireN2> corps = new StructureMatrix<>(0, TubulaireN2.class);
     private StructureMatrix<TubulaireN2> pattes = new StructureMatrix<>(1, TubulaireN2.class);
     private ChevalMovements move;
 
 
-    public Cheval() {
+    public Cheval(ParametricSurface psGround) {
+        this.psGround.setElem(psGround);
+
         corps.setElem(new TubulaireN2());
-        StructureMatrix<Point3D> coefficients = ((CourbeParametriquePolynomiale) corps.getElem().getSoulCurve().getElem()).getCoefficients();
+        StructureMatrix<Point3D> coefficients
+                = ((CourbeParametriquePolynomiale) corps.getElem().getSoulCurve().getElem()).getCoefficients();
         coefficients.add(new Point3D(100.0, -100.0, 0.0));
         coefficients.add(new Point3D(50.0, -50.0, 0.0));
         coefficients.add(new Point3D(0.0, -50.0, 0.0));
         coefficients.add(new Point3D(-50.0, -50.0, 0.0));
         coefficients.add(new Point3D(-100.0, -50.0, 0.0));
-        corps.getElem().getDiameterFunction().setElem(new FctXY().setFormulaX("20*abs(x*(x-1))+10"));
+        corps.getElem().getDiameterFunction().setElem(new FctXY().setFormulaX("50-10*x"));
 
         pattes.setElem(new TubulaireN2(), 0);
         pattes.setElem(new TubulaireN2(), 1);
@@ -67,10 +74,18 @@ public class Cheval extends RepresentableConteneur {
         coefficients.add(new Point3D(-50., -25., -50.));
         coefficients.add(new Point3D(-50., -.0, -50.));
 
-        add(corps.getElem());
+        StructureMatrix<Point3D> coefficients1
+                = ((CourbeParametriquePolynomiale) corps.getElem().getSoulCurve().getElem()).getCoefficients();
+
+        tete.setElem(new Sphere(coefficients1.getElem(0), 60));
+        queue.setElem(new Sphere(coefficients1.getElem(coefficients1.getData1d().size()-1), 40));
+
+        add(new PsOnPs(psGround, corps.getElem()));
         for (TubulaireN2 TubulaireN2 : pattes.getData1d()) {
-            add(TubulaireN2);
+            add(new PsOnPs(psGround, TubulaireN2));
         }
+        add(new PsOnPs(psGround, tete.getElem()));
+        add(new PsOnPs(psGround, queue.getElem()));
 
         move = new ChevalMovements(this);
 
@@ -92,13 +107,6 @@ public class Cheval extends RepresentableConteneur {
         super.texture(tc);
     }
 
-    @Override
-    public void declareProperties() {
-        getDeclaredDataStructure().put("corps/corps du cheval", corps);
-        getDeclaredDataStructure().put("pattes/pattes du cheval", pattes);
-        super.declareProperties();
-    }
-
     public ChevalMovements getMoves() {
         return move;
     }
@@ -109,10 +117,32 @@ public class Cheval extends RepresentableConteneur {
         public ChevalMovements(Cheval cheval) {
             this.cheval = cheval;
         }
+
+        public void moveTete(StructureMatrix<Sphere> tete, TubulaireN2 corps ) {
+            Point3D elem = ((CourbeParametriquePolynomiale) corps.getSoulCurve().getElem()).getCoefficients().getElem(0);
+
+            StructureMatrix<Axe> axe = new StructureMatrix<>(0, Axe.class);
+            axe.setElem(new Axe(
+                    elem.plus(Point3D.Y.mult(tete.getElem().getCircle().getRadius())),
+                    elem.moins(Point3D.Y.mult(tete.getElem().getCircle().getRadius()))
+            ));
+            tete.getElem().getCircle().setAxis(axe);
+        }
+        public void moveQueue(StructureMatrix<Sphere> tete, TubulaireN2 corps ) {
+            Point3D elem = ((CourbeParametriquePolynomiale) corps.getSoulCurve().getElem()).getCoefficients().getElem(
+                    ((CourbeParametriquePolynomiale) corps.getSoulCurve().getElem()).getCoefficients().getData1d().size()-1);
+
+            StructureMatrix<Axe> axe = new StructureMatrix<>(0, Axe.class);
+            axe.setElem(new Axe(
+                    elem.plus(Point3D.Y.mult(tete.getElem().getCircle().getRadius())),
+                    elem.moins(Point3D.Y.mult(tete.getElem().getCircle().getRadius()))
+            ));
+            tete.getElem().getCircle().setAxis(axe);
+        }
         public Cheval [] trotte(double seconds, int fps, boolean startsLeftFront, double angleTurn, double distance) {
             Cheval [] cheval1 = new Cheval[(int) (seconds * fps)];
             for(int i=0; i<cheval1.length; i++) {
-                cheval1[i] = new Cheval();
+                cheval1[i] = new Cheval(cheval.psGround.getElem());
                 double sin = Math.sin((2.0 * Math.PI * i) / cheval1.length);
                 double cos = Math.cos((2.0 * Math.PI * i) / cheval1.length);
                 if(!startsLeftFront) {
@@ -138,14 +168,14 @@ public class Cheval extends RepresentableConteneur {
                     ((CourbeParametriquePolynomiale)cheval1[i].pattes.getElem(3)
                             .getSoulCurve().getElem()).getCoefficients().getElem(2).setX(cos *distance);
 
-
+                moveTete(cheval1[i].tete, cheval1[i].corps.getElem());
             }
             return cheval1;
         }
         public Cheval [] galope(double seconds, int fps, boolean startsLeftFront, double angleTurn, int distance) {
             Cheval [] cheval1 = new Cheval[(int) (seconds * fps)];
             for(int i=0; i<cheval1.length; i++) {
-                cheval1[i] = new Cheval();
+                cheval1[i] = new Cheval(cheval.psGround.getElem());
                 double sin = Math.sin((2.0 * Math.PI * i) / cheval1.length);
                 double cos = Math.cos((2.0 * Math.PI * i) / cheval1.length);
                 if(!startsLeftFront) {
@@ -171,6 +201,7 @@ public class Cheval extends RepresentableConteneur {
                 ((CourbeParametriquePolynomiale)cheval1[i].pattes.getElem(3)
                         .getSoulCurve().getElem()).getCoefficients().getElem(2).setX(cos *distance);
 
+                moveTete(cheval1[i].tete, cheval1[i].corps.getElem());
 
             }
             return cheval1;
@@ -181,5 +212,23 @@ public class Cheval extends RepresentableConteneur {
             return cheval1;
         }
 
+    }
+
+    public void setAngleXyZ(double angleXY, double angleZ) {
+        for(Representable r : getListRepresentable()) {
+            if(r instanceof PsOnPs) {
+                ((PsOnPs)r).setAngleXY(angleXY);
+                ((PsOnPs)r).setAngleZ(angleXY);
+            }
+        }
+    }
+    @Override
+    public void declareProperties() {
+        super.declareProperties();
+        getDeclaredDataStructure().put("corps/corps", corps);
+        getDeclaredDataStructure().put("tete/tete", tete);
+        getDeclaredDataStructure().put("queue/queue", queue);
+        getDeclaredDataStructure().put("pattes/pattes", pattes);
+        return;
     }
 }

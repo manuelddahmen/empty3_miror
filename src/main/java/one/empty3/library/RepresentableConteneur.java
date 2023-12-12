@@ -38,9 +38,6 @@ public class RepresentableConteneur extends Representable implements IMovable, I
 
     public synchronized void add(Representable r) {
         re.add(1, r);
-        r.setVectX(this.getVectX());
-        r.setVectY(this.getVectX());
-        r.setVectZ(this.getVectX());
     }
 
     public synchronized void clear() {

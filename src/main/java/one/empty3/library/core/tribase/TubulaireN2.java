@@ -30,6 +30,7 @@
 package one.empty3.library.core.tribase;
 
 import one.empty3.library.ColorTexture;
+import one.empty3.library.Matrix33;
 import one.empty3.library.Point3D;
 import one.empty3.library.StructureMatrix;
 import one.empty3.library.core.nurbs.CourbeParametriquePolynomialeBezier;
@@ -189,9 +190,10 @@ public class TubulaireN2 extends ParametricSurface {
     @Override
     public Point3D calculerPoint3D(double u, double v) {
         Point3D[] vectPerp = vectPerp(u, v);
-        return soulCurve.getElem().calculerPoint3D(u).plus(
+        Point3D ret0 = soulCurve.getElem().calculerPoint3D(u).plus(
                 vectPerp[1].mult(diameterFunction.getElem().result(u) * Math.cos(2 * Math.PI * v))).plus(
                 vectPerp[2].mult(diameterFunction.getElem().result(u) * Math.sin(2 * Math.PI * v)));
+        return getOrig().plus(getVectX().mult(ret0.get(0))).plus(getVectY().mult(ret0.get(1))).plus(getVectZ().mult(ret0.get(2)));
     }
 
     /*old

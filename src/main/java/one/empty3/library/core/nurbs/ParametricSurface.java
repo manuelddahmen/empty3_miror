@@ -158,9 +158,9 @@ public abstract class ParametricSurface extends Representable {
     }
 
     public Point3D calculerNormale3D(double u, double v) {
-        Point3D moins = calculerPoint3D(u + incrNormale.getElem(), v).plus(calculerPoint3D(u, v));
-        Point3D moins1 = calculerPoint3D(u, v + incrNormale.getElem()).plus(calculerPoint3D(u, v));
-        return moins.prodVect(moins1).mult(0.5 / incrNormale.getElem() / incrNormale.getElem()).norme1();
+        Point3D moins0 = calculerPoint3D(u + incrNormale.getElem(), v).moins(calculerPoint3D(u, v)).norme1();
+        Point3D moins1 = calculerPoint3D(u, v + incrNormale.getElem()).moins(calculerPoint3D(u, v)).norme1();
+        return moins0.prodVect(moins1).mult(0.5 / incrNormale.getElem() / incrNormale.getElem()).norme1();
     }
 
     public Point3D calculerTangenteU(double u, double v) {
@@ -169,8 +169,8 @@ public abstract class ParametricSurface extends Representable {
     }
 
     public Point3D calculerTangenteV(double u, double v) {
-        Point3D moins1 = calculerPoint3D(u, v + incrVitesse.getElem()).moins(calculerPoint3D(u, v));
-        return moins1.mult(1.0 / incrVitesse.getElem()).norme1();
+        Point3D moins = calculerPoint3D(u, v + incrVitesse.getElem()).moins(calculerPoint3D(u, v));
+        return moins.mult(1.0 / incrVitesse.getElem()).norme1();
     }
 
     public Point3D calculerNormalePerp(double u, double v) {

@@ -184,7 +184,7 @@ public class TestPlanets9 extends TestObjetSub {
         //frame = 472;
 
 
-        cheval = new Cheval();
+        cheval = new Cheval(null);
 
     }
 

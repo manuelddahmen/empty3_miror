@@ -164,7 +164,14 @@ public class ZBufferImpl extends Representable implements ZBuffer {
             scene.getObjets().getData1d().forEach(representable -> draw(representable));
             return;
         } else if (r instanceof RepresentableConteneur) {
-            ((RepresentableConteneur) r).getListRepresentable().forEach(representable -> draw(representable));
+            final Representable r1 = r;
+            ((RepresentableConteneur) r).getListRepresentable().forEach(representable -> {
+                representable.setVectX(r1.getVectX());
+                representable.setVectY(r1.getVectY());
+                representable.setVectZ(r1.getVectZ());
+                draw(representable);
+            }
+            );
             return;
         }
 

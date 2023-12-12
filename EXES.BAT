@@ -1,9 +1,9 @@
-set JAVA_HOME=C:\Program Files\Java\jdk-17\
-set PATH=%PATH;C:\Program Files\Java\jdk-17\bin;C:\Program Files (x86)\GnuPG\bin\
+set JAVA_HOME=C:\Program Files\Java\jdk-21\
+set PATH=%PATH;C:\Program Files\Java\jdk-21\bin;C:\Program Files (x86)\GnuPG\bin\
 set APPDIR=empty3-library-generic
 set PUBLIC_PUB_DIR=jOutputBin
 set GRADLE_HOME=C:\Program Files\Gradle\bin
-set VERSION_STRING=version-26
+set VERSION_STRING=version-28
 mkdir %PUBLIC_PUB_DIR%
 mkdir %PUBLIC_PUB_DIR%\%VERSION_STRING%
 
