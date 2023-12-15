@@ -31,10 +31,10 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.logging.Logger;
 
-public class TestCourseChevalPS extends TestObjetSub {
-    private Cheval cheval;
+public class TestCourseChatPS extends TestObjetSub {
+    private Chat cheval;
     int moveIndex = 0;
-    Cheval [] trotte = null;
+    Chat [] trotte = null;
     private Plan3D parametricSurface;
 
     static class TextureInvertU extends ImageTexture {
@@ -63,10 +63,10 @@ public class TestCourseChevalPS extends TestObjetSub {
     }
 
     public static void main(String[] args) {
-        TestCourseChevalPS testCourseCheval = new TestCourseChevalPS();
-        testCourseCheval.loop(true);
-        testCourseCheval.setResolution(Resolution.HD720RESOLUTION.x(), Resolution.HD720RESOLUTION.y());
-        Thread thread = new Thread(testCourseCheval);
+        TestCourseChatPS testCourseChat = new TestCourseChatPS();
+        testCourseChat.loop(true);
+        testCourseChat.setResolution(Resolution.XVGARESOLUTION.x(), Resolution.XVGARESOLUTION.y());
+        Thread thread = new Thread(testCourseChat);
         thread.start();
     }
 
@@ -98,7 +98,7 @@ public class TestCourseChevalPS extends TestObjetSub {
         frame = 0;
 
 
-        cheval = new Cheval(parametricSurface);
+        cheval = new Chat(parametricSurface);
 
 
     }
@@ -129,7 +129,7 @@ public class TestCourseChevalPS extends TestObjetSub {
         double angleCamera  = 0.0;
         c = new Camera(axeViseeVideo[0].mult(Math.cos(angleCamera))
                 .plus(axeViseeVideo[0].mult(Math.sin(angleCamera))).mult(400)
-                .plus(Point3D.Y.mult(20.0)), Point3D.O0);
+                /*.plus(Point3D.Y.mult(20.0))*/, Point3D.O0);
         c.calculerMatrice(axeVerticalVideo);
         c.setAngleX(Math.PI/3*z().la()/z().ha());
         c.setAngleY(Math.PI/3);
@@ -149,15 +149,15 @@ public class TestCourseChevalPS extends TestObjetSub {
             switch ((int)( Math.random() * 2)) {
                 case 0:
                     moveIndex = 0;
-                    trotte = cheval.getMoves().trotte(1.0, 25, true, 0.0, 50);
+                    trotte = cheval.getMoves().trotte(2.0, 25, true, 0.0, 25);
                     break;
                 case 1:
                     moveIndex = 0;
-                    trotte = cheval.getMoves().galope(1.0, 25, true, 0.0, 50);
+                    trotte = cheval.getMoves().galope(2.0, 25, true, 0.0, 25);
                     break;
                 case 2:
                     moveIndex = 0;
-                    trotte = cheval.getMoves().trotte(1.0, 25, true, 0.0, 50);
+                    trotte = cheval.getMoves().trotte(2.0, 25, true, 0.0, 25);
                     break;
                 default:
                     break;
@@ -173,22 +173,10 @@ public class TestCourseChevalPS extends TestObjetSub {
         final int i1 = FPS * SECONDS * REAL_DAYS;
         double u =   ((double) getMaxFrames() - frame()) / getMaxFrames();
 
-        /*
-        Matrix33 matrixB = Matrix33.ZXY.mult(Matrix33.rotationZ(2.0*Math.PI*u))
-                .mult(Matrix33.rotationX(Math.PI));
-        Point3D[] colVectors = matrixB.getColVectors();//Matrix33.ZXY.mult(matriceB).getRowVectors();
-        earth.setVectX(colVectors[0]);
-        earth.setVectY(colVectors[1]);
-        earth.setVectZ(colVectors[2]);
-        int i = 0;
-        for(Point3D v : colVectors) {
-            System.out.println("P3 ["+i+"] = " + v);
-            i++;
-        }
-        System.out.println(matrixB);
-*/
-        PcOnPs pcOnPs;
-        Representable copy =cheval;// (Representable) cheval.copy();
+        Plan3D plane = new Plan3D(new Point3D(50.0, 0.0, 50.0), new Point3D(0.0, 0.0, -50.0), new Point3D(-50.0, 0.0, 0.0));
+        plane.texture(new ImageTexture(new File("resources/sol_sableux.jpg")));
+
+        Representable copy = cheval;
 
         cheval.texture(new ColorTexture(Color.pink));
 
@@ -198,6 +186,7 @@ public class TestCourseChevalPS extends TestObjetSub {
 
         scene().clear();
         scene().add(copy);
+        scene().add(plane);
         System.out.println("Camera u : " + u);
     }
 }

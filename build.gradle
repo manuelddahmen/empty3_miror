@@ -164,7 +164,14 @@ tasks.register('one.empty3.lasttests.TestTubeVisit', JavaExec) {
 
 tasks.register('one.empty3.tests.TestPlanetEtLune1', JavaExec) {
     classpath sourceSets.test.runtimeClasspath
-    mainClass = "one.empty3.tests.TestPlanetEtLune1"
+    mainClass = "one.empty3.tests.coursecheval.TestCourseChevalPS"
+    args ""
+    dependsOn(jar)
+}
+
+tasks.register('one.empty3.tests.TestCourseChatPS', JavaExec) {
+    classpath sourceSets.test.runtimeClasspath
+    mainClass = "one.empty3.tests.coursecheval.TestCourseChatPS"
     args ""
     dependsOn(jar)
 }

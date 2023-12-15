@@ -23,7 +23,6 @@ import one.empty3.feature.M;
 import one.empty3.feature.app.replace.javax.imageio.ImageIO;
 import one.empty3.library.*;
 import one.empty3.library.core.testing.TestObjetSub;
-import one.empty3.tests.coursecheval.Cheval;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -34,9 +33,7 @@ import java.util.logging.Logger;
 
 public class TestPlanets9 extends TestObjetSub {
     private final File planets = new File("res\\img\\planets2");
-    private Cheval cheval;
     int moveIndex = 0;
-    Cheval [] trotte = null;
 
     static class TextureInvertU extends ImageTexture {
         public TextureInvertU(ECBufferedImage ecBufferedImage) {
@@ -184,7 +181,6 @@ public class TestPlanets9 extends TestObjetSub {
         //frame = 472;
 
 
-        cheval = new Cheval(null);
 
     }
 
@@ -250,7 +246,6 @@ public class TestPlanets9 extends TestObjetSub {
 
 
 
-        cheval.texture(new ColorTexture(Color.GRAY));
 
         //scene().add(cheval);
 

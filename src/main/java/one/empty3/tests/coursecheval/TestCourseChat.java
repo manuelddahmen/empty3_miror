@@ -31,10 +31,10 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.logging.Logger;
 
-public class TestCourseCheval extends TestObjetSub {
-    private Cheval cheval;
+public class TestCourseChat extends TestObjetSub {
+    private Chat cheval;
     int moveIndex = 0;
-    Cheval [] trotte = null;
+    Chat [] trotte = null;
 
     static class TextureInvertU extends ImageTexture {
         public TextureInvertU(ECBufferedImage ecBufferedImage) {
@@ -90,10 +90,10 @@ public class TestCourseCheval extends TestObjetSub {
     }
 
     public static void main(String[] args) {
-        TestCourseCheval testCourseCheval = new TestCourseCheval();
-        testCourseCheval.loop(true);
-        testCourseCheval.setResolution(Resolution.HD720RESOLUTION.x(), Resolution.HD720RESOLUTION.y());
-        Thread thread = new Thread(testCourseCheval);
+        TestCourseChat testCourseChat = new TestCourseChat();
+        testCourseChat.loop(true);
+        testCourseChat.setResolution(Resolution.HD720RESOLUTION.x(), Resolution.HD720RESOLUTION.y());
+        Thread thread = new Thread(testCourseChat);
         thread.start();
     }
 
@@ -134,7 +134,7 @@ public class TestCourseCheval extends TestObjetSub {
         frame = 0;
 
 
-        cheval = new Cheval(null);
+        cheval = new Chat(null);
 
 
     }
@@ -182,15 +182,15 @@ public class TestCourseCheval extends TestObjetSub {
             switch ((int)( Math.random() * 2)) {
                 case 0:
                     moveIndex = 0;
-                    trotte = cheval.getMoves().trotte(1.0, 25, true, 0.0, 10);
+                    trotte = cheval.getMoves().trotte(1.0, 25, true, 0.0, 40);
                     break;
                 case 1:
                     moveIndex = 0;
-                    trotte = cheval.getMoves().galope(1.0, 25, true, 0.0, 20);
+                    trotte = cheval.getMoves().galope(1.0, 25, true, 0.0, 40);
                     break;
                 case 2:
                     moveIndex = 0;
-                    trotte = cheval.getMoves().trotte(1.0, 25, true, 0.0, 50);
+                    trotte = cheval.getMoves().trotte(1.0, 25, true, 0.0, 40);
                     break;
                 default:
                     break;
