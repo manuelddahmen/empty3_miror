@@ -95,7 +95,7 @@ public class ZBufferImpl extends Representable implements ZBuffer {
         ha = h;
         dimx = la;
         dimy = ha;
-        Logger.getAnonymousLogger().log(Level.INFO, "width,height(" + la + ", " + ha + ")");
+        //Logger.getAnonymousLogger().log(Level.INFO, "width,height(" + la + ", " + ha + ")");
         this.ime = new ImageMap(la, ha).getIme();
     }
 

@@ -23,14 +23,15 @@ import java.util.Objects;
 
 import one.empty3.library.Point3D;
 import one.empty3.library.StructureMatrix;
+import org.jetbrains.annotations.NotNull;
 
 public class Vec {
     private int dims;
     private final StructureMatrix<Double> vecVal
-            = new StructureMatrix(1, Double.class);
+            = new StructureMatrix<>(1, Double.class);
 
     private final StructureMatrix<Vec> vec
-            = new StructureMatrix(1, Vec.class);
+            = new StructureMatrix<>(1, Vec.class);
 
     public Vec(Point3D p) {
         for (int i = 0; i < 3; i++) {
@@ -47,33 +48,37 @@ public class Vec {
         for (int i = 0; i < d; d++)
             vecVal.getData1d().add(0.0);
     }
+
     public Vec(Double... comps) {
-        for (int i = 0; i < comps.length; i++) {
-            Double d = comps[i];
+        for (Double d : comps) {
             vecVal.add(1, d);
         }
     }
 
     public Vec(Vec... comps) {
-        for (int i = 0; i < comps.length; i++) {
-            vec.add(comps[i]);
+        for (Vec comp : comps) {
+            vec.add(comp);
 
-            for (int j = 0; j < comps[i].size(); j++) {
+            for (int j = 0; j < comp.size(); j++) {
 
-                vecVal.add(1, comps[i].get(j));
+                vecVal.add(1, comp.get(j));
             }
 
         }
     }
 
     public double get(int i) {
-        return vecVal.getElem(i);
+        Double elem = vecVal.getElem(i);
+        if(elem==null) {
+            return 0.0;
+        }
+        return elem;
     }
 
 
     public int getDims() {
         int dims = 0;
-        if (vecVal.getData1d().size() > 0) {
+        if (!vecVal.getData1d().isEmpty()) {
             this.dims += vecVal.getData1d().size();
         }
         return dims;
@@ -81,21 +86,22 @@ public class Vec {
 
     }
 
+    @NotNull
     public String toString() {
-        String s = "vec" + getDims() +
-                "(";
-        if (vecVal.getData1d().size() > 0)
+        StringBuilder s = new StringBuilder("vec (" + getDims() + ") " +
+                "(");
+        if (!vecVal.getData1d().isEmpty())
             for (int i = 0; i < vecVal.getData1d().size();
                  i++)
-                s += vecVal.
-                        getElem(i) + ", ";
+                s.append(vecVal.
+                        getElem(i)).append(", ");
         else
             for (int i = 0; i < vec.getData1d().size();
                  i++)
-                s += vec.
-                        getElem(i).toString() + ", ";
-        s += ")";
-        return s;
+                s.append(vec.
+                        getElem(i).toString()).append(", ");
+        s.append(")");
+        return s.toString();
     }
 
     public double norme() {

@@ -31,7 +31,9 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.logging.Logger;
 
-public class TestCourseChatPS extends TestObjetSub {
+public class TestChat3 extends TestObjetSub {
+    Point3D positionUv = new Point3D(0.5, 0.5, 0.0);
+    Point3D positionAngles = new Point3D(0.5, 0.5, 0.0);
     private Chat cheval;
     int moveIndex = 0;
     Chat [] trotte = null;
@@ -78,6 +80,7 @@ public class TestCourseChatPS extends TestObjetSub {
         z().ratioVerticalAngle();
 
         parametricSurface = new Plan3D(Point3D.O0, Point3D.Z.mult(10.0), Point3D.X.mult(10.0));
+        parametricSurface = new Sphere(Point3D.O0, 5);
 
 
         z().setDisplayType(ZBufferImpl.SURFACE_DISPLAY_COL_TRI);
@@ -124,7 +127,8 @@ public class TestCourseChatPS extends TestObjetSub {
     public void finit() throws Exception {
 
 
-        double angleOnSurface = 2.0 * Math.PI * frame() / getMaxFrames();
+        //double angleOnSurface = 2.0 * Math.PI * frame() / getMaxFrames();
+
 
         double angleCamera  = 0.0;
         c = new Camera(axeViseeVideo[0].mult(Math.cos(angleCamera))
@@ -168,7 +172,11 @@ public class TestCourseChatPS extends TestObjetSub {
 
         scene().add(cheval);
 
-        cheval.setAngleXyZ(angleOnSurface, 0.0);
+        positionAngles = positionAngles.plus(Point3D.random(0.02*2*Math.PI));
+        positionUv = positionUv.plus(Point3D.random(0.02));
+
+        cheval.setAngleXyZ(positionAngles.getX(), 0.0);
+        cheval.setOrig(positionUv);
 
         final int i1 = FPS * SECONDS * REAL_DAYS;
         double u =   ((double) getMaxFrames() - frame()) / getMaxFrames();

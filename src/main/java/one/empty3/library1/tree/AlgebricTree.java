@@ -191,7 +191,7 @@ public class AlgebricTree extends Tree {
             i++;
 
 
-            System.out.println("formula = " + subformula);
+            //System.out.println("formula = " + subformula);
         }
         throw new AlgebraicFormulaSyntaxException("Cannot add to treeNode or root.", this);
     }

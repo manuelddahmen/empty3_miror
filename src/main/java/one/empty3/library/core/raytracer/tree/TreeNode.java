@@ -70,8 +70,8 @@ public class TreeNode {
         TreeNodeType cType = (getChildren().size() == 0) ? type : getChildren().get(0).type;
 
         if (cType instanceof IdentTreeNodeType) {
-            System.out.println("cType Ident=" +getChildren().size());
-            System.out.println("cType Ident=" +getChildren().get(0).eval());
+            //System.out.println("cType Ident=" +getChildren().size());
+            //System.out.println("cType Ident=" +getChildren().get(0).eval());
             return getChildren().get(0).eval();
         } else if (cType instanceof EquationTreeNodeType) {
             return (Double) getChildren().get(0).eval() - (Double) getChildren().get(1).eval() - 0;
