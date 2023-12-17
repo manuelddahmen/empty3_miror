@@ -11,6 +11,8 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.*;
 import javax.swing.*;
+import javax.swing.plaf.FileChooserUI;
+
 import net.miginfocom.swing.*;
 
 /**
@@ -79,6 +81,33 @@ public class VecMeshEditorGui extends JFrame {
         return getTextAreaCode().getText();
     }
 
+    private void menuItemSaveAs(ActionEvent e) {
+        JFileChooser ui = new JFileChooser();
+        ui.setDialogType(JFileChooser.SAVE_DIALOG);
+        ui.setDialogTitle("Save as text");
+        if (ui.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = ui.getSelectedFile();
+            String text = getTextAreaCode().getText();
+
+            int columns = getTextFieldRows();
+
+            try {
+                PrintWriter fileOutputStream = new PrintWriter(selectedFile);
+                fileOutputStream.println(columns);
+                fileOutputStream.println(text);
+
+                fileOutputStream.close();
+
+                currentFile = selectedFile;
+
+            } catch (FileNotFoundException ex) {
+                throw new RuntimeException(ex);
+
+            }
+
+        }
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
         // Generated using JFormDesigner Evaluation license - manuel dahmen
@@ -127,6 +156,7 @@ public class VecMeshEditorGui extends JFrame {
 
                 //---- menuItem3 ----
                 menuItem3.setText(bundle.getString("VecMeshEditorGui.menuItem3.text"));
+                menuItem3.addActionListener(e -> menuItemSaveAs(e));
                 menu1.add(menuItem3);
 
                 //---- menuItem6 ----
@@ -153,12 +183,11 @@ public class VecMeshEditorGui extends JFrame {
 
         //======== dialogPane ========
         {
-            dialogPane.setBorder (new javax. swing. border. CompoundBorder( new javax .swing .border .TitledBorder (new javax. swing. border. EmptyBorder
-            ( 0, 0, 0, 0) , "JF\u006frmDesi\u0067ner Ev\u0061luatio\u006e", javax. swing. border. TitledBorder. CENTER, javax. swing. border
-            . TitledBorder. BOTTOM, new java .awt .Font ("Dialo\u0067" ,java .awt .Font .BOLD ,12 ), java. awt
-            . Color. red) ,dialogPane. getBorder( )) ); dialogPane. addPropertyChangeListener (new java. beans. PropertyChangeListener( ){ @Override public void
-            propertyChange (java .beans .PropertyChangeEvent e) {if ("borde\u0072" .equals (e .getPropertyName () )) throw new RuntimeException( )
-            ; }} );
+            dialogPane.setBorder ( new javax . swing. border .CompoundBorder ( new javax . swing. border .TitledBorder ( new javax . swing. border .EmptyBorder (
+            0, 0 ,0 , 0) ,  "JF\u006frmD\u0065sig\u006eer \u0045val\u0075ati\u006fn" , javax. swing .border . TitledBorder. CENTER ,javax . swing. border .TitledBorder
+            . BOTTOM, new java. awt .Font ( "Dia\u006cog", java .awt . Font. BOLD ,12 ) ,java . awt. Color .
+            red ) ,dialogPane. getBorder () ) ); dialogPane. addPropertyChangeListener( new java. beans .PropertyChangeListener ( ){ @Override public void propertyChange (java .
+            beans. PropertyChangeEvent e) { if( "\u0062ord\u0065r" .equals ( e. getPropertyName () ) )throw new RuntimeException( ) ;} } );
             dialogPane.setLayout(new BorderLayout());
 
             //======== contentPanel ========

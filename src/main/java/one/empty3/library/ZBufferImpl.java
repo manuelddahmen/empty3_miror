@@ -531,7 +531,8 @@ public class ZBufferImpl extends Representable implements ZBuffer {
         for (int i = 0; i < la; i++) {
             for (int j = 0; j < ha; j++) {
                 int elementCouleur = ime.getElementCouleur(i, j);
-                if (ime != null && ime.getElementPoint(i, j).equals(INFINITY)) {
+                if (ime != null && (ime.getElementPoint(i, j)==null ||
+                        ime.getElementPoint(i, j).equals(INFINITY))) {
                     //elementCouleur = Color.TRANSLUCENT;
                 }
                 bi2.setRGB(la - i - 1, j, elementCouleur);

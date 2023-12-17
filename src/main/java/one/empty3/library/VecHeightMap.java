@@ -5,8 +5,8 @@ import one.empty3.library1.shader.Vec;
 
 public class VecHeightMap extends HeightMapSurface {
     private final Vec vec;
-    private final int columnsCount;
-    private ParametricSurface parametricSurface;
+    private int columnsCount;
+    private final ParametricSurface parametricSurface;
 
     public VecHeightMap(ParametricSurface parametricSurface, Vec map, int columnsCount) {
         this.vec = map;
@@ -16,18 +16,43 @@ public class VecHeightMap extends HeightMapSurface {
 
     @Override
     public Point3D calculerPoint3D(double u, double v) {
+        int i = (int) (u * ((vec.size() / columnsCount)))+vec.size()*2;
+        int j = (int) (v * columnsCount)+vec.size()*2;
 
-        double round = getControlAt((int) u * ((vec.size() / columnsCount)),
-                (int) (v * columnsCount));
+        i = Math.round(i);
+        j = Math.round(j);
+
+        i = i % (vec.size()/columnsCount);
+        j = j % (columnsCount);
+
+        double round = getControlAt(i, j);
         return parametricSurface.calculerPoint3D(u, v)
-                .plus(parametricSurface.calculerNormale3D(u, v).mult(round));
+          .plus(parametricSurface.calculerNormale3D(u, v)
+                  .mult(round));
     }
 
     public double getControlAt(int x, int y) {
         double v = 0.0;
-        if(y*columnsCount+x<vec.size()&&y*columnsCount+x>=0&&x>=0&&y>=0&&x<vec.size()&&y<vec.size()) {
+        if(y*columnsCount+x<vec.size()&&y*columnsCount+x>=0
+                &&x>=0&&y>=0&&x<vec.size()&&y<vec.size()) {
             v = vec.get(y * columnsCount + x);
         }
         return v==0.0?0.0:v;
+    }
+
+    public Vec getVec() {
+        return vec;
+    }
+
+    public int getColumnsCount() {
+        return columnsCount;
+    }
+
+    public void setColumnsCount(int columnsCount) {
+        this.columnsCount = columnsCount;
+    }
+
+    public ParametricSurface getParametricSurface() {
+        return parametricSurface;
     }
 }
