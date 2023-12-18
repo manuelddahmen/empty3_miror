@@ -38,6 +38,14 @@ import one.empty3.library.StructureMatrix;
 public class SurfaceParametriquePolynomialeBezier extends SurfaceParametriquePolynomiale implements SurfaceElem{
 
 
+    public SurfaceParametriquePolynomialeBezier(Point3D[][] ps) {
+        super(ps);
+    }
+
+    public SurfaceParametriquePolynomialeBezier() {
+
+    }
+
     public double B(int i, int n, double t) {
         return factorielle(n) / factorielle(i) / factorielle(n - i)
                 * Math.pow(t, i) * Math.pow(1 - t, n - i);

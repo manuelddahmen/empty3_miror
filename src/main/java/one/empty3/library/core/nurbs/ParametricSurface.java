@@ -106,7 +106,7 @@ public abstract class ParametricSurface extends Representable {
         endU.setElem(1.0);
         endV.setElem(1.0);
         incrVitesse.setElem(0.0001);
-        incrNormale.setElem(0.000001);
+        incrNormale.setElem(0.0001);
         terminalU.setElem(new Point2Point.I());
         terminalV.setElem(new Point2Point.I());
     }

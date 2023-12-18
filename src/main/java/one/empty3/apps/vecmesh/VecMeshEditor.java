@@ -42,6 +42,8 @@ public class VecMeshEditor implements Runnable {
                     }
                     VecHeightMap vecHeightMap = new VecHeightMap(new Sphere(Point3D.O0, 4),
                             new Vec(doubles), vecMeshEditorGui.getTextFieldRows());
+                    vecHeightMap.setIncrU(0.01);
+                    vecHeightMap.setIncrV(0.01);
                     vecHeightMap.texture(new ColorTexture(Color.BLUE));
 
                     ZBufferImpl zBuffer = new ZBufferImpl(640, 480);

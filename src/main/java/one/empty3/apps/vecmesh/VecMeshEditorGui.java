@@ -108,6 +108,36 @@ public class VecMeshEditorGui extends JFrame {
         }
     }
 
+    private void menuItemOpen(ActionEvent e) {
+        JFileChooser ui = new JFileChooser();
+        ui.setDialogType(JFileChooser.OPEN_DIALOG);
+        ui.setDialogTitle("Load text");
+        if (ui.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = ui.getSelectedFile();
+            String text = getTextAreaCode().getText();
+
+            int columns = getTextFieldRows();
+
+            try (BufferedReader reader = Files.newBufferedReader(currentFile.toPath(), Charset.defaultCharset())){
+                String line = "";
+                String columnsString = reader.readLine();
+                if(columnsString!=null)
+                    textAreaColumsCount.setText(String.valueOf(Double.parseDouble(columnsString)));
+                StringBuffer sb = new StringBuffer();
+                while ((line = reader.readLine()) != null) {
+                    sb.append(line);
+                }
+                getTextAreaCode().setText(sb.toString());
+                reader.close();
+            } catch (RuntimeException | IOException ex) {
+                ex.printStackTrace();
+            }
+
+            currentFile = selectedFile;
+
+        }
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
         // Generated using JFormDesigner Evaluation license - manuel dahmen

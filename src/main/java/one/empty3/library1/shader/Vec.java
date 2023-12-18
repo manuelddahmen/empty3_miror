@@ -50,8 +50,9 @@ public class Vec {
     }
 
     public Vec(Double... comps) {
-        for (Double d : comps) {
-            vecVal.add(1, d);
+        for (int i = 0; i < comps.length; i++) {
+            Double d = comps[i];
+            vecVal.setElem(d, i);
         }
     }
 
@@ -68,11 +69,7 @@ public class Vec {
     }
 
     public double get(int i) {
-        Double elem = vecVal.getElem(i);
-        if(elem==null) {
-            return Double.NaN;
-        }
-        return elem;
+        return vecVal.getElem(i);
     }
 
 
