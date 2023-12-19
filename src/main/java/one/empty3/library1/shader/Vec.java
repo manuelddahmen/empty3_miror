@@ -50,9 +50,13 @@ public class Vec {
     }
 
     public Vec(Double... comps) {
-        for (int i = 0; i < comps.length; i++) {
-            Double d = comps[i];
-            vecVal.setElem(d, i);
+        for (Double d : comps) {
+            vecVal.add(1, d);
+        }
+    }
+    public Vec(double[] comps) {
+        for (Double d : comps) {
+            vecVal.add(1, d);
         }
     }
 

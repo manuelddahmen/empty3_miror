@@ -95,6 +95,7 @@ new FormModel {
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
 						name: "menuItem1"
 						"text": new FormMessage( null, "VecMeshEditorGui.menuItem1.text" )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItemOpen", true ) )
 					} )
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
 						name: "menuItem2"

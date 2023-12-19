@@ -74,6 +74,6 @@ public class AlgebraicFormulaSyntaxException extends Throwable {
 
     public AlgebraicFormulaSyntaxException(String s, AlgebricTree algebricTree) {
         this(s);
-        //System.err.println(algebricTree);
+        ///System.err.println(algebricTree);
     }
 }

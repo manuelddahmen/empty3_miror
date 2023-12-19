@@ -24,12 +24,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 import one.empty3.library.StructureMatrix;
 
@@ -104,7 +100,6 @@ public class ListInstructions {
                 String value = null;
                 String variable = null;
                 if(splitInstructionEquals.length==1) {
-                    variable = splitInstructionEquals[0].trim();
                     value = splitInstructionEquals[0].trim();
                 }
                 if (splitInstructionEquals.length == 2) {
@@ -124,26 +119,23 @@ public class ListInstructions {
                             assignations.add(new Instruction(i, variable, value));
                             assigned = true;
                         }
+                    } else {
+                        assignations.add(new Instruction(i, null, value));
+                        assigned = true;
                     }
                 }
                 if(!assigned) {
                     if(splitInstructionEquals.length==1) {
-                        if(variable!=null && !variable.isEmpty()) {
-                            if(!variable.startsWith("#")) {
-                                assignations.add(new Instruction(i, "", variable));
-                            }
-                        } else if(value!=null && !value.isEmpty()) {
-                            if(!value.startsWith("#")) {
-                                assignations.add(new Instruction(i, "", value));
-                            }
+                        if(!value.startsWith("#")) {
+                            assignations.add(new Instruction(i, "", splitInstructionEquals[0]));
                         }
                     }
                 }
             }
         }
     }
-    public String[] runInstructions() {
-        String [] errors = new String[assignations.size()];
+    public List<String> runInstructions() {
+        List<String> returnedCode = new ArrayList<>();
         Instruction[] instructions = new Instruction[assignations.size()];
 
         assignations.toArray(instructions);
@@ -170,9 +162,9 @@ public class ListInstructions {
                     resultVec = tree.eval();
 
                     if(resultVec != null) {
-                        if(resultVec.getDim()==1) {
+                        if(resultVec.getDim()==1 && key!=null) {
                             currentParamsValuesVecComputed.put(key, resultVec);
-                        } else if(resultVec.getDim()==0) {
+                        } else if(resultVec.getDim()==0 && key!=null) {
                             currentParamsValuesVecComputed.put(key, resultVec);
                         }
                     } else {
@@ -180,20 +172,24 @@ public class ListInstructions {
                     }
                     System.err.println("AlgebraicTree result : " + tree);
                 }
-            } catch (AlgebraicFormulaSyntaxException | TreeNodeEvalException e) {
+            } catch (AlgebraicFormulaSyntaxException | TreeNodeEvalException |
+                     NullPointerException e) {
                 e.printStackTrace();
-            } catch (NullPointerException ignored) {
-                ignored.printStackTrace();
             }
-            if(resultVec!=null) {
-                errors[i] = String.format(Locale.getDefault(), "# Result of line : (%d) <<< %s ", i, resultVec.toStringLine());
-            } else {
-
+            String errors1 = "";
+            if(value!=null && resultVec!=null && (!value.startsWith("# ") && !value.isBlank() && !value.equals("null")) ) {
+                errors1 += String.format(Locale.getDefault(), "# Result of line : (%d) <<< %s ", i, resultVec.toStringLine());
+            }
+            if(value!=null && (!value.startsWith("# "))) {
+                errors1 += "\n" + (key == null||key.isBlank() ? "" : (key + "=")) + value;
+            }
+            if(!(errors1.isBlank()||errors1.equals("null"))) {
+                returnedCode.add(errors1);
             }
             i++;
         }
 
-        return errors;
+        return returnedCode;
     }
 
     public HashMap<String, Double> getCurrentParamsValues() {

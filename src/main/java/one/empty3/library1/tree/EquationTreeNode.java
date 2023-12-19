@@ -52,13 +52,19 @@
 
 package one.empty3.library1.tree;
 
+import one.empty3.library.StructureMatrix;
 import one.empty3.library1.tree.TreeNode;
 
 /*__
  * Created by manuel on 25-12-16.
  */
 public class EquationTreeNode extends TreeNode {
-    public EquationTreeNode(String expStr) {
-        super(expStr);
+    public EquationTreeNode(TreeNode src, Object[] objects, TreeNodeType clazz) {
+        super(src, objects, clazz);
+    }
+
+    @Override
+    public StructureMatrix<Double> eval() throws TreeNodeEvalException, AlgebraicFormulaSyntaxException {
+        return getChildren().get(1).eval();
     }
 }
