@@ -7,6 +7,7 @@ package one.empty3.apps.vecmesh;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.*;
@@ -14,6 +15,12 @@ import javax.swing.*;
 import javax.swing.plaf.FileChooserUI;
 
 import net.miginfocom.swing.*;
+import one.empty3.library.Cube;
+import one.empty3.library.Representable;
+import one.empty3.library.Sphere;
+import one.empty3.library.core.nurbs.ParametricSurface;
+import one.empty3.library.core.tribase.Plan3D;
+import one.empty3.library.core.tribase.TubulaireN2;
 
 /**
  * @author Manuel Dahmen
@@ -21,7 +28,7 @@ import net.miginfocom.swing.*;
  */
 public class VecMeshEditorGui extends JFrame {
     private File currentFile;
-
+    private Class<? extends Representable> representableClass = Sphere.class;
     public VecMeshEditorGui() {
         initComponents();
 
@@ -52,6 +59,7 @@ public class VecMeshEditorGui extends JFrame {
             try {
                 currentFile.createNewFile();
                 PrintWriter printWriter = new PrintWriter(currentFile);
+                printWriter.println(representableClass.getCanonicalName());
                 printWriter.println("2");
                 printWriter.println("((1,1),(1,1))");
                 printWriter.close();
@@ -65,6 +73,12 @@ public class VecMeshEditorGui extends JFrame {
                 String columnsString = reader.readLine();
                 if(columnsString!=null)
                     textAreaColumsCount.setText(String.valueOf(Double.parseDouble(columnsString)));
+                String classNameReader = reader.readLine();
+                try {
+                    representableClass = (Class<? extends Representable>) ClassLoader.getPlatformClassLoader().loadClass(classNameReader);
+                } catch (ClassNotFoundException e) {
+                    throw new RuntimeException(e);
+                }
                 StringBuffer sb = new StringBuffer();
                 while ((line = reader.readLine()) != null) {
                     sb.append(line);
@@ -94,6 +108,7 @@ public class VecMeshEditorGui extends JFrame {
             try {
                 PrintWriter fileOutputStream = new PrintWriter(selectedFile);
                 fileOutputStream.println(columns);
+                fileOutputStream.println(representableClass.getClass().getCanonicalName());
                 fileOutputStream.println(text);
 
                 fileOutputStream.close();
@@ -123,6 +138,19 @@ public class VecMeshEditorGui extends JFrame {
                 String columnsString = reader.readLine();
                 if(columnsString!=null)
                     textAreaColumsCount.setText(String.valueOf(Double.parseDouble(columnsString)));
+                String classNameReader = reader.readLine();
+                try {
+                    Class<?> aClass = ClassLoader.getPlatformClassLoader().loadClass(classNameReader);
+                    Object o = aClass.getConstructor().newInstance();
+                    if(o instanceof Representable r) {
+                        representableClass = r.getClass();
+                    }
+                } catch (ClassNotFoundException | InvocationTargetException | InstantiationException |
+                         IllegalAccessException | NoSuchMethodException ex1) {
+                    throw new RuntimeException(ex1);
+                }
+                if(representableClass==null)
+                    representableClass = Sphere.class;
                 StringBuffer sb = new StringBuffer();
                 while ((line = reader.readLine()) != null) {
                     sb.append(line);
@@ -138,6 +166,19 @@ public class VecMeshEditorGui extends JFrame {
         }
     }
 
+    private void menuItemSphere(ActionEvent e) {
+        this.representableClass = Sphere.class;
+    }
+    private void menuItemTube(ActionEvent e) {
+        this.representableClass = TubulaireN2.class;
+    }
+    private void menuItemRectangle(ActionEvent e) {
+        this.representableClass = Plan3D.class;
+    }
+    private void menuItemCube(ActionEvent e) {
+        this.representableClass = Cube.class;
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
         // Generated using JFormDesigner Evaluation license - manuel dahmen
@@ -151,6 +192,12 @@ public class VecMeshEditorGui extends JFrame {
         menu2 = new JMenu();
         menuItemRender = new JMenuItem();
         menuItem5 = new JMenuItem();
+        menu3 = new JMenu();
+        menuItem4 = new JMenuItem();
+        menuItem7 = new JMenuItem();
+        menuItem8 = new JMenuItem();
+        menuItem9 = new JMenuItem();
+        menuItem10 = new JMenuItem();
         dialogPane = new JPanel();
         contentPanel = new JPanel();
         splitPane1 = new JSplitPane();
@@ -209,17 +256,45 @@ public class VecMeshEditorGui extends JFrame {
                 menu2.add(menuItem5);
             }
             menuBar1.add(menu2);
+
+            //======== menu3 ========
+            {
+                menu3.setText(bundle.getString("VecMeshEditorGui.menu3.text"));
+
+                //---- menuItem4 ----
+                menuItem4.setText(bundle.getString("VecMeshEditorGui.menuItem4.text"));
+                menuItem4.addActionListener(e -> menuItemSphere(e));
+                menu3.add(menuItem4);
+
+                //---- menuItem7 ----
+                menuItem7.setText(bundle.getString("VecMeshEditorGui.menuItem7.text"));
+                menu3.add(menuItem7);
+
+                //---- menuItem8 ----
+                menuItem8.setText(bundle.getString("VecMeshEditorGui.menuItem8.text"));
+                menu3.add(menuItem8);
+
+                //---- menuItem9 ----
+                menuItem9.setText(bundle.getString("VecMeshEditorGui.menuItem9.text"));
+                menu3.add(menuItem9);
+
+                //---- menuItem10 ----
+                menuItem10.setText(bundle.getString("VecMeshEditorGui.menuItem10.text"));
+                menu3.add(menuItem10);
+            }
+            menuBar1.add(menu3);
         }
         setJMenuBar(menuBar1);
 
         //======== dialogPane ========
         {
-            dialogPane.setBorder ( new javax . swing. border .CompoundBorder ( new javax . swing. border .TitledBorder ( new javax . swing.
-            border .EmptyBorder ( 0, 0 ,0 , 0) ,  "JF\u006frmD\u0065sig\u006eer \u0045val\u0075ati\u006fn" , javax. swing .border . TitledBorder. CENTER
-            ,javax . swing. border .TitledBorder . BOTTOM, new java. awt .Font ( "Dia\u006cog", java .awt . Font
-            . BOLD ,12 ) ,java . awt. Color .red ) ,dialogPane. getBorder () ) ); dialogPane. addPropertyChangeListener(
-            new java. beans .PropertyChangeListener ( ){ @Override public void propertyChange (java . beans. PropertyChangeEvent e) { if( "\u0062ord\u0065r"
-            .equals ( e. getPropertyName () ) )throw new RuntimeException( ) ;} } );
+            dialogPane.setBorder (new javax. swing. border. CompoundBorder( new javax .swing .border .TitledBorder (new
+            javax. swing. border. EmptyBorder( 0, 0, 0, 0) , "JFor\u006dDesi\u0067ner \u0045valu\u0061tion", javax
+            . swing. border. TitledBorder. CENTER, javax. swing. border. TitledBorder. BOTTOM, new java
+            .awt .Font ("Dia\u006cog" ,java .awt .Font .BOLD ,12 ), java. awt
+            . Color. red) ,dialogPane. getBorder( )) ); dialogPane. addPropertyChangeListener (new java. beans.
+            PropertyChangeListener( ){ @Override public void propertyChange (java .beans .PropertyChangeEvent e) {if ("bord\u0065r" .
+            equals (e .getPropertyName () )) throw new RuntimeException( ); }} );
             dialogPane.setLayout(new BorderLayout());
 
             //======== contentPanel ========
@@ -360,6 +435,12 @@ public class VecMeshEditorGui extends JFrame {
     private JMenu menu2;
     private JMenuItem menuItemRender;
     private JMenuItem menuItem5;
+    private JMenu menu3;
+    private JMenuItem menuItem4;
+    private JMenuItem menuItem7;
+    private JMenuItem menuItem8;
+    private JMenuItem menuItem9;
+    private JMenuItem menuItem10;
     private JPanel dialogPane;
     private JPanel contentPanel;
     private JSplitPane splitPane1;

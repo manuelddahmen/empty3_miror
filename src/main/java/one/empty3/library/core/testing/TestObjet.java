@@ -854,7 +854,7 @@ public abstract class TestObjet implements Test, Runnable {
                     return;
                 }
             }
-            System.out.println("Time for frame°"+frame()+" (scene configuration: " + lastInfoEllapsedMillis/1000f);
+            o.println("Time for frame°"+frame()+" (scene configuration: " + lastInfoEllapsedMillis/1000f);
 
             //Logger.getAnonymousLogger().log(Level.INFO, z.scene());
 
@@ -896,7 +896,7 @@ public abstract class TestObjet implements Test, Runnable {
                 }
             }
             lastInfoEllapsedMillis = System.currentTimeMillis() - timeStart;
-            System.out.println("Time for frame°"+frame()+" (scene rendering: " + lastInfoEllapsedMillis/1000f);
+            o.println("Time for frame°"+frame()+" (scene rendering: " + lastInfoEllapsedMillis/1000f);
             try {
                 File fout = new File(this.dir.getAbsolutePath()
                         + File.separator + filename + ".bmo");

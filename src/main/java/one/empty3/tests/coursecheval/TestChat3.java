@@ -67,7 +67,7 @@ public class TestChat3 extends TestObjetSub {
     public static void main(String[] args) {
         TestCourseChatPS testCourseChat = new TestCourseChatPS();
         testCourseChat.loop(true);
-        testCourseChat.setResolution(Resolution.XVGARESOLUTION.x(), Resolution.XVGARESOLUTION.y());
+        testCourseChat.setResolution(Resolution.HD1080RESOLUTION.x(), Resolution.HD1080RESOLUTION.y());
         Thread thread = new Thread(testCourseChat);
         thread.start();
     }
@@ -83,7 +83,7 @@ public class TestChat3 extends TestObjetSub {
         parametricSurface = new Sphere(Point3D.O0, 5);
 
 
-        z().setDisplayType(ZBufferImpl.SURFACE_DISPLAY_COL_TRI);
+        z().setDisplayType(ZBufferImpl.DISPLAY_ALL);
 
         z().texture(new ColorTexture(Color.BLACK));
         scene().texture(new ColorTexture(Color.BLACK));
