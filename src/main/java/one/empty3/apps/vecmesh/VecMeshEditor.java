@@ -1,6 +1,11 @@
 package one.empty3.apps.vecmesh;
 
 import one.empty3.library.*;
+import one.empty3.library.core.nurbs.CourbeParametriquePolynomiale;
+import one.empty3.library.core.nurbs.ParametricSurface;
+import one.empty3.library.core.tribase.Plan3D;
+import one.empty3.library.core.tribase.TubulaireN;
+import one.empty3.library.core.tribase.TubulaireN2;
 import one.empty3.library1.shader.Vec;
 import one.empty3.library1.tree.AlgebraicFormulaSyntaxException;
 import one.empty3.library1.tree.AlgebricTree;
@@ -20,6 +25,24 @@ public class VecMeshEditor implements Runnable {
         VecMeshEditor vecMeshEditor = new VecMeshEditor();
         Thread thread = new Thread(vecMeshEditor);
         thread.start();
+    }
+
+    public ParametricSurface getParametricSurface(double halfSize) {
+        Class<? extends Representable> representableClass = vecMeshEditorGui.getRepresentableClass();
+        if(representableClass.equals(Sphere.class)) {
+            return new Sphere(Point3D.O0, 4.0);
+        } else if(representableClass.equals(TubulaireN2.class)) {
+            TubulaireN2 tubulaireN2 = new TubulaireN2();
+            ((CourbeParametriquePolynomiale)tubulaireN2.getSoulCurve().getElem()).getCoefficients().
+                    getData1d().add(Point3D.Y.mult(4.0));
+            ((CourbeParametriquePolynomiale)tubulaireN2.getSoulCurve().getElem()).getCoefficients().
+                    getData1d().add(Point3D.Y.mult(-4.0));
+            tubulaireN2.setDiameter(3.0);
+            return tubulaireN2;
+        } else if(representableClass.equals(Plan3D.class)) {
+            return new Plan3D(new Point3D(-3.0, -5.0, 0.0), new Point3D(3.0, -5.0, 0.0), new Point3D(-3.0, 5.0, 0.0)) ;
+        }
+        return new Plan3D(new Point3D(-3.0, -5.0, 0.0), new Point3D(3.0, -5.0, 0.0), new Point3D(-3.0, 5.0, 0.0)) ;
     }
 
     public VecMeshEditor() {
@@ -64,7 +87,7 @@ public class VecMeshEditor implements Runnable {
                     zBuffer.idzpp();
                 }
             } catch (AlgebraicFormulaSyntaxException | TreeNodeEvalException | RuntimeException ignored) {
-                ignored.printStackTrace();
+                //ignored.printStackTrace();
             }
         }
     }

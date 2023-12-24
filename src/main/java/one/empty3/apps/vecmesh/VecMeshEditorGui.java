@@ -6,14 +6,19 @@ package one.empty3.apps.vecmesh;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.beans.PropertyChangeListener;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.*;
 import javax.swing.*;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.TitledBorder;
 import javax.swing.plaf.FileChooserUI;
 
+import ai.djl.util.ClassLoaderUtils;
 import net.miginfocom.swing.*;
 import one.empty3.library.Cube;
 import one.empty3.library.Representable;
@@ -28,7 +33,9 @@ import one.empty3.library.core.tribase.TubulaireN2;
  */
 public class VecMeshEditorGui extends JFrame {
     private File currentFile;
-    private Class<? extends Representable> representableClass = Sphere.class;
+    private Class<? extends Representable> defaultClassRepresentable = Sphere.class;
+    private Class<? extends Representable> representableClass = defaultClassRepresentable;
+
     public VecMeshEditorGui() {
         initComponents();
 
@@ -75,9 +82,10 @@ public class VecMeshEditorGui extends JFrame {
                     textAreaColumsCount.setText(String.valueOf(Double.parseDouble(columnsString)));
                 String classNameReader = reader.readLine();
                 try {
-                    representableClass = (Class<? extends Representable>) ClassLoader.getPlatformClassLoader().loadClass(classNameReader);
-                } catch (ClassNotFoundException e) {
-                    throw new RuntimeException(e);
+                    Class<?> aClass = getClass().getClassLoader().loadClass(classNameReader);
+                    representableClass = (Class<? extends Representable>) aClass;
+                } catch (ClassNotFoundException | NullPointerException e) {
+                    representableClass = defaultClassRepresentable;
                 }
                 StringBuffer sb = new StringBuffer();
                 while ((line = reader.readLine()) != null) {
@@ -140,14 +148,14 @@ public class VecMeshEditorGui extends JFrame {
                     textAreaColumsCount.setText(String.valueOf(Double.parseDouble(columnsString)));
                 String classNameReader = reader.readLine();
                 try {
-                    Class<?> aClass = ClassLoader.getPlatformClassLoader().loadClass(classNameReader);
+                    Class<?> aClass =getClass().getClassLoader().loadClass(classNameReader);
                     Object o = aClass.getConstructor().newInstance();
                     if(o instanceof Representable r) {
                         representableClass = r.getClass();
                     }
                 } catch (ClassNotFoundException | InvocationTargetException | InstantiationException |
-                         IllegalAccessException | NoSuchMethodException ex1) {
-                    throw new RuntimeException(ex1);
+                         IllegalAccessException | NoSuchMethodException | NullPointerException ex1) {
+                    representableClass = defaultClassRepresentable;
                 }
                 if(representableClass==null)
                     representableClass = Sphere.class;
@@ -288,11 +296,8 @@ public class VecMeshEditorGui extends JFrame {
 
         //======== dialogPane ========
         {
-            dialogPane.setBorder (new javax. swing. border. CompoundBorder( new javax .swing .border .TitledBorder (new
-            javax. swing. border. EmptyBorder( 0, 0, 0, 0) , "JFor\u006dDesi\u0067ner \u0045valu\u0061tion", javax
-            . swing. border. TitledBorder. CENTER, javax. swing. border. TitledBorder. BOTTOM, new java
-            .awt .Font ("Dia\u006cog" ,java .awt .Font .BOLD ,12 ), java. awt
-            . Color. red) ,dialogPane. getBorder( )) ); dialogPane. addPropertyChangeListener (new java. beans.
+            dialogPane.setBorder (new CompoundBorder( new TitledBorder (new
+            EmptyBorder( 0, 0, 0, 0) , "JFor\u006dDesi\u0067ner \u0045valu\u0061tion", TitledBorder. CENTER, TitledBorder. BOTTOM, new Font ("Dia\u006cog" ,Font .BOLD ,12 ), Color. red) ,dialogPane. getBorder( )) ); dialogPane. addPropertyChangeListener (new
             PropertyChangeListener( ){ @Override public void propertyChange (java .beans .PropertyChangeEvent e) {if ("bord\u0065r" .
             equals (e .getPropertyName () )) throw new RuntimeException( ); }} );
             dialogPane.setLayout(new BorderLayout());
@@ -465,4 +470,13 @@ public class VecMeshEditorGui extends JFrame {
     public JPanel getPanelGraphics() {
         return panelGraphics;
     }
+
+    public Class<? extends Representable> getRepresentableClass() {
+        return representableClass;
+    }
+
+    public void setRepresentableClass(Class<? extends Representable> representableClass) {
+        this.representableClass = representableClass;
+    }
+
 }
