@@ -57,6 +57,7 @@ new FormModel {
 					"$layoutConstraints": "insets dialog,alignx right"
 					"$columnConstraints": "[fill][fill][fill][fill][fill][fill][fill][fill][fill][fill][fill][fill][fill][fill][fill][fill][fill][fill][fill][fill][fill][fill][fill][fill][fill][fill][fill][fill][fill][fill][fill][fill][fill][fill][button,fill][button,fill][fill][fill][fill][fill][fill][fill][fill][fill]"
 					"$rowSpecs": "[fill]"
+					"$rowConstraints": "[][]"
 				} ) {
 					name: "buttonBar"
 					add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
@@ -69,6 +70,11 @@ new FormModel {
 					}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 						"value": "cell 0 0 11 1"
 					} )
+					add( new FormComponent( "javax.swing.JComboBox" ) {
+						name: "comboBox1"
+					}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+						"value": "cell 11 0"
+					} )
 					add( new FormComponent( "javax.swing.JButton" ) {
 						name: "okButton"
 						"text": new FormMessage( null, "VecMeshEditorGui.okButton.text" )
@@ -80,6 +86,12 @@ new FormModel {
 						"text": new FormMessage( null, "VecMeshEditorGui.cancelButton.text" )
 					}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 						"value": "cell 35 0"
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "buttonOutput"
+						"text": new FormMessage( null, "VecMeshEditorGui.buttonOutput.text" )
+					}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+						"value": "cell 1 1 43 1"
 					} )
 				}, new FormLayoutConstraints( class java.lang.String ) {
 					"value": "Last"
@@ -131,18 +143,22 @@ new FormModel {
 						name: "menuItem4"
 						"text": new FormMessage( null, "VecMeshEditorGui.menuItem4.text" )
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItemSphere", true ) )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItemSphere", true ) )
 					} )
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
 						name: "menuItem7"
 						"text": new FormMessage( null, "VecMeshEditorGui.menuItem7.text" )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItemTube", true ) )
 					} )
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
 						name: "menuItem8"
 						"text": new FormMessage( null, "VecMeshEditorGui.menuItem8.text" )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItemRectangle", true ) )
 					} )
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
 						name: "menuItem9"
 						"text": new FormMessage( null, "VecMeshEditorGui.menuItem9.text" )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItemCube", true ) )
 					} )
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
 						name: "menuItem10"

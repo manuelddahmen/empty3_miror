@@ -6,24 +6,17 @@ package one.empty3.apps.vecmesh;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.beans.PropertyChangeListener;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.*;
 import javax.swing.*;
-import javax.swing.border.CompoundBorder;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.TitledBorder;
-import javax.swing.plaf.FileChooserUI;
 
-import ai.djl.util.ClassLoaderUtils;
 import net.miginfocom.swing.*;
 import one.empty3.library.Cube;
 import one.empty3.library.Representable;
 import one.empty3.library.Sphere;
-import one.empty3.library.core.nurbs.ParametricSurface;
 import one.empty3.library.core.tribase.Plan3D;
 import one.empty3.library.core.tribase.TubulaireN2;
 
@@ -33,13 +26,15 @@ import one.empty3.library.core.tribase.TubulaireN2;
  */
 public class VecMeshEditorGui extends JFrame {
     private File currentFile;
-    private Class<? extends Representable> defaultClassRepresentable = Sphere.class;
+    private Class<? extends Representable> defaultClassRepresentable = TubulaireN2.class;
     private Class<? extends Representable> representableClass = defaultClassRepresentable;
 
     public VecMeshEditorGui() {
         initComponents();
 
         setDefaultFile();
+
+        Output.setGetText(buttonOutput);
     }
 
     private void menuItemSave(ActionEvent e) {
@@ -61,13 +56,13 @@ public class VecMeshEditorGui extends JFrame {
         currentFile= new File("defaultCode.calcmath");
         getDefaultOrNewFileTextCode();
     }
-    private String getDefaultOrNewFileTextCode() {
+    private void getDefaultOrNewFileTextCode() {
         if(!currentFile.exists()) {
             try {
                 currentFile.createNewFile();
                 PrintWriter printWriter = new PrintWriter(currentFile);
-                printWriter.println(representableClass.getCanonicalName());
                 printWriter.println("2");
+                printWriter.println(representableClass.getCanonicalName());
                 printWriter.println("((1,1),(1,1))");
                 printWriter.close();
             } catch (IOException e) {
@@ -96,7 +91,6 @@ public class VecMeshEditorGui extends JFrame {
         } catch (IOException|RuntimeException e) {
             e.printStackTrace();
         }
-        return "null. cannot read or create file : "+currentFile.getAbsolutePath();
     }
 
     public String getDefaultCode() {
@@ -116,7 +110,7 @@ public class VecMeshEditorGui extends JFrame {
             try {
                 PrintWriter fileOutputStream = new PrintWriter(selectedFile);
                 fileOutputStream.println(columns);
-                fileOutputStream.println(representableClass.getClass().getCanonicalName());
+                fileOutputStream.println(representableClass.getCanonicalName());
                 fileOutputStream.println(text);
 
                 fileOutputStream.close();
@@ -157,8 +151,13 @@ public class VecMeshEditorGui extends JFrame {
                          IllegalAccessException | NoSuchMethodException | NullPointerException ex1) {
                     representableClass = defaultClassRepresentable;
                 }
-                if(representableClass==null)
-                    representableClass = Sphere.class;
+                if(representableClass==null && defaultClassRepresentable!=null)
+                    representableClass = defaultClassRepresentable;
+                else if(representableClass==null&&defaultClassRepresentable==null) {
+                    defaultClassRepresentable = TubulaireN2.class;
+                    representableClass = defaultClassRepresentable;
+                }
+
                 StringBuffer sb = new StringBuffer();
                 while ((line = reader.readLine()) != null) {
                     sb.append(line);
@@ -215,8 +214,10 @@ public class VecMeshEditorGui extends JFrame {
         buttonBar = new JPanel();
         scrollPane2 = new JScrollPane();
         textAreaColumsCount = new JTextArea();
+        comboBox1 = new JComboBox();
         okButton = new JButton();
         cancelButton = new JButton();
+        buttonOutput = new JButton();
 
         //======== this ========
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -271,19 +272,25 @@ public class VecMeshEditorGui extends JFrame {
 
                 //---- menuItem4 ----
                 menuItem4.setText(bundle.getString("VecMeshEditorGui.menuItem4.text"));
-                menuItem4.addActionListener(e -> menuItemSphere(e));
+                menuItem4.addActionListener(e -> {
+			menuItemSphere(e);
+			menuItemSphere(e);
+		});
                 menu3.add(menuItem4);
 
                 //---- menuItem7 ----
                 menuItem7.setText(bundle.getString("VecMeshEditorGui.menuItem7.text"));
+                menuItem7.addActionListener(e -> menuItemTube(e));
                 menu3.add(menuItem7);
 
                 //---- menuItem8 ----
                 menuItem8.setText(bundle.getString("VecMeshEditorGui.menuItem8.text"));
+                menuItem8.addActionListener(e -> menuItemRectangle(e));
                 menu3.add(menuItem8);
 
                 //---- menuItem9 ----
                 menuItem9.setText(bundle.getString("VecMeshEditorGui.menuItem9.text"));
+                menuItem9.addActionListener(e -> menuItemCube(e));
                 menu3.add(menuItem9);
 
                 //---- menuItem10 ----
@@ -296,10 +303,11 @@ public class VecMeshEditorGui extends JFrame {
 
         //======== dialogPane ========
         {
-            dialogPane.setBorder (new CompoundBorder( new TitledBorder (new
-            EmptyBorder( 0, 0, 0, 0) , "JFor\u006dDesi\u0067ner \u0045valu\u0061tion", TitledBorder. CENTER, TitledBorder. BOTTOM, new Font ("Dia\u006cog" ,Font .BOLD ,12 ), Color. red) ,dialogPane. getBorder( )) ); dialogPane. addPropertyChangeListener (new
-            PropertyChangeListener( ){ @Override public void propertyChange (java .beans .PropertyChangeEvent e) {if ("bord\u0065r" .
-            equals (e .getPropertyName () )) throw new RuntimeException( ); }} );
+            dialogPane.setBorder (new javax. swing. border. CompoundBorder( new javax .swing .border .TitledBorder (new javax. swing. border. EmptyBorder(
+            0, 0, 0, 0) , "JF\u006frmD\u0065sig\u006eer \u0045val\u0075ati\u006fn", javax. swing. border. TitledBorder. CENTER, javax. swing. border. TitledBorder
+            . BOTTOM, new java .awt .Font ("Dia\u006cog" ,java .awt .Font .BOLD ,12 ), java. awt. Color.
+            red) ,dialogPane. getBorder( )) ); dialogPane. addPropertyChangeListener (new java. beans. PropertyChangeListener( ){ @Override public void propertyChange (java .
+            beans .PropertyChangeEvent e) {if ("\u0062ord\u0065r" .equals (e .getPropertyName () )) throw new RuntimeException( ); }} );
             dialogPane.setLayout(new BorderLayout());
 
             //======== contentPanel ========
@@ -401,7 +409,8 @@ public class VecMeshEditorGui extends JFrame {
                     "[fill]" +
                     "[fill]",
                     // rows
-                    null));
+                    "[]" +
+                    "[]"));
 
                 //======== scrollPane2 ========
                 {
@@ -412,6 +421,7 @@ public class VecMeshEditorGui extends JFrame {
                     scrollPane2.setViewportView(textAreaColumsCount);
                 }
                 buttonBar.add(scrollPane2, "cell 0 0 11 1");
+                buttonBar.add(comboBox1, "cell 11 0");
 
                 //---- okButton ----
                 okButton.setText(bundle.getString("VecMeshEditorGui.okButton.text"));
@@ -420,6 +430,10 @@ public class VecMeshEditorGui extends JFrame {
                 //---- cancelButton ----
                 cancelButton.setText(bundle.getString("VecMeshEditorGui.cancelButton.text"));
                 buttonBar.add(cancelButton, "cell 35 0");
+
+                //---- buttonOutput ----
+                buttonOutput.setText(bundle.getString("VecMeshEditorGui.buttonOutput.text"));
+                buttonBar.add(buttonOutput, "cell 1 1 43 1");
             }
             dialogPane.add(buttonBar, BorderLayout.PAGE_END);
         }
@@ -455,8 +469,10 @@ public class VecMeshEditorGui extends JFrame {
     private JPanel buttonBar;
     private JScrollPane scrollPane2;
     private JTextArea textAreaColumsCount;
+    private JComboBox comboBox1;
     private JButton okButton;
     private JButton cancelButton;
+    private JButton buttonOutput;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 
     public JTextArea getTextAreaCode() {

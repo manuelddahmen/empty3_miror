@@ -1,33 +1,42 @@
 package one.empty3.apps.vecmesh;
 
-import one.empty3.feature.M;
 import one.empty3.library.Matrix33;
 import one.empty3.library.Point3D;
 import one.empty3.library.Representable;
+import one.empty3.library.core.nurbs.ParametricSurface;
 
 import javax.swing.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 public class Rotate {
-    private final Matrix33 matrixOrig;
+    private Representable representable;
+    private final JPanel panel;
+    private Matrix33 matrixObject;
     private boolean mouseDown = false;
     private int lastMouseX = 0;
     private int lastMouseY = 0;
 
-    private Matrix33 RotationMatrix = new Matrix33();
 
     public Matrix33 getRotationMatrix() {
-        return RotationMatrix;
+        this.matrixObject = new Matrix33(new Point3D[] {representable.getVectX(), representable.getVectY(),
+                representable.getVectZ()});
+        return matrixObject;
     }
 
-    public void setRotationMatrix(Matrix33 RotationMatrix) {
-        this.RotationMatrix = RotationMatrix;
+    public void setRotationMatrix(Matrix33 rotationMatrix) {
+        this.matrixObject = rotationMatrix;
+        Point3D[] colVectors = rotationMatrix.getColVectors();
+        representable.setVectX(colVectors[0]);
+        representable.setVectY(colVectors[1]);
+        representable.setVectZ(colVectors[2]);
     }
 
 
     public Rotate(Representable r, JPanel jPanel) {
-        this.matrixOrig = new Matrix33(new Point3D[] {r.getVectX(), r.getVectY(), r.getVectZ()});
+        this.matrixObject = new Matrix33(new Point3D[] {r.getVectX(), r.getVectY(), r.getVectZ()});
+        this.representable = r;
+        this.panel = jPanel;
         jPanel.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -37,16 +46,17 @@ public class Rotate {
             @Override
             public void mousePressed(MouseEvent e) {
                 handleMouseDown(e);
+                handleMouseMove(e);
+                Point3D[] mult = getRotationMatrix().mult(matrixObject).getColVectors();
+                r.setVectX(mult[0]);
+                r.setVectY(mult[1]);
+                r.setVectZ(mult[2]);
+                matrixObject = new Matrix33(mult);
             }
 
             @Override
             public void mouseReleased(MouseEvent e) {
                 handleMouseUp(e);
-                handleMouseMove(e);
-                Point3D[] mult = getRotationMatrix().mult(matrixOrig).getColVectors();
-                r.setVectX(mult[0]);
-                r.setVectY(mult[1]);
-                r.setVectZ(mult[2]);
             }
 
             @Override
@@ -90,5 +100,17 @@ public class Rotate {
 
         lastMouseX = newX;
         lastMouseY = newY;
+    }
+
+    public JPanel getPanel() {
+        return panel;
+    }
+
+    public Representable getRepresentable() {
+        return representable;
+    }
+
+    public void setRepresentable(Representable parametricSurface) {
+        this.representable = parametricSurface;
     }
 }

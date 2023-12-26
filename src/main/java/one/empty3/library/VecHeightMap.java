@@ -12,18 +12,8 @@ public class VecHeightMap extends ParametricSurface {
     private final ParametricSurface parametricSurface;
 
     public VecHeightMap(ParametricSurface parametricSurface, Vec map, int columnsCount) {
-        terminalU.setElem(new Point2Point() {
-            @Override
-            public Point3D result(Point3D p) {
-                return new Point3D(1.0, p.get(1), p.get(2));
-            }
-        });
-        terminalV.setElem(new Point2Point() {
-            @Override
-            public Point3D result(Point3D p) {
-                return new Point3D(p.get(0), 1.0, 0.0);
-            }
-        });
+        terminalU.setElem(parametricSurface.getTerminalU().getElem());
+        terminalV.setElem(parametricSurface.getTerminalV().getElem());
         this.vec = map;
         this.columnsCount = columnsCount;
         this.parametricSurface = parametricSurface;
