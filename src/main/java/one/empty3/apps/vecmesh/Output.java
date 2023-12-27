@@ -4,18 +4,18 @@ import javax.swing.*;
 import javax.swing.text.JTextComponent;
 
 public class Output {
-    private static JButton getText;
+    private static JLabel getText;
     public static void println(String string) {
         System.out.println(string);
         if(getText!=null)
             getText.setText(string);
     }
 
-    public static JButton getGetText() {
+    public static JLabel getGetText() {
         return getText;
     }
 
-    public static void setGetText(JButton getText) {
+    public static void setGetText(JLabel getText) {
         Output.getText = getText;
     }
 }

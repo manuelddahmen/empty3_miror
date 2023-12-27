@@ -87,11 +87,11 @@ new FormModel {
 					}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 						"value": "cell 35 0"
 					} )
-					add( new FormComponent( "javax.swing.JButton" ) {
+					add( new FormComponent( "javax.swing.JLabel" ) {
 						name: "buttonOutput"
 						"text": new FormMessage( null, "VecMeshEditorGui.buttonOutput.text" )
 					}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
-						"value": "cell 1 1 43 1"
+						"value": "cell 0 1 44 1"
 					} )
 				}, new FormLayoutConstraints( class java.lang.String ) {
 					"value": "Last"
@@ -104,6 +104,10 @@ new FormModel {
 				add( new FormContainer( "javax.swing.JMenu", new FormLayoutManager( class javax.swing.JMenu ) ) {
 					name: "menu1"
 					"text": new FormMessage( null, "VecMeshEditorGui.menu1.text" )
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "menuItem12"
+						"text": new FormMessage( null, "VecMeshEditorGui.menuItem12.text" )
+					} )
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
 						name: "menuItem1"
 						"text": new FormMessage( null, "VecMeshEditorGui.menuItem1.text" )
@@ -118,6 +122,10 @@ new FormModel {
 						name: "menuItem3"
 						"text": new FormMessage( null, "VecMeshEditorGui.menuItem3.text" )
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItemSaveAs", true ) )
+					} )
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "menuItem11"
+						"text": new FormMessage( null, "VecMeshEditorGui.menuItem11.text" )
 					} )
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
 						name: "menuItem6"

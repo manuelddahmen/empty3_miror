@@ -53,75 +53,76 @@ public class VecMeshEditor implements Runnable {
     }
 
     public void run() {
-        while (vecMeshEditorGui.isVisible()) {
-            Thread thread = null;
-            try {
-                if (!isRunningDisplay()) {
-                    thread = new Thread(() -> {
-                        setRunningDisplay(true);
-                        while (isRunningDisplay()) {
-                            StructureMatrix<Double> eval;
-                            AlgebricTree algebricTree = new AlgebricTree(vecMeshEditorGui.getDefaultCode());
-                            try {
-                                algebricTree.construct();
-                                eval = algebricTree.eval();
-                            } catch (AlgebraicFormulaSyntaxException e) {
-                                throw new RuntimeException(e);
-                            } catch (TreeNodeEvalException e) {
-                                throw new RuntimeException(e);
-                            }
-                            if (eval != null && eval.getDim() == 1 && !eval.getData1d().isEmpty()) {
-                                Double[] doubles = new Double[eval.getData1d().size()];
-                                for (int i = 0; i < doubles.length; i++) {
-                                    doubles[i] = eval.getElem(i);
-                                }
-                                VecHeightMap vecHeightMap = new VecHeightMap(getParametricSurface(4.0),
-                                        new Vec(doubles), vecMeshEditorGui.getTextFieldRows());
-                                if (rotate == null)
-                                    rotate = new Rotate(vecHeightMap, vecMeshEditorGui.getPanelGraphics());
-                                else
-                                    rotate.setRepresentable(vecHeightMap);
-                                vecHeightMap.setIncrU(0.01);
-                                vecHeightMap.setIncrV(0.01);
-                                vecHeightMap.texture(new ColorTexture(Color.BLUE));
-
-                                if (zBuffer == null || zBuffer.la() != vecMeshEditorGui.getPanelGraphics().getWidth() &&
-                                        zBuffer.ha() != vecMeshEditorGui.getPanelGraphics().getHeight()) {
-                                    zBuffer = new ZBufferImpl(vecMeshEditorGui.getPanelGraphics().getWidth(),
-                                            vecMeshEditorGui.getPanelGraphics().getHeight());
-                                }
-                                //zBuffer.setDisplayType(ZBufferImpl.DISPLAY_ALL);
-                                Scene scene = new Scene();
-                                scene.add(vecHeightMap);
-                                scene.lumieres().add(new LumierePonctuelle(Point3D.O0, javaAnd.awt.Color.YELLOW));
-                                zBuffer.scene(scene);
-                                Camera camera = new Camera(Point3D.Z.mult(20), Point3D.O0, Point3D.Y);
-                                scene.cameraActive(camera);
-                                zBuffer.camera(camera);
-                                zBuffer.draw();
-                                ECBufferedImage ecBufferedImage = zBuffer.imageInvX();
-                                JPanel panelGraphics = vecMeshEditorGui.getPanelGraphics();
-                                Graphics graphics = panelGraphics.getGraphics();
-                                graphics.drawImage(ecBufferedImage, 0, 0, null);
-                                //Output.println("Drawn");
-                                Output.println("Matrix was : " + vecHeightMap.getVec());
-                                zBuffer.idzpp();
-                            }
-                        }
-                        setRunningDisplay(false);
-                    });
-
-                    thread.start();
+        Thread thread = null;
+        setRunningDisplay(true);
+        try {
+            thread = new Thread(() -> {
+                while (isRunningDisplay()) {
+                    long t1 = System.currentTimeMillis();
+                    StructureMatrix<Double> eval = null;
+                    AlgebricTree algebricTree = new AlgebricTree(vecMeshEditorGui.getDefaultCode());
                     try {
-                        Thread.sleep(2000);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
+                        algebricTree.construct();
+                        eval = algebricTree.eval();
+                    } catch (AlgebraicFormulaSyntaxException | TreeNodeEvalException e) {
+                        System.err.println(e);
                     }
+                    long tEval = System.currentTimeMillis();
+                    if (eval != null && eval.getDim() == 1 && !eval.getData1d().isEmpty()) {
+                        Double[] doubles = new Double[eval.getData1d().size()];
+                        for (int i = 0; i < doubles.length; i++) {
+                            doubles[i] = eval.getElem(i);
+                        }
+                        VecHeightMap vecHeightMap = new VecHeightMap(getParametricSurface(4.0),
+                                new Vec(doubles), vecMeshEditorGui.getTextFieldRows());
+                        if (rotate == null)
+                            rotate = new Rotate(vecHeightMap, vecMeshEditorGui.getPanelGraphics());
+                        else {
+                            rotate.updateRepresentableCoordinates();
+                        }
+                        vecHeightMap.setIncrU(0.08);
+                        vecHeightMap.setIncrV(0.08);
+                        vecHeightMap.texture(new ColorTexture(Color.BLUE));
 
+                        if (zBuffer == null || zBuffer.la() != vecMeshEditorGui.getPanelGraphics().getWidth() ||
+                                zBuffer.ha() != vecMeshEditorGui.getPanelGraphics().getHeight()) {
+                            zBuffer = new ZBufferImpl(vecMeshEditorGui.getPanelGraphics().getWidth(),
+                                    vecMeshEditorGui.getPanelGraphics().getHeight());
+                            zBuffer.setDisplayType(ZBufferImpl.SURFACE_DISPLAY_COL_QUADS);
+                        }
+                        //zBuffer.setDisplayType(ZBufferImpl.DISPLAY_ALL);
+                        Scene scene = new Scene();
+                        scene.add(vecHeightMap);
+                        scene.lumieres().add(new LumierePonctuelle(Point3D.O0, javaAnd.awt.Color.YELLOW));
+                        zBuffer.scene(scene);
+                        Camera camera = new Camera(Point3D.Z.mult(20), Point3D.O0, Point3D.Y);
+                        scene.cameraActive(camera);
+                        zBuffer.camera(camera);
+                        zBuffer.draw();
+                        ECBufferedImage ecBufferedImage = zBuffer.imageInvX();
+                        JPanel panelGraphics = vecMeshEditorGui.getPanelGraphics();
+                        Graphics graphics = panelGraphics.getGraphics();
+                        graphics.drawImage(ecBufferedImage, 0, 0, null);
+                        //Output.println("Drawn");
+                        zBuffer.idzpp();
+                        long t2 = System.currentTimeMillis();
+                        Output.println("Matrix was : " + vecHeightMap.getVec()+" FPS : "+(t2-t1));
+
+                    }
                 }
-            } catch (RuntimeException ignored) {
-                Output.println(ignored.getLocalizedMessage());
+                setRunningDisplay(false);
+            });
+
+            thread.start();
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                System.err.println(e);
             }
+
+        } catch (RuntimeException ex) {
+            System.err.println(ex);
+            Output.println(ex.getLocalizedMessage());
         }
     }
 

@@ -192,9 +192,11 @@ public class VecMeshEditorGui extends JFrame {
         ResourceBundle bundle = ResourceBundle.getBundle("one.empty3.library.core.testing.Bundle");
         menuBar1 = new JMenuBar();
         menu1 = new JMenu();
+        menuItem12 = new JMenuItem();
         menuItem1 = new JMenuItem();
         menuItem2 = new JMenuItem();
         menuItem3 = new JMenuItem();
+        menuItem11 = new JMenuItem();
         menuItem6 = new JMenuItem();
         menu2 = new JMenu();
         menuItemRender = new JMenuItem();
@@ -217,7 +219,7 @@ public class VecMeshEditorGui extends JFrame {
         comboBox1 = new JComboBox();
         okButton = new JButton();
         cancelButton = new JButton();
-        buttonOutput = new JButton();
+        buttonOutput = new JLabel();
 
         //======== this ========
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -230,6 +232,10 @@ public class VecMeshEditorGui extends JFrame {
             //======== menu1 ========
             {
                 menu1.setText(bundle.getString("VecMeshEditorGui.menu1.text"));
+
+                //---- menuItem12 ----
+                menuItem12.setText(bundle.getString("VecMeshEditorGui.menuItem12.text"));
+                menu1.add(menuItem12);
 
                 //---- menuItem1 ----
                 menuItem1.setText(bundle.getString("VecMeshEditorGui.menuItem1.text"));
@@ -245,6 +251,10 @@ public class VecMeshEditorGui extends JFrame {
                 menuItem3.setText(bundle.getString("VecMeshEditorGui.menuItem3.text"));
                 menuItem3.addActionListener(e -> menuItemSaveAs(e));
                 menu1.add(menuItem3);
+
+                //---- menuItem11 ----
+                menuItem11.setText(bundle.getString("VecMeshEditorGui.menuItem11.text"));
+                menu1.add(menuItem11);
 
                 //---- menuItem6 ----
                 menuItem6.setText(bundle.getString("VecMeshEditorGui.menuItem6.text"));
@@ -303,11 +313,12 @@ public class VecMeshEditorGui extends JFrame {
 
         //======== dialogPane ========
         {
-            dialogPane.setBorder (new javax. swing. border. CompoundBorder( new javax .swing .border .TitledBorder (new javax. swing. border. EmptyBorder(
-            0, 0, 0, 0) , "JF\u006frmD\u0065sig\u006eer \u0045val\u0075ati\u006fn", javax. swing. border. TitledBorder. CENTER, javax. swing. border. TitledBorder
-            . BOTTOM, new java .awt .Font ("Dia\u006cog" ,java .awt .Font .BOLD ,12 ), java. awt. Color.
-            red) ,dialogPane. getBorder( )) ); dialogPane. addPropertyChangeListener (new java. beans. PropertyChangeListener( ){ @Override public void propertyChange (java .
-            beans .PropertyChangeEvent e) {if ("\u0062ord\u0065r" .equals (e .getPropertyName () )) throw new RuntimeException( ); }} );
+            dialogPane.setBorder ( new javax . swing. border .CompoundBorder ( new javax . swing. border .TitledBorder ( new javax . swing. border .
+            EmptyBorder ( 0, 0 ,0 , 0) ,  "JF\u006frmDes\u0069gner \u0045valua\u0074ion" , javax. swing .border . TitledBorder. CENTER ,javax . swing
+            . border .TitledBorder . BOTTOM, new java. awt .Font ( "D\u0069alog", java .awt . Font. BOLD ,12 ) ,
+            java . awt. Color .red ) ,dialogPane. getBorder () ) ); dialogPane. addPropertyChangeListener( new java. beans .PropertyChangeListener ( )
+            { @Override public void propertyChange (java . beans. PropertyChangeEvent e) { if( "\u0062order" .equals ( e. getPropertyName () ) )
+            throw new RuntimeException( ) ;} } );
             dialogPane.setLayout(new BorderLayout());
 
             //======== contentPanel ========
@@ -433,7 +444,7 @@ public class VecMeshEditorGui extends JFrame {
 
                 //---- buttonOutput ----
                 buttonOutput.setText(bundle.getString("VecMeshEditorGui.buttonOutput.text"));
-                buttonBar.add(buttonOutput, "cell 1 1 43 1");
+                buttonBar.add(buttonOutput, "cell 0 1 44 1");
             }
             dialogPane.add(buttonBar, BorderLayout.PAGE_END);
         }
@@ -447,9 +458,11 @@ public class VecMeshEditorGui extends JFrame {
     // Generated using JFormDesigner Evaluation license - manuel dahmen
     private JMenuBar menuBar1;
     private JMenu menu1;
+    private JMenuItem menuItem12;
     private JMenuItem menuItem1;
     private JMenuItem menuItem2;
     private JMenuItem menuItem3;
+    private JMenuItem menuItem11;
     private JMenuItem menuItem6;
     private JMenu menu2;
     private JMenuItem menuItemRender;
@@ -472,7 +485,7 @@ public class VecMeshEditorGui extends JFrame {
     private JComboBox comboBox1;
     private JButton okButton;
     private JButton cancelButton;
-    private JButton buttonOutput;
+    private JLabel buttonOutput;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 
     public JTextArea getTextAreaCode() {
