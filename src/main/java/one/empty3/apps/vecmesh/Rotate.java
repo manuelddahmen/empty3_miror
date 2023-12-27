@@ -38,7 +38,7 @@ public class Rotate {
         this.matrixObject = new Matrix33(new Point3D[] {r.getVectX(), r.getVectY(), r.getVectZ()});
         this.representable = r;
         this.panel = jPanel;
-        jPanel.addMouseMotionListener(new MouseAdapter() {
+        MouseAdapter mouseAdapter = new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
                 super.mousePressed(e);
@@ -48,21 +48,23 @@ public class Rotate {
             @Override
             public void mouseReleased(MouseEvent e) {
                 super.mouseReleased(e);
-                Point3D[] mult = newRotationMatrix.mult(matrixObject).getColVectors();
-                r.setVectX(mult[0]);
-                r.setVectY(mult[1]);
-                r.setVectZ(mult[2]);
-                matrixObject = new Matrix33(mult);
-                handleMouseUp(e);
+                handleMouseMove(e);
+                Point3D[] multiply = newRotationMatrix.mult(matrixObject).getColVectors();
+                r.setVectX(multiply[0]);
+                r.setVectY(multiply[1]);
+                r.setVectZ(multiply[2]);
+                matrixObject = new Matrix33(multiply);
                 System.out.print("=>");
+                handleMouseUp(e);
+                updateRepresentableCoordinates();
             }
 
             @Override
             public void mouseMoved(MouseEvent e) {
                 super.mouseMoved(e);
-                handleMouseMove(e);
             }
-        });
+        };
+        jPanel.addMouseListener(mouseAdapter);
     }
 
     void handleMouseDown(MouseEvent event) {

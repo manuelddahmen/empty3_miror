@@ -78,6 +78,7 @@ public class VecMeshEditor implements Runnable {
                         if (rotate == null)
                             rotate = new Rotate(vecHeightMap, vecMeshEditorGui.getPanelGraphics());
                         else {
+                            rotate.setRepresentable(vecHeightMap);
                             rotate.updateRepresentableCoordinates();
                         }
                         vecHeightMap.setIncrU(0.08);

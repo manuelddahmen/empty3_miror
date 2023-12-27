@@ -83,4 +83,44 @@ public class VecHeightMap extends ParametricSurface {
     public ParametricSurface getParametricSurface() {
         return parametricSurface;
     }
+
+    @Override
+    public Point3D getVectX() {
+        return  parametricSurface.getVectX();
+    }
+
+    @Override
+    public Point3D getVectY() {
+        return parametricSurface.getVectY();
+    }
+
+    @Override
+    public Point3D getVectZ() {
+        return parametricSurface.getVectZ();
+    }
+
+    @Override
+    public Point3D getOrig() {
+        return parametricSurface.getOrig();
+    }
+
+    @Override
+    public void setVectX(Point3D vectX) {
+        parametricSurface.setVectX(vectX);
+    }
+
+    @Override
+    public void setVectY(Point3D vectY) {
+        parametricSurface.setVectY(vectY);
+    }
+
+    @Override
+    public void setVectZ(Point3D vectZ) {
+        parametricSurface.setVectZ(vectZ);
+    }
+
+    @Override
+    public void setOrig(Point3D orig) {
+        parametricSurface.setOrig(orig);
+    }
 }
