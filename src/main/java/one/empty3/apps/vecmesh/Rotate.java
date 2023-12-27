@@ -86,10 +86,10 @@ public class Rotate {
 
         var deltaX = newX - lastMouseX;
         newRotationMatrix = new Matrix33();
-         Matrix33 newRotationMatrixY = Matrix33.rotationY(2 * Math.PI * deltaX / 10 / 360);
+         Matrix33 newRotationMatrixY = Matrix33.rotationY(2 * Math.PI * deltaX / 360);
 
          var deltaY = newY - lastMouseY;
-         Matrix33 newRotationMatrixX = Matrix33.rotationX(2 * Math.PI * deltaY / 10 / 360);
+         Matrix33 newRotationMatrixX = Matrix33.rotationX(2 * Math.PI * deltaY / 360);
 
          newRotationMatrix = newRotationMatrixX.mult(newRotationMatrixY);
 
@@ -110,9 +110,9 @@ public class Rotate {
     }
 
     public void updateRepresentableCoordinates() {
-        Point3D[] colVectors = matrixObject.getColVectors();
-        representable.setVectX(colVectors[0]);
-        representable.setVectY(colVectors[1]);
-        representable.setVectZ(colVectors[2]);
+        Point3D[] rowVectors = matrixObject.getRowVectors();
+        representable.setVectX(rowVectors[0]);
+        representable.setVectY(rowVectors[1]);
+        representable.setVectZ(rowVectors[2]);
     }
 }
