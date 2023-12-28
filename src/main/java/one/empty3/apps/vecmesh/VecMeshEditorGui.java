@@ -225,12 +225,21 @@ public class VecMeshEditorGui extends JFrame {
         if(jFileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
             currentFile = jFileChooser.getSelectedFile();
             File currentFile1 = currentFile;
+            File dir = currentFile1;
             try {
-                File dir = new File(currentFile1.getParentFile().getAbsolutePath());
-                File xml = new File(currentFile1.getParentFile().getAbsolutePath() + "scene.xml");
-                File moo = new File(currentFile1.getParentFile().getAbsolutePath() + "scene.moo");
-                File stl = new File(currentFile1.getParentFile().getAbsolutePath() + "scene.stl");
-                File obj = new File(currentFile1.getParentFile().getAbsolutePath() + "scene.obj");
+                if (!currentFile1.isDirectory() && currentFile1.exists()) {
+                    return;
+                }
+                if (!currentFile1.isDirectory()) {
+                    currentFile1.mkdir();
+                }
+                if (currentFile1.exists() && !currentFile1.isDirectory()) {
+                    dir = new File(currentFile1.getParentFile().getAbsolutePath());
+                }
+                File xml = new File(dir.getAbsolutePath() + File.separator+"scene.xml");
+                File moo = new File(dir.getAbsolutePath() + File.separator+"scene.moo");
+                File stl = new File(dir.getAbsolutePath() + File.separator+"scene.stl");
+                File obj = new File(dir.getAbsolutePath() + File.separator+"scene.obj");
                 STLExport.save(stl, model.getScene(), false);
                 ObjExport.save(obj, model.getScene(), false);
                 PrintWriter printWriter = new PrintWriter(moo);
@@ -239,11 +248,11 @@ public class VecMeshEditorGui extends JFrame {
                 printWriter = new PrintWriter(xml);
                 StringBuilder stringBuilder = new StringBuilder();
                 model.getScene().getObjets().getElem(0).xmlRepresentation(dir.getAbsolutePath(),
-                        stringBuilder, model.getScene().getObjets().getElem(0));
+                        stringBuilder, model.getScene());
                 printWriter.println(stringBuilder.toString());
                 printWriter.close();
             } catch (IOException ex) {
-                throw new RuntimeException(ex);
+                System.err.println(ex);
             }
         }
     }
