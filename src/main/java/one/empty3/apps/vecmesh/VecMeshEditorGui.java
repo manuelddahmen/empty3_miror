@@ -14,10 +14,7 @@ import java.util.*;
 import javax.swing.*;
 
 import net.miginfocom.swing.*;
-import one.empty3.library.Cube;
-import one.empty3.library.Representable;
-import one.empty3.library.Sphere;
-import one.empty3.library.ZBufferImpl;
+import one.empty3.library.*;
 import one.empty3.library.core.export.ObjExport;
 import one.empty3.library.core.export.STLExport;
 import one.empty3.library.core.tribase.Plan3D;
@@ -35,9 +32,15 @@ public class VecMeshEditorGui extends JFrame {
     private VecMeshEditor model;
     private int resX;
     private int resY;
+    private Config config;
 
     public VecMeshEditorGui() {
         initComponents();
+
+
+        config = new Config();
+
+        currentFile= new File(config.getDefaultCodeVecMesh());
 
         setDefaultFile();
 
@@ -60,7 +63,6 @@ public class VecMeshEditorGui extends JFrame {
     }
 
     public void setDefaultFile() {
-        currentFile= new File("defaultCode.calcmath");
         getDefaultOrNewFileTextCode();
     }
     private void getDefaultOrNewFileTextCode() {
@@ -253,9 +255,11 @@ public class VecMeshEditorGui extends JFrame {
         int y = dimension.getY();
     }
 
+    private void menuItemSettings(ActionEvent e) {
+        config = new Config();
+    }
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
-        // Generated using JFormDesigner Evaluation license - manuel dahmen
         ResourceBundle bundle = ResourceBundle.getBundle("one.empty3.library.core.testing.Bundle");
         menuBar1 = new JMenuBar();
         menu1 = new JMenu();
@@ -335,6 +339,7 @@ public class VecMeshEditorGui extends JFrame {
 
                 //---- menuItem5 ----
                 menuItem5.setText(bundle.getString("VecMeshEditorGui.menuItem5.text"));
+                menuItem5.addActionListener(e -> menuItemSettings(e));
                 menu1.add(menuItem5);
 
                 //---- menuItem6 ----
@@ -438,12 +443,6 @@ public class VecMeshEditorGui extends JFrame {
 
         //======== dialogPane ========
         {
-            dialogPane.setBorder (new javax. swing. border. CompoundBorder( new javax .swing .border .TitledBorder (new javax. swing. border. EmptyBorder
-            ( 0, 0, 0, 0) , "JFor\u006dDesi\u0067ner \u0045valu\u0061tion", javax. swing. border. TitledBorder. CENTER, javax. swing. border
-            . TitledBorder. BOTTOM, new java .awt .Font ("Dia\u006cog" ,java .awt .Font .BOLD ,12 ), java. awt
-            . Color. red) ,dialogPane. getBorder( )) ); dialogPane. addPropertyChangeListener (new java. beans. PropertyChangeListener( ){ @Override public void
-            propertyChange (java .beans .PropertyChangeEvent e) {if ("bord\u0065r" .equals (e .getPropertyName () )) throw new RuntimeException( )
-            ; }} );
             dialogPane.setLayout(new BorderLayout());
 
             //======== contentPanel ========
@@ -580,7 +579,6 @@ public class VecMeshEditorGui extends JFrame {
     }
 
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables  @formatter:off
-    // Generated using JFormDesigner Evaluation license - manuel dahmen
     private JMenuBar menuBar1;
     private JMenu menu1;
     private JMenuItem menuItem12;

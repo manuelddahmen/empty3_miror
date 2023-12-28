@@ -23,6 +23,7 @@ public class VecMeshEditor implements Runnable {
         vecMeshEditorGui = new VecMeshEditorGui();
         vecMeshEditorGui.setVisible(true);
         vecMeshEditorGui.setModel(this);
+
     }
 
     public static void main(String[] strings) {
