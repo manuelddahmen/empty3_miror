@@ -2,9 +2,10 @@ package one.empty3.apps.vecmesh;
 
 import one.empty3.library.*;
 import one.empty3.library.core.nurbs.CourbeParametriquePolynomiale;
+import one.empty3.library.core.nurbs.FctXY;
 import one.empty3.library.core.nurbs.ParametricSurface;
 import one.empty3.library.core.tribase.Plan3D;
-import one.empty3.library.core.tribase.TubulaireN2;
+import one.empty3.library.core.tribase.Tubulaire3;
 import one.empty3.library1.shader.Vec;
 import one.empty3.library1.tree.AlgebricTree;
 import one.empty3.library1.tree.ListInstructions;
@@ -37,15 +38,20 @@ public class VecMeshEditor implements Runnable {
         Class<? extends Representable> representableClass = vecMeshEditorGui.getRepresentableClass();
         if (representableClass.equals(Sphere.class)) {
             shape = new Sphere(Point3D.O0, halfSize);
-        } else if (representableClass.equals(TubulaireN2.class)) {
-            shape = new TubulaireN2();
-            ((CourbeParametriquePolynomiale) ((TubulaireN2) shape).getSoulCurve().getElem()).getCoefficients().
+        } else if (representableClass.equals(Tubulaire3.class)) {
+            shape = new Tubulaire3();
+            ((CourbeParametriquePolynomiale) ((Tubulaire3) shape).getSoulCurve().getElem()).getCoefficients().
                     setElem(Point3D.Y.mult(halfSize / 2), 0);
-            ((CourbeParametriquePolynomiale) ((TubulaireN2) shape).getSoulCurve().getElem()).getCoefficients().
+            ((CourbeParametriquePolynomiale) ((Tubulaire3) shape).getSoulCurve().getElem()).getCoefficients().
                     setElem(Point3D.Y.mult(0), 1);
-            ((CourbeParametriquePolynomiale) ((TubulaireN2) shape).getSoulCurve().getElem()).getCoefficients().
+            ((CourbeParametriquePolynomiale) ((Tubulaire3) shape).getSoulCurve().getElem()).getCoefficients().
                     setElem(Point3D.Y.mult(-halfSize / 2), 2);
-            ((TubulaireN2) shape).setDiameter(halfSize / 2.0);
+            ((Tubulaire3) shape).getDiameterFunction().setElem(new FctXY() {
+                @Override
+                public double result(double input) {
+                    return halfSize / 2.0;
+                }
+            });
         } else if (representableClass.equals(Plan3D.class)) {
             shape = new Plan3D(new Point3D(-3.0, -halfSize, 0.0), new Point3D(halfSize, -halfSize, 0.0), new Point3D(-halfSize, halfSize, 0.0));
         }

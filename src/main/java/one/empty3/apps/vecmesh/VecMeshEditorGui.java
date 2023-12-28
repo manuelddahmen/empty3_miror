@@ -18,7 +18,7 @@ import one.empty3.library.*;
 import one.empty3.library.core.export.ObjExport;
 import one.empty3.library.core.export.STLExport;
 import one.empty3.library.core.tribase.Plan3D;
-import one.empty3.library.core.tribase.TubulaireN2;
+import one.empty3.library.core.tribase.Tubulaire3;
 
 /**
  * @author Manuel Dahmen
@@ -26,7 +26,7 @@ import one.empty3.library.core.tribase.TubulaireN2;
  */
 public class VecMeshEditorGui extends JFrame {
     private File currentFile;
-    private Class<? extends Representable> defaultClassRepresentable = TubulaireN2.class;
+    private Class<? extends Representable> defaultClassRepresentable = Tubulaire3.class;
     private Class<? extends Representable> representableClass = defaultClassRepresentable;
     private ZBufferImpl zBuffer;
     private VecMeshEditor model;
@@ -163,7 +163,7 @@ public class VecMeshEditorGui extends JFrame {
                 if(representableClass==null && defaultClassRepresentable!=null)
                     representableClass = defaultClassRepresentable;
                 else if(representableClass==null&&defaultClassRepresentable==null) {
-                    defaultClassRepresentable = TubulaireN2.class;
+                    defaultClassRepresentable = Tubulaire3.class;
                     representableClass = defaultClassRepresentable;
                 }
 
@@ -186,7 +186,7 @@ public class VecMeshEditorGui extends JFrame {
         this.representableClass = Sphere.class;
     }
     private void menuItemTube(ActionEvent e) {
-        this.representableClass = TubulaireN2.class;
+        this.representableClass = Tubulaire3.class;
     }
     private void menuItemRectangle(ActionEvent e) {
         this.representableClass = Plan3D.class;

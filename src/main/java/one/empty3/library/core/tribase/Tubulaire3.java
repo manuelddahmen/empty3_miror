@@ -29,6 +29,7 @@
  */
 package one.empty3.library.core.tribase;
 
+import one.empty3.library.Matrix33;
 import one.empty3.library.Point3D;
 import one.empty3.library.StructureMatrix;
 import one.empty3.library.core.nurbs.CourbeParametriquePolynomialeBezier;
@@ -173,7 +174,11 @@ public class Tubulaire3 extends ParametricSurface {
             j = 0;
         }
 
-        return vecteurs[j];
+        return new Matrix33(vecteurs[j]).mult(new Matrix33(new Point3D[] {
+                getVectors().data1d.get(0),
+                        getVectors().data1d.get(1),
+                        getVectors().data1d.get(2)}))
+                .getColVectors();
     }
 
     @Override
