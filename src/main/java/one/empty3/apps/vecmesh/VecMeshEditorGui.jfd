@@ -126,22 +126,15 @@ new FormModel {
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
 						name: "menuItem11"
 						"text": new FormMessage( null, "VecMeshEditorGui.menuItem11.text" )
-					} )
-					add( new FormComponent( "javax.swing.JMenuItem" ) {
-						name: "menuItem6"
-						"text": new FormMessage( null, "VecMeshEditorGui.menuItem6.text" )
-					} )
-				} )
-				add( new FormContainer( "javax.swing.JMenu", new FormLayoutManager( class javax.swing.JMenu ) ) {
-					name: "menu2"
-					"text": new FormMessage( null, "VecMeshEditorGui.menu2.text" )
-					add( new FormComponent( "javax.swing.JMenuItem" ) {
-						name: "menuItemRender"
-						"text": new FormMessage( null, "VecMeshEditorGui.menuItemRender.text" )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItemExportAs", true ) )
 					} )
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
 						name: "menuItem5"
 						"text": new FormMessage( null, "VecMeshEditorGui.menuItem5.text" )
+					} )
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "menuItem6"
+						"text": new FormMessage( null, "VecMeshEditorGui.menuItem6.text" )
 					} )
 				} )
 				add( new FormContainer( "javax.swing.JMenu", new FormLayoutManager( class javax.swing.JMenu ) ) {
@@ -171,6 +164,56 @@ new FormModel {
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
 						name: "menuItem10"
 						"text": new FormMessage( null, "VecMeshEditorGui.menuItem10.text" )
+					} )
+				} )
+				add( new FormContainer( "javax.swing.JMenu", new FormLayoutManager( class javax.swing.JMenu ) ) {
+					name: "menu2"
+					"text": new FormMessage( null, "VecMeshEditorGui.menu2.text" )
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "menuItemRender"
+						"text": new FormMessage( null, "VecMeshEditorGui.menuItemRender.text" )
+					} )
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "menuItemResolution"
+						"text": new FormMessage( null, "VecMeshEditorGui.menuItemResolution.text" )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "resolution", true ) )
+					} )
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "menuItemRenderPoints"
+						"text": new FormMessage( null, "VecMeshEditorGui.menuItemRenderPoints.text" )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "renderPoints", true ) )
+					} )
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "menuItemRenderLines"
+						"text": new FormMessage( null, "VecMeshEditorGui.menuItemRenderLines.text" )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "renderLines", true ) )
+					} )
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "menuItemRenderQuadsCol"
+						"text": new FormMessage( null, "VecMeshEditorGui.menuItemRenderQuadsCol.text" )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "renderQuadsCol", true ) )
+					} )
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "menuItemRenderQuadsTextured"
+						"text": new FormMessage( null, "VecMeshEditorGui.menuItemRenderQuadsTextured.text" )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "renderQuadsTextured", true ) )
+					} )
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "menuItemRenderAll"
+						"text": new FormMessage( null, "VecMeshEditorGui.menuItemRenderAll.text" )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "renderAll", true ) )
+					} )
+				} )
+				add( new FormContainer( "javax.swing.JMenu", new FormLayoutManager( class javax.swing.JMenu ) ) {
+					name: "menu4"
+					"text": new FormMessage( null, "VecMeshEditorGui.menu4.text" )
+					add( new FormContainer( "javax.swing.JMenu", new FormLayoutManager( class javax.swing.JMenu ) ) {
+						name: "menu5"
+						"text": new FormMessage( null, "VecMeshEditorGui.menu5.text" )
+					} )
+					add( new FormContainer( "javax.swing.JMenu", new FormLayoutManager( class javax.swing.JMenu ) ) {
+						name: "menu6"
+						"text": new FormMessage( null, "VecMeshEditorGui.menu6.text" )
 					} )
 				} )
 			}

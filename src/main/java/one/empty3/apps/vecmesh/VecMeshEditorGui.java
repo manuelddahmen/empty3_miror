@@ -17,6 +17,9 @@ import net.miginfocom.swing.*;
 import one.empty3.library.Cube;
 import one.empty3.library.Representable;
 import one.empty3.library.Sphere;
+import one.empty3.library.ZBufferImpl;
+import one.empty3.library.core.export.ObjExport;
+import one.empty3.library.core.export.STLExport;
 import one.empty3.library.core.tribase.Plan3D;
 import one.empty3.library.core.tribase.TubulaireN2;
 
@@ -28,6 +31,10 @@ public class VecMeshEditorGui extends JFrame {
     private File currentFile;
     private Class<? extends Representable> defaultClassRepresentable = TubulaireN2.class;
     private Class<? extends Representable> representableClass = defaultClassRepresentable;
+    private ZBufferImpl zBuffer;
+    private VecMeshEditor model;
+    private int resX;
+    private int resY;
 
     public VecMeshEditorGui() {
         initComponents();
@@ -63,7 +70,7 @@ public class VecMeshEditorGui extends JFrame {
                 PrintWriter printWriter = new PrintWriter(currentFile);
                 printWriter.println("2");
                 printWriter.println(representableClass.getCanonicalName());
-                printWriter.println("((1,1),(1,1))");
+                printWriter.println("heights = ((1,1),(1,1))");
                 printWriter.close();
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -186,6 +193,66 @@ public class VecMeshEditorGui extends JFrame {
         this.representableClass = Cube.class;
     }
 
+    private void renderPoints(ActionEvent e) {
+        zBuffer.setDisplayType(ZBufferImpl.SURFACE_DISPLAY_POINTS);
+    }
+
+    private void renderLines(ActionEvent e) {
+        zBuffer.setDisplayType(ZBufferImpl.SURFACE_DISPLAY_LINES);
+    }
+
+    private void renderQuadsCol(ActionEvent e) {
+        zBuffer.setDisplayType(ZBufferImpl.SURFACE_DISPLAY_COL_QUADS);
+
+    }
+
+    private void renderQuadsTextured(ActionEvent e) {
+        zBuffer.setDisplayType(ZBufferImpl.SURFACE_DISPLAY_TEXT_QUADS);
+
+    }
+
+    private void renderAll(ActionEvent e) {
+        zBuffer.setDisplayType(ZBufferImpl.DISPLAY_ALL);
+
+    }
+
+    private void menuItemExportAs(ActionEvent e) {
+        JFileChooser jFileChooser = new JFileChooser(currentFile.getParentFile());
+        jFileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
+        jFileChooser.setDialogTitle("Choisir où exporter les fichiers");
+        if(jFileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+            currentFile = jFileChooser.getSelectedFile();
+            File currentFile1 = currentFile;
+            try {
+                File dir = new File(currentFile1.getParentFile().getAbsolutePath());
+                File xml = new File(currentFile1.getParentFile().getAbsolutePath() + "scene.xml");
+                File moo = new File(currentFile1.getParentFile().getAbsolutePath() + "scene.moo");
+                File stl = new File(currentFile1.getParentFile().getAbsolutePath() + "scene.stl");
+                File obj = new File(currentFile1.getParentFile().getAbsolutePath() + "scene.obj");
+                STLExport.save(stl, model.getScene(), false);
+                ObjExport.save(obj, model.getScene(), false);
+                PrintWriter printWriter = new PrintWriter(moo);
+                printWriter.println(model.getScene().toString());
+                printWriter.close();
+                printWriter = new PrintWriter(xml);
+                StringBuilder stringBuilder = new StringBuilder();
+                model.getScene().getObjets().getElem(0).xmlRepresentation(dir.getAbsolutePath(),
+                        stringBuilder, model.getScene().getObjets().getElem(0));
+                printWriter.println(stringBuilder.toString());
+                printWriter.close();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+    }
+
+    private void resolution(ActionEvent e) {
+        DimensionZBuffer dimension = new DimensionZBuffer(this);
+        dimension.setVisible(true);
+        int x = dimension.getX();
+        int y = dimension.getY();
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
         // Generated using JFormDesigner Evaluation license - manuel dahmen
@@ -197,16 +264,25 @@ public class VecMeshEditorGui extends JFrame {
         menuItem2 = new JMenuItem();
         menuItem3 = new JMenuItem();
         menuItem11 = new JMenuItem();
-        menuItem6 = new JMenuItem();
-        menu2 = new JMenu();
-        menuItemRender = new JMenuItem();
         menuItem5 = new JMenuItem();
+        menuItem6 = new JMenuItem();
         menu3 = new JMenu();
         menuItem4 = new JMenuItem();
         menuItem7 = new JMenuItem();
         menuItem8 = new JMenuItem();
         menuItem9 = new JMenuItem();
         menuItem10 = new JMenuItem();
+        menu2 = new JMenu();
+        menuItemRender = new JMenuItem();
+        menuItemResolution = new JMenuItem();
+        menuItemRenderPoints = new JMenuItem();
+        menuItemRenderLines = new JMenuItem();
+        menuItemRenderQuadsCol = new JMenuItem();
+        menuItemRenderQuadsTextured = new JMenuItem();
+        menuItemRenderAll = new JMenuItem();
+        menu4 = new JMenu();
+        menu5 = new JMenu();
+        menu6 = new JMenu();
         dialogPane = new JPanel();
         contentPanel = new JPanel();
         splitPane1 = new JSplitPane();
@@ -254,27 +330,18 @@ public class VecMeshEditorGui extends JFrame {
 
                 //---- menuItem11 ----
                 menuItem11.setText(bundle.getString("VecMeshEditorGui.menuItem11.text"));
+                menuItem11.addActionListener(e -> menuItemExportAs(e));
                 menu1.add(menuItem11);
+
+                //---- menuItem5 ----
+                menuItem5.setText(bundle.getString("VecMeshEditorGui.menuItem5.text"));
+                menu1.add(menuItem5);
 
                 //---- menuItem6 ----
                 menuItem6.setText(bundle.getString("VecMeshEditorGui.menuItem6.text"));
                 menu1.add(menuItem6);
             }
             menuBar1.add(menu1);
-
-            //======== menu2 ========
-            {
-                menu2.setText(bundle.getString("VecMeshEditorGui.menu2.text"));
-
-                //---- menuItemRender ----
-                menuItemRender.setText(bundle.getString("VecMeshEditorGui.menuItemRender.text"));
-                menu2.add(menuItemRender);
-
-                //---- menuItem5 ----
-                menuItem5.setText(bundle.getString("VecMeshEditorGui.menuItem5.text"));
-                menu2.add(menuItem5);
-            }
-            menuBar1.add(menu2);
 
             //======== menu3 ========
             {
@@ -308,17 +375,75 @@ public class VecMeshEditorGui extends JFrame {
                 menu3.add(menuItem10);
             }
             menuBar1.add(menu3);
+
+            //======== menu2 ========
+            {
+                menu2.setText(bundle.getString("VecMeshEditorGui.menu2.text"));
+
+                //---- menuItemRender ----
+                menuItemRender.setText(bundle.getString("VecMeshEditorGui.menuItemRender.text"));
+                menu2.add(menuItemRender);
+
+                //---- menuItemResolution ----
+                menuItemResolution.setText(bundle.getString("VecMeshEditorGui.menuItemResolution.text"));
+                menuItemResolution.addActionListener(e -> resolution(e));
+                menu2.add(menuItemResolution);
+
+                //---- menuItemRenderPoints ----
+                menuItemRenderPoints.setText(bundle.getString("VecMeshEditorGui.menuItemRenderPoints.text"));
+                menuItemRenderPoints.addActionListener(e -> renderPoints(e));
+                menu2.add(menuItemRenderPoints);
+
+                //---- menuItemRenderLines ----
+                menuItemRenderLines.setText(bundle.getString("VecMeshEditorGui.menuItemRenderLines.text"));
+                menuItemRenderLines.addActionListener(e -> renderLines(e));
+                menu2.add(menuItemRenderLines);
+
+                //---- menuItemRenderQuadsCol ----
+                menuItemRenderQuadsCol.setText(bundle.getString("VecMeshEditorGui.menuItemRenderQuadsCol.text"));
+                menuItemRenderQuadsCol.addActionListener(e -> renderQuadsCol(e));
+                menu2.add(menuItemRenderQuadsCol);
+
+                //---- menuItemRenderQuadsTextured ----
+                menuItemRenderQuadsTextured.setText(bundle.getString("VecMeshEditorGui.menuItemRenderQuadsTextured.text"));
+                menuItemRenderQuadsTextured.addActionListener(e -> renderQuadsTextured(e));
+                menu2.add(menuItemRenderQuadsTextured);
+
+                //---- menuItemRenderAll ----
+                menuItemRenderAll.setText(bundle.getString("VecMeshEditorGui.menuItemRenderAll.text"));
+                menuItemRenderAll.addActionListener(e -> renderAll(e));
+                menu2.add(menuItemRenderAll);
+            }
+            menuBar1.add(menu2);
+
+            //======== menu4 ========
+            {
+                menu4.setText(bundle.getString("VecMeshEditorGui.menu4.text"));
+
+                //======== menu5 ========
+                {
+                    menu5.setText(bundle.getString("VecMeshEditorGui.menu5.text"));
+                }
+                menu4.add(menu5);
+
+                //======== menu6 ========
+                {
+                    menu6.setText(bundle.getString("VecMeshEditorGui.menu6.text"));
+                }
+                menu4.add(menu6);
+            }
+            menuBar1.add(menu4);
         }
         setJMenuBar(menuBar1);
 
         //======== dialogPane ========
         {
-            dialogPane.setBorder ( new javax . swing. border .CompoundBorder ( new javax . swing. border .TitledBorder ( new javax . swing. border .
-            EmptyBorder ( 0, 0 ,0 , 0) ,  "JF\u006frmDes\u0069gner \u0045valua\u0074ion" , javax. swing .border . TitledBorder. CENTER ,javax . swing
-            . border .TitledBorder . BOTTOM, new java. awt .Font ( "D\u0069alog", java .awt . Font. BOLD ,12 ) ,
-            java . awt. Color .red ) ,dialogPane. getBorder () ) ); dialogPane. addPropertyChangeListener( new java. beans .PropertyChangeListener ( )
-            { @Override public void propertyChange (java . beans. PropertyChangeEvent e) { if( "\u0062order" .equals ( e. getPropertyName () ) )
-            throw new RuntimeException( ) ;} } );
+            dialogPane.setBorder (new javax. swing. border. CompoundBorder( new javax .swing .border .TitledBorder (new javax. swing. border. EmptyBorder
+            ( 0, 0, 0, 0) , "JFor\u006dDesi\u0067ner \u0045valu\u0061tion", javax. swing. border. TitledBorder. CENTER, javax. swing. border
+            . TitledBorder. BOTTOM, new java .awt .Font ("Dia\u006cog" ,java .awt .Font .BOLD ,12 ), java. awt
+            . Color. red) ,dialogPane. getBorder( )) ); dialogPane. addPropertyChangeListener (new java. beans. PropertyChangeListener( ){ @Override public void
+            propertyChange (java .beans .PropertyChangeEvent e) {if ("bord\u0065r" .equals (e .getPropertyName () )) throw new RuntimeException( )
+            ; }} );
             dialogPane.setLayout(new BorderLayout());
 
             //======== contentPanel ========
@@ -463,16 +588,25 @@ public class VecMeshEditorGui extends JFrame {
     private JMenuItem menuItem2;
     private JMenuItem menuItem3;
     private JMenuItem menuItem11;
-    private JMenuItem menuItem6;
-    private JMenu menu2;
-    private JMenuItem menuItemRender;
     private JMenuItem menuItem5;
+    private JMenuItem menuItem6;
     private JMenu menu3;
     private JMenuItem menuItem4;
     private JMenuItem menuItem7;
     private JMenuItem menuItem8;
     private JMenuItem menuItem9;
     private JMenuItem menuItem10;
+    private JMenu menu2;
+    private JMenuItem menuItemRender;
+    private JMenuItem menuItemResolution;
+    private JMenuItem menuItemRenderPoints;
+    private JMenuItem menuItemRenderLines;
+    private JMenuItem menuItemRenderQuadsCol;
+    private JMenuItem menuItemRenderQuadsTextured;
+    private JMenuItem menuItemRenderAll;
+    private JMenu menu4;
+    private JMenu menu5;
+    private JMenu menu6;
     private JPanel dialogPane;
     private JPanel contentPanel;
     private JSplitPane splitPane1;
@@ -508,4 +642,38 @@ public class VecMeshEditorGui extends JFrame {
         this.representableClass = representableClass;
     }
 
+    public ZBufferImpl getZBuffer() {
+        if (zBuffer == null || zBuffer.la() != getPanelGraphics().getWidth() ||
+                zBuffer.ha() != getPanelGraphics().getHeight()) {
+            ZBufferImpl zBuffer1 = zBuffer;
+            zBuffer = new ZBufferImpl(getPanelGraphics().getWidth(),
+                    getPanelGraphics().getHeight());
+            if(zBuffer1!=null) {
+                zBuffer.setDisplayType(zBuffer1.getDisplayType());
+            }
+             else {
+                zBuffer.setDisplayType(ZBufferImpl.SURFACE_DISPLAY_COL_QUADS);
+            }
+        }
+        return zBuffer;
+    }
+
+    public void setModel(VecMeshEditor vecMeshEditor) {
+        this.model = vecMeshEditor;
+    }
+
+    public void setResY(int i) {
+        this.resY = i;
+    }
+    public void setResX(int j) {
+        this.resX = j;
+    }
+
+    public int getResX() {
+        return resX;
+    }
+
+    public int getResY() {
+        return resY;
+    }
 }

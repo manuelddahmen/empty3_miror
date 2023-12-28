@@ -1,9 +1,6 @@
 package one.empty3.apps.vecmesh;
 
-import one.empty3.library.Matrix33;
-import one.empty3.library.Point3D;
-import one.empty3.library.Representable;
-import one.empty3.library.VecHeightMap;
+import one.empty3.library.*;
 import one.empty3.library.core.nurbs.ParametricSurface;
 
 import javax.sound.midi.SysexMessage;
@@ -11,6 +8,7 @@ import javax.swing.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 
 public class Rotate {
     private Representable representable;
@@ -20,6 +18,7 @@ public class Rotate {
     private int lastMouseX = 0;
     private int lastMouseY = 0;
     private Matrix33 newRotationMatrix;
+    private ZBufferImpl zBuffer;
 
 
     public Matrix33 getRotationMatrix() {
@@ -38,33 +37,58 @@ public class Rotate {
         this.matrixObject = new Matrix33(new Point3D[] {r.getVectX(), r.getVectY(), r.getVectZ()});
         this.representable = r;
         this.panel = jPanel;
-        MouseAdapter mouseAdapter = new MouseAdapter() {
+        MouseListener mouseListener = new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+
+            }
+
             @Override
             public void mousePressed(MouseEvent e) {
-                super.mousePressed(e);
                 handleMouseDown(e);
+                handleMouseMove(e);
+                zBuffer.setDisplayType(ZBufferImpl.SURFACE_DISPLAY_LINES);
+
             }
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                super.mouseReleased(e);
+                handleMouseUp(e);
+                updateRepresentableCoordinates();
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+
+            }
+        };
+        MouseMotionListener mouseMotionListener = new MouseMotionListener() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
                 handleMouseMove(e);
                 Point3D[] multiply = newRotationMatrix.mult(matrixObject).getColVectors();
-                r.setVectX(multiply[0]);
-                r.setVectY(multiply[1]);
-                r.setVectZ(multiply[2]);
+                representable.setVectX(multiply[0]);
+                representable.setVectY(multiply[1]);
+                representable.setVectZ(multiply[2]);
                 matrixObject = new Matrix33(multiply);
                 System.out.print("=>");
-                handleMouseUp(e);
                 updateRepresentableCoordinates();
             }
 
             @Override
             public void mouseMoved(MouseEvent e) {
-                super.mouseMoved(e);
+
+
             }
         };
-        jPanel.addMouseListener(mouseAdapter);
+        jPanel.addMouseListener(mouseListener);
+        jPanel.addMouseMotionListener(mouseMotionListener);
     }
 
     void handleMouseDown(MouseEvent event) {
@@ -114,5 +138,9 @@ public class Rotate {
         representable.setVectX(rowVectors[0]);
         representable.setVectY(rowVectors[1]);
         representable.setVectZ(rowVectors[2]);
+    }
+
+    public void setZBuffer(ZBufferImpl zBuffer) {
+        this.zBuffer = zBuffer;
     }
 }

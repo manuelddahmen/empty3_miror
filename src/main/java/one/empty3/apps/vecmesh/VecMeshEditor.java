@@ -6,9 +6,8 @@ import one.empty3.library.core.nurbs.ParametricSurface;
 import one.empty3.library.core.tribase.Plan3D;
 import one.empty3.library.core.tribase.TubulaireN2;
 import one.empty3.library1.shader.Vec;
-import one.empty3.library1.tree.AlgebraicFormulaSyntaxException;
 import one.empty3.library1.tree.AlgebricTree;
-import one.empty3.library1.tree.TreeNodeEvalException;
+import one.empty3.library1.tree.ListInstructions;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,10 +17,12 @@ public class VecMeshEditor implements Runnable {
     private Rotate rotate;
     private boolean runningDisplay = false;
     private ZBufferImpl zBuffer;
+    private Scene scene;
 
     public VecMeshEditor() {
         vecMeshEditorGui = new VecMeshEditorGui();
         vecMeshEditorGui.setVisible(true);
+        vecMeshEditorGui.setModel(this);
     }
 
     public static void main(String[] strings) {
@@ -61,11 +62,15 @@ public class VecMeshEditor implements Runnable {
                     long t1 = System.currentTimeMillis();
                     StructureMatrix<Double> eval = null;
                     AlgebricTree algebricTree = new AlgebricTree(vecMeshEditorGui.getDefaultCode());
-                    try {
-                        algebricTree.construct();
-                        eval = algebricTree.eval();
-                    } catch (AlgebraicFormulaSyntaxException | TreeNodeEvalException e) {
-                        System.err.println(e);
+                    ListInstructions listInstructions = new ListInstructions();
+                    listInstructions.addInstructions(vecMeshEditorGui.getDefaultCode());
+                    listInstructions.runInstructions();
+                    //algebricTree.construct();
+                    StructureMatrix<Double> heights = listInstructions.getCurrentParamsValuesVecComputed().get("heights");
+                    if(heights!=null && !heights.data1d.isEmpty()) {
+                        Double[] doubles = new Double[heights.data1d.size()];
+                        heights.data1d.toArray(doubles);
+                        eval = new Vec(doubles).getVecVal();
                     }
                     long tEval = System.currentTimeMillis();
                     if (eval != null && eval.getDim() == 1 && !eval.getData1d().isEmpty()) {
@@ -84,16 +89,12 @@ public class VecMeshEditor implements Runnable {
                         vecHeightMap.setIncrU(0.08);
                         vecHeightMap.setIncrV(0.08);
                         vecHeightMap.texture(new ColorTexture(Color.BLUE));
+zBuffer = vecMeshEditorGui.getZBuffer();
 
-                        if (zBuffer == null || zBuffer.la() != vecMeshEditorGui.getPanelGraphics().getWidth() ||
-                                zBuffer.ha() != vecMeshEditorGui.getPanelGraphics().getHeight()) {
-                            zBuffer = new ZBufferImpl(vecMeshEditorGui.getPanelGraphics().getWidth(),
-                                    vecMeshEditorGui.getPanelGraphics().getHeight());
-                            zBuffer.setDisplayType(ZBufferImpl.SURFACE_DISPLAY_COL_QUADS);
-                        }
-                        //zBuffer.setDisplayType(ZBufferImpl.DISPLAY_ALL);
+                        rotate.setZBuffer(zBuffer);
                         Scene scene = new Scene();
                         scene.add(vecHeightMap);
+                        this.scene = scene;
                         scene.lumieres().add(new LumierePonctuelle(Point3D.O0, javaAnd.awt.Color.YELLOW));
                         zBuffer.scene(scene);
                         Camera camera = new Camera(Point3D.Z.mult(20), Point3D.O0, Point3D.Y);
@@ -133,5 +134,9 @@ public class VecMeshEditor implements Runnable {
 
     private void setRunningDisplay(boolean b) {
         this.runningDisplay = b;
+    }
+
+    public Scene getScene() {
+        return scene;
     }
 }
