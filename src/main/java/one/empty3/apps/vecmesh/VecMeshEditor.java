@@ -102,9 +102,7 @@ public class VecMeshEditor implements Runnable {
                         zBuffer = vecMeshEditorGui.getZBuffer();
 
                         if(vecMeshEditorGui.getFileTexture()!=null) {
-                            vecHeightMap.texture(new ImageTexture(new ECBufferedImage(vecMeshEditorGui.getTexture())));
                             vecHeightMap.texture(new ImageTexture(vecMeshEditorGui.getFileTexture()));
-                            System.err.println("Texture chosen : " + vecMeshEditorGui.getTexture().toString());
                             System.err.println("Texture file chosen : " + vecMeshEditorGui.getFileTexture());
                         } else {
                             vecHeightMap.texture(new ColorTexture(Color.BLUE));
