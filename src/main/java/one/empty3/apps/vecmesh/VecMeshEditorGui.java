@@ -6,17 +6,21 @@ package one.empty3.apps.vecmesh;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.*;
 import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
 
+import javaAnd.awt.image.imageio.ImageIO;
 import net.miginfocom.swing.*;
 import one.empty3.library.*;
 import one.empty3.library.core.export.ObjExport;
 import one.empty3.library.core.export.STLExport;
+import one.empty3.library.core.nurbs.F;
 import one.empty3.library.core.tribase.Plan3D;
 import one.empty3.library.core.tribase.Tubulaire3;
 
@@ -25,6 +29,8 @@ import one.empty3.library.core.tribase.Tubulaire3;
  * 18-12-2023
  */
 public class VecMeshEditorGui extends JFrame {
+    private static int instanceCount = 0;
+    private BufferedImage texture;
     private File currentFile;
     private Class<? extends Representable> defaultClassRepresentable = Tubulaire3.class;
     private Class<? extends Representable> representableClass = defaultClassRepresentable;
@@ -33,6 +39,8 @@ public class VecMeshEditorGui extends JFrame {
     private int resX;
     private int resY;
     private Config config;
+    private Collection<File> imagesTextures = new HashSet<>();
+    private File fileTexture = null;
 
     public VecMeshEditorGui() {
         initComponents();
@@ -45,6 +53,9 @@ public class VecMeshEditorGui extends JFrame {
         setDefaultFile();
 
         Output.setGetText(buttonOutput);
+
+        instanceCount++;
+        System.out.println("Instance==1 : "+(instanceCount==1));
     }
 
     private void menuItemSave(ActionEvent e) {
@@ -267,6 +278,66 @@ public class VecMeshEditorGui extends JFrame {
     private void menuItemSettings(ActionEvent e) {
         config = new Config();
     }
+
+    private void menuAddImages(ActionEvent e) {
+        File direFile = currentFile==null?new Config().getFileDirectoryDefault():currentFile;
+        JFileChooser jFileChooser = new JFileChooser(direFile);
+        jFileChooser.setDialogType(JFileChooser.OPEN_DIALOG);
+        jFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        jFileChooser.setFileFilter(new FileFilter() {
+            @Override
+            public boolean accept(File f) {
+                return (f.getName().toLowerCase().endsWith(".jpg")||f.getName().toLowerCase().endsWith(".png")
+                        ||f.getName().toLowerCase().endsWith(".jpeg")||f.getName().toLowerCase().endsWith(".bmp"));
+            }
+
+            @Override
+            public String getDescription() {
+                return null;
+
+            }
+        });
+        if(jFileChooser.showOpenDialog(this)==JFileChooser.APPROVE_OPTION) {
+            File f1 = jFileChooser.getSelectedFile();
+            File[] selectedFiles = null;
+            if(f1!=null) {
+                selectedFiles =new File[] {f1};
+            } else {
+                selectedFiles = jFileChooser.getSelectedFiles();
+            }
+            for(File f : selectedFiles) {
+                if(!getImages().contains(f) && f!=null) {
+                    if(getImages().add(f)) {
+                        JMenuItem jMenuItem = new JMenuItem(f.getAbsolutePath());
+                        jMenuItem.addActionListener(new AbstractAction() {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                File file = new File(((JMenuItem) e.getSource()).getText());
+                                if (file.exists() && file.isFile()) {
+                                    texture = ImageIO.read(file);
+                                    fileTexture = file;
+                                    System.out.println("texture: " + file.getAbsolutePath());
+                                } else
+                                    System.err.println("File"+file+" doesn't exist");
+                            }
+                        });
+                        menuImages.add(jMenuItem);
+
+                    }
+
+                }
+            }
+        }
+    }
+
+    private Collection<File> getImages() {
+        return imagesTextures;
+    }
+
+    private void menuAddImage(ActionEvent e) {
+        // TODO add your code here
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
         ResourceBundle bundle = ResourceBundle.getBundle("one.empty3.library.core.testing.Bundle");
@@ -294,8 +365,10 @@ public class VecMeshEditorGui extends JFrame {
         menuItemRenderQuadsTextured = new JMenuItem();
         menuItemRenderAll = new JMenuItem();
         menu4 = new JMenu();
-        menu5 = new JMenu();
+        menuImages = new JMenu();
+        menu7 = new JMenuItem();
         menu6 = new JMenu();
+        menuItem15 = new JMenuItem();
         dialogPane = new JPanel();
         contentPanel = new JPanel();
         splitPane1 = new JSplitPane();
@@ -434,15 +507,28 @@ public class VecMeshEditorGui extends JFrame {
             {
                 menu4.setText(bundle.getString("VecMeshEditorGui.menu4.text"));
 
-                //======== menu5 ========
+                //======== menuImages ========
                 {
-                    menu5.setText(bundle.getString("VecMeshEditorGui.menu5.text"));
+                    menuImages.setText(bundle.getString("VecMeshEditorGui.menuImages.text"));
+
+                    //---- menu7 ----
+                    menu7.setText(bundle.getString("VecMeshEditorGui.menu7.text"));
+                    menu7.addActionListener(e -> {
+			menuAddImage(e);
+			menuAddImage(e);
+			menuAddImages(e);
+		});
+                    menuImages.add(menu7);
                 }
-                menu4.add(menu5);
+                menu4.add(menuImages);
 
                 //======== menu6 ========
                 {
                     menu6.setText(bundle.getString("VecMeshEditorGui.menu6.text"));
+
+                    //---- menuItem15 ----
+                    menuItem15.setText(bundle.getString("VecMeshEditorGui.menuItem15.text"));
+                    menu6.add(menuItem15);
                 }
                 menu4.add(menu6);
             }
@@ -612,8 +698,10 @@ public class VecMeshEditorGui extends JFrame {
     private JMenuItem menuItemRenderQuadsTextured;
     private JMenuItem menuItemRenderAll;
     private JMenu menu4;
-    private JMenu menu5;
+    private JMenu menuImages;
+    private JMenuItem menu7;
     private JMenu menu6;
+    private JMenuItem menuItem15;
     private JPanel dialogPane;
     private JPanel contentPanel;
     private JSplitPane splitPane1;
@@ -682,5 +770,17 @@ public class VecMeshEditorGui extends JFrame {
 
     public int getResY() {
         return resY;
+    }
+
+    public BufferedImage getTexture() {
+        return texture;
+    }
+
+    public void setTexture(BufferedImage texture) {
+        this.texture = texture;
+    }
+
+    public File getFileTexture() {
+        return fileTexture;
     }
 }

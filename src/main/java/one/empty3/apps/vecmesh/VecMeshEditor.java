@@ -57,6 +57,9 @@ public class VecMeshEditor implements Runnable {
         }
         shape = shape == null ? new Plan3D(new Point3D(-halfSize, -halfSize, 0.0), new Point3D(halfSize, -halfSize, 0.0), new Point3D(-halfSize, halfSize, 0.0)) : shape;
 
+        if(vecMeshEditorGui.getTexture()!=null)
+            shape.texture(new ImageTexture(new ECBufferedImage(vecMeshEditorGui.getTexture())));
+
         return shape;
     }
 
@@ -95,14 +98,22 @@ public class VecMeshEditor implements Runnable {
                         }
                         vecHeightMap.setIncrU(0.08);
                         vecHeightMap.setIncrV(0.08);
-                        vecHeightMap.texture(new ColorTexture(Color.BLUE));
-zBuffer = vecMeshEditorGui.getZBuffer();
 
+                        zBuffer = vecMeshEditorGui.getZBuffer();
+
+                        if(vecMeshEditorGui.getFileTexture()!=null) {
+                            vecHeightMap.texture(new ImageTexture(new ECBufferedImage(vecMeshEditorGui.getTexture())));
+                            vecHeightMap.texture(new ImageTexture(vecMeshEditorGui.getFileTexture()));
+                            System.err.println("Texture chosen : " + vecMeshEditorGui.getTexture().toString());
+                            System.err.println("Texture file chosen : " + vecMeshEditorGui.getFileTexture());
+                        } else {
+                            vecHeightMap.texture(new ColorTexture(Color.BLUE));
+                        }
                         rotate.setZBuffer(zBuffer);
                         Scene scene = new Scene();
                         scene.add(vecHeightMap);
                         this.scene = scene;
-                        scene.lumieres().add(new LumierePonctuelle(Point3D.O0, javaAnd.awt.Color.YELLOW));
+                        //scene.lumieres().add(new LumierePonctuelle(Point3D.O0, javaAnd.awt.Color.YELLOW));
                         zBuffer.scene(scene);
                         Camera camera = new Camera(Point3D.Z.mult(20), Point3D.O0, Point3D.Y);
                         scene.cameraActive(camera);

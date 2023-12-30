@@ -209,12 +209,23 @@ new FormModel {
 					name: "menu4"
 					"text": new FormMessage( null, "VecMeshEditorGui.menu4.text" )
 					add( new FormContainer( "javax.swing.JMenu", new FormLayoutManager( class javax.swing.JMenu ) ) {
-						name: "menu5"
-						"text": new FormMessage( null, "VecMeshEditorGui.menu5.text" )
+						name: "menuImages"
+						"text": new FormMessage( null, "VecMeshEditorGui.menuImages.text" )
+						add( new FormComponent( "javax.swing.JMenuItem" ) {
+							name: "menu7"
+							"text": new FormMessage( null, "VecMeshEditorGui.menu7.text" )
+							addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuAddImage", true ) )
+							addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuAddImage", true ) )
+							addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuAddImages", true ) )
+						} )
 					} )
 					add( new FormContainer( "javax.swing.JMenu", new FormLayoutManager( class javax.swing.JMenu ) ) {
 						name: "menu6"
 						"text": new FormMessage( null, "VecMeshEditorGui.menu6.text" )
+						add( new FormComponent( "javax.swing.JMenuItem" ) {
+							name: "menuItem15"
+							"text": new FormMessage( null, "VecMeshEditorGui.menuItem15.text" )
+						} )
 					} )
 				} )
 			}

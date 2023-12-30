@@ -222,6 +222,4 @@ public class Tubulaire3 extends ParametricSurface {
     public StructureMatrix<FctXY> getDiameterFunction() {
         return diameterFunction;
     }
-
-
 }
