@@ -57,7 +57,7 @@ public class VecMeshEditor implements Runnable {
         }
         shape = shape == null ? new Plan3D(new Point3D(-halfSize, -halfSize, 0.0), new Point3D(halfSize, -halfSize, 0.0), new Point3D(-halfSize, halfSize, 0.0)) : shape;
 
-        if(vecMeshEditorGui.getTexture()!=null)
+        if (vecMeshEditorGui.getTexture() != null)
             shape.texture(new ImageTexture(new ECBufferedImage(vecMeshEditorGui.getTexture())));
 
         return shape;
@@ -66,9 +66,9 @@ public class VecMeshEditor implements Runnable {
     public void run() {
         Thread thread = null;
         setRunningDisplay(true);
-        try {
-            thread = new Thread(() -> {
-                while (isRunningDisplay()) {
+        thread = new Thread(() -> {
+            while (isRunningDisplay()) {
+                try {
                     long t1 = System.currentTimeMillis();
                     StructureMatrix<Double> eval = null;
                     AlgebricTree algebricTree = new AlgebricTree(vecMeshEditorGui.getDefaultCode());
@@ -77,7 +77,7 @@ public class VecMeshEditor implements Runnable {
                     listInstructions.runInstructions();
                     //algebricTree.construct();
                     StructureMatrix<Double> heights = listInstructions.getCurrentParamsValuesVecComputed().get("heights");
-                    if(heights!=null && !heights.data1d.isEmpty()) {
+                    if (heights != null && !heights.data1d.isEmpty()) {
                         Double[] doubles = new Double[heights.data1d.size()];
                         heights.data1d.toArray(doubles);
                         eval = new Vec(doubles).getVecVal();
@@ -101,7 +101,7 @@ public class VecMeshEditor implements Runnable {
 
                         zBuffer = vecMeshEditorGui.getZBuffer();
 
-                        if(vecMeshEditorGui.getFileTexture()!=null) {
+                        if (vecMeshEditorGui.getFileTexture() != null) {
                             vecHeightMap.texture(new ImageTexture(vecMeshEditorGui.getFileTexture()));
                             System.err.println("Texture file chosen : " + vecMeshEditorGui.getFileTexture());
                         } else {
@@ -124,24 +124,25 @@ public class VecMeshEditor implements Runnable {
                         //Output.println("Drawn");
                         zBuffer.idzpp();
                         long t2 = System.currentTimeMillis();
-                        Output.println("Matrix was : " + vecHeightMap.getVec()+" FPS : "+(t2-t1));
+                        Output.println("Matrix was : " + vecHeightMap.getVec() + " FPS : " + (t2 - t1));
 
                     }
+                } catch (RuntimeException ex) {
+                    System.err.println(ex);
+                    Output.println(ex.getLocalizedMessage());
                 }
-                setRunningDisplay(false);
-            });
 
-            thread.start();
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                System.err.println(e);
             }
+            setRunningDisplay(false);
+        });
 
-        } catch (RuntimeException ex) {
-            System.err.println(ex);
-            Output.println(ex.getLocalizedMessage());
+        thread.start();
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            System.err.println(e);
         }
+
     }
 
     public boolean isRunningDisplay() {
