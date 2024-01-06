@@ -29,6 +29,8 @@ import one.empty3.library.core.tribase.Tubulaire3;
  * 18-12-2023
  */
 public class VecMeshEditorGui extends JFrame {
+    private static final int TYPE_CONTAINER_CLASS_VEC_HEIGHT_MAP = 0;
+    private static final int TYPE_CONTAINER_CLASS_VORONOI_HEIGHTS = 1;
     private static int instanceCount = 0;
     private BufferedImage texture;
     private File currentFile;
@@ -41,6 +43,7 @@ public class VecMeshEditorGui extends JFrame {
     private Config config;
     private Collection<File> imagesTextures = new HashSet<>();
     private File fileTexture = null;
+    private int containerClassType = 0;
 
     public VecMeshEditorGui() {
         initComponents();
@@ -338,6 +341,17 @@ public class VecMeshEditorGui extends JFrame {
         // TODO add your code here
     }
 
+    private void menuItemHeightMap(ActionEvent e) {
+        this.containerClassType = TYPE_CONTAINER_CLASS_VEC_HEIGHT_MAP;
+    }
+    private void menuItemVoronoi(ActionEvent e) {
+        this.containerClassType = TYPE_CONTAINER_CLASS_VORONOI_HEIGHTS;
+    }
+
+    private void menuItemEditMeshHeightsForm(ActionEvent e) {
+
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
         ResourceBundle bundle = ResourceBundle.getBundle("one.empty3.library.core.testing.Bundle");
@@ -356,6 +370,9 @@ public class VecMeshEditorGui extends JFrame {
         menuItem8 = new JMenuItem();
         menuItem9 = new JMenuItem();
         menuItem10 = new JMenuItem();
+        menu5 = new JMenu();
+        menuItem13 = new JMenuItem();
+        menuItem14 = new JMenuItem();
         menu2 = new JMenu();
         menuItemRender = new JMenuItem();
         menuItemResolution = new JMenuItem();
@@ -459,9 +476,25 @@ public class VecMeshEditorGui extends JFrame {
 
                 //---- menuItem10 ----
                 menuItem10.setText(bundle.getString("VecMeshEditorGui.menuItem10.text"));
+                menuItem10.addActionListener(e -> menuItemEditMeshHeightsForm(e));
                 menu3.add(menuItem10);
             }
             menuBar1.add(menu3);
+
+            //======== menu5 ========
+            {
+                menu5.setText(bundle.getString("VecMeshEditorGui.menu5.text"));
+
+                //---- menuItem13 ----
+                menuItem13.setText(bundle.getString("VecMeshEditorGui.menuItem13.text"));
+                menuItem13.addActionListener(e -> menuItemHeightMap(e));
+                menu5.add(menuItem13);
+
+                //---- menuItem14 ----
+                menuItem14.setText(bundle.getString("VecMeshEditorGui.menuItem14.text"));
+                menu5.add(menuItem14);
+            }
+            menuBar1.add(menu5);
 
             //======== menu2 ========
             {
@@ -689,6 +722,9 @@ public class VecMeshEditorGui extends JFrame {
     private JMenuItem menuItem8;
     private JMenuItem menuItem9;
     private JMenuItem menuItem10;
+    private JMenu menu5;
+    private JMenuItem menuItem13;
+    private JMenuItem menuItem14;
     private JMenu menu2;
     private JMenuItem menuItemRender;
     private JMenuItem menuItemResolution;

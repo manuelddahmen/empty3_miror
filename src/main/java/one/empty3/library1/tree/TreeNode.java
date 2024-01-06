@@ -269,10 +269,10 @@ public class TreeNode {
                             op1 = ((FactorTreeNodeType) treeNode.type).getSignFactor();
                             if (op1 == 1) {
                                 dot = ((Double) treeNodeEval.getElem()*treeNode.type.getSign1());
-                                evalRes.setElem(dot * evalRes.getElem());
+                                evalRes.setElem(dot * ((evalRes.getDim()==0)?evalRes.getElem():evalRes.getElem(i)));
                             } else {
                                 dot = 1. / ((Double) treeNodeEval.getElem()*treeNode.type.getSign1());///treeNode.type.getSign1()) *
-                                evalRes.setElem(dot * evalRes.getElem());
+                                evalRes.setElem(dot * ((evalRes.getDim()==0)?evalRes.getElem():evalRes.getElem(i)));
                             }
                         }
                     }

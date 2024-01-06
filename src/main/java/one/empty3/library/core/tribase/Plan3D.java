@@ -56,15 +56,15 @@ public class Plan3D extends ParametricSurface {
         Point3D multY = m.mult(vY.getElem().moins(p0.getElem()));
         return p0.getElem().plus(multX.mult(u)).plus(multY.mult(v));
     }
-@Override
+/*@Override
     public Point3D calculerNormale3D(double u, double v) {
         Point3D o,x,y;
         o = p0.getElem();
         x = vX.getElem();
-        y = p0.getElem();
+        y = vY.getElem();
         return x.moins(o).prodVect(y.moins(o));
     }
-
+*/
     public String id() {
         throw new UnsupportedOperationException("Not supported yet.");
     }

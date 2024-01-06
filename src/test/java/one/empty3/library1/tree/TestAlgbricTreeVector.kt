@@ -606,6 +606,16 @@ class TestAlgbricTreeVector() {
     }
 
     @Test
+    fun testForVectorOfVectorMultNumber() {
+        val r = 12.0
+        val vars = HashMap<String, Double>()
+        vars["r"] = r
+        testResultVariableVec("((1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1),(1,1,2,2,2,2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1))*10",
+            Vec(10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,
+                10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,20.0,20.0,20.0,20.0,20.0,20.0,20.0,
+                10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0), vars, true)
+    }
+    @Test
     fun testForVectorOfVector() {
         val r = 12.0
         val vars = HashMap<String, Double>()

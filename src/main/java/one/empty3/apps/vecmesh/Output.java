@@ -8,7 +8,8 @@ public class Output {
     public static void println(String string) {
         System.out.println(string);
         if(getText!=null)
-            getText.setText(string);
+            getText.setText(string == null ?"":(string.length()<=20?string:string.substring(0, 20))+
+                    string.length());
     }
 
     public static JLabel getGetText() {

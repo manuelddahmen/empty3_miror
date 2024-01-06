@@ -7,7 +7,7 @@ import one.empty3.library.core.nurbs.SurfaceParametriquePolynomialeBezier;
 import one.empty3.library1.shader.Vec;
 
 public class VecHeightMap extends ParametricSurface {
-    private final StructureMatrix<Vec> vec = new StructureMatrix<>(0, Vec.class);
+    private final StructureMatrix<Vec> vec = new StructureMatrix<>(1, Vec.class);
     private StructureMatrix<SurfaceParametriquePolynomialeBezier> surfaceParametriquePolynomialeBezier
             = new StructureMatrix<>(0, SurfaceParametriquePolynomialeBezier.class);
     private StructureMatrix<Integer>  columnsCount = new StructureMatrix<>(0, Integer.class);

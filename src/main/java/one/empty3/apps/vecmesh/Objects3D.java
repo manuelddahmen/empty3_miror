@@ -7,7 +7,7 @@ import one.empty3.library1.shader.Vec;
 import one.empty3.library1.tree.ListInstructions;
 
 public class Objects3D {
-    public ParametricSurface suv(/*ListInstructions listInstructions,*/ Vec vec3d) {
+    public static ParametricSurface suv(/*ListInstructions listInstructions,*/ Vec vec3d) {
         return new ParametricSurface() {
             @Override
             public Point3D calculerPoint3D(double u, double v) {
