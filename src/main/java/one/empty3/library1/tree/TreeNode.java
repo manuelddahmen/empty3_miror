@@ -225,24 +225,19 @@ public class TreeNode {
                 double dot = 1.0;
                 TreeNode treeNode1 = getChildren().get(0);
                 int dim = treeNode1.eval().getDim();
-                if (dim == 1)
+                if (dim == 1) {
                     evalRes = new StructureMatrix<>(1, Double.class);
-                else if(dim==0){
+                    evalRes.setElem(1.0, 0);
+                }else if(dim==0) {
                     evalRes = new StructureMatrix<>(0, Double.class);
                     evalRes.setElem(1.0);
                 }
-                int dim0 = dim;
-                for (int i = 0; i < getChildren().size(); i++) {
+                /*for (int i = 0; i < getChildren().size(); i++) {
                     TreeNode treeNode = getChildren().get(i);
                     StructureMatrix<Double> treeNodeEval = treeNode.eval();
-                    dim = treeNodeEval.getDim();
                     double op1;
                     Double mult = 1.0;
                     if (treeNodeEval.getDim() == 1) {
-                        if(dim0==0 && dim==1) {
-                            mult = getChildren().get(0).eval().getElem();
-                            dim0 = -1;
-                        }
                         if(evalRes.data1d.size()!=treeNodeEval.data1d.size()) {
                             int leftOp = evalRes.data1d.size();
                             int rightOp = treeNodeEval.data1d.size();
@@ -251,10 +246,14 @@ public class TreeNode {
                         for (int j = 0; j < treeNodeEval.data1d.size(); j++) {
                             if (treeNode.type instanceof FactorTreeNodeType) {
                                 double e = 1.0;
-                                if (evalRes.data1d != null && j < evalRes.data1d.size()) {
+                                if (evalRes.getDim()==1 && j < evalRes.data1d.size()) {
                                     e = evalRes.getElem(j);
+                                } else if(evalRes.getDim()==1) {
+                                    e = evalRes.getElem(evalRes.getData1d().size()-1);
+                                } else if(evalRes.getDim()==0) {
+                                    e = evalRes.getElem();
                                 }
-                                op1 = ((FactorTreeNodeType) treeNode.type).getSignFactor();
+                                    op1 = ((FactorTreeNodeType) treeNode.type).getSignFactor();
                                 if (op1 == 1) {
                                     dot = ((Double) treeNode.eval().getElem(j)) * e;
                                     evalRes.setElem(dot*mult, j);
@@ -262,22 +261,91 @@ public class TreeNode {
                                     dot = 1. / ((Double) (Double) treeNode.eval().getElem(j)) * e;///treeNode.type.getSign1()) *
                                     evalRes.setElem(dot*mult, j);
                                 }
+
                             }
                         }
                     } else if (treeNodeEval.getDim() == 0) {
                         if (treeNode.type instanceof FactorTreeNodeType) {
-                            op1 = ((FactorTreeNodeType) treeNode.type).getSignFactor();
-                            if (op1 == 1) {
-                                dot = ((Double) treeNodeEval.getElem()*treeNode.type.getSign1());
-                                evalRes.setElem(dot * ((evalRes.getDim()==0)?evalRes.getElem():evalRes.getElem(i)));
-                            } else {
-                                dot = 1. / ((Double) treeNodeEval.getElem()*treeNode.type.getSign1());///treeNode.type.getSign1()) *
-                                evalRes.setElem(dot * ((evalRes.getDim()==0)?evalRes.getElem():evalRes.getElem(i)));
+                            if (evalRes.getDim() == 0) {
+                                op1 = ((FactorTreeNodeType) treeNode.type).getSignFactor();
+                                if (op1 == 1) {
+                                    dot = ((Double) treeNodeEval.getElem() * treeNode.type.getSign1());
+                                    evalRes.setElem(dot * evalRes.getElem());
+                                } else {
+                                    dot = 1. / ((Double) treeNodeEval.getElem() * treeNode.type.getSign1());///treeNode.type.getSign1()) *
+                                    evalRes.setElem(dot / evalRes.getElem());
+                                }
+                            } else if (evalRes.getDim() == 1) {
+                                op1 = ((FactorTreeNodeType) treeNode.type).getSignFactor();
+                                for(int k=0; k<evalRes.getData1d().size(); k++) {
+                                    if (op1 == 1) {
+                                        dot = ((Double) treeNodeEval.getElem() * treeNode.type.getSign1());
+                                        evalRes.setElem(dot * evalRes.getElem(k), k);
+                                    } else {
+                                        dot = 1. / ((Double) treeNodeEval.getElem() * treeNode.type.getSign1());///treeNode.type.getSign1()) *
+                                        evalRes.setElem(dot / evalRes.getElem(k), k);
+                                    }
+                                }
                             }
                         }
                     }
-                    dim0 = dim;
+                }*/
+                for (int i = 0; i < getChildren().size(); i++) {
+                    TreeNode treeNode = getChildren().get(i);
+                    StructureMatrix<Double> treeNodeEval = treeNode.eval();
+                    double op1;
+                    Double mult = 1.0;
+                    int leftOp = evalRes.getDim()==1?evalRes.data1d.size():0;
+                    int rightOp = treeNodeEval.getDim()==1?treeNodeEval.data1d.size():0;
+                    int finalSize = Math.max(leftOp, rightOp);
+                    double argMultiIndices = (double) leftOp/rightOp;
+
+                    StructureMatrix<Double> argLeft = evalRes;
+                    StructureMatrix<Double> argRight = treeNodeEval;
+                    if(leftOp==0) {
+                        StructureMatrix<Double> e2 = new StructureMatrix<>(1, Double.class);
+                        e2.setElem(argLeft.getDim()==1?argLeft.getElem(0):argLeft.getElem(), 0);
+                        evalRes = e2;
+                        leftOp = 1;
+                    }
+                    if(rightOp==0) {
+                        StructureMatrix<Double> e2 = new StructureMatrix<>(1, Double.class);
+                        e2.setElem(argRight.getDim()==1?argRight.getElem(0):argRight.getElem(), 0);
+                        treeNodeEval = e2;
+                        rightOp = 1;
+                    }
+                    finalSize = Math.max(leftOp, rightOp);
+                    argMultiIndices = (double)( leftOp/rightOp);
+                    for(int j=0; j<finalSize; j++) {
+                        double  argJ0 = 0.0;
+                        double  argJ1 = 0.0;
+                        if(argLeft.getDim()==0) {
+                            argJ0 = argLeft.getElem()==null?1.0:argLeft.getElem();
+                        } else if(argLeft.getDim()==1) {
+                            argJ0 = argLeft.getElem((int) ((rightOp > leftOp) ? (j * argMultiIndices) : j));
+                        }
+
+                        if(argRight.getDim()==0) {
+                            argJ1 = argRight.getElem()==null?1.0:argRight.getElem();
+                        } else if(argRight.getDim()==1) {
+                            argJ1 = argRight.getElem((int) ((rightOp > leftOp) ? (j) : (j / argMultiIndices)));
+                        }
+
+
+                        op1 = ((FactorTreeNodeType) treeNode.type).getSignFactor();
+                        if (op1 == 1) {
+                            evalRes.setElem(argJ0*argJ1, j);
+                        } else {
+                            evalRes.setElem(argJ0/argJ1, j);
+                        }
+                    }
+                    /**if(evalRes.getDim()==1 && evalRes.getData1d().isEmpty()) {
+                        StructureMatrix<Double> evalRes1 = new StructureMatrix<Double>(0, Double.class);
+                        evalRes1.setElem(evalRes.getElem(0));
+                        evalRes = evalRes1;
+                    }*/
                 }
+
             }
             return evalRes;
         } else if (cType instanceof TermTreeNodeType) {
