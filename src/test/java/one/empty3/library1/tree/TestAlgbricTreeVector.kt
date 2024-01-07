@@ -554,7 +554,7 @@ class TestAlgbricTreeVector() {
         val r = 12.0
         val vars = HashMap<String, Double>()
         vars["r"] = r
-        testResultVariableVec("(2,1,2)+(2,2,3)", Vec(4.0,3.0,5.0), vars, true)
+        testResultVariableVec("(2,1,2)+(2,2,3)", Vec(4.0,3.0,5.0), vars, false)
     }
     @Test
     fun testForVectorSubstract() {
