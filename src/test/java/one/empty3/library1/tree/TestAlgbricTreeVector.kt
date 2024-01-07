@@ -631,23 +631,31 @@ class TestAlgbricTreeVector() {
     fun testTextCalculator3() {
         val listInstructions: ListInstructions = ListInstructions()
         listInstructions.run {
-            addInstructions("x=(1,2,3)\n"+ "y=(5,6,7)\n"+ "z=x+y\n")
+            addInstructions(
+                "x=(1,2,3)\n"
+                     + "y=(5,6,7)\n"
+                     + "z=x+y\n")
             runInstructions()
         }
         var assertion = false
         try {
             if (vecEqualsSM(
-                    listInstructions.currentParamsValuesVecComputed!!["z"]!!,
+                    listInstructions.getCurrentParamsValuesVecComputed()!!["z"]!!,
                     Vec(1.0 + 5, 2.0 + 6, 3.0 + 7))
             ) {
                 assertion = true
+            } else {
+                Assert.assertTrue(false)
             }
         } catch (ex:RuntimeException) {
             ex.printStackTrace()
         }
-        Assert.assertTrue(assertion)
     }
 
+    /***
+     * @param get computed value
+     * @param vec expected value
+     */
     private fun vecEqualsSM(get: StructureMatrix<Double>, vec: Vec): Boolean {
         if(get!=null && get.dim==0) {
             if ((get.data0d != null && vec.vecVal.data0d != null &&
@@ -661,10 +669,10 @@ class TestAlgbricTreeVector() {
         } else if(get!=null && get.dim==1){
             if((get.data1d!=null && vec.vecVal.data1d!=null)) {
                 for (i in 0 until get.data1d.size) {
-                    println("computed vec : $get")
-                    println("computed vec : $vec")
+                    println("Computed computed vec : $get")
+                    println("Expected computed vec : $vec")
                     if(get.data1d[i]!=vec.vecVal.data1d[i]) {
-                        println("equals(StructureMatrix<Double>,Vec) : invalid for number $i")
+                        println("equals(StructureMatrix<Double>,Vec) : invalid for index $i")
                         return false
                     }
                 }

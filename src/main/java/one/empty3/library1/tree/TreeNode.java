@@ -52,15 +52,12 @@
 
 package one.empty3.library1.tree;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
-
-import javaAnd.awt.Point;
 import one.empty3.library.Point2D;
 import one.empty3.library.Point3D;
 import one.empty3.library.StructureMatrix;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
 
 /*__
  * Created by Manuel Dahmen on 15-12-16.
@@ -69,10 +66,10 @@ public class TreeNode {
     protected AlgebricTree algebricTree;
     protected Object[] objects;
     protected TreeNodeType type = null;
-    private TreeNodeValue value;
     protected ArrayList<TreeNode> children = new ArrayList<TreeNode>();
     protected TreeNode parent;
     protected String expressionString;
+    private TreeNodeValue value;
 
     public TreeNode(AlgebricTree algebricTree, String expStr) {
         this.algebricTree = algebricTree;
@@ -159,10 +156,10 @@ public class TreeNode {
             }
             ArrayList<TreeNode> childrenVars = getChildren().get(0).getChildren().get(0).getChildren();
             ArrayList<TreeNode> childrenValues = getChildren().get(0).getChildren().get(1).getChildren();
-            for(int i=0; i<childrenVars.size(); i++) {
-                if(childrenVars.get(i).type.getClass().equals(VariableTreeNodeType.class)) {
+            for (int i = 0; i < childrenVars.size(); i++) {
+                if (childrenVars.get(i).type.getClass().equals(VariableTreeNodeType.class)) {
                     String varName = childrenVars.get(i).expressionString;
-                    if(varName!=null) {
+                    if (varName != null) {
                         StructureMatrix<Double> put =
                                 algebricTree.getParametersValuesVecComputed()
                                         .put(varName, childrenValues.get(i).eval());
@@ -185,8 +182,8 @@ public class TreeNode {
             if (eval1.getDim() == 1 && eval2.getDim() == 1) {
                 dim1 = eval1.data1d.size();
                 dim2 = eval2.data1d.size();
-                for(int i=0; i<getChildren().size(); i++) {
-                    if(dim1==dim2 && dim1==3) {
+                for (int i = 0; i < getChildren().size(); i++) {
+                    if (dim1 == dim2 && dim1 == 3) {
                         Point3D point3D1 = new Point3D(eval1.data1d.get(0), eval1.data1d.get(1), eval1.data1d.get(2));
                         Point3D point3D2 = new Point3D(eval2.data1d.get(0), eval2.data1d.get(1), eval2.data1d.get(2));
                         Point3D point3Dres = point3D1.prodVect(point3D2);
@@ -196,10 +193,10 @@ public class TreeNode {
                         evalRes.setElem(point3Dres.get(2), 2);
 
                         return evalRes;
-                    } else if(dim1==dim2 && dim1==2) {
+                    } else if (dim1 == dim2 && dim1 == 2) {
                         Point2D point2D1 = new Point2D(eval1.data1d.get(0), eval1.data1d.get(1));
                         Point2D point2D2 = new Point2D(eval2.data1d.get(0), eval2.data1d.get(1));
-                        Point2D point3Dres = new Point2D(eval1.data1d.get(0)*eval2.data1d.get(1), eval1.data1d.get(1)*eval2.data1d.get(0));
+                        Point2D point3Dres = new Point2D(eval1.data1d.get(0) * eval2.data1d.get(1), eval1.data1d.get(1) * eval2.data1d.get(0));
                         evalRes = new StructureMatrix<>(1, Double.class);
                         evalRes.setElem(point3Dres.get(0), 0);
                         evalRes.setElem(point3Dres.get(1), 1);
@@ -228,67 +225,67 @@ public class TreeNode {
                 if (dim == 1) {
                     evalRes = new StructureMatrix<>(1, Double.class);
                     evalRes.setElem(1.0, 0);
-                }else if(dim==0) {
+                } else if (dim == 0) {
                     evalRes = new StructureMatrix<>(0, Double.class);
                     evalRes.setElem(1.0);
                 }
+                evalRes = initVoid(getChildren().get(0), 1.0);
                 for (int i = 0; i < getChildren().size(); i++) {
                     TreeNode treeNode = getChildren().get(i);
-                    if(i==0) evalRes = initVoid(treeNode, 1.0);
                     StructureMatrix<Double> treeNodeEval = treeNode.eval();
                     double op1;
                     Double mult = 1.0;
-                    int leftOp = evalRes.getDim()==1?evalRes.data1d.size():0;
-                    int rightOp = treeNodeEval.getDim()==1?treeNodeEval.data1d.size():0;
+                    int leftOp = evalRes.getDim() == 1 ? evalRes.data1d.size() : 0;
+                    int rightOp = treeNodeEval.getDim() == 1 ? treeNodeEval.data1d.size() : 0;
                     int finalSize = Math.max(leftOp, rightOp);
-                    double argMultiIndices = (double) leftOp/rightOp;
+                    double argMultiIndices = (double) leftOp / rightOp;
 
                     StructureMatrix<Double> argLeft = evalRes;
                     StructureMatrix<Double> argRight = treeNodeEval;
-                    if(leftOp==0) {
+                    if (leftOp == 0) {
                         StructureMatrix<Double> e2 = new StructureMatrix<>(1, Double.class);
-                        e2.setElem(argLeft.getDim()==1?argLeft.getElem(0):argLeft.getElem(), 0);
+                        e2.setElem(argLeft.getDim() == 1 ? argLeft.getElem(0) : argLeft.getElem(), 0);
                         evalRes = e2;
                         leftOp = 1;
                     }
-                    if(rightOp==0) {
+                    if (rightOp == 0) {
                         StructureMatrix<Double> e2 = new StructureMatrix<>(1, Double.class);
-                        e2.setElem(argRight.getDim()==1?argRight.getElem(0):argRight.getElem(), 0);
+                        e2.setElem(argRight.getDim() == 1 ? argRight.getElem(0) : argRight.getElem(), 0);
                         treeNodeEval = e2;
                         rightOp = 1;
                     }
                     finalSize = Math.max(leftOp, rightOp);
-                    argMultiIndices = (double)( leftOp/rightOp);
-                    for(int j=0; j<finalSize; j++) {
-                        double  argJ0 = 0.0;
-                        double  argJ1 = 0.0;
-                        if(argLeft.getDim()==0) {
-                            argJ0 = argLeft.getElem()==null?1.0:argLeft.getElem();
-                        } else if(argLeft.getDim()==1) {
+                    argMultiIndices = (double) (leftOp / rightOp);
+                    for (int j = 0; j < finalSize; j++) {
+                        double argJ0 = 0.0;
+                        double argJ1 = 0.0;
+                        if (argLeft.getDim() == 0) {
+                            argJ0 = argLeft.getElem() == null ? 1.0 : argLeft.getElem();
+                        } else if (argLeft.getDim() == 1) {
                             argJ0 = argLeft.getElem((int) ((rightOp > leftOp) ? (j * argMultiIndices) : j));
                         }
 
-                        if(argRight.getDim()==0) {
-                            argJ1 = argRight.getElem()==null?1.0:argRight.getElem();
-                        } else if(argRight.getDim()==1) {
+                        if (argRight.getDim() == 0) {
+                            argJ1 = argRight.getElem() == null ? 1.0 : argRight.getElem();
+                        } else if (argRight.getDim() == 1) {
                             argJ1 = argRight.getElem((int) ((rightOp > leftOp) ? (j) : (j / argMultiIndices)));
                         }
 
 
-                        if(treeNode.type instanceof FactorTreeNodeType) {
+                        if (treeNode.type instanceof FactorTreeNodeType) {
                             op1 = ((FactorTreeNodeType) treeNode.type).getSignFactor();
-                        } else if(treeNode.type instanceof SignTreeNodeType) {
+                        } else if (treeNode.type instanceof SignTreeNodeType) {
                             op1 = ((SignTreeNodeType) treeNode.type).getSign();
                         } else {
                             op1 = treeNode.type.sign1;
                         }
                         if (op1 == 1) {
-                            evalRes.setElem(argJ0*argJ1, j);
+                            evalRes.setElem(argJ0 * argJ1, j);
                         } else {
-                            evalRes.setElem(argJ0/argJ1, j);
+                            evalRes.setElem(argJ0 / argJ1, j);
                         }
                     }
-                    if(evalRes.getDim()==1 && evalRes.getData1d().size()<=1) {
+                    if (evalRes.getDim() == 1 && evalRes.getData1d().size() <= 1) {
                         StructureMatrix<Double> evalRes1 = new StructureMatrix<Double>(0, Double.class);
                         evalRes1.setElem(evalRes.getElem(0));
                         evalRes = evalRes1;
@@ -313,73 +310,74 @@ public class TreeNode {
                 if (dim == 1) {
                     evalRes = new StructureMatrix<>(1, Double.class);
                     evalRes.setElem(0.0, 0);
-                }else if(dim==0) {
+                } else if (dim == 0) {
                     evalRes = new StructureMatrix<>(0, Double.class);
                     evalRes.setElem(0.0);
                 }
+                evalRes = initVoid(getChildren().get(0), 0.0);
                 for (int i = 0; i < getChildren().size(); i++) {
                     TreeNode treeNode = getChildren().get(i);
-                    if(i==0) evalRes = initVoid(treeNode, 0.0);
                     StructureMatrix<Double> treeNodeEval = treeNode.eval();
-                    double op1;
-                    Double mult = 1.0;
-                    int leftOp = evalRes.getDim()==1?evalRes.data1d.size():0;
-                    int rightOp = treeNodeEval.getDim()==1?treeNodeEval.data1d.size():0;
+                    double op1 = 1;
+                    int leftOp = evalRes.getDim() == 1 ? evalRes.data1d.size() : 0;
+                    int rightOp = treeNodeEval.getDim() == 1 ? treeNodeEval.data1d.size() : 0;
+
                     int finalSize = Math.max(leftOp, rightOp);
-                    double argMultiIndices = (double) leftOp/rightOp;
+                    double argMultiIndices = (double) leftOp / rightOp;
 
                     StructureMatrix<Double> argLeft = evalRes;
                     StructureMatrix<Double> argRight = treeNodeEval;
-                    if(leftOp==0) {
+                    if (leftOp == 0) {
                         StructureMatrix<Double> e2 = new StructureMatrix<>(1, Double.class);
-                        e2.setElem(argLeft.getDim()==1?argLeft.getElem(0):argLeft.getElem(), 0);
+                        e2.setElem(argLeft.getDim() == 1 ? argLeft.getElem(0) : argLeft.getElem(), 0);
                         evalRes = e2;
                         leftOp = 1;
                     }
-                    if(rightOp==0) {
+                    if (rightOp == 0) {
                         StructureMatrix<Double> e2 = new StructureMatrix<>(1, Double.class);
-                        e2.setElem(argRight.getDim()==1?argRight.getElem(0):argRight.getElem(), 0);
-                        treeNodeEval = e2;
+                        e2.setElem(argRight.getDim() == 1 ? argRight.getElem(0) : argRight.getElem(), 0);
                         rightOp = 1;
                     }
                     finalSize = Math.max(leftOp, rightOp);
-                    argMultiIndices = (double)( leftOp/rightOp);
-                    for(int j=0; j<finalSize; j++) {
-                        double  argJ0 = 0.0;
-                        double  argJ1 = 0.0;
-                        if(argLeft.getDim()==0) {
-                            argJ0 = argLeft.getElem()==null?1.0:argLeft.getElem();
-                        } else if(argLeft.getDim()==1) {
+                    argMultiIndices = (((double) leftOp )/ rightOp);
+                    for (int j = 0; j < finalSize; j++) {
+                        double argJ0 = 0.0;
+                        double argJ1 = 0.0;
+                        if (argLeft.getDim() == 0) {
+                            argJ0 = argLeft.getElem() == null ? 1.0 : argLeft.getElem();
+                        } else if (argLeft.getDim() == 1) {
                             argJ0 = argLeft.getElem((int) ((rightOp > leftOp) ? (j * argMultiIndices) : j));
                         }
 
-                        if(argRight.getDim()==0) {
-                            argJ1 = argRight.getElem()==null?1.0:argRight.getElem();
-                        } else if(argRight.getDim()==1) {
-                            argJ1 = argRight.getElem((int) ((rightOp > leftOp) ? (j) : (j / argMultiIndices)));
+                        if (argRight.getDim() == 0) {
+                            argJ1 = argRight.getElem() == null ? 1.0 : argRight.getElem();
+                        } else if (argRight.getDim() == 1) {
+                            argJ1 = argRight.getElem((int) ((rightOp > leftOp) ? (j/ argMultiIndices) : (j)));
                         }
 
-                        if(treeNode.type != null) {
+                        if (treeNode.type instanceof TermTreeNodeType) {
+                            op1 = ((TermTreeNodeType) treeNode.type).getSign1();
+                        } else if (treeNode.type != null) {
                             op1 = treeNode.type.getSign1();
                         } else
                             op1 = 1.0;
                         if (op1 == 1) {
-                            evalRes.setElem(argJ0+op1*argJ1, j);
+                            evalRes.setElem(argJ0 + op1 * argJ1, j);
                         } else {
-                            evalRes.setElem(argJ0+op1*argJ1, j);
+                            evalRes.setElem(argJ0 + op1 * argJ1, j);
                         }
 
                         if (op1 == 1) {
-                            evalRes.setElem(argJ0+argJ1, j);
+                            evalRes.setElem(argJ0 + op1 * argJ1, j);
                         } else {
-                            evalRes.setElem(argJ0-argJ1, j);
+                            evalRes.setElem(argJ0 + op1 * argJ1, j);
                         }
                     }
-                    if(evalRes.getDim()==1 && evalRes.getData1d().size()<=1) {
-                     StructureMatrix<Double> evalRes1 = new StructureMatrix<Double>(0, Double.class);
-                     evalRes1.setElem(evalRes.getElem(0));
-                     evalRes = evalRes1;
-                     }
+                    if (evalRes.getDim() == 1 && evalRes.getData1d().size() <= 1) {
+                        StructureMatrix<Double> evalRes1 = new StructureMatrix<Double>(0, Double.class);
+                        evalRes1.setElem(evalRes.getElem(0));
+                        evalRes = evalRes1;
+                    }
                 }
 
             }

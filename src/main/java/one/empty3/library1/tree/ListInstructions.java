@@ -89,7 +89,7 @@ public class ListInstructions {
 
             String text = toString;
 
-            String [] splitLines = text.split("\n");
+            String [] splitLines = text.split("\\n");
 
             for (int i = 0; i < splitLines.length; i++) {
 
@@ -170,7 +170,7 @@ public class ListInstructions {
                     } else {
                         throw new AlgebraicFormulaSyntaxException("Result was null");
                     }
-                    //System.err.println("AlgebraicTree result : " + tree);
+                    System.err.println("AlgebraicTree result : " + tree);
                 }
             } catch (AlgebraicFormulaSyntaxException | TreeNodeEvalException |
                      NullPointerException e) {
