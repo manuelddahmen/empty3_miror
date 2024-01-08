@@ -229,9 +229,10 @@ public class TreeNode {
                     evalRes = new StructureMatrix<>(0, Double.class);
                     evalRes.setElem(1.0);
                 }
-                evalRes = initVoid(getChildren().get(0), 1.0);
+                TreeNode treeNode = getChildren().get(0);
+                evalRes = initVoid(treeNode, 1.0);
                 for (int i = 0; i < getChildren().size(); i++) {
-                    TreeNode treeNode = getChildren().get(i);
+                    treeNode = getChildren().get(i);
                     StructureMatrix<Double> treeNodeEval = treeNode.eval();
                     double op1;
                     Double mult = 1.0;
@@ -257,8 +258,8 @@ public class TreeNode {
                     finalSize = Math.max(leftOp, rightOp);
                     argMultiIndices = (double) (leftOp / rightOp);
                     for (int j = 0; j < finalSize; j++) {
-                        double argJ0 = 0.0;
-                        double argJ1 = 0.0;
+                        double argJ0 = 1.0;
+                        double argJ1 = 1.0;
                         if (argLeft.getDim() == 0) {
                             argJ0 = argLeft.getElem() == null ? 1.0 : argLeft.getElem();
                         } else if (argLeft.getDim() == 1) {
@@ -291,9 +292,9 @@ public class TreeNode {
                         evalRes = evalRes1;
                     }
                 }
+                return evalRes;
 
             }
-            return evalRes;
         } else if (cType instanceof TermTreeNodeType) {
             if (getChildren().size() == 1) {
                 evalRes = getChildren().get(0).eval();///SIGN
@@ -315,10 +316,11 @@ public class TreeNode {
                     evalRes.setElem(0.0);
                 }
                 evalRes = initVoid(getChildren().get(0), 0.0);
+                TreeNode treeNode = getChildren().get(0);
                 for (int i = 0; i < getChildren().size(); i++) {
-                    TreeNode treeNode = getChildren().get(i);
+                    treeNode = getChildren().get(i);
                     StructureMatrix<Double> treeNodeEval = treeNode.eval();
-                    double op1 = 1;
+                    double op1 = 1.0;
                     int leftOp = evalRes.getDim() == 1 ? evalRes.data1d.size() : 0;
                     int rightOp = treeNodeEval.getDim() == 1 ? treeNodeEval.data1d.size() : 0;
 
@@ -352,7 +354,7 @@ public class TreeNode {
                         if (argRight.getDim() == 0) {
                             argJ1 = argRight.getElem() == null ? 1.0 : argRight.getElem();
                         } else if (argRight.getDim() == 1) {
-                            argJ1 = argRight.getElem((int) ((rightOp > leftOp) ? (j/ argMultiIndices) : (j)));
+                            argJ1 = argRight.getElem((int) ((rightOp > leftOp) ? (j * argMultiIndices) : (j)));
                         }
 
                         if (treeNode.type instanceof TermTreeNodeType) {
@@ -380,8 +382,8 @@ public class TreeNode {
                     }
                 }
 
+                return evalRes;
             }
-            return evalRes;
 
         } else if (cType instanceof TreeTreeNodeType) {
             if (!getChildren().isEmpty()) {
@@ -441,6 +443,20 @@ public class TreeNode {
             return evalRes;
         } else if (cType instanceof VectorTreeNodeType) {
             evalRes = new StructureMatrix<>(1, Double.class);
+            /*
+            int dim = 0;
+            for (int i = 0; i <getChildren().get(0).getChildren().size() ; i++) {
+                if(dim==0) dim = 1;
+                if(getChildren().get(0).getChildren().get(i).type.equals(VectorTreeNode.class)) {
+                    dim = 2;
+                }
+            }
+            if(dim==2) evalRes = new StructureMatrix<>(2, Double.class);
+            for (int i = 0; i < getChildren().get(0).getChildren().size(); i++) {
+                StructureMatrix<Double> eval = getChildren().get(0).getChildren().get(i).eval();///!!!
+                evalRes.setElem(eval.getElem(i), i);
+            }
+             */
             for (int i = 0; i < getChildren().get(0).getChildren().size(); i++) {
                 StructureMatrix<Double> eval = getChildren().get(0).getChildren().get(i).eval();///!!!
                 evalRes.setElem(eval.getElem(i), i);

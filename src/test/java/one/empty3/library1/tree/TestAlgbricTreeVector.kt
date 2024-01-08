@@ -347,7 +347,7 @@ class TestAlgbricTreeVector() {
 
     @Test
     fun testSimple6() {
-        testResultVariable("-5/-5*3.0", -5/-5*3.0,HashMap<String, Double>(), true)
+        testResultVariable("(-5)/(-5)*3.0", -5/-5*3.0,HashMap<String, Double>(), true)
     }
 
     @Test
@@ -610,7 +610,7 @@ class TestAlgbricTreeVector() {
     }
 
     @Test
-    fun testForNumberMultVectorOfVector() {
+    fun testForNumberMultiVectorOfVector() {
         val r = 12.0
         val vars = HashMap<String, Double>()
         vars["r"] = r
@@ -618,6 +618,16 @@ class TestAlgbricTreeVector() {
             Vec(10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,
                 10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,20.0,20.0,20.0,20.0,20.0,20.0,20.0,
                 10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0), vars, true)
+    }
+    @Test
+    fun testForNumberMultiVectorOfVector4() {
+        val r = 12.0
+        val vars = HashMap<String, Double>()
+        vars["r"] = r
+        testResultVariableVec("10*(20*(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1),(1,1,2,2,2,2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1)*40)",
+            Vec(200.0,200.0,200.0,200.0,200.0,200.0,200.0,200.0,200.0,200.0,200.0,200.0,200.0,200.0,200.0,200.0,
+                200.0,200.0,200.0,200.0,200.0,200.0,200.0,200.0,800.0,800.0,800.0,800.0,800.0,800.0,800.0,
+                40.0,40.0,40.0,40.0,40.0,40.0,40.0,40.0,40.0,40.0,40.0,40.0,40.0), vars, true)
     }
     @Test
     fun testForVectorOfVector() {
