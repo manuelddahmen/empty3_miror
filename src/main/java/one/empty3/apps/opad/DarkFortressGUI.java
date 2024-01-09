@@ -111,6 +111,7 @@ public class DarkFortressGUI extends JFrame {
             addKeyListener(gameKeyListener);
             //addKeyListener(plotter3D);
 
+
             setVisible(true);
 
 

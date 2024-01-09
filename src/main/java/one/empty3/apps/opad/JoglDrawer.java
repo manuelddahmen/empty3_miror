@@ -44,6 +44,7 @@ import java.util.logging.Logger;
 public class JoglDrawer extends Drawer implements GLEventListener {
     protected final Frame component;
     protected final Animator animator;
+    private final JPanel panel;
     protected GLCanvas glCanvas;
     double INCR_AA = 0.1;
     protected final double maximize = INCR_AA / 10;
@@ -109,7 +110,7 @@ public class JoglDrawer extends Drawer implements GLEventListener {
 
         this.component = darkFortressGUI;
 
-        JPanel panel = new JPanel();
+        panel = new JPanel();
 
         panel.setMinimumSize(new Dimension(640, 480));
         panel.setSize(640, 480);
@@ -654,7 +655,8 @@ public class JoglDrawer extends Drawer implements GLEventListener {
 
     public void displayChanged(GLAutoDrawable gLDrawable, boolean modeChanged,
                                boolean deviceChanged) {
-        reshape(gLDrawable, 0, 0, glCanvas.getWidth(), glCanvas.getHeight());
+        reshape(gLDrawable, 0, 0, component.getWidth(), component.getHeight());
+        panel.setSize(new Dimension(component.getWidth(), component.getHeight()));
     }
 
     @Override
