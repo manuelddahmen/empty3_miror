@@ -215,18 +215,14 @@ public class PositionUpdateImpl implements PositionUpdate, Runnable, ActionListe
     public void rotationGauche(long timeNano) {
         angle = positionMobile.getAngleVisee().get(numAxe) - tourSec * rotationPerNano * 1E-9;
         positionMobile.getAngleVisee().set(numAxe, angle);
-        if (isPositionOk(getPositionMobile().getPositionSol(), false)) {
-            ;
-        }
+        isPositionOk(getPositionMobile().getPositionSol(), false);
     }
 
     @Override
     public void rotationDroite(long timeNano) {
         angle = positionMobile.getAngleVisee().get(numAxe) + tourSec * rotationPerNano * 1E-9;
         positionMobile.getAngleVisee().set(numAxe, angle);
-        if (isPositionOk(getPositionMobile().getPositionSol(), false)) {
-            ;
-        }
+        isPositionOk(getPositionMobile().getPositionSol(), false);
     }
 
     public synchronized void testCollision(PositionMobile positionMobile) {
