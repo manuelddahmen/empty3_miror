@@ -106,16 +106,17 @@ public class DarkFortressGUI extends JFrame {
                 mover.setMain(this);
             }
 
-            setSize(640, 480);
+            setMinimumSize(new Dimension(640, 480));
+            setFocusable(true);
             addKeyListener(gameKeyListener);
-            addKeyListener(plotter3D);
+            //addKeyListener(plotter3D);
 
+            setVisible(true);
 
 
         } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException ex) {
             Logger.getLogger(DarkFortressGUI.class.getName()).log(Level.SEVERE, null, ex);
         }
-        setVisible(true);
 
     }
 

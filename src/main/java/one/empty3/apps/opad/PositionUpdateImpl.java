@@ -175,9 +175,10 @@ public class PositionUpdateImpl implements PositionUpdate, Runnable, ActionListe
     @Override
     public void dec(long timeNano) {
        Logger.getAnonymousLogger().log(Level.INFO, "DEC" + timeNano);
-        Point3D direction2D = getVecDir2D().norme1().mult(timeNano * 1E-9 * unitPerSec);
+        Point3D direction2D = getVecDir2D().norme1().mult(1.0*timeNano * 1E-9 * unitPerSec);
         accera -= timeNano;
-        Point3D p2 = positionMobile.getPositionSol().plus(direction2D);
+        Point3D p2 = positionMobile.getPositionSol().moins(direction2D);
+        Logger.getAnonymousLogger().log(Level.INFO, "acc:" + p2.toString());
         if (isPositionOk(p2, false)) {
             positionMobile.setPositionSol(p2);
         } else
