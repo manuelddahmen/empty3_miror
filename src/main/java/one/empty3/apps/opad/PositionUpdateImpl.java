@@ -168,7 +168,7 @@ public class PositionUpdateImpl implements PositionUpdate, Runnable, ActionListe
         if (isPositionOk(p2, false)) {
             positionMobile.setPositionSol(p2);
 
-        } else;
+        } else
            Logger.getAnonymousLogger().log(Level.INFO, "OUT acc:" + p2.toString());
     }
 
@@ -180,7 +180,7 @@ public class PositionUpdateImpl implements PositionUpdate, Runnable, ActionListe
         Point3D p2 = positionMobile.getPositionSol().plus(direction2D);
         if (isPositionOk(p2, false)) {
             positionMobile.setPositionSol(p2);
-        } else;
+        } else
            Logger.getAnonymousLogger().log(Level.INFO, "OUT acc:" + p2.toString());
     }
 

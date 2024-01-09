@@ -45,11 +45,17 @@ try {
 }
 
 tasks.register('copyDeps', Copy) {
-    //from(configurations.compile + configurations.testCompile) {
-        include ".jar"
-        include ".so", "*.dll"
-    //}
-    DuplicatesStrategy.EXCLUDE
+    from(configurations.compile + configurations.testCompile) {
+        include "**/*.jar"
+        include "**/*.xml"
+        include "**/*.properties"
+        include "**/*.dll"
+        include "**/*.so"
+    }
+    duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
+}
+jar {
+    duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
 }
 def load = properties
 java {
