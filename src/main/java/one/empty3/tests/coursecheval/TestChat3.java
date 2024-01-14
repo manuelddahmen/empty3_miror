@@ -1,20 +1,23 @@
 /*
- * Copyright (c) 2022-2023. Manuel Daniel Dahmen
+ *
+ *  * Copyright (c) 2024. Manuel Daniel Dahmen
+ *  *
+ *  *
+ *  *    Copyright 2024 Manuel Daniel Dahmen
+ *  *
+ *  *    Licensed under the Apache License, Version 2.0 (the "License");
+ *  *    you may not use this file except in compliance with the License.
+ *  *    You may obtain a copy of the License at
+ *  *
+ *  *        http://www.apache.org/licenses/LICENSE-2.0
+ *  *
+ *  *    Unless required by applicable law or agreed to in writing, software
+ *  *    distributed under the License is distributed on an "AS IS" BASIS,
+ *  *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  *    See the License for the specific language governing permissions and
+ *  *    limitations under the License.
  *
  *
- *    Copyright 2012-2023 Manuel Daniel Dahmen
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
  */
 
 package one.empty3.tests.coursecheval;
@@ -36,7 +39,7 @@ public class TestChat3 extends TestObjetSub {
     Point3D positionAngles = new Point3D(0.5, 0.5, 0.0);
     private Chat cheval;
     int moveIndex = 0;
-    Chat [] trotte = null;
+    Chat[] trotte = null;
     private ParametricSurface parametricSurface;
 
     static class TextureInvertU extends ImageTexture {
@@ -46,9 +49,10 @@ public class TestChat3 extends TestObjetSub {
 
         @Override
         public Point2D getCoord(double x, double y) {
-            return super.getCoord(1.0-x, y);
+            return super.getCoord(1.0 - x, y);
         }
     }
+
     public static final int SECONDS = 15;
     public static final int FPS = 50;
     private static final int TURNS = 1;
@@ -61,11 +65,11 @@ public class TestChat3 extends TestObjetSub {
     private final Point3D[] axesSphereHorizontaux = new Point3D[]{Point3D.Z, Point3D.X};
 
     private static double getaDouble() {
-        return  FPS * SECONDS * REAL_DAYS;
+        return FPS * SECONDS * REAL_DAYS;
     }
 
     public static void main(String[] args) {
-        TestCourseChatPS testCourseChat = new TestCourseChatPS();
+        TestChat3 testCourseChat = new TestChat3();
         testCourseChat.loop(true);
         testCourseChat.setResolution(Resolution.HD1080RESOLUTION.x(), Resolution.HD1080RESOLUTION.y());
         Thread thread = new Thread(testCourseChat);
@@ -75,7 +79,7 @@ public class TestChat3 extends TestObjetSub {
     @Override
     public void ginit() {
         logger = Logger.getLogger(this.getClass().getCanonicalName());
-        setMaxFrames( FPS * SECONDS * REAL_DAYS);
+        setMaxFrames(FPS * SECONDS * REAL_DAYS);
 
         z().ratioVerticalAngle();
 
@@ -108,9 +112,9 @@ public class TestChat3 extends TestObjetSub {
 
     public Point3D positions() {
         Point3D p = new Point3D();
-        p.set(0, 1.0*(frame() / (FPS * SECONDS * TURNS)));
-        p.set(1, 1.0*(frame() % (FPS * SECONDS * TURNS)));
-        p.set(2, 1.0* FPS * SECONDS * TURNS);
+        p.set(0, 1.0 * (frame() / (FPS * SECONDS * TURNS)));
+        p.set(1, 1.0 * (frame() % (FPS * SECONDS * TURNS)));
+        p.set(2, 1.0 * FPS * SECONDS * TURNS);
 
         return p;
     }
@@ -130,27 +134,26 @@ public class TestChat3 extends TestObjetSub {
         //double angleOnSurface = 2.0 * Math.PI * frame() / getMaxFrames();
 
 
-        double angleCamera  = 0.0;
+        double angleCamera = 0.0;
         c = new Camera(axeViseeVideo[0].mult(Math.cos(angleCamera))
-                .plus(axeViseeVideo[0].mult(Math.sin(angleCamera))).mult(400)
+                .plus(axeViseeVideo[0].mult(Math.sin(angleCamera)))
                 /*.plus(Point3D.Y.mult(20.0))*/, Point3D.O0);
         c.calculerMatrice(axeVerticalVideo);
-        c.setAngleX(Math.PI/3*z().la()/z().ha());
-        c.setAngleY(Math.PI/3);
+        c.setAngleX(Math.PI / 3 * z().la() / z().ha());
+        c.setAngleY(Math.PI / 3);
         z().scene().cameraActive(c);
         scene().cameraActive(c);
         z().camera(c);
         camera(c);
 
 
-
-        if(trotte!=null && trotte.length>moveIndex && trotte[moveIndex]!=null) {
+        if (trotte != null && trotte.length > moveIndex && trotte[moveIndex] != null) {
             scene().clear();
             cheval = trotte[moveIndex];
             moveIndex++;
         }
-        if(trotte==null || moveIndex>=trotte.length) {
-            switch ((int)( Math.random() * 2)) {
+        if (trotte == null || moveIndex >= trotte.length) {
+            switch ((int) (Math.random() * 2)) {
                 case 0:
                     moveIndex = 0;
                     trotte = cheval.getMoves().trotte(2.0, 25, true, 0.0, 25);
@@ -172,14 +175,14 @@ public class TestChat3 extends TestObjetSub {
 
         scene().add(cheval);
 
-        positionAngles = positionAngles.plus(Point3D.random(0.02*2*Math.PI));
+        positionAngles = positionAngles.plus(Point3D.random(0.02 * 2 * Math.PI));
         positionUv = positionUv.plus(Point3D.random(0.02));
 
         cheval.setAngleXyZ(positionAngles.getX(), 0.0);
-        cheval.setOrig(positionUv);
+        cheval.setOrig(positionUv.plus(Point3D.Y.mult(100)));
 
         final int i1 = FPS * SECONDS * REAL_DAYS;
-        double u =   ((double) getMaxFrames() - frame()) / getMaxFrames();
+        double u = ((double) getMaxFrames() - frame()) / getMaxFrames();
 
         Plan3D plane = new Plan3D(new Point3D(50.0, 0.0, 50.0), new Point3D(0.0, 0.0, -50.0), new Point3D(-50.0, 0.0, 0.0));
         plane.texture(new ImageTexture(new File("resources/sol_sableux.jpg")));

@@ -1,20 +1,23 @@
 /*
- * Copyright (c) 2023. Manuel Daniel Dahmen
+ *
+ *  * Copyright (c) 2024. Manuel Daniel Dahmen
+ *  *
+ *  *
+ *  *    Copyright 2024 Manuel Daniel Dahmen
+ *  *
+ *  *    Licensed under the Apache License, Version 2.0 (the "License");
+ *  *    you may not use this file except in compliance with the License.
+ *  *    You may obtain a copy of the License at
+ *  *
+ *  *        http://www.apache.org/licenses/LICENSE-2.0
+ *  *
+ *  *    Unless required by applicable law or agreed to in writing, software
+ *  *    distributed under the License is distributed on an "AS IS" BASIS,
+ *  *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  *    See the License for the specific language governing permissions and
+ *  *    limitations under the License.
  *
  *
- *    Copyright 2012-2023 Manuel Daniel Dahmen
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
  */
 
 package one.empty3.tests.coursecheval;
@@ -25,6 +28,7 @@ import one.empty3.library.core.nurbs.FctXY;
 import one.empty3.library.core.nurbs.ParametricSurface;
 import one.empty3.library.core.tribase.TubulaireN2;
 
+import java.io.File;
 import java.util.function.Consumer;
 
 public class Chat extends RepresentableConteneur {
@@ -47,7 +51,9 @@ public class Chat extends RepresentableConteneur {
         coefficients.add(new Point3D(0.0, -50.0, 0.0));
         coefficients.add(new Point3D(-50.0, -50.0, 0.0));
         coefficients.add(new Point3D(-100.0, -50.0, 0.0));
-        corps.getElem().getDiameterFunction().setElem(new FctXY().setFormulaX("50-10*x"));
+        corps.getElem().getDiameterFunction().setElem(new FctXY().setFormulaX("2*(50-10*x)"));
+
+        corps.getElem().texture(new ImageTexture(new File("res/img/_light-1337_2082-pelage-d-un-chat-roux-et-blanc-a-poil-long.jpg")));
 
         pattes.setElem(new TubulaireN2(), 0);
         pattes.setElem(new TubulaireN2(), 1);
@@ -75,11 +81,12 @@ public class Chat extends RepresentableConteneur {
         StructureMatrix<Point3D> coefficients1
                 = ((CourbeParametriquePolynomiale) corps.getElem().getSoulCurve().getElem()).getCoefficients();
 
-        tete.setElem(new Sphere(coefficients1.getElem(0), 60));
-        queue.setElem(new Sphere(coefficients1.getElem(coefficients1.getData1d().size() - 1), 40));
+        tete.setElem(new Sphere(coefficients1.getElem(0), 60*2));
+        queue.setElem(new Sphere(coefficients1.getElem(coefficients1.getData1d().size() - 1), 40*2));
 
         add(new PsOnPs(psGround, corps.getElem()));
         for (TubulaireN2 TubulaireN2 : pattes.getData1d()) {
+            TubulaireN2.setDiameter(40);
             add(new PsOnPs(psGround, TubulaireN2));
         }
         add(new PsOnPs(psGround, tete.getElem()));
@@ -88,8 +95,8 @@ public class Chat extends RepresentableConteneur {
         move = new ChatMovements(this);
 
         for (ParametricSurface elem : new ParametricSurface[]{corps.getElem(), pattes.getElem(0), pattes.getElem(1), pattes.getElem(2), pattes.getElem(3)}) {
-            elem.setIncrU(0.1);
-            elem.setIncrV(0.1);
+            elem.setIncrU(0.02);
+            elem.setIncrV(0.02);
         }
     }
 
