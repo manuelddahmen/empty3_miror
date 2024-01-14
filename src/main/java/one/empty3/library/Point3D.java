@@ -48,10 +48,10 @@ public class Point3D extends Representable {
         public void actionOnChange(Object oldValue, Object newValue, int dim, int posI, int posJ) {
             switch (dim) {
                 case 0:
-                break;
+                    break;
                 case 1:
-                    if(posI>=0 && posI<3) {
-                        set(posI, (double)newValue);
+                    if (posI >= 0 && posI < 3) {
+                        set(posI, (double) newValue);
                     }
                     break;
                 case 2:
@@ -103,11 +103,12 @@ public class Point3D extends Representable {
     final Double[] coordArr = new Double[3];
 
     {
-        coordArr[0]=0d;
-        coordArr[1]=0d;
-        coordArr[2]=0d;
+        coordArr[0] = 0d;
+        coordArr[1] = 0d;
+        coordArr[2] = 0d;
 
     }
+
     /*__
      * *
      * Pour le tracé de surface normale au point
@@ -138,33 +139,33 @@ public class Point3D extends Representable {
      */
     public Point3D(double[] x0) {
         int i = 0;
-        if(x0.length<3)
+        if (x0.length < 3)
             throw new UnsupportedOperationException("x0.length<3");
         for (double d : x0) {
-            coordArr[i]=d;
+            coordArr[i] = d;
             i++;
         }
     }
 
     /*__
-         * *
-         * Initialise à partir d'un vecteur
-         *
-         * @param x0 coordonnées (>3)
-         */
+     * *
+     * Initialise à partir d'un vecteur
+     *
+     * @param x0 coordonnées (>3)
+     */
     public Point3D(Double... x0) {
         int i = 0;
-        if(x0.length<3)
+        if (x0.length < 3)
             throw new UnsupportedOperationException("x0.length<3");
         for (Double d : x0) {
-            coordArr[i]=d;
+            coordArr[i] = d;
             i++;
         }
     }
 
     public Point3D(Double[] x0, ITexture t) {
         int i = 0;
-        if(x0.length<3)
+        if (x0.length < 3)
             throw new UnsupportedOperationException("x0.length<3");
         for (Double d : x0) {
             coordArr[i] = d;
@@ -185,10 +186,10 @@ public class Point3D extends Representable {
     }
 
     /*__
-         *
-         *
-         * @param p0 point à copier
-         */
+     *
+     *
+     * @param p0 point à copier
+     */
     public Point3D(Point3D p0) {
         super();
         for (int i = 0; i < 3; i++)
@@ -223,6 +224,7 @@ public class Point3D extends Representable {
             d += (p1.get(i) - p2.get(i)) * (p1.get(i) - p2.get(i));
         return Math.sqrt(d);
     }
+
     /*
     public static Double distance(Point3D p1, Point3D p2, Fct1D_1D f) {
         double d = 0.0;
@@ -249,10 +251,10 @@ public class Point3D extends Representable {
         return new Point3D(((Math.random() - 0.5) * 2 * d), ((Math.random() - 0.5) * 2 * d), ((Math.random() - 0.5) * 2 * d));
     }
 
-    public static double[] toArray1d(Point3D norme1, double [] arr) {
+    public static double[] toArray1d(Point3D norme1, double[] arr) {
         double[] d = arr;
 
-        if(arr.length<3)
+        if (arr.length < 3)
             d = new double[3];
 
         arr[0] = norme1.coordArr[0];
@@ -260,6 +262,14 @@ public class Point3D extends Representable {
         arr[2] = norme1.coordArr[2];
 
         return arr;
+    }
+
+    public static Point3D circle(double v) {
+        return new Point3D(Math.cos(v), Math.sin(v), 0.0);
+    }
+
+    public static Point3D sphere(double v, double v1) {
+        return new Point3D(Math.cos(v) * Math.sin(v1), Math.sin(v) * Math.sin(v1), Math.cos(v1));
     }
 
     @Override
@@ -358,9 +368,11 @@ public class Point3D extends Representable {
 
         return p1;
     }
+
     public Point3D multDot(Point3D p1) {
         return mult(p1);
     }
+
     public Point3D mult(Double d) {
         return mult((double) d);
     }
@@ -398,7 +410,7 @@ public class Point3D extends Representable {
      * @return Vecteur normalisé à 1
      */
     public Point3D norme1() {
-        if(norme()==0.0)
+        if (norme() == 0.0)
             return Point3D.O0;
         return mult(1d / norme());
     }
@@ -447,11 +459,11 @@ public class Point3D extends Representable {
     }
 
     /* *
-    * produit vectoriel
-    *
-    * @param p1
-    * @return
-    */
+     * produit vectoriel
+     *
+     * @param p1
+     * @return
+     */
     public Point3D prodVect(Point3D p1) {
         return new Point3D(p1.getY() * getZ() + -p1.getZ() * getY(), p1.getZ()
                 * getX() - p1.getX() * getZ(), p1.getX() * getY() - p1.getY()
@@ -464,7 +476,7 @@ public class Point3D extends Representable {
 
     public String toLongString() {
         //Color c = texture.toString();
-        return "p ( \n\t(" + coordArr[0] + " , " + coordArr[1] + " , " + coordArr[2]+ " )\n\t("
+        return "p ( \n\t(" + coordArr[0] + " , " + coordArr[1] + " , " + coordArr[2] + " )\n\t("
                 + texture.toString()
                 + ")\n)\n";
     }
@@ -563,7 +575,7 @@ public class Point3D extends Representable {
         for (int i = 0; i < 3; i++) {
             if (!(coordArr[i] - (point3D.get(i)) < 1E-10))
                 return false;
-            if(coordArr[i].equals(Double.NaN)|| point3D.coordArr[i].equals(Double.NaN)) {
+            if (coordArr[i].equals(Double.NaN) || point3D.coordArr[i].equals(Double.NaN)) {
                 return false;
             }
         }
@@ -578,6 +590,7 @@ public class Point3D extends Representable {
         }
         return false;
     }
+
     public void declareProperties() {
         super.declareProperties();
         getDeclaredDataStructure().put("coordArr/coordonnées", getCoordArr());
@@ -595,7 +608,7 @@ public class Point3D extends Representable {
     }
 
     public void setCoordArr(StructureMatrix<Double> coordArr) {
-        for(int i=0; i<3; i++)
+        for (int i = 0; i < 3; i++)
             this.coordArr[i] = coordArr.getElem(i);
     }
 
@@ -639,14 +652,15 @@ public class Point3D extends Representable {
     }*/
 
     public Color toColor() {
-        return new Color((float)(double)(get(0)), (float)(double)(get(1)), (float)(double)(get(2)));
+        return new Color((float) (double) (get(0)), (float) (double) (get(1)), (float) (double) (get(2)));
     }
+
     public static Point3D fromColor(Color color) {
         float[] colorComponents = new float[4];
         color.getColorComponents(colorComponents);
         Point3D point3D = new Point3D(3);
-        for(int i=0; i< colorComponents.length; i++)
-            point3D.set(i, (double)colorComponents[i]);
+        for (int i = 0; i < colorComponents.length; i++)
+            point3D.set(i, (double) colorComponents[i]);
         return point3D;
     }
 
@@ -675,12 +689,12 @@ public class Point3D extends Representable {
     }
 
     public void rotate(Point3D point3D, Point3D ref, Point3D axe) {
-        if(Point3D.distance(point3D, ref)<Point3D.DISTANCE_MIN)
+        if (Point3D.distance(point3D, ref) < Point3D.DISTANCE_MIN)
             return;
         Point3D moins = ref.moins(point3D);
         Point3D y = moins.prodVect(axe);
         Point3D x = y.prodVect(moins);
-        getRotation().setElem(new Rotation(new Matrix33(new Point3D[] {x, y, moins}), ref));
+        getRotation().setElem(new Rotation(new Matrix33(new Point3D[]{x, y, moins}), ref));
         getRotation().getElem().rotation(ref);
     }
 }

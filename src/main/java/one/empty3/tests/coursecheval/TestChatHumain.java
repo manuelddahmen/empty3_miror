@@ -86,7 +86,7 @@ public class TestChatHumain extends TestObjetSub {
         //parametricSurface = new Sphere(Point3D.O0, 5);
 
 
-        z().setDisplayType(ZBufferImpl.SURFACE_DISPLAY_TEXT_QUADS);
+        z().setDisplayType(ZBufferImpl.SURFACE_DISPLAY_COL_QUADS);
 
         z().texture(new ColorTexture(Color.BLACK));
         scene().texture(new ColorTexture(Color.BLACK));
@@ -129,7 +129,7 @@ public class TestChatHumain extends TestObjetSub {
 
         double angleCamera = 0.0;
         c = new Camera(axeViseeVideo[0].mult(Math.cos(angleCamera))
-                .plus(axeViseeVideo[0].mult(Math.sin(angleCamera))).mult(900), Point3D.O0);
+                .plus(axeViseeVideo[0].mult(Math.sin(angleCamera))).mult(600), Point3D.O0);
         c.calculerMatrice(axeVerticalVideo);
         c.setAngleX(Math.PI / 3 * z().la() / z().ha());
         c.setAngleY(Math.PI / 3);
@@ -138,9 +138,9 @@ public class TestChatHumain extends TestObjetSub {
         z().camera(c);
         camera(c);
 
+        scene().clear();
 
         if (trotte != null && trotte.length > moveIndex && trotte[moveIndex] != null) {
-            scene().clear();
             cheval = trotte[moveIndex];
             moveIndex++;
         }
@@ -163,11 +163,11 @@ public class TestChatHumain extends TestObjetSub {
             }
         }
 
-        positionAngles = positionAngles.plus(Point3D.random(0.2 * 2 * Math.PI));
-        positionUv = positionUv.plus(Point3D.random(0.2));
+        positionAngles = positionAngles.plus(Point3D.circle(4.0 * 2.0 * Math.PI * frame() / getMaxFrames()));
+        //positionUv = positionUv.plus(Point3D.random(0.2));
 
         cheval.setAngleXyZ(positionAngles.getX(), 0.0);
-        cheval.setOrig(positionUv.plus(Point3D.Y.mult(100)));
+        //cheval.setOrig(positionUv.plus(Point3D.Y.mult(100)));
 
         final int i1 = FPS * SECONDS * REAL_DAYS;
         double u = ((double) getMaxFrames() - frame()) / getMaxFrames();
