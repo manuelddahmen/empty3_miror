@@ -70,12 +70,12 @@ public class ChatHumain extends RepresentableConteneur {
 
         coefficients = ((CourbeParametriquePolynomiale) pattes.getElem(2).getSoulCurve().getElem()).getCoefficients();
         coefficients.setElem(new Point3D(-100., -50., 30.), 0);
-        coefficients.setElem(new Point3D(-150., -50., 30.), 1);
-        coefficients.setElem(new Point3D(-200., -50., 30.), 2);
+        coefficients.setElem(new Point3D(-125., -50., 30.), 1);
+        coefficients.setElem(new Point3D(-150., -50., 30.), 2);
         coefficients = ((CourbeParametriquePolynomiale) pattes.getElem(3).getSoulCurve().getElem()).getCoefficients();
         coefficients.setElem(new Point3D(-100., -50., -30.), 0);
-        coefficients.setElem(new Point3D(-150., -50., -30.), 1);
-        coefficients.setElem(new Point3D(-200., -50., -30.), 2);
+        coefficients.setElem(new Point3D(-125., -50., -30.), 1);
+        coefficients.setElem(new Point3D(-150., -50., -30.), 2);
 
         StructureMatrix<Point3D> coefficients1
                 = ((CourbeParametriquePolynomiale) corps.getElem().getSoulCurve().getElem()).getCoefficients();

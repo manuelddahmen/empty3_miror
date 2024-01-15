@@ -86,7 +86,7 @@ public class TestChatHumain extends TestObjetSub {
         //parametricSurface = new Sphere(Point3D.O0, 5);
 
 
-        z().setDisplayType(ZBufferImpl.SURFACE_DISPLAY_COL_QUADS);
+        z().setDisplayType(ZBufferImpl.DISPLAY_ALL);
 
         z().texture(new ColorTexture(Color.BLACK));
         scene().texture(new ColorTexture(Color.BLACK));
