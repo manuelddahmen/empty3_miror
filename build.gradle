@@ -14,8 +14,8 @@ sourceSets {
         }
         resources {
             srcDirs "src/main/resources", "src/main/configs", "src/main/java"
-            }
         }
+    }
     test {
         java {
             srcDirs 'src/test/java'
@@ -25,8 +25,8 @@ sourceSets {
 }
 
 //kotlin {
-    //macosX64('native') { // on macOS
-   // linuxX64('native') // on Linux
+//macosX64('native') { // on macOS
+// linuxX64('native') // on Linux
 //    mingwX64('native') // on Windows
 //        binaries {
 //            executable()
@@ -86,13 +86,13 @@ tasks.register('BoardGameGui', JavaExec) {
 }
 tasks.register('ResolutionCharacter8', JavaExec) {
     classpath sourceSets.main.runtimeClasspath
-    mainClass= "one.empty3.feature.tryocr.ResolutionCharacter8"
+    mainClass = "one.empty3.feature.tryocr.ResolutionCharacter8"
     args "arg1", "arg2"
     dependsOn(jar)
 }
 tasks.register('OCR', JavaExec) {
     classpath sourceSets.main.runtimeClasspath
-    mainClass= "one.empty3.feature.tryocr.OCR1"
+    mainClass = "one.empty3.feature.tryocr.OCR1"
     args "arg1", "arg2"
     dependsOn(jar)
 }
@@ -183,7 +183,6 @@ tasks.register('one.empty3.tests.TestCourseChatPS', JavaExec) {
 }
 
 
-
 signing {
     def signingKey = load.get("signing.keyId")
     def signingPassword = load.get("signing.password")
@@ -236,8 +235,8 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     def jogl = '2.3.2'
     implementation "org.jogamp.jogl:jogl-all:$jogl"
-    implementation group: 'org.jogamp.gluegen', name: 'gluegen-rt-main', version:"$jogl"
-    implementation group: 'org.jogamp.jogl', name: 'jogl-all-main', version:"$jogl"
+    implementation group: 'org.jogamp.gluegen', name: 'gluegen-rt-main', version: "$jogl"
+    implementation group: 'org.jogamp.jogl', name: 'jogl-all-main', version: "$jogl"
     implementation 'ai.djl:api:0.21.0'
     implementation("org.jcodec:jcodec-javase:0.2.5")
     implementation("org.jcodec:jcodec-javase:0.2.5")
@@ -298,12 +297,18 @@ tasks.named("processResources") {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
+tasks.register("publishAll") {
+    dependsOn(getTasksByName("publishAllPublicationsToJetBrainsSpaceEmpty3Repository", true))
+    dependsOn(getTasksByName("publishAllPublicationsToOSSRHRepository", true))
+    dependsOn(getTasksByName("publishMavenPublicationToMavenLocal", true))
+}
+
 publishing {
     publications {
         maven(MavenPublication) {
             groupId = 'one.empty3'
             artifactId = 'empty3-library-3d'
-            version = "2023.12-1"
+            version = "2024.1-1"
             from components.java
 
             project.tasks.withType(Sign) {

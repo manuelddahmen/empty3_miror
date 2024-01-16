@@ -85,8 +85,12 @@ public class AlgebricTree extends Tree {
         this.parametersValues = parametersValues;
         removeSpaces();
     }
+
     public void removeSpaces() {
-        formula = formula.replace(" ", "").replace("\n", "").replace("\r", "").replace("\t","");
+        if (formula != null)
+            formula = formula.replace(" ", "").replace("\n", "").replace("\r", "").replace("\t", "");
+        else
+            formula = "";
     }
 
     public void setParameter(String s, Double d) {
@@ -210,10 +214,10 @@ public class AlgebricTree extends Tree {
     }
 
     private String addSpaces(String subformula) {
-        while(subformula!=null && !subformula.isEmpty() &&
-                    (subformula.charAt(0)=='\s' || subformula.charAt(0)=='\n' ||
-                    subformula.charAt(0)=='\r' || subformula.charAt(0)=='\t'))
-                subformula = subformula.substring(1);
+        while (subformula != null && !subformula.isEmpty() &&
+                (subformula.charAt(0) == '\s' || subformula.charAt(0) == '\n' ||
+                        subformula.charAt(0) == '\r' || subformula.charAt(0) == '\t'))
+            subformula = subformula.substring(1);
         return subformula;
     }
 
@@ -224,33 +228,33 @@ public class AlgebricTree extends Tree {
      * @return
      */
     private boolean addFormulaSeparator(TreeNode src, String subformula) {
-        if(subformula==null || subformula.isEmpty())
+        if (subformula == null || subformula.isEmpty())
             return false;
 
         String[] s;
-        int i=0;
-        int count=0;
-        while(i<subformula.length()) {
+        int i = 0;
+        int count = 0;
+        while (i < subformula.length()) {
             char currentChar = subformula.charAt(i);
-            if(currentChar=='(')
+            if (currentChar == '(')
                 count++;
-            if(currentChar==')')
+            if (currentChar == ')')
                 count--;
-            if(currentChar=='=' && count==0) {
+            if (currentChar == '=' && count == 0) {
                 s = new String[2];
                 s[0] = subformula.substring(0, i);
-                s[1] = subformula.substring(i+1);
+                s[1] = subformula.substring(i + 1);
                 EquationTreeNode tt = new EquationTreeNode(src, new Object[]{
                         subformula, parametersValues, parametersValuesVec, parametersValuesVecComputed},
                         new EquationTreeNodeType(1.0));
-                tt.getChildren().add( new TreeNode(src, new Object[]{
+                tt.getChildren().add(new TreeNode(src, new Object[]{
                         s[0], parametersValues, parametersValuesVec, parametersValuesVecComputed},
                         new IdentTreeNodeType()));
-                tt.getChildren().add( new TreeNode(src, new Object[]{
+                tt.getChildren().add(new TreeNode(src, new Object[]{
                         s[1], parametersValues, parametersValuesVec, parametersValuesVecComputed},
                         new IdentTreeNodeType()));
                 try {
-                    if(add(tt.getChildren().get(0), s[0]) && add(tt.getChildren().get(1), s[1])) {
+                    if (add(tt.getChildren().get(0), s[0]) && add(tt.getChildren().get(1), s[1])) {
                         src.getChildren().add(tt);
                         return true;
                     }
@@ -737,6 +741,7 @@ public class AlgebricTree extends Tree {
 
         return t.getChildren().size() > 0;
     }
+
     public boolean addFunctionDefinition(TreeNode t, String values)
             throws AlgebraicFormulaSyntaxException {
         int i = 1;
@@ -758,12 +763,11 @@ public class AlgebricTree extends Tree {
                 count++;
             } else if (values.charAt(i) == ')') {
                 count--;
-            } else if(values.charAt(i) == '{') {
-                if(count==0 && fNameAdded) {
+            } else if (values.charAt(i) == '{') {
+                if (count == 0 && fNameAdded) {
                     listInstructionDef = i + 1;
                 }
-            }
-            else if (i < 1)
+            } else if (i < 1)
                 return false;
 
             TreeNode t2 = null;
@@ -783,9 +787,9 @@ public class AlgebricTree extends Tree {
                 if (!add(t2, fParamString))
                     return false;
 
-            } else if(values.charAt(i)=='{' && t2!=null && listInstructionDef>0) {
-                listInstructionDef = i+1;
-                if(addFunctionBody(t2, values.substring(listInstructionDef)))
+            } else if (values.charAt(i) == '{' && t2 != null && listInstructionDef > 0) {
+                listInstructionDef = i + 1;
+                if (addFunctionBody(t2, values.substring(listInstructionDef)))
                     t.getChildren().add(t2);
                 else
                     return false;
@@ -850,6 +854,7 @@ public class AlgebricTree extends Tree {
     public void setParametersValues(Map<String, Double> parametersValues) {
         this.parametersValues = parametersValues;
     }
+
     public void setParametersValuesVec(Map<String, String> parametersValuesVec) {
         this.parametersValuesVec = parametersValuesVec;
     }
@@ -857,13 +862,16 @@ public class AlgebricTree extends Tree {
     public Map<String, Double> getParametersValues() {
         return parametersValues;
     }
+
     public Map<String, String> getParametersValuesVec() {
         return parametersValuesVec;
     }
+
     public void setParametersValuesVecComputed(HashMap<String, StructureMatrix<Double>> parametersValuesVecComputed) {
         this.parametersValuesVecComputed = parametersValuesVecComputed;
     }
-    public HashMap<String, StructureMatrix<Double>>  getParametersValuesVecComputed() {
+
+    public HashMap<String, StructureMatrix<Double>> getParametersValuesVecComputed() {
         return parametersValuesVecComputed;
     }
 

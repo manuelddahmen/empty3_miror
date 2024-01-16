@@ -76,7 +76,7 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
     private File webcamFile;
 
     public void setWebcamFile() {
-        this.webcamFile = new File(tempDir + File.separator + getUuid() +"_"+(this.idFrame++)+"_"+"webcam.jpg");
+        this.webcamFile = new File(tempDir + File.separator + getUuid() + "_" + (this.idFrame++) + "_" + "webcam.jpg");
     }
 
     public File getWebcamFile() {
@@ -149,7 +149,7 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
         @Override
         public String toString() {
             return "ListFilesElement{" +
-                    "files=" + (files==null?"":Arrays.toString(files)) +
+                    "files=" + (files == null ? "" : Arrays.toString(files)) +
                     ", x=" + x +
                     ", y=" + y +
                     ", label='" + label + '\'' +
@@ -232,9 +232,9 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
         protected Class theClass;
         protected PartElement partAfter;
 
-        protected File[] files = new File[] {new File(".")};
-        protected String tmpFilename = tempDir+
-                File.separator+"temp-"+ getUuid() +".jpg";
+        protected File[] files = new File[]{new File(".")};
+        protected String tmpFilename = tempDir +
+                File.separator + "temp-" + getUuid() + ".jpg";
         private ProcessFile instance;
 
         public ClassElement() {
@@ -270,7 +270,7 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
             return "ClassElement{" +
                     "theClass=" + theClass +
                     ", partAfter=" + partAfter +
-                    ", files=" + (files==null?"":Arrays.toString(files)) +
+                    ", files=" + (files == null ? "" : Arrays.toString(files)) +
                     ", tmpFilename='" + tmpFilename + '\'' +
                     ", x=" + x +
                     ", y=" + y +
@@ -279,7 +279,7 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
         }
 
         public ProcessFile getInstance() {
-            if(instance==null) {
+            if (instance == null) {
                 try {
                     instance = (ProcessFile) theClass
                             .getDeclaredConstructor().newInstance();
@@ -291,6 +291,7 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
             return instance;
         }
     }
+
     class ClassMultiInputElement extends ClassElement {
 
         @Override
@@ -411,7 +412,7 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
                             selectedActionDeleteLink = false;
                             currentAction = 0;
                         }
-                    } else if(selectsAddLink) {
+                    } else if (selectsAddLink) {
                         if (currentAction == 0) {
                             if (selectFromPoint(e.getX(), e.getY()) != null &&
                                     selectFromPoint(e.getX(), e.getY()).getClass().equals(ClassElement.class)) {
@@ -493,6 +494,7 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
         classElement.theClass = comboBox1.getSelectedItem().getClass();
         diagramElements.add(classElement);
     }
+
     private void buttonAdd2filters(ActionEvent e) {
         ClassElement classElement = new ClassElement();
         classElement.theClass = comboBox2.getSelectedItem().getClass();
@@ -545,7 +547,7 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
                         int n = 1;
                         while (ce.partAfter.element != null && ce.partAfter.element != ce) {
                             ce = (ClassElement) ce.partAfter.element;
-                                processes.add(ce.getInstance());
+                            processes.add(ce.getInstance());
                             last.getInstance().getProperties().sharePropertiesWith(ce.instance.getProperties());
 
                             last = ce;
@@ -580,7 +582,7 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
                 if (f.getName().contains("webcam")) {
                     //f = getWebcamFile();
                 }
-                if (!processes.isEmpty() && f!=null) {
+                if (!processes.isEmpty() && f != null) {
                     ProcessFile ce = processes.get(0);
                     int processNameOrder = listProcessClasses.indexOf(ce.getClass());
                     StringBuilder s = new StringBuilder();
@@ -594,7 +596,7 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
                     System.out.printf("Process %s \nfrom:  %s\n", processes.get(0).getClass().toString(), f.getAbsolutePath());
                     System.out.printf("Process %s \nto  :  %s\n", processes.get(0).getClass().toString(), fileOut.getAbsolutePath());
 
-                    System.out.printf("Run process %d/%d on file%s\n", 0, processes.size(), f.getAbsolutePath());
+                    System.out.printf("Run process 0 . %d / %d on file %s\n", 0 + 1, processes.size(), f.getAbsolutePath());
 
                     File fileIn = null;
 
@@ -621,7 +623,7 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
                                 if (!fileOut.exists()) {
                                     //fileOut.mkdirs();
                                 }
-                                System.out.printf("Run process %d/%d on file%s\n", i, processes.size(), f.getAbsolutePath());
+                                System.out.printf("Run process 1 . %d/%d on file %s\n", i + 1, processes.size(), f.getAbsolutePath());
                                 ce.process(fileIn, fileOut);
                                 liveEffect.setFileIn(fileOut);
 
@@ -662,10 +664,10 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
 
     private void buttonAddLinkActionPerformed(ActionEvent e) {
         //buttonAddLink.setSelected(!buttonAddLink.isSelected());
-        if(buttonAddLink.isSelected()) {
+        if (buttonAddLink.isSelected()) {
             selectsAddLink = true;
             labelStatus.setText("Method: Use click on class1, then class2 ");
-        } else if(!buttonAddLink.isSelected()){
+        } else if (!buttonAddLink.isSelected()) {
             selectsAddLink = false;
             labelStatus.setText("Do nothing");
         }
@@ -885,18 +887,18 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
         setVisible(true);
         var contentPane = getContentPane();
         contentPane.setLayout(new MigLayout(
-            "insets 0,hidemode 3,gap 5 5",
-            // columns
-            "[fill]" +
-            "[fill]" +
-            "[fill]" +
-            "[fill]" +
-            "[fill]",
-            // rows
-            "[fill]" +
-            "[fill]" +
-            "[fill]" +
-            "[]"));
+                "insets 0,hidemode 3,gap 5 5",
+                // columns
+                "[fill]" +
+                        "[fill]" +
+                        "[fill]" +
+                        "[fill]" +
+                        "[fill]",
+                // rows
+                "[fill]" +
+                        "[fill]" +
+                        "[fill]" +
+                        "[]"));
 
         //---- comboBox1 ----
         comboBox1.setMaximumRowCount(20);
@@ -959,14 +961,14 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
         //======== panel1 ========
         {
             panel1.setLayout(new MigLayout(
-                "hidemode 3",
-                // columns
-                "[fill]" +
-                "[fill]",
-                // rows
-                "[]" +
-                "[]" +
-                "[]"));
+                    "hidemode 3",
+                    // columns
+                    "[fill]" +
+                            "[fill]",
+                    // rows
+                    "[]" +
+                            "[]" +
+                            "[]"));
         }
         contentPane.add(panel1, "cell 0 1 5 2,dock center");
 
@@ -1037,6 +1039,7 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
             listProcessClasses.add(RunFeatures.class.newInstance());
             listProcessClasses.add(GFG.class.newInstance());
             listProcessClasses.add(Hist4Contour2.class.newInstance());
+            listProcessClasses.add(CustomProcessFileRGB.class.newInstance());
             listProcessClasses.forEach(new Consumer<ProcessFile>() {
                 @Override
                 public void accept(ProcessFile processFile) {
@@ -1071,9 +1074,9 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
                 int x = ((ClassElement) diagramElement).partAfter.element.x;
                 int y = ((ClassElement) diagramElement).partAfter.element.y;
                 g.setColor(Color.GREEN);
-                g.fillOval(diagramElement.x+40, diagramElement.y+40, 10,10);
+                g.fillOval(diagramElement.x + 40, diagramElement.y + 40, 10, 10);
                 g.setColor(Color.GRAY);
-                g.drawLine(diagramElement.x+40, diagramElement.y+40, x, y);
+                g.drawLine(diagramElement.x + 40, diagramElement.y + 40, x, y);
             }
         }
     }
@@ -1128,7 +1131,6 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
         g.fillRect(0, 0, panel1.getWidth(), panel1.getHeight());
 
 
-
         try {
             Point location = MouseInfo.getPointerInfo().getLocation();
             DiagramElement selected = selectFromPoint(location.x, location.y);
@@ -1154,7 +1156,7 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
         treeDiagram = new TreeDiagram(diagramElements);
 
 
-        if(treeDiagram.head!=null) {
+        if (treeDiagram.head != null) {
             ArrayList<TreeNodeDiagram> diagramElements2 = new ArrayList<>();
 
 
@@ -1205,6 +1207,7 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
                 ", listProcessClasses=" + listProcessClasses +
                 '}';
     }
+
     private JButton buttonStop;
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
     private JComboBox comboBox1;
