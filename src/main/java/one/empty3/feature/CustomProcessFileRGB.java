@@ -109,6 +109,8 @@ public class CustomProcessFileRGB extends ProcessFile {
 //                        b = 0.0;
 //                        x = 0.0;
 //                        y = 0.0;
+                        System.err.println("Error in sources");
+                        return false;
                     }
                     pix.setValues((int) x, (int) y, r, g, b);
                 }
