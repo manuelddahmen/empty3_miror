@@ -84,10 +84,11 @@ public class CustomProcessFileRGB extends ProcessFile {
                     listInstructions.setCurrentParamsValuesVec(currentVecs);
                     listInstructions.addInstructions(textDialog.getText());
                     currentVars.put("r", r);
-                    currentVars.put("g", r);
-                    currentVars.put("b", r);
+                    currentVars.put("g", g);
+                    currentVars.put("b", b);
                     currentVars.put("x", x);
                     currentVars.put("y", y);
+                    currentVecs.put("rgb", (String.format("(%f,%f,%f)", r, g, b)));
                     listInstructions.runInstructions();
 
                     currentVars = listInstructions.getCurrentParamsValues();
@@ -109,7 +110,7 @@ public class CustomProcessFileRGB extends ProcessFile {
 //                        x = 0.0;
 //                        y = 0.0;
                     }
-                    pix.setValues(i, j, r, g, b);
+                    pix.setValues((int) x, (int) y, r, g, b);
                 }
             }
 
