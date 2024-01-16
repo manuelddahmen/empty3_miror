@@ -27,6 +27,7 @@ import one.empty3.io.ProcessFile;
 import one.empty3.library1.shader.Vec;
 import one.empty3.library1.tree.ListInstructions;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -52,8 +53,16 @@ public class CustomProcessFileRGB extends ProcessFile {
     @Override
     public boolean process(File in, File out) {
         PixM pix = new PixM(maxRes == 0 ? 1280 : maxRes, maxRes == 0 ? (int) (1280. / 16 * 9) : maxRes);
-        if (isImage(in))
-            pix = PixM.getPixM(Objects.requireNonNull(ImageIO.read(in)), maxRes);
+        BufferedImage read;
+        if (isImage(in)) {
+            read = ImageIO.read(in);
+            if (read == null) {
+                return false;
+            }
+        } else {
+            return false;
+        }
+        pix = PixM.getPixM(read, maxRes);
         try {
             HashMap<String, String> currentVecs = new HashMap<>();
             HashMap<String, Double> currentVars = new HashMap<>();

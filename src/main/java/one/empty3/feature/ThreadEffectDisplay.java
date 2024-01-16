@@ -104,11 +104,11 @@ public class ThreadEffectDisplay extends Thread {
                     main.buttonGOActionPerformed(null);
 
                     while ((imageIn2 = getImageIn()) == null) {
-                        try {
+                        /*try {
                             Thread.sleep(20);
                         } catch (InterruptedException ignored) {
 
-                        }
+                        }*/
                         main.buttonGOActionPerformed(null);
                     }
 
