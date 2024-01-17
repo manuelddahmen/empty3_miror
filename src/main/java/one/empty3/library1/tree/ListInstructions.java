@@ -44,6 +44,10 @@ public class ListInstructions {
         this.currentParamsValuesVec = currentVecs;
     }
 
+    public String evaluate(String s) {
+        return "";
+    }
+
     public class Instruction {
         private int id;
         private String leftHand;

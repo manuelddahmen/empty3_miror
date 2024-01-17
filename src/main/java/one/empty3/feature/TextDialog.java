@@ -27,11 +27,19 @@ import java.awt.*;
 
 public class TextDialog extends JFrame {
     private final JTextArea textArea = new JTextArea(80, 25);
+    private static TextDialog instance = null;
 
     public TextDialog() {
         setContentPane(textArea);
         setMinimumSize(new Dimension(1024, 768));
         //textArea.setText(customProcessFileRGB);
+        if (instance == null)
+            instance = this;
+    }
+
+
+    public static TextDialog getInstance() {
+        return instance;
     }
 
     public String getText() {

@@ -31,6 +31,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -44,25 +45,24 @@ public class CustomProcessFileRGB extends ProcessFile {
     ListInstructions listInstructions;
 
     public CustomProcessFileRGB() {
-        if (textDialog == null || !textDialog.isActive()) {
-            textDialog = new TextDialog();
-            textDialog.setVisible(true);
-        }
+        textDialog = TextDialog.getInstance();
     }
 
     @Override
     public boolean process(File in, File out) {
-        PixM pix = new PixM(maxRes == 0 ? 1280 : maxRes, maxRes == 0 ? (int) (1280. / 16 * 9) : maxRes);
-        BufferedImage read;
+        PixM pixIn = new PixM(maxRes == 0 ? 1280 : maxRes, maxRes == 0 ? (int) (1280. / 16 * 9) : maxRes);
+        BufferedImage readIn;
         if (isImage(in)) {
-            read = ImageIO.read(in);
-            if (read == null) {
+            readIn = ImageIO.read(in);
+            if (readIn == null) {
                 return false;
             }
         } else {
             return false;
         }
-        pix = PixM.getPixM(read, maxRes);
+        pixIn = PixM.getPixM(readIn, maxRes);
+        PixM pix = pixIn;
+        PixM pixOut = pixIn.copy();
         try {
             HashMap<String, String> currentVecs = new HashMap<>();
             HashMap<String, Double> currentVars = new HashMap<>();
@@ -91,32 +91,26 @@ public class CustomProcessFileRGB extends ProcessFile {
                     currentVecs.put("rgb", (String.format("(%f,%f,%f)", r, g, b)));
                     listInstructions.runInstructions();
 
+                    System.out.println(listInstructions.evaluate("(r,g,b"));
+
                     currentVars = listInstructions.getCurrentParamsValues();
 
-                    if (currentVars.get("r") != null &&
-                            currentVars.get("g") != null &&
-                            currentVars.get("b") != null &&
-                            currentVars.get("x") != null &&
-                            currentVars.get("y") != null) {
+                    if (currentVars.get("r") != null && currentVars.get("g") != null && currentVars.get("b") != null) {
                         r = currentVars.get("r");
                         g = currentVars.get("g");
                         b = currentVars.get("b");
-                        x = currentVars.get("x");
-                        y = currentVars.get("y");
                     } else {
-//                        r = 0.0;
-//                        g = 0.0;
-//                        b = 0.0;
-//                        x = 0.0;
-//                        y = 0.0;
+                        r = 0.0;
+                        g = 0.0;
+                        b = 0.0;
                         System.err.println("Error in sources");
                         return false;
                     }
-                    pix.setValues((int) x, (int) y, r, g, b);
+                    pixOut.setValues(i, j, r, g, b);
                 }
             }
 
-            ImageIO.write(pix.getImage(), "jpg", out);
+            ImageIO.write(pixOut.normalize(0, 1).getImage(), "jpg", out);
 
             return true;
 
