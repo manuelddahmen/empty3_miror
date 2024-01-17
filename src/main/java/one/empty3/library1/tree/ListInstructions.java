@@ -36,14 +36,6 @@ public class ListInstructions {
     HashMap<String, String> currentParamsValuesVec = new HashMap<>();
     HashMap<String, StructureMatrix<Double>> currentParamsValuesVecComputed = new HashMap<>();
 
-    public void setCurrentParamsValues(HashMap<String, Double> currentVars) {
-        this.currentParamsValues = currentVars;
-    }
-
-    public void setCurrentParamsValuesVec(HashMap<String, String> currentVecs) {
-        this.currentParamsValuesVec = currentVecs;
-    }
-
     public String evaluate(String s) {
         return "";
     }
@@ -157,9 +149,12 @@ public class ListInstructions {
 
         assignations.toArray(instructions);
 
-        currentParamsValues = new HashMap<>();
-        currentParamsValuesVec = new HashMap<>();
-        currentParamsValuesVecComputed = new HashMap<>();
+        if (currentParamsValues == null)
+            currentParamsValues = new HashMap<>();
+        if (currentParamsValuesVec == null)
+            currentParamsValuesVec = new HashMap<>();
+        if (currentParamsValuesVecComputed == null)
+            currentParamsValuesVecComputed = new HashMap<>();
         int i = 0;
         for (Instruction instruction : instructions) {
             String key = (String) instruction.getLeftHand();
@@ -219,5 +214,17 @@ public class ListInstructions {
 
     public HashMap<String, StructureMatrix<Double>> getCurrentParamsValuesVecComputed() {
         return currentParamsValuesVecComputed;
+    }
+
+    public void setCurrentParamsValues(HashMap<String, Double> currentVars) {
+        this.currentParamsValues = currentVars;
+    }
+
+    public void setCurrentParamsValuesVec(HashMap<String, String> currentVecs) {
+        this.currentParamsValuesVec = currentVecs;
+    }
+
+    public void setCurrentParamsValuesVecComputed(HashMap<String, StructureMatrix<Double>> currentVecsComputed) {
+        this.currentParamsValuesVecComputed = currentVecsComputed;
     }
 }

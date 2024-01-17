@@ -24,6 +24,7 @@ package one.empty3.feature;
 
 import one.empty3.feature.app.replace.javax.imageio.ImageIO;
 import one.empty3.io.ProcessFile;
+import one.empty3.library.StructureMatrix;
 import one.empty3.library1.shader.Vec;
 import one.empty3.library1.tree.ListInstructions;
 
@@ -46,6 +47,7 @@ public class CustomProcessFileRGB extends ProcessFile {
 
     public CustomProcessFileRGB() {
         textDialog = TextDialog.getInstance();
+        textDialog.setVisible(true);
     }
 
     @Override
@@ -66,6 +68,7 @@ public class CustomProcessFileRGB extends ProcessFile {
         try {
             HashMap<String, String> currentVecs = new HashMap<>();
             HashMap<String, Double> currentVars = new HashMap<>();
+            HashMap<String, StructureMatrix<Double>> currentVecsComputed = new HashMap<>();
 
             for (int i = 0; i < pix.getColumns(); i++) {
                 for (int j = 0; j < pix.getLines(); j++) {
@@ -82,6 +85,7 @@ public class CustomProcessFileRGB extends ProcessFile {
 
                     listInstructions.setCurrentParamsValues(currentVars);
                     listInstructions.setCurrentParamsValuesVec(currentVecs);
+                    listInstructions.setCurrentParamsValuesVecComputed(currentVecsComputed);
                     listInstructions.addInstructions(textDialog.getText());
                     currentVars.put("r", r);
                     currentVars.put("g", g);
@@ -93,19 +97,11 @@ public class CustomProcessFileRGB extends ProcessFile {
 
                     System.out.println(listInstructions.evaluate("(r,g,b"));
 
-                    currentVars = listInstructions.getCurrentParamsValues();
+                    currentVecsComputed = listInstructions.getCurrentParamsValuesVecComputed();
 
-                    if (currentVars.get("r") != null && currentVars.get("g") != null && currentVars.get("b") != null) {
-                        r = currentVars.get("r");
-                        g = currentVars.get("g");
-                        b = currentVars.get("b");
-                    } else {
-                        r = 0.0;
-                        g = 0.0;
-                        b = 0.0;
-                        System.err.println("Error in sources");
-                        return false;
-                    }
+                    r = currentVecsComputed.getOrDefault("r", (new StructureMatrix<Double>(0, Double.class).setElem(r))).getElem();
+                    g = currentVecsComputed.getOrDefault("g", (new StructureMatrix<Double>(0, Double.class).setElem(g))).getElem();
+                    b = currentVecsComputed.getOrDefault("b", (new StructureMatrix<Double>(0, Double.class).setElem(b))).getElem();
                     pixOut.setValues(i, j, r, g, b);
                 }
             }

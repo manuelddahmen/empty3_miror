@@ -39,6 +39,8 @@ public class TextDialog extends JFrame {
 
 
     public static TextDialog getInstance() {
+        if (instance == null)
+            return new TextDialog();
         return instance;
     }
 
