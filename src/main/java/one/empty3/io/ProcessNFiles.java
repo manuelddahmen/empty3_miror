@@ -34,7 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-public class ProcessNFiles  {
+public class ProcessNFiles {
     private InProcessCode code;
     public List<ProcessNFiles> processNFiles = new ArrayList<>();
     protected ObjectWithProperties properties;
@@ -48,14 +48,20 @@ public class ProcessNFiles  {
     public ProcessNFiles() {
         initProperties(this);
     }
+
     public void initProperties(ProcessNFiles processFile) {
-        if(properties==null) {
+        if (properties == null) {
             properties = new ObjectWithProperties(processFile);
         }
         getProperties().addProperty("maxRes", ObjectWithProperties.ClassTypes.AtomicInt, this.maxRes);
         this.processNFiles.add(this);
 
     }
+
+    public void onInstanceInit() {
+        
+    }
+
     protected static boolean isImage(File in) {
         return in != null && (in.getAbsolutePath().toLowerCase().endsWith(".jpg")
                 || in.getAbsolutePath().toLowerCase().endsWith(".png"));
@@ -104,6 +110,7 @@ public class ProcessNFiles  {
         System.out.printf("STACK %d : %s", index, imagesStack.get(index));
         return imagesStack.get(index);
     }
+
     @Deprecated
     public void setStack(List<File> files1) {
         this.imagesStack = files1;
@@ -133,7 +140,7 @@ public class ProcessNFiles  {
     }
 
     public ObjectWithProperties getProperties() {
-        if(properties==null) {
+        if (properties == null) {
             properties = new ObjectWithProperties(this);
         }
         return properties;
@@ -146,6 +153,7 @@ public class ProcessNFiles  {
     public InProcessCode getCode() {
         return code;
     }
+
     public void setCode(InProcessCode inProcessCode) {
         this.code = inProcessCode;
     }

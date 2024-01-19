@@ -69,8 +69,8 @@ public class TestChatHumain extends TestObjetSub {
     public static void main(String[] args) {
         TestChatHumain testCourseChat = new TestChatHumain();
         testCourseChat.loop(true);
-        //testCourseChat.setResolution(Resolution.HD1080RESOLUTION.x(), Resolution.HD1080RESOLUTION.y());
-        testCourseChat.setResolution(640, 480);
+        testCourseChat.setResolution(Resolution.HD1080RESOLUTION.x(), Resolution.HD1080RESOLUTION.y());
+        //testCourseChat.setResolution(640, 480);
         Thread thread = new Thread(testCourseChat);
         thread.start();
     }

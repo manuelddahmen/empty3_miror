@@ -39,23 +39,25 @@ public abstract class ProcessFile extends ProcessNFiles {
 
 
     protected static boolean isImage(File in) {
-        if( in != null && (in.getAbsolutePath().toLowerCase().endsWith(".jpg")
+        if (in != null && (in.getAbsolutePath().toLowerCase().endsWith(".jpg")
                 || in.getAbsolutePath().toLowerCase().endsWith(".png")))
             return true;
         try {
             BufferedImage read = ImageIO.read(in);
-            if(read!=null) return true;
+            if (read != null) return true;
         } catch (IOException e) {
 
         }
         return false;
     }
+
     public ProcessFile() {
         super();
     }
+
     public void initProperties(ProcessNFiles processFile) {
         super.initProperties(processFile);
-        if(properties==null) {
+        if (properties == null) {
             properties = new ObjectWithProperties(processFile);
         }
         getProperties().addProperty("maxRes", ObjectWithProperties.ClassTypes.AtomicInt, this.maxRes);
@@ -70,7 +72,6 @@ public abstract class ProcessFile extends ProcessNFiles {
     public void setOutputDirectory(File outputDirectory) {
         this.outputDirectory = outputDirectory;
     }
-
 
 
     public abstract boolean process(File in, File out);
