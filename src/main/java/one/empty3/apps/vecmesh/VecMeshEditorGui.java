@@ -73,20 +73,20 @@ public class VecMeshEditorGui extends JFrame {
 
         config = new Config();
 
-        currentFile= new File(config.getDefaultCodeVecMesh());
+        currentFile = new File(config.getDefaultCodeVecMesh());
 
         setDefaultFile();
 
         Output.setGetText(buttonOutput);
 
         instanceCount++;
-        System.out.println("Instance==1 : "+(instanceCount==1));
+        System.out.println("Instance==1 : " + (instanceCount == 1));
     }
 
     private void menuItemSave(ActionEvent e) {
         String text = getTextAreaCode().getText();
         int columns = getTextFieldRows();
-        if(currentFile!=null&&currentFile.exists()) {
+        if (currentFile != null && currentFile.exists()) {
             try {
                 PrintWriter fileOutputStream = new PrintWriter(currentFile);
                 fileOutputStream.println(columns);
@@ -101,24 +101,26 @@ public class VecMeshEditorGui extends JFrame {
     public void setDefaultFile() {
         getDefaultOrNewFileTextCode();
     }
+
     private void getDefaultOrNewFileTextCode() {
-        if(!currentFile.exists()) {
+        if (!currentFile.exists()) {
             try {
                 currentFile.createNewFile();
                 PrintWriter printWriter = new PrintWriter(currentFile);
                 printWriter.println("2");
                 printWriter.println(representableClass.getCanonicalName());
-                printWriter.println("heights = ((1,1),(1,1))");
+                printWriter.println("heights = ((1,1),(1,1))\n" +
+                        "heights.cols = 2");
                 printWriter.close();
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
         try {
-            try (BufferedReader reader = Files.newBufferedReader(currentFile.toPath(), Charset.defaultCharset())){
+            try (BufferedReader reader = Files.newBufferedReader(currentFile.toPath(), Charset.defaultCharset())) {
                 String line = null;
                 String columnsString = reader.readLine();
-                if(columnsString!=null)
+                if (columnsString != null)
                     textAreaColumsCount.setText(String.valueOf(Double.parseDouble(columnsString)));
                 String classNameReader = reader.readLine();
                 try {
@@ -133,7 +135,7 @@ public class VecMeshEditorGui extends JFrame {
                 }
                 getTextAreaCode().setText(sb.toString());
             }
-        } catch (IOException|RuntimeException e) {
+        } catch (IOException | RuntimeException e) {
             e.printStackTrace();
         }
     }
@@ -180,25 +182,25 @@ public class VecMeshEditorGui extends JFrame {
 
             int columns = getTextFieldRows();
 
-            try (BufferedReader reader = Files.newBufferedReader(currentFile.toPath(), Charset.defaultCharset())){
+            try (BufferedReader reader = Files.newBufferedReader(currentFile.toPath(), Charset.defaultCharset())) {
                 String line = "";
                 String columnsString = reader.readLine();
-                if(columnsString!=null)
+                if (columnsString != null)
                     textAreaColumsCount.setText(String.valueOf(Double.parseDouble(columnsString)));
                 String classNameReader = reader.readLine();
                 try {
-                    Class<?> aClass =getClass().getClassLoader().loadClass(classNameReader);
+                    Class<?> aClass = getClass().getClassLoader().loadClass(classNameReader);
                     Object o = aClass.getConstructor().newInstance();
-                    if(o instanceof Representable r) {
+                    if (o instanceof Representable r) {
                         representableClass = r.getClass();
                     }
                 } catch (ClassNotFoundException | InvocationTargetException | InstantiationException |
                          IllegalAccessException | NoSuchMethodException | NullPointerException ex1) {
                     representableClass = defaultClassRepresentable;
                 }
-                if(representableClass==null && defaultClassRepresentable!=null)
+                if (representableClass == null && defaultClassRepresentable != null)
                     representableClass = defaultClassRepresentable;
-                else if(representableClass==null&&defaultClassRepresentable==null) {
+                else if (representableClass == null && defaultClassRepresentable == null) {
                     defaultClassRepresentable = Tubulaire3.class;
                     representableClass = defaultClassRepresentable;
                 }
@@ -221,12 +223,15 @@ public class VecMeshEditorGui extends JFrame {
     private void menuItemSphere(ActionEvent e) {
         this.representableClass = Sphere.class;
     }
+
     private void menuItemTube(ActionEvent e) {
         this.representableClass = Tubulaire3.class;
     }
+
     private void menuItemRectangle(ActionEvent e) {
         this.representableClass = Plan3D.class;
     }
+
     private void menuItemCube(ActionEvent e) {
         this.representableClass = Cube.class;
     }
@@ -258,7 +263,7 @@ public class VecMeshEditorGui extends JFrame {
         JFileChooser jFileChooser = new JFileChooser(currentFile.getParentFile());
         jFileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
         jFileChooser.setDialogTitle("Choisir où exporter les fichiers");
-        if(jFileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+        if (jFileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
             currentFile = jFileChooser.getSelectedFile();
             File currentFile1 = currentFile;
             File dir = currentFile1;
@@ -272,10 +277,10 @@ public class VecMeshEditorGui extends JFrame {
                 if (currentFile1.exists() && !currentFile1.isDirectory()) {
                     dir = new File(currentFile1.getParentFile().getAbsolutePath());
                 }
-                File xml = new File(dir.getAbsolutePath() + File.separator+"scene.xml");
-                File moo = new File(dir.getAbsolutePath() + File.separator+"scene.moo");
-                File stl = new File(dir.getAbsolutePath() + File.separator+"scene.stl");
-                File obj = new File(dir.getAbsolutePath() + File.separator+"scene.obj");
+                File xml = new File(dir.getAbsolutePath() + File.separator + "scene.xml");
+                File moo = new File(dir.getAbsolutePath() + File.separator + "scene.moo");
+                File stl = new File(dir.getAbsolutePath() + File.separator + "scene.stl");
+                File obj = new File(dir.getAbsolutePath() + File.separator + "scene.obj");
                 STLExport.save(stl, model.getScene(), false);
                 ObjExport.save(obj, model.getScene(), false);
                 PrintWriter printWriter = new PrintWriter(moo);
@@ -305,15 +310,15 @@ public class VecMeshEditorGui extends JFrame {
     }
 
     private void menuAddImages(ActionEvent e) {
-        File direFile = currentFile==null?new Config().getFileDirectoryDefault():currentFile;
+        File direFile = currentFile == null ? new Config().getFileDirectoryDefault() : currentFile;
         JFileChooser jFileChooser = new JFileChooser(direFile);
         jFileChooser.setDialogType(JFileChooser.OPEN_DIALOG);
         jFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         jFileChooser.setFileFilter(new FileFilter() {
             @Override
             public boolean accept(File f) {
-                return (f.getName().toLowerCase().endsWith(".jpg")||f.getName().toLowerCase().endsWith(".png")
-                        ||f.getName().toLowerCase().endsWith(".jpeg")||f.getName().toLowerCase().endsWith(".bmp"));
+                return (f.getName().toLowerCase().endsWith(".jpg") || f.getName().toLowerCase().endsWith(".png")
+                        || f.getName().toLowerCase().endsWith(".jpeg") || f.getName().toLowerCase().endsWith(".bmp"));
             }
 
             @Override
@@ -322,17 +327,17 @@ public class VecMeshEditorGui extends JFrame {
 
             }
         });
-        if(jFileChooser.showOpenDialog(this)==JFileChooser.APPROVE_OPTION) {
+        if (jFileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             File f1 = jFileChooser.getSelectedFile();
             File[] selectedFiles = null;
-            if(f1!=null) {
-                selectedFiles =new File[] {f1};
+            if (f1 != null) {
+                selectedFiles = new File[]{f1};
             } else {
                 selectedFiles = jFileChooser.getSelectedFiles();
             }
-            for(File f : selectedFiles) {
-                if(!getImages().contains(f) && f!=null) {
-                    if(getImages().add(f)) {
+            for (File f : selectedFiles) {
+                if (!getImages().contains(f) && f != null) {
+                    if (getImages().add(f)) {
                         JMenuItem jMenuItem = new JMenuItem(f.getAbsolutePath());
                         jMenuItem.addActionListener(new AbstractAction() {
                             @Override
@@ -343,7 +348,7 @@ public class VecMeshEditorGui extends JFrame {
                                     fileTexture = file;
                                     System.out.println("texture: " + file.getAbsolutePath());
                                 } else
-                                    System.err.println("File"+file+" doesn't exist");
+                                    System.err.println("File" + file + " doesn't exist");
                             }
                         });
                         menuImages.add(jMenuItem);
@@ -366,6 +371,7 @@ public class VecMeshEditorGui extends JFrame {
     private void menuItemHeightMap(ActionEvent e) {
         this.containerClassType = TYPE_CONTAINER_CLASS_VEC_HEIGHT_MAP;
     }
+
     private void menuItemVoronoi(ActionEvent e) {
         this.containerClassType = TYPE_CONTAINER_CLASS_VORONOI_HEIGHTS;
     }
@@ -780,7 +786,7 @@ public class VecMeshEditorGui extends JFrame {
     }
 
     public int getTextFieldRows() {
-        return (int)(Double.parseDouble(textAreaColumsCount.getText()));
+        return (int) (Double.parseDouble(textAreaColumsCount.getText()));
     }
 
     public JPanel getPanelGraphics() {
@@ -801,10 +807,9 @@ public class VecMeshEditorGui extends JFrame {
             ZBufferImpl zBuffer1 = zBuffer;
             zBuffer = new ZBufferImpl(getPanelGraphics().getWidth(),
                     getPanelGraphics().getHeight());
-            if(zBuffer1!=null) {
+            if (zBuffer1 != null) {
                 zBuffer.setDisplayType(zBuffer1.getDisplayType());
-            }
-             else {
+            } else {
                 zBuffer.setDisplayType(ZBufferImpl.SURFACE_DISPLAY_COL_QUADS);
             }
         }
@@ -818,6 +823,7 @@ public class VecMeshEditorGui extends JFrame {
     public void setResY(int i) {
         this.resY = i;
     }
+
     public void setResX(int j) {
         this.resX = j;
     }

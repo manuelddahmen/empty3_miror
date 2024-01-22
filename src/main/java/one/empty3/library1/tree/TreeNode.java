@@ -65,7 +65,7 @@ import java.util.ArrayList;
  * Created by Manuel Dahmen on 15-12-16.
  */
 public class TreeNode {
-    protected AlgebricTree algebricTree;
+    protected AlgebraicTree algebraicTree;
     protected Object[] objects;
     protected TreeNodeType type = null;
     protected ArrayList<TreeNode> children = new ArrayList<TreeNode>();
@@ -73,8 +73,8 @@ public class TreeNode {
     protected String expressionString;
     private TreeNodeValue value;
 
-    public TreeNode(AlgebricTree algebricTree, String expStr) {
-        this.algebricTree = algebricTree;
+    public TreeNode(AlgebraicTree algebraicTree, String expStr) {
+        this.algebraicTree = algebraicTree;
         this.parent = null;
         if (expStr.trim().isEmpty())
             expressionString = "0.0";
@@ -89,7 +89,7 @@ public class TreeNode {
      */
     public TreeNode(TreeNode src, Object[] objects, TreeNodeType clazz) {
         this.parent = src;
-        this.algebricTree = src.algebricTree;
+        this.algebraicTree = src.algebraicTree;
         this.objects = objects;
         clazz.instantiate(objects);
         this.type = clazz;
@@ -163,7 +163,7 @@ public class TreeNode {
                     String varName = childrenVars.get(i).expressionString;
                     if (varName != null) {
                         StructureMatrix<Double> put =
-                                algebricTree.getParametersValuesVecComputed()
+                                algebraicTree.getParametersValuesVecComputed()
                                         .put(varName, childrenValues.get(i).eval());
                     }
                 }
@@ -343,7 +343,7 @@ public class TreeNode {
                         rightOp = 1;
                     }
                     finalSize = Math.max(leftOp, rightOp);
-                    argMultiIndices = (((double) leftOp )/ rightOp);
+                    argMultiIndices = (((double) leftOp) / rightOp);
                     for (int j = 0; j < finalSize; j++) {
                         double argJ0 = 0.0;
                         double argJ1 = 0.0;

@@ -35,18 +35,19 @@ public class ImageIO {
     public static java.awt.image.BufferedImage read(File file) {
         try {
             FileInputStream fileInputStream = new FileInputStream(file);
-            java.awt.image.BufferedImage BufferedImage2 = javax.imageio.ImageIO.read(fileInputStream);
+            java.awt.image.BufferedImage bufferedImage2 = javax.imageio.ImageIO.read(fileInputStream);
             fileInputStream.close();
-            return BufferedImage2;
-        } catch (Exception ex) {}
-
-        return null;
+            return bufferedImage2;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
     }
 
     public static boolean write(BufferedImage imageOut, String jpg, File out) throws IOException {
-        if(out.getAbsolutePath().endsWith("png"))
+        if (out.getAbsolutePath().endsWith("png"))
             jpg = "png";
-        if(out.getAbsolutePath().endsWith("jpg"))
+        if (out.getAbsolutePath().endsWith("jpg"))
             jpg = "jpg";
         FileOutputStream fileOutputStream = new FileOutputStream(out);
         // ???

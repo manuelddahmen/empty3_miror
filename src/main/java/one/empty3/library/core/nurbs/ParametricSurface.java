@@ -45,7 +45,7 @@ public abstract class ParametricSurface extends Representable {
     private static final double MIN_NORMGT0 = 0.000000001;
     private static final double TANGENT_INCR = 0.00000001;
     protected int quad_not_computed = 3;
-//    private static Globals globals;
+    //    private static Globals globals;
     protected StructureMatrix<Point2Point> terminalU = new StructureMatrix<>(0, Point2Point.class);
     protected StructureMatrix<Point2Point> terminalV = new StructureMatrix<>(0, Point2Point.class);
     protected Point3D[] vectorsBak;
@@ -320,6 +320,11 @@ public abstract class ParametricSurface extends Representable {
     public void setQuad_not_computed(int quad_not_computed) {
         this.quad_not_computed = quad_not_computed;
     }
+
+    public StructureMatrix<Double> getIncrNormale() {
+        return incrNormale;
+    }
+
 
     public static class Globals {
         private Double incrU;

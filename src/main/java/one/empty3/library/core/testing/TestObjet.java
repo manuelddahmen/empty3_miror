@@ -94,7 +94,7 @@ public abstract class TestObjet implements Test, Runnable {
     private File avif;
     //private AVIWriter aw;
     private boolean aviOpen = false;
-    private String filmName;
+    public String filmName;
     private int idxFilm;
     private boolean unterminable = false;
     private long timeStart;
@@ -125,7 +125,7 @@ public abstract class TestObjet implements Test, Runnable {
     private boolean initialise;
     private boolean structure = false;
     private boolean noZoom;
-    private String sousdossier;
+    public String sousdossier;
     private boolean D3 = false;
     private ImageContainer biic;
     private ECBufferedImage riG;
@@ -857,7 +857,7 @@ public abstract class TestObjet implements Test, Runnable {
                     return;
                 }
             }
-            o.println("Time for frame°"+frame()+" (scene configuration: " + lastInfoEllapsedMillis/1000f);
+            o.println("Time for frame°" + frame() + " (scene configuration: " + lastInfoEllapsedMillis / 1000f);
 
             //Logger.getAnonymousLogger().log(Level.INFO, z.scene());
 
@@ -873,7 +873,7 @@ public abstract class TestObjet implements Test, Runnable {
                     ex.printStackTrace();
                 }
 
-                if(getGenerate(TestObjet.GENERATE_IMAGE)) {
+                if (getGenerate(TestObjet.GENERATE_IMAGE)) {
                     ri = z.image2();
 
                     afterRenderFrame();
@@ -899,7 +899,7 @@ public abstract class TestObjet implements Test, Runnable {
                 }
             }
             lastInfoEllapsedMillis = System.currentTimeMillis() - timeStart;
-            o.println("Time for frame°"+frame()+" (scene rendering: " + lastInfoEllapsedMillis/1000f);
+            o.println("Time for frame°" + frame() + " (scene rendering: " + lastInfoEllapsedMillis / 1000f);
             try {
                 File fout = new File(this.dir.getAbsolutePath()
                         + File.separator + filename + ".bmo");
@@ -1181,5 +1181,9 @@ public abstract class TestObjet implements Test, Runnable {
 
     public void setZ(ZBufferImpl z) {
         this.z = z;
+    }
+
+    public File getDir() {
+        return dir;
     }
 }

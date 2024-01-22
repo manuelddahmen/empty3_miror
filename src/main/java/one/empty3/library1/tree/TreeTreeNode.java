@@ -29,12 +29,12 @@ import java.util.Map;
 import one.empty3.library.StructureMatrix;
 
 public class TreeTreeNode extends TreeNode {
-    private final AlgebricTree tree;
+    private final AlgebraicTree tree;
     private Method method = null;
 
     public TreeTreeNode(TreeNode t, Object[] objects, TreeNodeType type) {
         super(t, objects, type);
-        tree = new AlgebricTree((String) objects[0], (Map<String, Double>) objects[1]);
+        tree = new AlgebraicTree((String) objects[0], (Map<String, Double>) objects[1]);
         try {
             tree.construct();
             if (objects[2] instanceof String && !((String) objects[2]).isEmpty()) {

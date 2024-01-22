@@ -54,9 +54,6 @@
 
 package one.empty3.library1.tree;
 
-import one.empty3.library1.tree.AlgebricTree;
-import one.empty3.library1.tree.Tree;
-
 /*__
  * Created by Manuel Dahmen on 15-12-16.
  */
@@ -74,7 +71,7 @@ public class AlgebraicFormulaSyntaxException extends Throwable {
         //System.err.println(algebraicTree);
     }
 
-    public AlgebraicFormulaSyntaxException(String s, AlgebricTree algebricTree) {
+    public AlgebraicFormulaSyntaxException(String s, AlgebraicTree algebraicTree) {
         this(s);
         ///System.err.println(algebricTree);
     }

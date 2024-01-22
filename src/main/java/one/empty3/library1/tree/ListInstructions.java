@@ -164,7 +164,7 @@ public class ListInstructions {
             Double resultDouble = null;
             try {
                 if (value != null) {
-                    AlgebricTree tree = new AlgebricTree(value);
+                    AlgebraicTree tree = new AlgebraicTree(value);
                     tree.setParametersValues(currentParamsValues);
                     tree.setParametersValuesVec(currentParamsValuesVec);
                     tree.setParametersValuesVecComputed(currentParamsValuesVecComputed);

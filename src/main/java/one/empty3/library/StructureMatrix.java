@@ -74,11 +74,11 @@ public class StructureMatrix<T> implements Serializable, Serialisable {
 
     public StructureMatrix<T> setElem(@NotNull T value) {
         dim = 0;
-        if(value instanceof Point3D) {
+        if (value instanceof Point3D) {
 
         }
         this.data0d = value;
-        if(value!=null)
+        if (value != null)
             this.classType = value.getClass();
         listenersPropertyChanged(null, value, 0, 0, 0);
         return this;
@@ -137,7 +137,7 @@ public class StructureMatrix<T> implements Serializable, Serialisable {
     public T getElem() {
 
         if (dim == 0) {
-            if(data0d!=null) {
+            if (data0d != null) {
                 return this.data0d;
             } else {
                 //System.out.println("null structureMatrix elem dim=0");
@@ -175,12 +175,15 @@ public class StructureMatrix<T> implements Serializable, Serialisable {
     public List<List<T>> getData2d() {
         return data2d;
     }
+
     public boolean inBounds(int i, int j) {
-        return dim==2 && i<getData2d().size() && j<getData2d().get(i).size();
+        return dim == 2 && i < getData2d().size() && j < getData2d().get(i).size();
     }
+
     public boolean inBounds(int i) {
-        return dim==1 && i<getData1d().size();
+        return dim == 1 && i < getData1d().size();
     }
+
     public void insert(int pos, int rowCol, T value) {
         if (dim == 1)
             data1d.add(pos, value);
@@ -263,14 +266,15 @@ public class StructureMatrix<T> implements Serializable, Serialisable {
     }
 
     boolean equals1(StructureMatrix<T> that) {
-        if(data1d.size()==that.data1d.size()) {
+        if (data1d.size() == that.data1d.size()) {
             for (int i = 0; i < data1d.size(); i++) {
-                if(!data1d.get(i).equals(that.data1d.get(i)))
+                if (!data1d.get(i).equals(that.data1d.get(i)))
                     return false;
             }
         }
         return true;
     }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -309,19 +313,28 @@ public class StructureMatrix<T> implements Serializable, Serialisable {
         s.append("(dim:" + dim + ")");
         switch (dim) {
             case 0:
-                if(data0d !=null)
+                if (data0d != null)
                     s.append("(data : {" + data0d.toString() + "} )");
                 else
                     s.append("null 0d-data");
                 break;
             case 1:
                 s.append("(data : (");
+                final boolean[] a1 = {true};
                 data1d.forEach(new Consumer<T>() {
                     @Override
                     public void accept(T t) {
-                        s.append("(" + t.toString() + ")");
+
+                        if (a1[0]) {
+                            a1[0] = false;
+                        } else {
+                            s.append(", ");
+                        }
+                        if (t != null)
+                            s.append(t.toString());
                     }
                 });
+                s.append("))");
                 break;
             case 2:
                 s.append("(data : (");
@@ -329,13 +342,22 @@ public class StructureMatrix<T> implements Serializable, Serialisable {
                     @Override
                     public void accept(List<T> ts) {
                         s.append("( ");
+                        final boolean[] a1 = {true};
 
-                        ts.forEach(new Consumer<T>() {
-                            @Override
-                            public void accept(T t) {
-                                s.append("(" + t.toString() + ")");
-                            }
-                        });
+                        if (ts != null)
+                            ts.forEach(new Consumer<T>() {
+                                @Override
+                                public void accept(T t) {
+
+                                    if (a1[0]) {
+                                        a1[0] = false;
+                                    } else {
+                                        s.append(", ");
+                                    }
+                                    if (t != null)
+                                        s.append(t.toString());
+                                }
+                            });
 
                         s.append(" )\n");
 
@@ -354,7 +376,7 @@ public class StructureMatrix<T> implements Serializable, Serialisable {
         s.append("(dim:" + dim + ")");
         switch (dim) {
             case 0:
-                if(data0d !=null)
+                if (data0d != null)
                     s.append("(data : {" + data0d.toString() + "} )");
                 else
                     s.append("null 0d-data");
@@ -403,7 +425,7 @@ public class StructureMatrix<T> implements Serializable, Serialisable {
         switch (dim) {
             case 1:
                 data1d.clear();
-                int i=0;
+                int i = 0;
                 for (T t : all) {
                     if (t != null)
                         setElem(t, i);
@@ -459,13 +481,13 @@ public class StructureMatrix<T> implements Serializable, Serialisable {
 
     private T cloneElement(T t) throws IllegalAccessException, CopyRepresentableError, InstantiationException {
         T t1 = null;
-        if(t==null)
+        if (t == null)
             return null;
         if (t instanceof StructureMatrix) {
             t1 = (T) ((StructureMatrix) t).copy();
-        } else if(t instanceof Point3D) {
-            t1 = (T) new Point3D(((Point3D)t).get(0),
-                    ((Point3D)t).get(1),((Point3D)t).get(2));
+        } else if (t instanceof Point3D) {
+            t1 = (T) new Point3D(((Point3D) t).get(0),
+                    ((Point3D) t).get(1), ((Point3D) t).get(2));
         } else if (t instanceof MatrixPropertiesObject) {
             ((MatrixPropertiesObject) t).declareProperties();
             t1 = (T) ((MatrixPropertiesObject) t).copy();
@@ -557,12 +579,13 @@ public class StructureMatrix<T> implements Serializable, Serialisable {
         try {
             out.write(getDim());
             switch (getDim()) {
-                case 0: out.write(((Serialisable)data0d).type());
+                case 0:
+                    out.write(((Serialisable) data0d).type());
                     break;
                 case 1:
                     getData1d().forEach(t -> {
                         try {
-                            out.write(((Serialisable)t).type());
+                            out.write(((Serialisable) t).type());
                         } catch (IOException e) {
                             throw new RuntimeException(e);
                         }
@@ -576,7 +599,7 @@ public class StructureMatrix<T> implements Serializable, Serialisable {
                                 @Override
                                 public void accept(T t) {
                                     try {
-                                        out.write(((Serialisable)t).type());
+                                        out.write(((Serialisable) t).type());
                                     } catch (IOException e) {
                                         throw new RuntimeException(e);
                                     }

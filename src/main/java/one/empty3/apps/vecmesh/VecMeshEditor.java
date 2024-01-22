@@ -22,6 +22,7 @@
 
 package one.empty3.apps.vecmesh;
 //heights = ((1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1),(1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,1,1,1,1,1,1,1),(1,1,1,,1,1,1,1,1,1,3,3,3,3,1,1,1,1,1,1,1,1,1),(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1),(1,1,1,1,1,1,1,1,1,1,2,2,2,1,1,1,1,1,1,1,1,1),(1,1,1,1,1,1,1,1,1,1,2,2,2,1,1,1,1,1,1,1,1,1),(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1),(1,1,1,1,1,4,1,1,1,1,1,1,1,1,1,1,4,1,1,1,1,1),(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1),(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1))
+
 import one.empty3.library.*;
 import one.empty3.library.core.nurbs.CourbeParametriquePolynomiale;
 import one.empty3.library.core.nurbs.FctXY;
@@ -29,7 +30,7 @@ import one.empty3.library.core.nurbs.ParametricSurface;
 import one.empty3.library.core.tribase.Plan3D;
 import one.empty3.library.core.tribase.Tubulaire3;
 import one.empty3.library1.shader.Vec;
-import one.empty3.library1.tree.AlgebricTree;
+import one.empty3.library1.tree.AlgebraicTree;
 import one.empty3.library1.tree.ListInstructions;
 
 import javax.swing.*;
@@ -75,7 +76,7 @@ public class VecMeshEditor implements Runnable {
                 }
             });
         } else if (representableClass.equals(Plan3D.class)) {
-            shape = new Plan3D(new Point3D(-3.0, -halfSize, 0.0), new Point3D(halfSize, -halfSize, 0.0), new Point3D(-halfSize, halfSize, 0.0));
+            shape = new Plan3D(new Point3D(-halfSize, -halfSize, 0.0), new Point3D(halfSize, -halfSize, 0.0), new Point3D(-halfSize, halfSize, 0.0));
         }
         shape = shape == null ? new Plan3D(new Point3D(-halfSize, -halfSize, 0.0), new Point3D(halfSize, -halfSize, 0.0), new Point3D(-halfSize, halfSize, 0.0)) : shape;
 
@@ -93,7 +94,7 @@ public class VecMeshEditor implements Runnable {
                 try {
                     long t1 = System.currentTimeMillis();
                     StructureMatrix<Double> eval = null;
-                    AlgebricTree algebricTree = new AlgebricTree(vecMeshEditorGui.getDefaultCode());
+                    AlgebraicTree algebraicTree = new AlgebraicTree(vecMeshEditorGui.getDefaultCode());
                     ListInstructions listInstructions = new ListInstructions();
                     listInstructions.addInstructions(vecMeshEditorGui.getDefaultCode());
                     listInstructions.runInstructions();
@@ -112,6 +113,7 @@ public class VecMeshEditor implements Runnable {
                         }
                         VecHeightMap vecHeightMap = new VecHeightMap(getParametricSurface(4.0),
                                 new Vec(doubles), vecMeshEditorGui.getTextFieldRows());
+                        vecHeightMap.getIncrNormale().setElem(0.01);
                         if (rotate == null)
                             rotate = new Rotate(vecHeightMap, vecMeshEditorGui.getPanelGraphics());
                         else {
@@ -146,7 +148,7 @@ public class VecMeshEditor implements Runnable {
                         //Output.println("Drawn");
                         zBuffer.idzpp();
                         long t2 = System.currentTimeMillis();
-                        Output.println("Matrix was : " + vecHeightMap.getVec() + " FPS : " + (t2 - t1));
+                        Output.println("Matrix was : " + vecHeightMap.getVec() + " FPS : " + 1.0 / ((t2 - t1) / 1000.));
 
                     }
                 } catch (RuntimeException ex) {

@@ -25,12 +25,17 @@
  */
 package one.empty3.library.core.testing2;
 
+import com.badlogic.gdx.utils.Null;
 import com.formdev.flatlaf.*;
 import net.miginfocom.swing.MigLayout;
 import one.empty3.library.ECBufferedImage;
 import one.empty3.library.core.testing.ImageContainer;
 import one.empty3.library.core.testing.TestObjet;
 import one.empty3.library.core.testing.TextAreaOutputStream;
+import org.jcodec.api.awt.AWTSequenceEncoder;
+import org.jcodec.common.io.FileChannelWrapper;
+import org.jcodec.common.io.NIOUtils;
+import org.jcodec.common.model.Rational;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -41,6 +46,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ResourceBundle;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -80,6 +86,8 @@ public final class ShowTestResult extends JFrame implements Runnable {
     private JButton button4;
     private JButton buttonShowModel;
     private JButton button2;
+    private JTextField textFieldFilename;
+    private JButton button1;
     private JScrollPane scrollPane1;
     private JEditorPane editorPane1;
     // End of variables declaration//GEN-END:variables
@@ -178,13 +186,13 @@ public final class ShowTestResult extends JFrame implements Runnable {
                 if (jPanel1 != null) {
                     Graphics g = jPanel1.getGraphics();
                     if (g != null) {
-                        if(isDisplaying()) {
+                        if (isDisplaying()) {
                             jPanel1.getGraphics().drawImage(image, 0, 0,
                                     jPanel1.getWidth(), jPanel1.getHeight(), 0, 0,
                                     image.getWidth(), image.getHeight(), null);
                         }
                         jPanel1.getGraphics().drawString(" ? Pause ? " + testRef.isPause() + " ? Pause active ? " + testRef.isPauseActive(), 50, 10);
-                        jTextField1.setText("Frame n° " + (testRef.frame() + 1)+"/"+testRef.getMaxFrames());
+                        jTextField1.setText("Frame n° " + (testRef.frame() + 1) + "/" + testRef.getMaxFrames());
                     }
                     //Graphics gg = jPanel4.getGraphics();
                     //gimballs.draw(gg, new Rectangle(jPanel4.getWidth()-30, jPanel4.getHeight()-30, jPanel4.getWidth()-1,jPanel4.getHeight()-1));
@@ -330,9 +338,67 @@ public final class ShowTestResult extends JFrame implements Runnable {
         dessine();
     }
 
+
+    public JTextField getTextFieldFilename() {
+        return this.textFieldFilename;
+    }
+
+    public JButton getButton1() {
+        return this.button1;
+    }
+
+    private void buttonEncodeAll(ActionEvent e) {
+
+        File avif = new File(testRef.getDir().getAbsolutePath() + File.separator
+                + testRef.sousdossier + this.getClass().getName() + "__" + testRef.filmName + (testRef.getIdxFilm() + "_" + UUID.randomUUID()) + ".AVI");
+
+        FileChannelWrapper out = null;
+        AWTSequenceEncoder encoder = null;
+        try {
+            out = NIOUtils.writableFileChannel(avif.getAbsolutePath());
+            // for Android use: AndroidSequenceEncoder
+            encoder = new AWTSequenceEncoder(out, Rational.R(25, 1));
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
+            NIOUtils.closeQuietly(out);
+        }
+        boolean aviOpen = true;
+
+        File dir = testRef.getDir();
+
+        try {
+            File[] files = dir.listFiles();
+            if (files != null && encoder != null) {
+                for (File file : files) {
+                    if (file.isFile() && file.exists()) {
+                        try {
+                            BufferedImage read = ImageIO.read(file);
+                            if (read != null) {
+                                assert encoder != null;
+                                encoder.encodeImage(read);
+                            }
+                        } catch (IOException ex) {
+                            throw new RuntimeException(ex);
+                        } catch (RuntimeException ex) {
+                            ex.printStackTrace();
+                        }
+
+                    }
+                }
+                encoder.finish();
+            }
+        } catch (RuntimeException ex) {
+            ex.printStackTrace();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
     private void editorPane1MouseClicked(MouseEvent e) {
         // TODO add your code here
     }
+
+
     public void exceptionReception(Exception t) {
         this.throwable = t;
         try {
@@ -377,14 +443,16 @@ public final class ShowTestResult extends JFrame implements Runnable {
         this.button4 = new JButton();
         this.buttonShowModel = new JButton();
         this.button2 = new JButton();
+        this.textFieldFilename = new JTextField();
+        this.button1 = new JButton();
         this.scrollPane1 = new JScrollPane();
         this.editorPane1 = new JEditorPane();
 
         //======== this ========
         try {
-            UIManager.setLookAndFeel( new FlatDarkLaf() );
-        } catch( Exception ex ) {
-            System.err.println( "Failed to initialize LaF" );
+            UIManager.setLookAndFeel(new FlatDarkLaf());
+        } catch (Exception ex) {
+            System.err.println("Failed to initialize LaF");
         }
 
         // create UI here...
@@ -412,9 +480,9 @@ public final class ShowTestResult extends JFrame implements Runnable {
         //======== jSplitPane1 ========
         {
             try {
-                UIManager.setLookAndFeel( new FlatLightLaf() );
-            } catch( Exception ex ) {
-                System.err.println( "Failed to initialize LaF" );
+                UIManager.setLookAndFeel(new FlatLightLaf());
+            } catch (Exception ex) {
+                System.err.println("Failed to initialize LaF");
             }
 
             // create UI here...
@@ -444,21 +512,21 @@ public final class ShowTestResult extends JFrame implements Runnable {
                 //======== jPanel2 ========
                 {
                     this.jPanel2.setLayout(new MigLayout(
-                        "fill,insets 0,hidemode 3,gap 5 5",
-                        // columns
-                        "[fill]" +
-                        "[fill]" +
-                        "[fill]" +
-                        "[fill]" +
-                        "[fill]" +
-                        "[fill]" +
-                        "[fill]" +
-                        "[fill]",
-                        // rows
-                        "[fill]" +
-                        "[fill]" +
-                        "[fill]" +
-                        "[]"));
+                            "fill,insets 0,hidemode 3,gap 5 5",
+                            // columns
+                            "[fill]" +
+                                    "[fill]" +
+                                    "[fill]" +
+                                    "[fill]" +
+                                    "[fill]" +
+                                    "[fill]" +
+                                    "[fill]" +
+                                    "[fill]",
+                            // rows
+                            "[fill]" +
+                                    "[fill]" +
+                                    "[fill]" +
+                                    "[]"));
 
                     //---- jCheckBoxOGL ----
                     this.jCheckBoxOGL.setText("Open GL");
@@ -515,6 +583,11 @@ public final class ShowTestResult extends JFrame implements Runnable {
                     this.button2.setText("Parcourir");
                     this.button2.addActionListener(e -> parcourir(e));
                     this.jPanel2.add(this.button2, "cell 0 3");
+                    this.jPanel2.add(this.textFieldFilename, "cell 1 3");
+
+                    //---- button1 ----
+                    this.button1.addActionListener(e -> buttonEncodeAll(e));
+                    this.jPanel2.add(this.button1, "cell 2 3");
                 }
                 this.jSplitPane2.setLeftComponent(this.jPanel2);
 
@@ -538,20 +611,20 @@ public final class ShowTestResult extends JFrame implements Runnable {
         GroupLayout contentPaneLayout = new GroupLayout(contentPane);
         contentPane.setLayout(contentPaneLayout);
         contentPaneLayout.setHorizontalGroup(
-            contentPaneLayout.createParallelGroup()
-                .addGroup(contentPaneLayout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(this.jSplitPane1)
-                    .addContainerGap())
+                contentPaneLayout.createParallelGroup()
+                        .addGroup(contentPaneLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(this.jSplitPane1)
+                                .addContainerGap())
         );
         contentPaneLayout.setVerticalGroup(
-            contentPaneLayout.createParallelGroup()
-                .addComponent(this.jSplitPane1, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 404, Short.MAX_VALUE)
+                contentPaneLayout.createParallelGroup()
+                        .addComponent(this.jSplitPane1, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 432, Short.MAX_VALUE)
         );
 
         initComponentsI18n();
 
-        setSize(915, 435);
+        setSize(920, 485);
         setLocationRelativeTo(getOwner());
     }// </editor-fold>//GEN-END:initComponents
 
@@ -691,6 +764,7 @@ public final class ShowTestResult extends JFrame implements Runnable {
         this.menuItem2.setText(bundle.getString("ShowTestResult.menuItem2.text"));
         this.menuItem3.setText(bundle.getString("ShowTestResult.menuItem3.text"));
         this.buttonShowModel.setText(bundle.getString("ShowTestResult.buttonShowModel.text"));
+        this.button1.setText(bundle.getString("ShowTestResult.button1.text"));
         // JFormDesigner - End of component i18n initialization  //GEN-END:initI18n  @formatter:on
     }
 

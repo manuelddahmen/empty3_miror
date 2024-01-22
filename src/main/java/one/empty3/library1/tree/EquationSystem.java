@@ -56,8 +56,6 @@ package one.empty3.library1.tree;
 
 import java.util.HashMap;
 
-import one.empty3.library1.tree.TreeNode;
-
 /*__
  * Created by manuel on 25-12-16.
  */
@@ -66,7 +64,7 @@ public class EquationSystem extends TreeNode {
     private HashMap<String, Double> constantes;
 
     public EquationSystem(TreeNode src, String expStr, String[] inconnue, HashMap<String, Double> values) {
-        super(src.algebricTree, expStr);
+        super(src.algebraicTree, expStr);
         this.inconnues = inconnue;
         this.constantes = values;
         // Fonctions...

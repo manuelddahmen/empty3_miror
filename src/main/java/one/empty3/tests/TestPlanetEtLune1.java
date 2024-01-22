@@ -40,30 +40,31 @@ public class TestPlanetEtLune1 extends TestObjetSub {
 
         @Override
         public Point2D getCoord(double x, double y) {
-            return super.getCoord(1.0-x, y);
+            return super.getCoord(1.0 - x, y);
         }
     }
-    public static final int SECONDS = 35;
+
+    public static final int SECONDS = 2;
     public static final int FPS = 25;
     private static final int TURNS = 1;
-    private static final int REAL_DAYS = 1;
+    private static final int REAL_DAYS = 365;
     private final File planets = new File("res\\img\\planets2");
-    private final File earthFilename = new File(planets.getAbsolutePath()+
-            File.separator+"_earth.jpg");
-    private final File moonFilename = new File(planets.getAbsolutePath()+
-            File.separator+"8k_moon.jpg");
-    private final File sunFilename = new File(planets.getAbsolutePath()+
-            File.separator+"8k_sun.jpg");
+    private final File earthFilename = new File(planets.getAbsolutePath() +
+            File.separator + "_earth.jpg");
+    private final File moonFilename = new File(planets.getAbsolutePath() +
+            File.separator + "8k_moon.jpg");
+    private final File sunFilename = new File(planets.getAbsolutePath() +
+            File.separator + "8k_sun.jpg");
     private final double radius = 2.0;
     private final double sunDistance = 150;
     private final double moonDistance = 0.384;
-    private final double sunRealSize = 13927E6/2;
-    private final double earthRealSize = (double) 12756 /2;
+    private final double sunRealSize = 13927E6 / 2;
+    private final double earthRealSize = (double) 12756 / 2;
     private final double moonRealSize = 3475;
     private final double earthPeriod = 365.256;
-    private final double moonPeriod = 655.7/24;
+    private final double moonPeriod = 655.7 / 24;
     private final double earthMass = 5.97;//E24
-    private final double sunMass = 1.98847E6 ;
+    private final double sunMass = 1.98847E6;
     private final double moonMass = 0.073;
 
     private int i = -1;
@@ -83,7 +84,7 @@ public class TestPlanetEtLune1 extends TestObjetSub {
     private Sphere moon;
 
     private static double getaDouble() {
-        return  FPS * SECONDS * REAL_DAYS;
+        return FPS * SECONDS * REAL_DAYS;
     }
 
     public static void main(String[] args) {
@@ -98,7 +99,7 @@ public class TestPlanetEtLune1 extends TestObjetSub {
 
     @Override
     public void ginit() {
-        sun = new Sphere(new Point3D(0., 0.,sunDistance), sunRealSize);
+        sun = new Sphere(new Point3D(0., 0., sunDistance), sunRealSize);
         earth = new Sphere(new Point3D(0., 0., 0.), radius);
         moon = new Sphere(new Point3D(0., moonDistance, 0.0), moonRealSize);
 
@@ -107,7 +108,7 @@ public class TestPlanetEtLune1 extends TestObjetSub {
         moon.texture(new TextureInvertU(new ECBufferedImage(ImageIO.read(moonFilename))));
 
         logger = Logger.getLogger(this.getClass().getCanonicalName());
-        setMaxFrames( FPS * SECONDS * REAL_DAYS);
+        setMaxFrames(FPS * SECONDS * REAL_DAYS);
 
         z().ratioVerticalAngle();
 
@@ -126,18 +127,15 @@ public class TestPlanetEtLune1 extends TestObjetSub {
 */
         i = -1;
 
-        LumierePonctuelle lumierePointSimple = new LumierePonctuelle(Point3D.X.mult(1000.0), Color.BLACK);
-
-        //scene().lumieres().add(lumierePointSimple);
 
         frame = 0;
     }
 
     public Point3D positions() {
         Point3D p = new Point3D();
-        p.set(0, 1.0*(frame() / (FPS * SECONDS * TURNS)));
-        p.set(1, 1.0*(frame() % (FPS * SECONDS * TURNS)));
-        p.set(2, 1.0* FPS * SECONDS * TURNS);
+        p.set(0, 1.0 * (frame() / (FPS * SECONDS * TURNS)));
+        p.set(1, 1.0 * (frame() % (FPS * SECONDS * TURNS)));
+        p.set(2, 1.0 * FPS * SECONDS * TURNS);
 
         return p;
     }
@@ -156,47 +154,57 @@ public class TestPlanetEtLune1 extends TestObjetSub {
 
         double angleCamera = 0; //2.0 * Math.PI * frame() / getMaxFrames();
         c = new Camera(axeViseeVideo[0].mult(Math.cos(angleCamera))
-                .plus(axeViseeVideo[0].mult(Math.sin(angleCamera))).mult(radius*3), Point3D.O0);
+                .plus(axeViseeVideo[0].mult(Math.sin(angleCamera))).mult(radius * 3), Point3D.O0);
         c.calculerMatrice(axeVerticalVideo);
-        c.setAngleX(Math.PI/3*z().la()/z().ha());
-        c.setAngleY(Math.PI/3);
+        c.setAngleX(Math.PI / 3 * z().la() / z().ha());
+        c.setAngleY(Math.PI / 3);
         z().scene().cameraActive(c);
         scene().cameraActive(c);
         z().camera(c);
         camera(c);
 
 
-        for(Sphere sphere :new Sphere[] {earth}) {
+        for (Sphere sphere : new Sphere[]{earth}) {
             sphere.setIncrU(.05);
             sphere.setIncrV(.05);
             scene().clear();
             scene().add(sphere);
         }
-        final int i1 = FPS * SECONDS * REAL_DAYS;
-        double u =   ((double) getMaxFrames() - frame()) / getMaxFrames();
+        final int i1 = FPS * SECONDS;
+        double u = ((double) frame() / (i1));
 
         Circle circle = earth.getCircle();
         circle.getAxis().getElem().getP1().setElem(axeVerticalVideo.mult(radius));
         circle.getAxis().getElem().getP2().setElem(axeVerticalVideo.mult(-radius));
+
         earth.setVectZ(axeVerticalVideo);
-        earth.setVectX(axesSphereHorizontaux[0].mult(Math.cos(2 * Math.PI * u))
-                        .plus(axesSphereHorizontaux[1].mult(Math.sin(2 * Math.PI * u))));
-        earth.setVectY(axesSphereHorizontaux[0].mult(-Math.sin(2 * Math.PI * u))
-                .plus(axesSphereHorizontaux[1].mult(Math.cos(2 * Math.PI * u))));
-        /*
-        Matrix33 matrixB = Matrix33.ZXY.mult(Matrix33.rotationZ(2.0*Math.PI*u))
-                .mult(Matrix33.rotationX(Math.PI));
+        earth.setVectX(axesSphereHorizontaux[0].mult(Math.cos(2 * Math.PI * -u))
+                .plus(axesSphereHorizontaux[1].mult(Math.sin(2 * Math.PI * -u))));
+        earth.setVectY(axesSphereHorizontaux[0].mult(-Math.sin(2 * Math.PI * -u))
+                .plus(axesSphereHorizontaux[1].mult(Math.cos(2 * Math.PI * -u))));
+
+        Point3D[] vecEarth = {earth.getVectX(), earth.getVectY(), earth.getVectZ()};
+
+        Matrix33 matrixB = Matrix33.rotationZ(2.0 * Math.PI * 27.0 / 360.0)
+                .mult(new Matrix33(vecEarth).tild());
         Point3D[] colVectors = matrixB.getColVectors();//Matrix33.ZXY.mult(matriceB).getRowVectors();
         earth.setVectX(colVectors[0]);
         earth.setVectY(colVectors[1]);
         earth.setVectZ(colVectors[2]);
-        int i = 0;
+        /*int i = 0;
         for(Point3D v : colVectors) {
             System.out.println("P3 ["+i+"] = " + v);
             i++;
         }
         System.out.println(matrixB);
 */
+        Point3D lX = new Point3D();
+        Point3D lY = new Point3D();
+        vecDirRotate(Point3D.X.mult(100.0), new Point3D(0., 0., 0.), 1.0 * frame() / getMaxFrames(), lX, lY);
+        LumierePointSimple lumierePointSimple = new LumierePointSimple(Color.BLACK, lX.plus(lY), 1.0);
+
+        scene().lumieres().clear();
+        scene().lumieres().add(lumierePointSimple);
 
         earth.setCircle(circle);
         circle.setCalculerRepere1(true);

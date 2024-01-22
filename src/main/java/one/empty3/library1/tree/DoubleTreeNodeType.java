@@ -55,14 +55,13 @@
 package one.empty3.library1.tree;
 
 import one.empty3.library.StructureMatrix;
-import one.empty3.library1.tree.VariableTreeNodeType;
 
 /*__
  * Created by Manuel Dahmen on 15-12-16.
  */
 public class DoubleTreeNodeType extends VariableTreeNodeType {
-    public DoubleTreeNodeType(AlgebricTree algebricTree) {
-        super(algebricTree);
+    public DoubleTreeNodeType(AlgebraicTree algebraicTree) {
+        super(algebraicTree);
 
     }
 

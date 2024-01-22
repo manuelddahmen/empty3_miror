@@ -62,7 +62,7 @@ import one.empty3.library.StructureMatrix;
 public abstract class TreeNodeType {
     protected Object[] values;
     protected double sign1 = 1.0;
-    protected AlgebricTree algebricTree;
+    protected AlgebraicTree algebraicTree;
     private TreeNodeType d;
     private TreeNodeType tnt;
 
@@ -96,7 +96,7 @@ public abstract class TreeNodeType {
         if (values != null) {
             int i = 0;
             for (Object o : values) {
-                if(o!=null) {
+                if (o != null) {
                     s.append(o.toString()).append(" (+) ");
                 }
             }

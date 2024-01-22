@@ -65,7 +65,7 @@ import org.jetbrains.annotations.NotNull;
 /*__
  * Created by Manuel Dahmen on 15-12-16.
  */
-public class AlgebricTree extends Tree {
+public class AlgebraicTree extends Tree {
 
     private String formula = "0.0";
     Map<String, Double> parametersValues = new HashMap<>();
@@ -74,12 +74,12 @@ public class AlgebricTree extends Tree {
     private TreeNode root;
     private int stackSize = 0;
 
-    public AlgebricTree(String formula) {
+    public AlgebraicTree(String formula) {
         this.formula = formula;
         removeSpaces();
     }
 
-    public AlgebricTree(String formula, Map<String, Double> parametersValues) {
+    public AlgebraicTree(String formula, Map<String, Double> parametersValues) {
         this(formula);
         this.formula = formula;
         this.parametersValues = parametersValues;
@@ -97,7 +97,7 @@ public class AlgebricTree extends Tree {
         this.parametersValues.put(s, d);
     }
 
-    public AlgebricTree construct() throws AlgebraicFormulaSyntaxException {
+    public AlgebraicTree construct() throws AlgebraicFormulaSyntaxException {
         root = new TreeNode(this, formula);
         stackSize = 0; // Restine sommaire//
         add(root, formula);
@@ -215,9 +215,17 @@ public class AlgebricTree extends Tree {
 
     private String addSpaces(String subformula) {
         while (subformula != null && !subformula.isEmpty() &&
-                (subformula.charAt(0) == '\s' || subformula.charAt(0) == '\n' ||
+                (subformula.charAt(0) == ' ' || subformula.charAt(0) == '\n' ||
                         subformula.charAt(0) == '\r' || subformula.charAt(0) == '\t'))
             subformula = subformula.substring(1);
+        return subformula;
+    }
+
+    private String addSpaces(String subformula, int index) {
+        while (subformula != null && !subformula.isEmpty() &&
+                (subformula.charAt(index) == ' ' || subformula.charAt(index) == '\n' ||
+                        subformula.charAt(index) == '\r' || subformula.charAt(index) == '\t'))
+            subformula = subformula.substring(0, index) + subformula.substring(index + 1, subformula.length());
         return subformula;
     }
 
@@ -244,6 +252,8 @@ public class AlgebricTree extends Tree {
                 s = new String[2];
                 s[0] = subformula.substring(0, i);
                 s[1] = subformula.substring(i + 1);
+                s[0] = s[0].trim();
+                s[1] = s[1].trim();
                 EquationTreeNode tt = new EquationTreeNode(src, new Object[]{
                         subformula, parametersValues, parametersValuesVec, parametersValuesVecComputed},
                         new EquationTreeNodeType(1.0));
@@ -331,7 +341,9 @@ public class AlgebricTree extends Tree {
         double newExpSign = 1;
         double oldExpSign = 1;
         while (i < values.length()) {
-
+            values = addSpaces(values, i);
+            if (i >= values.length())
+                break;
             if (values.charAt(i) == '^' && /*9(i < values.length() - 1 || values.charAt(i + 1) != '*') &&*/ count == 0) {
                 newExp = '^';
                 newExpPos = i;
@@ -408,6 +420,9 @@ public class AlgebricTree extends Tree {
         double newFactorSign = 1;
         double oldFactorSign = 1;
         while (i < values.length()) {
+            values = addSpaces(values, i);
+            if (i >= values.length())
+                break;
 
             if (values.charAt(i) == '*' && /*9(i < values.length() - 1 || values.charAt(i + 1) != '*') &&*/ count == 0) {
                 newFactor = '*';
@@ -482,6 +497,9 @@ public class AlgebricTree extends Tree {
         double newFactorSign = 1;
         double oldFactorSign = 1;
         while (i < values.length()) {
+            values = addSpaces(values, i);
+            if (i >= values.length())
+                break;
             if (values.charAt(i) == '+' && count == 0 && i > 0/*&& (i < values.length() - 1 || values.charAt(i + 1) != '+')*/ && count == 0) {
                 newFactor = '+';
                 newFactorPos = i;
@@ -563,6 +581,9 @@ public class AlgebricTree extends Tree {
         double newFactorSign = 1;
         double oldFactorSign = 1;
         while (i < values.length()) {
+            values = addSpaces(values, i);
+            if (i >= values.length())
+                break;
             if (values.charAt(i) == ',' && count == 0 && i > 0/*&& (i < values.length() - 1 || values.charAt(i + 1) != '+')*/ && count == 0) {
                 newFactor = ',';
                 newFactorPos = i;
@@ -639,6 +660,9 @@ public class AlgebricTree extends Tree {
             int countLetters = 0;
             boolean isName = true;
             while (i < values.length()) {
+                values = addSpaces(values, i);
+                if (i >= values.length())
+                    break;
                 if (isName && Character.isLetter(values.charAt(0)) && Character.isLetterOrDigit(values.charAt(i)) && count == 0) {
                     countLetters++;
                     isName = true;
@@ -702,6 +726,9 @@ public class AlgebricTree extends Tree {
         int countLetters = 0;
 
         while (i < values.length()) {
+            values = addSpaces(values, i);
+            if (i >= values.length())
+                break;
             if (Character.isLetter(values.charAt(0)) && Character.isLetterOrDigit(values.charAt(i)) && count == 0) {
                 countLetters++;
             } else if (values.charAt(i) == '(') {
@@ -754,6 +781,9 @@ public class AlgebricTree extends Tree {
         boolean fNameAdded = false;
         int listInstructionDef = -1;
         while (i < values.length()) {
+            values = addSpaces(values, i);
+            if (i >= values.length())
+                break;
             if (Character.isLetter(values.charAt(0)) && Character.isLetterOrDigit(values.charAt(i)) && count == 0) {
                 countLetters++;
             } else if (values.charAt(i) == '(') {
@@ -811,6 +841,9 @@ public class AlgebricTree extends Tree {
         int i = 0;
         int count = 0;
         while (i < values.length()) {
+            values = addSpaces(values, i);
+            if (i >= values.length())
+                break;
             if (values.charAt(i) == ')') {
                 count--;
             } else if (values.charAt(i) == '(') {

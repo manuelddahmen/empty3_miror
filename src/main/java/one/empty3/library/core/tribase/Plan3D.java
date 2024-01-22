@@ -43,6 +43,7 @@ public class Plan3D extends ParametricSurface {
         //setMaxX(1);
         //setMaxY(1);
     }
+
     public Plan3D(Point3D p0, Point3D pX, Point3D pY) {
         this.p0.setElem(p0);
         this.vX.setElem(pX);
@@ -54,20 +55,12 @@ public class Plan3D extends ParametricSurface {
     @Override
     public Point3D calculerPoint3D(double u, double v) {
         StructureMatrix<Point3D> vectors1 = getVectors();
-        Matrix33 m = new Matrix33(new Point3D[] {vectors1.data1d.get(0),vectors1.data1d.get(1),vectors1.data1d.get(2)});
-        Point3D multX = m.mult(vX.getElem().moins(p0.getElem()));
-        Point3D multY = m.mult(vY.getElem().moins(p0.getElem()));
-        return p0.getElem().plus(multX.mult(u)).plus(multY.mult(v));
+        Matrix33 m = new Matrix33(new Point3D[]{vectors1.data1d.get(0), vectors1.data1d.get(1), vectors1.data1d.get(2)});
+        Point3D multipliedX = m.mult(vX.getElem().moins(p0.getElem()));
+        Point3D multipliedY = m.mult(vY.getElem().moins(p0.getElem()));
+        return p0.getElem().plus(multipliedX.mult(u)).plus(multipliedY.mult(v));
     }
-/*@Override
-    public Point3D calculerNormale3D(double u, double v) {
-        Point3D o,x,y;
-        o = p0.getElem();
-        x = vX.getElem();
-        y = vY.getElem();
-        return x.moins(o).prodVect(y.moins(o));
-    }
-*/
+    
     public String id() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
