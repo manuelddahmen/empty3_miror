@@ -30,7 +30,6 @@ import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
-import java.util.*
 
 /*__
  * Created by Manuel Dahmen on 15-12-16.
@@ -45,7 +44,7 @@ class TestAlgebraicTreeVector() {
         map: Map<String, Double>,
         echo: Boolean
     ) {
-        var algebraicTree: AlgebraicTree? = null
+        var algebraicTree: AlgebraicTree?
         try {
             println("Expression string : $expr")
             algebraicTree = AlgebraicTree(expr)
@@ -53,7 +52,7 @@ class TestAlgebraicTreeVector() {
             algebraicTree.construct()
             if (echo) println(algebraicTree)
             try {
-                var result: Double = 0.0
+                var result: Double
                 val eval = algebraicTree.eval()
                 println("eval dims:" + eval.dim + " ")
                 if (eval.dim == 1)
@@ -89,7 +88,7 @@ class TestAlgebraicTreeVector() {
     }
 
     protected fun testResult(expr: String, expectedResult: Double, echo: Boolean): Boolean {
-        var algebraicTree: AlgebraicTree? = null
+        var algebraicTree: AlgebraicTree?
         try {
             println("Expression string : $expr")
             algebraicTree = AlgebraicTree(expr)
@@ -124,7 +123,7 @@ class TestAlgebraicTreeVector() {
         expectedResult: Double,
         echo: Boolean
     ): Boolean {
-        var algebraicTree: AlgebraicTree? = null
+        var algebraicTree: AlgebraicTree?
         try {
             println("Expression string : $expr")
             algebraicTree = AlgebraicTree(expr)
@@ -513,7 +512,7 @@ class TestAlgebraicTreeVector() {
         map: HashMap<String, Double>,
         echo: Boolean
     ) {
-        var algebraicTree: AlgebraicTree? = null
+        var algebraicTree: AlgebraicTree?
         try {
             println("Expression string : $expr")
             algebraicTree = AlgebraicTree(expr)
@@ -526,7 +525,7 @@ class TestAlgebraicTreeVector() {
                 println("Result : $result")
                 if (echo) println("Expected : $expectedResult")
 
-                var assertion = true
+                var assertion: Boolean
 
                 try {
                     if (vecEqualsSM(result, expectedResult)) {
@@ -710,6 +709,19 @@ class TestAlgebraicTreeVector() {
     }
 
     @Test
+    fun testForVectorOfVectorWithSpaces() {
+        val r = 12.0
+        val vars = HashMap<String, Double>()
+        vars["r"] = r
+        testResultVariableVec(
+            " ( ( 2 , 1 , 2 ) , ( 2 , 2 , 3 ) , ( 1, 2 , 3 ) ) ",
+            Vec(2.0, 1.0, 2.0, 2.0, 2.0, 3.0, 1.0, 2.0, 3.0),
+            vars,
+            true
+        )
+    }
+
+    @Test
     fun testTextCalculator3() {
         val listInstructions: ListInstructions = ListInstructions()
         listInstructions.run {
@@ -722,25 +734,25 @@ class TestAlgebraicTreeVector() {
         }
         var assertion = false
         try {
-            if (vecEqualsSM(
+            if (listInstructions.getCurrentParamsValuesVecComputed() != null &&
+                vecEqualsSM(
                     listInstructions.getCurrentParamsValuesVecComputed()!!["z"]!!,
                     Vec(1.0 + 5, 2.0 + 6, 3.0 + 7)
                 )
             ) {
                 assertion = true
-            } else {
-                Assert.assertTrue(false)
             }
         } catch (ex: RuntimeException) {
             ex.printStackTrace()
         }
+        Assert.assertTrue(assertion)
     }
 
     /***
      * @param get computed value
      * @param vec expected value
      */
-    private fun vecEqualsSM(get: StructureMatrix<Double>, vec: Vec): Boolean {
+    fun vecEqualsSM(get: StructureMatrix<Double>, vec: Vec): Boolean {
         if (get != null && get.dim == 0) {
             if ((get.data0d != null && vec.vecVal.data0d != null &&
                         vec.vecVal.data0d.equals(get.data0d))

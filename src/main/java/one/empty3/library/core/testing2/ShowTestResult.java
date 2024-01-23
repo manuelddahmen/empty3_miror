@@ -364,7 +364,7 @@ public final class ShowTestResult extends JFrame implements Runnable {
         }
         boolean aviOpen = true;
 
-        File dir = testRef.getDir();
+        File dir = new File(testRef.getDir().getAbsoluteFile() + File.separator + testRef.sousdossier);
 
         try {
             File[] files = dir.listFiles();
