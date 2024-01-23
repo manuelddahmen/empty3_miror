@@ -724,14 +724,17 @@ class TestAlgebraicTreeVector() {
     @Test
     fun testTextCalculator3() {
         val listInstructions: ListInstructions = ListInstructions()
-        listInstructions.run {
-            addInstructions(
-                "x=(1,2,3)\n"
-                        + "y=(5,6,7)\n"
-                        + "z=x+y\n"
-            )
-            runInstructions()
-        }
+        listInstructions.addInstructions(
+            "x=(1,2,3)\n"
+                    + "y=(5,6,7)\n"
+                    + "z=x+y"
+        )
+        println(listInstructions.runInstructions())
+
+        println("x: " + listInstructions.getCurrentParamsValuesVecComputed()!!["x"]!!)
+        println("y: " + listInstructions.getCurrentParamsValuesVecComputed()!!["y"]!!)
+        println("z: " + listInstructions.getCurrentParamsValuesVecComputed()!!["z"]!!)
+
         var assertion = false
         try {
             if (listInstructions.getCurrentParamsValuesVecComputed() != null &&

@@ -32,9 +32,9 @@ import java.util.Locale;
 import one.empty3.library.StructureMatrix;
 
 public class ListInstructions {
-    HashMap<String, Double> currentParamsValues = new HashMap<>();
-    HashMap<String, String> currentParamsValuesVec = new HashMap<>();
-    HashMap<String, StructureMatrix<Double>> currentParamsValuesVecComputed = new HashMap<>();
+    private HashMap<String, Double> currentParamsValues = new HashMap<>();
+    private HashMap<String, String> currentParamsValuesVec = new HashMap<>();
+    private HashMap<String, StructureMatrix<Double>> currentParamsValuesVecComputed = new HashMap<>();
 
     public String evaluate(String s) {
         return "";
@@ -97,7 +97,7 @@ public class ListInstructions {
 
             String text = toString;
 
-            String[] splitLines = text.split("\\n");
+            String[] splitLines = text.split("\n");
 
             for (int i = 0; i < splitLines.length; i++) {
 
@@ -157,33 +157,35 @@ public class ListInstructions {
             currentParamsValuesVecComputed = new HashMap<>();
         int i = 0;
         for (Instruction instruction : instructions) {
-            String key = (String) instruction.getLeftHand();
-            String value = (String) instruction.getExpression();
+            String key = (String) instruction.getLeftHand().trim();
+            String value = (String) instruction.getExpression().trim();
+
 
             StructureMatrix<Double> resultVec = null;
             Double resultDouble = null;
             try {
-                if (value != null) {
-                    AlgebraicTree tree = new AlgebraicTree(value);
-                    tree.setParametersValues(currentParamsValues);
-                    tree.setParametersValuesVec(currentParamsValuesVec);
-                    tree.setParametersValuesVecComputed(currentParamsValuesVecComputed);
+                AlgebraicTree tree = new AlgebraicTree(value);
+                tree.setParametersValues(currentParamsValues);
+                tree.setParametersValuesVec(currentParamsValuesVec);
+                tree.setParametersValuesVecComputed(currentParamsValuesVecComputed);
 
-                    tree.construct();
+                tree.construct();
 
-                    resultVec = tree.eval();
-
-                    if (resultVec != null) {
-                        if (resultVec.getDim() == 1 && key != null) {
-                            currentParamsValuesVecComputed.put(key, resultVec);
-                        } else if (resultVec.getDim() == 0 && key != null) {
-                            currentParamsValuesVecComputed.put(key, resultVec);
-                        }
-                    } else {
-                        throw new AlgebraicFormulaSyntaxException("Result was null");
+                resultVec = tree.eval();
+                
+                if (resultVec != null) {
+                    System.out.println("key: " + key + " value: " + value + " computed: " + resultVec);
+                    if (resultVec.getDim() == 1) {
+                        currentParamsValuesVecComputed.put(key, resultVec);
+                        currentParamsValuesVec.put(key, value);
+                    } else if (resultVec.getDim() == 0) {
+                        currentParamsValuesVecComputed.put(key, resultVec);
+                        currentParamsValuesVec.put(key, value);
                     }
-                    //System.err.println("AlgebraicTree result : " + tree);
+                } else {
+                    throw new AlgebraicFormulaSyntaxException("Result was null");
                 }
+                //System.err.println("AlgebraicTree result : " + tree);
             } catch (AlgebraicFormulaSyntaxException | TreeNodeEvalException |
                      NullPointerException e) {
                 e.printStackTrace();
