@@ -76,8 +76,7 @@ public class TreeNode {
     public TreeNode(AlgebraicTree algebraicTree, String expStr) {
         this.algebraicTree = algebraicTree;
         this.parent = null;
-        if (expStr.trim().isEmpty())
-            expressionString = "0.0";
+        if (expStr.trim().isEmpty()) expressionString = "0.0";
         this.expressionString = expStr;
     }
 
@@ -162,9 +161,7 @@ public class TreeNode {
                 if (childrenVars.get(i).type.getClass().equals(VariableTreeNodeType.class)) {
                     String varName = childrenVars.get(i).expressionString;
                     if (varName != null) {
-                        StructureMatrix<Double> put =
-                                algebraicTree.getParametersValuesVecComputed()
-                                        .put(varName, childrenValues.get(i).eval());
+                        StructureMatrix<Double> put = algebraicTree.getParametersValuesVecComputed().put(varName, childrenValues.get(i).eval());
                     }
                 }
             }
@@ -298,7 +295,9 @@ public class TreeNode {
 
             }
         } else if (cType instanceof TermTreeNodeType) {
+            /*
             if (getChildren().size() == 1) {
+
                 evalRes = getChildren().get(0).eval();///SIGN
                 if (evalRes.getDim() == 1) {
                     return evalRes;
@@ -328,18 +327,17 @@ public class TreeNode {
 
                     int finalSize = Math.max(leftOp, rightOp);
                     double argMultiIndices = (double) leftOp / rightOp;
-
                     StructureMatrix<Double> argLeft = evalRes;
                     StructureMatrix<Double> argRight = treeNodeEval;
                     if (leftOp == 0) {
                         StructureMatrix<Double> e2 = new StructureMatrix<>(1, Double.class);
-                        e2.setElem(argLeft.getDim() == 1 ? argLeft.getElem(0) : argLeft.getElem(), 0);
+                        e2.setElem(argLeft.getDim() == 1 ? (argLeft.getData1d().isEmpty() ? 0.0 : argLeft.getElem(0)) : argLeft.getElem(), 0);
                         evalRes = e2;
                         leftOp = 1;
                     }
                     if (rightOp == 0) {
                         StructureMatrix<Double> e2 = new StructureMatrix<>(1, Double.class);
-                        e2.setElem(argRight.getDim() == 1 ? argRight.getElem(0) : argRight.getElem(), 0);
+                        e2.setElem(argRight.getDim() == 1 ? (argRight.getData1d().isEmpty() ? 0.0 : argLeft.getElem(0)) : argRight.getElem(), 0);
                         rightOp = 1;
                     }
                     finalSize = Math.max(leftOp, rightOp);
@@ -348,22 +346,27 @@ public class TreeNode {
                         double argJ0 = 0.0;
                         double argJ1 = 0.0;
                         if (argLeft.getDim() == 0) {
-                            argJ0 = argLeft.getElem() == null ? 1.0 : argLeft.getElem();
+                            argJ0 = argLeft.getElem() == null ? 0.0 : argLeft.getElem();
                         } else if (argLeft.getDim() == 1) {
-                            argJ0 = argLeft.getElem((int) ((rightOp > leftOp) ? (j * argMultiIndices) : j));
+                            int i1 = (int) ((rightOp > leftOp) ? (j * argMultiIndices) : j);
+                            if (i1 < argLeft.getData1d().size()) argJ0 = argLeft.getElem(i1);
+                            else argJ0 = 0.0;
                         }
 
                         if (argRight.getDim() == 0) {
-                            argJ1 = argRight.getElem() == null ? 1.0 : argRight.getElem();
+                            argJ1 = argRight.getElem() == null ? 0.0 : argRight.getElem();
                         } else if (argRight.getDim() == 1) {
-                            argJ1 = argRight.getElem((int) ((rightOp > leftOp) ? (j * argMultiIndices) : (j)));
+                            int i1 = (int) ((rightOp > leftOp) ? (j * argMultiIndices) : (j));
+                            if (i1 < argRight.getData1d().size()) argJ1 = argRight.getElem(i1);
+                            else argJ1 = 0.0;
                         }
 
                         if (treeNode.type instanceof TermTreeNodeType) {
                             op1 = ((TermTreeNodeType) treeNode.type).getSign1();
                         } else if (treeNode.type != null) {
                             op1 = treeNode.type.getSign1();
-                        } else
+                        } else op1 = 1.0;
+                        if (op1 == 0)
                             op1 = 1.0;
                         if (op1 == 1) {
                             evalRes.setElem(argJ0 + op1 * argJ1, j);
@@ -379,18 +382,53 @@ public class TreeNode {
                     }
                     if (evalRes.getDim() == 1 && evalRes.getData1d().size() <= 1) {
                         StructureMatrix<Double> evalRes1 = new StructureMatrix<Double>(0, Double.class);
-                        evalRes1.setElem(evalRes.getElem(0));
+                        evalRes1.setElem(evalRes.getData1d().size() > 0 ? evalRes.getElem(0) : evalRes.getElem());
                         evalRes = evalRes1;
                     }
                 }
 
                 return evalRes;
             }
-
+            */
+            if (getChildren().size() == 1) {
+                return evalRes.setElem(((Double) getChildren().get(0).eval().getElem()) * getChildren().get(0).type.getSign1());
+            }
+            double sum = 0.0;
+            int dimChild0 = getChildren().get(0).eval().getDim();
+            if (dimChild0 == 0) {
+                evalRes = new StructureMatrix<>(0, Double.class);
+            } else {
+                evalRes = new StructureMatrix<>(1, Double.class);
+                for (int j = 0; j < evalRes.data1d.size(); j++)
+                    evalRes.setElem(0.0, j);
+            }
+            for (int i = 0; i < getChildren().size(); i++) {
+                TreeNode treeNode1 = getChildren().get(i);
+                double op1 = treeNode1.type.getSign1();
+                StructureMatrix<Double> eval = treeNode1.eval();
+                if (treeNode1.type instanceof TermTreeNodeType) {
+                    if (eval.getDim() == 1) {
+                        for (int j = 0; j < eval.data1d.size(); j++) {
+                            double e = 0.0;
+                            if (evalRes.data1d != null && j < evalRes.data1d.size()) {
+                                e = evalRes.getElem(j);
+                            } else {
+                                evalRes.setElem(e, j);
+                            }
+                            evalRes.setElem(e + eval.getElem(j) * op1, j);
+                        }
+                        System.err.println("In TreeNode.eval #TermTreeNodeType");
+                    } else if (eval.getDim() == 0) {
+                        sum = op1 * (Double) ((eval.getElem() == null) ? 0.0 : eval.getElem());
+                        double evalSum = (evalRes.getElem() == null) ? 0.0 : evalRes.getElem();
+                        evalRes.setElem(sum + evalSum);
+                    }
+                }
+            }
+            return evalRes;
         } else if (cType instanceof TreeTreeNodeType) {
             if (!getChildren().isEmpty()) {
-                if (!getChildren().get(0).getChildren().isEmpty() &&
-                        getChildren().get(0).getChildren().get(0).type instanceof VectorTreeNodeType) {
+                if (!getChildren().get(0).getChildren().isEmpty() && getChildren().get(0).getChildren().get(0).type instanceof VectorTreeNodeType) {
                     evalRes = new StructureMatrix<>(1, Double.class);
                     switch (evalRes.getDim()) {
                         case 0:
@@ -521,14 +559,9 @@ public class TreeNode {
 
     @NotNull
     public String toString() {
-        String s = "TreeNode " + this.getClass().getSimpleName() +
-                "\nExpression string: " + expressionString +
-                (type == null ? "Type null" :
-                        "Type: " + type.getClass() + "\n " + type.toString()) +
-                "\nChildren: " + getChildren().size() + "\n";
+        String s = "TreeNode " + this.getClass().getSimpleName() + "\nExpression string: " + expressionString + (type == null ? "Type null" : "Type: " + type.getClass() + "\n " + type.toString()) + "\nChildren: " + getChildren().size() + "\n";
         int i = 0;
-        for (TreeNode t :
-                getChildren()) {
+        for (TreeNode t : getChildren()) {
             s += "Child (" + i++ + ") : " + t.toString() + "\n";
         }
         return s + "\n";
