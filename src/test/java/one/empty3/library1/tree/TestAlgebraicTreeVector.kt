@@ -722,6 +722,19 @@ class TestAlgebraicTreeVector() {
     }
 
     @Test
+    fun testForVectorSumWithSpaces() {
+        val r = 12.0
+        val vars = HashMap<String, Double>()
+        vars["r"] = r
+        testResultVariableVec(
+            " ( 2 , 1 , 2 ) + ( 2 , 2 , 3 ) - ( 1, 2 , 3 )  ",
+            Vec(3.0, 1.0, 2.0),
+            vars,
+            true
+        )
+    }
+
+    @Test
     fun testTextCalculator3() {
         val listInstructions: ListInstructions = ListInstructions()
         listInstructions.addInstructions(
