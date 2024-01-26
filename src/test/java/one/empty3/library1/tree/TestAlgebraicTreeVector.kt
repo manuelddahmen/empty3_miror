@@ -801,7 +801,7 @@ class TestAlgebraicTreeVector() {
      * @param vec expected value
      */
     fun vecEqualsSM(get: StructureMatrix<Double>, vec: Vec): Boolean {
-        if (get != null && get.dim == 0) {
+        if (get.dim == 0) {
             if ((get.data0d != null && vec.vecVal.data0d != null &&
                         vec.vecVal.data0d.equals(get.data0d))
             ) {
@@ -810,7 +810,7 @@ class TestAlgebraicTreeVector() {
                 println("get : StructureMatrix<Double> : invalid StructureMatrix or Vec { $get, $vec }")
                 return false
             }
-        } else if (get != null && get.dim == 1) {
+        } else if (get.dim == 1) {
             if ((get.data1d != null && vec.vecVal.data1d != null)) {
                 for (i in 0 until get.data1d.size) {
                     println("Computed computed vec : $get")
@@ -825,12 +825,10 @@ class TestAlgebraicTreeVector() {
                 println("StructureMatrix<Double>,Vec one or two terms has 1-dim null error")
                 return false
             }
-            return true
         } else {
             println("StructureMatrix<Double>,Vec sm==null or sm.dim=invalid")
             return false
         }
-        return false
     }
 
 }

@@ -439,6 +439,55 @@ public class StringAnalyser {
 
     }
 
+
+    static class ActualContext {
+        private enum ContextType {Classname, FieldName, MethodName, Instruction}
+
+        private ContextType currentContextType;
+        private String currentClassname;
+        private String currentFieldName;
+        private String currentMethodName;
+
+        public ActualContext(ContextType currentContextType, String currentClassname, String currentFieldName, String currentMethodName) {
+            this.currentContextType = currentContextType;
+            this.currentClassname = currentClassname;
+            this.currentFieldName = currentFieldName;
+            this.currentMethodName = currentMethodName;
+        }
+
+        public ContextType getCurrentContextType() {
+            return currentContextType;
+        }
+
+        public void setCurrentContextType(ContextType currentContextType) {
+            this.currentContextType = currentContextType;
+        }
+
+        public String getCurrentClassname() {
+            return currentClassname;
+        }
+
+        public void setCurrentClassname(String currentClassname) {
+            this.currentClassname = currentClassname;
+        }
+
+        public String getCurrentFieldName() {
+            return currentFieldName;
+        }
+
+        public void setCurrentFieldName(String currentFieldName) {
+            this.currentFieldName = currentFieldName;
+        }
+
+        public String getCurrentMethodName() {
+            return currentMethodName;
+        }
+
+        public void setCurrentMethodName(String currentMethodName) {
+            this.currentMethodName = currentMethodName;
+        }
+    }
+
     class Construct {
         protected Class currentClass = new Class();
         protected List<Class> cited = new ArrayList<>();
@@ -452,6 +501,7 @@ public class StringAnalyser {
     }
 
     private Construct construct = new Construct();
+    private ActualContext actualContext;
 
     public int parse(String input) {
         return definitions.get(0).parse(input, 0);

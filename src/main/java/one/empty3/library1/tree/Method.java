@@ -30,7 +30,7 @@ public class Method {
     private String name;
     private Variable ofClass;
     private List<Variable> variableList = new ArrayList<>();
-    private List<ListInstructions.Instruction> instructions = new ArrayList<>();
+    private List<Instruction> instructions = new ArrayList<>();
 
     public Method() {
 
@@ -60,11 +60,11 @@ public class Method {
         this.variableList = variableList;
     }
 
-    public List<ListInstructions.Instruction> getInstructions() {
+    public List<Instruction> getInstructions() {
         return instructions;
     }
 
-    public void setInstructions(List<ListInstructions.Instruction> instructions) {
+    public void setInstructions(List<Instruction> instructions) {
         this.instructions = instructions;
     }
 
