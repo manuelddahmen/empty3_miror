@@ -757,9 +757,9 @@ class TestAlgebraicTreeVector() {
         val stringAnalyser: StringAnalyser = StringAnalyser()
         val parse: Int = stringAnalyser.parse(
             "class Numb {\n" +
-                    "func1(Double a, Double b, Double c) {\n" +
+                    "double func1(Double a, Double b, Double c) {\n" +
                     "Double d = c+b/a\n" +
-                    "\n" +
+                    "return d\n" +
                     "}\n" +
                     "}\n"
         )

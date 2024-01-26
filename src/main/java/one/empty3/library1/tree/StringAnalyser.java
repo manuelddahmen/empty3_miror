@@ -86,6 +86,8 @@ public class StringAnalyser {
             input = input.substring(position);
             for (String searched : values) {
                 if (input.startsWith(searched)) {
+                    this.setSuccessful(true);
+                    construct.currentClass.setAccessModifier(searched);
                     return searched.length();
                 }
             }
@@ -93,23 +95,40 @@ public class StringAnalyser {
         }
     }
 
-    class TokenClassScope extends TokenChoiceExclusive {
-        private String[] values = new String[]{"static", ""};
+    class TokenChoiceStringMandatory extends Token {
+        private final String[] names;
 
+        public TokenChoiceStringMandatory(int indexCurrent, String[] values) {
+            super(indexCurrent);
+            this.names = values;
+        }
+
+        @Override
+        public int parse(String input, int position) {
+            position = super.skipBlanks(input, position);
+            input = input.substring(position);
+            for (String s : names) {
+                if (input.startsWith(s)) {
+                    setSuccessful(true);
+                    return position + s.length();
+                }
+            }
+            return position;
+        }
+    }
+
+    class TokenClassScope extends TokenChoiceStringMandatory {
         public TokenClassScope(int indexCurrent) {
-            super(indexCurrent);
-
+            super(indexCurrent, new String[]{"static", ""});
         }
     }
 
-
-    class TokenConstantModifier extends TokenChoiceExclusive {
-        private String[] values = new String[]{"final", ""};
-
+    class TokenConstantModifier extends TokenChoiceStringMandatory {
         public TokenConstantModifier(int indexCurrent) {
-            super(indexCurrent);
+            super(indexCurrent, new String[]{"final", ""});
         }
     }
+
 
     class TokenCodeFile extends Token {
         public TokenCodeFile(int indexCurrent) {
@@ -145,7 +164,7 @@ public class StringAnalyser {
     }
 
     class TokenChoiceExclusive extends Token {
-        private final Token[] choices;
+        protected final Token[] choices;
 
         public TokenChoiceExclusive(int indCurr, Token... choices) {
             super(indCurr);
@@ -172,8 +191,21 @@ public class StringAnalyser {
         }
     }
 
-    class TokenPackage extends TokenChoiceInclusive {
+    class TokenPackage extends TokenChoiceStringMandatory {
         public TokenPackage(int currIndex) {
+            super(currIndex, new String[]{"package"});
+        }
+
+        @Override
+        public int parse(String input, int position) {
+            position = super.parse(input, position);
+            int position1 = super.parse(input, position);
+            return position1;
+        }
+    }
+
+    class TokenQualifiedName extends TokenName {
+        public TokenQualifiedName(int currIndex) {
             super(currIndex);
         }
 
@@ -181,6 +213,19 @@ public class StringAnalyser {
         public int parse(String input, int position) {
             position = super.parse(input, position);
             int position1 = super.parse(input, position);
+            int i = 0;
+            boolean passed = false;
+            while (i < input.charAt(i) && (Character.isLetterOrDigit(input.charAt(i)) || Character.isAlphabetic(input.charAt(i))
+                    || input.charAt(i) == '_')) {
+                passed = true;
+            }
+            if (passed) {
+                if (input.substring(position1, i).length() > 0) {
+                    setSuccessful(true);
+                    return position1 + i;
+                }
+            }
+            setSuccessful(false);
             return position1;
         }
     }
@@ -209,8 +254,11 @@ public class StringAnalyser {
         public int parse(String input, int position) {
             position = super.parse(input, position);
             input = input.substring(position);
-            if (input.startsWith(name))
+            if (input.startsWith(name)) {
+                setSuccessful(true);
                 return position + name.length();
+            }
+            setSuccessful(false);
             return position;
         }
     }
@@ -319,13 +367,13 @@ public class StringAnalyser {
         }
     }
 
-    class TokenMethodMemberDefinition extends Token {
+    class TokenMethodMemberDefinition extends TokenName {
         public TokenMethodMemberDefinition(int indexCurrent) {
             super(indexCurrent);
         }
     }
 
-    class TokenVariableMemberDefinition extends Token {
+    class TokenVariableMemberDefinition extends TokenName {
         public TokenVariableMemberDefinition(int indexCurrent) {
             super(indexCurrent);
         }
@@ -344,7 +392,7 @@ public class StringAnalyser {
         }
     }
 
-    class TokenVariableMemberDefinitionClassName extends Token {
+    class TokenVariableMemberDefinitionClassName extends TokenName {
         public TokenVariableMemberDefinitionClassName(int indexCurrent) {
             super(indexCurrent);
         }
@@ -400,11 +448,10 @@ public class StringAnalyser {
 
         public void construct() {
             Token token = definitions.get(0);
-            if (token.getClass().equals(TokenCodeFile.class)) {
-
-            }
         }
     }
+
+    private Construct construct = new Construct();
 
     public int parse(String input) {
         return definitions.get(0).parse(input, 0);

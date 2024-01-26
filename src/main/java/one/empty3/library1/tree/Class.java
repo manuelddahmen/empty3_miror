@@ -30,6 +30,7 @@ public class Class {
     private String name;
     private List<Variable> variableList = new ArrayList<>();
     private List<Method> methodList = new ArrayList<>();
+    private String accessModifier;
 
     public Class() {
 
@@ -76,5 +77,9 @@ public class Class {
         int result = variableList != null ? variableList.hashCode() : 0;
         result = 31 * result + (methodList != null ? methodList.hashCode() : 0);
         return result;
+    }
+
+    public void setAccessModifier(String searched) {
+        this.accessModifier = searched;
     }
 }
