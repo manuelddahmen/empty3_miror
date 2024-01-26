@@ -832,7 +832,40 @@ public class AlgebraicTree extends Tree {
         return false;
     }
 
-    public boolean addFunctionBody(TreeNode t2, String substring) {
+    public boolean addFunctionBody(TreeNode src, String values) {
+
+        TreeNode tBraced;
+        int i = 0;
+        int count = 0;
+        while (i < values.length()) {
+            values = addSpaces(values, i);
+            if (i >= values.length())
+                break;
+            if (values.charAt(i) == ')') {
+                count--;
+            } else if (values.charAt(i) == '(') {
+                count++;
+            } else if (i < 1)
+                return false;
+
+            if (i == values.length() - 1 && count == 0 && values.charAt(i) == ')') {
+                String subsubstring = values.substring(1, values.length() - 1);
+                TreeTreeNodeType mathFunctionTreeNodeType = new TreeTreeNodeType(
+                        subsubstring, parametersValues
+                );
+                TreeNode t2 = new TreeNode(src, new Object[]{subsubstring, parametersValues, ""}, mathFunctionTreeNodeType);
+                try {
+                    if (!add(t2, subsubstring))
+                        return false;
+                } catch (AlgebraicFormulaSyntaxException e) {
+                    return false;
+                }
+                src.getChildren().add(t2);
+            }
+
+
+            i++;
+        }
         return false;
     }
 

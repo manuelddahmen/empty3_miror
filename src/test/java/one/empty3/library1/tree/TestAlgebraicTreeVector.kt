@@ -735,6 +735,21 @@ class TestAlgebraicTreeVector() {
     }
 
     @Test
+    fun testForFunctionWithSpaces() {
+        val r = 12.0
+        val vars = HashMap<String, Double>()
+        vars["r"] = r
+        val algebraicTree = AlgebraicTree(
+            "func1(a, b, c) {\n" +
+                    "d = c+b/a\n" +
+                    "\n" +
+                    "}\n"
+        )
+        algebraicTree.construct()
+        algebraicTree.eval()
+    }
+
+    @Test
     fun testTextCalculator3() {
         val listInstructions: ListInstructions = ListInstructions()
         listInstructions.addInstructions(
