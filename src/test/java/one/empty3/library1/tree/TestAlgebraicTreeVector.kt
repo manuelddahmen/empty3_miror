@@ -750,6 +750,23 @@ class TestAlgebraicTreeVector() {
     }
 
     @Test
+    fun testStringAnalyzer1() {
+        val r = 12.0
+        val vars = HashMap<String, Double>()
+        vars["r"] = r
+        val stringAnalyser: StringAnalyser = StringAnalyser()
+        val parse: Int = stringAnalyser.parse(
+            "class Numb {\n" +
+                    "func1(Double a, Double b, Double c) {\n" +
+                    "Double d = c+b/a\n" +
+                    "\n" +
+                    "}\n" +
+                    "}\n"
+        )
+        println(parse)
+    }
+
+    @Test
     fun testTextCalculator3() {
         val listInstructions: ListInstructions = ListInstructions()
         listInstructions.addInstructions(

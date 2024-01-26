@@ -66,7 +66,12 @@ import org.jetbrains.annotations.NotNull;
  * Created by Manuel Dahmen on 15-12-16.
  */
 public class AlgebraicTree extends Tree {
-
+    private static final int TYPE_NAME_CLASS = 1;
+    private static final int TYPE_NAME_METHOD = 2;
+    private static final int TYPE_NAME_VARIABLE = 3;
+    private static final int TYPE_NAME_FIELD = 4;
+    private static final int TYPE_NAME_CLASS_TYPE = 5;
+    private static final int TYPE_NAME_CLASS_KEYWORDS = 6;
     private String formula = "0.0";
     Map<String, Double> parametersValues = new HashMap<>();
     Map<String, String> parametersValuesVec = new HashMap<>();
@@ -227,6 +232,14 @@ public class AlgebraicTree extends Tree {
                         subformula.charAt(index) == '\r' || subformula.charAt(index) == '\t'))
             subformula = subformula.substring(0, index) + subformula.substring(index + 1, subformula.length());
         return subformula;
+    }
+
+    private String guessName(String subformula, int index) {
+        return "";
+    }
+
+    private boolean checkName(String name, int nameType) {
+        return false;
     }
 
     /***
