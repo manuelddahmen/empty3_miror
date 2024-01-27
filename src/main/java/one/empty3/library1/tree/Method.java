@@ -29,8 +29,10 @@ import java.util.Objects;
 public class Method {
     private String name;
     private Variable ofClass;
+    private List<Variable> parameterList = new ArrayList<>();
     private List<Variable> variableList = new ArrayList<>();
     private List<Instruction> instructions = new ArrayList<>();
+    private String scope;
 
     public Method() {
 
@@ -68,6 +70,18 @@ public class Method {
         this.instructions = instructions;
     }
 
+    public List<Variable> getParameterList() {
+        return parameterList;
+    }
+
+    public void setParameterList(List<Variable> parameterList) {
+        this.parameterList = parameterList;
+    }
+
+    public String getScope() {
+        return scope;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -89,5 +103,9 @@ public class Method {
         result = 31 * result + (variableList != null ? variableList.hashCode() : 0);
         result = 31 * result + (instructions != null ? instructions.hashCode() : 0);
         return result;
+    }
+
+    public void setScope(String choice) {
+        this.scope = choice;
     }
 }

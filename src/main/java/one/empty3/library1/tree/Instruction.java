@@ -30,4 +30,12 @@ public class Instruction {
     @Nullable
     private String name;
     private ListInstructions.Instruction expression;
+
+    public void setName(String name) {
+
+    }
+
+    public void setType(String name) {
+        this.type = name;
+    }
 }

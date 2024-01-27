@@ -25,6 +25,7 @@ package one.empty3.library1.tree;
 public class Variable {
     private String name;
     private Class value;
+    private String scope;
 
     public Variable() {
 
@@ -44,5 +45,9 @@ public class Variable {
 
     public void setValue(Class value) {
         this.value = value;
+    }
+
+    public void setScope(String choice) {
+        this.scope = choice;
     }
 }

@@ -31,6 +31,8 @@ public class Class {
     private List<Variable> variableList = new ArrayList<>();
     private List<Method> methodList = new ArrayList<>();
     private String accessModifier;
+    private boolean mFinal;
+    private String packageName;
 
     public Class() {
 
@@ -60,6 +62,7 @@ public class Class {
         this.methodList = methodList;
     }
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -81,5 +84,13 @@ public class Class {
 
     public void setAccessModifier(String searched) {
         this.accessModifier = searched;
+    }
+
+    public void setFinal(boolean b) {
+        this.mFinal = b;
+    }
+
+    public void setPackageName(String packageName) {
+        this.packageName = packageName;
     }
 }

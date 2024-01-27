@@ -22,6 +22,8 @@
 
 package one.empty3.library1.tree;
 
+import org.apache.xerces.impl.xpath.XPath;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -33,20 +35,24 @@ public class StringAnalyser {
     private int index = 0;
 
     abstract class Token {
-        private int indCurrent = 0;
+        protected Action action;
         protected Class aClass;
         protected Method method;
         protected Variable variable;
         private boolean successful = false;
 
-        public Token(int indCurrent) {
-            this.indCurrent = indCurrent;
+        public Token() {
             index++;
+            this.action = action;
         }
 
         public Token addToken(Token token) {
             definitions.put(index, token);
             return token;
+        }
+
+        public void setAction(Action action) {
+            this.action = action;
         }
 
         public int skipBlanks(String input, int position) {
@@ -69,14 +75,35 @@ public class StringAnalyser {
         public void setSuccessful(boolean successful) {
             this.successful = successful;
         }
+
+        public Action getAction() {
+            return action;
+        }
+
     }
 
+    class Action {
+        protected final Token token;
+
+        public Token getToken() {
+            return token;
+        }
+
+        public Action(Token token) {
+            this.token = token;
+
+        }
+
+        public boolean action() {
+            return false;
+        }
+    }
 
     class TokenPrivacyModifier extends TokenChoiceExclusive {
         private String[] values = new String[]{"private", "public", "protected", ""};
 
-        public TokenPrivacyModifier(int indexCurrent) {
-            super(indexCurrent);
+        public TokenPrivacyModifier() {
+
 
         }
 
@@ -95,11 +122,15 @@ public class StringAnalyser {
         }
     }
 
+    /***
+     * Il faut choisir une des strings c'est obligatoire.
+     */
     class TokenChoiceStringMandatory extends Token {
         private final String[] names;
+        private String choice = "";
 
-        public TokenChoiceStringMandatory(int indexCurrent, String[] values) {
-            super(indexCurrent);
+        public TokenChoiceStringMandatory(String[] values) {
+
             this.names = values;
         }
 
@@ -109,30 +140,36 @@ public class StringAnalyser {
             input = input.substring(position);
             for (String s : names) {
                 if (input.startsWith(s)) {
+                    this.choice = s;
                     setSuccessful(true);
                     return position + s.length();
                 }
             }
             return position;
         }
+
+        public String getChoice() {
+            return choice;
+        }
     }
 
     class TokenClassScope extends TokenChoiceStringMandatory {
-        public TokenClassScope(int indexCurrent) {
-            super(indexCurrent, new String[]{"static", ""});
+        public TokenClassScope() {
+            super(new String[]{"static", ""});
         }
     }
 
     class TokenConstantModifier extends TokenChoiceStringMandatory {
-        public TokenConstantModifier(int indexCurrent) {
-            super(indexCurrent, new String[]{"final", ""});
+        public TokenConstantModifier() {
+            super(new String[]{"final"});
         }
+
     }
 
 
     class TokenCodeFile extends Token {
-        public TokenCodeFile(int indexCurrent) {
-            super(indexCurrent);
+        public TokenCodeFile() {
+            super();
             aClass = new Class();
         }
 
@@ -141,8 +178,8 @@ public class StringAnalyser {
     class TokenChoiceInclusive extends Token {
         protected List<Token> choices;
 
-        public TokenChoiceInclusive(int indexCurrent, Token... choices) {
-            super(indexCurrent);
+        public TokenChoiceInclusive(Token... choices) {
+
             this.choices = Arrays.stream(choices).toList();
         }
 
@@ -161,13 +198,14 @@ public class StringAnalyser {
             setSuccessful(false);
             return position;
         }
+
     }
 
     class TokenChoiceExclusive extends Token {
         protected final Token[] choices;
 
-        public TokenChoiceExclusive(int indCurr, Token... choices) {
-            super(indCurr);
+        public TokenChoiceExclusive(Token... choices) {
+
             this.choices = choices;
         }
 
@@ -192,8 +230,8 @@ public class StringAnalyser {
     }
 
     class TokenPackage extends TokenChoiceStringMandatory {
-        public TokenPackage(int currIndex) {
-            super(currIndex, new String[]{"package"});
+        public TokenPackage() {
+            super(new String[]{"package"});
         }
 
         @Override
@@ -205,8 +243,8 @@ public class StringAnalyser {
     }
 
     class TokenQualifiedName extends TokenName {
-        public TokenQualifiedName(int currIndex) {
-            super(currIndex);
+        public TokenQualifiedName() {
+
         }
 
         @Override
@@ -232,8 +270,8 @@ public class StringAnalyser {
 
     class TokenClassKeyword extends TokenString {
 
-        public TokenClassKeyword(int currIndex) {
-            super(currIndex, "class");
+        public TokenClassKeyword() {
+            super("class");
         }
 
     }
@@ -241,12 +279,12 @@ public class StringAnalyser {
     class TokenString extends Token {
         protected String name = "{";
 
-        public TokenString(int currIndex) {
-            super(currIndex);
+        public TokenString() {
+
         }
 
-        public TokenString(int index, String aPackage) {
-            super(index);
+        public TokenString(String aPackage) {
+
             this.name = aPackage;
         }
 
@@ -264,24 +302,24 @@ public class StringAnalyser {
     }
 
     class TokenOpenBracket extends TokenString {
-        public TokenOpenBracket(int currIndex) {
-            super(currIndex);
+        public TokenOpenBracket() {
+
             name = "{";
         }
 
     }
 
     class TokenComa extends TokenString {
-        public TokenComa(int currIndex) {
-            super(currIndex);
+        public TokenComa() {
+
             name = ",";
         }
 
     }
 
     class TokenCloseBracket extends TokenString {
-        public TokenCloseBracket(int currIndex) {
-            super(currIndex);
+        public TokenCloseBracket() {
+
             name = "}";
 
         }
@@ -289,8 +327,8 @@ public class StringAnalyser {
     }
 
     class TokenOpenParenthesized extends TokenString {
-        public TokenOpenParenthesized(int currIndex) {
-            super(currIndex);
+        public TokenOpenParenthesized() {
+
             name = "(";
         }
 
@@ -298,8 +336,8 @@ public class StringAnalyser {
 
     class TokenCloseParenthesized extends TokenString {
 
-        public TokenCloseParenthesized(int currIndex) {
-            super(currIndex);
+        public TokenCloseParenthesized() {
+
             name = ")";
         }
 
@@ -307,8 +345,8 @@ public class StringAnalyser {
 
     class MultiTokenOptional extends TokenChoiceInclusive {
 
-        public MultiTokenOptional(int indCurrent, Token... options) {
-            super(indCurrent);
+        public MultiTokenOptional(Token... options) {
+
             this.choices = Arrays.stream(options).toList();
         }
 
@@ -337,8 +375,8 @@ public class StringAnalyser {
 
     class MultiTokenMandatory extends TokenChoiceInclusive {
 
-        public MultiTokenMandatory(int indCurrent, Token... mandatory) {
-            super(indCurrent);
+        public MultiTokenMandatory(Token... mandatory) {
+
             this.choices = Arrays.stream(mandatory).toList();
         }
 
@@ -368,74 +406,269 @@ public class StringAnalyser {
     }
 
     class TokenMethodMemberDefinition extends TokenName {
-        public TokenMethodMemberDefinition(int indexCurrent) {
-            super(indexCurrent);
+        public TokenMethodMemberDefinition() {
+            super();
         }
     }
 
     class TokenVariableMemberDefinition extends TokenName {
-        public TokenVariableMemberDefinition(int indexCurrent) {
-            super(indexCurrent);
+        public TokenVariableMemberDefinition() {
+
         }
     }
 
 
     class TokenName extends Token {
-        public TokenName(int indexCurrent) {
-            super(indexCurrent);
+        private String name;
+
+        public TokenName() {
+
 
         }
 
         @Override
         public int parse(String input, int position) {
+            int position1 = super.parse(input, position);
+            input = input.substring(position1);
+            int i = position1;
+            boolean passed = false;
+            while (i < input.length() && (Character.isLetterOrDigit(input.charAt(i)) || input.charAt(i) == '_') || input.charAt(i) == '.') {
+                i++;
+                passed = true;
+            }
+            if (passed)
+                this.setName(input.substring(position1, i));
             return super.parse(input, position);
+        }
+
+        private void setName(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
         }
     }
 
     class TokenVariableMemberDefinitionClassName extends TokenName {
-        public TokenVariableMemberDefinitionClassName(int indexCurrent) {
-            super(indexCurrent);
+        public TokenVariableMemberDefinitionClassName() {
+
+        }
+    }
+
+    class TokenVariableInMethodName extends TokenName {
+        public TokenVariableInMethodName() {
+
         }
     }
 
     class TokenEquals extends TokenString {
-        public TokenEquals(int indexCurrent) {
-            super(indexCurrent);
+        public TokenEquals() {
+
             name = "=";
         }
     }
 
     class TokenExpression extends Token {
-        public TokenExpression(int indexCurrent) {
-            super(indexCurrent);
+        public TokenExpression() {
+
+        }
+    }
+
+    class TokenSemiColon extends TokenString {
+        public TokenSemiColon() {
+            super(";");
         }
     }
 
     public StringAnalyser() {
-        definitions.put(0, new TokenCodeFile(index).addToken(new TokenChoiceInclusive(index,
-                        new MultiTokenMandatory(index, new TokenString(index, "package"), new TokenName(index)), new TokenClassScope(index)))
-                .addToken(new TokenConstantModifier(index)).addToken(new TokenClassKeyword(index)).addToken(new TokenOpenBracket(index))
-                .addToken(new MultiTokenOptional(index,
+        TokenQualifiedName packageQualifiedName = new TokenQualifiedName();
+        Action actionPackageName = new Action(packageQualifiedName) {
+            @Override
+            public boolean action() {
+                construct.packageName = getToken().isSuccessful() ? ((TokenQualifiedName) getToken()).getName() : "";
+                return true;
+            }
+        };
+        Token isFinal = new TokenConstantModifier();
+        Action actionConstantModifier = new Action(isFinal) {
+            @Override
+            public boolean action() {
+                if (getToken().isSuccessful()) {
+                    String choice = (((TokenConstantModifier) token)).getChoice();
+                    construct.currentClass.setFinal(true);
+                }
+                return true;
+            }
+        };
+        Token className = new TokenName();
+        Action setNewClassName = new Action(className) {
+            @Override
+            public boolean action() {
+                String name = ((TokenName) getToken()).getName();
+                construct.currentClass.setPackageName(construct.packageName);
+                construct.currentClass.setName(name);
+                if (construct.currentClass != null) {
+
+                }
+                actualContext.setCurrentClassname(construct.currentClass);
+                return true;
+            }
+        };
+        Token closeBracket = new TokenCloseBracket();
+        Action actionCloseClassBracket = new Action(closeBracket) {
+            @Override
+            public boolean action() {
+                //((TokenCloseBracket)getToken())
+                if (token.isSuccessful()) {
+                    construct.cited.put(construct.packageName + "." + construct.currentClass.getName(), construct.currentClass);
+                    construct.currentClass = new Class();
+                }
+                return true;
+            }
+        };
+        TokenClassScope tokenVariableScope = new TokenClassScope();
+        Action action = new Action(tokenVariableScope) {
+            @Override
+            public boolean action() {
+                if (token.isSuccessful()) {
+                    Variable variable = new Variable();
+                    construct.currentClass.getVariableList().add(variable);
+                    variable.setScope(tokenVariableScope.getChoice());
+
+                }
+                return true;
+            }
+        };
+        TokenQualifiedName tokenQualifiedNameVariable = new TokenQualifiedName();
+
+        Action actionQualifiedNameVariable = new Action(tokenQualifiedNameVariable) {
+            @Override
+            public boolean action() {
+                if (token.isSuccessful()) {
+                    List<Variable> variableList = construct.currentClass.getVariableList();
+                    variableList.get(variableList.size() - 1).setName(((TokenQualifiedName) token).getName());
+
+                }
+                return true;
+            }
+        };
+        TokenClassScope tokenMethodScope = new TokenClassScope();
+        Action actionClassScope = new Action(tokenMethodScope) {
+            @Override
+            public boolean action() {
+                List<Method> methodList = construct.currentClass.getMethodList();
+                if (methodList.isEmpty())
+                    methodList.add(new Method());
+                if (token.isSuccessful()) {
+                    methodList.get(methodList.size() - 1).setScope(((TokenClassScope) token).getChoice());
+                    return true;
+                }
+                return false;
+            }
+        };
+        TokenMethodMemberDefinition tokenMethodMemberDefinition = new TokenMethodMemberDefinition();
+        Action actionMethodName = new Action(tokenMethodScope) {
+            @Override
+            public boolean action() {
+                List<Method> methodList = construct.currentClass.getMethodList();
+                if (methodList.isEmpty())
+                    methodList.add(new Method());
+                if (token.isSuccessful()) {
+                    methodList.get(methodList.size() - 1).setName(((TokenName) token).getName());
+                    return true;
+                }
+                return false;
+            }
+        };
+
+
+        TokenConstantModifier tokenConstantModifierMethod = new TokenConstantModifier();
+        TokenConstantModifier tokenConstantModifier = new TokenConstantModifier();
+        TokenName tokenNameReturnType = new TokenName();
+
+
+        TokenVariableInMethodName tokenVariableInMethodName = new TokenVariableInMethodName();
+        Action actionTokenVariableInMethodName = new Action(tokenVariableInMethodName) {
+            @Override
+            public boolean action() {
+                if (token.isSuccessful()) {
+                    String name = ((TokenVariableInMethodName) token).getName();
+                    List<Instruction> instructions = construct.methodMembers.get(construct.methodMembers.size() - 1).getInstructions();
+                    Instruction instruction = instructions.get(instructions.size() - 1);
+                    instruction.setType(name);
+                }
+                return true;
+            }
+        };
+
+        Token endOfInstruction = new TokenSemiColon();
+        Action actionEndOfInstruction = new Action(endOfInstruction) {
+            @Override
+            public boolean action() {
+                if (token.isSuccessful()) {
+                    List<Instruction> instructions = construct.methodMembers.get(construct.methodMembers.size() - 1).getInstructions();
+                    instructions.add(new Instruction());
+                    construct.methodMembers.get(construct.methodMembers.size() - 1)
+                            .setInstructions(instructions);
+                    Instruction instruction = instructions.get(instructions.size() - 1);
+                    return true;
+                }
+                return false;
+            }
+        };
+        Token tokenBeginOfMethod = new TokenOpenBracket();
+        Action actionBeginOfInstructions = new Action(tokenBeginOfMethod) {
+            @Override
+            public boolean action() {
+                if (token.isSuccessful()) {
+                    construct.methodMembers.get(construct.methodMembers.size() - 1).setInstructions(new ArrayList<>());
+                    construct.methodMembers.get(construct.methodMembers.size() - 1).getInstructions().add(new Instruction());
+                    return true;
+                }
+                return false;
+            }
+        };
+        TokenClassKeyword tokenClassKeyword = new TokenClassKeyword();
+        Action actionClassKeyword = new Action(tokenClassKeyword) {
+            @Override
+            public boolean action() {
+                if (token.isSuccessful()) {
+                    construct.methodMembers = new HashMap<>();
+                    construct.fieldMembers = new HashMap<>();
+                    construct.currentClass = new Class();
+                    construct.currentClass.setPackageName(construct.packageName);
+                    construct.currentMethod = new Method();
+                    construct.currentField = new Variable();
+                    return true;
+                }
+                return false;
+            }
+        };
+        Token aPackage = definitions.put(0, new TokenCodeFile().addToken(new TokenChoiceInclusive(
+                        new MultiTokenMandatory(new TokenString("package"),
+                                packageQualifiedName))
+                        .addToken(new TokenClassScope()))
+                .addToken(isFinal).addToken(tokenClassKeyword).addToken(className).addToken(new TokenOpenBracket())
+                .addToken(new MultiTokenOptional(new Token[]{
                         // Variables
-                        new MultiTokenOptional(index,
-                                new TokenClassScope(index)
-                                        .addToken(new TokenConstantModifier(index)).addToken(
-                                                new TokenVariableMemberDefinitionClassName(index))),
-                        // Methods
-                        new TokenClassScope(index)
-                                .addToken(new TokenConstantModifier(index)).addToken(new TokenMethodMemberDefinition(index))
-                                // Arguments' list
-                                .addToken(new TokenOpenParenthesized(index)).addToken(new MultiTokenOptional(index, new MultiTokenMandatory(index,
-                                        new TokenVariableMemberDefinitionClassName(index), new TokenName(index), new TokenComa(index)
-                                )))
-                                .addToken(new TokenCloseParenthesized(index))
-                                // Instructions' block
-                                .addToken(new TokenOpenBracket(index).
-                                        addToken(new MultiTokenOptional(index, new MultiTokenMandatory(index,
-                                                new TokenVariableMemberDefinitionClassName(index), new TokenName(index), new TokenEquals(index))
-                                                .addToken(new TokenExpression(index)), new TokenComa(index))
-                                        )))
-                        .addToken(new TokenOpenBracket(index))));
+                        new MultiTokenOptional(new Token[]{tokenVariableScope, tokenConstantModifier})
+                                .addToken(tokenQualifiedNameVariable)}).addToken(new TokenSemiColon()))// Commit changes
+                // Methods
+                .addToken(new MultiTokenOptional(new Token[]{tokenNameReturnType, tokenMethodScope
+                        .addToken(tokenConstantModifierMethod).addToken(tokenMethodMemberDefinition)
+                        // Arguments' list
+                        .addToken(new TokenOpenParenthesized()).addToken(new MultiTokenOptional(new MultiTokenMandatory(
+                                new TokenVariableMemberDefinitionClassName(), new TokenName(), new TokenComa()
+                        )))
+                        .addToken(new TokenCloseParenthesized())
+                        // Instructions' block
+                        .addToken(tokenBeginOfMethod.
+                        addToken(new MultiTokenOptional(new MultiTokenMandatory(tokenVariableInMethodName
+                                , new TokenName(), new TokenEquals())
+                                .addToken(new TokenExpression()), new TokenComa()).addToken(endOfInstruction)// Commit changes
+                        ))}))
+                .addToken(closeBracket));// Commit changes
 
     }
 
@@ -444,11 +677,15 @@ public class StringAnalyser {
         private enum ContextType {Classname, FieldName, MethodName, Instruction}
 
         private ContextType currentContextType;
-        private String currentClassname;
-        private String currentFieldName;
-        private String currentMethodName;
+        private Class currentClassname;
+        private Variable currentFieldName;
+        private Method currentMethodName;
 
-        public ActualContext(ContextType currentContextType, String currentClassname, String currentFieldName, String currentMethodName) {
+        public ActualContext() {
+
+        }
+
+        public ActualContext(ContextType currentContextType, Class currentClassname, Variable currentFieldName, Method currentMethodName) {
             this.currentContextType = currentContextType;
             this.currentClassname = currentClassname;
             this.currentFieldName = currentFieldName;
@@ -463,36 +700,92 @@ public class StringAnalyser {
             this.currentContextType = currentContextType;
         }
 
-        public String getCurrentClassname() {
+        public Class getCurrentClassname() {
             return currentClassname;
         }
 
-        public void setCurrentClassname(String currentClassname) {
+        public void setCurrentClassname(Class currentClassname) {
             this.currentClassname = currentClassname;
         }
 
-        public String getCurrentFieldName() {
+        public Variable getCurrentFieldName() {
             return currentFieldName;
         }
 
-        public void setCurrentFieldName(String currentFieldName) {
+        public void setCurrentFieldName(Variable currentFieldName) {
             this.currentFieldName = currentFieldName;
         }
 
-        public String getCurrentMethodName() {
+        public Method getCurrentMethodName() {
             return currentMethodName;
         }
 
-        public void setCurrentMethodName(String currentMethodName) {
+        public void setCurrentMethodName(Method currentMethodName) {
             this.currentMethodName = currentMethodName;
         }
     }
 
+    /*
+        static class ActualContext {
+            private enum ContextType {Classname, FieldName, MethodName, Instruction}
+
+            private ContextType currentContextType;
+            private String currentClassname;
+            private String currentFieldName;
+            private String currentMethodName;
+
+            public ActualContext() {
+
+            }
+
+            public ActualContext(ContextType currentContextType, String currentClassname, String currentFieldName, String currentMethodName) {
+                this.currentContextType = currentContextType;
+                this.currentClassname = currentClassname;
+                this.currentFieldName = currentFieldName;
+                this.currentMethodName = currentMethodName;
+            }
+
+            public ContextType getCurrentContextType() {
+                return currentContextType;
+            }
+
+            public void setCurrentContextType(ContextType currentContextType) {
+                this.currentContextType = currentContextType;
+            }
+
+            public String getCurrentClassname() {
+                return currentClassname;
+            }
+
+            public void setCurrentClassname(String currentClassname) {
+                this.currentClassname = currentClassname;
+            }
+
+            public String getCurrentFieldName() {
+                return currentFieldName;
+            }
+
+            public void setCurrentFieldName(String currentFieldName) {
+                this.currentFieldName = currentFieldName;
+            }
+
+            public String getCurrentMethodName() {
+                return currentMethodName;
+            }
+
+            public void setCurrentMethodName(String currentMethodName) {
+                this.currentMethodName = currentMethodName;
+            }
+        }
+    */
     class Construct {
+        public Variable currentField;
+        public Method currentMethod;
+        protected String packageName = "";
         protected Class currentClass = new Class();
-        protected List<Class> cited = new ArrayList<>();
-        protected List<Variable> fieldMembers = new ArrayList<>();
-        protected List<Method> methodMembers = new ArrayList<>();
+        protected HashMap<String, Class> cited = new HashMap<>();
+        protected HashMap<String, Variable> fieldMembers = new HashMap<>();
+        protected HashMap<String, Method> methodMembers = new HashMap<>();
 
 
         public void construct() {
@@ -500,8 +793,8 @@ public class StringAnalyser {
         }
     }
 
-    private Construct construct = new Construct();
-    private ActualContext actualContext;
+    private final Construct construct = new Construct();
+    private final ActualContext actualContext = new ActualContext();
 
     public int parse(String input) {
         return definitions.get(0).parse(input, 0);
