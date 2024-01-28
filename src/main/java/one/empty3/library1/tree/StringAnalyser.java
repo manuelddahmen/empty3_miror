@@ -22,7 +22,8 @@
 
 package one.empty3.library1.tree;
 
-import org.apache.xerces.impl.xpath.XPath;
+import one.empty3.library.StructureMatrix;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,9 +31,14 @@ import java.util.HashMap;
 import java.util.List;
 
 public class StringAnalyser {
-    private HashMap<Integer, Token> definitions = new HashMap<>();
+    protected HashMap<Integer, Token> definitions = new HashMap<>();
     private HashMap<String, Class> classes;
     private int index = 0;
+
+    @NotNull
+    protected Construct getConstruct() {
+        return construct;
+    }
 
     abstract class Token {
         protected Action action;
@@ -40,15 +46,18 @@ public class StringAnalyser {
         protected Method method;
         protected Variable variable;
         private boolean successful = false;
+        private StructureMatrix<Token> nextTokens = new StructureMatrix<>(1, Token.class);
 
         public Token() {
-            index++;
             this.action = action;
         }
 
         public Token addToken(Token token) {
+            index++;
             definitions.put(index, token);
-            return token;
+            this.nextTokens.setElem(token, this.nextTokens.getData1d().size());
+            index++;
+            return this;
         }
 
         public void setAction(Action action) {
@@ -65,6 +74,7 @@ public class StringAnalyser {
         }
 
         public int parse(String input, int position) {
+            System.out.println(toString());
             return position = skipBlanks(input, position);
         }
 
@@ -80,9 +90,23 @@ public class StringAnalyser {
             return action;
         }
 
+        @Override
+        public String toString() {
+            return getClass().getName() + "{" +
+                    "action=" + action +
+                    ", aClass=" + aClass +
+                    ", method=" + method +
+                    ", variable=" + variable +
+                    ", successful=" + successful +
+                    '}';
+        }
+
+        public StructureMatrix<Token> getNextToken() {
+            return nextTokens;
+        }
     }
 
-    class Action {
+    abstract class Action {
         protected final Token token;
 
         public Token getToken() {
@@ -91,12 +115,11 @@ public class StringAnalyser {
 
         public Action(Token token) {
             this.token = token;
+            token.action = this;
 
         }
 
-        public boolean action() {
-            return false;
-        }
+        public abstract boolean action();
     }
 
     class TokenPrivacyModifier extends TokenChoiceExclusive {
@@ -201,6 +224,10 @@ public class StringAnalyser {
 
     }
 
+
+    /***
+     * Tous les tokens choisis et aucun autre.
+     */
     class TokenChoiceExclusive extends Token {
         protected final Token[] choices;
 
@@ -225,6 +252,10 @@ public class StringAnalyser {
                 }
             }
             setSuccessful(true);
+            for (int i = 0; i < choices.length; i++) {
+                getNextToken().getData1d().clear();
+                getNextToken().add(choices[i]);
+            }
             return position;
         }
     }
@@ -352,6 +383,8 @@ public class StringAnalyser {
 
         @Override
         public int parse(String input, int position) {
+            getNextToken().data1d.clear();
+            ;
             position = super.parse(input, position);
             input = input.substring(position);
             boolean allOk = true;
@@ -363,12 +396,13 @@ public class StringAnalyser {
                     position1 = token.parse(input, position1);
                     if (!token.isSuccessful()) {
                         allOk = false;
-                    } else {
                         allNotOk = false;
+                    } else {
+                        //            getNextToken().data1d.add(token);
                     }
                 }
             }
-            setSuccessful(allOk);
+            setSuccessful(!allNotOk || allOk);
             return position1;
         }
     }
@@ -436,9 +470,15 @@ public class StringAnalyser {
                 i++;
                 passed = true;
             }
-            if (passed)
+            if (passed && i - position1 > 0) {
                 this.setName(input.substring(position1, i));
-            return super.parse(input, position);
+                setSuccessful(true);
+                return i;
+            } else {
+                setSuccessful(false);
+                return position1;
+            }
+            
         }
 
         private void setName(String name) {
@@ -791,12 +831,37 @@ public class StringAnalyser {
         public void construct() {
             Token token = definitions.get(0);
         }
+
+        @Override
+        public String toString() {
+            return "Construct{" +
+                    "currentField=" + currentField +
+                    ", currentMethod=" + currentMethod +
+                    ", packageName='" + packageName + '\'' +
+                    ", currentClass=" + currentClass +
+                    ", cited=" + cited +
+                    ", fieldMembers=" + fieldMembers +
+                    ", methodMembers=" + methodMembers +
+                    '}';
+        }
     }
 
     private final Construct construct = new Construct();
     private final ActualContext actualContext = new ActualContext();
 
     public int parse(String input) {
-        return definitions.get(0).parse(input, 0);
+        Token token = definitions.get(0);
+        int position1 = token.parse(input, 0);
+        input = input.substring(position1);
+        while (token != null && token.isSuccessful()) {
+            position1 = token.parse(input, position1);
+            input = input.substring(position1);
+            if (token.getNextToken() != null)
+                for (int i = 0; i < token.getNextToken().data1d.size(); i++) {
+                    token.getNextToken().getElem(i);
+                }
+
+        }
+        return position1;
     }
 }

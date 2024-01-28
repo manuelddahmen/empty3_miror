@@ -755,14 +755,24 @@ class TestAlgebraicTreeVector() {
         val vars = HashMap<String, Double>()
         vars["r"] = r
         val stringAnalyser: StringAnalyser = StringAnalyser()
-        val parse: Int = stringAnalyser.parse(
-            "class Numb {\n" +
-                    "double func1(Double a, Double b, Double c) {\n" +
-                    "Double d = c+b/a\n" +
-                    "return d\n" +
-                    "}\n" +
+
+        val input =
+            "package one.empty3;\n\n" +
+                    "class Numb {\n" +
+                    "\tdouble func1(Double a, Double b, Double c) {\n" +
+                    "\t\tDouble d = c+b/a;\n" +
+                    "\t\treturn d\n" +
+                    "\t}\n" +
                     "}\n"
-        )
+
+        val parse: Int = stringAnalyser.parse(input)
+        println(input)
+        println(stringAnalyser.construct)
+        stringAnalyser.definitions.keys.sorted().forEach {
+            if (it != null) {
+                println("[" + it + "]\t" + stringAnalyser.definitions.get(it))
+            }
+        }
         println(parse)
     }
 
