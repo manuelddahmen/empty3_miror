@@ -351,7 +351,7 @@ public class StringAnalyser {
         @Override
         public int parse(String input, int position) {
             position = super.skipBlanks(input, position);
-            if (input.substring(position).startsWith(name)) {
+            if (position < input.length() && input.substring(position).startsWith(name)) {
                 setSuccessful(true);
                 position += name.length();
                 if (!getNextToken().getData1d().isEmpty()) {
