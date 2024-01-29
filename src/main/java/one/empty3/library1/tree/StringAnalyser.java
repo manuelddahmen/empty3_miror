@@ -46,17 +46,15 @@ public class StringAnalyser {
         protected Method method;
         protected Variable variable;
         private boolean successful = false;
-        private StructureMatrix<Token> nextTokens = new StructureMatrix<>(1, Token.class);
+        private final StructureMatrix<Token> nextTokens = new StructureMatrix<>(1, Token.class);
 
         public Token() {
-            this.action = action;
         }
 
         public Token addToken(Token token) {
             index++;
             definitions.put(index, token);
             this.nextTokens.setElem(token, this.nextTokens.getData1d().size());
-            index++;
             return this;
         }
 
@@ -66,18 +64,21 @@ public class StringAnalyser {
 
         public int skipBlanks(String input, int position) {
             boolean passed = false;
-            while (position < input.length() && (Character.isSpaceChar(input.charAt(position)) || Character.isWhitespace(input.charAt(position)))) {
-                position++;
+            int position1 = position;
+            while (position1 < input.length() && (Character.isSpaceChar(input.charAt(position1)) || Character.isWhitespace(input.charAt(position1)))) {
+                position1++;
                 passed = true;
             }
-            return passed ? position : 0;
+            int position2 = passed ? position1 : position;//(input.length() > position2 ? input.substring(position2) : "")+
+            System.out.printf("\n\n\nClasse\t" + getClass() + "\nPosition\t" + position2 + "\nReste <<<<\n" +
+                    (input.length() > position2 ? input.substring(position2) : "")
+                    + "\n>>>>\ntoString()\t" + this);
+            return position2;
         }
 
         public int parse(String input, int position) {
             position = skipBlanks(input, position);
-            int position1 = 0;
-            System.out.printf("\nClasse\t" + getClass() + "\nPosition\t" + position + "\nReste\n<<<<\n" + input.substring(position) + "\n>>>>\n");
-            return position1;
+            return position;
         }
 
         protected boolean isSuccessful() {
@@ -124,20 +125,19 @@ public class StringAnalyser {
         public abstract boolean action();
     }
 
-    class TokenPrivacyModifier extends TokenChoiceExclusive {
-        private String[] values = new String[]{"private", "public", "protected", ""};
+    class TokenPrivacyModifier extends TokenChoiceStringMandatory {
 
         public TokenPrivacyModifier() {
-
+            super(new String[]{"private", "public", "protected", ""});
 
         }
 
         @Override
         public int parse(String input, int position) {
-            position = super.parse(input, position);
-            input = input.substring(position);
-            for (String searched : values) {
-                if (input.startsWith(searched)) {
+            position = super.parse(input.substring(position), position) + position;
+
+            for (String searched : names) {
+                if (input.substring(position).startsWith(searched)) {
                     this.setSuccessful(true);
                     construct.currentClass.setAccessModifier(searched);
                     return searched.length();
@@ -151,8 +151,8 @@ public class StringAnalyser {
      * Il faut choisir une des strings c'est obligatoire.
      */
     class TokenChoiceStringMandatory extends Token {
-        private final String[] names;
-        private String choice = "";
+        protected final String[] names;
+        protected String choice = "";
 
         public TokenChoiceStringMandatory(String[] values) {
 
@@ -161,20 +161,30 @@ public class StringAnalyser {
 
         @Override
         public int parse(String input, int position) {
-            position = super.parse(input, position);
-            input = input.substring(position);
+            position = super.parse(input.substring(position), position) + position;
             for (String s : names) {
-                if (input.startsWith(s)) {
-                    this.choice = s;
-                    setSuccessful(true);
-                    return position + s.length();
+                if (position < input.length()) {
+                    if (input.substring(position).startsWith(s)) {
+                        this.choice = s;
+                        setSuccessful(true);
+                        return position + s.length();
+                    }
                 }
             }
+            setSuccessful(false);
             return position;
         }
 
         public String getChoice() {
             return choice;
+        }
+
+        @Override
+        public String toString() {
+            return "TokenChoiceStringMandatory{" +
+                    "names=" + Arrays.toString(names) +
+                    ", choice='" + choice + '\'' +
+                    '}';
         }
     }
 
@@ -186,7 +196,7 @@ public class StringAnalyser {
 
     class TokenConstantModifier extends TokenChoiceStringMandatory {
         public TokenConstantModifier() {
-            super(new String[]{"final"});
+            super(new String[]{"final", ""});
         }
 
     }
@@ -200,12 +210,12 @@ public class StringAnalyser {
 
         @Override
         public int parse(String input, int position) {
-            position = super.parse(input, position);
-            input = input.substring(position);
-            if (getNextToken().data1d.size() > 0) {
-                position = getNextToken().getElem(0).parse(input, 0);
+            position = skipBlanks(input, position);
+            if (!getNextToken().data1d.isEmpty()) {
+                int position1 = getNextToken().getElem(0).parse(input, position);
                 if (getNextToken().getElem(0).isSuccessful()) {
-                    return position;
+                    setSuccessful(true);
+                    return position1;
                 }
             }
             setSuccessful(false);
@@ -223,11 +233,10 @@ public class StringAnalyser {
 
         @Override
         public int parse(String input, int position) {
-            position = super.parse(input, position);
-            input = input.substring(position);
+            position = super.parse(input.substring(position), position) + position;
             for (Token token : choices) {
                 int position1 = position;
-                position1 = token.parse(input, position);
+                position1 = token.parse(input.substring(position1), position);
                 if (token.isSuccessful()) {
                     setSuccessful(true);
                     return position1;
@@ -237,6 +246,12 @@ public class StringAnalyser {
             return position;
         }
 
+        @Override
+        public String toString() {
+            return "TokenChoiceInclusive{" +
+                    "choices=" + choices +
+                    '}';
+        }
     }
 
 
@@ -253,12 +268,11 @@ public class StringAnalyser {
 
         @Override
         public int parse(String input, int position) {
-            position = super.parse(input, position);
-            input = input.substring(position);
+            position = super.parse(input.substring(position), position) + position;
             int position1 = position;
             for (Token token : choices) {
                 position1 = position;
-                position1 = token.parse(input, position);
+                position1 = token.parse(input.substring(position1), position);
                 if (!token.isSuccessful()) {
                     setSuccessful(false);
                     return position;
@@ -266,6 +280,13 @@ public class StringAnalyser {
             }
             setSuccessful(true);
             return position;
+        }
+
+        @Override
+        public String toString() {
+            return "TokenChoiceExclusive{" +
+                    "choices=" + Arrays.toString(choices) +
+                    '}';
         }
     }
 
@@ -276,10 +297,10 @@ public class StringAnalyser {
 
         @Override
         public int parse(String input, int position) {
-            position = super.parse(input, position);
-            int position1 = super.parse(input, position);
-            return position1;
+            position = super.parse(input.substring(position), position) + position;
+            return position;
         }
+
     }
 
     class TokenQualifiedName extends TokenName {
@@ -289,17 +310,20 @@ public class StringAnalyser {
 
         @Override
         public int parse(String input, int position) {
-            position = super.parse(input, position);
-            int position1 = super.parse(input, position);
-            int i = 0;
+            position = super.skipBlanks(input, position);
+            int position1 = position;
+            int i = position1;
             boolean passed = false;
-            while (i < input.charAt(i) && (Character.isLetterOrDigit(input.charAt(i)) || Character.isAlphabetic(input.charAt(i))
-                    || input.charAt(i) == '_')) {
+            while (i < input.substring(position).charAt(i) && (Character.isLetterOrDigit(input.substring(position).charAt(i))
+                    || Character.isAlphabetic(input.substring(position).charAt(i))
+                    || input.substring(position).charAt(i) == '_' || input.substring(position).charAt(i) == '.')) {
                 passed = true;
+                i++;
             }
-            if (passed) {
-                if (input.substring(position1, i).length() > 0) {
+            if (passed && i < input.length()) {
+                if (!input.substring(position1, i).isEmpty()) {
                     setSuccessful(true);
+                    setName(input.substring(position1, i));
                     return position1 + i;
                 }
             }
@@ -317,50 +341,57 @@ public class StringAnalyser {
     }
 
     class TokenString extends Token {
-        protected String name = "{";
+        protected String name;
 
-        public TokenString() {
+        public TokenString(String name) {
 
-        }
-
-        public TokenString(String aPackage) {
-
-            this.name = aPackage;
+            this.name = name;
         }
 
         @Override
         public int parse(String input, int position) {
-            position = super.parse(input, position);
-            input = input.substring(position);
-            if (input.startsWith(name)) {
+            position = super.skipBlanks(input, position);
+            if (input.substring(position).startsWith(name)) {
                 setSuccessful(true);
-                return position + name.length();
+                position += name.length();
+                if (!getNextToken().getData1d().isEmpty()) {
+                    position = getNextToken().getElem(0).parse(input, position);
+                    if (getNextToken().getElem(0).isSuccessful()) {
+                        return position;
+                    }
+                }
+                return position;
             }
             setSuccessful(false);
             return position;
+        }
+
+        @Override
+        public String toString() {
+            return "TokenString{" +
+                    "name='" + name + '\'' +
+                    '}';
         }
     }
 
     class TokenOpenBracket extends TokenString {
         public TokenOpenBracket() {
+            super("{");
 
-            name = "{";
         }
 
     }
 
     class TokenComa extends TokenString {
         public TokenComa() {
-
-            name = ",";
+            super(",");
         }
 
     }
 
     class TokenCloseBracket extends TokenString {
         public TokenCloseBracket() {
-
-            name = "}";
+            super("}");
 
         }
 
@@ -368,8 +399,7 @@ public class StringAnalyser {
 
     class TokenOpenParenthesized extends TokenString {
         public TokenOpenParenthesized() {
-
-            name = "(";
+            super("(");
         }
 
     }
@@ -377,46 +407,48 @@ public class StringAnalyser {
     class TokenCloseParenthesized extends TokenString {
 
         public TokenCloseParenthesized() {
-
-            name = ")";
+            super(")");
         }
 
     }
 
-    class MultiTokenOptional extends TokenChoiceInclusive {
+    class MultiTokenOptional extends Token {
 
-        public MultiTokenOptional(Token... options) {
+        private final Token[] choices;
 
-            this.choices = Arrays.stream(options).toList();
+        public MultiTokenOptional(Token... choices) {
+            this.choices = choices;
         }
 
         @Override
         public int parse(String input, int position) {
             position = super.parse(input, position);
-            input = input.substring(position);
             boolean allOk = true;
             boolean allNotOk = false;
             int position1 = position;
-            while (allNotOk) {
+            int position2 = position1;
+            while (!allNotOk) {
                 allNotOk = true;
                 for (Token token : choices) {
-                    int position2 = token.parse(input, position1);
+                    position2 = token.parse(input, position1);
                     if (!token.isSuccessful()) {
                         allOk = false;
-                        allNotOk = false;
                     } else {
+                        allNotOk = false;
                         position1 = position2;
                     }
                 }
             }
             setSuccessful(true);
             if (isSuccessful() && getNextToken().getElem(0) != null)
-                return getNextToken().getElem(0).parse(input, position1);
-            return position1;
+                position2 = getNextToken().getElem(0).parse(input, position2);
+            return position2;
         }
     }
 
-    class MultiTokenMandatory extends TokenChoiceInclusive {
+    class MultiTokenMandatory extends Token {
+
+        private final List<Token> choices;
 
         public MultiTokenMandatory(Token... mandatory) {
 
@@ -426,7 +458,6 @@ public class StringAnalyser {
         @Override
         public int parse(String input, int position) {
             position = super.parse(input, position);
-            input = input.substring(position);
             boolean allOk = true;
             int position1 = position;
             boolean allNotOk = false;
@@ -437,7 +468,7 @@ public class StringAnalyser {
                     if (!token.isSuccessful()) {
                         allOk = false;
                         setSuccessful(allOk);
-                        return position;
+                        return position1;
                     } else {
                         allNotOk = false;
                     }
@@ -465,14 +496,11 @@ public class StringAnalyser {
         private String name;
 
         public TokenName() {
-
-
         }
 
         @Override
         public int parse(String input, int position) {
             int position1 = super.parse(input, position);
-            input = input.substring(position1);
             int i = position1;
             boolean passed = false;
             while (i < input.length() && (Character.isLetterOrDigit(input.charAt(i)) || input.charAt(i) == '_') || input.charAt(i) == '.') {
@@ -482,6 +510,14 @@ public class StringAnalyser {
             if (passed && i - position1 > 0) {
                 this.setName(input.substring(position1, i));
                 setSuccessful(true);
+                if (!getNextToken().getData1d().isEmpty()) {
+                    i = getNextToken().getElem(0).parse(input, i);
+                    if (getNextToken().getElem(0).isSuccessful()) {
+                        return i;
+                    } else {
+                        return i;
+                    }
+                }
                 return i;
             } else {
                 setSuccessful(false);
@@ -490,12 +526,19 @@ public class StringAnalyser {
 
         }
 
-        private void setName(String name) {
+        public void setName(String name) {
             this.name = name;
         }
 
         public String getName() {
             return name;
+        }
+
+        @Override
+        public String toString() {
+            return getClass().getName() + "{" +
+                    "name='" + name + '\'' +
+                    '}';
         }
     }
 
@@ -513,8 +556,7 @@ public class StringAnalyser {
 
     class TokenEquals extends TokenString {
         public TokenEquals() {
-
-            name = "=";
+            super("=");
         }
     }
 
