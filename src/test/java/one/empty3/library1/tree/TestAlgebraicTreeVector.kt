@@ -22,6 +22,7 @@
 
 package one.empty3.library1.tree
 
+import junit.framework.TestCase.assertTrue
 import one.empty3.library.Point2D
 import one.empty3.library.Point3D
 import one.empty3.library.StructureMatrix
@@ -761,7 +762,7 @@ class TestAlgebraicTreeVector() {
                     "class Numb {\n" +
                     "\tdouble func1(Double a, Double b, Double c) {\n" +
                     "\t\tDouble d = c+b/a;\n" +
-                    "\t\treturn d\n" +
+                    "\t\treturn d;\n" +
                     "\t}\n" +
                     "}\n"
 
@@ -770,10 +771,14 @@ class TestAlgebraicTreeVector() {
         println(stringAnalyser.construct)
         stringAnalyser.definitions.keys.sorted().forEach {
             if (it != null) {
-                println("[" + it + "]\t" + stringAnalyser.definitions.get(it))
+                println(
+                    "[" + it + "]\n" + stringAnalyser.definitions.get(it)!!
+                        .isSuccessful() + "\n" + stringAnalyser.definitions.get(it) + "\n"
+                )
             }
         }
         println(parse)
+        assertTrue(parse >= 0)
     }
 
     @Test
