@@ -368,7 +368,7 @@ public class StringAnalyser {
 
         @Override
         public String toString() {
-            return "TokenString{" +
+            return getClass().getName() + "<=TokenString{" +
                     "name='" + name + '\'' +
                     '}';
         }
