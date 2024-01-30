@@ -108,4 +108,16 @@ public class Method {
     public void setScope(String choice) {
         this.scope = choice;
     }
+
+    @Override
+    public String toString() {
+        return "Method{" +
+                "name='" + name + '\'' +
+                ", ofClass=" + ofClass +
+                ", parameterList=" + parameterList +
+                ", variableList=" + variableList +
+                ", instructions=" + instructions +
+                ", scope='" + scope + '\'' +
+                '}';
+    }
 }

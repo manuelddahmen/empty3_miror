@@ -50,4 +50,13 @@ public class Variable {
     public void setScope(String choice) {
         this.scope = choice;
     }
+
+    @Override
+    public String toString() {
+        return "Variable{" +
+                "name='" + name + '\'' +
+                ", value=" + value +
+                ", scope='" + scope + '\'' +
+                '}';
+    }
 }

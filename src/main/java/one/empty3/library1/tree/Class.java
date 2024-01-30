@@ -93,4 +93,16 @@ public class Class {
     public void setPackageName(String packageName) {
         this.packageName = packageName;
     }
+
+    @Override
+    public String toString() {
+        return "Class{" +
+                "name='" + name + '\'' +
+                ", variableList=" + variableList +
+                ", methodList=" + methodList +
+                ", accessModifier='" + accessModifier + '\'' +
+                ", mFinal=" + mFinal +
+                ", packageName='" + packageName + '\'' +
+                '}';
+    }
 }

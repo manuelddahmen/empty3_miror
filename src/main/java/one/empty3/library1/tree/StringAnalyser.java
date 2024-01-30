@@ -88,7 +88,7 @@ public class StringAnalyser {
         public void setSuccessful(boolean successful) {
             this.successful = successful;
             if (successful && action != null)
-                action.action();
+                action();
         }
 
         public Action getAction() {
@@ -453,9 +453,49 @@ public class StringAnalyser {
                     }
                 }
             }
+            if (isSuccessful() && !getNextToken().getData1d().isEmpty()) {
+                int position3 = getNextToken().getElem(0).parse(input, position2);
+                setSuccessful(getNextToken().getElem(0).isSuccessful());
+                if (isSuccessful()) {
+                    return position3;
+                } else {
+                    return position2;
+                }
+            }
             setSuccessful(true);
-            if (isSuccessful() && getNextToken().getElem(0) != null)
-                position2 = getNextToken().getElem(0).parse(input, position2);
+            return position2;
+        }
+    }
+
+    class SingleTokenOptional extends Token {
+
+        private final Token choice;
+
+        public SingleTokenOptional(Token choice) {
+            this.choice = choice;
+        }
+
+        @Override
+        public int parse(String input, int position) {
+            position = super.parse(input, position);
+            int position1 = position;
+            int position2 = choice.parse(input, position1);
+            if (choice.isSuccessful()) {
+                if (!getNextToken().getData1d().isEmpty()) {
+                    int position3 = getNextToken().getElem(0).parse(input, position2);
+                    if (getNextToken().getElem(0).isSuccessful()) {
+                        setSuccessful(true);
+                        return position3;
+                    } else {
+                        setSuccessful(false);
+                        return position3;
+                    }
+                } else {
+                    setSuccessful(true);
+                    return position2;
+                }
+            }
+            setSuccessful(false);
             return position2;
         }
     }
@@ -474,22 +514,36 @@ public class StringAnalyser {
             position = super.parse(input, position);
             boolean allOk = true;
             int position1 = position;
-            boolean allNotOk = false;
-            while (!allNotOk) {
-                allNotOk = true;
+            int i = 0;
+            int position0 = position1;
+            while (allOk) {
                 for (Token token : choices) {
                     position1 = token.parse(input, position1);
                     if (!token.isSuccessful()) {
                         allOk = false;
-                        setSuccessful(allOk);
-                        return position1;
-                    } else {
-                        allNotOk = false;
+                        if (i > 0) {
+                            setSuccessful(true);
+                            if (!getNextToken().getData1d().isEmpty())
+                                return getNextToken().getData1d().get(0).parse(input, position0);
+                            return position0;
+                        } else {
+                            setSuccessful(false);
+                            return position;
+                        }
                     }
                 }
+                position0 = position1;
+                if (allOk) {
+                    setSuccessful(true);
+                    if (!getNextToken().getData1d().isEmpty())
+                        return getNextToken().getData1d().get(0).parse(input, position0);
+                    return position0;
+
+                }
+                i++;
             }
-            setSuccessful(allOk);
-            return position1;
+            setSuccessful(false);
+            return position;
         }
     }
 
@@ -523,17 +577,16 @@ public class StringAnalyser {
             }
             if (passed && i - position1 > 0) {
                 this.setName(input.substring(position1, i));
+                setSuccessful(true);
                 if (!getNextToken().getData1d().isEmpty()) {
                     i = getNextToken().getElem(0).parse(input, i);
                     if (getNextToken().getElem(0).isSuccessful()) {
-                        setSuccessful(true);
                         return i;
                     } else {
                         setSuccessful(false);
-                        return i;
+                        return position1;
                     }
                 } else {
-                    setSuccessful(true);
                     return i;
                 }
             } else {
@@ -628,14 +681,17 @@ public class StringAnalyser {
         Action setNewClassName = new Action(className) {
             @Override
             public boolean action() {
-                String name = ((TokenName) getToken()).getName();
-                construct.currentClass.setPackageName(construct.packageName);
-                construct.currentClass.setName(name);
-                if (construct.currentClass != null) {
+                if (token.isSuccessful()) {
+                    String name = ((TokenName) getToken()).getName();
+                    construct.currentClass.setPackageName(construct.packageName);
+                    construct.currentClass.setName(name);
+                    if (construct.currentClass != null) {
 
+                    }
+                    actualContext.setCurrentClassname(construct.currentClass);
+                    return true;
                 }
-                actualContext.setCurrentClassname(construct.currentClass);
-                return true;
+                return false;
             }
         };
         Token closeBracket = new TokenCloseBracket();
@@ -768,30 +824,30 @@ public class StringAnalyser {
                 return false;
             }
         };
-        Token aPackage = definitions.put(0, new TokenCodeFile().addToken(new MultiTokenOptional(
-                new MultiTokenMandatory(new TokenString("package"),
-                        packageQualifiedName, new TokenSemiColon()))
+        Token aPackage = definitions.put(0, new TokenCodeFile().addToken(new SingleTokenOptional(
+                        new MultiTokenMandatory(new TokenString("package"),
+                                packageQualifiedName, new TokenSemiColon())))
                 .addToken(new MultiTokenOptional(new TokenClassScope(),
-                        isFinal).addToken(tokenClassKeyword.addToken(className).addToken(new TokenOpenBracket())
-                                .addToken(new MultiTokenOptional(new Token[]{
-                                        // Variables
-                                        new MultiTokenOptional(new Token[]{tokenVariableScope, tokenConstantModifier})
-                                                .addToken(tokenQualifiedNameVariable)}).addToken(new TokenSemiColon()))// Commit changes
-                                // Methods
-                                .addToken(new MultiTokenOptional(new Token[]{tokenNameReturnType, tokenMethodScope
-                                        .addToken(tokenConstantModifierMethod).addToken(tokenMethodMemberDefinition)
-                                        // Arguments' list
-                                        .addToken(new TokenOpenParenthesized()).addToken(new MultiTokenOptional(new MultiTokenMandatory(
-                                                new TokenVariableMemberDefinitionClassName(), new TokenName(), new TokenComa()
-                                        )))
-                                        .addToken(new TokenCloseParenthesized())
-                                        // Instructions' block
-                                        .addToken(tokenBeginOfMethod.
-                                        addToken(new MultiTokenOptional(new MultiTokenMandatory(tokenVariableInMethodName
-                                                , new TokenName(), new TokenEquals())
-                                                .addToken(new TokenExpression()), new TokenComa()).addToken(endOfInstruction)// Commit changes
-                                        ))})))
-                        .addToken(closeBracket))));// Commit changes
+                        isFinal).addToken(new MultiTokenMandatory(tokenClassKeyword, className, new TokenOpenBracket()))
+                        .addToken(new MultiTokenOptional(new Token[]{
+                                // Variables
+                                new MultiTokenOptional(new Token[]{tokenVariableScope, tokenConstantModifier})
+                                        .addToken(tokenQualifiedNameVariable)}).addToken(new TokenSemiColon()))// Commit changes
+                        // Methods
+                        .addToken(new MultiTokenOptional(new Token[]{tokenNameReturnType, tokenMethodScope
+                                .addToken(tokenConstantModifierMethod).addToken(tokenMethodMemberDefinition)
+                                // Arguments' list
+                                .addToken(new TokenOpenParenthesized()).addToken(new MultiTokenOptional(new MultiTokenMandatory(
+                                        new TokenVariableMemberDefinitionClassName(), new TokenName(), new TokenComa()
+                                )))
+                                .addToken(new TokenCloseParenthesized())
+                                // Instructions' block
+                                .addToken(tokenBeginOfMethod.
+                                addToken(new MultiTokenOptional(new MultiTokenMandatory(tokenVariableInMethodName
+                                        , new TokenName(), new TokenEquals())
+                                        .addToken(new TokenExpression()), new TokenComa()).addToken(endOfInstruction)// Commit changes
+                                ))})))
+                .addToken(closeBracket));// Commit changes
 
     }
 
