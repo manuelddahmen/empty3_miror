@@ -179,7 +179,7 @@ public class StringAnalyser {
         protected String choice = "";
 
         public TokenChoiceStringMandatory(String[] values) {
-
+            super();
             this.names = values;
         }
 
@@ -259,7 +259,7 @@ public class StringAnalyser {
         protected List<Token> choices;
 
         public TokenChoiceInclusive(Token... choices) {
-
+            super();
             this.choices = Arrays.stream(choices).toList();
         }
 
@@ -294,7 +294,7 @@ public class StringAnalyser {
         protected final Token[] choices;
 
         public TokenChoiceExclusive(Token... choices) {
-
+            super();
             this.choices = choices;
         }
 
@@ -325,13 +325,12 @@ public class StringAnalyser {
     class TokenPackage extends TokenString {
         public TokenPackage() {
             super("package");
-
         }
     }
 
     class TokenQualifiedName extends TokenName {
         public TokenQualifiedName() {
-
+            super();
         }
 
         @Override
@@ -370,7 +369,7 @@ public class StringAnalyser {
         protected String name;
 
         public TokenString(String name) {
-
+            super();
             this.name = name;
         }
 
@@ -449,13 +448,13 @@ public class StringAnalyser {
         private final Token[] choices;
 
         public MultiTokenOptional(Token... choices) {
+            super();
             this.choices = choices;
         }
 
         @Override
         public int parse(String input, int position) {
             position = super.parse(input, position);
-            boolean allOk = true;
             boolean allNotOk = false;
             int position1 = position;
             int position2 = position1;
@@ -464,7 +463,6 @@ public class StringAnalyser {
                 for (Token token : choices) {
                     position2 = token.parse(input, position1);
                     if (!token.isSuccessful()) {
-                        allOk = false;
                         position2 = position1;
                     } else {
                         allNotOk = false;
@@ -472,15 +470,15 @@ public class StringAnalyser {
                     }
                 }
             }
-            if (isSuccessful() && !getNextToken().getData1d().isEmpty()) {
-                int position3 = getNextToken().getElem(0).parse(input, position2);
+            if (!getNextToken().getData1d().isEmpty()) {
+                int position3 = getNextToken().getElem(0).parse(input, position1);
 
                 if (getNextToken().getElem(0).isSuccessful()) {
                     setSuccessful(true);
                     return position3;
                 } else {
                     setSuccessful(false);
-                    return position2;
+                    return position1;
                 }
             }
             setSuccessful(true);
@@ -493,6 +491,7 @@ public class StringAnalyser {
         private final Token choice;
 
         public SingleTokenOptional(Token choice) {
+            super();
             this.choice = choice;
         }
 
@@ -534,7 +533,7 @@ public class StringAnalyser {
         private final List<Token> choices;
 
         public MultiTokenMandatory(Token... mandatory) {
-
+            super();
             this.choices = Arrays.stream(mandatory).toList();
         }
 
@@ -563,8 +562,13 @@ public class StringAnalyser {
                     position0 = position1;
                 i++;
             }
-            setSuccessful(true);
-            return position0;
+            int i1 = nextToken(input, position0);
+            if (nextToken().isSuccessful()) {
+                setSuccessful(true);
+                return i1;
+            } else {
+                return position;
+            }
         }
     }
 
@@ -576,7 +580,7 @@ public class StringAnalyser {
 
     class TokenVariableMemberDefinition extends TokenName {
         public TokenVariableMemberDefinition() {
-
+            super();
         }
     }
 
@@ -585,6 +589,7 @@ public class StringAnalyser {
         private String name;
 
         public TokenName() {
+            super();
         }
 
         @Override
@@ -635,13 +640,13 @@ public class StringAnalyser {
 
     class TokenVariableMemberDefinitionClassName extends TokenName {
         public TokenVariableMemberDefinitionClassName() {
-
+            super();
         }
     }
 
     class TokenVariableInMethodName extends TokenName {
         public TokenVariableInMethodName() {
-
+            super();
         }
     }
 
@@ -653,6 +658,7 @@ public class StringAnalyser {
 
     class TokenExpression extends Token {
         public TokenExpression() {
+            super();
         }
 
         @Override
@@ -846,8 +852,8 @@ public class StringAnalyser {
             }
         };
         Token aPackage = definitions.put(0, new TokenCodeFile().addToken(
-                        new SingleTokenOptional(new MultiTokenMandatory(new TokenString("package"),
-                                packageQualifiedName, new TokenSemiColon())))
+                        new MultiTokenMandatory(new TokenString("package"),
+                                packageQualifiedName, new TokenSemiColon()))
                 .addToken(new MultiTokenOptional(new TokenClassScope(),
                         isFinal).addToken(new MultiTokenMandatory(tokenClassKeyword, className, new TokenOpenBracket()))
                         .addToken(new MultiTokenOptional(new Token[]{

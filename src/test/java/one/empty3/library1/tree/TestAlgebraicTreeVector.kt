@@ -759,7 +759,7 @@ class TestAlgebraicTreeVector() {
 
         val input =
             "package one.empty3;\n\n" +
-                    "class Numb {\n" +
+                    "class Number {\n" +
                     "\tdouble func1(Double a, Double b, Double c) {\n" +
                     "\t\tDouble d = c+b/a;\n" +
                     "\t\treturn d;\n" +
