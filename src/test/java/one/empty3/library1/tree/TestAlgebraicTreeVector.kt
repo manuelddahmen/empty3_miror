@@ -776,7 +776,7 @@ class TestAlgebraicTreeVector() {
                 )
             }
         }
-        println(parse)
+        println("" + parse + "/" + input.length)
         println(stringAnalyser.construct)
         assertTrue(parse >= 0)
     }

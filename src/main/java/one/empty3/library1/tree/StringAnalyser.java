@@ -72,7 +72,7 @@ public class StringAnalyser {
             int position2 = passed ? position1 : position;//(input.length() > position2 ? input.substring(position2) : "")+
             System.out.printf("\n\n\nClasse\t" + getClass() + "\nPosition\t" + position2 + "\nReste <<<<\n" +
                     (input.length() > position2 ? input.substring(position2) : "")
-                    + "\n>>>>\ntoString()\t" + this);
+                    + "\n>>>>\ntoString()\n" + this + "\n\n");
             return position2;
         }
 
@@ -87,10 +87,16 @@ public class StringAnalyser {
 
         public void setSuccessful(boolean successful) {
             this.successful = successful;
+            if (successful && action != null)
+                action.action();
         }
 
         public Action getAction() {
             return action;
+        }
+
+        public void action() {
+            if (action != null) getAction().action();
         }
 
         @Override
@@ -101,7 +107,7 @@ public class StringAnalyser {
                     ", method=" + method +
                     ", variable=" + variable +
                     ", successful=" + successful +
-                    '}';
+                    "}\n";
         }
 
         public StructureMatrix<Token> getNextToken() {
@@ -161,18 +167,26 @@ public class StringAnalyser {
 
         @Override
         public int parse(String input, int position) {
-            position = super.parse(input.substring(position), position) + position;
+            int position1 = super.parse(input, position);
+            boolean success = true;
             for (String s : names) {
-                if (position < input.length()) {
+                if (position1 < input.length()) {
                     if (input.substring(position).startsWith(s)) {
                         this.choice = s;
-                        setSuccessful(true);
-                        return position + s.length();
+                        position1 = position1 + s.length();
+                    } else {
+                        success = false;
                     }
+                    position1 = super.parse(input, position1);
                 }
             }
-            setSuccessful(false);
-            return position;
+            if (success) {
+                setSuccessful(true);
+                return position1;
+            } else {
+                setSuccessful(false);
+                return position;
+            }
         }
 
         public String getChoice() {
@@ -503,22 +517,25 @@ public class StringAnalyser {
             int position1 = super.parse(input, position);
             int i = position1;
             boolean passed = false;
-            while (i < input.length() && (Character.isLetterOrDigit(input.charAt(i)) || input.charAt(i) == '_') || input.charAt(i) == '.') {
+            while (i < input.length() && (Character.isLetterOrDigit(input.charAt(i)) || input.charAt(i) == '_' || input.charAt(i) == '.')) {
                 i++;
                 passed = true;
             }
             if (passed && i - position1 > 0) {
                 this.setName(input.substring(position1, i));
-                setSuccessful(true);
                 if (!getNextToken().getData1d().isEmpty()) {
                     i = getNextToken().getElem(0).parse(input, i);
                     if (getNextToken().getElem(0).isSuccessful()) {
+                        setSuccessful(true);
                         return i;
                     } else {
+                        setSuccessful(false);
                         return i;
                     }
+                } else {
+                    setSuccessful(true);
+                    return i;
                 }
-                return i;
             } else {
                 setSuccessful(false);
                 return position1;
@@ -562,7 +579,22 @@ public class StringAnalyser {
 
     class TokenExpression extends Token {
         public TokenExpression() {
+        }
 
+        @Override
+        public int parse(String input, int position) {
+            position = super.skipBlanks(input, position);
+            int i = position;
+            boolean passed = false;
+            while (i < input.length() && input.charAt(i) != ';') {
+                i++;
+                passed = true;
+            }
+            if (passed && input.charAt(i) == ';') {
+                return i;
+            } else {
+                return position;
+            }
         }
     }
 
