@@ -58,6 +58,22 @@ public class StringAnalyser {
             return this;
         }
 
+        public int nextToken(String input, int position) {
+            if (!nextTokens.getData1d().isEmpty()) {
+                return nextTokens.getData1d().get(0).parse(input, position);
+            }
+            return position;
+        }
+
+        public Token nextToken() {
+            if (!nextTokens.getData1d().isEmpty()) {
+                return nextTokens.getData1d().get(0);
+            }
+            return new Token() {
+
+            };
+        }
+
         public void setAction(Action action) {
             this.action = action;
         }
@@ -89,6 +105,9 @@ public class StringAnalyser {
             this.successful = successful;
             if (successful && action != null)
                 action();
+            if (!successful) {
+                System.err.println("<<<Error : " + toString() + ">>>");
+            }
         }
 
         public Action getAction() {
@@ -144,9 +163,8 @@ public class StringAnalyser {
 
             for (String searched : names) {
                 if (input.substring(position).startsWith(searched)) {
-                    this.setSuccessful(true);
-                    construct.currentClass.setAccessModifier(searched);
-                    return searched.length();
+                    setSuccessful(true);
+                    return position + searched.length();
                 }
             }
             return 0;
@@ -304,17 +322,11 @@ public class StringAnalyser {
         }
     }
 
-    class TokenPackage extends TokenChoiceStringMandatory {
+    class TokenPackage extends TokenString {
         public TokenPackage() {
-            super(new String[]{"package"});
-        }
+            super("package");
 
-        @Override
-        public int parse(String input, int position) {
-            position = super.parse(input.substring(position), position) + position;
-            return position;
         }
-
     }
 
     class TokenQualifiedName extends TokenName {
@@ -364,20 +376,26 @@ public class StringAnalyser {
 
         @Override
         public int parse(String input, int position) {
-            position = super.skipBlanks(input, position);
+            position = super.parse(input, position);
             if (position < input.length() && input.substring(position).startsWith(name)) {
-                setSuccessful(true);
-                position += name.length();
+                int position1 = position + name.length();
                 if (!getNextToken().getData1d().isEmpty()) {
-                    position = getNextToken().getElem(0).parse(input, position);
-                    if (getNextToken().getElem(0).isSuccessful()) {
-                        return position;
+                    int position2 = nextToken(input, position1);
+                    if (nextToken().isSuccessful()) {
+                        setSuccessful(true);
+                        return position2;
+                    } else {
+                        setSuccessful(false);
+                        return position1;
                     }
+                } else {
+                    setSuccessful(true);
+                    return position1;
                 }
+            } else {
+                setSuccessful(false);
                 return position;
             }
-            setSuccessful(false);
-            return position;
         }
 
         @Override
@@ -447,6 +465,7 @@ public class StringAnalyser {
                     position2 = token.parse(input, position1);
                     if (!token.isSuccessful()) {
                         allOk = false;
+                        position2 = position1;
                     } else {
                         allNotOk = false;
                         position1 = position2;
@@ -455,10 +474,12 @@ public class StringAnalyser {
             }
             if (isSuccessful() && !getNextToken().getData1d().isEmpty()) {
                 int position3 = getNextToken().getElem(0).parse(input, position2);
-                setSuccessful(getNextToken().getElem(0).isSuccessful());
-                if (isSuccessful()) {
+
+                if (getNextToken().getElem(0).isSuccessful()) {
+                    setSuccessful(true);
                     return position3;
                 } else {
+                    setSuccessful(false);
                     return position2;
                 }
             }
@@ -482,21 +503,29 @@ public class StringAnalyser {
             int position2 = choice.parse(input, position1);
             if (choice.isSuccessful()) {
                 if (!getNextToken().getData1d().isEmpty()) {
-                    int position3 = getNextToken().getElem(0).parse(input, position2);
-                    if (getNextToken().getElem(0).isSuccessful()) {
+                    int position3 = nextToken(input, position2);
+                    if (nextToken().isSuccessful()) {
                         setSuccessful(true);
                         return position3;
                     } else {
                         setSuccessful(false);
-                        return position3;
+                        return position2;
                     }
                 } else {
                     setSuccessful(true);
                     return position2;
                 }
+            } else {
+                if (!getNextToken().getData1d().isEmpty()) {
+                    int position3 = nextToken(input, position2);
+                    if (nextToken().isSuccessful()) {
+                        setSuccessful(true);
+                        return position3;
+                    }
+                }
+                setSuccessful(false);
+                return position;
             }
-            setSuccessful(false);
-            return position2;
         }
     }
 
@@ -520,30 +549,22 @@ public class StringAnalyser {
                 for (Token token : choices) {
                     position1 = token.parse(input, position1);
                     if (!token.isSuccessful()) {
-                        allOk = false;
                         if (i > 0) {
-                            setSuccessful(true);
-                            if (!getNextToken().getData1d().isEmpty())
-                                return getNextToken().getData1d().get(0).parse(input, position0);
-                            return position0;
+                            allOk = false;
+                            break;
                         } else {
+                            allOk = false;
                             setSuccessful(false);
                             return position;
                         }
                     }
                 }
-                position0 = position1;
-                if (allOk) {
-                    setSuccessful(true);
-                    if (!getNextToken().getData1d().isEmpty())
-                        return getNextToken().getData1d().get(0).parse(input, position0);
-                    return position0;
-
-                }
+                if (allOk)
+                    position0 = position1;
                 i++;
             }
-            setSuccessful(false);
-            return position;
+            setSuccessful(true);
+            return position0;
         }
     }
 
@@ -824,8 +845,8 @@ public class StringAnalyser {
                 return false;
             }
         };
-        Token aPackage = definitions.put(0, new TokenCodeFile().addToken(new SingleTokenOptional(
-                        new MultiTokenMandatory(new TokenString("package"),
+        Token aPackage = definitions.put(0, new TokenCodeFile().addToken(
+                        new SingleTokenOptional(new MultiTokenMandatory(new TokenString("package"),
                                 packageQualifiedName, new TokenSemiColon())))
                 .addToken(new MultiTokenOptional(new TokenClassScope(),
                         isFinal).addToken(new MultiTokenMandatory(tokenClassKeyword, className, new TokenOpenBracket()))
