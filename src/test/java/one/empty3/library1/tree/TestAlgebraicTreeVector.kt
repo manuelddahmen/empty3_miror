@@ -767,7 +767,6 @@ class TestAlgebraicTreeVector() {
                     "}\n"
 
         val parse: Int = stringAnalyser.parse(input)
-        println(input.substring(parse))
         stringAnalyser.definitions.keys.sorted().forEach {
             if (it != null) {
                 println(

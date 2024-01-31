@@ -40,7 +40,7 @@ public class StringAnalyser {
         return construct;
     }
 
-    abstract class Token {
+    public abstract class Token {
         protected Action action;
         protected Class aClass;
         protected Method method;
@@ -69,9 +69,7 @@ public class StringAnalyser {
             if (!nextTokens.getData1d().isEmpty()) {
                 return nextTokens.getData1d().get(0);
             }
-            return new Token() {
-
-            };
+            return null;
         }
 
         public void setAction(Action action) {
@@ -118,6 +116,22 @@ public class StringAnalyser {
             if (action != null) getAction().action();
         }
 
+        protected int processNext(String input, int position) {
+            if (nextToken() != null) {
+                int nextToken = nextToken(input, position);
+                if (nextToken().isSuccessful()) {
+                    setSuccessful(true);
+                    return nextToken;
+                } else {
+                    setSuccessful(false);
+                    return position;
+                }
+            } else {
+                setSuccessful(true);
+                return position;
+            }
+        }
+
         @Override
         public String toString() {
             return getClass().getName() + "{" +
@@ -134,7 +148,7 @@ public class StringAnalyser {
         }
     }
 
-    abstract class Action {
+    public abstract class Action {
         protected final Token token;
 
         public Token getToken() {
@@ -186,24 +200,24 @@ public class StringAnalyser {
         @Override
         public int parse(String input, int position) {
             int position1 = super.parse(input, position);
-            boolean success = true;
+            int position2 = position1;
+            boolean success = false;
             for (String s : names) {
-                if (position1 < input.length()) {
-                    if (input.substring(position).startsWith(s)) {
+                if (position2 < input.length()) {
+                    if (input.substring(position2).startsWith(s)) {
                         this.choice = s;
-                        position1 = position1 + s.length();
-                    } else {
-                        success = false;
+                        position2 = position2 + s.length();
+                        success = true;
+                        break;
                     }
-                    position1 = super.parse(input, position1);
                 }
             }
             if (success) {
                 setSuccessful(true);
-                return position1;
+                return processNext(input, position2);
             } else {
                 setSuccessful(false);
-                return position;
+                return position1;
             }
         }
 
@@ -339,17 +353,16 @@ public class StringAnalyser {
             int position1 = position;
             int i = position1;
             boolean passed = false;
-            while (i < input.substring(position).charAt(i) && (Character.isLetterOrDigit(input.substring(position).charAt(i))
-                    || Character.isAlphabetic(input.substring(position).charAt(i))
-                    || input.substring(position).charAt(i) == '_' || input.substring(position).charAt(i) == '.')) {
+            while (i < input.charAt(i) && (Character.isLetterOrDigit(input.charAt(i))
+                    || Character.isAlphabetic(input.charAt(i))
+                    || input.charAt(i) == '_' || input.charAt(i) == '.')) {
                 passed = true;
                 i++;
             }
-            if (passed && i < input.length()) {
+            if (passed) {
                 if (!input.substring(position1, i).isEmpty()) {
-                    setSuccessful(true);
                     setName(input.substring(position1, i));
-                    return position1 + i;
+                    return processNext(input, i);
                 }
             }
             setSuccessful(false);
@@ -470,19 +483,8 @@ public class StringAnalyser {
                     }
                 }
             }
-            if (!getNextToken().getData1d().isEmpty()) {
-                int position3 = getNextToken().getElem(0).parse(input, position1);
-
-                if (getNextToken().getElem(0).isSuccessful()) {
-                    setSuccessful(true);
-                    return position3;
-                } else {
-                    setSuccessful(false);
-                    return position1;
-                }
-            }
             setSuccessful(true);
-            return position2;
+            return position1;
         }
     }
 
@@ -562,13 +564,17 @@ public class StringAnalyser {
                     position0 = position1;
                 i++;
             }
-            int i1 = nextToken(input, position0);
-            if (nextToken().isSuccessful()) {
-                setSuccessful(true);
-                return i1;
-            } else {
-                return position;
-            }
+
+            setSuccessful(true);
+            return processNext(input, position0);
+
+        }
+
+        @Override
+        public String toString() {
+            return "MultiTokenMandatory{" +
+                    "choices=" + choices +
+                    ", successful=" + isSuccessful() + '}';
         }
     }
 
@@ -603,24 +609,14 @@ public class StringAnalyser {
             }
             if (passed && i - position1 > 0) {
                 this.setName(input.substring(position1, i));
-                setSuccessful(true);
-                if (!getNextToken().getData1d().isEmpty()) {
-                    i = getNextToken().getElem(0).parse(input, i);
-                    if (getNextToken().getElem(0).isSuccessful()) {
-                        return i;
-                    } else {
-                        setSuccessful(false);
-                        return position1;
-                    }
-                } else {
-                    return i;
-                }
+                return processNext(input, i);
             } else {
                 setSuccessful(false);
                 return position1;
             }
 
         }
+
 
         public void setName(String name) {
             this.name = name;
@@ -704,7 +700,7 @@ public class StringAnalyser {
                 return true;
             }
         };
-        Token className = new TokenName();
+        TokenName className = new TokenName();
         Action setNewClassName = new Action(className) {
             @Override
             public boolean action() {
@@ -856,12 +852,12 @@ public class StringAnalyser {
                                 packageQualifiedName, new TokenSemiColon()))
                 .addToken(new MultiTokenOptional(new TokenClassScope(),
                         isFinal).addToken(new MultiTokenMandatory(tokenClassKeyword, className, new TokenOpenBracket()))
-                        .addToken(new MultiTokenOptional(new Token[]{
+                        .addToken(new MultiTokenOptional(
                                 // Variables
-                                new MultiTokenOptional(new Token[]{tokenVariableScope, tokenConstantModifier})
-                                        .addToken(tokenQualifiedNameVariable)}).addToken(new TokenSemiColon()))// Commit changes
+                                new MultiTokenOptional(tokenVariableScope, tokenConstantModifier)
+                                        .addToken(tokenQualifiedNameVariable)).addToken(new TokenSemiColon()))// Commit changes
                         // Methods
-                        .addToken(new MultiTokenOptional(new Token[]{tokenNameReturnType, tokenMethodScope
+                        .addToken(new MultiTokenOptional(tokenNameReturnType, tokenMethodScope
                                 .addToken(tokenConstantModifierMethod).addToken(tokenMethodMemberDefinition)
                                 // Arguments' list
                                 .addToken(new TokenOpenParenthesized()).addToken(new MultiTokenOptional(new MultiTokenMandatory(
@@ -870,10 +866,10 @@ public class StringAnalyser {
                                 .addToken(new TokenCloseParenthesized())
                                 // Instructions' block
                                 .addToken(tokenBeginOfMethod.
-                                addToken(new MultiTokenOptional(new MultiTokenMandatory(tokenVariableInMethodName
-                                        , new TokenName(), new TokenEquals())
-                                        .addToken(new TokenExpression()), new TokenComa()).addToken(endOfInstruction)// Commit changes
-                                ))})))
+                                        addToken(new MultiTokenOptional(new MultiTokenMandatory(tokenVariableInMethodName
+                                                , new TokenName(), new TokenEquals())
+                                                .addToken(new TokenExpression()), new TokenComa()).addToken(endOfInstruction)// Commit changes
+                                        )))))
                 .addToken(closeBracket));// Commit changes
 
     }
@@ -984,7 +980,7 @@ public class StringAnalyser {
             }
         }
     */
-    class Construct {
+    public class Construct {
         public Variable currentField;
         public Method currentMethod;
         protected String packageName = "";
