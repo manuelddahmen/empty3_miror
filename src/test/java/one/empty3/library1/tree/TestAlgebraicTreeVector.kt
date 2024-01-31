@@ -751,6 +751,32 @@ class TestAlgebraicTreeVector() {
     }
 
     @Test
+    fun testStringAnalyzer0() {
+        val r = 12.0
+        val vars = HashMap<String, Double>()
+        vars["r"] = r
+        val stringAnalyser: StringAnalyser = StringAnalyser()
+
+        val input =
+            "package one.empty3;\n\n"
+
+        val parse: Int = stringAnalyser.parse(input)
+        stringAnalyser.definitions.keys.sorted().forEach {
+            if (it != null) {
+                println(
+                    "[" + it + "]\n" + stringAnalyser.definitions.get(it)!!
+                        .isSuccessful() + "\n" + stringAnalyser.definitions.get(it) + "\n"
+                )
+            }
+        }
+        println("" + parse + "/" + input.length)
+        println(stringAnalyser.construct)
+        if (parse < input.length)
+            println(input.substring(parse))
+        assertTrue(parse >= input.length || input.substring(parse).trim().isEmpty())
+    }
+
+    @Test
     fun testStringAnalyzer1() {
         val r = 12.0
         val vars = HashMap<String, Double>()
@@ -777,7 +803,41 @@ class TestAlgebraicTreeVector() {
         }
         println("" + parse + "/" + input.length)
         println(stringAnalyser.construct)
-        assertTrue(parse >= 0)
+        if (parse < input.length)
+            println(input.substring(parse))
+        assertTrue(parse >= input.length || input.substring(parse).trim().isEmpty())
+    }
+
+    @Test
+    fun testStringAnalyzerV2_1() {
+        val r = 12.0
+        val vars = HashMap<String, Double>()
+        vars["r"] = r
+        val stringAnalyser: StringAnalyzer1 = StringAnalyzer1()
+
+        val input =
+            "package one.empty3;\n\n" +
+                    "class Number {\n" +
+                    "\tdouble func1(Double a, Double b, Double c) {\n" +
+                    "\t\tDouble d = c+b/a;\n" +
+                    "\t\treturn d;\n" +
+                    "\t}\n" +
+                    "}\n"
+
+        val parse: Int = stringAnalyser.parse(input)
+        stringAnalyser.definitions.keys.sorted().forEach {
+            if (it != null) {
+                println(
+                    "[" + it + "]\n" + stringAnalyser.definitions.get(it)!!
+                        .isSuccessful() + "\n" + stringAnalyser.definitions.get(it) + "\n"
+                )
+            }
+        }
+        println("" + parse + "/" + input.length)
+        println(stringAnalyser.construct)
+        if (parse < input.length)
+            println(input.substring(parse))
+        assertTrue(parse >= input.length || input.substring(parse).trim().isEmpty())
     }
 
     @Test
