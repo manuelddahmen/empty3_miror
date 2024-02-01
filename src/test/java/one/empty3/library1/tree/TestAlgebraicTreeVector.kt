@@ -820,7 +820,8 @@ class TestAlgebraicTreeVector() {
                     "class Number {\n" +
                     "\tdouble func1(Double a, Double b, Double c) {\n" +
                     "\t\tDouble d = c+b/a;\n" +
-                    "\t\treturn d;\n" +
+                    "\t\tDouble e = d+c/a;\n" +
+                    "\t\treturn e;\n" +
                     "\t}\n" +
                     "}\n"
 

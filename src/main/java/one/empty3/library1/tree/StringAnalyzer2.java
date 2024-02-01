@@ -30,7 +30,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-public class StringAnalyzer1 {
+public class StringAnalyzer2 {
     protected HashMap<Integer, Token> definitions = new HashMap<>();
     private HashMap<String, Class> classes;
     private int index = 0;
@@ -84,7 +84,7 @@ public class StringAnalyzer1 {
                 passed = true;
             }
             int position2 = passed ? position1 : position;//(input.length() > position2 ? input.substring(position2) : "")+
-            System.out.printf("\n\n\nClasse\t" + getClass() + "\nPosition\t" + position2 + "/" + input.length() + "\nReste <<<<\n" +
+            System.out.printf("\n\n\nClasse\t" + getClass() + "\nPosition\t" + position2 + "\nReste <<<<\n" +
                     (input.length() > position2 ? input.substring(position2) : "")
                     + "\n>>>>\ntoString()\n" + this + "\n\n");
             return position2;
@@ -163,21 +163,18 @@ public class StringAnalyzer1 {
 
         public abstract boolean action();
     }
-/*
+
     class TokenPrivacyModifier extends TokenChoiceStringMandatory {
 
         public TokenPrivacyModifier() {
-            super(new String[]{"private", "public", "protected"});
+            super(new String[]{"private", "public", "protected"/*, ""*/});
 
         }
 
         @Override
         public int parse(String input, int position) {
             position = super.parse(input.substring(position), position) + position;
-            if (position >= input.length() || input.substring(position).trim().isEmpty()) {
-                setSuccessful(true);
-                return position;
-            }
+
             for (String searched : names) {
                 if (input.substring(position).startsWith(searched)) {
                     setSuccessful(true);
@@ -187,34 +184,6 @@ public class StringAnalyzer1 {
             return 0;
         }
     }
-*/
-
-    class SingleTokenExclusiveXor extends Token {
-        private final List<Token> choices;
-
-        public SingleTokenExclusiveXor(Token... mandatory) {
-            super();
-            this.choices = Arrays.stream(mandatory).toList();
-        }
-
-        @Override
-        public int parse(String input, int position) {
-            position = super.parse(input, position);
-            int position1 = position;
-            int i = 0;
-            int position0 = position1;
-            for (Token token : choices) {
-                position1 = token.parse(input, position0);
-                if (token.isSuccessful()) {
-                    return processNext(input, position1);
-                }
-            }
-            setSuccessful(false);
-            return position0;
-
-        }
-    }
-
 
     /***
      * Il faut choisir une des strings c'est obligatoire.
@@ -230,17 +199,14 @@ public class StringAnalyzer1 {
 
         @Override
         public int parse(String input, int position) {
-            if (position >= input.length() || input.substring(position).trim().isEmpty()) {
-                setSuccessful(false);
-                return position;
-            }
             int position1 = super.parse(input, position);
             int position2 = position1;
             boolean success = false;
-            for (String s : names) {
+            for (int i = 0; i < names.length; i++) {
+                String s = names[i];
                 if (position2 < input.length() && input.substring(position2).startsWith(s)) {
                     this.choice = s;
-                    position2 = position2 + s.length();
+                    position2 += s.length();
                     success = true;
                     break;
                 }
@@ -248,8 +214,9 @@ public class StringAnalyzer1 {
             if (success) {
                 return processNext(input, position2);
             } else {
-                setSuccessful(false);
-                return position1;
+                return processNext(input, position1);
+//                setSuccessful(false);
+//                return position1;
             }
         }
 
@@ -288,10 +255,6 @@ public class StringAnalyzer1 {
 
         @Override
         public int parse(String input, int position) {
-            if (position >= input.length() || input.substring(position).trim().isEmpty()) {
-                setSuccessful(false);
-                return position;
-            }
             position = super.parse(input, position);
             return processNext(input, position);
 
@@ -308,10 +271,6 @@ public class StringAnalyzer1 {
 
         @Override
         public int parse(String input, int position) {
-            if (position >= input.length() || input.substring(position).trim().isEmpty()) {
-                setSuccessful(true);
-                return position;
-            }
             position = super.parse(input.substring(position), position) + position;
             for (Token token : choices) {
                 int position1 = position;
@@ -347,10 +306,6 @@ public class StringAnalyzer1 {
 
         @Override
         public int parse(String input, int position) {
-            if (position >= input.length() || input.substring(position).trim().isEmpty()) {
-                setSuccessful(true);
-                return position;
-            }
             position = super.parse(input.substring(position), position) + position;
             int position1 = position;
             for (Token token : choices) {
@@ -386,15 +341,11 @@ public class StringAnalyzer1 {
 
         @Override
         public int parse(String input, int position) {
-            if (position >= input.length() || input.substring(position).trim().isEmpty()) {
-                setSuccessful(true);
-                return position;
-            }
             position = super.skipBlanks(input, position);
             int position1 = position;
             int i = position1;
             boolean passed = false;
-            while (i < input.length() && (Character.isLetterOrDigit(input.charAt(i))
+            while (i < input.charAt(i) && (Character.isLetterOrDigit(input.charAt(i))
                     || Character.isAlphabetic(input.charAt(i))
                     || input.charAt(i) == '_' || input.charAt(i) == '.')) {
                 passed = true;
@@ -430,10 +381,6 @@ public class StringAnalyzer1 {
 
         @Override
         public int parse(String input, int position) {
-            if (position >= input.length() || input.substring(position).trim().isEmpty()) {
-                setSuccessful(true);
-                return position;
-            }
             position = super.parse(input, position);
             if (position < input.length() && input.substring(position).startsWith(name)) {
                 int position1 = position + name.length();
@@ -513,10 +460,6 @@ public class StringAnalyzer1 {
 
         @Override
         public int parse(String input, int position) {
-            if (position >= input.length() || input.substring(position).trim().isEmpty()) {
-                setSuccessful(true);
-                return position;
-            }
             position = super.parse(input, position);
             boolean allNotOk = false;
             int position1 = position;
@@ -549,16 +492,13 @@ public class StringAnalyzer1 {
 
         @Override
         public int parse(String input, int position) {
-            if (position >= input.length() || input.substring(position).trim().isEmpty()) {
-                setSuccessful(true);
-                return position;
-            }
             position = super.parse(input, position);
             int position1 = position;
             int position2 = choice.parse(input, position1);
             return processNext(input, position2);
         }
     }
+
 
     class MultiTokenMandatory extends Token {
 
@@ -571,24 +511,20 @@ public class StringAnalyzer1 {
 
         @Override
         public int parse(String input, int position) {
-            if (position >= input.length() || input.substring(position).trim().isEmpty()) {
-                setSuccessful(true);
-                return position;
-            }
             position = super.parse(input, position);
             boolean allOk = true;
             int position1 = position;
             int i = 0;
             int position0 = position1;
             while (allOk) {
-                for (Token token : choices) {
+                for (int j = 0; j < choices.size(); j++) {
+                    Token token = choices.get(j);
                     position1 = token.parse(input, position1);
                     if (!token.isSuccessful()) {
+                        allOk = false;
                         if (i > 0) {
-                            allOk = false;
                             break;
                         } else {
-                            allOk = false;
                             setSuccessful(false);
                             return position;
                         }
@@ -608,6 +544,32 @@ public class StringAnalyzer1 {
             return "MultiTokenMandatory{" +
                     "choices=" + choices +
                     ", successful=" + isSuccessful() + '}';
+        }
+    }
+
+    class MultiTokenExclusiveXor extends Token {
+        private final List<Token> choices;
+
+        public MultiTokenExclusiveXor(Token... mandatory) {
+            super();
+            this.choices = Arrays.stream(mandatory).toList();
+        }
+
+        @Override
+        public int parse(String input, int position) {
+            position = super.parse(input, position);
+            int position1 = position;
+            int i = 0;
+            int position0 = position1;
+            for (Token token : choices) {
+                position1 = token.parse(input, position0);
+                if (token.isSuccessful()) {
+                    return processNext(input, position1);
+                }
+            }
+            setSuccessful(false);
+            return position0;
+
         }
     }
 
@@ -633,10 +595,6 @@ public class StringAnalyzer1 {
 
         @Override
         public int parse(String input, int position) {
-            if (position >= input.length() || input.substring(position).trim().isEmpty()) {
-                setSuccessful(true);
-                return position;
-            }
             int position1 = super.parse(input, position);
             int i = position1;
             boolean passed = false;
@@ -696,10 +654,6 @@ public class StringAnalyzer1 {
 
         @Override
         public int parse(String input, int position) {
-            if (position >= input.length() || input.substring(position).trim().isEmpty()) {
-                setSuccessful(true);
-                return position;
-            }
             position = super.parse(input, position);
             int i = position;
             boolean passed = false;
@@ -707,7 +661,7 @@ public class StringAnalyzer1 {
                 i++;
                 passed = true;
             }
-            if (passed && (i >= input.length() || input.charAt(i) == ';')) {
+            if (passed && i < input.length()) {
                 return processNext(input, i);
 
             } else {
@@ -723,7 +677,7 @@ public class StringAnalyzer1 {
         }
     }
 
-    public StringAnalyzer1() {
+    public StringAnalyzer2() {
         TokenQualifiedName packageQualifiedName = new TokenQualifiedName();
         Action actionPackageName = new Action(packageQualifiedName) {
             @Override
@@ -835,8 +789,8 @@ public class StringAnalyzer1 {
         TokenName tokenNameReturnType = new TokenName();
 
 
-        TokenVariableInMethodName tokenVariableInMethodName = new TokenVariableInMethodName();
-        Action actionTokenVariableInMethodName = new Action(tokenVariableInMethodName) {
+        TokenVariableInMethodName tokenVariableInMethodClassName = new TokenVariableInMethodName();
+        Action actionTokenVariableInMethodName = new Action(tokenVariableInMethodClassName) {
             @Override
             public boolean action() {
                 if (token.isSuccessful()) {
@@ -896,28 +850,31 @@ public class StringAnalyzer1 {
                 new MultiTokenOptional(new TokenString("package"), packageQualifiedName, new TokenSemiColon()),
                 new MultiTokenOptional(new TokenClassScope(), isFinal,
                         new MultiTokenMandatory(tokenClassKeyword, className, new TokenOpenBracket()),
-                        new MultiTokenOptional(new MultiTokenMandatory(
+                        new MultiTokenMandatory(
                                 // Variables
                                 new MultiTokenOptional(tokenVariableScope, tokenConstantModifier), tokenQualifiedNameVariable),
-                                new MultiTokenOptional(new TokenEquals(), new TokenExpression(),
-                                        new TokenSemiColon())),// Commit changes
+                        new MultiTokenOptional(new TokenEquals(), new TokenExpression(),
+                                new TokenSemiColon()),// Commit changes
                         // Methods
                         new MultiTokenOptional(
-                                new MultiTokenMandatory(new MultiTokenOptional(tokenNameReturnType, tokenMethodScope,
-                                        tokenConstantModifierMethod), tokenMethodMemberDefinition,
-                                        // Arguments' list
-                                        new MultiTokenMandatory(new TokenOpenParenthesized(),
-                                                new MultiTokenOptional(new MultiTokenMandatory(
-                                                        new TokenVariableMemberDefinitionClassName(), new TokenName(), new TokenComa()
-                                                ))),
-                                        new TokenCloseParenthesized(),
-                                        // Instructions' block
-                                        new MultiTokenMandatory(
-                                                tokenBeginOfMethod,
-                                                new MultiTokenOptional(new MultiTokenMandatory(tokenVariableInMethodName
-                                                        , new TokenName(), new TokenEquals()),
-                                                        new TokenExpression()), /*new TokenComa(),*/ endOfInstruction))),// Commit changes
-                        closeBracket), closeBracket));// Commit changes
+                                new MultiTokenMandatory(tokenMethodScope, tokenConstantModifierMethod, tokenNameReturnType),
+                                tokenMethodMemberDefinition,
+                                // Arguments' list
+                                new MultiTokenMandatory(new TokenOpenParenthesized(),
+                                        new MultiTokenOptional(new MultiTokenMandatory(
+                                                new TokenVariableMemberDefinitionClassName(), new TokenName(), new TokenComa()
+                                        ))),
+                                new TokenCloseParenthesized(),
+                                // Instructions' block
+                                tokenBeginOfMethod,
+                                new MultiTokenOptional(
+                                        new MultiTokenExclusiveXor(
+                                                new MultiTokenMandatory(tokenVariableInMethodClassName, new TokenName(), new TokenEquals(), new TokenExpression(), endOfInstruction),
+                                                new MultiTokenMandatory(new TokenExpression(), endOfInstruction),
+                                                new MultiTokenMandatory(tokenVariableInMethodClassName, new TokenName(), endOfInstruction)
+                                        )),
+                                closeBracket),// Commit changes
+                        closeBracket)));// Commit changes
 
     }
 
