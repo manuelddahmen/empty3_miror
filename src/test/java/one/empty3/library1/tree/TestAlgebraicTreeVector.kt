@@ -809,7 +809,7 @@ class TestAlgebraicTreeVector() {
     }
 
     @Test
-    fun testStringAnalyzerV2_1() {
+    fun testStringAnalyzerV1_1() {
         val r = 12.0
         val vars = HashMap<String, Double>()
         vars["r"] = r
@@ -822,6 +822,44 @@ class TestAlgebraicTreeVector() {
                     "\t\tDouble d = c+b/a;\n" +
                     "\t\tDouble e = d+c/a;\n" +
                     "\t\treturn e;\n" +
+                    "\t}\n" +
+                    "}\n"
+
+        val parse: Int = stringAnalyser.parse(input)
+        stringAnalyser.definitions.keys.sorted().forEach {
+            if (it != null) {
+                println(
+                    "[" + it + "]\n" + stringAnalyser.definitions.get(it)!!
+                        .isSuccessful() + "\n" + stringAnalyser.definitions.get(it) + "\n"
+                )
+            }
+        }
+        println("" + parse + "/" + input.length)
+        println(stringAnalyser.construct)
+        if (parse < input.length)
+            println(input.substring(parse))
+        assertTrue(parse >= input.length || input.substring(parse).trim().isEmpty())
+    }
+
+    @Test
+    fun testStringAnalyzerV1_2() {
+        val r = 12.0
+        val vars = HashMap<String, Double>()
+        vars["r"] = r
+        val stringAnalyser: StringAnalyzer1 = StringAnalyzer1()
+
+        val input =
+            "package one.empty3;\n\n" +
+                    "class Number {\n" +
+                    "\tdouble func1(Double a, Double b, Double c) {\n" +
+                    "\t\tDouble d = c+b/a;\n" +
+                    "\t\tDouble e = d+c/a;\n" +
+                    "\t\treturn e;\n" +
+                    "\t}\n" +
+                    "\tdouble func2(Double a) {\n" +
+                    "\t\tDouble d = a*a;\n" +
+                    "\t\ta = d+1;\n" +
+                    "\t\treturn a;\n" +
                     "\t}\n" +
                     "}\n"
 

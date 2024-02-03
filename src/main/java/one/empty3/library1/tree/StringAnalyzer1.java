@@ -199,6 +199,10 @@ public class StringAnalyzer1 {
 
         @Override
         public int parse(String input, int position) {
+            if (position >= input.length() || input.substring(position).trim().isEmpty()) {
+                setSuccessful(false);
+                return position;
+            }
             position = super.parse(input, position);
             int position1 = position;
             int i = 0;
@@ -289,8 +293,8 @@ public class StringAnalyzer1 {
         @Override
         public int parse(String input, int position) {
             if (position >= input.length() || input.substring(position).trim().isEmpty()) {
-                setSuccessful(false);
-                return position;
+                setSuccessful(true);
+                return input.length();
             }
             position = super.parse(input, position);
             return processNext(input, position);
@@ -310,7 +314,7 @@ public class StringAnalyzer1 {
         public int parse(String input, int position) {
             if (position >= input.length() || input.substring(position).trim().isEmpty()) {
                 setSuccessful(true);
-                return position;
+                return input.length();
             }
             position = super.parse(input.substring(position), position) + position;
             for (Token token : choices) {
@@ -349,7 +353,7 @@ public class StringAnalyzer1 {
         public int parse(String input, int position) {
             if (position >= input.length() || input.substring(position).trim().isEmpty()) {
                 setSuccessful(true);
-                return position;
+                return input.length();
             }
             position = super.parse(input.substring(position), position) + position;
             int position1 = position;
@@ -388,7 +392,7 @@ public class StringAnalyzer1 {
         public int parse(String input, int position) {
             if (position >= input.length() || input.substring(position).trim().isEmpty()) {
                 setSuccessful(true);
-                return position;
+                return input.length();
             }
             position = super.skipBlanks(input, position);
             int position1 = position;
@@ -431,8 +435,9 @@ public class StringAnalyzer1 {
         @Override
         public int parse(String input, int position) {
             if (position >= input.length() || input.substring(position).trim().isEmpty()) {
-                setSuccessful(true);
-                return position;
+                throw new RuntimeException("TokenString : position>=input.length()");
+                //                setSuccessful(true);
+                //                return input.length();
             }
             position = super.parse(input, position);
             if (position < input.length() && input.substring(position).startsWith(name)) {
@@ -515,7 +520,7 @@ public class StringAnalyzer1 {
         public int parse(String input, int position) {
             if (position >= input.length() || input.substring(position).trim().isEmpty()) {
                 setSuccessful(true);
-                return position;
+                return input.length();
             }
             position = super.parse(input, position);
             boolean allNotOk = false;
@@ -551,7 +556,7 @@ public class StringAnalyzer1 {
         public int parse(String input, int position) {
             if (position >= input.length() || input.substring(position).trim().isEmpty()) {
                 setSuccessful(true);
-                return position;
+                return input.length();
             }
             position = super.parse(input, position);
             int position1 = position;
@@ -573,7 +578,7 @@ public class StringAnalyzer1 {
         public int parse(String input, int position) {
             if (position >= input.length() || input.substring(position).trim().isEmpty()) {
                 setSuccessful(true);
-                return position;
+                return input.length();
             }
             position = super.parse(input, position);
             boolean allOk = true;
@@ -635,7 +640,7 @@ public class StringAnalyzer1 {
         public int parse(String input, int position) {
             if (position >= input.length() || input.substring(position).trim().isEmpty()) {
                 setSuccessful(true);
-                return position;
+                return input.length();
             }
             int position1 = super.parse(input, position);
             int i = position1;
@@ -689,6 +694,7 @@ public class StringAnalyzer1 {
         }
     }
 
+
     class TokenExpression extends Token {
         public TokenExpression() {
             super();
@@ -698,7 +704,7 @@ public class StringAnalyzer1 {
         public int parse(String input, int position) {
             if (position >= input.length() || input.substring(position).trim().isEmpty()) {
                 setSuccessful(true);
-                return position;
+                return input.length();
             }
             position = super.parse(input, position);
             int i = position;
@@ -708,6 +714,39 @@ public class StringAnalyzer1 {
                 passed = true;
             }
             if (passed && (i >= input.length() || input.charAt(i) == ';')) {
+                return processNext(input, i);
+
+            } else {
+                setSuccessful(false);
+                return position;
+            }
+        }
+    }
+
+    class TokenExpression1 extends Token {
+        public TokenExpression1() {
+            super();
+        }
+
+        protected boolean isValid(String input, int p) {
+            return p >= input.length() || (input.charAt(p) == ';' || input.charAt(p) == '{'
+                    || input.charAt(p) == '}');
+        }
+
+        @Override
+        public int parse(String input, int position) {
+            if (position >= input.length() || input.substring(position).trim().isEmpty()) {
+                setSuccessful(true);
+                return input.length();
+            }
+            position = super.parse(input, position);
+            int i = position;
+            boolean passed = false;
+            while (i < input.length() && isValid(input, i)) {
+                i++;
+                passed = true;
+            }
+            if (passed && !isValid(input, i)) {
                 return processNext(input, i);
 
             } else {
@@ -916,7 +955,7 @@ public class StringAnalyzer1 {
                                                 tokenBeginOfMethod,
                                                 new MultiTokenOptional(new MultiTokenMandatory(tokenVariableInMethodName
                                                         , new TokenName(), new TokenEquals()),
-                                                        new TokenExpression()), /*new TokenComa(),*/ endOfInstruction))),// Commit changes
+                                                        new TokenExpression1()), /*new TokenComa(),*/ endOfInstruction))),// Commit changes
                         closeBracket), closeBracket));// Commit changes
 
     }
