@@ -729,8 +729,11 @@ public class StringAnalyzer1 {
         }
 
         protected boolean isValid(String input, int p) {
-            return p >= input.length() || (input.charAt(p) == ';' || input.charAt(p) == '{'
-                    || input.charAt(p) == '}');
+            return p >= input.length() || (input.charAt(p) == ';');
+        }
+
+        protected boolean isValid2(String input, int p) {
+            return p >= input.length() || (input.charAt(p) == '{' || input.charAt(p) == '}');
         }
 
         @Override
@@ -742,7 +745,7 @@ public class StringAnalyzer1 {
             position = super.parse(input, position);
             int i = position;
             boolean passed = false;
-            while (i < input.length() && isValid(input, i)) {
+            while (i < input.length() && isValid(input, i) && isValid2(input, i)) {
                 i++;
                 passed = true;
             }

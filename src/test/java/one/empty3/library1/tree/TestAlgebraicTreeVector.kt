@@ -755,7 +755,7 @@ class TestAlgebraicTreeVector() {
         val r = 12.0
         val vars = HashMap<String, Double>()
         vars["r"] = r
-        val stringAnalyser: StringAnalyser = StringAnalyser()
+        val stringAnalyser: StringAnalyzer1 = StringAnalyzer1()
 
         val input =
             "package one.empty3;\n\n"
@@ -781,7 +781,7 @@ class TestAlgebraicTreeVector() {
         val r = 12.0
         val vars = HashMap<String, Double>()
         vars["r"] = r
-        val stringAnalyser: StringAnalyser = StringAnalyser()
+        val stringAnalyser: StringAnalyzer1 = StringAnalyzer1()
 
         val input =
             "package one.empty3;\n\n" +
