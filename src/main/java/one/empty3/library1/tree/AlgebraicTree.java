@@ -94,8 +94,8 @@ public class AlgebraicTree extends Tree {
     /**
      * Constructs a new instance of the AlgebraicTree class with the specified formula and parameter values.
      *
-     * @param formula         the formula used to create the algebraic tree
-     * @param parameterValues a map of parameter values
+     * @param formula          the formula used to create the algebraic tree
+     * @param parametersValues a map of parameter values
      */
     public AlgebraicTree(String formula, Map<String, Double> parametersValues) {
         this(formula);
@@ -255,6 +255,13 @@ public class AlgebraicTree extends Tree {
         throw new AlgebraicFormulaSyntaxException("Cannot add to treeNode or root.", this);
     }
 
+    /***
+     * Adds spaces to the given subformula. Removes leading spaces, newlines, carriage returns, and tabs.
+     * If the subformula is null or empty, it returns the subformula unchanged.
+     *
+     * @param subformula the subformula to add spaces to
+     * @return the subformula with spaces added
+     */
     private String addSpaces(String subformula) {
         while (subformula != null && !subformula.isEmpty() &&
                 (subformula.charAt(0) == ' ' || subformula.charAt(0) == '\n' ||
@@ -263,6 +270,14 @@ public class AlgebraicTree extends Tree {
         return subformula;
     }
 
+    /**
+     * Adds spaces to the given subformula. Removes leading spaces, newlines, carriage returns, and tabs.
+     * If the subformula is null or empty, it returns the subformula unchanged.
+     *
+     * @param subformula the subformula to add spaces to
+     * @param index      the index of the character to check for spaces
+     * @return the subformula with spaces added
+     */
     private String addSpaces(String subformula, int index) {
         while (subformula != null && !subformula.isEmpty() &&
                 (subformula.charAt(index) == ' ' || subformula.charAt(index) == '\n' ||

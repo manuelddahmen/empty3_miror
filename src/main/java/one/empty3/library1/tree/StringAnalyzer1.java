@@ -34,7 +34,7 @@ import java.util.List;
  * The StringAnalyzer1 class is responsible for analyzing string inputs and performing parsing operations.
  * It contains methods for parsing and retrieving constructs.
  *
- * @see Object
+ * @see AlgebraicTree
  */
 public class StringAnalyzer1 {
     protected HashMap<Integer, Token> definitions = new HashMap<>();
