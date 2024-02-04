@@ -49,7 +49,6 @@ public final class ShowTestResult extends JFrame implements Runnable {
     /*__
      *
      */
-    private static final long serialVersionUID = -7844993762133687210L;
     private ECBufferedImage image = null;
     private ImageContainer biic;
     private boolean stop = false;
@@ -585,9 +584,8 @@ public final class ShowTestResult extends JFrame implements Runnable {
 
     @Override
     public void run() {
-        while (!stop)
-        {
-            if(isDisplaying()) {
+        while (!stop) {
+            if (isDisplaying()) {
                 dessine();
             }
             try {

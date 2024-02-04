@@ -30,16 +30,30 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * The StringAnalyzer1 class is responsible for analyzing string inputs and performing parsing operations.
+ * It contains methods for parsing and retrieving constructs.
+ *
+ * @see Object
+ */
 public class StringAnalyzer1 {
     protected HashMap<Integer, Token> definitions = new HashMap<>();
     private HashMap<String, Class> classes;
     private int index = 0;
 
+    /**
+     * Retrieves the Construct object from the current instance.
+     *
+     * @return the Construct object
+     */
     @NotNull
     protected Construct getConstruct() {
         return construct;
     }
 
+    /**
+     * Represents a token in a parsing process.
+     */
     public abstract class Token {
         protected Action action;
         protected Class aClass;
@@ -76,6 +90,13 @@ public class StringAnalyzer1 {
             this.action = action;
         }
 
+        /***
+         * Skips over any blank spaces in the input string starting from the given position.
+         *
+         * @param input    the input string
+         * @param position the starting position
+         * @return the new position after skipping the blank spaces
+         */
         public int skipBlanks(String input, int position) {
             boolean passed = false;
             int position1 = position;
@@ -90,15 +111,32 @@ public class StringAnalyzer1 {
             return position2;
         }
 
+        /***
+         * Parses the input string starting from the given position and skips over any blank spaces.
+         *
+         * @param input    the input string
+         * @param position the starting position
+         * @return the new position after skipping the blank spaces
+         */
         public int parse(String input, int position) {
             position = skipBlanks(input, position);
             return position;
         }
 
+        /**
+         * Determines whether the current operation was successful or not.
+         *
+         * @return true if the operation was successful, false otherwise
+         */
         protected boolean isSuccessful() {
             return successful;
         }
 
+        /**
+         * Sets the success state of the current operation.
+         *
+         * @param successful the flag indicating whether the operation was successful
+         */
         public void setSuccessful(boolean successful) {
             this.successful = successful;
             if (successful && action != null)
@@ -108,14 +146,29 @@ public class StringAnalyzer1 {
             }
         }
 
+        /**
+         * Retrieves the action associated with the token.
+         *
+         * @return the action associated with the token
+         */
         public Action getAction() {
             return action;
         }
 
+        /**
+         * Executes the action associated with the token, if it is not null.
+         */
         public void action() {
             if (action != null) getAction().action();
         }
 
+        /**
+         * Processes the next token in the input string starting from the given position.
+         *
+         * @param input    the input string
+         * @param position the starting position
+         * @return the new position after processing the next token
+         */
         protected int processNext(String input, int position) {
             if (nextToken() != null) {
                 int nextToken = nextToken(input, position);
@@ -148,19 +201,37 @@ public class StringAnalyzer1 {
         }
     }
 
+    /***
+     * The Action class represents an action that can be performed in a parsing process.
+     * It is an abstract class that must be subclassed to implement the action logic.
+     */
     public abstract class Action {
         protected final Token token;
 
+        /**
+         * Retrieves the token associated with the current action.
+         *
+         * @return the token associated with the current action
+         */
         public Token getToken() {
             return token;
         }
 
+        /**
+         * This class represents an action that can be performed in a parsing process.
+         * It is an abstract class that must be subclassed to implement the action logic.
+         */
         public Action(Token token) {
             this.token = token;
             token.action = this;
 
         }
 
+        /**
+         * Executes the action associated with the token.
+         *
+         * @return true if the action was executed successfully, false otherwise
+         */
         public abstract boolean action();
     }
 /*
@@ -189,6 +260,10 @@ public class StringAnalyzer1 {
     }
 */
 
+    /**
+     * The SingleTokenExclusiveXor class represents a token that matches only one of the specified tokens in an exclusive XOR manner.
+     * It extends the Token class and overrides the parse method to implement the exclusive XOR logic.
+     */
     class SingleTokenExclusiveXor extends Token {
         private final List<Token> choices;
 
@@ -219,9 +294,9 @@ public class StringAnalyzer1 {
         }
     }
 
-
-    /***
-     * Il faut choisir une des strings c'est obligatoire.
+    /**
+     * Represents a mandatory choice token, which matches one of the given string values.
+     * Extends the {@link Token} class.
      */
     class TokenChoiceStringMandatory extends Token {
         protected final String[] names;
@@ -424,6 +499,9 @@ public class StringAnalyzer1 {
 
     }
 
+    /**
+     * Represents a token for matching a specific string in a parsing process.
+     */
     class TokenString extends Token {
         protected String name;
 
@@ -507,6 +585,9 @@ public class StringAnalyzer1 {
 
     }
 
+    /**
+     * Represents a token class for handling multiple optional tokens.
+     */
     class MultiTokenOptional extends Token {
 
         private final Token[] choices;
@@ -543,6 +624,10 @@ public class StringAnalyzer1 {
         }
     }
 
+    /**
+     * Represents a single optional token in a parsing process.
+     * Extends the base class Token.
+     */
     class SingleTokenOptional extends Token {
 
         private final Token choice;
@@ -565,6 +650,9 @@ public class StringAnalyzer1 {
         }
     }
 
+    /**
+     * Represents a multi-token that is mandatory for the parsing process.
+     */
     class MultiTokenMandatory extends Token {
 
         private final List<Token> choices;
@@ -629,6 +717,9 @@ public class StringAnalyzer1 {
     }
 
 
+    /**
+     * Represents a token that identifies a name in a parsing process.
+     */
     class TokenName extends Token {
         private String name;
 
@@ -695,6 +786,10 @@ public class StringAnalyzer1 {
     }
 
 
+    /**
+     * Represents a token for parsing expressions in a given input string.
+     * Extends the Token class.
+     */
     class TokenExpression extends Token {
         public TokenExpression() {
             super();
@@ -723,6 +818,9 @@ public class StringAnalyzer1 {
         }
     }
 
+    /**
+     * Represents a specific type of Token.
+     */
     class TokenExpression1 extends Token {
         public TokenExpression1() {
             super();
@@ -765,6 +863,9 @@ public class StringAnalyzer1 {
         }
     }
 
+    /**
+     * This class represents a StringAnalyzer1 object that can perform parsing operations on a string input.
+     */
     public StringAnalyzer1() {
         TokenQualifiedName packageQualifiedName = new TokenQualifiedName();
         Action actionPackageName = new Action(packageQualifiedName) {

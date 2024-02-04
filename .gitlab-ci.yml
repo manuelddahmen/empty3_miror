@@ -1,3 +1,15 @@
+qodana:
+  only:
+    - main
+    - merge_requests
+  image:
+    name: jetbrains/qodana-jvm
+    entrypoint: [""]
+  variables:
+    QODANA_TOKEN: $qodana_token
+  script:
+    - qodana --save-report --results-dir=$CI_PROJECT_DIR/.qodana
+
 # This file is a template, and might need editing before it works on your project.
 ---
 # Build JAVA applications using Apache Maven (http://maven.apache.org)

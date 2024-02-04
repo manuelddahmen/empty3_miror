@@ -31,6 +31,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 import java.util.logging.Level;
+
 /*__
  * Created by Maauel Dahmen on 30-06-18.
  */
@@ -73,7 +74,7 @@ public class SetMinMax implements CsvAction {
         return colors;
     }
 
-    class MyDim extends Representable {
+    public class MyDim extends Representable {
         Point2D pA = new Point2D(Double.POSITIVE_INFINITY,
                 Double.POSITIVE_INFINITY);
         Point2D pB = new Point2D(Double.NEGATIVE_INFINITY,

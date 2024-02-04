@@ -62,8 +62,10 @@ import one.empty3.library.StructureMatrix;
 import org.jetbrains.annotations.NotNull;
 
 
-/*__
+/**
+ * Represents a mathematical expression tree.
  * Created by Manuel Dahmen on 15-12-16.
+ * Updated by Manuel Dahmen on 05-02-24
  */
 public class AlgebraicTree extends Tree {
     private static final int TYPE_NAME_CLASS = 1;
@@ -79,11 +81,22 @@ public class AlgebraicTree extends Tree {
     private TreeNode root;
     private int stackSize = 0;
 
+    /**
+     * Constructs a new instance of the {@code AlgebraicTree} class with the specified formula.
+     *
+     * @param formula the formula used to create the algebraic tree
+     */
     public AlgebraicTree(String formula) {
         this.formula = formula;
         removeSpaces();
     }
 
+    /**
+     * Constructs a new instance of the AlgebraicTree class with the specified formula and parameter values.
+     *
+     * @param formula         the formula used to create the algebraic tree
+     * @param parameterValues a map of parameter values
+     */
     public AlgebraicTree(String formula, Map<String, Double> parametersValues) {
         this(formula);
         this.formula = formula;
@@ -91,6 +104,10 @@ public class AlgebraicTree extends Tree {
         removeSpaces();
     }
 
+    /**
+     * Removes all spaces, newlines, carriage returns, and tabs from the formula string.
+     * If the formula is null, it sets it to an empty string.
+     */
     public void removeSpaces() {
         if (formula != null)
             formula = formula.replace(" ", "").replace("\n", "").replace("\r", "").replace("\t", "");
@@ -98,10 +115,22 @@ public class AlgebraicTree extends Tree {
             formula = "";
     }
 
+    /**
+     * Sets the parameter value for a given parameter name.
+     *
+     * @param s the parameter name
+     * @param d the parameter value
+     */
     public void setParameter(String s, Double d) {
         this.parametersValues.put(s, d);
     }
 
+    /**
+     * Constructs and returns an AlgebraicTree object.
+     *
+     * @return the constructed AlgebraicTree object
+     * @throws AlgebraicFormulaSyntaxException if there is a syntax error in the algebraic formula
+     */
     public AlgebraicTree construct() throws AlgebraicFormulaSyntaxException {
         root = new TreeNode(this, formula);
         stackSize = 0; // Restine sommaire//
@@ -127,6 +156,14 @@ public class AlgebraicTree extends Tree {
         }
     }
 
+    /**
+     * Adds a subformula to the given source tree node.
+     *
+     * @param src        the source tree node to add the subformula to
+     * @param subformula the subformula to be added
+     * @return true if the subformula was successfully added, false otherwise
+     * @throws AlgebraicFormulaSyntaxException if there is a syntax error in the subformula
+     */
     public boolean add(TreeNode src, String subformula) throws AlgebraicFormulaSyntaxException {
 
         stackSize++;

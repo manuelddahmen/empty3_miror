@@ -35,7 +35,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
-/*__
+/**
+ * The StructureMatrix class represents a matrix with flexible dimensions and element types.
  * Created by manue on 07-09-19.
  */
 public class StructureMatrix<T> implements Serializable, Serialisable {
@@ -49,8 +50,14 @@ public class StructureMatrix<T> implements Serializable, Serialisable {
     private StructureMatrix<Point3D> all;
     private Point3D center;
 
+    /**
+     * The StructureMatrix class represents a matrix with a specific data type.
+     * It is used to store and manipulate data in a matrix-like form.
+     * The matrix can have a variable dimension and a specific class type for its elements.
+     */
     public StructureMatrix() {
-        dim = -1;
+        dim = 0;
+        classType = Double.class;
 
     }
 
@@ -58,6 +65,14 @@ public class StructureMatrix<T> implements Serializable, Serialisable {
         classType = T;
     }
 
+    /**
+     * The StructureMatrix class represents a matrix with a specific data type.
+     * It is used to store and manipulate data in a matrix-like form.
+     * The matrix can have a variable dimension and a specific class type for its elements.
+     *
+     * @param dim       the dimension of the matrix
+     * @param classType the class type for the elements of the matrix
+     */
     public StructureMatrix(int dim, Class classType) {
         init(dim, classType);
     }
@@ -72,6 +87,12 @@ public class StructureMatrix<T> implements Serializable, Serialisable {
         this.classType = classType;
     }
 
+    /**
+     * Sets the value of an element in the StructureMatrix.
+     *
+     * @param value the value to set for the element
+     * @return the modified StructureMatrix instance
+     */
     public StructureMatrix<T> setElem(@NotNull T value) {
         dim = 0;
         if (value instanceof Point3D) {
@@ -84,6 +105,12 @@ public class StructureMatrix<T> implements Serializable, Serialisable {
         return this;
     }
 
+    /**
+     * Sets the value of an element in the StructureMatrix.
+     *
+     * @param elem the value to set for the element
+     * @param i    the index of the element to set
+     */
     public void setElem(T elem, int i) {
         if (i >= data1d.size()) {
             int j = data1d.size();
@@ -106,6 +133,13 @@ public class StructureMatrix<T> implements Serializable, Serialisable {
         listenersPropertyChanged(null, elem, 1, i, 0);
     }
 
+    /**
+     * Sets the value of an element in the StructureMatrix.
+     *
+     * @param elem the value to set for the element
+     * @param i    the row index of the element
+     * @param j    the column index of the element
+     */
     public void setElem(T elem, int i, int j) {
 
         this.classType = elem.getClass();
@@ -134,6 +168,12 @@ public class StructureMatrix<T> implements Serializable, Serialisable {
         return null;
     }
 
+    /***
+     * Returns the element stored in the StructureMatrix.
+     *
+     * @return the element stored in the StructureMatrix, or null if the dimension of the matrix is 0 or if the element is not set
+     * @throws UnsupportedOperationException if the dimension of the matrix is not 0
+     */
     public T getElem() {
 
         if (dim == 0) {
@@ -148,6 +188,12 @@ public class StructureMatrix<T> implements Serializable, Serialisable {
         throw new UnsupportedOperationException("Error");
     }
 
+    /**
+     * Returns the element stored in the StructureMatrix at the given index.
+     *
+     * @param i the index of the element to retrieve
+     * @return the element stored in the StructureMatrix at the given index, or null if the dimension of the matrix is not 1
+     */
     public T getElem(int i) {
         if (dim == 1) {
             return data1d.get(i);
@@ -156,6 +202,14 @@ public class StructureMatrix<T> implements Serializable, Serialisable {
         return null;
     }
 
+    /**
+     * Returns the element stored in the StructureMatrix at the given indices.
+     *
+     * @param i the row index of the element
+     * @param j the column index of the element
+     * @return the element stored in the StructureMatrix at the given indices,
+     * or null if the dimension of the matrix is not 2 or if the indices are out of bounds
+     */
     public T getElem(int i, int j) {
         if (dim == 2) {
             return data2d.get(i).get(j);

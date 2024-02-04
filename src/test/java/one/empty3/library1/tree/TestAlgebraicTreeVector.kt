@@ -32,9 +32,8 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 
-/*__
- * Created by Manuel Dahmen on 15-12-16.
- * Updated by Manuel Dahmen on 10-11-23
+/**
+ * Test class for AlgebraicTree.
  */
 @RunWith(JUnit4::class)
 class TestAlgebraicTreeVector() {
