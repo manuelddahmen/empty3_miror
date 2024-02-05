@@ -424,7 +424,7 @@ public abstract class TestObjet implements Test, Runnable {
         try {
             out = NIOUtils.writableFileChannel(avif.getAbsolutePath());
             // for Android use: AndroidSequenceEncoder
-            encoder = new AWTSequenceEncoder(out, Rational.R(25, 1));
+            encoder = new AWTSequenceEncoder(out, Rational.R(getFps(), 1));
         } catch (IOException ioException) {
             ioException.printStackTrace();
             NIOUtils.closeQuietly(out);
@@ -860,6 +860,19 @@ public abstract class TestObjet implements Test, Runnable {
 
     }
 
+    /**
+     * Publishes the test results if the publish flag is set to true.
+     * <p>
+     * This method creates a new thread to publish the test results by calling the {@link one.empty3.library.core.testing2.ShowTestResult} class,
+     * passing in the necessary parameters. The publishing process includes setting the image container, the test object, and starting the thread for execution.
+     * </p>
+     * <p>
+     * This method does not return any value.
+     * </p>
+     * <p>
+     * <b>Note:</b> The publish flag needs to be set to true in order for the test results to be published.
+     * </p>
+     */
     public void publishResult() {
         if (getPublish()) {
 
@@ -878,6 +891,12 @@ public abstract class TestObjet implements Test, Runnable {
         this.publish = publish;
     }
 
+    /**
+     * Sets the publish flag of the object.
+     *
+     * @param publish The boolean flag indicating if the test results should be published
+     *                sets to false for a console mode or true for GUI process controls.
+     */
     public void publishResult(boolean publish) {
         this.publish = publish;
     }
@@ -1058,6 +1077,7 @@ public abstract class TestObjet implements Test, Runnable {
                 try {
                     Thread.sleep(500);
                 } catch (InterruptedException e) {
+                    reportException(e);
                     e.printStackTrace();
                 }
             }
@@ -1077,7 +1097,6 @@ public abstract class TestObjet implements Test, Runnable {
                     timeStart = System.currentTimeMillis();
                     testScene();
                     lastInfoEllapsedMillis = System.currentTimeMillis() - timeStart;
-                    reportSuccess(null);
                 } catch (Exception e1) {
                     reportException(e1);
                     return;
@@ -1095,7 +1114,10 @@ public abstract class TestObjet implements Test, Runnable {
                     z.idzpp();
 
                     z.draw(scene());
+                } catch (RuntimeException ex1) {
+                    reportException(ex1);
                 } catch (Exception ex) {
+                    reportException(ex);
                     ex.printStackTrace();
                 }
 
@@ -1111,7 +1133,11 @@ public abstract class TestObjet implements Test, Runnable {
                         try {
                             encoder.encodeImage((BufferedImage) ri);
                         } catch (IOException e) {
+                            reportException(e);
                             e.printStackTrace();
+                        } catch (RuntimeException e1) {
+                            reportException(e1);
+
                         }
                     } else {
                         o.println(
@@ -1138,6 +1164,7 @@ public abstract class TestObjet implements Test, Runnable {
                 dataModel.save(fout.getAbsolutePath());
                 dataWriter.writeFrameData(frame(), "Save bin: " + fout.getAbsolutePath());
             } catch (IOException e) {
+                reportException(e);
                 throw new RuntimeException(e);
             }
 
@@ -1150,8 +1177,10 @@ public abstract class TestObjet implements Test, Runnable {
                     dataWriter.writeFrameData(frame(), "Export model: " + filename);
                     o.println("End generating model");
                 } catch (IOException ex) {
+                    reportException(ex);
                     o.println(ex.getLocalizedMessage());
                 } catch (Exception ex) {
+                    reportException(ex);
                     o.println("Other exception in generating model" + ex);
                     ex.printStackTrace();
                 }
@@ -1190,6 +1219,7 @@ public abstract class TestObjet implements Test, Runnable {
                 encoder.finish();
             } catch (IOException e) {
                 e.printStackTrace();
+                reportException(e);
 
             } finally {
                 NIOUtils.closeQuietly(out);
@@ -1207,6 +1237,7 @@ public abstract class TestObjet implements Test, Runnable {
                     System.out.print(outputStream);
                 }
             } catch (IOException ex) {
+                reportException(ex);
                 o.println(ex.getLocalizedMessage());
             }
         } else if (file.exists()) {
@@ -1217,6 +1248,7 @@ public abstract class TestObjet implements Test, Runnable {
                 OutputStream outputStream = runtime.exec(cmd).getOutputStream();
                 System.out.print(outputStream);
             } catch (IOException ex) {
+                reportException(ex);
                 o.println(ex.getLocalizedMessage());
             }
         }
@@ -1233,6 +1265,11 @@ public abstract class TestObjet implements Test, Runnable {
         saveTxt = b;
     }
 
+    /**
+     * Returns the scene associated with this object.
+     *
+     * @return the scene associated with this object
+     */
     public Scene scene() {
         return scene;
     }
@@ -1255,6 +1292,11 @@ public abstract class TestObjet implements Test, Runnable {
         }
     }
 
+    /***
+     * Sets the scene associated with this object.
+     *
+     * @param load The scene to be set
+     */
     public void scene(Scene load) {
         scene = load;
     }
@@ -1313,10 +1355,21 @@ public abstract class TestObjet implements Test, Runnable {
 
     }
 
-    /*__
-     * Definir la scene scene().add(<<Representable>>)
+    /**
+     * Represents a test scene in the TestObjet class.
      *
-     * @throws java.lang.Exception
+     * <p>
+     * This abstract method should be implemented by subclasses to define the specific test scene logic.
+     * It is responsible for performing all the necessary steps required for the test,
+     * such as initializing the object, setting up parameters, generating images or models,
+     * and handling other specific operations as needed.
+     * </p>
+     *
+     * <p>
+     * This method can throw an Exception if any error occurs during the test scene execution.
+     * </p>
+     *
+     * @throws Exception if an error occurs during the test scene execution.
      */
     public abstract void testScene() throws Exception;
 
@@ -1348,10 +1401,20 @@ public abstract class TestObjet implements Test, Runnable {
         return dir.getAbsolutePath();
     }
 
+    /**
+     * Sets the unterminable flag of the object.
+     *
+     * @param b the boolean flag indicating if the object is unterminable
+     */
     public void unterminable(boolean b) {
         unterminable = b;
     }
 
+    /**
+     * Get the ZBuffer implementation used by the class.
+     *
+     * @return The ZBuffer implementation used by the class
+     */
     public ZBuffer getZ() {
         if (z == null)
             z = ZBufferFactory.instance(resx, resy, D3);

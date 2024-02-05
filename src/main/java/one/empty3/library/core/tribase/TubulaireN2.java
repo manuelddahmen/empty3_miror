@@ -71,7 +71,7 @@ public class TubulaireN2 extends ParametricSurface {
 
     public Point3D calculerNormale(double t) {
         Point3D n = calculerTangente(t + NORM_FCT_INCR).moins(calculerTangente(t)).mult(1.0 / NORM_FCT_INCR);
-        if (n.equals(Point3D.O0)||n.isAnyNaN()) {
+        if (n.equals(Point3D.O0) || n.isAnyNaN()) {
             int i = 0;
             while (i < 3 && (n.equals(Point3D.O0) ||
                     n.isAnyNaN())) {
@@ -87,14 +87,14 @@ public class TubulaireN2 extends ParametricSurface {
 
     public Point3D[] calculerAxes(double t, Point3D tangent, int iMin) {
 
-        Point3D n = new Point3D(2., 2., 2.);
+        Point3D n = new Point3D(2., 2., 2.).norme1();
 
         Point3D axe2;
         if (n.norme() != 1.0) {
 
             int i = 0;
-            while (i < 3  && (n.dot(tangent) != 0.0 ||
-                    n.isAnyNaN() || i<iMin)) {
+            while (i < 3 && (Math.abs(n.dot(tangent)) > 1E-20 ||
+                    n.isAnyNaN() || i < iMin)) {
                 n = tangent.prodVect(new Point3D(i == 0 ? 1.0 : 0.0, i == 1 ? 1.0 : 0.0, i == 2 ? 1.0 : 0.0)).norme1();
                 i++;
             }
@@ -102,7 +102,7 @@ public class TubulaireN2 extends ParametricSurface {
 
         axe2 = tangent.prodVect(n).norme1();
 
-        return new Point3D[] { n , axe2 };
+        return new Point3D[]{n, axe2};
     }
 
     public Point3D calculerTangente(double t) {
@@ -126,7 +126,7 @@ public class TubulaireN2 extends ParametricSurface {
         return s;
     }
 
-    public Point3D[] vectPerp(double t, double v) {
+    public Point3D[] vecP(double t, double v) {
         Point3D[][] vecteurs = new Point3D[3][3];
 
         for (int i = 0; i < 3; i++)
@@ -139,12 +139,12 @@ public class TubulaireN2 extends ParametricSurface {
         Point3D tangente = Point3D.O0;
         int k = 0;
         while (tangente.equals(Point3D.O0) && k < 3) {
-            tangente = calculerTangente(t);
-            if (tangente.equals(Point3D.O0) || tangente.isAnyNaN()) {
+            tangente = calculerTangente(t).norme1();
+            if (tangente.equals(Point3D.O0) || tangente.isAnyNaN() || (tangente.norme() < 1.0E-20)) {
                 //TODO
                 tangente =
-                        lastTan==null?new Point3D(k == 0 ? 1. : 0,
-                                        k == 1 ? 1. : 0, k == 2 ? 1. : 0)
+                        lastTan == null ? new Point3D(k == 0 ? 1. : 0,
+                                k == 1 ? 1. : 0, k == 2 ? 1. : 0)
                                 : lastTan;
             } else {
                 lastTan = tangente;
@@ -160,7 +160,7 @@ public class TubulaireN2 extends ParametricSurface {
         Point3D px = null;
         Point3D py = null;
         int j = 0;
-        double min = 1d;
+        double min = 0.1d;
         double minI = 1000d; // TODO
         int iMin = 0;
         for (int i = 0; i < 3; i++) {
@@ -171,8 +171,8 @@ public class TubulaireN2 extends ParametricSurface {
 
 
             vecteurs[i][0] = tangente.norme1();
-            vecteurs[i][1] = px;
-            vecteurs[i][2] = py;
+            vecteurs[i][1] = px.norme1();
+            vecteurs[i][2] = py.norme1();
 
             minI = Math.abs(px.dot(py));// Math.abs(px.prodVect(py).norme() - 1.);
 
@@ -192,10 +192,10 @@ public class TubulaireN2 extends ParametricSurface {
 
     @Override
     public Point3D calculerPoint3D(double u, double v) {
-        Point3D[] vectPerp = vectPerp(u, v);
+        Point3D[] vecP = vecP(u, v);
         Point3D ret0 = soulCurve.getElem().calculerPoint3D(u).plus(
-                vectPerp[1].mult(diameterFunction.getElem().result(u) * Math.cos(2 * Math.PI * v))).plus(
-                vectPerp[2].mult(diameterFunction.getElem().result(u) * Math.sin(2 * Math.PI * v)));
+                vecP[1].mult(diameterFunction.getElem().result(u) * Math.cos(2 * Math.PI * v))).plus(
+                vecP[2].mult(diameterFunction.getElem().result(u) * Math.sin(2 * Math.PI * v)));
         return getOrig().plus(getVectX().mult(ret0.get(0))).plus(getVectY().mult(ret0.get(1))).plus(getVectZ().mult(ret0.get(2)));
     }
 

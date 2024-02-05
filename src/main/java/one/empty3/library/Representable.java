@@ -39,15 +39,167 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
 import java.util.logging.Level;
+
+/**
+ * The Representable class represents a generic object that can be rendered and manipulated in a 3D scene.
+ * This class provides various methods to control the position, orientation, and appearance of the object.
+ * <p>
+ * Fields:
+ * - vectors: The structure matrix representing the vectors of the object.
+ * - DISPLAY_ALL: A constant indicating that all display types are enabled.
+ * - SURFACE_DISPLAY_TEXT_QUADS: A constant indicating that the surface should be displayed as textured quads with text.
+ * - SURFACE_DISPLAY_COL_QUADS: A constant indicating that the surface should be displayed as colored quads.
+ * - SURFACE_DISPLAY_COL_TRI: A constant indicating that the surface should be displayed as colored triangles.
+ * - SURFACE_DISPLAY_LINES: A constant indicating that the surface should be displayed as lines.
+ * - SURFACE_DISPLAY_POINTS: A constant indicating that the surface should be displayed as points.
+ * - DEFAULT_TEXTURE: The default texture to use for the object.
+ * - SURFACE_DISPLAY_TEXT_TRI: A constant indicating that the surface should be displayed as textured triangles with text.
+ * - displayTypes: The available display types for the object.
+ * - SCALE1: The scale factor for the object.
+ * - classPainters: The list of painters for the object.
+ * - defaultHashMapData: The default hash map data for the object.
+ * - PATH_ELEM_STRUCTURE_MATRIX: A constant representing the path element structure matrix.
+ * - PATH_ELEM_DOUBLE_VALUES: A constant representing the path element double values.
+ * - PATH_ELEM_REPRESENTABLE: A constant representing the path element representable.
+ * - rotation: The rotation matrix for the object.
+ * - NFAST: The number of fast updates for the object.
+ * - materiau: The material of the object.
+ * - CFAST: The fast counter.
+ * - parent: The parent representable object.
+ * - scene: The scene containing the object.
+ * - texture: The texture applied to the object.
+ * - render: The render mode of the object.
+ * - T: The T value of the object.
+ * - displayType: The display type of the object.
+ * - id: The ID of the object.
+ * - painter: The painter of the object.
+ * - RENDERING_DEFAULT: A constant indicating the default rendering mode.
+ * - declaredDataStructure: The declared data structure of the object.
+ * - declaredLists: The declared lists of the object.
+ * <p>
+ * Methods:
+ * - public Representable(): Constructs a new Representable object.
+ * - public Point3D getOrientedPoint(Point3D a): Returns an oriented point for the given point.
+ * - public static void setPaintingActForClass(ZBuffer z, Scene s, PaintingAct pa): Sets the painting act for the class.
+ * - private static ArrayList<Painter> classPainters(): Returns the list of class painters.
+ * - public static String[] getDisplayTypes(): Returns the available display types.
+ * - public StructureMatrix<Rotation> getRotation(): Returns the rotation matrix of the object.
+ * - public void setRotation(StructureMatrix<Rotation> rotation): Sets the rotation matrix of the object.
+ * - public Point3D rotate(Point3D p0, Representable ref): Rotates the given point around the reference point.
+ * - public String id(): Returns the ID of the object.
+ * - public void id(String id): Sets the ID of the object.
+ * - public void informer(Representable parent): Informs the parent object.
+ * - public void replace(String moo): Replaces the object with the given value.
+ * - public boolean supporteTexture(): Returns true if the object supports texture, false otherwise.
+ * - public ITexture texture(): Returns the texture applied to the object.
+ * - public void texture(ITexture tc): Sets the texture applied to the object.
+ * - public Point3D refPoint(Point3D x): Returns the reference point for the given point.
+ * - public void setAxes(Point3D o, Point3D vx, Point3D vy, Point3D vz): Sets the axes of the object.
+ * - public void drawStructureDrawFast(ZBuffer z): Draws the structure of the object using fast drawing method.
+ * - public boolean ISdrawStructureDrawFastIMPLEMENTED(ZBuffer z): Returns true if the fast drawing method is implemented for the object, false otherwise.
+ * - public void setPaintingAct(ZBuffer z, Scene s, PaintingAct pa): Sets the painting act for the object.
+ * - public Painter getPainter(): Returns the painter of the object.
+ * - public void setPainter(Painter painter): Sets the painter of the object.
+ * - public void paint(): Paints the object.
+ * - public Intersects.Intersection intersects(RtRay ray, RtIntersectInfo cii): Checks if the object intersects with the given ray.
+ * - public Representable intersects(Representable r2): Checks if the object intersects with the given Representable object.
+ * - public void become(Representable r): Becomes the given Representable object.
+ * - private void set(Representable r): Sets the given Representable object.
+ * - public int compareTo(Object o): Compares this object with the specified object for order.
+ * - public void draw(ZBufferImpl zBuffer): Draws the object on the ZBuffer.
+ * - public StructureMatrix getDeclaredProperty(String name): Returns the declared property with the given name.
+ * - public Map<String, StructureMatrix> getDeclaredDataStructure(): Returns the declared data structure of the object.
+ * - public Map<String, StructureMatrix> getDeclaredLists(): Returns the declared lists of the object.
+ * - public ITexture getTexture(): Returns the texture applied to the object.
+ * - public void setTexture(ITexture texture): Sets the texture applied to the object.
+ * - public Class getPropertyType(String propertyName) throws NoSuchMethodException: Returns the type of the property with the given name.
+ * - public void setProperty(String propertyName, Object value) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException: Sets the value of the property with
+ * the given name.
+ * - public Object getProperty(String propertyName) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException: Returns the value of the property with the given
+ * name.
+ * - public String toString(): Returns a string representation of the object.
+ * - public void declareProperties(): Declares the properties of the object.
+ * - public Map<String, StructureMatrix> declarations(): Returns the map of declarations.
+ * - public ITexture getCFAST(): Returns the CFAST texture of the object.
+ * - public void setCFAST(ITexture CFAST): Sets the CFAST texture of the object.
+ * - public void xmlRepresentation(String filesPath, StringBuilder stringBuilder, Double o): Generates the XML representation for the object with double value.
+ * - public void xmlRepresentation(String filesPath, StringBuilder stringBuilder, Boolean o): Generates the XML representation for the object with boolean value.
+ * - public void xmlRepresentation(String filesPath, StringBuilder stringBuilder, Integer o): Generates the XML representation for the object with integer value.
+ * - public void xmlRepresentation(String filesPath, StringBuilder stringBuilder, String o): Generates the XML representation for the object with string value.
+ * - public void xmlRepresentation(String filesPath, StringBuilder stringBuilder, File o): Generates the XML representation for the object with file value.
+ * - public void xmlRepresentation(String filesPath, MatrixPropertiesObject parent, StringBuilder stringBuilder, ArrayList o): Generates the XML representation for the object with
+ * array list value.
+ * - public void xmlRepresentation(String filesPath, StringBuilder stringBuilder, Object o): Generates the XML representation for the object with object value.
+ * - public void xmlRepresentation(String filesPath, StringBuilder stringBuilder, Representable is): Generates the XML representation for the object with representable value.
+ * - public void xmlRepresentation(String filesPath, MatrixPropertiesObject parent, StringBuilder stringBuilder): Generates the XML representation for the object.
+ * - public void xmlRepresentation(String filesPath, String name, StringBuilder stringBuilder, StructureMatrix is): Generates the XML representation for the object with structure
+ * matrix value.
+ * - public MatrixPropertiesObject copy(): Copies the object.
+ * - public int getDisplayType(): Returns the display type of the object.
+ * - public void setDisplayType(int displayType): Sets the display type of the object.
+ * - public double T(T t): Returns the T value of the object.
+ * - public Point3D calculerPointT(double t): Calculates the point on the object at the given T value.
+ * - public Point3D calculerCurveT(double u, double t): Calculates the point on the curve of the object at the given U and T values.
+ * - public Point3D calculerSurfaceT(double u, double v, double t): Calculates the point on the surface of the object at the given U, V, and T values.
+ * - public void setPosition(Point3D calcCposition): Sets the position of the object.
+ * - public Path getPath(String property): Returns the path for the given property of the object.
+ * - public Point3D computeSpherical(Point3D pxy, double scale): Computes the spherical coordinates for the given point.
+ * - public Point3D computeCubic(Point3D pxy, double scale): Computes the cubic coordinates for the given point.
+ * - public Point3D getVectX(): Returns the X vector of the object.
+ * - public void setVectX(Point3D vectX): Sets the X vector of the object.
+ * - public Point3D getVectY(): Returns the Y vector of the object.
+ * - public void setVectY(Point3D vectY): Sets the Y vector of the object.
+ * - public Point3D getVectZ(): Returns the Z vector of the object.
+ * - public void setVectZ(Point3D vectZ): Sets the Z vector of the object.
+ * - public void setOrig(Point3D orig): Sets the origin of the object.
+ * - public Point3D getOrig(): Returns the origin of the object.
+ * - public StructureMatrix<Point3D> getVectors(): Returns the vectors of the object.
+ */
 public class Representable /*extends RepresentableT*/ implements Serializable, Comparable, XmlRepresentable, MatrixPropertiesObject, TemporalComputedObject3D {
 
+    /**
+     * This variable represents a structure matrix of Point3D vectors.
+     * The structure matrix is used to store and manipulate a collection of Point3D vectors.
+     * The vectors can be accessed using various methods provided by the StructureMatrix class.
+     */
     protected StructureMatrix<Point3D> vectors;
-
+    /**
+     * Represents the display option for rendering all elements.
+     * The value of this variable is 0.
+     */
     public static final int DISPLAY_ALL = 0;
+    /***
+     * Represents the display type for rendering text quads on a surface.
+     * This variable is a constant with a value of 1.
+     * It is used as a parameter to control the display of text quads on a surface.
+     *
+     * @see Representable
+     * @see Representable#getDisplayType()
+     * @see Representable#setDisplayType(int)
+     */
     public static final int SURFACE_DISPLAY_TEXT_QUADS = 1;
+    /**
+     * The variable SURFACE_DISPLAY_COL_QUADS represents the number of quads used for surface display in a graphical application.
+     * It is a static final int variable with a value of 3.
+     * <p>
+     * This variable is defined in the class Representable, which is a superclass for various graphical representations.
+     */
     public static final int SURFACE_DISPLAY_COL_QUADS = 3;
+    /**
+     * Constant integer variable representing the display type of colored triangles on the surface.
+     * The value is set to 4.
+     */
     public static final int SURFACE_DISPLAY_COL_TRI = 4;
+    /**
+     * The number of lines used for displaying a surface.
+     */
     public static final int SURFACE_DISPLAY_LINES = 5;
+    /**
+     * The SURFACE_DISPLAY_POINTS variable represents the number of surface points to be displayed.
+     * It is a constant integer value that determines the level of detail for rendering surfaces.
+     * The higher the value, the more points will be displayed on the surface, resulting in a more detailed representation.
+     * The default value is 6.
+     */
     public static final int SURFACE_DISPLAY_POINTS = 6;
     public static final ITexture DEFAULT_TEXTURE = new TextureCol(Colors.random());
     private static final int SURFACE_DISPLAY_TEXT_TRI = 2;
@@ -60,20 +212,51 @@ public class Representable /*extends RepresentableT*/ implements Serializable, C
     public static int PATH_ELEM_REPRESENTABLE = 4;
     public final StructureMatrix<Rotation> rotation = new StructureMatrix<Rotation>(0, Rotation.class);
     protected double NFAST = 100;
-    protected RtMatiere materiau;
     protected ITexture CFAST = DEFAULT_TEXTURE;
     // protected Barycentre bc = new Barycentre();
     protected Representable parent;
+    /**
+     * Represents a scene object.
+     *
+     * <p>
+     * A scene is a container that holds various objects and is used for rendering purposes.
+     * It provides methods to set and retrieve the objects within the scene.
+     * </p>
+     *
+     * <p>
+     * This variable is declared as protected, which means it can only be accessed
+     * within the class or its subclasses.
+     * </p>
+     *
+     * @see Representable
+     */
     protected Scene scene;
+    /**
+     * Represents a texture
+     */
     protected ITexture texture = DEFAULT_TEXTURE;
     protected Render render; //= Render.getInstance(0, -1);
     protected StructureMatrix<T> T; // = new StructureMatrix<T>(0, one.empty3.library.T.class);
-    private int displayType = 0; //SURFACE_DISPLAY_TEXT_QUADS;
+    /**
+     * The display type of an object.
+     */
+    private int displayType = SURFACE_DISPLAY_TEXT_QUADS;
     private String id;
     private Painter painter = null;
     private int RENDERING_DEFAULT = 0;
     private Map<String, StructureMatrix> declaredDataStructure;// = Collections.synchronizedMap(new HashMap());
     private Map<String, StructureMatrix> declaredLists;//= new HashMap<>();
+
+    /**
+     * Represents an object that can be represented in three-dimensional space.
+     * This class provides a constructor that initializes the rotation and vectors
+     * of the object based on its type.
+     * <p>
+     * The rotation is set to an empty rotation object if the object is not an instance of
+     * Matrix33, Point3D, or Camera. The vectors are set to a default StructureMatrix
+     * with Point3D objects representing the X, Y, Z, and origin vectors.
+     * </p>
+     */
     public Representable() {
         if (!(this instanceof Matrix33 || this instanceof Point3D || this instanceof Camera)) {
             rotation.setElem(new Rotation());
@@ -96,6 +279,7 @@ public class Representable /*extends RepresentableT*/ implements Serializable, C
         oriented.texture(a.texture());
         return oriented;
     }
+
     public static void setPaintingActForClass(ZBuffer z, Scene s, PaintingAct pa) {
         Painter p = null;
         classPainters().add(new Painter(z, s, Representable.class));
@@ -115,7 +299,7 @@ public class Representable /*extends RepresentableT*/ implements Serializable, C
     }
 
     public void setRotation(StructureMatrix<Rotation> rotation) {
-        if(rotation!=null && rotation.getElem()!=null){
+        if (rotation != null && rotation.getElem() != null) {
             this.rotation.setElem(rotation.getElem());
         }
     }
@@ -165,7 +349,7 @@ public class Representable /*extends RepresentableT*/ implements Serializable, C
 
 
     public Point3D refPoint(Point3D x) {
-        if(!(this instanceof Point3D) && !(this instanceof Matrix33))
+        if (!(this instanceof Point3D) && !(this instanceof Matrix33))
             return getOrientedPoint(x);
         else
             return x;
@@ -177,6 +361,7 @@ public class Representable /*extends RepresentableT*/ implements Serializable, C
         setVectY(vy);
         setVectZ(vz);
     }
+
     /*__
      * DOn't call ZBuffer dessiine methods here: it would loop.
      *
@@ -257,17 +442,28 @@ public class Representable /*extends RepresentableT*/ implements Serializable, C
     public void draw(ZBufferImpl zBuffer) {
     }
 
+    /**
+     * Retrieves the value of the declared property with the given name.
+     *
+     * @param name the name of the property to retrieve
+     * @return the value of the declared property, or null if the property was not found
+     */
     @Override
     public StructureMatrix getDeclaredProperty(String name) {
         declareProperties();
         for (String s : getDeclaredDataStructure().keySet()) {
-            if(s.startsWith(name)) {
+            if (s.startsWith(name)) {
                 return getDeclaredDataStructure().get(s);
             }
         }
         return null;
     }
 
+    /**
+     * Retrieves the declared data structure of the Representable class.
+     *
+     * @return the declared data structure, which is a map with string keys and StructureMatrix values
+     */
     public Map<String, StructureMatrix> getDeclaredDataStructure() {
         if ((!(this instanceof Point3D)) && (declaredDataStructure == null))
             declaredDataStructure = Collections.synchronizedMap(new HashMap());
@@ -288,20 +484,45 @@ public class Representable /*extends RepresentableT*/ implements Serializable, C
         this.texture = texture;
     }
 
+    /***
+     * Retrieves the type of the property with the given name.
+     *
+     * @param propertyName the name of the property
+     * @return the type of the property
+     * @throws NoSuchMethodException if the property getter method is not found
+     */
     public Class getPropertyType(String propertyName) throws NoSuchMethodException {
         Method propertyGetter = null;
         propertyGetter = this.getClass().getMethod("get" + ("" + propertyName.charAt(0)).toUpperCase() + (propertyName.length() > 1 ? propertyName.substring(1) : ""));
         return propertyGetter.getReturnType();
     }
 
+    /**
+     * Sets the value of the property with the given name.
+     *
+     * @param propertyName the name of the property
+     * @param value        the value to be set
+     * @throws InvocationTargetException if the invoked method throws an exception
+     * @throws IllegalAccessException    if the invoked method is not accessible
+     * @throws NoSuchMethodException     if the property setter method is not found
+     */
     public void setProperty(String propertyName, Object value) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException {
         Method propertySetter = null;
 
-        propertySetter = this.getClass().getMethod("set" + ("" + propertyName.charAt(0)).toUpperCase() + (propertyName.substring(1)), value==null?null:value.getClass());
+        propertySetter = this.getClass().getMethod("set" + ("" + propertyName.charAt(0)).toUpperCase() + (propertyName.substring(1)), value == null ? null : value.getClass());
         propertySetter.invoke(this, value);
         Logger.getAnonymousLogger().log(Level.INFO, "RType : " + this.getClass().getName() + " Property: " + propertyName + " New Value set " + getProperty(propertyName));
     }
 
+    /**
+     * Retrieves the value of the property with the given name.
+     *
+     * @param propertyName the name of the property to retrieve
+     * @return the value of the declared property, or null if the property was not found
+     * @throws InvocationTargetException if the invoked method throws an exception
+     * @throws IllegalAccessException    if the invoked method is not accessible
+     * @throws NoSuchMethodException     if the property getter method is not found
+     */
     public Object getProperty(String propertyName) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException {
         Method propertySetter = null;
         propertySetter = this.getClass().getMethod("get" + ("" + propertyName.charAt(0)).toUpperCase() + propertyName.substring(1));
@@ -312,6 +533,12 @@ public class Representable /*extends RepresentableT*/ implements Serializable, C
         return "Representable()";
     }
 
+    /**
+     * Declares the properties of the Representable class.
+     * This method clears the declaredDataStructure map and adds specific properties to it based on the object's rotation and type.
+     * If the object's rotation is not null and the object is not an instance of Point3D, a "rotation/Rotation" property is added.
+     * The "vectors/vectors" property is always added to the map.
+     */
     public void declareProperties() {
         getDeclaredDataStructure().clear();
         if (getRotation() != null
@@ -367,9 +594,9 @@ public class Representable /*extends RepresentableT*/ implements Serializable, C
                 fileOutputStream.write(bytes, 0, read);
             }
 
-        } catch (Exception ex) {}
+        } catch (Exception ex) {
+        }
 
-        
 
     }
 
@@ -569,21 +796,21 @@ public class Representable /*extends RepresentableT*/ implements Serializable, C
         Representable representable1 = this;
         Object value = null;
         StructureMatrix declaredProperty = null;
-        int i=-1;
-        int j=-1;
+        int i = -1;
+        int j = -1;
         for (int k = 0; k < split.length; k++) {
             String split0 = split[k].split("/")[0];
-            if(value!=null) {
-                if(value instanceof Representable) {
-                    representable1 = ((Representable)value);
+            if (value != null) {
+                if (value instanceof Representable) {
+                    representable1 = ((Representable) value);
                 }
 
             }
             String[] split1 = split0.split(":");
-            if(split1.length>1) {
+            if (split1.length > 1) {
                 i = Integer.parseInt(split1[1]);
             }
-            if(split1.length>2) {
+            if (split1.length > 2) {
                 j = Integer.parseInt(split1[2]);
             }
 
@@ -592,7 +819,7 @@ public class Representable /*extends RepresentableT*/ implements Serializable, C
             if (declaredProperty == null)
                 return null;
             else {
-                if(declaredProperty instanceof StructureMatrix) {
+                if (declaredProperty instanceof StructureMatrix) {
 
                     StructureMatrix sm = (StructureMatrix) declaredProperty;
                     switch (sm.getDim()) {
@@ -619,12 +846,12 @@ public class Representable /*extends RepresentableT*/ implements Serializable, C
 
     public Point3D computeSpherical(Point3D pxy, double scale) {
         for (Point3D point3D : vectors.data1d) {
-            if(point3D==null)
+            if (point3D == null)
                 return pxy;
         }
         double cos = Math.cos(-Math.PI / 2 + Math.PI * pxy.get(1));
         return getOrig().plus(
-                 getVectX().mult(
+                getVectX().mult(
                                 Math.cos(2.0 * Math.PI * pxy.get(0)) * cos).plus(
                                 getVectY().mult(
                                         Math.sin(2.0 * Math.PI * pxy.get(1)) * cos))
@@ -634,14 +861,15 @@ public class Representable /*extends RepresentableT*/ implements Serializable, C
 
     public Point3D computeCubic(Point3D pxy, double scale) {
         for (Point3D point3D : vectors.data1d) {
-            if(point3D==null)
+            if (point3D == null)
                 return pxy;
         }
         return getOrig().plus(getVectX().mult(pxy.get(0)).plus(getVectY().mult(pxy.get(1)).plus(getVectZ().mult(pxy.get(2)))).norme1().mult(scale));
     }
+
     public Point3D getVectX() {
         Point3D elem = vectors.getElem(0);
-        return elem==null?Point3D.X:elem;
+        return elem == null ? Point3D.X : elem;
     }
 
     public void setVectX(Point3D vectX) {
@@ -650,7 +878,7 @@ public class Representable /*extends RepresentableT*/ implements Serializable, C
 
     public Point3D getVectY() {
         Point3D elem = vectors.getElem(1);
-        return elem==null?Point3D.Y:elem;
+        return elem == null ? Point3D.Y : elem;
     }
 
     public void setVectY(Point3D vectY) {
@@ -659,18 +887,20 @@ public class Representable /*extends RepresentableT*/ implements Serializable, C
 
     public Point3D getVectZ() {
         Point3D elem = vectors.getElem(2);
-        return elem==null?Point3D.Y:elem;
+        return elem == null ? Point3D.Y : elem;
     }
 
     public void setVectZ(Point3D vectZ) {
         this.vectors.setElem(vectZ, 2);
     }
+
     public void setOrig(Point3D orig) {
 
     }
+
     public Point3D getOrig() {
         Point3D elem = vectors.getElem(3);
-        return elem==null?Point3D.O0:elem;
+        return elem == null ? Point3D.O0 : elem;
     }
 
     public StructureMatrix<Point3D> getVectors() {
