@@ -36,7 +36,7 @@ public class ChatHumain extends RepresentableConteneur {
     private final StructureMatrix<Sphere> queue = new StructureMatrix<>(0, Sphere.class);
     private StructureMatrix<TubulaireN2> corps = new StructureMatrix<>(0, TubulaireN2.class);
     private StructureMatrix<TubulaireN2> pattes = new StructureMatrix<>(1, TubulaireN2.class);
-    private one.empty3.tests.coursecheval.ChatHumain.ChatMovements move;
+    private ChatMovements move;
 
 
     public ChatHumain(ParametricSurface psGround) {
@@ -114,7 +114,7 @@ public class ChatHumain extends RepresentableConteneur {
         super.texture(tc);
     }
 
-    public one.empty3.tests.coursecheval.ChatHumain.ChatMovements getMoves() {
+    public ChatMovements getMoves() {
         return move;
     }
 
@@ -138,9 +138,9 @@ public class ChatHumain extends RepresentableConteneur {
     }
 
     final static class ChatMovements extends Move {
-        private final one.empty3.tests.coursecheval.ChatHumain cheval;
+        private final ChatHumain cheval;
 
-        public ChatMovements(one.empty3.tests.coursecheval.ChatHumain cheval) {
+        public ChatMovements(ChatHumain cheval) {
             this.cheval = cheval;
         }
 
@@ -167,19 +167,20 @@ public class ChatHumain extends RepresentableConteneur {
             tete.getElem().getCircle().setAxis(axe);
         }
 
-        public one.empty3.tests.coursecheval.ChatHumain[] trotte(double speed, double seconds, int fps, boolean startsLeftFront, double angleTurn, double distance) {
-            one.empty3.tests.coursecheval.ChatHumain[] cheval1 = new one.empty3.tests.coursecheval.ChatHumain[(int) (seconds * fps)];
+        public ChatHumain[] trotte(double speed, double seconds, int fps, boolean startsLeftFront, double angleTurn, double distance) {
+            ChatHumain[] cheval1 = new ChatHumain[(int) (seconds * fps)];
 
             for (int i = 0; i < cheval1.length; i++) {
-                cheval1[i] = new one.empty3.tests.coursecheval.ChatHumain(cheval.psGround.getElem());
+                cheval1[i] = new ChatHumain(cheval.psGround.getElem());
                 cheval1[i].texture(this.cheval.texture());
-                double sin = Math.sin(speed * 2.0 * Math.PI * i / seconds / fps);
-                double cos = Math.cos(speed * 2.0 * Math.PI * i / seconds / fps);
+                double sin = Math.sin((speed * 2.0 * Math.PI * i) / seconds / fps);
+                double cos = Math.cos((speed * 2.0 * Math.PI * i) / seconds / fps);
                 if (!startsLeftFront) {
                     double a = cos;
                     cos = sin;
                     sin = a;
                 }
+                System.out.println("sin : " + sin);
                 ((CourbeParametriquePolynomiale) cheval1[i].pattes.getElem(0)
                         .getSoulCurve().getElem()).getCoefficients().getElem(1).setX(50 + sin * distance / 2);
                 ((CourbeParametriquePolynomiale) cheval1[i].pattes.getElem(1)
@@ -200,47 +201,6 @@ public class ChatHumain extends RepresentableConteneur {
 
                 moveTete(cheval1[i].tete, cheval1[i].corps.getElem());
             }
-            return cheval1;
-        }
-
-        public one.empty3.tests.coursecheval.ChatHumain[] galope(double speed, double seconds, int fps, boolean startsLeftFront, double angleTurn, int distance) {
-            one.empty3.tests.coursecheval.ChatHumain[] cheval1 = new one.empty3.tests.coursecheval.ChatHumain[(int) (seconds * fps)];
-            for (int i = 0; i < cheval1.length; i++) {
-                cheval1[i] = new one.empty3.tests.coursecheval.ChatHumain(cheval.psGround.getElem());
-                cheval1[i].texture(this.cheval.texture());
-                double sin = Math.sin(speed * 2.0 * Math.PI * i / seconds / fps);
-                double cos = Math.cos(speed * 2.0 * Math.PI * i / seconds / fps);
-                if (!startsLeftFront) {
-                    double a = cos;
-                    cos = sin;
-                    sin = a;
-                }
-                ((CourbeParametriquePolynomiale) cheval1[i].pattes.getElem(0)
-                        .getSoulCurve().getElem()).getCoefficients().getElem(1).setX(50 + sin * distance / 2);
-                ((CourbeParametriquePolynomiale) cheval1[i].pattes.getElem(1)
-                        .getSoulCurve().getElem()).getCoefficients().getElem(1).setX(50 + cos * distance / 2);
-                ((CourbeParametriquePolynomiale) cheval1[i].pattes.getElem(2)
-                        .getSoulCurve().getElem()).getCoefficients().getElem(1).setX(-50 + sin * distance / 2);
-                ((CourbeParametriquePolynomiale) cheval1[i].pattes.getElem(3)
-                        .getSoulCurve().getElem()).getCoefficients().getElem(1).setX(-50 + cos * distance / 2);
-
-                ((CourbeParametriquePolynomiale) cheval1[i].pattes.getElem(0)
-                        .getSoulCurve().getElem()).getCoefficients().getElem(2).setX(50 + sin * distance);
-                ((CourbeParametriquePolynomiale) cheval1[i].pattes.getElem(1)
-                        .getSoulCurve().getElem()).getCoefficients().getElem(2).setX(50 + cos * distance);
-                ((CourbeParametriquePolynomiale) cheval1[i].pattes.getElem(2)
-                        .getSoulCurve().getElem()).getCoefficients().getElem(2).setX(-50 + sin * distance);
-                ((CourbeParametriquePolynomiale) cheval1[i].pattes.getElem(3)
-                        .getSoulCurve().getElem()).getCoefficients().getElem(2).setX(-50 + cos * distance);
-
-                moveTete(cheval1[i].tete, cheval1[i].corps.getElem());
-
-            }
-            return cheval1;
-        }
-
-        public one.empty3.tests.coursecheval.ChatHumain[] saute(double speed, double seconds, int fps, boolean startsLeftFront, double angleTurn, int i) {
-            one.empty3.tests.coursecheval.ChatHumain[] cheval1 = new one.empty3.tests.coursecheval.ChatHumain[(int) (seconds * fps)];
 
             return cheval1;
         }

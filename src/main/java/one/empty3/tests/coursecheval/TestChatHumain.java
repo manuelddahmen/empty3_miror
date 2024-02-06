@@ -53,8 +53,7 @@ public class TestChatHumain extends TestObjetSub {
 
     public static final int SECONDS = 15;
     public static final int FPS = 25;
-    private static final int TURNS = 1;
-    private static final int REAL_DAYS = 1;
+    private static final int TURNS = 3;
     private int i = -1;
     private BufferedImage image;
     private Logger logger;
@@ -65,7 +64,7 @@ public class TestChatHumain extends TestObjetSub {
     public static void main(String[] args) {
         TestChatHumain testCourseChat = new TestChatHumain();
         testCourseChat.loop(true);
-        testCourseChat.setResolution(320, 240);
+        testCourseChat.setResolution(Resolution.HD1080RESOLUTION.x(), Resolution.HD1080RESOLUTION.y());
         Thread thread = new Thread(testCourseChat);
         testCourseChat.setFps(50);
         testCourseChat.setMaxFrames(SECONDS * FPS * TURNS);
@@ -75,7 +74,6 @@ public class TestChatHumain extends TestObjetSub {
     @Override
     public void ginit() {
         logger = Logger.getLogger(this.getClass().getCanonicalName());
-        setMaxFrames(FPS * SECONDS);
 
         z().ratioVerticalAngle();
 
@@ -83,7 +81,7 @@ public class TestChatHumain extends TestObjetSub {
         //parametricSurface = new Sphere(Point3D.O0, 5);
 
 
-        z().setDisplayType(ZBufferImpl.SURFACE_DISPLAY_COL_QUADS);
+        z().setDisplayType(ZBufferImpl.DISPLAY_ALL);
 
         z().texture(new ColorTexture(Color.BLACK));
         scene().texture(new ColorTexture(Color.BLACK));
@@ -136,28 +134,28 @@ public class TestChatHumain extends TestObjetSub {
             switch ((int) (Math.random() * 2)) {
                 case 0:
                     moveIndex = 0;
-                    trotte = cheval.getMoves().trotte(3, SECONDS, getFps(), true, 0.0, 40);
+                    trotte = cheval.getMoves().trotte(30, SECONDS, getFps(), true, 0.0, 40);
                     break;
                 case 1:
                     moveIndex = 0;
-                    trotte = cheval.getMoves().galope(8, SECONDS, getFps(), true, 0.0, 35);
+                    trotte = cheval.getMoves().trotte(30, SECONDS, getFps(), true, 0.0, 40);
                     break;
                 case 2:
                     moveIndex = 0;
-                    trotte = cheval.getMoves().trotte(3, SECONDS, getFps(), true, 0.0, 40);
+                    trotte = cheval.getMoves().trotte(30, SECONDS, getFps(), true, 0.0, 40);
                     break;
                 default:
                     break;
             }
         }
 
-        positionAngles = Point3D.circle((2.0 * Math.PI * frame()) / getMaxFrames() + Math.PI / 2);
+        positionAngles.setX(((2.0 * Math.PI * frame()) / getMaxFrames()) / TURNS + Math.PI / 2);
         //positionUv = positionUv.plus(Point3D.random(0.2));
+
 
         cheval.setAngleXyZ(positionAngles.getX(), 0.0);
         //cheval.setOrig(positionUv.plus(Point3D.Y.mult(100)));
 
-        final int i1 = FPS * SECONDS * REAL_DAYS;
         double u = ((double) getMaxFrames() - frame()) / getMaxFrames();
 
         Plan3D plane = new Plan3D(new Point3D(50.0, 0.0, 50.0), new Point3D(0.0, 0.0, -50.0), new Point3D(-50.0, 0.0, 0.0));
