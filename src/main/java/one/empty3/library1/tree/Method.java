@@ -25,6 +25,7 @@ package one.empty3.library1.tree;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Consumer;
 
 public class Method {
     private String name;
@@ -111,13 +112,32 @@ public class Method {
 
     @Override
     public String toString() {
-        return "Method{" +
+        final String[] string = {"Method{" +
                 "name='" + name + '\'' +
                 ", ofClass=" + ofClass +
                 ", parameterList=" + parameterList +
                 ", variableList=" + variableList +
                 ", instructions=" + instructions +
                 ", scope='" + scope + '\'' +
-                '}';
+                '}'};
+        parameterList.forEach(new Consumer<Variable>() {
+            @Override
+            public void accept(Variable variable) {
+                string[0] += variable.toString();
+            }
+        });
+        variableList.forEach(new Consumer<Variable>() {
+            @Override
+            public void accept(Variable variable) {
+                string[0] += variable.toString();
+            }
+        });
+        instructions.forEach(new Consumer<Instruction>() {
+            @Override
+            public void accept(Instruction instruction) {
+                string[0] += instruction.toString();
+            }
+        });
+        return string[0];
     }
 }

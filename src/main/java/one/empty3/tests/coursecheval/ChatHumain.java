@@ -186,18 +186,18 @@ public class ChatHumain extends RepresentableConteneur {
                 ((CourbeParametriquePolynomiale) cheval1[i].pattes.getElem(1)
                         .getSoulCurve().getElem()).getCoefficients().getElem(1).setX(50 + cos * distance / 2);
                 ((CourbeParametriquePolynomiale) cheval1[i].pattes.getElem(2)
-                        .getSoulCurve().getElem()).getCoefficients().getElem(1).setX(-50 + sin * distance / 2);
-                ((CourbeParametriquePolynomiale) cheval1[i].pattes.getElem(3)
                         .getSoulCurve().getElem()).getCoefficients().getElem(1).setX(-50 + cos * distance / 2);
+                ((CourbeParametriquePolynomiale) cheval1[i].pattes.getElem(3)
+                        .getSoulCurve().getElem()).getCoefficients().getElem(1).setX(-50 + sin * distance / 2);
 
                 ((CourbeParametriquePolynomiale) cheval1[i].pattes.getElem(0)
                         .getSoulCurve().getElem()).getCoefficients().getElem(2).setX(50 + sin * distance);
                 ((CourbeParametriquePolynomiale) cheval1[i].pattes.getElem(1)
                         .getSoulCurve().getElem()).getCoefficients().getElem(2).setX(50 + cos * distance);
                 ((CourbeParametriquePolynomiale) cheval1[i].pattes.getElem(2)
-                        .getSoulCurve().getElem()).getCoefficients().getElem(2).setX(-50 + sin * distance);
-                ((CourbeParametriquePolynomiale) cheval1[i].pattes.getElem(3)
                         .getSoulCurve().getElem()).getCoefficients().getElem(2).setX(-50 + cos * distance);
+                ((CourbeParametriquePolynomiale) cheval1[i].pattes.getElem(3)
+                        .getSoulCurve().getElem()).getCoefficients().getElem(2).setX(-50 + sin * distance);
 
                 moveTete(cheval1[i].tete, cheval1[i].corps.getElem());
             }

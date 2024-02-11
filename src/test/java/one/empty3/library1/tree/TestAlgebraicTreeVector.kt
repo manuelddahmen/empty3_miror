@@ -758,8 +758,13 @@ class TestAlgebraicTreeVector() {
 
         val input =
             "package one.empty3;\n\n"
-
-        val parse: Int = stringAnalyser.parse(input)
+        var parse = 0
+        try {
+            parse = stringAnalyser.parse(input)
+            parse = stringAnalyser.mPosition
+        } catch (ex: RuntimeException) {
+            ex.printStackTrace()
+        }
         stringAnalyser.definitions.keys.sorted().forEach {
             if (it != null) {
                 println(
@@ -791,7 +796,13 @@ class TestAlgebraicTreeVector() {
                     "\t}\n" +
                     "}\n"
 
-        val parse: Int = stringAnalyser.parse(input)
+        var parse = 0
+        try {
+            parse = stringAnalyser.parse(input)
+            parse = stringAnalyser.mPosition
+        } catch (ex: RuntimeException) {
+            ex.printStackTrace()
+        }
         stringAnalyser.definitions.keys.sorted().forEach {
             if (it != null) {
                 println(
@@ -823,21 +834,26 @@ class TestAlgebraicTreeVector() {
                     "\t\treturn e;\n" +
                     "\t}\n" +
                     "}\n"
-
-        val parse: Int = stringAnalyser.parse(input)
-        stringAnalyser.definitions.keys.sorted().forEach {
-            if (it != null) {
-                println(
-                    "[" + it + "]\n" + stringAnalyser.definitions.get(it)!!
-                        .isSuccessful() + "\n" + stringAnalyser.definitions.get(it) + "\n"
-                )
-            }
+        var parse: Int = 0
+        try {
+            parse = stringAnalyser.parse(input)
+            parse = stringAnalyser.mPosition
+        } catch (ex: RuntimeException) {
         }
-        println("" + parse + "/" + input.length)
+        /*        stringAnalyser.definitions.keys.sorted().forEach {
+                    if (it != null) {
+                        println(
+                            "[" + it + "]\n" + stringAnalyser.definitions.get(it)!!
+                                .isSuccessful() + "\n" + stringAnalyser.definitions.get(it) + "\n"
+                        )
+                    }
+                }
+        */        println("" + parse + "/" + input.length)
         println(stringAnalyser.construct)
-        if (parse < input.length)
+        /*if (parse < input.length)
             println(input.substring(parse))
-        assertTrue(parse >= input.length || input.substring(parse).trim().isEmpty())
+        */
+        assertTrue(parse >= input.length || (parse >= 0 && input.substring(parse).trim().isEmpty()))
     }
 
     @Test
@@ -862,19 +878,23 @@ class TestAlgebraicTreeVector() {
                     "\t}\n" +
                     "}\n"
 
-        val parse: Int = stringAnalyser.parse(input)
-        stringAnalyser.definitions.keys.sorted().forEach {
-            if (it != null) {
-                println(
-                    "[" + it + "]\n" + stringAnalyser.definitions.get(it)!!
-                        .isSuccessful() + "\n" + stringAnalyser.definitions.get(it) + "\n"
-                )
-            }
+        var parse: Int = 0
+        try {
+            parse = stringAnalyser.parse(input)
+            parse = stringAnalyser.mPosition
+        } catch (ex: RuntimeException) {
         }
+        /*        stringAnalyser.definitions.keys.sorted().forEach {
+                    if (it != null) {
+                        println(
+                            "[" + it + "]\n" + stringAnalyser.definitions.get(it)!!
+                                .isSuccessful() + "\n" + stringAnalyser.definitions.get(it) + "\n"
+                        )
+                    }
+                }
+        */
         println("" + parse + "/" + input.length)
         println(stringAnalyser.construct)
-        if (parse < input.length)
-            println(input.substring(parse))
         assertTrue(parse >= input.length || input.substring(parse).trim().isEmpty())
     }
 
