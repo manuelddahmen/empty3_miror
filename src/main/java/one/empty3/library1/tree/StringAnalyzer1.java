@@ -268,8 +268,8 @@ public class StringAnalyzer1 {
         @Override
         public int parse(String input, int position) {
             if (position >= input.length() || input.substring(position).trim().isEmpty()) {
-                setSuccessful(false);
-                return position;
+                mPosition = position;
+                throw new RuntimeException("TokenString : position>=input.length()");
             }
             position = super.parse(input, position);
             int position1 = position;
@@ -303,8 +303,8 @@ public class StringAnalyzer1 {
         @Override
         public int parse(String input, int position) {
             if (position >= input.length() || input.substring(position).trim().isEmpty()) {
-                setSuccessful(false);
-                return position;
+                mPosition = position;
+                throw new RuntimeException("TokenString : position>=input.length()");
             }
             int position1 = super.parse(input, position);
             int position2 = position1;
@@ -346,7 +346,7 @@ public class StringAnalyzer1 {
 
     class TokenConstantModifier extends TokenChoiceStringMandatory {
         public TokenConstantModifier() {
-            super(new String[]{"final"/*, ""*/});
+            super(new String[]{"final", ""});
         }
 
     }
@@ -361,8 +361,8 @@ public class StringAnalyzer1 {
         @Override
         public int parse(String input, int position) {
             if (position >= input.length() || input.substring(position).trim().isEmpty()) {
-                setSuccessful(true);
-                return input.length();
+                mPosition = position;
+                throw new RuntimeException("TokenString : position>=input.length()");
             }
             position = super.parse(input, position);
             return processNext(input, position);
@@ -381,8 +381,8 @@ public class StringAnalyzer1 {
         @Override
         public int parse(String input, int position) {
             if (position >= input.length() || input.substring(position).trim().isEmpty()) {
-                setSuccessful(true);
-                return input.length();
+                mPosition = position;
+                throw new RuntimeException("TokenString : position>=input.length()");
             }
             position = super.skipBlanks(input, position);
             for (Token token : choices) {
@@ -420,8 +420,8 @@ public class StringAnalyzer1 {
         @Override
         public int parse(String input, int position) {
             if (position >= input.length() || input.substring(position).trim().isEmpty()) {
-                setSuccessful(true);
-                return input.length();
+                mPosition = position;
+                throw new RuntimeException("TokenString : position>=input.length()");
             }
             position = super.parse(input, position) + position;
             int position1 = position;
@@ -459,8 +459,8 @@ public class StringAnalyzer1 {
         @Override
         public int parse(String input, int position) {
             if (position >= input.length() || input.substring(position).trim().isEmpty()) {
-                setSuccessful(true);
-                return input.length();
+                mPosition = position;
+                throw new RuntimeException("TokenString : position>=input.length()");
             }
             int position1 = position;
             int i = position1;
@@ -598,8 +598,8 @@ public class StringAnalyzer1 {
         @Override
         public int parse(String input, int position) {
             if (position >= input.length() || input.substring(position).trim().isEmpty()) {
-                setSuccessful(true);
-                return input.length();
+                mPosition = position;
+                throw new RuntimeException("TokenString : position>=input.length()");
             }
             position = super.parse(input, position);
             boolean allNotOk = false;
@@ -655,8 +655,8 @@ public class StringAnalyzer1 {
         @Override
         public int parse(String input, int position) {
             if (position >= input.length() || input.substring(position).trim().isEmpty()) {
-                setSuccessful(true);
-                return input.length();
+                mPosition = position;
+                throw new RuntimeException("TokenString : position>=input.length()");
             }
             position = super.parse(input, position);
             int position1 = position;
@@ -695,9 +695,9 @@ public class StringAnalyzer1 {
 
         @Override
         public int parse(String input, int position) {
-            if (position >= input.length() || input.substring(position).trim().isEmpty()) {
-                setSuccessful(true);
-                return input.length();
+            if (position >= input.length() || input.substring(position)..trim().isEmpty()) {
+                mPosition = position;
+                throw new RuntimeException("TokenString : position>=input.length()");
             }
             position = super.parse(input, position);
             boolean allOk = true;
@@ -771,8 +771,8 @@ public class StringAnalyzer1 {
         @Override
         public int parse(String input, int position) {
             if (position >= input.length() || input.substring(position).trim().isEmpty()) {
-                setSuccessful(true);
-                return input.length();
+                mPosition = position;
+                throw new RuntimeException("TokenString : position>=input.length()");
             }
             int position1 = super.parse(input, position);
             int i = position1;
@@ -842,8 +842,8 @@ public class StringAnalyzer1 {
         @Override
         public int parse(String input, int position) {
             if (position >= input.length() || input.substring(position).trim().isEmpty()) {
-                setSuccessful(true);
-                return input.length();
+                mPosition = position;
+                throw new RuntimeException("TokenString : position>=input.length()");
             }
             position = super.parse(input, position);
             int i = position;
@@ -881,8 +881,8 @@ public class StringAnalyzer1 {
         @Override
         public int parse(String input, int position) {
             if (position >= input.length() || input.substring(position).trim().isEmpty()) {
-                setSuccessful(true);
-                return input.length();
+                mPosition = position;
+                throw new RuntimeException("TokenString : position>=input.length()");
             }
             position = super.parse(input, position);
             int i = position;
@@ -916,7 +916,7 @@ public class StringAnalyzer1 {
             @Override
             public boolean action() {
                 String string = getToken().isSuccessful() ? ((TokenName) getToken()).getName() : "";
-                if (string != null && !string.isBlank()) {
+                if (string != null && !string.isEmpty()) {
                     construct.packageName = string;
                     construct.currentClass.setPackageName(construct.packageName);
                 }
@@ -929,8 +929,7 @@ public class StringAnalyzer1 {
             public boolean action() {
                 if (getToken().isSuccessful()) {
                     String choice = (((TokenConstantModifier) token)).getChoice();
-                    String string = getToken().isSuccessful() ? ((TokenName) getToken()).getName() : "";
-                    if (choice != null && !choice.isBlank()) {
+                    if (choice != null && !choice.isEmpty()) {
                         construct.currentClass.setFinal(true);
                     }
                 }
@@ -943,7 +942,7 @@ public class StringAnalyzer1 {
             public boolean action() {
                 if (token.isSuccessful()) {
                     String string = getToken().isSuccessful() ? ((TokenName) getToken()).getName() : "";
-                    if (string != null && !string.isBlank()) {
+                    if (string != null && !string.isEmpty()) {
                         construct.currentClass.setName(string);
                     }
 
@@ -971,7 +970,7 @@ public class StringAnalyzer1 {
                 if (token.isSuccessful()) {
                     Variable variable = new Variable();
                     String string = tokenVariableScope.getChoice();
-                    if (string != null && !string.isBlank()) {
+                    if (string != null && !string.isEmpty()) {
                         construct.currentClass.getVariableList().add(variable);
                         variable.setScope(string);
                     }
@@ -990,7 +989,7 @@ public class StringAnalyzer1 {
                     if (variableList.isEmpty())
                         variableList.add(new Variable());
                     String name = ((TokenQualifiedName) token).getName();
-                    if (name != null && name.isBlank()) {
+                    if (name != null && !name.isEmpty()) {
                         variableList.get(variableList.size() - 1).setName(name);
                     }
 
@@ -1007,7 +1006,7 @@ public class StringAnalyzer1 {
                     methodList.add(new Method());
                 if (token.isSuccessful()) {
                     String name = ((TokenClassScope) token).getChoice();
-                    if (name != null && name.isBlank()) {
+                    if (name != null && !name.isEmpty()) {
                         methodList.get(methodList.size() - 1).setScope(name);
                     }
                     return true;
@@ -1024,7 +1023,7 @@ public class StringAnalyzer1 {
                     methodList.add(new Method());
                 if (token.isSuccessful()) {
                     String name = ((TokenName) token).getName();
-                    if (name != null && name.isBlank()) {
+                    if (name != null && !name.isEmpty()) {
                         methodList.get(methodList.size() - 1).setName(((TokenName) token).getName());
                     }
                     return true;
@@ -1045,7 +1044,7 @@ public class StringAnalyzer1 {
             public boolean action() {
                 if (token.isSuccessful()) {
                     String name = ((TokenVariableInMethodName) token).getName();
-                    if (name != null && name.isBlank()) {
+                    if (name != null && !name.isEmpty()) {
                         List<Instruction> instructions = construct.methodMembers.get(construct.methodMembers.size() - 1).getInstructions();
                         Instruction instruction = instructions.get(instructions.size() - 1);
                         instruction.setType(name);
