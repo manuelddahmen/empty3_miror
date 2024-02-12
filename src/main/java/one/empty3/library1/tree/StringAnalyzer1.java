@@ -314,15 +314,12 @@ public class StringAnalyzer1 {
                     this.choice = s;
                     position2 = position2 + s.length();
                     success = true;
-                    break;
+                    return processNext(input, position2);
                 }
             }
-            if (success) {
-                return processNext(input, position2);
-            } else {
-                setSuccessful(false);
-                return position1;
-            }
+
+            setSuccessful(false);
+            return position1;
         }
 
         public String getChoice() {
@@ -346,7 +343,7 @@ public class StringAnalyzer1 {
 
     class TokenConstantModifier extends TokenChoiceStringMandatory {
         public TokenConstantModifier() {
-            super(new String[]{"final", ""});
+            super(new String[]{"final"/*, ""*/});
         }
 
     }
@@ -695,7 +692,7 @@ public class StringAnalyzer1 {
 
         @Override
         public int parse(String input, int position) {
-            if (position >= input.length() || input.substring(position)..trim().isEmpty()) {
+            if (position >= input.length() || input.substring(position).trim().isEmpty()) {
                 mPosition = position;
                 throw new RuntimeException("TokenString : position>=input.length()");
             }
