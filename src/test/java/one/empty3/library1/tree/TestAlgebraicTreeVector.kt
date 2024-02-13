@@ -834,26 +834,7 @@ class TestAlgebraicTreeVector() {
                     "\t\treturn e;\n" +
                     "\t}\n" +
                     "}\n"
-        var parse: Int = 0
-        try {
-            parse = stringAnalyser.parse(input)
-            parse = stringAnalyser.mPosition
-        } catch (ex: RuntimeException) {
-        }
-        /*        stringAnalyser.definitions.keys.sorted().forEach {
-                    if (it != null) {
-                        println(
-                            "[" + it + "]\n" + stringAnalyser.definitions.get(it)!!
-                                .isSuccessful() + "\n" + stringAnalyser.definitions.get(it) + "\n"
-                        )
-                    }
-                }
-        */        println("" + parse + "/" + input.length)
-        println(stringAnalyser.construct)
-        /*if (parse < input.length)
-            println(input.substring(parse))
-        */
-        assertTrue(parse >= input.length || (parse >= 0 && input.substring(parse).trim().isEmpty()))
+        runCodeParser(input)
     }
 
     @Test
@@ -861,7 +842,6 @@ class TestAlgebraicTreeVector() {
         val r = 12.0
         val vars = HashMap<String, Double>()
         vars["r"] = r
-        val stringAnalyser: StringAnalyzer1 = StringAnalyzer1()
 
         val input =
             "package one.empty3;\n\n" +
@@ -877,6 +857,11 @@ class TestAlgebraicTreeVector() {
                     "\t\treturn a;\n" +
                     "\t}\n" +
                     "}\n"
+        runCodeParser(input)
+    }
+
+    fun runCodeParser(input: String) {
+        val stringAnalyser: StringAnalyzer1 = StringAnalyzer1()
 
         var parse: Int = 0
         try {
@@ -895,6 +880,7 @@ class TestAlgebraicTreeVector() {
         */
         println("" + parse + "/" + input.length)
         println(stringAnalyser.construct)
+        println(input)
         assertTrue(parse >= input.length || input.substring(parse).trim().isEmpty())
     }
 

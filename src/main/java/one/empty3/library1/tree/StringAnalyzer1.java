@@ -606,11 +606,11 @@ public class StringAnalyzer1 {
                 allNotOk = true;
                 for (Token token : choices) {
                     position2 = token.parse(input, position1);
-                    if (!token.isSuccessful()) {
-                        position2 = position1;
-                    } else {
+                    if (position2 != position1 && token.isSuccessful()) {
                         allNotOk = false;
                         position1 = position2;
+                    } else if (!token.isSuccessful()) {
+                        position2 = position1;
                     }
                 }
             }
@@ -908,11 +908,11 @@ public class StringAnalyzer1 {
      * This class represents a StringAnalyzer1 object that can perform parsing operations on a string input.
      */
     public StringAnalyzer1() {
-        TokenName packageQualifiedName = new TokenName();
+        TokenQualifiedName packageQualifiedName = new TokenQualifiedName();
         Action actionPackageName = new Action(packageQualifiedName) {
             @Override
             public boolean action() {
-                String string = getToken().isSuccessful() ? ((TokenName) getToken()).getName() : "";
+                String string = getToken().isSuccessful() ? ((TokenQualifiedName) getToken()).getName() : "";
                 if (string != null && !string.isEmpty()) {
                     construct.packageName = string;
                     construct.currentClass.setPackageName(construct.packageName);
@@ -965,11 +965,13 @@ public class StringAnalyzer1 {
             @Override
             public boolean action() {
                 if (token.isSuccessful()) {
-                    Variable variable = new Variable();
+                    List<Variable> variableList = construct.currentClass.getVariableList();
+                    if (variableList.isEmpty())
+                        variableList.add(new Variable());
                     String string = tokenVariableScope.getChoice();
                     if (string != null && !string.isEmpty()) {
-                        construct.currentClass.getVariableList().add(variable);
-                        variable.setScope(string);
+                        //construct.currentClass.getVariableList().add(variable);
+                        variableList.get(variableList.size() - 1).setScope(string);
                     }
 
                 }
@@ -1233,7 +1235,7 @@ public class StringAnalyzer1 {
     public class Construct {
         public Variable currentField;
         public Method currentMethod;
-        protected String packageName = "";
+        protected String packageName;
         protected Class currentClass = new Class();
         protected HashMap<String, Class> cited = new HashMap<>();
         protected HashMap<String, Variable> fieldMembers = new HashMap<>();

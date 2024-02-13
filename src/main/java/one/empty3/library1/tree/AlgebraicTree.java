@@ -334,7 +334,9 @@ public class AlgebraicTree extends Tree {
                         return true;
                     }
                 } catch (AlgebraicFormulaSyntaxException e) {
-                    throw new RuntimeException(e);
+                    return false;
+
+//                    throw new RuntimeException(e);
                 }
                 return true;
 
