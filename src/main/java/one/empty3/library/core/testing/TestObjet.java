@@ -354,6 +354,8 @@ public abstract class TestObjet implements Test, Runnable {
     private String name;
     private FileChannelWrapper out;
     private File file0;
+    private Thread threadGLafter;
+    private boolean threadGLafterHasRun = false;
 
 
     /**
@@ -996,7 +998,6 @@ public abstract class TestObjet implements Test, Runnable {
 
         long lastInfoEllapsedMillis = System.currentTimeMillis();
         if ((generate & GENERATE_OPENGL) > 0) {
-            throw new UnsupportedOperationException("No class for OpenGL here");
         }
         if ((generate & GENERATE_MOVIE) > 0) {
             startNewMovie();
@@ -1110,6 +1111,11 @@ public abstract class TestObjet implements Test, Runnable {
 
             if ((generate & GENERATE_IMAGE) > 0 && !(((generate & GENERATE_OPENGL) > 0))) {
                 try {
+                    if (threadGLafter != null && !threadGLafterHasRun()) {
+                        threadGLafter.start();
+                        threadGLafterHasRun = true;
+                        threadGLafter = null;
+                    }
                     if (scene() != null && scene().cameraActive() != null)
                         scene().cameraActive().declareProperties();
 
@@ -1123,14 +1129,14 @@ public abstract class TestObjet implements Test, Runnable {
                     ex.printStackTrace();
                 }
 
-                if (getGenerate(TestObjet.GENERATE_IMAGE)) {
+                if (getGenerate(TestObjet.GENERATE_IMAGE) && !(((generate & GENERATE_OPENGL) > 0))) {
                     ri = z.image2();
 
                     afterRenderFrame();
 
                     // ri.getGraphics().drawString(description, 0, 0);
 
-                    if ((generate & GENERATE_MOVIE) > 0 && encoder != null) {
+                    if ((generate & GENERATE_MOVIE) > 0 && encoder != null && !(((generate & GENERATE_OPENGL) > 0))) {
 
                         try {
                             encoder.encodeImage((BufferedImage) ri);
@@ -1261,6 +1267,10 @@ public abstract class TestObjet implements Test, Runnable {
         o.println("End movie       " + runtimeInfoSucc());
         o.println("Quit run method " + runtimeInfoSucc());
 
+    }
+
+    private boolean threadGLafterHasRun() {
+        return threadGLafterHasRun;
     }
 
     public void saveBMood(boolean b) {
@@ -1476,5 +1486,9 @@ public abstract class TestObjet implements Test, Runnable {
 
     public File getDir() {
         return dir;
+    }
+
+    public void setThreadGLafter(Thread thread) {
+        this.threadGLafter = thread;
     }
 }

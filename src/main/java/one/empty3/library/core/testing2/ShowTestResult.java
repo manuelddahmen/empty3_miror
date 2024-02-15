@@ -34,6 +34,7 @@ import org.jcodec.api.awt.AWTSequenceEncoder;
 import org.jcodec.common.io.FileChannelWrapper;
 import org.jcodec.common.io.NIOUtils;
 import org.jcodec.common.model.Rational;
+import org.junit.experimental.theories.Theories;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -96,7 +97,7 @@ public final class ShowTestResult extends JFrame implements Runnable {
     private int frameNo = 1;
     private JTable jTableEquations = new JTable();
     private boolean displaying = true;
-    private ViewerFrame windowGl;
+    private ViewerFrame windowGl = null;
     private TestObjetJoglDrawer testObjetJoglDrawer;
 
     /*__
@@ -652,24 +653,25 @@ public final class ShowTestResult extends JFrame implements Runnable {
     }
 
     private void jCheckBoxOGLActionPerformed(java.awt.event.ActionEvent evt) {
-        //GEN-FIRST:event_jCheckBoxOGLActionPerformed
-
         toggleTestOption(TestObjet.GENERATE_OPENGL, jCheckBoxOGL.isSelected());
-        if ((testRef.getGenerate() & TestObjet.GENERATE_OPENGL) > 0) {
-            if (this.windowGl == null) {
-                windowGl = new ViewerFrame("TestObjet : " + testRef.getClass());
+        if ((testRef.getGenerate() & TestObjet.GENERATE_OPENGL) > 0
+                && windowGl == null) {
+            testRef.setThreadGLafter(new Thread() {
+                {
+                    windowGl = new
 
-                testObjetJoglDrawer = new TestObjetJoglDrawer(windowGl);
-                if (!windowGl.isVisible())
-                    windowGl.setVisible(true);
-            }
-            if (this.testObjetJoglDrawer == null) {
-                testObjetJoglDrawer = new TestObjetJoglDrawer(windowGl);
-                if (!windowGl.isVisible())
-                    windowGl.setVisible(true);
-            }
+                            ViewerFrame("TestObjet : " + testRef.getClass());
+                    testObjetJoglDrawer = new
+
+                            TestObjetJoglDrawer(windowGl, testRef.scene());
+                    if (!windowGl.isVisible()) {
+                        windowGl.setVisible(true);
+
+                    }
+                }
+            });
         }
-    }//GEN-LAST:event_jCheckBoxOGLActionPerformed
+    }
 
     private void jCheckBoxModelesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxModelesActionPerformed
         toggleTestOption(TestObjet.GENERATE_MODEL, jCheckBoxModeles.isSelected());

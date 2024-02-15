@@ -22,6 +22,7 @@
 
 package one.empty3.library.core.testing;
 
+import com.jogamp.common.os.Platform;
 import com.jogamp.nativewindow.AbstractGraphicsDevice;
 import com.jogamp.opengl.*;
 import com.jogamp.opengl.awt.GLCanvas;
@@ -93,8 +94,11 @@ public class TestObjetJoglDrawer extends Drawer implements GLEventListener {
      * Initializes a TestObjetJoglDrawer with the given ViewerFrame.
      *
      * @param viewerFrame The ViewerFrame to be used.
+     * @param scene
      */
-    public TestObjetJoglDrawer(ViewerFrame viewerFrame) {
+    public TestObjetJoglDrawer(ViewerFrame viewerFrame, Scene scene) {
+        this.scene = scene;
+
 
         setupOpenGl(viewerFrame);
 
@@ -120,10 +124,16 @@ public class TestObjetJoglDrawer extends Drawer implements GLEventListener {
      *
      * @param viewerFrame The ViewerFrame to use.
      */
+    private static boolean isGlSetupDone = false;
+// ...
+
     private void setupOpenGl(ViewerFrame viewerFrame) {
+        if (isGlSetupDone)
+            return;
+
         //getting the capabilities object of GL2 profile
-        GLProfile.initSingleton();
-        final GLProfile profile = GLProfile.getDefault();
+        Platform.initSingleton();
+        GLProfile profile = GLProfile.getDefault();
         AbstractGraphicsDevice defaultDevice = GLProfile.getDefaultDevice();
         defaultDevice.open();
         GLCapabilities capabilities = new GLCapabilities(profile);
@@ -137,6 +147,8 @@ public class TestObjetJoglDrawer extends Drawer implements GLEventListener {
         glCanvas.addGLEventListener(this);
 
         initFrame(viewerFrame);
+
+        isGlSetupDone = true;
     }
 
     /**
