@@ -1092,6 +1092,8 @@ public abstract class TestObjet implements Test, Runnable {
             }
             if ((generate & GENERATE_OPENGL) > 0) {
                 o.println("No OpenGL");
+
+                str.getTestObjetJoglDrawer().setScene(scene());
             } else {
                 try {
                     timeStart = System.currentTimeMillis();
@@ -1106,7 +1108,7 @@ public abstract class TestObjet implements Test, Runnable {
 
             //Logger.getAnonymousLogger().log(Level.INFO, z.scene());
 
-            if ((generate & GENERATE_IMAGE) > 0) {
+            if ((generate & GENERATE_IMAGE) > 0 && !(((generate & GENERATE_OPENGL) > 0))) {
                 try {
                     if (scene() != null && scene().cameraActive() != null)
                         scene().cameraActive().declareProperties();

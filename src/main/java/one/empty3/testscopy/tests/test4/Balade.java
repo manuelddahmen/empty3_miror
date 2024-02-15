@@ -23,6 +23,7 @@
 package one.empty3.testscopy.tests.test4;
 
 import javax.imageio.ImageIO;
+
 import one.empty3.library.*;
 import one.empty3.library.core.nurbs.CourbeParametriquePolynomialeBezier;
 import one.empty3.library.core.nurbs.Fct1D_1D;
@@ -48,7 +49,7 @@ public class Balade extends TestObjetSub {
     public static void main(String[] args) {
         Balade balade = new Balade();
         balade.loop(true);
-        balade.setMaxFrames(VUE_1*FPS);
+        balade.setMaxFrames(VUE_1 * FPS);
         //balade.setDimension(new Resolution(320, 200));
         balade.setDimension(new Resolution(1920, 1080));
         new Thread(balade).start();
@@ -63,7 +64,7 @@ public class Balade extends TestObjetSub {
         try {
             imageTextureTrunk = new ImageTexture(new ECBufferedImage(Objects.requireNonNull(ImageIO.read(new File("resources/img/CIMG0454-modif-cs4.jpg")))));
             ciel_ensoleille = new ImageTexture(new ECBufferedImage(Objects.requireNonNull(ImageIO.read(new File("resources/ciel_ensoleille.jpg")))));
-            sol_sableux = new ImageTexture(new ECBufferedImage(Objects.requireNonNull(ImageIO.read(new File("res/img/planets2/8k_saturn_ring_alpha.png")))));
+            sol_sableux = new ImageTexture(new ECBufferedImage(Objects.requireNonNull(ImageIO.read(new File("res/img/planets2/others/8k_saturn_ring_alpha.png")))));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -72,7 +73,7 @@ public class Balade extends TestObjetSub {
         polygonSol.getSoulCurve().setElem(
                 new CourbeParametriquePolynomialeBezier());
 
-        for(int i=0; i<5; i++) {
+        for (int i = 0; i < 5; i++) {
             polygonSol.getSoulCurve().getElem().getCoefficients().setElem(Point3D.random(10.0), i);
         }
         polygonSol.getDiameterFunction().setElem(new FctXY() {
@@ -89,12 +90,11 @@ public class Balade extends TestObjetSub {
 
         scene().add(polygonSol);
 
-            setZ(new ZBufferImpl(z.la(), z.ha()));
-            z().scene(scene());
+        setZ(new ZBufferImpl(z.la(), z.ha()));
+        z().scene(scene());
         z().texture(new ColorTexture(Color.blue));
         //z().setDisplayType(ZBufferImpl.SURFACE_DISPLAY_LINES);
         z().setDisplayType(ZBufferImpl.DISPLAY_ALL);
-        frame = 102;
     }
 
     @Override
@@ -112,7 +112,7 @@ public class Balade extends TestObjetSub {
 
             Point3D[] vects = new Point3D[]{mat.getElem(0, 0), mat.getElem(0, 1), mat.getElem(1, 0)};
 
-            StructureMatrix<Point3D>[] v = new StructureMatrix[] {
+            StructureMatrix<Point3D>[] v = new StructureMatrix[]{
                     new StructureMatrix<Point3D>(0, Point3D.class),
                     new StructureMatrix<Point3D>(0, Point3D.class),
                     new StructureMatrix<Point3D>(0, Point3D.class)};
@@ -122,7 +122,7 @@ public class Balade extends TestObjetSub {
             v[1].setElem(vects[1]);
             v[2].setElem(vects[2]);
 
-            StructureMatrix<Point3D>[] v1 = new StructureMatrix[] {
+            StructureMatrix<Point3D>[] v1 = new StructureMatrix[]{
                     new StructureMatrix<Point3D>(0, Point3D.class),
                     new StructureMatrix<Point3D>(0, Point3D.class),
                     new StructureMatrix<Point3D>(0, Point3D.class)};
@@ -133,14 +133,14 @@ public class Balade extends TestObjetSub {
             v1[2].setElem(vects[2].plus(Point3D.Y));
 
 
-            Point3D a = polygonSol.getSoulCurve().getElem().calculerPoint3D((frame() * 1.0) /getMaxFrames());
-            Point3D b = polygonSol.getSoulCurve().getElem().calculerPoint3D((frame() + 2.0) /getMaxFrames());
+            Point3D a = polygonSol.getSoulCurve().getElem().calculerPoint3D((frame() * 1.0) / getMaxFrames());
+            Point3D b = polygonSol.getSoulCurve().getElem().calculerPoint3D((frame() + 2.0) / getMaxFrames());
 
-            Point3D y  = polygonSol.calculerPoint3D(0.25, 1.0*frame()/getMaxFrames());
-            Point3D ym = polygonSol.calculerPoint3D(0.75, 1.0*frame()/getMaxFrames());
+            Point3D y = polygonSol.calculerPoint3D(0.25, 1.0 * frame() / getMaxFrames());
+            Point3D ym = polygonSol.calculerPoint3D(0.75, 1.0 * frame() / getMaxFrames());
 
 
-            Camera camera = new Camera(a, b, y.moins(ym).mult(1.0/Point3D.distance(y, ym)));
+            Camera camera = new Camera(a, b, y.moins(ym).mult(1.0 / Point3D.distance(y, ym)));
 
             camera.getScale().setElem(200.0);
             scene().cameraActive(camera);

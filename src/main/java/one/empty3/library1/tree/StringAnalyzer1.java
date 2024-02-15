@@ -1101,8 +1101,8 @@ public class StringAnalyzer1 {
                 new MultiTokenOptional(new TokenString("package"), packageQualifiedName, new TokenSemiColon()),
                 new MultiTokenOptional(new TokenClassScope(), isFinal,
                         new MultiTokenMandatory(tokenClassKeyword, className, new TokenOpenBracket()),
+                        // Variables
                         new MultiTokenOptional(new MultiTokenMandatory(
-                                // Variables
                                 new MultiTokenOptional(tokenVariableScope, tokenConstantModifier), tokenQualifiedNameVariable),
                                 new MultiTokenOptional(new TokenEquals(), new TokenExpression(),
                                         new TokenSemiColon())),// Commit changes

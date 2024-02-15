@@ -29,9 +29,7 @@ import com.badlogic.gdx.utils.Null;
 import com.formdev.flatlaf.*;
 import net.miginfocom.swing.MigLayout;
 import one.empty3.library.ECBufferedImage;
-import one.empty3.library.core.testing.ImageContainer;
-import one.empty3.library.core.testing.TestObjet;
-import one.empty3.library.core.testing.TextAreaOutputStream;
+import one.empty3.library.core.testing.*;
 import org.jcodec.api.awt.AWTSequenceEncoder;
 import org.jcodec.common.io.FileChannelWrapper;
 import org.jcodec.common.io.NIOUtils;
@@ -98,6 +96,8 @@ public final class ShowTestResult extends JFrame implements Runnable {
     private int frameNo = 1;
     private JTable jTableEquations = new JTable();
     private boolean displaying = true;
+    private ViewerFrame windowGl;
+    private TestObjetJoglDrawer testObjetJoglDrawer;
 
     /*__
      * Creates new form ShowTestResult
@@ -651,9 +651,24 @@ public final class ShowTestResult extends JFrame implements Runnable {
         testRef.setGenerate(testRef.getGenerate() | ((value ? 1 : 0) | GEN_OPT));
     }
 
-    private void jCheckBoxOGLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxOGLActionPerformed
+    private void jCheckBoxOGLActionPerformed(java.awt.event.ActionEvent evt) {
+        //GEN-FIRST:event_jCheckBoxOGLActionPerformed
 
         toggleTestOption(TestObjet.GENERATE_OPENGL, jCheckBoxOGL.isSelected());
+        if ((testRef.getGenerate() & TestObjet.GENERATE_OPENGL) > 0) {
+            if (this.windowGl == null) {
+                windowGl = new ViewerFrame("TestObjet : " + testRef.getClass());
+
+                testObjetJoglDrawer = new TestObjetJoglDrawer(windowGl);
+                if (!windowGl.isVisible())
+                    windowGl.setVisible(true);
+            }
+            if (this.testObjetJoglDrawer == null) {
+                testObjetJoglDrawer = new TestObjetJoglDrawer(windowGl);
+                if (!windowGl.isVisible())
+                    windowGl.setVisible(true);
+            }
+        }
     }//GEN-LAST:event_jCheckBoxOGLActionPerformed
 
     private void jCheckBoxModelesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxModelesActionPerformed
@@ -775,6 +790,22 @@ public final class ShowTestResult extends JFrame implements Runnable {
 
     public void setDisplaying(boolean b) {
         this.displaying = b;
+    }
+
+    public ViewerFrame getWindowGl() {
+        return windowGl;
+    }
+
+    public void setWindowGl(ViewerFrame windowGl) {
+        this.windowGl = windowGl;
+    }
+
+    public TestObjetJoglDrawer getTestObjetJoglDrawer() {
+        return testObjetJoglDrawer;
+    }
+
+    public void setTestObjetJoglDrawer(TestObjetJoglDrawer testObjetJoglDrawer) {
+        this.testObjetJoglDrawer = testObjetJoglDrawer;
     }
 }
 
