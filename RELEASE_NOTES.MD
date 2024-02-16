@@ -1,4 +1,6 @@
-# Release Note
+# Release Notes
+
+## Version 2024.2.1
 
 ## Version 2019.1
 
