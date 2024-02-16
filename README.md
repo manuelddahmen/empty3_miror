@@ -1,40 +1,24 @@
-# empty3
-empty3.one
-Rendering engine. Shapes: surfaces, math-related
-Drawings, curves, textures with pictures, movies
-or colors.
+# empty3-library-3d
 
-#In progress or not:
-- Lighting model. 
-- Texture with geometric structure.
-- Burbs? Nurbs.
-- real modelling interface. Graphical or
-  touch.
-- Glsl clone compiler, interpreter and 
-  rendering.
+empty3.app
+Moteur de rendu et éléments de conception.
+Formes:
 
-When you build with maven tool, assuming you have
-correctly set jdk home and exe path, and maven
-too, internet connection, space disk and memory
-size enough...
+## surfaces:
 
-If you miss a property check this
-https://maven.apache.org/guides/introduction/introduction-to-profiles.html
+Surfaces paramétrées
+Cube, sphère, rectangle, extrusion, cylindre courbe
 
-Or make a new issue.
+## courbes
 
-#In progress 
-##October 2021 : move
-Movement : make persona walk. Idea: program object for moving
-cylinder and sphere and beziers. Make it move from/to (Vec3 
-linear displacement).
-MoveCollection: actions (to walk, to run, to sit, to smoke)
-Move: individual member move. 
+Courbe paramétrées
+Ligne, cercle, rectangle
 
-2022 Automn
+##
 
-``` _._
-```
+Textures: couleur, image, vidéo, algorithmique
+
+Build avec Gradle, différentes interfaces utilisateurs sont proposées
 
 # Feature
 
@@ -52,7 +36,7 @@ matrix c(x,y)
 - format jpg en sortie
 - PixM components matrix of pictures. color component based.
 - M3 components
-  + matrix (columnsIn, linesIn) internal matrix at x, y
+    + matrix (columnsIn, linesIn) internal matrix at x, y
 - conversion to BufferedImage, minMax normalize linear
 - gradient. dx, dy, phase atan dy/dy atan dx/dy
 - detecteur de contours
@@ -62,25 +46,14 @@ matrix c(x,y)
 ```
 <dependency>
     <groupId>one.empty3</groupId>
-    <artifactId>feature</artifactId>
-    <version>2020.4.4</version>
+    <artifactId>empty3-library-3d</artifactId>
+    <version>2024-</version>
 </dependency>
 ```
 
 ## En développement. Ambitions.
 
-https://github.com/manuelddahmen/feature
-
 ## La conception de features 2d 3d.
-
-Les collections d'images contenant des
-_feature_ (caractéristiques) ou d'un ensemble de _features_.
-
-Features matching
-
-Base de données à mettre au point. sum(Circle.i) dist/ c.r2
-
-#    
 
 ```
 file : ./settings.properties
@@ -95,31 +68,11 @@ classname=one.empty3.feature.Transform1,one.empty3.feature.Histogram2,one.empty3
 
 ## Feature extraction, classification
 
-Faire les histogrammes de toutes les parties des images. Rechercher les histogrammes de différences minimales
-(-autour des features.)
-
-## Exemple
 Voici un exemple de run:
 Run class: one.empty3.Run
 Args : "originalHarris_PasteBlank"
 settings.properties
-```
-# Effect blue eyes white hairs
-username=empty3.one
-password=yfgvu75rtr44fsfii8yr
-host=empty3.one
-port=21
-in.device=local
-in.directory=../images_faces/
-out.device=local
-out.directory=../o/originalHarris_PasteBlank/
-directory=/empty3/feature/processes
-classname=one.empty3.feature.TrueHarrisProcess,one.empty3.feature.TrueHarrisProcess
-#  ,one.empty3.feature.selection.PasteBlank
-#classname=one.empty3.feature.DiffE
-effect.0.min=double:0.3
-maxRes=400
-```
+
 ![image](https://user-images.githubusercontent.com/38113629/158326067-4e881cae-26f1-42cf-b529-20a6f99d7ada.png)
 ![image](https://user-images.githubusercontent.com/38113629/158326114-f577abd5-0af4-4dc6-9061-aaaa7eb0d61d.png)
 
@@ -128,6 +81,3 @@ Avec une application Android.
 
 ![Screenshot_20230701_095233](https://github.com/manuelddahmen/empty3_miror/assets/38113629/827310f3-3823-4577-a3e9-784a50934e78)
 
-
-
-Manuel DAHMEN.
