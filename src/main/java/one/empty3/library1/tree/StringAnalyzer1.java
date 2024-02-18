@@ -24,6 +24,7 @@ package one.empty3.library1.tree;
 
 import one.empty3.library.StructureMatrix;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -69,9 +70,8 @@ public class StringAnalyzer1 {
             definitions.put(index, this);
         }
 
-        public Token addToken(Token token) {
+        public void addToken(Token token) {
             this.nextTokens.setElem(token, this.nextTokens.getData1d().size());
-            return this;
         }
 
         public int nextToken(String input, int position) {
@@ -270,7 +270,7 @@ public class StringAnalyzer1 {
         public int parse(String input, int position) {
             if (position >= input.length() || input.substring(position).trim().isEmpty()) {
                 mPosition = position;
-                throw new RuntimeException("TokenString : position>=input.length()");
+                throw new RuntimeException("SingleTokenExclusiveXor : position>=input.length()");
             }
             position = super.parse(input, position);
             int position1 = position;
@@ -460,6 +460,7 @@ public class StringAnalyzer1 {
                 mPosition = position;
                 throw new RuntimeException("TokenString : position>=input.length()");
             }
+            position = skipBlanks(input, position);
             int position1 = position;
             int i = position1;
             boolean passed = false;
@@ -516,7 +517,8 @@ public class StringAnalyzer1 {
             position = super.parse(input, position);
             if (position < input.length() && input.substring(position).startsWith(name)) {
                 int position1 = position + name.length();
-                if (!getNextToken().getData1d().isEmpty()) {
+                return processNext(input, position1);
+                /*if (!getNextToken().getData1d().isEmpty()) {
                     int position2 = nextToken(input, position1);
                     if (nextToken().isSuccessful()) {
                         setSuccessful(true);
@@ -528,7 +530,7 @@ public class StringAnalyzer1 {
                 } else {
                     setSuccessful(true);
                     return position1;
-                }
+                }*/
             } else {
                 setSuccessful(false);
                 return position;
@@ -659,7 +661,12 @@ public class StringAnalyzer1 {
             position = super.parse(input, position);
             int position1 = position;
             int position2 = choice.parse(input, position1);
-            return processNext(input, position2);
+            if (choice.isSuccessful()) {
+                return processNext(input, position2);
+            } else {
+                setSuccessful(false);
+                return position1;
+            }
         }
 
 
@@ -1111,8 +1118,12 @@ public class StringAnalyzer1 {
                 return false;
             }
         };
+        TokenString aPackage1 = new TokenString("package");
+        aPackage1.addToken(packageQualifiedName);
+        packageQualifiedName.addToken(new TokenSemiColon());
         Token aPackage = definitions.put(0, new MultiTokenMandatory(
-                new SingleTokenOptional(new TokenString("package").addToken(packageQualifiedName).addToken(new TokenSemiColon())),
+
+                new SingleTokenOptional(aPackage1),
                 new MultiTokenOptional(new TokenClassScope(), isFinal,
                         new MultiTokenMandatory(tokenClassKeyword, className, new TokenOpenBracket()),
                         // Variables
@@ -1289,7 +1300,7 @@ public class StringAnalyzer1 {
 
     private final Construct construct = new Construct();
 
-    public int parse(String input) {
+    public int parse(@Nullable String input) {
         /*new Thread() {
             @Override
             public void run() {
@@ -1305,6 +1316,17 @@ public class StringAnalyzer1 {
         try {
             Token token = definitions.get(0);
             position1 = token.parse(input, 0);
+            return position1;
+        } catch (RuntimeException ex) {
+            ex.printStackTrace();
+        }
+        return position1;
+    }
+
+    public int parse(@NotNull Token token1, @Nullable String input) {
+        int position1 = 0;
+        try {
+            position1 = token1.parse(input, 0);
             return position1;
         } catch (RuntimeException ex) {
             ex.printStackTrace();
