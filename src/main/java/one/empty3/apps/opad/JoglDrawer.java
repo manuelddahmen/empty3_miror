@@ -130,7 +130,7 @@ public class JoglDrawer extends Drawer implements GLEventListener {
             ex.printStackTrace();
             System.err.println("Continue///");
         }
-        ((JFrame)component).setContentPane(panel);
+        ((JFrame) component).setContentPane(panel);
         component.setVisible(true);
 
     }
@@ -176,12 +176,12 @@ public class JoglDrawer extends Drawer implements GLEventListener {
 
         Point3D pos = camera.getEye();
         Point3D dir = camera.getLookat().moins(pos).norme1();
-        diff = dir.moins(pos).norme1();
+        diff = dir.norme1();
         Point3D up = camera.getVerticale();
 
 
         Point3D posCam = pos;//.moins(dir.norme1());
-        Point3D vertical = camera.getVerticale().norme1();
+        Point3D vertical = up.norme1();
         Point3D vert2 = vertical.prodVect(dir).mult(-1);
 
         posCam = posCam.plus(camera.getLookat().moins(posCam).mult(-0.05));
@@ -277,7 +277,7 @@ public class JoglDrawer extends Drawer implements GLEventListener {
         color(gl, new Color(tri.texture().getColorAt(0.5, 0.5)));
         for (Point3D sommet : tri.getSommet().getData1d()) {
             Point3D p;
-            if(getTerrain()!=null) {
+            if (getTerrain() != null) {
                 p = getTerrain().p3(sommet);
             } else {
                 p = sommet;
@@ -357,7 +357,7 @@ public class JoglDrawer extends Drawer implements GLEventListener {
                     draw((LineSegment) r, glu, gl);
                 } else if (r instanceof ParametricSurface) {
                     draw((ParametricSurface) r, glu, gl);
-                } else if(r instanceof Polygon) {
+                } else if (r instanceof Polygon) {
                     draw((Polygon) r, glu, gl);
                 }
             } catch (ConcurrentModificationException ex) {
@@ -370,8 +370,8 @@ public class JoglDrawer extends Drawer implements GLEventListener {
 
     protected void draw(ParametricSurface s, GLU glu, GL2 gl) {
         gl.glBegin(GL2.GL_TRIANGLES);
-        for (double i = s.getStartU(); i < s.getEndU(); i+=s.getIncrU()) {
-            for (double j = s.getStartV(); j < s.getEndV(); j+=s.getIncrV()) {
+        for (double i = s.getStartU(); i < s.getEndU(); i += s.getIncrU()) {
+            for (double j = s.getStartV(); j < s.getEndV(); j += s.getIncrV()) {
                 Polygon elementSurface = s.getElementSurface(i, s.getIncrU(), j, s.getIncrV());
                 Point3D INFINI = Point3D.INFINI;
                 draw2(new TRI(elementSurface.getPoints().getElem(0),
@@ -390,8 +390,8 @@ public class JoglDrawer extends Drawer implements GLEventListener {
 
     protected void draw(Terrain t, ParametricSurface s, GLU glu, GL2 gl) {
         gl.glBegin(GL2.GL_TRIANGLES);
-        for (double i = s.getStartU(); i < s.getEndU(); i+=s.getIncrU()) {
-            for (double j = s.getStartV(); j < s.getEndV(); j+=s.getIncrV()) {
+        for (double i = s.getStartU(); i < s.getEndU(); i += s.getIncrU()) {
+            for (double j = s.getStartV(); j < s.getEndV(); j += s.getIncrV()) {
                 Polygon elementSurface = s.getElementSurface(i, s.getIncrU(), j, s.getIncrV());
                 Point3D INFINI = Point3D.INFINI;
                 draw2(new TRI(t.p3(elementSurface.getPoints().getElem(0)),
@@ -633,12 +633,13 @@ public class JoglDrawer extends Drawer implements GLEventListener {
             d0 = d;
         }
     }
+
     protected void draw(Polygon polygon, GLU glu, GL2 gl) {
         int size = polygon.getPoints().data1d.size();
         Point3D isocentre = polygon.getIsocentre();
-        for (int d = 0; d <=size; d ++) {
-            draw(new TRI(polygon.getPoints().getElem((d+size)%size),
-                    polygon.getPoints().getElem((d+size)%size),
+        for (int d = 0; d <= size; d++) {
+            draw(new TRI(polygon.getPoints().getElem((d + size) % size),
+                    polygon.getPoints().getElem((d + size) % size),
                     isocentre, polygon.texture()), glu, gl);
         }
     }

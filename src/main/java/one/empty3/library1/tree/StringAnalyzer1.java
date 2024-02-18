@@ -105,8 +105,9 @@ public class StringAnalyzer1 {
             }
         }
 
-        public void setAction(Action action) {
+        public Token setAction(Action action) {
             this.action = action;
+            return this;
         }
 
         /***
@@ -948,8 +949,8 @@ public class StringAnalyzer1 {
                 return false;
             }
         };
-        Token closeBracket = new TokenCloseBracket();
-        Action actionCloseClassBracket = new Action(closeBracket) {
+        Token closeBracketClass = new TokenCloseBracket();
+        Action actionCloseClassBracket = new Action(closeBracketClass) {
             @Override
             public boolean action() {
                 //((TokenCloseBracket)getToken())
@@ -960,6 +961,19 @@ public class StringAnalyzer1 {
                 return true;
             }
         };
+        Token closeBracketMethod = new TokenCloseBracket();
+        actionCloseClassBracket = new Action(closeBracketMethod) {
+            @Override
+            public boolean action() {
+                //((TokenCloseBracket)getToken())
+                if (token.isSuccessful()) {
+                    //construct.cited.put(construct.packageName + "." + construct.currentClass.getName(), construct.currentClass);
+                    //construct.currentClass = new Class();
+                }
+                return true;
+            }
+        };
+
         TokenClassScope tokenVariableScope = new TokenClassScope();
         Action action = new Action(tokenVariableScope) {
             @Override
@@ -1060,8 +1074,8 @@ public class StringAnalyzer1 {
                 if (token.isSuccessful()) {
                     List<Instruction> instructions = construct.methodMembers.get(construct.methodMembers.size() - 1).getInstructions();
                     instructions.add(new Instruction());
-                    construct.methodMembers.get(construct.methodMembers.size() - 1)
-                            .setInstructions(instructions);
+                    //construct.methodMembers.get(construct.methodMembers.size() - 1)
+                    //       .setInstructions(instructions);
                     Instruction instruction = instructions.get(instructions.size() - 1);
                     return true;
                 }
@@ -1098,7 +1112,7 @@ public class StringAnalyzer1 {
             }
         };
         Token aPackage = definitions.put(0, new MultiTokenMandatory(
-                new MultiTokenOptional(new TokenString("package"), packageQualifiedName, new TokenSemiColon()),
+                new SingleTokenOptional(new TokenString("package").addToken(packageQualifiedName).addToken(new TokenSemiColon())),
                 new MultiTokenOptional(new TokenClassScope(), isFinal,
                         new MultiTokenMandatory(tokenClassKeyword, className, new TokenOpenBracket()),
                         // Variables
@@ -1122,7 +1136,7 @@ public class StringAnalyzer1 {
                                                 new MultiTokenOptional(new MultiTokenMandatory(tokenVariableInMethodName
                                                         , new TokenName(), new TokenEquals()),
                                                         new TokenExpression1()), /*new TokenComa(),*/ endOfInstruction))),// Commit changes
-                        closeBracket), closeBracket));// Commit changes
+                        closeBracketMethod), closeBracketClass));// Commit changes
 
     }
 

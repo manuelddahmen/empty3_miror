@@ -98,9 +98,9 @@ public class Class {
     public String toString() {
         return "Class{" +
                 "name='" + name + '\'' +
-                ", variableList=" + variableList +
-                ", methodList=" + methodList +
-                ", accessModifier='" + accessModifier + '\'' +
+                ", variableList=[" + variableList +
+                "], methodList=[" + methodList +
+                "], accessModifier='" + accessModifier + '\'' +
                 ", mFinal=" + mFinal +
                 ", packageName='" + packageName + '\'' +
                 '}';

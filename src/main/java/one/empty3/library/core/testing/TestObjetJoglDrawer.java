@@ -305,15 +305,15 @@ public class TestObjetJoglDrawer extends Drawer implements GLEventListener {
 
         if (scene != null) {
 
-            Camera camera = scene != null ? scene.cameraActive() : new Camera(Point3D.Z.mult(-100), Point3D.O0, Point3D.Y);
+            Camera camera = scene.cameraActive() != null ? scene.cameraActive() : new Camera(Point3D.Z.mult(-100), Point3D.O0, Point3D.Y);
             Point3D pos = camera.getEye();
             Point3D dir = camera.getLookat().moins(pos).norme1();
-            diff = dir.moins(pos).norme1();
+            diff = dir.norme1();
             Point3D up = camera.getVerticale();
 
 
             Point3D posCam = pos;//.moins(dir.norme1());
-            Point3D vertical = camera.getVerticale().norme1();
+            Point3D vertical = up.norme1();
             Point3D vert2 = vertical.prodVect(dir).mult(-1);
 
             posCam = posCam.plus(camera.getLookat().moins(posCam).mult(-0.05));
