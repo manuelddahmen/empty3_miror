@@ -320,7 +320,7 @@ class TestStringAnalyzer1 {
 
         class ActionClassname : Action(tokenClassName) {
             override fun action(): Boolean {
-                stringAnalyzer1.construct.currentClass.name = tokenPackageName.name
+                stringAnalyzer1.construct.currentClass.name = tokenClassName.name
                 return true
             }
         }
@@ -371,16 +371,44 @@ class TestStringAnalyzer1 {
         tokenMemberMethodExpression3.addToken(tokenMethodSemiColonVar3)
 
         val tokenMemberVar = stringAnalyzer1.SingleTokenExclusiveXor(
-            tokenMemberVarType1, tokenMemberVarType2, tokenMemberMethodExpression3
+            tokenMemberVarType1, tokenMemberVarType2
         )
 
         val tokenMemberMethodType = stringAnalyzer1.TokenQualifiedName()
         val tokenMemberMethodName = stringAnalyzer1.TokenName()
+
+        // Arguments' list
+        val tokenOpenParenthesizedMethodParameter = stringAnalyzer1.TokenOpenParenthesized()
+        val tokenComaMethodParameter = stringAnalyzer1.TokenComa()
+        val tokenQualifiedNameMethodParameter = stringAnalyzer1.TokenQualifiedName()
+        val tokenNameMethodParameter = stringAnalyzer1.TokenName()
+        val tokenCloseParenthesizedMethodParameter = stringAnalyzer1.TokenCloseParenthesized()
+
+        val multiTokenOptionalMethodParameter2 =
+            stringAnalyzer1.MultiTokenMandatory(
+                tokenComaMethodParameter, tokenQualifiedNameMethodParameter, tokenNameMethodParameter
+            )
+        val multiTokenOptionalMethodParameter1 =
+            stringAnalyzer1.MultiTokenMandatory(
+                tokenQualifiedNameMethodParameter, tokenNameMethodParameter
+            )
+
+
+        val multiTokenOptionalMethodParameter = stringAnalyzer1.MultiTokenOptional(
+            multiTokenOptionalMethodParameter1
+        )
+        multiTokenOptionalMethodParameter1.addToken(
+            stringAnalyzer1.MultiTokenOptional(
+                multiTokenOptionalMethodParameter2
+            )
+        )
+        tokenOpenParenthesizedMethodParameter.addToken(multiTokenOptionalMethodParameter)
+        multiTokenOptionalMethodParameter.addToken(tokenCloseParenthesizedMethodParameter)
         val tokenOpenBracketMethod = stringAnalyzer1.TokenOpenBracket()
+        tokenCloseParenthesizedMethodParameter.addToken(tokenOpenBracketMethod)
 
         tokenMemberMethodType.addToken(tokenMemberMethodName)
-        tokenMemberMethodName.addToken(tokenOpenBracketMethod)
-
+        tokenMemberMethodName.addToken(tokenOpenParenthesizedMethodParameter)
         // Instructions
         val singleTokenExclusiveXorMethodInstruction =
             stringAnalyzer1.SingleTokenExclusiveXor(
@@ -400,7 +428,9 @@ class TestStringAnalyzer1 {
         val tokenMultiMembersInstructions = stringAnalyzer1.MultiTokenOptional(
             singleTokenExclusiveXorMethodInstruction
         )
-
+        val tokenCloseBracketMethod = stringAnalyzer1.TokenCloseBracket()
+        tokenOpenBracketMethod.addToken(tokenMultiMembersInstructions)
+        tokenMultiMembersInstructions.addToken(tokenCloseBracketMethod)
         //tokenOpenBracketMethod.addToken(tokenMultiMembersInstructions)
         tokenPackage.addToken(tokenPackageName)
         tokenPackageName.addToken(tokenPackageSemicolon)
@@ -408,11 +438,9 @@ class TestStringAnalyzer1 {
         tokenClass.addToken(tokenClassName)
         tokenClassName.addToken(tokenOpenBracket)
         val multiTokenOptional = stringAnalyzer1.MultiTokenOptional(
-            tokenMemberVar, tokenMemberMethodType
+            tokenMemberMethodType, tokenMemberVar
         )
         tokenOpenBracket.addToken(multiTokenOptional)
-        val tokenCloseBracketMethod = stringAnalyzer1.TokenCloseBracket()
-        tokenMultiMembersInstructions.addToken(tokenCloseBracketMethod)
         multiTokenOptional.addToken(tokenCloseBracketClass)
 
 
@@ -420,12 +448,22 @@ class TestStringAnalyzer1 {
 
         //token.addToken(tokenClass)
 
-        val input = "package com.example;\nclass Graph {\n}\n"
+//        val input = "package com.example;\nclass Graph {\n}\n"
+        val input =
+            "package one.empty3;\n\n" +
+                    "class Number {\n" +
+                    "\tdouble func1(Double a, Double b, Double c) {\n" +
+                    "\t\tDouble d = c+b/a;\n" +
+                    "\t\treturn d;\n" +
+                    "\t}\n" +
+                    "}\n"
+
         var parse = -1
         try {
             parse = stringAnalyzer1.parse(token, input)
 //            parse = stringAnalyzer1.mPosition
         } catch (ex: RuntimeException) {
+            ex.printStackTrace()
             if (token.isSuccessful) {
                 if (parse >= input.length) {
                     Assert.assertTrue(true)

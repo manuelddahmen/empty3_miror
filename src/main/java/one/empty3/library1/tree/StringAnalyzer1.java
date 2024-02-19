@@ -69,7 +69,6 @@ public class StringAnalyzer1 {
         public Token() {
             index++;
             definitions.put(index, this);
-            System.err.println(getClass());
         }
 
         public void addToken(Token token) {
@@ -223,6 +222,42 @@ public class StringAnalyzer1 {
         }
     }
 
+    class MultiTokenExclusiveXor extends Token {
+        private final List<Token> choices;
+
+        public MultiTokenExclusiveXor(Token... mandatory) {
+            super();
+            this.choices = Arrays.stream(mandatory).toList();
+        }
+
+        @Override
+        public int parse(String input, int position) {
+            if (position >= input.length() || input.substring(position).trim().isEmpty()) {
+                mPosition = position;
+                throw new RuntimeException("SingleTokenExclusiveXor : position>=input.length()");
+            }
+            position = super.parse(input, position);
+            int position1 = position;
+            int i = 0;
+            int position0 = position1;
+            boolean firstPass = true;
+            boolean isOk = false;
+            while (firstPass || isOk) {
+                firstPass = false;
+                for (Token token : choices) {
+                    position1 = token.parse(input, position0);
+                    if (token.isSuccessful()) {
+                        position0 = position1;
+                        isOk = true;
+                        break;
+                    } else {
+                        isOk = false;
+                    }
+                }
+            }
+            return processNext(input, position0);
+        }
+    }
 
     /**
      * The SingleTokenExclusiveXor class represents a token that matches only one of the specified tokens in an exclusive XOR manner.
@@ -402,7 +437,7 @@ public class StringAnalyzer1 {
                 }
             }
             setSuccessful(true);
-            return position;
+            return nextToken(input, position);
         }
 
         @Override
@@ -575,6 +610,7 @@ public class StringAnalyzer1 {
             boolean allNotOk = false;
             int position1 = position;
             int position2 = position1;
+            int i = 0;
             while (!allNotOk) {
                 allNotOk = true;
                 for (Token token : choices) {
@@ -586,8 +622,9 @@ public class StringAnalyzer1 {
                         position2 = position1;
                     }
                 }
+                i++;
             }
-            setSuccessful(true);
+            setSuccessful(i > 1);
             return position1;
         }
 
@@ -679,6 +716,7 @@ public class StringAnalyzer1 {
             int position1 = position;
             int i = 0;
             int position0 = position1;
+            int position2 = position0;
             while (allOk) {
                 for (Token token : choices) {
                     position1 = token.parse(input, position1);
@@ -697,7 +735,10 @@ public class StringAnalyzer1 {
                     position0 = position1;
                 i++;
             }
-            return processNext(input, position0);
+            if (i > 0) {
+                return processNext(input, position0);
+            }
+            return position;
 
 
         }
@@ -886,7 +927,7 @@ public class StringAnalyzer1 {
      * This class represents a StringAnalyzer1 object that can perform parsing operations on a string input.
      */
     public StringAnalyzer1() {
-        TokenQualifiedName packageQualifiedName = new TokenQualifiedName();
+        /*TokenQualifiedName packageQualifiedName = new TokenQualifiedName();
         Action actionPackageName = new Action(packageQualifiedName) {
             @Override
             public boolean action() {
@@ -1116,9 +1157,9 @@ public class StringAnalyzer1 {
                                                 tokenBeginOfMethod,
                                                 new MultiTokenOptional(new MultiTokenMandatory(tokenVariableInMethodName
                                                         , new TokenName(), new TokenEquals()),
-                                                        new TokenExpression1()), /*new TokenComa(),*/ endOfInstruction))),// Commit changes
+                                                        new TokenExpression1()),  endOfInstruction))),// Commit changes
                         closeBracketMethod), closeBracketClass));// Commit changes
-
+*/
     }
 
 
@@ -1258,6 +1299,13 @@ public class StringAnalyzer1 {
                     classesStr[0] += "\n" + "\n" + aClass.toString();
                 }
             });
+            final String[] citedStr = {""};
+            cited.forEach(new BiConsumer<String, Class>() {
+                @Override
+                public void accept(String s, Class aClass) {
+                    citedStr[0] += aClass.toString();
+                }
+            });
             final String[] methodStr = {""};
             methodMembers.forEach(new BiConsumer<String, Method>() {
                 @Override
@@ -1266,13 +1314,13 @@ public class StringAnalyzer1 {
                 }
             });
             String[] string = {"Construct{" +
-                    "', packageName='" + packageName +
+                    "packageName='" + packageName +
                     "', classes=[" + classesStr[0] +
                     "], fieldMembers=[" + fieldsStr[0] +
                     "'], methodMembers=[" + methodStr[0] +
                     "], currentClass={" + currentClass +
-                    "}, cited=" + cited +
-                    "}\n}\n"};
+                    "}, cited=[" + citedStr[0] +
+                    "]}"};
 
             return string[0];
         }
