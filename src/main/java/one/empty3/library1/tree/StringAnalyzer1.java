@@ -31,6 +31,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 /**
  * The StringAnalyzer1 class is responsible for analyzing string inputs and performing parsing operations.
@@ -68,6 +69,7 @@ public class StringAnalyzer1 {
         public Token() {
             index++;
             definitions.put(index, this);
+            System.err.println(getClass());
         }
 
         public void addToken(Token token) {
@@ -84,7 +86,7 @@ public class StringAnalyzer1 {
         public Token nextToken() {
             if (!nextTokens.getData1d().isEmpty()) {
                 return nextTokens.getData1d().get(0);
-            } else {
+            } /*else {
                 return new Token() {
 
                     @Override
@@ -102,7 +104,8 @@ public class StringAnalyzer1 {
                         return true;
                     }
                 };
-            }
+            }*/
+            return null;
         }
 
         public Token setAction(Action action) {
@@ -161,7 +164,7 @@ public class StringAnalyzer1 {
          */
         public void setSuccessful(boolean successful) {
             this.successful = successful;
-            if (/*successful && */getAction() != null)
+            if (successful && getAction() != null)
                 action();
         }
 
@@ -220,39 +223,6 @@ public class StringAnalyzer1 {
         }
     }
 
-    /***
-     * The Action class represents an action that can be performed in a parsing process.
-     * It is an abstract class that must be subclassed to implement the action logic.
-     */
-    public abstract class Action {
-        protected final Token token;
-
-        /**
-         * Retrieves the token associated with the current action.
-         *
-         * @return the token associated with the current action
-         */
-        public Token getToken() {
-            return token;
-        }
-
-        /**
-         * This class represents an action that can be performed in a parsing process.
-         * It is an abstract class that must be subclassed to implement the action logic.
-         */
-        public Action(Token token) {
-            this.token = token;
-            token.setAction(this);
-
-        }
-
-        /**
-         * Executes the action associated with the token.
-         *
-         * @return true if the action was executed successfully, false otherwise
-         */
-        public abstract boolean action();
-    }
 
     /**
      * The SingleTokenExclusiveXor class represents a token that matches only one of the specified tokens in an exclusive XOR manner.
@@ -1265,6 +1235,7 @@ public class StringAnalyzer1 {
         protected HashMap<String, Class> cited = new HashMap<>();
         protected HashMap<String, Variable> fieldMembers = new HashMap<>();
         protected HashMap<String, Method> methodMembers = new HashMap<>();
+        protected ArrayList<Class> classes = new ArrayList<>();
 
 
         public Construct() {
@@ -1273,27 +1244,36 @@ public class StringAnalyzer1 {
 
         @Override
         public String toString() {
-            final String[] string = {"Construct{" +
-                    "currentField='" + currentField +
-                    "', currentMethod='" + currentMethod +
-                    "', packageName='" + packageName +
-                    "', currentClass=" + currentClass +
-                    ", cited=" + cited +
-                    ", fieldMembers={" + fieldMembers +
-                    "}, methodMembers={" + methodMembers +
-                    "}}\n"};
+            final String[] fieldsStr = {""};
             fieldMembers.forEach(new BiConsumer<String, Variable>() {
                 @Override
                 public void accept(String s, Variable variable) {
-                    string[0] += "\n" + s + "\n" + variable.toString();
+                    fieldsStr[0] += "\n" + s + "\n" + variable.toString();
                 }
             });
+            final String[] classesStr = {""};
+            classes.forEach(new Consumer<Class>() {
+                @Override
+                public void accept(Class aClass) {
+                    classesStr[0] += "\n" + "\n" + aClass.toString();
+                }
+            });
+            final String[] methodStr = {""};
             methodMembers.forEach(new BiConsumer<String, Method>() {
                 @Override
                 public void accept(String s, Method method) {
-                    string[0] += "\n" + s + "\n" + method.toString();
+                    methodStr[0] += "\n" + s + "\n" + method.toString();
                 }
             });
+            String[] string = {"Construct{" +
+                    "', packageName='" + packageName +
+                    "', classes=[" + classesStr[0] +
+                    "], fieldMembers=[" + fieldsStr[0] +
+                    "'], methodMembers=[" + methodStr[0] +
+                    "], currentClass={" + currentClass +
+                    "}, cited=" + cited +
+                    "}\n}\n"};
+
             return string[0];
         }
     }
