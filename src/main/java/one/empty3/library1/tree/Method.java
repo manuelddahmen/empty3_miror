@@ -112,32 +112,37 @@ public class Method {
 
     @Override
     public String toString() {
-        final String[] string = {"Method{" +
-                "name='" + name + '\'' +
-                ", ofClass=" + ofClass +
-                ", parameterList=" + parameterList +
-                ", variableList=" + variableList +
-                ", instructions=" + instructions +
-                ", scope='" + scope + '\'' +
-                '}'};
+        String[] string = {""};
+
+        String[] parameterListStr = {""};
         parameterList.forEach(new Consumer<Variable>() {
             @Override
             public void accept(Variable variable) {
-                string[0] += variable.toString();
+                parameterListStr[0] += variable.toString();
             }
         });
+        String[] variableListStr = {""};
         variableList.forEach(new Consumer<Variable>() {
             @Override
             public void accept(Variable variable) {
-                string[0] += variable.toString();
+                variableListStr[0] += variable.toString();
             }
         });
+        String[] instructionsListStr = {""};
         instructions.forEach(new Consumer<Instruction>() {
             @Override
             public void accept(Instruction instruction) {
-                string[0] += instruction.toString();
+                instructionsListStr[0] += instruction.toString();
             }
         });
+        string[0] += "Method{" +
+                "name='" + name + '\'' +
+                ", ofClass=" + ofClass +
+                ", parameterList=[" + parameterListStr[0] +
+                "], variableList=[" + variableListStr[0] +
+                "], instructions=[" + instructionsListStr[0] +
+                "], scope='" + scope + '\'' +
+                '}';
         return string[0];
     }
 }

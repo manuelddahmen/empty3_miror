@@ -22,6 +22,7 @@
 
 package one.empty3.library1.tree;
 
+import one.empty3.feature.V;
 import one.empty3.library.StructureMatrix;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -240,22 +241,19 @@ public class StringAnalyzer1 {
             int position1 = position;
             int i = 0;
             int position0 = position1;
-            boolean firstPass = true;
-            boolean isOk = false;
-            while (firstPass || isOk) {
-                firstPass = false;
-                for (Token token : choices) {
-                    position1 = token.parse(input, position0);
-                    if (token.isSuccessful()) {
-                        position0 = position1;
-                        isOk = true;
-                        break;
-                    } else {
-                        isOk = false;
-                    }
+            boolean passed = false;
+            for (Token token : choices) {
+                position1 = token.parse(input, position0);
+                if (token.isSuccessful()) {
+                    position0 = position1;
+                    passed = true;
+                    continue;
                 }
             }
-            return processNext(input, position0);
+            if (passed)
+                setSuccessful(true);
+            return position0;
+
         }
     }
 
@@ -1269,9 +1267,9 @@ public class StringAnalyzer1 {
         }
     */
     public class Construct {
-        public Variable currentField;
-        public Method currentMethod;
-        protected String packageName;
+        public Variable currentField = new Variable();
+        public Method currentMethod = new Method();
+        protected String packageName = "";
         protected Class currentClass = new Class();
         protected HashMap<String, Class> cited = new HashMap<>();
         protected HashMap<String, Variable> fieldMembers = new HashMap<>();
@@ -1316,9 +1314,11 @@ public class StringAnalyzer1 {
             String[] string = {"Construct{" +
                     "packageName='" + packageName +
                     "', classes=[" + classesStr[0] +
-                    "], fieldMembers=[" + fieldsStr[0] +
+                    "], fieldMembers=['" + fieldsStr[0] +
                     "'], methodMembers=[" + methodStr[0] +
                     "], currentClass={" + currentClass +
+                    "], currentMethod={" + currentMethod +
+                    "], currentField={" + currentField +
                     "}, cited=[" + citedStr[0] +
                     "]}"};
 

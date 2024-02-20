@@ -24,6 +24,7 @@ package one.empty3.library1.tree;
 
 public class Variable {
     private String name;
+    private String classStr;
     private Class value;
     private String scope;
 
@@ -51,11 +52,23 @@ public class Variable {
         this.scope = choice;
     }
 
+    public String getClassStr() {
+        return classStr;
+    }
+
+    public void setClassStr(String classStr) {
+        this.classStr = classStr;
+    }
+
+    public String getScope() {
+        return scope;
+    }
+
     @Override
     public String toString() {
         return "Variable{" +
                 "name='" + name + '\'' +
-                ", value=" + value +
+                ", value=" + classStr +
                 ", scope='" + scope + '\'' +
                 '}';
     }

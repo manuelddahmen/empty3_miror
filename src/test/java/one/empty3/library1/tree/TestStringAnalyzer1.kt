@@ -393,7 +393,6 @@ class TestStringAnalyzer1 {
                 tokenQualifiedNameMethodParameter, tokenNameMethodParameter
             )
 
-
         val multiTokenOptionalMethodParameter = stringAnalyzer1.MultiTokenOptional(
             multiTokenOptionalMethodParameter1
         )
@@ -406,6 +405,26 @@ class TestStringAnalyzer1 {
         multiTokenOptionalMethodParameter.addToken(tokenCloseParenthesizedMethodParameter)
         val tokenOpenBracketMethod = stringAnalyzer1.TokenOpenBracket()
         tokenCloseParenthesizedMethodParameter.addToken(tokenOpenBracketMethod)
+
+        class ActionParamName : Action(tokenNameMethodParameter) {
+            override fun action(): Boolean {
+                stringAnalyzer1.construct.currentMethod.parameterList.get(
+                    stringAnalyzer1.construct.currentMethod.parameterList.size - 1
+                ).name = tokenNameMethodParameter.name
+                return true
+            }
+        }
+
+        class ActionParamType : Action(tokenQualifiedNameMethodParameter) {
+            override fun action(): Boolean {
+                stringAnalyzer1.construct.currentMethod.parameterList.add(Variable())
+                stringAnalyzer1.construct.currentMethod.parameterList.get(
+                    stringAnalyzer1.construct.currentMethod.parameterList.size - 1
+                ).classStr = tokenQualifiedNameMethodParameter.name
+                return true
+            }
+        }
+
 
         tokenMemberMethodType.addToken(tokenMemberMethodName)
         tokenMemberMethodName.addToken(tokenOpenParenthesizedMethodParameter)
