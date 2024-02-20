@@ -45,7 +45,7 @@ public class EcDrawer extends Drawer implements Runnable {
 
         z = new ZBufferImpl(640, 480);
 
-        ((ZBufferImpl)z).setDisplayType(ZBufferImpl.SURFACE_DISPLAY_COL_TRI);
+        ((ZBufferImpl) z).setDisplayType(ZBufferImpl.SURFACE_DISPLAY_COL_TRI);
 
         darkFortress.setSize(640, 480);
 
@@ -58,7 +58,7 @@ public class EcDrawer extends Drawer implements Runnable {
     public void resize() {
         z = ZBufferFactory.instance(w, h);
         z.couleurDeFond(new ColorTexture(Color.black));
-        ((ZBufferImpl)z).setDisplayType(ZBufferImpl.SURFACE_DISPLAY_COL_TRI);
+        ((ZBufferImpl) z).setDisplayType(ZBufferImpl.SURFACE_DISPLAY_COL_TRI);
 
         ah = h;
         aw = w;
@@ -109,25 +109,25 @@ public class EcDrawer extends Drawer implements Runnable {
                 scene.add(vaisseau.getObject());
 
 
-
                 Camera camera;
-                if (mover.getPlotter3D()!=null&&mover.getPlotter3D().isActive())
+                if (mover.getPlotter3D() != null && mover.getPlotter3D().isActive())
                     camera = mover.getPositionMobile().calcCameraMobile();
                 else
                     camera = mover.getPositionMobile().calcCamera();
 
                 Point3D pos = camera.getEye();
                 Point3D dir = camera.getLookat().moins(pos).norme1();
-                Point3D diff = dir.moins(pos).norme1();
                 Point3D up = camera.getVerticale();
 
-                Point3D posCam = pos;//.moins(dir.norme1());
-                Point3D vertical = camera.getVerticale().norme1();
-                Point3D vert2 = vertical.prodVect(dir).mult(-1);
-                Point3D positionCamRear = posCam
-                        .plus(camera.getLookat().moins(posCam).mult(-0.05));
 
-                posCam = positionCamRear;
+                Point3D posCam = pos;//.moins(dir.norme1());
+                Point3D vertical = up.norme1();
+                Point3D vert2 = vertical.prodVect(dir).mult(-1);
+
+                posCam = posCam.plus(camera.getLookat().moins(posCam).mult(-0.05));
+
+                up = dir.prodVect(up.prodVect(dir));
+
 
                 scene.cameraActive(new Camera(posCam, dir, up));
                 scene.cameraActive().declareProperties();

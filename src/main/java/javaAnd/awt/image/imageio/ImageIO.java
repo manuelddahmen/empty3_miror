@@ -42,7 +42,8 @@ public class ImageIO {
             java.awt.image.BufferedImage BufferedImage2 = ImageIO.read(fileInputStream);
             fileInputStream.close();
             return BufferedImage2;
-        } catch (Exception ex) {}
+        } catch (Exception ignored) {
+        }
         return null;
     }
 

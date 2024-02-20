@@ -242,12 +242,17 @@ public class StringAnalyzer1 {
             int i = 0;
             int position0 = position1;
             boolean passed = false;
-            for (Token token : choices) {
-                position1 = token.parse(input, position0);
-                if (token.isSuccessful()) {
-                    position0 = position1;
-                    passed = true;
-                    continue;
+            boolean next = true;
+            while (next) {
+                next = false;
+                for (Token token : choices) {
+                    position1 = token.parse(input, position0);
+                    if (token.isSuccessful()) {
+                        position0 = position1;
+                        passed = true;
+                        next = true;
+                        break;
+                    }
                 }
             }
             if (passed)
@@ -284,6 +289,7 @@ public class StringAnalyzer1 {
                 if (token.isSuccessful()) {
                     return processNext(input, position1);
                 }
+                position0 = position;
             }
             setSuccessful(false);
             return position0;
@@ -622,7 +628,7 @@ public class StringAnalyzer1 {
                 }
                 i++;
             }
-            setSuccessful(i > 1);
+            setSuccessful(true);
             return position1;
         }
 

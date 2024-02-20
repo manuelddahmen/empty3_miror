@@ -135,7 +135,7 @@ public class Method {
                 instructionsListStr[0] += instruction.toString();
             }
         });
-        string[0] += "Method{" +
+        string[0] = "Method{" +
                 "name='" + name + '\'' +
                 ", ofClass=" + ofClass +
                 ", parameterList=[" + parameterListStr[0] +

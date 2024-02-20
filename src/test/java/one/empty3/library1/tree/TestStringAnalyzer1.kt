@@ -393,34 +393,43 @@ class TestStringAnalyzer1 {
                 tokenQualifiedNameMethodParameter, tokenNameMethodParameter
             )
 
-        val multiTokenOptionalMethodParameter = stringAnalyzer1.MultiTokenOptional(
-            multiTokenOptionalMethodParameter1
+        val multiTokenOptionalMethodParameter = stringAnalyzer1.MultiTokenExclusiveXor(
+            multiTokenOptionalMethodParameter1, multiTokenOptionalMethodParameter2
         )
+        /*
         multiTokenOptionalMethodParameter1.addToken(
             stringAnalyzer1.MultiTokenOptional(
                 multiTokenOptionalMethodParameter2
             )
-        )
+        )*/
         tokenOpenParenthesizedMethodParameter.addToken(multiTokenOptionalMethodParameter)
         multiTokenOptionalMethodParameter.addToken(tokenCloseParenthesizedMethodParameter)
+        //multiTokenOptionalMethodParameter2.addToken(tokenCloseParenthesizedMethodParameter)//???
         val tokenOpenBracketMethod = stringAnalyzer1.TokenOpenBracket()
         tokenCloseParenthesizedMethodParameter.addToken(tokenOpenBracketMethod)
 
+
+        class ActionTokenOpenParenthesizedMethodParameter : Action(tokenOpenParenthesizedMethodParameter) {
+            override fun action(): Boolean {
+                stringAnalyzer1.construct.currentMethod.ofClass = Variable()
+                stringAnalyzer1.construct.currentMethod.ofClass.classStr = tokenMemberMethodName.name
+                return true
+            }
+        }
+
         class ActionParamName : Action(tokenNameMethodParameter) {
             override fun action(): Boolean {
-                stringAnalyzer1.construct.currentMethod.parameterList.get(
-                    stringAnalyzer1.construct.currentMethod.parameterList.size - 1
-                ).name = tokenNameMethodParameter.name
+                val parameterList = stringAnalyzer1.construct.currentMethod.parameterList
+                parameterList[parameterList.size - 1].name = tokenNameMethodParameter.name
                 return true
             }
         }
 
         class ActionParamType : Action(tokenQualifiedNameMethodParameter) {
             override fun action(): Boolean {
-                stringAnalyzer1.construct.currentMethod.parameterList.add(Variable())
-                stringAnalyzer1.construct.currentMethod.parameterList.get(
-                    stringAnalyzer1.construct.currentMethod.parameterList.size - 1
-                ).classStr = tokenQualifiedNameMethodParameter.name
+                val parameterList = stringAnalyzer1.construct.currentMethod.parameterList
+                parameterList.add(Variable())
+                parameterList[parameterList.size - 1].classStr = tokenNameMethodParameter.name
                 return true
             }
         }
@@ -429,10 +438,11 @@ class TestStringAnalyzer1 {
         tokenMemberMethodType.addToken(tokenMemberMethodName)
         tokenMemberMethodName.addToken(tokenOpenParenthesizedMethodParameter)
         // Instructions
-        val singleTokenExclusiveXorMethodInstruction =
-            stringAnalyzer1.SingleTokenExclusiveXor(
+        val tokenMultiMembersInstructions =
+            stringAnalyzer1.MultiTokenExclusiveXor(
                 tokenMemberMethodVarType1,
-                tokenMemberMethodVarType2
+                tokenMemberMethodVarType2,
+                tokenMemberMethodExpression3,
             )
 
         val tokenMemberMethodVarType = stringAnalyzer1.TokenQualifiedName()
@@ -444,9 +454,6 @@ class TestStringAnalyzer1 {
 
         // End of Instructions
 
-        val tokenMultiMembersInstructions = stringAnalyzer1.MultiTokenOptional(
-            singleTokenExclusiveXorMethodInstruction
-        )
         val tokenCloseBracketMethod = stringAnalyzer1.TokenCloseBracket()
         tokenOpenBracketMethod.addToken(tokenMultiMembersInstructions)
         tokenMultiMembersInstructions.addToken(tokenCloseBracketMethod)
