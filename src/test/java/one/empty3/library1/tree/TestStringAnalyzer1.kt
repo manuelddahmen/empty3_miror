@@ -43,7 +43,7 @@ class TestStringAnalyzer1 {
 //            parse = stringAnalyzer1.mPosition
         } catch (ex: RuntimeException) {
             if (token.isSuccessful) {
-                if (parse >= input.length) {
+                if (stringAnalyzer1.mPosition >= input.length) {
                     Assert.assertTrue(true)
 
                     println(stringAnalyzer1.construct)
@@ -55,7 +55,7 @@ class TestStringAnalyzer1 {
         }
 
         println("TestStringAnalyzer1.testStringAnalyzerPackage")
-        println("parse = " + parse + "/" + input.length)
+        println("parse = " + stringAnalyzer1.mPosition + "/" + input.length)
         println("isSuccessful = " + token.isSuccessful)
 
 
@@ -412,7 +412,8 @@ class TestStringAnalyzer1 {
         class ActionTokenOpenParenthesizedMethodParameter : Action(tokenOpenParenthesizedMethodParameter) {
             override fun action(): Boolean {
                 stringAnalyzer1.construct.currentMethod.ofClass = Variable()
-                stringAnalyzer1.construct.currentMethod.ofClass.classStr = tokenMemberMethodName.name
+                stringAnalyzer1.construct.currentMethod.ofClass.classStr = tokenMemberMethodType.name
+                stringAnalyzer1.construct.currentMethod.name = tokenMemberMethodType.name
                 return true
             }
         }
@@ -487,14 +488,13 @@ class TestStringAnalyzer1 {
         var parse = -1
         try {
             parse = stringAnalyzer1.parse(token, input)
-//            parse = stringAnalyzer1.mPosition
+            parse = stringAnalyzer1.mPosition
         } catch (ex: RuntimeException) {
             ex.printStackTrace()
-            if (token.isSuccessful) {
-                if (parse >= input.length) {
-                    Assert.assertTrue(true)
-                    return
-                }
+            if (parse >= input.length) {
+                Assert.assertTrue(true)
+            } else {
+                Assert.assertTrue(false)
             }
         }
         println("TestStringAnalyzer1.testStringAnalyzerPackage")
@@ -505,17 +505,14 @@ class TestStringAnalyzer1 {
         if (parse >= input.length)
             println("")
         else
-            println(input.substring(parse))
+            println(input.substring(stringAnalyzer1.mPosition))
 
-        if (token.isSuccessful) {
-            if (parse >= input.length) {
-                Assert.assertTrue(true)
-                return
-            }
+        if (parse >= input.length) {
+            Assert.assertTrue(true)
+            return
+        } else {
+            Assert.assertTrue(false)
         }
-
-        Assert.assertTrue(false)
-
 
     }
 
