@@ -43,7 +43,8 @@ import java.util.logging.Logger;
 
 /*__
  *
- * @author Manuel Dahmen _manuel.dahmen@gmx.com_
+ * Meta Description missing
+ * @author Manuel Dahmen dathewolf@gmail.com
  */
 public class Ciel {
     private final Sphere bleu;
@@ -58,7 +59,7 @@ public class Ciel {
             ECBufferedImage ecBufferedImage = new ECBufferedImage(read);
             bleu.texture(new ImageTexture(ecBufferedImage));
 
-        } catch (Exception  ex) {
+        } catch (Exception ex) {
             bleu.texture(new ColorTexture(Color.BLUE));
         }
     }

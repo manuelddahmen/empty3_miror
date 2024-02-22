@@ -30,10 +30,11 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 import javax.swing.*;
+
 import net.miginfocom.swing.*;
 
 /**
- * @author manue
+ * @author Manuel Dahmen dathewolf@gmail.com
  */
 public class DimensionZBuffer extends JDialog {
     private int resX;
@@ -45,8 +46,8 @@ public class DimensionZBuffer extends JDialog {
     }
 
     private void ok(ActionEvent e) {
-        ((VecMeshEditorGui)(getOwner())).setResX(Integer.parseInt(this.textFieldX.getText()));
-        ((VecMeshEditorGui)(getOwner())).setResY(Integer.parseInt(this.textFieldY.getText()));
+        ((VecMeshEditorGui) (getOwner())).setResX(Integer.parseInt(this.textFieldX.getText()));
+        ((VecMeshEditorGui) (getOwner())).setResY(Integer.parseInt(this.textFieldY.getText()));
         this.dispose();
     }
 

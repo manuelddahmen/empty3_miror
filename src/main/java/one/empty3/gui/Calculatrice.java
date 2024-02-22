@@ -36,7 +36,9 @@ import java.awt.event.MouseEvent;
 import java.util.ResourceBundle;
 
 /**
- * @author Manuel Dahmen
+ * My class description missing
+ *
+ * @author Manuel Dahmen dathewolf@gmail.com
  */
 public class Calculatrice extends JDialog {
     private final JTextField textField0;
@@ -46,17 +48,17 @@ public class Calculatrice extends JDialog {
         initComponents();
         this.textField1.setText(text.getText());
         this.textField0 = text;
-   }
+    }
+
     private void appendEventButtonActionPerformed(ActionEvent e) {
         boolean del = false;
         String buttonText = ((JButton) e.getSource()).getText();
-        if(buttonText.equals("DELETE"))
-        {
+        if (buttonText.equals("DELETE")) {
             del = true;
             buttonText = "";
         }
-        if(textField1.getSelectedText()!=null)
-            textField1.replaceSelection(del?"":buttonText);
+        if (textField1.getSelectedText() != null)
+            textField1.replaceSelection(del ? "" : buttonText);
         else {
             int caretPosition = this.textField1.getCaretPosition();
             String substring1 = this.textField1.getText().substring(0, caretPosition);
@@ -84,7 +86,7 @@ public class Calculatrice extends JDialog {
     }
 
     private void listFunctionMouseClicked(MouseEvent e) {
-        this.textField1.setText(this.textField1.getText()+ listFunction.getSelectedValue().toString());
+        this.textField1.setText(this.textField1.getText() + listFunction.getSelectedValue().toString());
     }
 
     private void initComponents() {
@@ -127,29 +129,29 @@ public class Calculatrice extends JDialog {
         //======== dialogPane ========
         {
             dialogPane.setLayout(new MigLayout(
-                "insets 0,hidemode 3,gap 0 0",
-                // columns
-                "[grow,fill]",
-                // rows
-                "[grow,fill]" +
-                "[fill]"));
+                    "insets 0,hidemode 3,gap 0 0",
+                    // columns
+                    "[grow,fill]",
+                    // rows
+                    "[grow,fill]" +
+                            "[fill]"));
 
             //======== contentPanel ========
             {
                 contentPanel.setLayout(new MigLayout(
-                    "fill,insets dialog,hidemode 3",
-                    // columns
-                    "[fill]",
-                    // rows
-                    "[]" +
-                    "[]" +
-                    "[]" +
-                    "[]" +
-                    "[]" +
-                    "[]" +
-                    "[]" +
-                    "[]" +
-                    "[]"));
+                        "fill,insets dialog,hidemode 3",
+                        // columns
+                        "[fill]",
+                        // rows
+                        "[]" +
+                                "[]" +
+                                "[]" +
+                                "[]" +
+                                "[]" +
+                                "[]" +
+                                "[]" +
+                                "[]" +
+                                "[]"));
                 contentPanel.add(textField1, "cell 0 0");
 
                 //---- button2 ----
@@ -258,19 +260,25 @@ public class Calculatrice extends JDialog {
                     //---- listFunction ----
                     listFunction.setModel(new AbstractListModel<String>() {
                         String[] values = {
-                            "sin",
-                            "cos",
-                            "tan",
-                            "atan",
-                            "**",
-                            "log10",
-                            "log",
-                            "random"
+                                "sin",
+                                "cos",
+                                "tan",
+                                "atan",
+                                "**",
+                                "log10",
+                                "log",
+                                "random"
                         };
+
                         @Override
-                        public int getSize() { return values.length; }
+                        public int getSize() {
+                            return values.length;
+                        }
+
                         @Override
-                        public String getElementAt(int i) { return values[i]; }
+                        public String getElementAt(int i) {
+                            return values[i];
+                        }
                     });
                     listFunction.addMouseListener(new MouseAdapter() {
                         @Override
@@ -287,13 +295,13 @@ public class Calculatrice extends JDialog {
             //======== buttonBar ========
             {
                 buttonBar.setLayout(new MigLayout(
-                    "insets dialog,alignx right",
-                    // columns
-                    "[button,fill]" +
-                    "[button,fill]" +
-                    "[button,fill]",
-                    // rows
-                    null));
+                        "insets dialog,alignx right",
+                        // columns
+                        "[button,fill]" +
+                                "[button,fill]" +
+                                "[button,fill]",
+                        // rows
+                        null));
 
                 //---- okButton ----
                 okButton.setText(bundle.getString("Calculatrice.okButton.text"));

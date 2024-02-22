@@ -35,7 +35,8 @@ import one.empty3.library.Representable;
 import one.empty3.library.StructureMatrix;
 
 /*__
- * @author Manuel Dahmen _manuel.dahmen@gmx.com_
+ * Meta Description missing
+ * @author Manuel Dahmen dathewolf@gmail.com
  */
 public class ParametricCurve extends Representable {
     public final double INCR_TAN = 0.00001;
@@ -47,17 +48,15 @@ public class ParametricCurve extends Representable {
 
 
     static {
-        if(globals==null)
-
-        {
+        if (globals == null) {
             Globals globals1 = new Globals();
             ParametricCurve.setGlobals(globals1);
             globals1.setIncrU(0.0001);
         }
 
     }
-    public ParametricCurve()
-    {
+
+    public ParametricCurve() {
         super();
         startU.setElem(0.0);
         endU.setElem(1.0);
@@ -66,7 +65,7 @@ public class ParametricCurve extends Representable {
     }
 
     protected StructureMatrix<Double> startU = new StructureMatrix<>(0, Double.class);
-    protected StructureMatrix<Double>  endU= new StructureMatrix<>(0, Double.class);
+    protected StructureMatrix<Double> endU = new StructureMatrix<>(0, Double.class);
     protected StructureMatrix<Boolean> connected = new StructureMatrix<>(0, Boolean.class);
     private Parameters parameters = new Parameters(true);
     private StructureMatrix<Double> incrU = new StructureMatrix<>(0, Double.class);
@@ -83,22 +82,20 @@ public class ParametricCurve extends Representable {
         this.parameters = parameters;
     }
 
-    public Point3D calculerPoint3D(double t)
-    {
+    public Point3D calculerPoint3D(double t) {
         throw new UnsupportedOperationException("To implements. Subclasses");
     }
 
-    public Point3D calculerVitesse3D(double t)
-    {
-        return calculerPoint3D(t*(1+INCR_TAN)).moins(calculerPoint3D(t)).mult(INCR_TAN);
+    public Point3D calculerVitesse3D(double t) {
+        return calculerPoint3D(t * (1 + INCR_TAN)).moins(calculerPoint3D(t)).mult(INCR_TAN);
     }
-    public Point3D calculerTangente(double t)
-    {
-        return calculerPoint3D(t*(1+INCR_TAN)).moins(calculerPoint3D(t)).mult(INCR_TAN);
+
+    public Point3D calculerTangente(double t) {
+        return calculerPoint3D(t * (1 + INCR_TAN)).moins(calculerPoint3D(t)).mult(INCR_TAN);
     }
-    public Point3D tangente(Double t)
-    {
-        return calculerPoint3D(t*1.0001).moins(calculerPoint3D(t));
+
+    public Point3D tangente(Double t) {
+        return calculerPoint3D(t * 1.0001).moins(calculerPoint3D(t));
     }
 
     public Double endU() {
@@ -117,7 +114,7 @@ public class ParametricCurve extends Representable {
             incr = globals.getIncrU();
         }
         StructureMatrix<Double> doubleStructureMatrix = new StructureMatrix<>(0, Double.class);
-        doubleStructureMatrix.setElem(incr <= incrU.getElem()? incrU.getElem() : incr);
+        doubleStructureMatrix.setElem(incr <= incrU.getElem() ? incrU.getElem() : incr);
         return doubleStructureMatrix;
     }
 
@@ -143,7 +140,7 @@ public class ParametricCurve extends Representable {
     }
 
     public Point3D calculerNormale(double u) {
-        return calculerPoint3D(u+INCR_TAN).moins(calculerPoint3D(u-INCR_TAN)).norme1();
+        return calculerPoint3D(u + INCR_TAN).moins(calculerPoint3D(u - INCR_TAN)).norme1();
     }
 
     public static class Globals {
@@ -178,10 +175,12 @@ public class ParametricCurve extends Representable {
 
             return Parameters.this.incrU;
         }
+
         public Double getStartU() {
 
             return Parameters.this.startU;
         }
+
         public Double getEndU() {
 
             return Parameters.this.endU;
@@ -202,13 +201,13 @@ public class ParametricCurve extends Representable {
         public void setEndU(Double endU) {
             Parameters.this.endU = endU;
         }
+
         public void setStartU(Double endU) {
             Parameters.this.startU = endU;
         }
     }
 
-    public ParametricCurve morph(Double incrU)
-    {
+    public ParametricCurve morph(Double incrU) {
         // TODO
         return this;
     }

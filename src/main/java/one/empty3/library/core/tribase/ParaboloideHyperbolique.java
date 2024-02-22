@@ -35,7 +35,8 @@ import one.empty3.library.Point3D;
 import one.empty3.library.core.nurbs.ParametricSurface;
 
 /*__
- * @author Manuel Dahmen _manuel.dahmen@gmx.com_
+ * Meta Description missing
+ * @author Manuel Dahmen dathewolf@gmail.com
  */
 public class ParaboloideHyperbolique extends ParametricSurface {
     private double a;
@@ -45,8 +46,8 @@ public class ParaboloideHyperbolique extends ParametricSurface {
     {
         setStartU(-1.0);
         setStartV(-1.0);
-        setEndU (1.0);
-        setEndV (1.0);
+        setEndU(1.0);
+        setEndV(1.0);
     }
 
     public ParaboloideHyperbolique(double a, double b, double h) {

@@ -27,6 +27,7 @@
 package one.empty3.feature;
 
 import javax.swing.event.*;
+
 import net.miginfocom.swing.MigLayout;
 import one.empty3.feature.process.InProcessCode;
 import one.empty3.io.ObjectWithProperties;
@@ -42,7 +43,9 @@ import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
 /**
- * @author manue
+ * My class description missing
+ *
+ * @author Manuel Dahmen dathewolf@gmail.com
  */
 public class DialogMultFrames extends JDialog {
     private final ClassSchemaBuilder owner;
@@ -59,7 +62,7 @@ public class DialogMultFrames extends JDialog {
     public DialogMultFrames(Window owner) {
         super(owner);
         this.owner = (ClassSchemaBuilder) owner;
-        current = ((ClassSchemaBuilder)owner).getSelectedElement();
+        current = ((ClassSchemaBuilder) owner).getSelectedElement();
 
         initComponents();
 
@@ -69,14 +72,14 @@ public class DialogMultFrames extends JDialog {
 
     private void updateForms() {
 
-        if(current==null) {
+        if (current == null) {
             dispose();
-            this.classInstance =  null;
+            this.classInstance = null;
         } else {
             this.classInstance = ((ClassSchemaBuilder.ClassElement) current).getInstance();
         }
         ProcessFile pf = classInstance;
-        if(pf==null) {
+        if (pf == null) {
             System.err.println("DialogMultFrames: pf==null ");
             dispose();
             setVisible(false);
@@ -85,9 +88,10 @@ public class DialogMultFrames extends JDialog {
         pack();
 
     }
+
     public void initComboBox() {
 
-        if(classInstance!=null) {
+        if (classInstance != null) {
             List<String> model = new ArrayList<>(classInstance.getProperties()
                     .getPropertyList());
 
@@ -113,7 +117,7 @@ public class DialogMultFrames extends JDialog {
 
     private void updateDataField() {
         Object o = getComboBox1().getSelectedItem();
-        if(o instanceof String) {
+        if (o instanceof String) {
             String s = (String) o;
             ProcessFile instance = ((ClassSchemaBuilder.ClassElement) current).getInstance();
             ObjectWithProperties.ClassTypes types =
@@ -127,47 +131,47 @@ public class DialogMultFrames extends JDialog {
             code = classInstance.getCode();
             this.classType = types;
         } else {
-            System.err.println("Selected item is null or no string :" +o);
+            System.err.println("Selected item is null or no string :" + o);
         }
-        String property = (String)(comboBox1.getSelectedItem());
+        String property = (String) (comboBox1.getSelectedItem());
 
         pack();
     }
 
     private void applyChanges(ActionEvent e) {
-        if(classInstance != null && getClassType()!=null) {
+        if (classInstance != null && getClassType() != null) {
             JTextField textFieldValue1 = getTextFieldValue();
             String text = textFieldValue1.getText();
 
-            if(text!=null && text.length()>0) {
+            if (text != null && text.length() > 0) {
 
-            Object o = text;
+                Object o = text;
 
-            switch (classType) {
-                case AtomicInt:
-                    o = Integer.parseInt(text);
-                    break;
-                case AtomicBoolean:
-                    o = Boolean.parseBoolean(text);
-                    break;
+                switch (classType) {
+                    case AtomicInt:
+                        o = Integer.parseInt(text);
+                        break;
+                    case AtomicBoolean:
+                        o = Boolean.parseBoolean(text);
+                        break;
 
-                case String:
-                    o = text;
-                    break;
-                case AtomicChar :
-                    Character c = text.charAt(0);
-                    o = c;
-                    break;
+                    case String:
+                        o = text;
+                        break;
+                    case AtomicChar:
+                        Character c = text.charAt(0);
+                        o = c;
+                        break;
 
-                case AtomicDouble :
-                    o = Double.parseDouble(text);
-                    break;
-                default:
-                    throw new IllegalStateException("Unexpected value: " + classType);
+                    case AtomicDouble:
+                        o = Double.parseDouble(text);
+                        break;
+                    default:
+                        throw new IllegalStateException("Unexpected value: " + classType);
+                }
+                classInstance.getProperties()
+                        .updateProperty(currentPropertyName, o);
             }
-            classInstance.getProperties()
-                    .updateProperty(currentPropertyName, o);
-        }
         }
 
         pack();
@@ -255,7 +259,7 @@ public class DialogMultFrames extends JDialog {
             @Override
             public void accept(String s) {
                 String codeNew = "\n" + s + "=" + classInstance.getProperties().getProperty(s) + "\n";
-                if(textAreaCodeEditorSimple.getText().contains(s)) {
+                if (textAreaCodeEditorSimple.getText().contains(s)) {
                     String text = textAreaCodeEditorSimple.getText();
                     int start = text.indexOf(s);
                     int end = text.indexOf(s, start);
@@ -264,7 +268,7 @@ public class DialogMultFrames extends JDialog {
                     textAreaCodeEditorSimple.setText(textMod);
                 } else {
                     textAreaCodeEditorSimple.setText(textAreaCodeEditorSimple.getText()
-                    + codeNew);
+                            + codeNew);
                 }
                 code.newVersion(textAreaCodeEditorSimple.getText());
 

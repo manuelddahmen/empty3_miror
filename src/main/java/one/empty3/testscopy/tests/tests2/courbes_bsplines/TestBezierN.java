@@ -37,7 +37,8 @@ import java.awt.*;
 /*__
  * Test OK
  *
- * @author Manuel Dahmen _manuel.dahmen@gmx.com_
+ * Meta Description missing
+ * @author Manuel Dahmen dathewolf@gmail.com
  */
 public class TestBezierN extends TestObjet {
     private CourbeParametriquePolynomialeBezier b;

@@ -33,7 +33,9 @@ import java.awt.*;
 import java.io.File;
 
 /**
- * @author Manuel Dahmen
+ * My class description missing
+ *
+ * @author Manuel Dahmen dathewolf@gmail.com
  */
 public class Main extends JFrame {
     private File[] files;

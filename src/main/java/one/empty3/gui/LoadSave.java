@@ -41,7 +41,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * @author Manuel Dahmen
+ * My class description missing
+ *
+ * @author Manuel Dahmen dathewolf@gmail.com
  */
 public class LoadSave extends JPanel {
     private Main main;
@@ -66,8 +68,7 @@ public class LoadSave extends JPanel {
         reinit(main.getDataModel().getScene());
     }
 
-    public void reinit(Scene scene)
-    {
+    public void reinit(Scene scene) {
         main.getREditor().history.clear();
         main.getREditor().init(scene);
     }
@@ -86,7 +87,7 @@ public class LoadSave extends JPanel {
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
-            Logger.getAnonymousLogger().log(Level.INFO, "Load file"+selectedFile.toString());
+            Logger.getAnonymousLogger().log(Level.INFO, "Load file" + selectedFile.toString());
 
             main.setDataModel(new DataModel(selectedFile));
             currentDirectory = jFileChooser.getCurrentDirectory();
@@ -137,26 +138,26 @@ public class LoadSave extends JPanel {
 
         //======== this ========
         setLayout(new MigLayout(
-            "hidemode 3",
-            // columns
-            "[fill]" +
-            "[fill]",
-            // rows
-            "[]" +
-            "[]" +
-            "[]" +
-            "[]" +
-            "[]" +
-            "[]" +
-            "[]" +
-            "[]"));
+                "hidemode 3",
+                // columns
+                "[fill]" +
+                        "[fill]",
+                // rows
+                "[]" +
+                        "[]" +
+                        "[]" +
+                        "[]" +
+                        "[]" +
+                        "[]" +
+                        "[]" +
+                        "[]"));
 
         //---- buttonNew ----
         buttonNew.setText("new");
         buttonNew.addActionListener(e -> {
-			buttonNewActionPerformed(e);
-			buttonNewActionPerformed(e);
-		});
+            buttonNewActionPerformed(e);
+            buttonNewActionPerformed(e);
+        });
         add(buttonNew, "cell 0 0");
 
         //======== scrollPane1 ========
@@ -164,16 +165,17 @@ public class LoadSave extends JPanel {
 
             //---- tableLatest ----
             tableLatest.setModel(new DefaultTableModel(
-                new Object[][] {
-                    {"Latest"},
-                },
-                new String[] {
-                    null
-                }
+                    new Object[][]{
+                            {"Latest"},
+                    },
+                    new String[]{
+                            null
+                    }
             ) {
-                Class<?>[] columnTypes = new Class<?>[] {
-                    String.class
+                Class<?>[] columnTypes = new Class<?>[]{
+                        String.class
                 };
+
                 @Override
                 public Class<?> getColumnClass(int columnIndex) {
                     return columnTypes[columnIndex];
@@ -182,9 +184,9 @@ public class LoadSave extends JPanel {
             {
                 TableColumnModel cm = tableLatest.getColumnModel();
                 cm.getColumn(0).setCellEditor(new DefaultCellEditor(
-                    new JComboBox(new DefaultComboBoxModel(new String[] {
-                        "Latest"
-                    }))));
+                        new JComboBox(new DefaultComboBoxModel(new String[]{
+                                "Latest"
+                        }))));
             }
             scrollPane1.setViewportView(tableLatest);
         }
@@ -207,9 +209,9 @@ public class LoadSave extends JPanel {
         //---- buttonEstl ----
         buttonEstl.setText("Export STL");
         buttonEstl.addActionListener(e -> {
-			buttonEstlActionPerformed(e);
-			buttonEstlActionPerformed(e);
-		});
+            buttonEstlActionPerformed(e);
+            buttonEstlActionPerformed(e);
+        });
         add(buttonEstl, "cell 0 4");
 
         //---- buttonEobj ----

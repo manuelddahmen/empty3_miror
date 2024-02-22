@@ -33,9 +33,11 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 /**
- * @author Manuel Dahmen
+ * My class description missing
+ *
+ * @author Manuel Dahmen dathewolf@gmail.com
  */
-public class TreeScene extends JPanel implements PropertyChangeListener{
+public class TreeScene extends JPanel implements PropertyChangeListener {
     public TreeScene() {
         initComponents();
         treeScene.addPropertyChangeListener(this);
@@ -48,20 +50,20 @@ public class TreeScene extends JPanel implements PropertyChangeListener{
 
         //======== this ========
         setLayout(new MigLayout(
-            "hidemode 3",
-            // columns
-            "[fill]" +
-            "[fill]" +
-            "[fill]" +
-            "[fill]" +
-            "[fill]" +
-            "[fill]",
-            // rows
-            "[]" +
-            "[]" +
-            "[]" +
-            "[]" +
-            "[]"));
+                "hidemode 3",
+                // columns
+                "[fill]" +
+                        "[fill]" +
+                        "[fill]" +
+                        "[fill]" +
+                        "[fill]" +
+                        "[fill]",
+                // rows
+                "[]" +
+                        "[]" +
+                        "[]" +
+                        "[]" +
+                        "[]"));
 
         //======== scrollPane1 ========
         {

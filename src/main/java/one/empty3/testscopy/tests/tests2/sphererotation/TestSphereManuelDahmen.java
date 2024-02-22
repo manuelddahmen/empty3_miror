@@ -45,7 +45,8 @@ import java.util.logging.Logger;
  * cette classe produit une image de sphère avec "Manuel Dahmen" écrit dessus. La sphère tourne
  * puis s'en va et revient à l'écran.
  *
- * @author Manuel Dahmen _manuel.dahmen@gmx.com_
+ * Meta Description missing
+ * @author Manuel Dahmen dathewolf@gmail.com
  */
 public class TestSphereManuelDahmen extends TestObjetSub {
     double distance = 35;

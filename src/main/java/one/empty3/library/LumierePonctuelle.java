@@ -33,7 +33,8 @@ package one.empty3.library;
 import java.awt.*;
 
 /*__
- * @author Manuel Dahmen _manuel.dahmen@gmx.com_
+ * Meta Description missing
+ * @author Manuel Dahmen dathewolf@gmail.com
  */
 public class LumierePonctuelle extends Lumiere {
 
@@ -75,9 +76,9 @@ public class LumierePonctuelle extends Lumiere {
         double[] Lsa = getRgb(Ls);
         double[] Laa = getRgb(La);
         for (int i = 0; i < 3; i++) {
-            double x = (1-angle)*couleurObjet[i]
+            double x = (1 - angle) * couleurObjet[i]
                     + (angle) * Lsa[i];
-            res[i] = Math.exp(-x*x*2);
+            res[i] = Math.exp(-x * x * 2);
 
             if (res[i] < minThreshold) {
                 res[i] = minThreshold;
@@ -110,7 +111,6 @@ public class LumierePonctuelle extends Lumiere {
     float minmaxc(double c) {
         return (float) Math.max(1.0, Math.min(0.0, c));
     }
-
 
 
     public void declareProperties() {

@@ -34,7 +34,8 @@ package one.empty3.apps.opad;
 
 /*__
  *
- * @author Manuel Dahmen _manuel.dahmen@gmx.com_
+ * Meta Description missing
+ * @author Manuel Dahmen dathewolf@gmail.com
  */
 public class Team {
 

@@ -31,34 +31,35 @@ import java.awt.*;
  */
 
 
-
 /**
- * @author Manuel Dahmen
+ * My class description missing
+ *
+ * @author Manuel Dahmen dathewolf@gmail.com
  */
 public class LayerView extends JFrame {
-	public LayerView() {
-		initComponents();
-	}
+    public LayerView() {
+        initComponents();
+    }
 
-	private void initComponents() {
-		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
+    private void initComponents() {
+        // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         //======== this ========
         Container contentPane = getContentPane();
         contentPane.setLayout(new MigLayout(
-            "fill,hidemode 3",
-            // columns
-            "[fill]" +
-            "[fill]",
-            // rows
-            "[]" +
-            "[]" +
-            "[]"));
+                "fill,hidemode 3",
+                // columns
+                "[fill]" +
+                        "[fill]",
+                // rows
+                "[]" +
+                        "[]" +
+                        "[]"));
 
         pack();
         setLocationRelativeTo(getOwner());
-		// JFormDesigner - End of component initialization  //GEN-END:initComponents
-	}
+        // JFormDesigner - End of component initialization  //GEN-END:initComponents
+    }
 
-	// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
-	// JFormDesigner - End of variables declaration  //GEN-END:variables
+    // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
+    // JFormDesigner - End of variables declaration  //GEN-END:variables
 }

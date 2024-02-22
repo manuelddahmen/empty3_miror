@@ -32,7 +32,8 @@
 package one.empty3.library;
 
 /*__
- * @author Manuel Dahmen _manuel.dahmen@gmx.com_
+ * Meta Description missing
+ * @author Manuel Dahmen dathewolf@gmail.com
  */
 public interface DeformMap {
     Point2D getOtherCordinates(double ValueX, double ValueY);

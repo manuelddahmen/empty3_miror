@@ -32,7 +32,8 @@
 package one.empty3.library.core.testing;
 
 /*__
- * @author Manuel Dahmen _manuel.dahmen@gmx.com_
+ * Meta Description missing
+ * @author Manuel Dahmen dathewolf@gmail.com
  */
 public class Gimbal {
     public static final double CIRCLE = 2 * Math.PI;

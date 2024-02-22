@@ -50,7 +50,9 @@ import java.util.logging.Logger;
 
 
 /**
- * @author Manuel Dahmen
+ * My class description missing
+ *
+ * @author Manuel Dahmen dathewolf@gmail.com
  */
 public class Main implements PropertyChangeListener {
     private boolean drawingPointCoords;
@@ -77,8 +79,8 @@ public class Main implements PropertyChangeListener {
     private MeshGEditorThread meshGeditorThread;
     private MeshGraphicalEdit graphicalEditMesh;
     MeshEditorBean meshEditorProps;
-    public static void main(String [] args)
-    {
+
+    public static void main(String[] args) {
         Main main = new Main();
     }
 
@@ -167,24 +169,25 @@ public class Main implements PropertyChangeListener {
     private void ScriptPanelPropertyChange(PropertyChangeEvent e) {
         // TODO add your code here
     }
-/*
-    private void menuItemLoadActionPerformed(ActionEvent e) {
-        JFileChooser jFileChooser = new JFileChooser(".");
-        jFileChooser.setDialogTitle("Open file");
-        jFileChooser.setDialogType(JFileChooser.OPEN_DIALOG);
-        jFileChooser.showDialog(MainWindow, "Load");
-        File selectedFile = jFileChooser.getSelectedFile();
-        Scene scene = new Scene();
-        try {
-            new Loader().load(selectedFile, scene);
-            setDataModel(new DataModel(selectedFile));
-        } catch (VersionNonSupporteeException e1) {
-            e1.printStackTrace();
-        } catch (ExtensionFichierIncorrecteException e1) {
-            e1.printStackTrace();
+
+    /*
+        private void menuItemLoadActionPerformed(ActionEvent e) {
+            JFileChooser jFileChooser = new JFileChooser(".");
+            jFileChooser.setDialogTitle("Open file");
+            jFileChooser.setDialogType(JFileChooser.OPEN_DIALOG);
+            jFileChooser.showDialog(MainWindow, "Load");
+            File selectedFile = jFileChooser.getSelectedFile();
+            Scene scene = new Scene();
+            try {
+                new Loader().load(selectedFile, scene);
+                setDataModel(new DataModel(selectedFile));
+            } catch (VersionNonSupporteeException e1) {
+                e1.printStackTrace();
+            } catch (ExtensionFichierIncorrecteException e1) {
+                e1.printStackTrace();
+            }
         }
-    }
-*/
+    */
     private void menuItemSaveActionPerformed(ActionEvent e) {
         JFileChooser jFileChooser = new JFileChooser(".");
         jFileChooser.setDialogTitle("Save file");
@@ -196,8 +199,7 @@ public class Main implements PropertyChangeListener {
             new Loader().saveTxt(selectedFile, scene);
             dataModel = new DataModel();
             dataModel.setScene(scene);
-        } catch (Exception ex)
-        {
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
@@ -207,38 +209,36 @@ public class Main implements PropertyChangeListener {
     }
 
     private void MainWindowKeyPressed(KeyEvent e) {
-        if(e.getKeyCode()==KeyEvent.VK_ESCAPE)
-        {
+        if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
             getUpdateView().getzRunner().setStopCurrentRender(true);
         }
     }
 
     private void updateViewMouseClicked(MouseEvent e) {
-            try {
-                Logger.getAnonymousLogger().log(Level.INFO,""+ e.getX());
-                Logger.getAnonymousLogger().log(Level.INFO, ""+e.getY());
-                Point3D point3D = getUpdateView().getzRunner().getzBuffer(). clickAt(
-                        (int)e.getX(), (int)e.getY());
+        try {
+            Logger.getAnonymousLogger().log(Level.INFO, "" + e.getX());
+            Logger.getAnonymousLogger().log(Level.INFO, "" + e.getY());
+            Point3D point3D = getUpdateView().getzRunner().getzBuffer().clickAt(
+                    (int) e.getX(), (int) e.getY());
 
-                if(point3D==null && point3D.equals(ZBufferImpl.INFINITY)) {
-                    toDraw = "background(texture)";
-                }else{
-            String[] ps = new String[3];
-            for (int i = 0; i < 3; i++)
-                ps[i] = String.format("%.3f", point3D.get(i));
-            toDraw = "p3(" + ps[0] + ", " + ps[1] + ", " + ps[2] + ")";
-        }
-                click = e.getPoint();
-                drawingPointCoords = true;
-            } catch (Exception ex) {
-                ex.printStackTrace();
+            if (point3D == null && point3D.equals(ZBufferImpl.INFINITY)) {
+                toDraw = "background(texture)";
+            } else {
+                String[] ps = new String[3];
+                for (int i = 0; i < 3; i++)
+                    ps[i] = String.format("%.3f", point3D.get(i));
+                toDraw = "p3(" + ps[0] + ", " + ps[1] + ", " + ps[2] + ")";
             }
+            click = e.getPoint();
+            drawingPointCoords = true;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
 
     }
 
     private void buttonSaveRActionPerformed(ActionEvent e) {
-        SwingUtilities.invokeLater(new Thread()
-        {
+        SwingUtilities.invokeLater(new Thread() {
 
             @Override
             public void run() {
@@ -248,14 +248,12 @@ public class Main implements PropertyChangeListener {
                 try {
                     imageWidth = Integer.parseInt(textFieldXres.getText());
                     imageHeight = Integer.parseInt(textFieldYres.getText());
-                }catch (NumberFormatException ex)
-                {
+                } catch (NumberFormatException ex) {
                     imageWidth = -1;
                     imageHeight = -1;
                     Logger.getAnonymousLogger().info("Invalid numbers (must be int>0 => default");
                 }
-                if(imageHeight<=0 || imageWidth<=0)
-                {
+                if (imageHeight <= 0 || imageWidth <= 0) {
                     imageWidth = 1920;
                     imageHeight = 1080;
 
@@ -268,7 +266,7 @@ public class Main implements PropertyChangeListener {
                 try {
                     File file = new File(getDataModel().getNewImageFile());
                     ImageIO.write(image, "jpg", file);
-                    Logger.getAnonymousLogger().info("Image rendered and saved as <a href="+file.getCanonicalPath()+"\">"+file.getCanonicalPath()+"</a>");
+                    Logger.getAnonymousLogger().info("Image rendered and saved as <a href=" + file.getCanonicalPath() + "\">" + file.getCanonicalPath() + "</a>");
                 } catch (IOException e1) {
                     e1.printStackTrace();
                 }
@@ -279,11 +277,9 @@ public class Main implements PropertyChangeListener {
     }
 
     private void checkBoxBindToPreviewActionPerformed(ActionEvent e) {
-        if(checkBoxBindToPreview.isSelected())
-        {
+        if (checkBoxBindToPreview.isSelected()) {
             bindingGroup.bind();
-        } else
-        {
+        } else {
             bindingGroup.unbind();
         }
     }
@@ -387,13 +383,10 @@ public class Main implements PropertyChangeListener {
 
     private void checkBoxActiveActionPerformed(ActionEvent e) {
         boolean isSelected;
-        if(isSelected = ((JCheckBox)e.getSource()).isSelected())
-        {
+        if (isSelected = ((JCheckBox) e.getSource()).isSelected()) {
             Logger.getAnonymousLogger().log(Level.INFO, "Graphical edition enabled");
-        }
-        else
-        {
-            if(getGraphicalEdit2()==null) {
+        } else {
+            if (getGraphicalEdit2() == null) {
                 graphicalEdit2 = new GraphicalEdit2();
                 graphicalEdit2.setMain(this);
             }
@@ -405,7 +398,7 @@ public class Main implements PropertyChangeListener {
     }
 
     private void radioButton1ActionPerformed(ActionEvent e) {
-        this.getGraphicalEdit2().setSelection(((JRadioButton)e.getSource()).isSelected());
+        this.getGraphicalEdit2().setSelection(((JRadioButton) e.getSource()).isSelected());
         graphicalEdit2.setActionToPerform(GraphicalEdit2.Action.SELECT);
     }
 
@@ -414,23 +407,22 @@ public class Main implements PropertyChangeListener {
     }
 
 
-
     public void setGraphicalEdit2(GraphicalEdit2 graphicalEdit2) {
         this.graphicalEdit2 = graphicalEdit2;
     }
 
     private void checkBoxSelMultipleObjectsActionPerformed(ActionEvent e) {
-        graphicalEdit2.setSelectingMultipleObjects(((JCheckBox)e.getSource()).isSelected());
+        graphicalEdit2.setSelectingMultipleObjects(((JCheckBox) e.getSource()).isSelected());
 
     }
 
     private void checkBoxSelMultiplePointsActionPerformed(ActionEvent e) {
         graphicalEdit2.setStartSel1(true);
-        graphicalEdit2.setSelectArbitraryPointsIn(((JCheckBox)e.getSource()).isSelected());
+        graphicalEdit2.setSelectArbitraryPointsIn(((JCheckBox) e.getSource()).isSelected());
     }
 
     private void checkBoxSelArbitraryPointsActionPerformed(ActionEvent e) {
-        graphicalEdit2.setSelectArbitraryPointsIn(((JCheckBox)e.getSource()).isSelected());
+        graphicalEdit2.setSelectArbitraryPointsIn(((JCheckBox) e.getSource()).isSelected());
     }
 
     private void radioButtonTranslateActionPerformed(ActionEvent e) {
@@ -442,23 +434,23 @@ public class Main implements PropertyChangeListener {
     }
 
     private void checkBoxEndSelActionPerformed(ActionEvent e) {
-        graphicalEdit2.setEndSel1(((JCheckBox)e.getSource()).isSelected());
+        graphicalEdit2.setEndSel1(((JCheckBox) e.getSource()).isSelected());
     }
 
     private void buttonDuplicateOnPointsActionPerformed(ActionEvent e) {
-        graphicalEdit2.setActionToPerform(((JRadioButton)e.getSource()).isSelected()?GraphicalEdit2.Action.duplicateOnPoints:null);
+        graphicalEdit2.setActionToPerform(((JRadioButton) e.getSource()).isSelected() ? GraphicalEdit2.Action.duplicateOnPoints : null);
     }
 
     private void buttonDuplicateOnCurveActionPerformed(ActionEvent e) {
-        graphicalEdit2.setActionToPerform(((JRadioButton)e.getSource()).isSelected()?GraphicalEdit2.Action.duplicateOnCurve:null);
+        graphicalEdit2.setActionToPerform(((JRadioButton) e.getSource()).isSelected() ? GraphicalEdit2.Action.duplicateOnCurve : null);
     }
 
     private void buttonDuplicateOnSurfaceActionPerformed(ActionEvent e) {
-        graphicalEdit2.setActionToPerform(((JRadioButton)e.getSource()).isSelected()?GraphicalEdit2.Action.duplicateOnSurface:null);
+        graphicalEdit2.setActionToPerform(((JRadioButton) e.getSource()).isSelected() ? GraphicalEdit2.Action.duplicateOnSurface : null);
     }
 
     private void buttonExtrudeSelActionPerformed(ActionEvent e) {
-        graphicalEdit2.setActionToPerform(((JRadioButton)e.getSource()).isSelected()?GraphicalEdit2.Action.extrude:null);
+        graphicalEdit2.setActionToPerform(((JRadioButton) e.getSource()).isSelected() ? GraphicalEdit2.Action.extrude : null);
     }
 
     private void buttonSelGoActionPerformed(ActionEvent e) {
@@ -504,11 +496,11 @@ public class Main implements PropertyChangeListener {
     }
 
     private void toggleButtonTransSelActionPerformed(ActionEvent e) {
-        getGraphicalEdit2().setTransSel(((JToggleButton)e.getSource()).isSelected());
+        getGraphicalEdit2().setTransSel(((JToggleButton) e.getSource()).isSelected());
     }
 
     private void toggleButtonRotSelActionPerformed(ActionEvent e) {
-        getGraphicalEdit2().setRotSel(((JToggleButton)e.getSource()).isSelected());
+        getGraphicalEdit2().setRotSel(((JToggleButton) e.getSource()).isSelected());
     }
 
     private void tabbedPaneCameraFocusGained(FocusEvent e) {
@@ -588,9 +580,9 @@ public class Main implements PropertyChangeListener {
     }
 
 
-
-    private class ThreadDrawingCoords  extends Thread {
+    private class ThreadDrawingCoords extends Thread {
     }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         // Generated using JFormDesigner non-commercial license
@@ -708,25 +700,25 @@ public class Main implements PropertyChangeListener {
             });
             var MainWindowContentPane = this.MainWindow.getContentPane();
             MainWindowContentPane.setLayout(new MigLayout(
-                "fill,hidemode 3",
-                // columns
-                "[fill]" +
-                "[fill]",
-                // rows
-                "[]" +
-                "[]" +
-                "[]"));
+                    "fill,hidemode 3",
+                    // columns
+                    "[fill]" +
+                            "[fill]",
+                    // rows
+                    "[]" +
+                            "[]" +
+                            "[]"));
 
             //======== panel6 ========
             {
                 this.panel6.setLayout(new MigLayout(
-                    "fill,hidemode 3",
-                    // columns
-                    "[fill]",
-                    // rows
-                    "[]" +
-                    "[]" +
-                    "[]"));
+                        "fill,hidemode 3",
+                        // columns
+                        "[fill]",
+                        // rows
+                        "[]" +
+                                "[]" +
+                                "[]"));
 
                 //======== menu1 ========
                 {
@@ -735,9 +727,9 @@ public class Main implements PropertyChangeListener {
                     //---- menuItemNew ----
                     this.menuItemNew.setText("New");
                     this.menuItemNew.addActionListener(e -> {
-			menuItemNewActionPerformed(e);
-			menuItemNewActionPerformed(e);
-		});
+                        menuItemNewActionPerformed(e);
+                        menuItemNewActionPerformed(e);
+                    });
                     this.menu1.add(this.menuItemNew);
 
                     //---- menuItemLoad ----
@@ -777,6 +769,7 @@ public class Main implements PropertyChangeListener {
                             public void mouseDragged(MouseEvent e) {
                                 updateViewMouseDragged(e);
                             }
+
                             @Override
                             public void mouseMoved(MouseEvent e) {
                                 updateViewMouseMoved(e);
@@ -810,21 +803,21 @@ public class Main implements PropertyChangeListener {
                         //======== panel1 ========
                         {
                             this.panel1.setLayout(new MigLayout(
-                                "hidemode 3",
-                                // columns
-                                "[fill]" +
-                                "[fill]" +
-                                "[fill]" +
-                                "[fill]" +
-                                "[fill]" +
-                                "[fill]",
-                                // rows
-                                "[]" +
-                                "[]" +
-                                "[]" +
-                                "[]" +
-                                "[]" +
-                                "[]"));
+                                    "hidemode 3",
+                                    // columns
+                                    "[fill]" +
+                                            "[fill]" +
+                                            "[fill]" +
+                                            "[fill]" +
+                                            "[fill]" +
+                                            "[fill]",
+                                    // rows
+                                    "[]" +
+                                            "[]" +
+                                            "[]" +
+                                            "[]" +
+                                            "[]" +
+                                            "[]"));
                             this.panel1.add(this.objectEditorBase1, "cell 0 0 6 6,dock center");
                         }
                         this.tabbedPane1.addTab("Position", this.panel1);
@@ -832,16 +825,16 @@ public class Main implements PropertyChangeListener {
                         //======== panel2 ========
                         {
                             this.panel2.setLayout(new MigLayout(
-                                "hidemode 3",
-                                // columns
-                                "[fill]" +
-                                "[fill]" +
-                                "[fill]",
-                                // rows
-                                "[]" +
-                                "[]" +
-                                "[]" +
-                                "[]"));
+                                    "hidemode 3",
+                                    // columns
+                                    "[fill]" +
+                                            "[fill]" +
+                                            "[fill]",
+                                    // rows
+                                    "[]" +
+                                            "[]" +
+                                            "[]" +
+                                            "[]"));
 
                             //---- labelX ----
                             this.labelX.setText("res.x");
@@ -864,14 +857,14 @@ public class Main implements PropertyChangeListener {
                             this.panel2.add(this.label3, "cell 0 2");
 
                             //---- comboBox1 ----
-                            this.comboBox1.setModel(new DefaultComboBoxModel<>(new String[] {
-                                "DISPLAY_ALL",
-                                "SURFACE_DISPLAY_TEXT_QUADS",
-                                "SURFACE_DISPLAY_TEXT_TRI",
-                                "SURFACE_DISPLAY_COL_QUADS",
-                                "SURFACE_DISPLAY_COL_TRI",
-                                "SURFACE_DISPLAY_LINES",
-                                "SURFACE_DISPLAY_POINTS"
+                            this.comboBox1.setModel(new DefaultComboBoxModel<>(new String[]{
+                                    "DISPLAY_ALL",
+                                    "SURFACE_DISPLAY_TEXT_QUADS",
+                                    "SURFACE_DISPLAY_TEXT_TRI",
+                                    "SURFACE_DISPLAY_COL_QUADS",
+                                    "SURFACE_DISPLAY_COL_TRI",
+                                    "SURFACE_DISPLAY_LINES",
+                                    "SURFACE_DISPLAY_POINTS"
                             }));
                             this.panel2.add(this.comboBox1, "cell 1 2");
 
@@ -890,14 +883,14 @@ public class Main implements PropertyChangeListener {
                         //======== panel3 ========
                         {
                             this.panel3.setLayout(new MigLayout(
-                                "hidemode 3",
-                                // columns
-                                "[fill]" +
-                                "[fill]",
-                                // rows
-                                "[]" +
-                                "[]" +
-                                "[]"));
+                                    "hidemode 3",
+                                    // columns
+                                    "[fill]" +
+                                            "[fill]",
+                                    // rows
+                                    "[]" +
+                                            "[]" +
+                                            "[]"));
                             this.panel3.add(this.loadSave1, "cell 0 0 2 3,dock center");
                         }
                         this.tabbedPane1.addTab("LOad/save/export", this.panel3);
@@ -905,24 +898,24 @@ public class Main implements PropertyChangeListener {
                         //======== panel7 ========
                         {
                             this.panel7.setLayout(new MigLayout(
-                                "hidemode 3",
-                                // columns
-                                "[fill]" +
-                                "[fill]" +
-                                "[fill]",
-                                // rows
-                                "[]" +
-                                "[]" +
-                                "[]" +
-                                "[]" +
-                                "[]"));
+                                    "hidemode 3",
+                                    // columns
+                                    "[fill]" +
+                                            "[fill]" +
+                                            "[fill]",
+                                    // rows
+                                    "[]" +
+                                            "[]" +
+                                            "[]" +
+                                            "[]" +
+                                            "[]"));
 
                             //---- buttonXML ----
                             this.buttonXML.setText("Open");
                             this.buttonXML.addActionListener(e -> {
-			buttonXMLActionPerformed(e);
-			buttonXMLActionPerformed(e);
-		});
+                                buttonXMLActionPerformed(e);
+                                buttonXMLActionPerformed(e);
+                            });
                             this.panel7.add(this.buttonXML, "cell 0 0");
 
                             //---- buttonRefreshXML ----
@@ -946,42 +939,42 @@ public class Main implements PropertyChangeListener {
                         //======== panel8 ========
                         {
                             this.panel8.setLayout(new MigLayout(
-                                "fill,hidemode 3",
-                                // columns
-                                "[fill]" +
-                                "[fill]" +
-                                "[fill]" +
-                                "[fill]" +
-                                "[fill]" +
-                                "[fill]" +
-                                "[fill]" +
-                                "[fill]" +
-                                "[fill]" +
-                                "[fill]" +
-                                "[fill]" +
-                                "[fill]",
-                                // rows
-                                "[]" +
-                                "[]" +
-                                "[]" +
-                                "[]" +
-                                "[]" +
-                                "[]" +
-                                "[]" +
-                                "[]" +
-                                "[]"));
+                                    "fill,hidemode 3",
+                                    // columns
+                                    "[fill]" +
+                                            "[fill]" +
+                                            "[fill]" +
+                                            "[fill]" +
+                                            "[fill]" +
+                                            "[fill]" +
+                                            "[fill]" +
+                                            "[fill]" +
+                                            "[fill]" +
+                                            "[fill]" +
+                                            "[fill]" +
+                                            "[fill]",
+                                    // rows
+                                    "[]" +
+                                            "[]" +
+                                            "[]" +
+                                            "[]" +
+                                            "[]" +
+                                            "[]" +
+                                            "[]" +
+                                            "[]" +
+                                            "[]"));
 
                             //---- checkBoxActive ----
                             this.checkBoxActive.setText("Active graphical markers");
                             this.checkBoxActive.setBorder(new SoftBevelBorder(SoftBevelBorder.LOWERED));
                             this.checkBoxActive.setBorderPainted(true);
                             this.checkBoxActive.addActionListener(e -> {
-			checkBoxActiveActionPerformed(e);
-			checkBoxActiveActionPerformed(e);
-			checkBoxActiveActionPerformed(e);
-			checkBoxActiveActionPerformed(e);
-			checkBoxActiveActionPerformed(e);
-		});
+                                checkBoxActiveActionPerformed(e);
+                                checkBoxActiveActionPerformed(e);
+                                checkBoxActiveActionPerformed(e);
+                                checkBoxActiveActionPerformed(e);
+                                checkBoxActiveActionPerformed(e);
+                            });
                             this.panel8.add(this.checkBoxActive, "cell 1 0");
 
                             //---- label1 ----
@@ -992,9 +985,9 @@ public class Main implements PropertyChangeListener {
                             this.radioButtonSel1.setText("Selection 1 (IN)");
                             this.radioButtonSel1.setSelected(true);
                             this.radioButtonSel1.addActionListener(e -> {
-			radioButtonSel1ActionPerformed(e);
-			radioButtonSel1ActionPerformed(e);
-		});
+                                radioButtonSel1ActionPerformed(e);
+                                radioButtonSel1ActionPerformed(e);
+                            });
                             this.panel8.add(this.radioButtonSel1, "cell 4 0");
 
                             //======== scrollPane2 ========
@@ -1014,47 +1007,47 @@ public class Main implements PropertyChangeListener {
                             this.radioButton1.setText("S\u00e9lection");
                             this.radioButton1.setSelected(true);
                             this.radioButton1.addActionListener(e -> {
-			radioButton1ActionPerformed(e);
-			radioButton1ActionPerformed(e);
-		});
+                                radioButton1ActionPerformed(e);
+                                radioButton1ActionPerformed(e);
+                            });
                             this.panel8.add(this.radioButton1, "cell 1 1");
 
                             //---- checkBoxSelMultipleObjects ----
                             this.checkBoxSelMultipleObjects.setText("Selection Multiple objects");
                             this.checkBoxSelMultipleObjects.addActionListener(e -> {
-			checkBoxSelMultipleObjectsActionPerformed(e);
-			checkBoxSelMultipleObjectsActionPerformed(e);
-			checkBoxSelMultipleObjectsActionPerformed(e);
-			checkBoxSelMultipleObjectsActionPerformed(e);
-		});
+                                checkBoxSelMultipleObjectsActionPerformed(e);
+                                checkBoxSelMultipleObjectsActionPerformed(e);
+                                checkBoxSelMultipleObjectsActionPerformed(e);
+                                checkBoxSelMultipleObjectsActionPerformed(e);
+                            });
                             this.panel8.add(this.checkBoxSelMultipleObjects, "cell 3 1");
 
                             //---- radioButtonSel2 ----
                             this.radioButtonSel2.setText("Selection 2 (OUT)");
                             this.radioButtonSel2.addActionListener(e -> {
-			radioButtonSel2ActionPerformed(e);
-			radioButtonSel2ActionPerformed(e);
-			radioButtonSel2ActionPerformed(e);
-			radioButtonSel2ActionPerformed(e);
-		});
+                                radioButtonSel2ActionPerformed(e);
+                                radioButtonSel2ActionPerformed(e);
+                                radioButtonSel2ActionPerformed(e);
+                                radioButtonSel2ActionPerformed(e);
+                            });
                             this.panel8.add(this.radioButtonSel2, "cell 4 1");
 
                             //---- buttonDuplicateOnPoints ----
                             this.buttonDuplicateOnPoints.setText("Duplicate object on p");
                             this.buttonDuplicateOnPoints.addActionListener(e -> {
-			buttonDuplicateOnPointsActionPerformed(e);
-			buttonDuplicateOnPointsActionPerformed(e);
-		});
+                                buttonDuplicateOnPointsActionPerformed(e);
+                                buttonDuplicateOnPointsActionPerformed(e);
+                            });
                             this.panel8.add(this.buttonDuplicateOnPoints, "cell 7 1");
 
                             //---- radioButtonTranslate ----
                             this.radioButtonTranslate.setText("Translate");
                             this.radioButtonTranslate.addActionListener(e -> {
-			radioButtonTranslateActionPerformed(e);
-			radioButtonTranslateActionPerformed(e);
-			radioButtonTranslateActionPerformed(e);
-			radioButtonTranslateActionPerformed(e);
-		});
+                                radioButtonTranslateActionPerformed(e);
+                                radioButtonTranslateActionPerformed(e);
+                                radioButtonTranslateActionPerformed(e);
+                                radioButtonTranslateActionPerformed(e);
+                            });
                             this.panel8.add(this.radioButtonTranslate, "cell 1 2");
 
                             //---- checkBoxSelMultiplePoints ----
@@ -1066,18 +1059,18 @@ public class Main implements PropertyChangeListener {
                             //---- buttonDuplicateOnCurve ----
                             this.buttonDuplicateOnCurve.setText("on curve");
                             this.buttonDuplicateOnCurve.addActionListener(e -> {
-			buttonDuplicateOnCurveActionPerformed(e);
-			buttonDuplicateOnCurveActionPerformed(e);
-		});
+                                buttonDuplicateOnCurveActionPerformed(e);
+                                buttonDuplicateOnCurveActionPerformed(e);
+                            });
                             this.panel8.add(this.buttonDuplicateOnCurve, "cell 7 2");
 
                             //---- textFieldU ----
                             this.textFieldU.setToolTipText("u");
                             this.textFieldU.setText("0.0");
                             this.textFieldU.addActionListener(e -> {
-			textFieldOnCurveUActionPerformed(e);
-			textField1ActionPerformed(e);
-		});
+                                textFieldOnCurveUActionPerformed(e);
+                                textField1ActionPerformed(e);
+                            });
                             this.panel8.add(this.textFieldU, "cell 8 2 2 1");
 
                             //---- label4 ----
@@ -1114,9 +1107,9 @@ public class Main implements PropertyChangeListener {
                             //---- radioButtonRotate ----
                             this.radioButtonRotate.setText("Rotate");
                             this.radioButtonRotate.addActionListener(e -> {
-			radioButtonRotateActionPerformed(e);
-			radioButtonRotateActionPerformed(e);
-		});
+                                radioButtonRotateActionPerformed(e);
+                                radioButtonRotateActionPerformed(e);
+                            });
                             this.panel8.add(this.radioButtonRotate, "cell 1 4");
 
                             //---- checkBoxEndSel ----
@@ -1162,114 +1155,114 @@ public class Main implements PropertyChangeListener {
                         //======== panel9 ========
                         {
                             this.panel9.setLayout(new MigLayout(
-                                "hidemode 3",
-                                // columns
-                                "[fill]" +
-                                "[fill]",
-                                // rows
-                                "[]" +
-                                "[]" +
-                                "[]"));
+                                    "hidemode 3",
+                                    // columns
+                                    "[fill]" +
+                                            "[fill]",
+                                    // rows
+                                    "[]" +
+                                            "[]" +
+                                            "[]"));
                         }
                         this.tabbedPane1.addTab("Copy/PasteTranslate/Rotate", this.panel9);
 
                         //======== panel10 ========
                         {
                             this.panel10.setLayout(new MigLayout(
-                                "hidemode 3",
-                                // columns
-                                "[fill]" +
-                                "[fill]",
-                                // rows
-                                "[]" +
-                                "[]" +
-                                "[]"));
+                                    "hidemode 3",
+                                    // columns
+                                    "[fill]" +
+                                            "[fill]",
+                                    // rows
+                                    "[]" +
+                                            "[]" +
+                                            "[]"));
                         }
                         this.tabbedPane1.addTab("Copy/Paste on Object", this.panel10);
 
                         //======== panel11 ========
                         {
                             this.panel11.setLayout(new MigLayout(
-                                "hidemode 3",
-                                // columns
-                                "[fill]" +
-                                "[fill]",
-                                // rows
-                                "[]" +
-                                "[]" +
-                                "[]"));
+                                    "hidemode 3",
+                                    // columns
+                                    "[fill]" +
+                                            "[fill]",
+                                    // rows
+                                    "[]" +
+                                            "[]" +
+                                            "[]"));
                         }
                         this.tabbedPane1.addTab("Camera move & orientation", this.panel11);
 
                         //======== panel12 ========
                         {
                             this.panel12.setLayout(new MigLayout(
-                                "fill,hidemode 3",
-                                // columns
-                                "[fill]" +
-                                "[fill]",
-                                // rows
-                                "[]" +
-                                "[]" +
-                                "[]"));
+                                    "fill,hidemode 3",
+                                    // columns
+                                    "[fill]" +
+                                            "[fill]",
+                                    // rows
+                                    "[]" +
+                                            "[]" +
+                                            "[]"));
 
                             //---- label6 ----
                             this.label6.setText("New mesh");
                             this.panel12.add(this.label6, "cell 0 0");
 
                             //---- meshType ----
-                            this.meshType.setModel(new DefaultComboBoxModel<>(new String[] {
-                                "Parametric Surface",
-                                "Sphere",
-                                "Cube",
-                                "Plane"
+                            this.meshType.setModel(new DefaultComboBoxModel<>(new String[]{
+                                    "Parametric Surface",
+                                    "Sphere",
+                                    "Cube",
+                                    "Plane"
                             }));
                             this.panel12.add(this.meshType, "cell 0 0");
 
                             //======== panelMeshEdit ========
                             {
                                 this.panelMeshEdit.setLayout(new MigLayout(
-                                    "fill,hidemode 3",
-                                    // columns
-                                    "[fill]" +
-                                    "[fill]" +
-                                    "[fill]" +
-                                    "[fill]" +
-                                    "[fill]" +
-                                    "[fill]" +
-                                    "[fill]" +
-                                    "[fill]" +
-                                    "[fill]" +
-                                    "[fill]" +
-                                    "[fill]" +
-                                    "[fill]",
-                                    // rows
-                                    "[]" +
-                                    "[]" +
-                                    "[]" +
-                                    "[]" +
-                                    "[]" +
-                                    "[]" +
-                                    "[]" +
-                                    "[]" +
-                                    "[]" +
-                                    "[]"));
+                                        "fill,hidemode 3",
+                                        // columns
+                                        "[fill]" +
+                                                "[fill]" +
+                                                "[fill]" +
+                                                "[fill]" +
+                                                "[fill]" +
+                                                "[fill]" +
+                                                "[fill]" +
+                                                "[fill]" +
+                                                "[fill]" +
+                                                "[fill]" +
+                                                "[fill]" +
+                                                "[fill]",
+                                        // rows
+                                        "[]" +
+                                                "[]" +
+                                                "[]" +
+                                                "[]" +
+                                                "[]" +
+                                                "[]" +
+                                                "[]" +
+                                                "[]" +
+                                                "[]" +
+                                                "[]"));
 
                                 //---- checkBoxActive2 ----
                                 this.checkBoxActive2.setText("Active graphical markers");
                                 this.checkBoxActive2.setBorder(new SoftBevelBorder(SoftBevelBorder.LOWERED));
                                 this.checkBoxActive2.setBorderPainted(true);
                                 this.checkBoxActive2.addActionListener(e -> {
-			checkBoxActiveActionPerformed(e);
-			checkBoxActiveActionPerformed(e);
-			checkBoxActiveActionPerformed(e);
-			checkBoxActiveActionPerformed(e);
-			checkBoxActiveActionPerformed(e);
-			checkBoxActive2ActionPerformed(e);
-			checkBoxActive2ActionPerformed(e);
-			checkBoxActive2ActionPerformed();
-			checkBoxActive2ActionPerformed(e);
-		});
+                                    checkBoxActiveActionPerformed(e);
+                                    checkBoxActiveActionPerformed(e);
+                                    checkBoxActiveActionPerformed(e);
+                                    checkBoxActiveActionPerformed(e);
+                                    checkBoxActiveActionPerformed(e);
+                                    checkBoxActive2ActionPerformed(e);
+                                    checkBoxActive2ActionPerformed(e);
+                                    checkBoxActive2ActionPerformed();
+                                    checkBoxActive2ActionPerformed(e);
+                                });
                                 this.panelMeshEdit.add(this.checkBoxActive2, "cell 0 0");
 
                                 //======== scrollPane6 ========
@@ -1381,15 +1374,15 @@ public class Main implements PropertyChangeListener {
         //---- bindings ----
         this.bindingGroup = new BindingGroup();
         this.bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
-            this.updateViewMain, BeanProperty.create("width"),
-            this.textFieldXres, BeanProperty.create("text_ON_ACTION_OR_FOCUS_LOST")));
+                this.updateViewMain, BeanProperty.create("width"),
+                this.textFieldXres, BeanProperty.create("text_ON_ACTION_OR_FOCUS_LOST")));
         this.bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
-            this.updateViewMain, BeanProperty.create("height"),
-            this.textFieldYres, BeanProperty.create("text_ON_ACTION_OR_FOCUS_LOST")));
+                this.updateViewMain, BeanProperty.create("height"),
+                this.textFieldYres, BeanProperty.create("text_ON_ACTION_OR_FOCUS_LOST")));
         {
             var binding = Bindings.createAutoBinding(UpdateStrategy.READ,
-                this.comboBox1, BeanProperty.create("selectedIndex"),
-                this.updateViewMain, BeanProperty.create("view.zDiplayType"));
+                    this.comboBox1, BeanProperty.create("selectedIndex"),
+                    this.updateViewMain, BeanProperty.create("view.zDiplayType"));
             binding.setSourceNullValue(0);
             binding.setSourceUnreadableValue(0);
             binding.setTargetNullValue(0);
@@ -1397,29 +1390,29 @@ public class Main implements PropertyChangeListener {
             binding.bind();
         }
         this.bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
-            this.updateViewMain, BeanProperty.create("view.meshEditorBean.activateMarkers"),
-            this.checkBoxActive2, BeanProperty.create("selected")));
+                this.updateViewMain, BeanProperty.create("view.meshEditorBean.activateMarkers"),
+                this.checkBoxActive2, BeanProperty.create("selected")));
         this.bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
-            this.updateViewMain, BeanProperty.create("zRunner.main.meshEditorProps.meshType"),
-            this.meshType, BeanProperty.create("selectedItem")));
+                this.updateViewMain, BeanProperty.create("zRunner.main.meshEditorProps.meshType"),
+                this.meshType, BeanProperty.create("selectedItem")));
         this.bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
-            this.updateViewMain, BeanProperty.create("view.meshEditorBean.translateOnSu"),
-            this.spinnerU, BeanProperty.create("value")));
+                this.updateViewMain, BeanProperty.create("view.meshEditorBean.translateOnSu"),
+                this.spinnerU, BeanProperty.create("value")));
         this.bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
-            this.updateViewMain, BeanProperty.create("view.meshEditorBean.translateOnSv"),
-            this.spinnerV, BeanProperty.create("value")));
+                this.updateViewMain, BeanProperty.create("view.meshEditorBean.translateOnSv"),
+                this.spinnerV, BeanProperty.create("value")));
         this.bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
-            this.updateViewMain, BeanProperty.create("view.meshEditorBean.inSelection"),
-            this.list1, BeanProperty.create("selectedElements")));
+                this.updateViewMain, BeanProperty.create("view.meshEditorBean.inSelection"),
+                this.list1, BeanProperty.create("selectedElements")));
         this.bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
-            this.updateViewMain, BeanProperty.create("view.meshEditorBean.actionOk"),
-            this.button2, BeanProperty.create("selected")));
+                this.updateViewMain, BeanProperty.create("view.meshEditorBean.actionOk"),
+                this.button2, BeanProperty.create("selected")));
         this.bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
-            this.updateViewMain, BeanProperty.create("view.meshEditorBean.opType"),
-            this.radioButton5, BeanProperty.create("selected")));
+                this.updateViewMain, BeanProperty.create("view.meshEditorBean.opType"),
+                this.radioButton5, BeanProperty.create("selected")));
         this.bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
-            this.updateViewMain, BeanProperty.create("view.opType"),
-            this.radioButton4, BeanProperty.create("selected")));
+                this.updateViewMain, BeanProperty.create("view.opType"),
+                this.radioButton4, BeanProperty.create("selected")));
         this.bindingGroup.bind();
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
 
@@ -1545,22 +1538,19 @@ public class Main implements PropertyChangeListener {
             for (RepresentableEditor representableEditor : representableEditors) {
                 if (!evt.getSource().equals(representableEditor) && evt.getNewValue() instanceof Representable) {
                     representableEditor.initValues((one.empty3.library.Representable) evt.getNewValue());
-                    Logger.getAnonymousLogger().info(representableEditor.getClass().getName()+".initValue()");
+                    Logger.getAnonymousLogger().info(representableEditor.getClass().getName() + ".initValue()");
                 }
             }
         } else if (evt.getPropertyName().equals("renderedImageOK")) {
-            if (evt.getNewValue()==null) {
+            if (evt.getNewValue() == null) {
             } else {
-                if(evt.getNewValue().equals(-1))
-                {
+                if (evt.getNewValue().equals(-1)) {
                     try {
                         this.getUpdateView().getzRunner().setLastImage(ImageIO.read(new File("resources/img/FAILED.PNG")));
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                }
-                else if(evt.getNewValue().equals(0))
-                {
+                } else if (evt.getNewValue().equals(0)) {
                     try {
                         this.getUpdateView().getzRunner().setLastImage(ImageIO.read(new File("resources/img/WAITING.PNG")));
                     } catch (IOException e) {
@@ -1575,12 +1565,11 @@ public class Main implements PropertyChangeListener {
         return objectEditorBase1;
     }
 
-    public boolean isTranslateR()
-    {
+    public boolean isTranslateR() {
         return translateR;
     }
-    public boolean isRotateR()
-    {
+
+    public boolean isRotateR() {
         return rotateR;
     }
 

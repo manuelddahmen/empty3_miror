@@ -34,7 +34,8 @@ import java.awt.*;
 import java.util.ArrayList;
 
 /*__
- * @author Manuel Dahmen _manuel.dahmen@gmx.com_
+ * Meta Description missing
+ * @author Manuel Dahmen dathewolf@gmail.com
  */
 public class AnneauDeSpheresQuiTournent extends TestObjet {
 
@@ -120,7 +121,7 @@ public class AnneauDeSpheresQuiTournent extends TestObjet {
             scene().add(centre);
             s1.setCentre(Trajectoires.sphere(longiI(i), latI(i), RI(i)));
         }
-       scene().cameraActive(new Camera(Trajectoires.sphere(longiC(), latC(), RC()),
+        scene().cameraActive(new Camera(Trajectoires.sphere(longiC(), latC(), RC()),
                 camera().getLookat(), camera().getVerticale()));
         camera().calculerMatrice(null);
     }

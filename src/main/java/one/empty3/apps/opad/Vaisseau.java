@@ -39,7 +39,8 @@ import java.util.ResourceBundle;
 
 /*__
  *
- * @author Manuel Dahmen _manuel.dahmen@gmx.com_
+ * Meta Description missing
+ * @author Manuel Dahmen dathewolf@gmail.com
  */
 public class Vaisseau {
     private final ResourceBundle bundle;
@@ -49,6 +50,7 @@ public class Vaisseau {
         bundle = ResourceBundle.getBundle("one.empty3.apps.opad.Bundle"); // NOI18N
         mlc = Double.parseDouble(bundle.getString("persoCube.mlc"));
     }
+
     private final PositionUpdate gm;
 
     public Vaisseau(PositionUpdate gm) {

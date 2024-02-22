@@ -36,7 +36,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 /*__
- * @author Manuel Dahmen _manuel.dahmen@gmx.com_
+ * Meta Description missing
+ * @author Manuel Dahmen dathewolf@gmail.com
  */
 public abstract class SimpleTrajectory implements Trajectory {
 

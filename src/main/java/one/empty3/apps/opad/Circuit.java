@@ -47,10 +47,10 @@ import java.util.Iterator;
 
 /*__
  *
- * @author Manuel Dahmen _manuel.dahmen@gmx.com_
+ * Meta Description missing
+ * @author Manuel Dahmen dathewolf@gmail.com
  */
-public class Circuit extends TubulaireN
-{
+public class Circuit extends TubulaireN {
 
     public Circuit(ArrayList<Point3D> listPoint3d) {
         listPoint3d.forEach(this::addPoint);
@@ -59,10 +59,10 @@ public class Circuit extends TubulaireN
 
     public Circuit(Bonus bonus) {
         Iterator<Representable> iterator = bonus.getListRepresentable().iterator();
-        while(iterator.hasNext()) {
+        while (iterator.hasNext()) {
             Representable next = iterator.next();
-            if(next != null && next instanceof TRISphere2) {
-                addPoint(((Sphere)next).getCircle().getCenter());
+            if (next != null && next instanceof TRISphere2) {
+                addPoint(((Sphere) next).getCircle().getCenter());
             }
 
             this.texture(new ColorTexture(Color.ORANGE));

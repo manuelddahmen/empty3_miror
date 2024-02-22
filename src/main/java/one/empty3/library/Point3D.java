@@ -203,9 +203,9 @@ public class Point3D extends Representable {
     }
 
     /**
-     * Represents a three-dimensional point with coordinates (x, y, z) initialized from a StructureMatrix<Double> object.
+     * Represents a three-dimensional point with coordinates (x, y, z) initialized from a object.
      *
-     * @param coordArr A StructureMatrix<Double> object containing the coordinates of the point in the order [x, y, z].
+     * @param coordArr An object containing the coordinates of the point in the order [x, y, z].
      */
     public Point3D(StructureMatrix<Double> coordArr) {
         this(coordArr.getElem(0), coordArr.getElem(1), coordArr.getElem(2));
@@ -826,7 +826,7 @@ public class Point3D extends Representable {
 
 
     /**
-     * Retrieves the coordinate array as a StructureMatrix<Double>.
+     * Retrieves the coordinate array as a
      *
      * @return a StructureMatrix<Double> containing the coordinate array
      */

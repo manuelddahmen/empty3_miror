@@ -41,14 +41,15 @@ import java.util.Iterator;
 
 /*__
  *
- * @author Manuel Dahmen _manuel.dahmen@gmx.com_
+ * Meta Description missing
+ * @author Manuel Dahmen dathewolf@gmail.com
  */
 public class SolSphere extends Terrain {
 
     private double radius = 1.0;
 
     private Point3D coord(double u, double v) {
-        double a = u * 2 * Math.PI ;//- Math.PI;
+        double a = u * 2 * Math.PI;//- Math.PI;
         double b = v * Math.PI;
         Point3D p = new Point3D(Math.sin(a) * Math.sin(b)
                 * radius, Math.sin(a) * Math.cos(b) * radius,

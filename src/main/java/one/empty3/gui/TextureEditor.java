@@ -46,16 +46,18 @@ import java.io.IOException;
 import java.util.Arrays;
 
 /**
- * @author Manuel Dahmen
+ * My class description missing
+ *
+ * @author Manuel Dahmen dathewolf@gmail.com
  */
 public class TextureEditor extends JPanel {
-    class TextureTransferHandler extends TransferHandler
-    {
-        public class MyTransferHandler extends TransferHandler{
+    class TextureTransferHandler extends TransferHandler {
+        public class MyTransferHandler extends TransferHandler {
 
             /**
              * Méthode permettant à l'objet de savoir si les données reçues
              * via un drop sont autorisées à être importées
+             *
              * @param info
              * @return boolean
              */
@@ -66,14 +68,16 @@ public class TextureEditor extends JPanel {
                 }
                 return true;
             }
+
             /**
              * C'est ici que l'insertion des données dans notre composant est réalisée
+             *
              * @param support
              * @return boolean
              */
-            public boolean importData(TransferHandler.TransferSupport support){
+            public boolean importData(TransferHandler.TransferSupport support) {
                 //Nous contrôlons si les données reçues sont d'un type autorisé
-                if(!canImport(support))
+                if (!canImport(support))
                     return false;
 
                 //On récupère notre objet Transferable, celui qui contient les données en transit
@@ -83,7 +87,7 @@ public class TextureEditor extends JPanel {
                 try {
                     //Nous récupérons nos données en spécifiant ce que nous attendons
                     f = (File) data.getTransferData(DataFlavor.javaFileListFlavor);
-                } catch (UnsupportedFlavorException e){
+                } catch (UnsupportedFlavorException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -93,8 +97,7 @@ public class TextureEditor extends JPanel {
 
                 String[] extensionsImg = new String[]{"jpg", "jpeg", "png", "gif", "tiff", "ppm"};//...
                 String[] extensionsMov = new String[]{"mpeg", "mpg", "avi", "qt", "mp4"};
-                if(Arrays.stream(extensionsImg).anyMatch(s -> s.equals(extensionsImg)))
-                {
+                if (Arrays.stream(extensionsImg).anyMatch(s -> s.equals(extensionsImg))) {
                     try {
                         tableModelTexture.getLines().add(new TableModelTexture.ModelLine(f, new TextureImg(
                                 new ECBufferedImage(ImageIO.read(f))), TextureImg.class));
@@ -104,25 +107,27 @@ public class TextureEditor extends JPanel {
                     }
 
                 }
-                if(Arrays.stream(extensionsMov).anyMatch(s -> s.equals(extensionsMov)))
-                {
-                        TextureMov textureMov = new TextureMov();
-                        textureMov.setFile(f);
-                        tableModelTexture.getLines().add(new TableModelTexture.ModelLine(f, textureMov,
-                                TextureMov.class));
-                        done = true;
+                if (Arrays.stream(extensionsMov).anyMatch(s -> s.equals(extensionsMov))) {
+                    TextureMov textureMov = new TextureMov();
+                    textureMov.setFile(f);
+                    tableModelTexture.getLines().add(new TableModelTexture.ModelLine(f, textureMov,
+                            TextureMov.class));
+                    done = true;
                 }
 
                 return done;
             }
+
             /**
              * Cette méthode est invoquée à la fin de l'action DROP
              * Si des actions sont à faire ensuite, c'est ici qu'il faudra coder le comportement désiré
+             *
              * @param c
              * @param t
              * @param action
              */
-            protected void exportDone(JComponent c, Transferable t, int action){}
+            protected void exportDone(JComponent c, Transferable t, int action) {
+            }
 
             public int getSourceActions(JComponent c) {
                 return COPY;
@@ -138,8 +143,8 @@ public class TextureEditor extends JPanel {
     private TableModelTexture tableModelTexture;
     private Main main;
     private File currentDirectory = new File(System.getProperties().getProperty("user.home"));
-    
-    
+
+
     public TextureEditor() {
         initComponents();
         tableModelTexture = new TableModelTexture();
@@ -152,7 +157,7 @@ public class TextureEditor extends JPanel {
         table1.setDragEnabled(true);
         table1.setDropMode(DropMode.INSERT_ROWS);
         table1.setModel(tableModelTexture);
-     }
+    }
 
     private void comboBox1ActionPerformed(ActionEvent e) {
         if (choiceTexType == 0) {
@@ -166,14 +171,14 @@ public class TextureEditor extends JPanel {
             choose.setFileFilter(new FileFilter() {
                 @Override
                 public boolean accept(File f) {
-                    String extension = f.getName().substring(f.getName().lastIndexOf(".")+1).toLowerCase();
+                    String extension = f.getName().substring(f.getName().lastIndexOf(".") + 1).toLowerCase();
                     String[] extensions;
                     if (choiceTexType == 1) {
                         extensions = new String[]{"jpg", "jpeg", "png", "gif", "tiff", "ppm"};//...
                     } else {
                         extensions = new String[]{"mpeg", "mpg", "avi", "qt", "mp4"};
                     }
-                    return Arrays.stream(extensions).anyMatch(s -> s.equals(extension)||f.isDirectory());
+                    return Arrays.stream(extensions).anyMatch(s -> s.equals(extension) || f.isDirectory());
                 }
 
                 @Override
@@ -203,7 +208,7 @@ public class TextureEditor extends JPanel {
                         TextureMov textureMov = new TextureMov(sel.getAbsolutePath());
                         getMain().getDataModel().addTexture(textureMov);
                         tableModelTexture.getLines().add(new TableModelTexture.ModelLine(sel, textureMov, textureMov.getClass()));
-    
+
                     }
                 }
             }
@@ -214,8 +219,7 @@ public class TextureEditor extends JPanel {
     private void button3ActionPerformed(ActionEvent e) {
         String text = ((JButton) e.getSource()).getText();
         int index = -1;
-        switch (text)
-        {
+        switch (text) {
             case "Color":
                 choiceTexType = 0;
                 break;
@@ -230,7 +234,7 @@ public class TextureEditor extends JPanel {
     }
 
     private void buttonRefreshActionPerformed(ActionEvent e) {
-    
+
     }
 
     private void button1ActionPerformed(ActionEvent e) {
@@ -239,11 +243,10 @@ public class TextureEditor extends JPanel {
 
     private void button2ActionPerformed(ActionEvent e) {
         try {
-            if(table1.getSelectedRow()<table1.getRowCount()&&table1.getSelectedRow()>=0
-                    && table1.getSelectedRow()<tableModelTexture.getLines().size())
+            if (table1.getSelectedRow() < table1.getRowCount() && table1.getSelectedRow() >= 0
+                    && table1.getSelectedRow() < tableModelTexture.getLines().size())
                 ((Representable) getMain().getREditor().getRepresentable()).setTexture(tableModelTexture.getLines().get(table1.getSelectedRow()).getiTexture());
-        } catch(ArrayIndexOutOfBoundsException ex)
-        {
+        } catch (ArrayIndexOutOfBoundsException ex) {
 
         }
     }
@@ -273,16 +276,16 @@ public class TextureEditor extends JPanel {
             //======== contentPanel ========
             {
                 contentPanel.setLayout(new MigLayout(
-                    "insets dialog,hidemode 3",
-                    // columns
-                    "[fill]" +
-                    "[fill]" +
-                    "[fill]",
-                    // rows
-                    "[]" +
-                    "[]" +
-                    "[]" +
-                    "[]"));
+                        "insets dialog,hidemode 3",
+                        // columns
+                        "[fill]" +
+                                "[fill]" +
+                                "[fill]",
+                        // rows
+                        "[]" +
+                                "[]" +
+                                "[]" +
+                                "[]"));
 
                 //---- label1 ----
                 label1.setText("Texture edtor");
@@ -321,11 +324,11 @@ public class TextureEditor extends JPanel {
                     //---- table1 ----
                     table1.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
                     table1 = new JTable(
-                        new Object[][] {{"",""}
-                        },
-                        new Object[] {
-                            "Texture", "Text type"
-                        }
+                            new Object[][]{{"", ""}
+                            },
+                            new Object[]{
+                                    "Texture", "Text type"
+                            }
                     );
                     table1.setVerifyInputWhenFocusTarget(false);
                     table1.setUpdateSelectionOnSort(false);
@@ -356,18 +359,16 @@ public class TextureEditor extends JPanel {
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 
 
-    public void refreshTable()
-    {
+    public void refreshTable() {
         tableModelTexture.initTable();
     }
-    
+
     public void setMain(Main main) {
-        
+
         this.main = main;
     }
-    
-    
-    
+
+
     public Main getMain() {
         return main;
     }

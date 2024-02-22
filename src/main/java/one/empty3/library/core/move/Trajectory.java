@@ -35,7 +35,8 @@ import one.empty3.library.*;
 import java.util.Collection;
 
 /*__
- * @author Manuel Dahmen _manuel.dahmen@gmx.com_
+ * Meta Description missing
+ * @author Manuel Dahmen dathewolf@gmail.com
  */
 public interface Trajectory {
 

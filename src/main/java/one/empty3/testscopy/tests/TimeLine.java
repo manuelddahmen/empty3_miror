@@ -31,7 +31,8 @@ import javax.swing.table.*;
 import net.miginfocom.swing.*;
 
 /**
- * @author Manuel Dahmen
+* My class description missing
+ * @author Manuel Dahmen dathewolf@gmail.com
  */
 /*
 public class TimeLine extends JFrame {

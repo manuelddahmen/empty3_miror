@@ -42,10 +42,10 @@ import java.util.Iterator;
 
 /*__
  *
- * @author Manuel Dahmen _manuel.dahmen@gmx.com_
+ * Meta Description missing
+ * @author Manuel Dahmen dathewolf@gmail.com
  */
-public class SimpleMap extends Map
-{
+public class SimpleMap extends Map {
     private Point3D gamePosition;
     private final Camera camera;
     private final ArrayList<Polygon> polygons;
@@ -70,7 +70,7 @@ public class SimpleMap extends Map
         z.scene(new Scene());
         Iterator<Polygon> itP;
         itP = polygons.iterator();
-        while(itP.hasNext())
+        while (itP.hasNext())
             z.scene().add(itP.next());
         z.scene().add(gamePosition);
     }

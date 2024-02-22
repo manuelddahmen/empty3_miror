@@ -29,7 +29,8 @@ import one.empty3.library.Point3D;
 import one.empty3.library.core.nurbs.ParametricCurve;
 
 /*__
- * @author Manuel Dahmen _manuel.dahmen@gmx.com_
+ * Meta Description missing
+ * @author Manuel Dahmen dathewolf@gmail.com
  */
 public class gdx_BSplineCurve extends ParametricCurve {
     int degree;

@@ -33,7 +33,8 @@ package one.empty3.library.core.testing;
 import java.util.ArrayList;
 
 /*__
- * @author Manuel Dahmen _manuel.dahmen@gmx.com_
+ * Meta Description missing
+ * @author Manuel Dahmen dathewolf@gmail.com
  */
 public abstract class TestInstance {
 

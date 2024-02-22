@@ -40,7 +40,8 @@ import java.util.ArrayList;
 ;
 
 /*__
- * @author Manuel Dahmen _manuel.dahmen@gmx.com_
+ * Meta Description missing
+ * @author Manuel Dahmen dathewolf@gmail.com
  */
 public class Scene1 extends TestObjet {
     private static final int NUMBRE = 50;

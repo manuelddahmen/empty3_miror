@@ -37,7 +37,9 @@ import java.util.HashMap;
 import java.util.ResourceBundle;
 
 /**
- * @author Manuel Dahmen
+ * My class description missing
+ *
+ * @author Manuel Dahmen dathewolf@gmail.com
  */
 public class AdvanceEditTable<T> extends JDialog {
     private final Representable representable;
@@ -51,8 +53,7 @@ public class AdvanceEditTable<T> extends JDialog {
     }
 
     private void table1MouseClicked(MouseEvent e) {
-        if(e.getButton()==1)
-        {
+        if (e.getButton() == 1) {
             // Right Click
             popupMenuOptions.setVisible(true);
         }
@@ -83,12 +84,12 @@ public class AdvanceEditTable<T> extends JDialog {
             //======== contentPanel ========
             {
                 contentPanel.setLayout(new MigLayout(
-                    "fill,insets dialog,hidemode 3",
-                    // columns
-                    "[fill]",
-                    // rows
-                    "[]" +
-                    "[]"));
+                        "fill,insets dialog,hidemode 3",
+                        // columns
+                        "[fill]",
+                        // rows
+                        "[]" +
+                                "[]"));
 
                 //---- label1 ----
                 label1.setText(bundle.getString("AdvanceEditTable.label1.text"));
@@ -113,13 +114,13 @@ public class AdvanceEditTable<T> extends JDialog {
             //======== buttonBar ========
             {
                 buttonBar.setLayout(new MigLayout(
-                    "insets dialog,alignx right",
-                    // columns
-                    "[button,fill]" +
-                    "[button,fill]" +
-                    "[button,fill]",
-                    // rows
-                    null));
+                        "insets dialog,alignx right",
+                        // columns
+                        "[button,fill]" +
+                                "[button,fill]" +
+                                "[button,fill]",
+                        // rows
+                        null));
 
                 //---- okButton ----
                 okButton.setText(bundle.getString("AdvanceEditTable.okButton.text"));

@@ -31,11 +31,14 @@ import java.io.File;
 import java.util.*;
 import java.util.List;
 import javax.swing.*;
+
 import net.miginfocom.swing.*;
 import one.empty3.library.Representable;
 
 /**
- * @author Manuel Dahmen
+ * My class description missing
+ *
+ * @author Manuel Dahmen dathewolf@gmail.com
  */
 public class SaveFileToRepresentable extends JDialog {
     private Representable r;
@@ -47,11 +50,8 @@ public class SaveFileToRepresentable extends JDialog {
 
     public void init(Representable r, Object fileS, String property, int dim, int row, int col) {
         this.r = r;
-        if(fileS instanceof File)
-        {
-        }
-        else if(fileS instanceof List)
-        {
+        if (fileS instanceof File) {
+        } else if (fileS instanceof List) {
             List<File> files = ((List<File>) fileS);
 
         }
@@ -77,26 +77,26 @@ public class SaveFileToRepresentable extends JDialog {
             //======== contentPanel ========
             {
                 contentPanel.setLayout(new MigLayout(
-                    "insets dialog,hidemode 3",
-                    // columns
-                    "[fill]" +
-                    "[fill]",
-                    // rows
-                    "[]" +
-                    "[]" +
-                    "[]"));
+                        "insets dialog,hidemode 3",
+                        // columns
+                        "[fill]" +
+                                "[fill]",
+                        // rows
+                        "[]" +
+                                "[]" +
+                                "[]"));
             }
             dialogPane.add(contentPanel, BorderLayout.CENTER);
 
             //======== buttonBar ========
             {
                 buttonBar.setLayout(new MigLayout(
-                    "insets dialog,alignx right",
-                    // columns
-                    "[button,fill]" +
-                    "[button,fill]",
-                    // rows
-                    null));
+                        "insets dialog,alignx right",
+                        // columns
+                        "[button,fill]" +
+                                "[button,fill]",
+                        // rows
+                        null));
 
                 //---- okButton ----
                 okButton.setText(bundle.getString("SaveFileToRepresentable.okButton.text"));

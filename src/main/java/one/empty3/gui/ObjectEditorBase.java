@@ -43,7 +43,9 @@ import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
 /**
- * @author Manuel Dahmen
+ * My class description missing
+ *
+ * @author Manuel Dahmen dathewolf@gmail.com
  */
 public class ObjectEditorBase extends JPanel implements RepresentableEditor {
     private boolean initValues;

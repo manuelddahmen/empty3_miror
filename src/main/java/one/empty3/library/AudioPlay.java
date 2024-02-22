@@ -21,6 +21,7 @@
  */
 
 package one.empty3.library;
+
 /*__
  * *
  * Global license : * CC Attribution
@@ -31,7 +32,8 @@ package one.empty3.library;
  */
 /*__
  *
- * @author Manuel Dahmen _manuel.dahmen@gmx.com_
+ * Meta Description missing
+ * @author Manuel Dahmen dathewolf@gmail.com
  */
 class AudioPlay {
 

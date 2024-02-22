@@ -38,10 +38,10 @@ import one.empty3.library.Point3D;
 
 /*__
  *
- * @author Manuel Dahmen _manuel.dahmen@gmx.com_
+ * Meta Description missing
+ * @author Manuel Dahmen dathewolf@gmail.com
  */
-public interface PositionUpdate extends Runnable
-{
+public interface PositionUpdate extends Runnable {
 
     void update();
 
@@ -53,7 +53,6 @@ public interface PositionUpdate extends Runnable
     boolean plot(Point3D position, Point3D deplacement, Cube plottee);
 
     int state();
-
 
 
     void rotationGauche(long timeMillis);
@@ -75,7 +74,6 @@ public interface PositionUpdate extends Runnable
     Point3D calculerPositionAuSol(Point2D position2D);
 
     Point3D calculerPositionModule(Point2D position2D);
-
 
 
     int STATE_GAME_IN_PROGRESS();

@@ -32,7 +32,9 @@ import javax.swing.*;
 import java.util.ResourceBundle;
 
 /**
- * @author Manuel Dahmen
+ * My class description missing
+ *
+ * @author Manuel Dahmen dathewolf@gmail.com
  */
 public class TexturesDrawEditMapOnObjectPart extends JPanel {
     public TexturesDrawEditMapOnObjectPart() {
@@ -52,18 +54,18 @@ public class TexturesDrawEditMapOnObjectPart extends JPanel {
         //======== this ========
         setName("this"); //NON-NLS
         setLayout(new MigLayout(
-            "fill,hidemode 3", //NON-NLS
-            // columns
-            "[fill]" + //NON-NLS
-            "[fill]" + //NON-NLS
-            "[fill]" + //NON-NLS
-            "[fill]", //NON-NLS
-            // rows
-            "[]" + //NON-NLS
-            "[]" + //NON-NLS
-            "[]" + //NON-NLS
-            "[]" + //NON-NLS
-            "[]")); //NON-NLS
+                "fill,hidemode 3", //NON-NLS
+                // columns
+                "[fill]" + //NON-NLS
+                        "[fill]" + //NON-NLS
+                        "[fill]" + //NON-NLS
+                        "[fill]", //NON-NLS
+                // rows
+                "[]" + //NON-NLS
+                        "[]" + //NON-NLS
+                        "[]" + //NON-NLS
+                        "[]" + //NON-NLS
+                        "[]")); //NON-NLS
 
         //======== menuBar1 ========
         {

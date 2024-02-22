@@ -32,11 +32,12 @@ import java.util.ResourceBundle;
  */
 
 
-
 /**
- * @author Manuel Dahmen
+ * My class description missing
+ *
+ * @author Manuel Dahmen dathewolf@gmail.com
  */
-public class FormFunctionGUI  {
+public class FormFunctionGUI {
 
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
@@ -48,14 +49,14 @@ public class FormFunctionGUI  {
             FormFunctionGUI.setTitle(bundle.getString("FormFunctionGUI.title"));
             Container FormFunctionGUIContentPane = FormFunctionGUI.getContentPane();
             FormFunctionGUIContentPane.setLayout(new MigLayout(
-                "hidemode 3",
-                // columns
-                "[fill]" +
-                "[fill]",
-                // rows
-                "[]" +
-                "[]" +
-                "[]"));
+                    "hidemode 3",
+                    // columns
+                    "[fill]" +
+                            "[fill]",
+                    // rows
+                    "[]" +
+                            "[]" +
+                            "[]"));
             FormFunctionGUI.pack();
             FormFunctionGUI.setLocationRelativeTo(FormFunctionGUI.getOwner());
         }

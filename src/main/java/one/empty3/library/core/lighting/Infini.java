@@ -33,7 +33,8 @@ package one.empty3.library.core.lighting;
 import one.empty3.library.*;
 
 /*__
- * @author Manuel Dahmen _manuel.dahmen@gmx.com_
+ * Meta Description missing
+ * @author Manuel Dahmen dathewolf@gmail.com
  */
 public class Infini extends Representable {
 

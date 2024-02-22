@@ -39,7 +39,8 @@ import java.awt.image.BufferedImage;
 
 /*__
  *
- * @author Manuel Dahmen _manuel.dahmen@gmx.com_
+ * Meta Description missing
+ * @author Manuel Dahmen dathewolf@gmail.com
  */
 public abstract class Map {
     public final int CARD_TYPE_COLORS = 0;
@@ -62,7 +63,7 @@ public abstract class Map {
 
     public abstract BufferedImage genererImage();
 
-    public abstract void initCard(int width, int height, Color [][] objet);
+    public abstract void initCard(int width, int height, Color[][] objet);
 
     public int getWidth() {
         return width;

@@ -27,10 +27,13 @@
 package one.empty3.library.core.testing;
 
 import javax.swing.*;
+
 import net.miginfocom.swing.*;
 
 /**
- * @author manue
+ * My class description missing
+ *
+ * @author Manuel Dahmen dathewolf@gmail.com
  */
 public class TestObjetUI extends JFrame {
     public TestObjetUI() {

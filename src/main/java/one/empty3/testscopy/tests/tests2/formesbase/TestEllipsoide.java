@@ -38,7 +38,8 @@ import one.empty3.library.core.tribase.TRIEllipsoide;
 
 /*__
  *
- * @author Manuel Dahmen _manuel.dahmen@gmx.com_
+ * Meta Description missing
+ * @author Manuel Dahmen dathewolf@gmail.com
  */
 public class TestEllipsoide extends TestObjetSub {
 

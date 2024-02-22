@@ -34,7 +34,8 @@ import java.awt.*;
 import java.util.ArrayList;
 
 /*__
- * @author Manuel Dahmen _manuel.dahmen@gmx.com_
+ * Meta Description missing
+ * @author Manuel Dahmen dathewolf@gmail.com
  */
 public class AnneauDeSpheresQuiTournent extends TestObjet {
 

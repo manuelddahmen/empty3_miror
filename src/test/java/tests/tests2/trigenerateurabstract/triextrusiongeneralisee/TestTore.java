@@ -38,7 +38,8 @@ import one.empty3.library.core.tribase.*;
 import java.awt.*;
 
 /*__
- * @author Manuel Dahmen _manuel.dahmen@gmx.com_
+ * Meta Description missing
+ * @author Manuel Dahmen dathewolf@gmail.com
  */
 public class TestTore extends TestObjetSub {
     public static void main(String[] args) {

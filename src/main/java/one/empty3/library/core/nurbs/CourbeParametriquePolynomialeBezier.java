@@ -25,14 +25,15 @@ package one.empty3.library.core.nurbs;
 import one.empty3.library.Point3D;
 
 /*__
- * @author Manuel Dahmen _manuel.dahmen@gmx.com_
+ * Meta Description missing
+ * @author Manuel Dahmen dathewolf@gmail.com
  */
 public class CourbeParametriquePolynomialeBezier extends CourbeParametriquePolynomiale {
 
-    public CourbeParametriquePolynomialeBezier()
-    {
+    public CourbeParametriquePolynomialeBezier() {
         super();
     }
+
     public CourbeParametriquePolynomialeBezier(Point3D[] coefficients) {
         super(coefficients);
     }
@@ -66,17 +67,16 @@ public class CourbeParametriquePolynomialeBezier extends CourbeParametriquePolyn
         return sum;
     }
 
-    public void declareProperties()
-    {
+    public void declareProperties() {
         super.declareProperties();
     }
 
     @Override
     public String toString() {
         String s = "bezier(";
-        for(int i=0; i<coefficients.getData1d().size(); i++)
-            s+="\n"+coefficients.getElem(i).toString()+"\n";
-        return s+")\n";
+        for (int i = 0; i < coefficients.getData1d().size(); i++)
+            s += "\n" + coefficients.getElem(i).toString() + "\n";
+        return s + ")\n";
     }
 
 }

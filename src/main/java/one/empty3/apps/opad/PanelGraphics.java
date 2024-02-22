@@ -41,7 +41,8 @@ import java.util.logging.Logger;
 
 /*__
  *
- * @author Manuel Dahmen _manuel.dahmen@gmx.com_
+ * Meta Description missing
+ * @author Manuel Dahmen dathewolf@gmail.com
  */
 public class PanelGraphics extends JDialog {
     private final PanelGraphics panelGraphics;
@@ -71,37 +72,39 @@ public class PanelGraphics extends JDialog {
         ArrayList<Player> localPlayers = new ArrayList();
         try {
             localPlayers = Game.getLocalPlayers();
-        
-        ArrayList<String> playersNames = new ArrayList<String>();
-        for (Player localPlayer : localPlayers) {
-            playersNames.add(localPlayer.getName());
-        }
-        String [] playersnamesArray = new String[playersNames.size()+1];
-        int i = 0;
-        for(String s : playersNames)
-        {
-            playersnamesArray[i] =s;
-            i++;
-        }
-        playersnamesArray[i] = "New player";
 
-        jComboBoxNom = new JComboBox<>();
-        jComboBoxNom.setModel(new DefaultComboBoxModel<>(
-                playersnamesArray
-        ));
-        jComboBoxNom.setAction(new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (((String) jComboBoxNom.getSelectedItem()).equals("New player")) {
-                    NewPlayerDialog newPlayerDialog = new NewPlayerDialog((Frame) getParent(), true);
-                    newPlayerDialog.setVisible(true);
-                    newPlayerDialog.dispose();
+            ArrayList<String> playersNames = new ArrayList<String>();
+            for (Player localPlayer : localPlayers) {
+                playersNames.add(localPlayer.getName());
+            }
+            String[] playersnamesArray = new String[playersNames.size() + 1];
+            int i = 0;
+            for (String s : playersNames) {
+                playersnamesArray[i] = s;
+                i++;
+            }
+            playersnamesArray[i] = "New player";
 
-                    initPlayersList();
+            jComboBoxNom = new JComboBox<>();
+            jComboBoxNom.setModel(new DefaultComboBoxModel<>(
+                    playersnamesArray
+            ));
+            jComboBoxNom.setAction(new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if (((String) jComboBoxNom.getSelectedItem()).equals("New player")) {
+                        NewPlayerDialog newPlayerDialog = new NewPlayerDialog((Frame) getParent(), true);
+                        newPlayerDialog.setVisible(true);
+                        newPlayerDialog.dispose();
+
+                        initPlayersList();
+                    }
                 }
-            };
-        });
-        } catch (Exception ex) {}
+
+                ;
+            });
+        } catch (Exception ex) {
+        }
 
     }
 
@@ -186,12 +189,12 @@ public class PanelGraphics extends JDialog {
 
         //---- jComboBoxTerrain ----
         jComboBoxTerrain.setForeground(new Color(51, 0, 255));
-        jComboBoxTerrain.setModel(new DefaultComboBoxModel<>(new String[] {
-            "Plan",
-            "Sinusoide",
-            "Sinusoide Mouvante",
-            "Sphere",
-            "Tube"
+        jComboBoxTerrain.setModel(new DefaultComboBoxModel<>(new String[]{
+                "Plan",
+                "Sinusoide",
+                "Sinusoide Mouvante",
+                "Sphere",
+                "Tube"
         }));
         jComboBoxTerrain.setToolTipText(bundle.getString("PanelGraphics.jComboBoxTerrain.toolTipText"));
         jComboBoxTerrain.setName("jComboBoxTerrain");
@@ -206,55 +209,55 @@ public class PanelGraphics extends JDialog {
         GroupLayout contentPaneLayout = new GroupLayout(contentPane);
         contentPane.setLayout(contentPaneLayout);
         contentPaneLayout.setHorizontalGroup(
-            contentPaneLayout.createParallelGroup()
-                .addComponent(jLabel1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(contentPaneLayout.createSequentialGroup()
-                    .addContainerGap()
-                    .addGroup(contentPaneLayout.createParallelGroup()
-                        .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jLabel3, GroupLayout.DEFAULT_SIZE, 197, Short.MAX_VALUE)
-                            .addComponent(jLabel2, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addComponent(jLabel4, GroupLayout.PREFERRED_SIZE, 197, GroupLayout.PREFERRED_SIZE))
-                    .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                    .addGroup(contentPaneLayout.createParallelGroup()
-                        .addComponent(jTextFieldNom)
-                        .addGroup(GroupLayout.Alignment.TRAILING, contentPaneLayout.createSequentialGroup()
-                            .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                                .addGroup(contentPaneLayout.createSequentialGroup()
-                                    .addComponent(jRadioButtonECGraph, GroupLayout.DEFAULT_SIZE, 275, Short.MAX_VALUE)
-                                    .addGap(18, 18, 18)
-                                    .addComponent(jRadioButtonOGLGraph, GroupLayout.PREFERRED_SIZE, 154, GroupLayout.PREFERRED_SIZE))
-                                .addComponent(jComboBoxTerrain))
-                            .addContainerGap())))
-                .addGroup(contentPaneLayout.createSequentialGroup()
-                    .addGap(47, 47, 47)
-                    .addComponent(jButtonStart, GroupLayout.PREFERRED_SIZE, 600, GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 21, Short.MAX_VALUE))
+                contentPaneLayout.createParallelGroup()
+                        .addComponent(jLabel1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(contentPaneLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(contentPaneLayout.createParallelGroup()
+                                        .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.TRAILING, false)
+                                                .addComponent(jLabel3, GroupLayout.DEFAULT_SIZE, 197, Short.MAX_VALUE)
+                                                .addComponent(jLabel2, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                        .addComponent(jLabel4, GroupLayout.PREFERRED_SIZE, 197, GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(contentPaneLayout.createParallelGroup()
+                                        .addComponent(jTextFieldNom)
+                                        .addGroup(GroupLayout.Alignment.TRAILING, contentPaneLayout.createSequentialGroup()
+                                                .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                                                        .addGroup(contentPaneLayout.createSequentialGroup()
+                                                                .addComponent(jRadioButtonECGraph, GroupLayout.DEFAULT_SIZE, 275, Short.MAX_VALUE)
+                                                                .addGap(18, 18, 18)
+                                                                .addComponent(jRadioButtonOGLGraph, GroupLayout.PREFERRED_SIZE, 154, GroupLayout.PREFERRED_SIZE))
+                                                        .addComponent(jComboBoxTerrain))
+                                                .addContainerGap())))
+                        .addGroup(contentPaneLayout.createSequentialGroup()
+                                .addGap(47, 47, 47)
+                                .addComponent(jButtonStart, GroupLayout.PREFERRED_SIZE, 600, GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 21, Short.MAX_VALUE))
         );
         contentPaneLayout.setVerticalGroup(
-            contentPaneLayout.createParallelGroup()
-                .addGroup(contentPaneLayout.createSequentialGroup()
-                    .addComponent(jLabel1, GroupLayout.PREFERRED_SIZE, 76, GroupLayout.PREFERRED_SIZE)
-                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jLabel2, GroupLayout.DEFAULT_SIZE, 51, Short.MAX_VALUE)
-                        .addComponent(jTextFieldNom))
-                    .addGap(18, 18, 18)
-                    .addGroup(contentPaneLayout.createParallelGroup()
+                contentPaneLayout.createParallelGroup()
                         .addGroup(contentPaneLayout.createSequentialGroup()
-                            .addComponent(jLabel3, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE))
-                        .addGroup(contentPaneLayout.createSequentialGroup()
-                            .addGroup(contentPaneLayout.createParallelGroup()
-                                .addComponent(jRadioButtonECGraph, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jRadioButtonOGLGraph, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGap(4, 4, 4)))
-                    .addGroup(contentPaneLayout.createParallelGroup()
-                        .addComponent(jComboBoxTerrain, GroupLayout.DEFAULT_SIZE, 45, Short.MAX_VALUE)
-                        .addComponent(jLabel4, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(jButtonStart, GroupLayout.PREFERRED_SIZE, 107, GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap())
+                                .addComponent(jLabel1, GroupLayout.PREFERRED_SIZE, 76, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(jLabel2, GroupLayout.DEFAULT_SIZE, 51, Short.MAX_VALUE)
+                                        .addComponent(jTextFieldNom))
+                                .addGap(18, 18, 18)
+                                .addGroup(contentPaneLayout.createParallelGroup()
+                                        .addGroup(contentPaneLayout.createSequentialGroup()
+                                                .addComponent(jLabel3, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE))
+                                        .addGroup(contentPaneLayout.createSequentialGroup()
+                                                .addGroup(contentPaneLayout.createParallelGroup()
+                                                        .addComponent(jRadioButtonECGraph, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                        .addComponent(jRadioButtonOGLGraph, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                                .addGap(4, 4, 4)))
+                                .addGroup(contentPaneLayout.createParallelGroup()
+                                        .addComponent(jComboBoxTerrain, GroupLayout.DEFAULT_SIZE, 45, Short.MAX_VALUE)
+                                        .addComponent(jLabel4, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButtonStart, GroupLayout.PREFERRED_SIZE, 107, GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap())
         );
         setSize(670, 405);
         setLocationRelativeTo(null);
@@ -286,17 +289,18 @@ public class PanelGraphics extends JDialog {
 
         Class<Terrain> loadClass = levelMenu.loadClass();
 
-        if(loadClass==null)
+        if (loadClass == null)
             throw new NullPointerException("classForSol == null");
         Player byName = null;
         try {
             byName = Player.getByName(jComboBoxNom.getSelectedItem().toString());
-        } catch (Exception ex) {}
+        } catch (Exception ex) {
+        }
 
 
         Game game = new Game();
 
-        assert byName!=null;
+        assert byName != null;
 
         game.setCurrentPlayer(byName);
 
@@ -355,6 +359,7 @@ public class PanelGraphics extends JDialog {
             }
         });
     }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // Generated using JFormDesigner non-commercial license
     private JLabel jLabel1;

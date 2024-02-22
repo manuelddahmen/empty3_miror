@@ -43,7 +43,8 @@ import java.util.ArrayList;
 import java.util.Properties;
 
 /*__
- * @author Manuel Dahmen _manuel.dahmen@gmx.com_
+ * Meta Description missing
+ * @author Manuel Dahmen dathewolf@gmail.com
  */
 public class Player {
 
@@ -53,9 +54,7 @@ public class Player {
     private Color color;
     private String name;
 
-    public Player(String name, Color color, int score)
-
-    {
+    public Player(String name, Color color, int score) {
         this.name = name;
         this.color = color;
         this.score = score;
@@ -107,12 +106,12 @@ public class Player {
 
         File file = new File(filename);
         // New or update
-        if (!file.exists() && (file.exists()&&check())) {
+        if (!file.exists() && (file.exists() && check())) {
             try {
                 PrintWriter printWriter = new PrintWriter(file);
-                printWriter.println("color=" + (float)color.getRed()/255f + ","
-                        + (float)color.getGreen()/255f + ","
-                        + (float)color.getBlue()/255f);
+                printWriter.println("color=" + (float) color.getRed() / 255f + ","
+                        + (float) color.getGreen() / 255f + ","
+                        + (float) color.getBlue() / 255f);
                 printWriter.println("name=" + name);
                 printWriter.println("playerId=" + playerId);
                 printWriter.println("score=" + score);

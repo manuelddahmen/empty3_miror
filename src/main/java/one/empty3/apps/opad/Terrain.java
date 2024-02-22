@@ -38,7 +38,8 @@ import one.empty3.library.core.nurbs.ParametricSurface;
 
 /*__
  *
- * @author Manuel Dahmen _manuel.dahmen@gmx.com_
+ * Meta Description missing
+ * @author Manuel Dahmen dathewolf@gmail.com
  */
 public abstract class Terrain extends RepresentableConteneur {
     protected ParametricSurface ps;
@@ -49,22 +50,21 @@ public abstract class Terrain extends RepresentableConteneur {
     private boolean isDessineMurs = true;
     private double incrCalcNormale = 0.0001;
 
-    public boolean isDessineMurs()
-    {
+    public boolean isDessineMurs() {
         return isDessineMurs;
     }
-    public void setDessineMurs(boolean b)
-    {
+
+    public void setDessineMurs(boolean b) {
         //isDessineMurs = b;
     }
+
     public Terrain() {
     }
 
 
-    public Point3D calcNormale(double u, double v)
-    {
-        Point3D v1 = ps.calculerPoint3D(u+ getaDouble(), v).moins(ps.calculerPoint3D(u, v));
-        Point3D v2 = ps.calculerPoint3D(u, v+getaDouble()).moins(ps.calculerPoint3D(u, v));
+    public Point3D calcNormale(double u, double v) {
+        Point3D v1 = ps.calculerPoint3D(u + getaDouble(), v).moins(ps.calculerPoint3D(u, v));
+        Point3D v2 = ps.calculerPoint3D(u, v + getaDouble()).moins(ps.calculerPoint3D(u, v));
 
         return v1.prodVect(v2);
     }
@@ -74,24 +74,22 @@ public abstract class Terrain extends RepresentableConteneur {
     }
 
     /*__
-     * 
+     *
      * @param u X-coordonnée [0-1] sur la surface
      * @param v Y-coordonnée [0-1] sur la surface
-     * @return 
+     * @return
      */
     public Point3D calcCposition(double u, double v) {
         return ps.calculerPoint3D(u, v);
     }
 
 
-    public Point3D hauteur(double x, double y, double z)
-    {
+    public Point3D hauteur(double x, double y, double z) {
         return ps.calculerPoint3D(x, y).plus(calcNormale(x, y).norme1().mult(z));
 
     }
-    public Point3D calculerLigneEcoulement(Point3D p3)
 
-    {
+    public Point3D calculerLigneEcoulement(Point3D p3) {
         Point3D P = Point3D.O0;
 
         Point3D N = calcNormale(p3.get(0), p3.get(1));

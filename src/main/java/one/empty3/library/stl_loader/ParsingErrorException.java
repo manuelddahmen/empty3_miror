@@ -31,7 +31,8 @@
 package one.empty3.library.stl_loader;
 
 /*__
- * @author Manuel Dahmen _manuel.dahmen@gmx.com_
+ * Meta Description missing
+ * @author Manuel Dahmen dathewolf@gmail.com
  */
 public class ParsingErrorException extends Exception {
 

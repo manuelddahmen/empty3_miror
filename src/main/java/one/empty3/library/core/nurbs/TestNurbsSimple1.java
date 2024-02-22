@@ -40,7 +40,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*__
- * @author Manuel Dahmen _manuel.dahmen@gmx.com_
+ * Meta Description missing
+ * @author Manuel Dahmen dathewolf@gmail.com
  */
 public class TestNurbsSimple1 extends TestObjetSub {
 
@@ -117,7 +118,7 @@ public class TestNurbsSimple1 extends TestObjetSub {
         n.setMaxY(5);
 
         scene().add(n);
-        Logger.getAnonymousLogger().log(Level.INFO, ""+n);
+        Logger.getAnonymousLogger().log(Level.INFO, "" + n);
 
         scene().cameraActive(new Camera(Point3D.Z.mult(-1000d), Point3D.O0));
     }

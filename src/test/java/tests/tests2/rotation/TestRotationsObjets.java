@@ -46,7 +46,8 @@ import java.util.logging.Logger;
  * cette classe produit une image de sphère avec "Manuel Dahmen" écrit dessus. La sphère tourne
  * puis s'en va et revient à l'écran.
  *
- * @author Manuel Dahmen _manuel.dahmen@gmx.com_
+ * Meta Description missing
+ * @author Manuel Dahmen dathewolf@gmail.com
  */
 public class TestRotationsObjets extends TestObjetSub {
     static int nObjets = 2;
@@ -202,7 +203,6 @@ public class TestRotationsObjets extends TestObjetSub {
         representable.setVectX(colVectors[0]);
         representable.setVectY(colVectors[1]);
         representable.setVectZ(colVectors[2]);
-
 
 
         //representable.setRotation(representable.new Rotation(rot, Point3D.O0));

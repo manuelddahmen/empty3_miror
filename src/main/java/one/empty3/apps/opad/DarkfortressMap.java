@@ -36,10 +36,10 @@ import one.empty3.library.Point3D;
 
 /*__
  *
- * @author Manuel Dahmen _manuel.dahmen@gmx.com_
+ * Meta Description missing
+ * @author Manuel Dahmen dathewolf@gmail.com
  */
-public class DarkfortressMap extends SimpleMap
-{
+public class DarkfortressMap extends SimpleMap {
     private final PositionUpdate mover;
 
     public DarkfortressMap(PositionUpdate m) {

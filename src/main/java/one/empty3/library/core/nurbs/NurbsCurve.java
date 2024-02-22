@@ -37,7 +37,8 @@ import java.util.ArrayList;
 import java.util.Map.Entry;
 
 /*__
- * @author Manuel Dahmen _manuel.dahmen@gmx.com_
+ * Meta Description missing
+ * @author Manuel Dahmen dathewolf@gmail.com
  */
 public class NurbsCurve extends ParametricCurve {
     ArrayList<Double> knots = new ArrayList<>();
@@ -70,7 +71,7 @@ public class NurbsCurve extends ParametricCurve {
 
 
     protected double fOOO(double a, double b) {
-        if (Double.isInfinite(a/b) || Double.isNaN(a/b)) {
+        if (Double.isInfinite(a / b) || Double.isNaN(a / b)) {
             return 1;
         } else {
             return a / b;
@@ -90,6 +91,7 @@ public class NurbsCurve extends ParametricCurve {
         }
 
     }
+
     public ArrayList<Entry<Point3D, Double>> getPointsAndWeights() {
         return pointsAndWeights;
     }
@@ -112,8 +114,8 @@ public class NurbsCurve extends ParametricCurve {
         pointsAndWeights.add(new AbstractMap.SimpleImmutableEntry<Point3D, Double>(point, v));
     }
 
-    public void setKnots(double [] knots) {
-        for(int i=0; i<knots.length; i++)
+    public void setKnots(double[] knots) {
+        for (int i = 0; i < knots.length; i++)
             this.knots.add(knots[i]);
     }
 }

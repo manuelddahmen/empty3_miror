@@ -56,7 +56,8 @@ import java.util.logging.Logger;
 import static org.jcodec.common.io.NIOUtils.writableFileChannel;
 
 /**
- * @author Manuel Dahmen
+ * This class represents the user interface for the Morph application.
+ * It provides methods for initializing the UI components, handling user actions, and performing image morphing operations.
  */
 public class MorphUI extends JFrame {
     private final StructureMatrix<Point3D> gridUV1;
@@ -344,7 +345,7 @@ public class MorphUI extends JFrame {
 
                         Logger.getAnonymousLogger().log(Level.INFO, "STARTING. File = " + avif.getAbsolutePath());
                         int frame = 0;
-                        while ( frame < getFps() * getSeconds()) {
+                        while (frame < getFps() * getSeconds()) {
                             Logger.getAnonymousLogger()
                                     .log(Level.FINE, "FrameNo" + frame);
                             BufferedImage bufferedImage = computeFrame(frame);
@@ -390,7 +391,7 @@ public class MorphUI extends JFrame {
         new Thread() {
             public void run() {
                 int attempts = 0;
-                while(isComputing() && attempts <3) {
+                while (isComputing() && attempts < 3) {
                     try {
                         Thread.sleep(100);
                         attempts++;
@@ -457,73 +458,73 @@ public class MorphUI extends JFrame {
                     MixPolygons mixPolygons = null;
 
 
-                    if(shapeType==0) {
+                    if (shapeType == 0) {
 
-                    if (imageControl1.getPointView().getCheckBoxNoDeformation().isSelected()
-                            && imageControl2.getPointView().getCheckBoxNoDeformation().isSelected()) {
+                        if (imageControl1.getPointView().getCheckBoxNoDeformation().isSelected()
+                                && imageControl2.getPointView().getCheckBoxNoDeformation().isSelected()) {
 
-                        ImageControls[] imageControls = new ImageControls[]
-                                {imageControl1, imageControl2};
-                        ParametricSurface[] surfaces = new ParametricSurface[2];
-                        int i = 0;
-                        for (ImageControls ic : imageControls) {
-                            switch (ic.getModelIndex()) {
-                                case 0:
-                                    surfaces[i] = new Polygons();
-                                    ((SurfaceParametriquePolynomiale) (surfaces[i]))
-                                            .setCoefficients(ic.getGrid());
-                                    break;
-                                case 1:
-                                    surfaces[i] = new PolygonsDistinctUV();
-                                    ((PolygonsDistinctUV) (surfaces[i]))
-                                            .setCoefficients(ic.getGrid());
-                                    ((PolygonsDistinctUV) (surfaces[i]))
-                                            .setUvMap(ic.getGridUv());
-                                    break;
-                                case 2:
-                                case 3:
-                                    surfaces[i] = new Plan3D();
-                                    ((Plan3D) surfaces[i]).getP0().setElem(Point3D.O0);
-                                    ((Plan3D) surfaces[i]).getvX().setElem(Point3D.X.mult(resX));
-                                    ((Plan3D) surfaces[i]).getvY().setElem(Point3D.Y.mult(resY));
-                                    break;
+                            ImageControls[] imageControls = new ImageControls[]
+                                    {imageControl1, imageControl2};
+                            ParametricSurface[] surfaces = new ParametricSurface[2];
+                            int i = 0;
+                            for (ImageControls ic : imageControls) {
+                                switch (ic.getModelIndex()) {
+                                    case 0:
+                                        surfaces[i] = new Polygons();
+                                        ((SurfaceParametriquePolynomiale) (surfaces[i]))
+                                                .setCoefficients(ic.getGrid());
+                                        break;
+                                    case 1:
+                                        surfaces[i] = new PolygonsDistinctUV();
+                                        ((PolygonsDistinctUV) (surfaces[i]))
+                                                .setCoefficients(ic.getGrid());
+                                        ((PolygonsDistinctUV) (surfaces[i]))
+                                                .setUvMap(ic.getGridUv());
+                                        break;
+                                    case 2:
+                                    case 3:
+                                        surfaces[i] = new Plan3D();
+                                        ((Plan3D) surfaces[i]).getP0().setElem(Point3D.O0);
+                                        ((Plan3D) surfaces[i]).getvX().setElem(Point3D.X.mult(resX));
+                                        ((Plan3D) surfaces[i]).getvY().setElem(Point3D.Y.mult(resY));
+                                        break;
+                                }
+                                i++;
+
                             }
-                            i++;
-
+                            mixPolygons = new MixPolygons(surfaces[0], surfaces[1], text1, text2);
+                        } else if (imageControl1.getPointView().getCheckBoxMorphing().isSelected()
+                                && imageControl2.getPointView().getCheckBoxMorphing().isSelected()
+                                && !imageControl1.getPointView().getCheckBoxUv().isSelected()
+                                && !imageControl1.getPointView().getCheckBoxUv().isSelected()) {
+                            polygons = new Polygons();
+                            ((Polygons) polygons).setCoefficients(copy);
+                        } else if (imageControl1.getPointView().getCheckBoxMorphing().isSelected()
+                                && imageControl2.getPointView().getCheckBoxMorphing().isSelected()
+                                && imageControl1.getPointView().getCheckBoxUv().isSelected()
+                                && imageControl1.getPointView().getCheckBoxUv().isSelected()) {
+                            polygons = new ShapeMorph1(text1, text2, grid1, grid2);
+                            ((ShapeMorph1) polygons).setT(t);
+                        } else {
+                            polygons = new PolygonsDistinctUV();
+                            ((PolygonsDistinctUV) polygons).setUvMap(imageControl1.getGridUv());
+                            ((PolygonsDistinctUV) polygons).setCoefficients(copy);
+                            ((PolygonsDistinctUV) polygons).setTexture2(textureMorphing);
                         }
-                        mixPolygons = new MixPolygons(surfaces[0], surfaces[1], text1, text2);
-                    } else if (imageControl1.getPointView().getCheckBoxMorphing().isSelected()
-                            && imageControl2.getPointView().getCheckBoxMorphing().isSelected()
-                            && !imageControl1.getPointView().getCheckBoxUv().isSelected()
-                            && !imageControl1.getPointView().getCheckBoxUv().isSelected()) {
-                        polygons = new Polygons();
-                        ((Polygons) polygons).setCoefficients(copy);
-                    } else if (imageControl1.getPointView().getCheckBoxMorphing().isSelected()
-                            && imageControl2.getPointView().getCheckBoxMorphing().isSelected()
-                            && imageControl1.getPointView().getCheckBoxUv().isSelected()
-                            && imageControl1.getPointView().getCheckBoxUv().isSelected()) {
-                        polygons = new ShapeMorph1(text1, text2, grid1, grid2);
-                        ((ShapeMorph1) polygons).setT(t);
-                    } else {
-                        polygons = new PolygonsDistinctUV();
-                        ((PolygonsDistinctUV) polygons).setUvMap(imageControl1.getGridUv());
-                        ((PolygonsDistinctUV) polygons).setCoefficients(copy);
-                        ((PolygonsDistinctUV) polygons).setTexture2(textureMorphing);
-                    }
 
-                    //polygons.texture(textureMorphing);
-                    //scene.add(polygons);
+                        //polygons.texture(textureMorphing);
+                        //scene.add(polygons);
 
-                    if (mixPolygons != null) {
-                        mixPolygons.texture(textureMorphing);
-                        mixPolygons.setTime(t);
-                        scene.add(mixPolygons);
-                    } else if (polygons != null) {
-                        polygons.texture(textureMorphing);
-                        scene.add(polygons);
-                    } else {
-                        Logger.getAnonymousLogger().log(Level.SEVERE, "Polygons==null && mixPolygons==null");
-                    }
+                        if (mixPolygons != null) {
+                            mixPolygons.texture(textureMorphing);
+                            mixPolygons.setTime(t);
+                            scene.add(mixPolygons);
+                        } else if (polygons != null) {
+                            polygons.texture(textureMorphing);
+                            scene.add(polygons);
+                        } else {
+                            Logger.getAnonymousLogger().log(Level.SEVERE, "Polygons==null && mixPolygons==null");
+                        }
 
 
                     /*
@@ -533,10 +534,10 @@ public class MorphUI extends JFrame {
 */
                     } else {
                         polygons = new ShapeMorph1(text1, text2, grid1, grid2);
-                        ((ShapeMorph1)polygons).setT(t);
+                        ((ShapeMorph1) polygons).setT(t);
                     }
 
-                        Point3D plus = Point3D.X.mult(
+                    Point3D plus = Point3D.X.mult(
                             resX / 2.).plus(Point3D.Y.mult(resY / 2.));
 
                     Camera camera = new Camera(Point3D.Z.mult(
@@ -546,7 +547,7 @@ public class MorphUI extends JFrame {
                     scene.cameraActive(camera);
 
                     //if (zBufferComputing == null)
-                        zBufferComputing = new ZBufferImpl(resX, resY);
+                    zBufferComputing = new ZBufferImpl(resX, resY);
                     //else
                     //    zBufferComputing.idzpp();
 
@@ -556,7 +557,7 @@ public class MorphUI extends JFrame {
                     zBufferComputing.camera(camera);
 
                     textureMorphing.setT(t);
-                    if(mixPolygons!=null)
+                    if (mixPolygons != null)
                         mixPolygons.setTime(t);
                     if (zBufferComputing != null) {
 
@@ -774,7 +775,7 @@ public class MorphUI extends JFrame {
     }
 
     private void shapeType(ActionEvent e) {
-        switch (((JComboBox)(e.getSource())).getSelectedIndex()) {
+        switch (((JComboBox) (e.getSource())).getSelectedIndex()) {
             case 0:
                 shapeType = 0;
                 break;
@@ -787,7 +788,7 @@ public class MorphUI extends JFrame {
     }
 
     private void checkBoxDisplayGrids(ActionEvent e) {
-        if(checkBox1.isSelected()) {
+        if (checkBox1.isSelected()) {
             imageControl1.setDisplayGrids(true);
             imageControl2.setDisplayGrids(true);
         } else {

@@ -37,20 +37,21 @@ import java.util.logging.Logger;
 
 /*__
  *
- * @author Manuel Dahmen _manuel.dahmen@gmx.com_
+ * Meta Description missing
+ * @author Manuel Dahmen dathewolf@gmail.com
  */
 public class TestTimer {
-    public static void main(String [] args) {
+    public static void main(String[] args) {
         Timer t = new Timer();
         t.init();
-        int i=0;
-        while(i<100) {
+        int i = 0;
+        while (i < 100) {
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException ex) {
                 Logger.getLogger(TestTimer.class.getName()).log(Level.SEVERE, null, ex);
             }
-            Logger.getAnonymousLogger().log(Level.INFO,""+ t.getTimeEllapsed());
+            Logger.getAnonymousLogger().log(Level.INFO, "" + t.getTimeEllapsed());
         }
     }
 }

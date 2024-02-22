@@ -40,7 +40,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*__
- * @author Manuel Dahmen _manuel.dahmen@gmx.com_
+ * Meta Description missing
+ * @author Manuel Dahmen dathewolf@gmail.com
  */
 public class TestNurbs1 extends TestObjetSub {
 
@@ -93,7 +94,7 @@ public class TestNurbs1 extends TestObjetSub {
         n.creerNurbs();
 
         scene().add(n);
-        Logger.getAnonymousLogger().log(Level.INFO,""+ n);
+        Logger.getAnonymousLogger().log(Level.INFO, "" + n);
         //Axes axes = new Axes();
 
         //scene().add(axes);

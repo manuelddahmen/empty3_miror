@@ -49,7 +49,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * @author Manuel Dahmen
+ * My class description missing
+ *
+ * @author Manuel Dahmen dathewolf@gmail.com
  */
 public class REditor extends JPanel implements PropertyChangeListener, RepresentableEditor {
     private static final int INSERT_ROW_AT_DIM1 = 0;
@@ -66,8 +68,9 @@ public class REditor extends JPanel implements PropertyChangeListener, Represent
 
     private RPropertyDetailsRow tableModel;
     private Main main;
-    public REditor()
-    {}
+
+    public REditor() {
+    }
 
     public REditor(Main main, Representable re) {
         super();
@@ -77,16 +80,16 @@ public class REditor extends JPanel implements PropertyChangeListener, Represent
         history.addToHistory(tableModel);
         init(history.getCurrentRow());
         this.r = re;
-            }
+    }
 
     public void init(Object re) {
-        if(re!=null) {
+        if (re != null) {
             if (re instanceof Representable) {
                 labelBreadCumbs.setText(re.getClass().getSimpleName());
                 this.tableModel = new RPropertyDetailsRow((Representable) re);
                 tableObjectDetails.setModel(tableModel);
                 firePropertyChange("representable", r, tableModel.getRepresentable());
-                this.r  = tableModel.getRepresentable();
+                this.r = tableModel.getRepresentable();
                 tableObjectDetails.setDefaultRenderer(String.class, new RETableRenderer(tableModel));
             } else if (re instanceof RPropertyDetailsRow) {
                 labelBreadCumbs.setText(((RPropertyDetailsRow) re).getRepresentable().getClass().getSimpleName());
@@ -96,7 +99,7 @@ public class REditor extends JPanel implements PropertyChangeListener, Represent
                 tableObjectDetails.setModel(model);
                 labelBreadCumbs.setText(((RPropertyDetailsRow) re).getRepresentable().getClass().getSimpleName());
                 firePropertyChange("representable", r, tableModel.getRepresentable());
-                this.r  = tableModel.getRepresentable();
+                this.r = tableModel.getRepresentable();
             }
             tableModel.setMain(main);
         }
@@ -121,10 +124,10 @@ public class REditor extends JPanel implements PropertyChangeListener, Represent
         // TODO add your code here
     }
 
-    private void tableObjectDetailsMouseClicked(MouseEvent e)  {
+    private void tableObjectDetailsMouseClicked(MouseEvent e) {
         int selectedRow = tableObjectDetails.getSelectedRow();
         ObjectDetailDescription objectDetailDescription = tableModel.getObjectDetailDescriptions().get(selectedRow);
-        if(e.getButton()==1) {
+        if (e.getButton() == 1) {
             if (tableModel.getItemList(selectedRow) != null) {
                 if (tableModel.getItemList(selectedRow) instanceof MatrixPropertiesObject) {
                     boolean isNew = tableModel.getValueAt(selectedRow, 1) != null && tableModel.getValueAt(selectedRow, 1).toString().equals("NEW");
@@ -132,21 +135,21 @@ public class REditor extends JPanel implements PropertyChangeListener, Represent
                     MatrixPropertiesObject oldR = r;
                     if (isNew) {
                         if (oldR instanceof Scene) {
-                            ((Scene) oldR).add((Representable)newR);
+                            ((Scene) oldR).add((Representable) newR);
                             System.out.print("Added to scene" + newR.toString());
                         }
                         if (oldR instanceof RepresentableConteneur) {
-                            ((RepresentableConteneur) oldR).add((Representable)newR);
+                            ((RepresentableConteneur) oldR).add((Representable) newR);
                             System.out.print("Added to scene" + newR.toString());
                         }
 
                     }
-                        history.addToHistory(new RPropertyDetailsRow(newR));
-                        Logger.getAnonymousLogger().log(Level.INFO, "add to history " + history.getCurrent());
-                        init(newR);
-                        refreshTable();
+                    history.addToHistory(new RPropertyDetailsRow(newR));
+                    Logger.getAnonymousLogger().log(Level.INFO, "add to history " + history.getCurrent());
+                    init(newR);
+                    refreshTable();
 
-                } else if(tableModel.getItemList(selectedRow) instanceof Color) {
+                } else if (tableModel.getItemList(selectedRow) instanceof Color) {
                     Color o = (Color) tableModel.getItemList(selectedRow);
                     JColorChooser jColorChooser = new JColorChooser(o);
                     jColorChooser.setVisible(true);
@@ -154,9 +157,8 @@ public class REditor extends JPanel implements PropertyChangeListener, Represent
                     tableModel.setValueAt(o, selectedRow, 5);
                 }
             }
-        }
-        else if(e.getButton()==3) {
-                 // PopUp
+        } else if (e.getButton() == 3) {
+            // PopUp
 
         }
     }
@@ -165,22 +167,23 @@ public class REditor extends JPanel implements PropertyChangeListener, Represent
     private void objectType(Class<?> aClass) {
 
     }
-/*
-    public String getToolTipText(MouseEvent e) {
-        String tip = null;
-        java.awt.Point p = e.getPoint();
-        int rowIndex = rowAtPoint(p);
-        int colIndex = columnAtPoint(p);
 
-        try {
-            tip = getValueAt(rowIndex, colIndex).toString();
-        } catch (RuntimeException e1) {
-            //catch null pointer exception if mouse is over an empty line
+    /*
+        public String getToolTipText(MouseEvent e) {
+            String tip = null;
+            java.awt.Point p = e.getPoint();
+            int rowIndex = rowAtPoint(p);
+            int colIndex = columnAtPoint(p);
+
+            try {
+                tip = getValueAt(rowIndex, colIndex).toString();
+            } catch (RuntimeException e1) {
+                //catch null pointer exception if mouse is over an empty line
+            }
+
+            return tip;
         }
-
-        return tip;
-    }
-*/
+    */
     public void historyBack() {
         history.back();
         refreshTable();
@@ -194,10 +197,9 @@ public class REditor extends JPanel implements PropertyChangeListener, Represent
     }
 
 
-
     public void refreshTable() {
         Object h = history.getCurrentRow();
-        if(h==null)
+        if (h == null)
             ;
         else
             init(h);
@@ -216,7 +218,7 @@ public class REditor extends JPanel implements PropertyChangeListener, Represent
         if (evt.getNewValue() instanceof ITexture) {
             try {
 
-                ((Representable)tableModel.getRepresentable()).setProperty(evt.getPropertyName(), evt.getNewValue());
+                ((Representable) tableModel.getRepresentable()).setProperty(evt.getPropertyName(), evt.getNewValue());
             } catch (InvocationTargetException e) {
                 e.printStackTrace();
             } catch (IllegalAccessException e) {
@@ -267,15 +269,13 @@ public class REditor extends JPanel implements PropertyChangeListener, Represent
     }
 
 
-    private StructureMatrix getProperty()
-    {
+    private StructureMatrix getProperty() {
         ObjectDetailDescription description = tableModel.getObjectDetailDescriptions().get(tableObjectDetails.getSelectedRow());
-        Logger.getAnonymousLogger().info("+++"+ description);
+        Logger.getAnonymousLogger().info("+++" + description);
         try {
-            Object property = ((Representable)getRepresentable()).getProperty(description.getName());
-            if(property instanceof StructureMatrix)
-            {
-                return (StructureMatrix)property;
+            Object property = ((Representable) getRepresentable()).getProperty(description.getName());
+            if (property instanceof StructureMatrix) {
+                return (StructureMatrix) property;
             }
         } catch (IllegalAccessException e1) {
             e1.printStackTrace();
@@ -291,10 +291,8 @@ public class REditor extends JPanel implements PropertyChangeListener, Represent
     private void menuItemInsertActionPerformed(ActionEvent e) {
         StructureMatrix property = getProperty();
         ObjectDetailDescription description = tableModel.getObjectDetailDescriptions().get(tableObjectDetails.getSelectedRow());
-        if(property!=null)
-        {
-            if(property.getDim()==1)
-            {
+        if (property != null) {
+            if (property.getDim() == 1) {
                 int parseInt = Integer.parseInt(description.getIndexes());
                 try {
                     property.insert(parseInt, description.getClazz().newInstance());
@@ -304,11 +302,10 @@ public class REditor extends JPanel implements PropertyChangeListener, Represent
                     e1.printStackTrace();
                 }
             }
-            if(property.getDim()==2)
-            {
+            if (property.getDim() == 2) {
                 int pos = Integer.parseInt(description.getIndexes().split(",")[0]);
                 property.addRow();
-                for(int i=0; i<((List)property.getData2d().get(0)).size(); i++)
+                for (int i = 0; i < ((List) property.getData2d().get(0)).size(); i++)
                     try {
                         property.insert(pos, 0, description.getClazz().newInstance());
                     } catch (InstantiationException e1) {
@@ -326,17 +323,14 @@ public class REditor extends JPanel implements PropertyChangeListener, Represent
     private void menuItemDeleteRowActionPerformed(ActionEvent e) {
         StructureMatrix property = getProperty();
         ObjectDetailDescription description = tableModel.getObjectDetailDescriptions().get(tableObjectDetails.getSelectedRow());
-        if(property!=null)
-        {
-            if(property.getDim()==1)
-            {
+        if (property != null) {
+            if (property.getDim() == 1) {
                 int parseInt = Integer.parseInt(description.getIndexes());
                 property.delete(parseInt);
             }
-            if(property.getDim()==2)
-            {
+            if (property.getDim() == 2) {
                 int pos = Integer.parseInt(description.getIndexes().split(",")[0]);
-                        property.delete(pos, 0);
+                property.delete(pos, 0);
 
             }
         }
@@ -347,15 +341,12 @@ public class REditor extends JPanel implements PropertyChangeListener, Represent
     private void menuItemDeleteColActionPerformed(ActionEvent e) {
         StructureMatrix property = getProperty();
         ObjectDetailDescription description = tableModel.getObjectDetailDescriptions().get(tableObjectDetails.getSelectedRow());
-        if(property!=null)
-        {
-            if(property.getDim()==1)
-            {
+        if (property != null) {
+            if (property.getDim() == 1) {
                 int parseInt = Integer.parseInt(description.getIndexes());
                 property.delete(parseInt);
             }
-            if(property.getDim()==2)
-            {
+            if (property.getDim() == 2) {
                 int pos = Integer.parseInt(description.getIndexes().split(",")[0]);
                 property.delete(pos, 1);
             }
@@ -375,10 +366,8 @@ public class REditor extends JPanel implements PropertyChangeListener, Represent
     private void menuItemInsRowActionPerformed(ActionEvent e) {
         StructureMatrix property = getProperty();
         ObjectDetailDescription description = tableModel.getObjectDetailDescriptions().get(tableObjectDetails.getSelectedRow());
-        if(property!=null)
-        {
-            if(property.getDim()==1)
-            {
+        if (property != null) {
+            if (property.getDim() == 1) {
                 int parseInt = Integer.parseInt(description.getIndexes());
                 try {
                     property.insert(parseInt, description.getClazz().newInstance());
@@ -388,11 +377,10 @@ public class REditor extends JPanel implements PropertyChangeListener, Represent
                     e1.printStackTrace();
                 }
             }
-            if(property.getDim()==2)
-            {
+            if (property.getDim() == 2) {
                 int pos = Integer.parseInt(description.getIndexes().split(",")[0]);
                 property.addRow();
-                for(int i=0; i<((List)property.getData2d().get(0)).size(); i++)
+                for (int i = 0; i < ((List) property.getData2d().get(0)).size(); i++)
                     try {
                         property.insert(pos, 0, description.getClazz().newInstance());
                     } catch (InstantiationException e1) {
@@ -404,17 +392,15 @@ public class REditor extends JPanel implements PropertyChangeListener, Represent
             }
         }
         tableModel.refresh();
-        }
+    }
 
 
     // Insert Col at
     private void menuItemInsColActionPerformed(ActionEvent e) {
         StructureMatrix property = getProperty();
         ObjectDetailDescription description = tableModel.getObjectDetailDescriptions().get(tableObjectDetails.getSelectedRow());
-        if(property!=null)
-        {
-            if(property.getDim()==1)
-            {
+        if (property != null) {
+            if (property.getDim() == 1) {
                 int parseInt = Integer.parseInt(description.getIndexes());
                 try {
                     property.insert(parseInt, description.getClazz().newInstance());
@@ -424,10 +410,9 @@ public class REditor extends JPanel implements PropertyChangeListener, Represent
                     e1.printStackTrace();
                 }
             }
-            if(property.getDim()==2)
-            {
+            if (property.getDim() == 2) {
                 int pos = Integer.parseInt(description.getIndexes().split(",")[0]);
-                for(int i=0; i<((List)property.getData2d().get(0)).size(); i++)
+                for (int i = 0; i < ((List) property.getData2d().get(0)).size(); i++)
                     try {
                         property.insert(pos, 1, description.getClazz().newInstance());
                     } catch (InstantiationException e1) {
@@ -449,26 +434,23 @@ public class REditor extends JPanel implements PropertyChangeListener, Represent
     private void menuItemRowAfterActionPerformed(ActionEvent e) {
         StructureMatrix property = getProperty();
         ObjectDetailDescription description = tableModel.getObjectDetailDescriptions().get(tableObjectDetails.getSelectedRow());
-        if(property!=null)
-        {
-            if(property.getDim()==1)
-            {
+        if (property != null) {
+            if (property.getDim() == 1) {
                 int parseInt = Integer.parseInt(description.getIndexes());
                 try {
-                    property.insert(parseInt+1, description.getClazz().newInstance());
+                    property.insert(parseInt + 1, description.getClazz().newInstance());
                 } catch (InstantiationException e1) {
                     e1.printStackTrace();
                 } catch (IllegalAccessException e1) {
                     e1.printStackTrace();
                 }
             }
-            if(property.getDim()==2)
-            {
+            if (property.getDim() == 2) {
                 int pos = Integer.parseInt(description.getIndexes().split(",")[0]);
                 property.addRow();
-                for(int i=0; i<((List)property.getData2d().get(0)).size(); i++)
+                for (int i = 0; i < ((List) property.getData2d().get(0)).size(); i++)
                     try {
-                        property.insert(pos+1, 0, description.getClazz().newInstance());
+                        property.insert(pos + 1, 0, description.getClazz().newInstance());
                     } catch (InstantiationException e1) {
                         e1.printStackTrace();
                     } catch (IllegalAccessException e1) {
@@ -479,29 +461,27 @@ public class REditor extends JPanel implements PropertyChangeListener, Represent
         }
         tableModel.refresh();
     }
+
     // Insert col after
     private void menuItemColAfterActionPerformed(ActionEvent e) {
         StructureMatrix property = getProperty();
         ObjectDetailDescription description = tableModel.getObjectDetailDescriptions().get(tableObjectDetails.getSelectedRow());
-        if(property!=null)
-        {
-            if(property.getDim()==1)
-            {
+        if (property != null) {
+            if (property.getDim() == 1) {
                 int parseInt = Integer.parseInt(description.getIndexes());
                 try {
-                    property.insert(parseInt+1, description.getClazz().newInstance());
+                    property.insert(parseInt + 1, description.getClazz().newInstance());
                 } catch (InstantiationException e1) {
                     e1.printStackTrace();
                 } catch (IllegalAccessException e1) {
                     e1.printStackTrace();
                 }
             }
-            if(property.getDim()==2)
-            {
+            if (property.getDim() == 2) {
                 int pos = Integer.parseInt(description.getIndexes().split(",")[0]);
-                for(int i=0; i<((List)property.getData2d().get(0)).size(); i++)
+                for (int i = 0; i < ((List) property.getData2d().get(0)).size(); i++)
                     try {
-                        property.insert(pos+1, 1, description.getClazz().newInstance());
+                        property.insert(pos + 1, 1, description.getClazz().newInstance());
                     } catch (InstantiationException e1) {
                         e1.printStackTrace();
                     } catch (IllegalAccessException e1) {
@@ -644,19 +624,19 @@ public class REditor extends JPanel implements PropertyChangeListener, Represent
             {
                 contentPanel.setName("contentPanel"); //NON-NLS
                 contentPanel.setLayout(new MigLayout(
-                    new LC().fill().insets("dialog").hideMode(3), //NON-NLS
-                    // columns
-                    new AC()
-                        .fill().gap()
-                        .fill().gap()
-                        .fill(),
-                    // rows
-                    new AC()
-                        .gap()
-                        .gap()
-                        .gap()
-                        .gap()
-                        ));
+                        new LC().fill().insets("dialog").hideMode(3), //NON-NLS
+                        // columns
+                        new AC()
+                                .fill().gap()
+                                .fill().gap()
+                                .fill(),
+                        // rows
+                        new AC()
+                                .gap()
+                                .gap()
+                                .gap()
+                                .gap()
+                ));
 
                 //======== scrollPane1 ========
                 {
@@ -734,13 +714,13 @@ public class REditor extends JPanel implements PropertyChangeListener, Represent
 
                     //---- tableObjectDetails ----
                     tableObjectDetails.setModel(new DefaultTableModel(
-                        new Object[][] {
-                            {null, null, null, null, null},
-                            {null, null, null, null, null},
-                        },
-                        new String[] {
-                            "Detail name", "Dim", "Indices", "objectType", "object" //NON-NLS
-                        }
+                            new Object[][]{
+                                    {null, null, null, null, null},
+                                    {null, null, null, null, null},
+                            },
+                            new String[]{
+                                    "Detail name", "Dim", "Indices", "objectType", "object" //NON-NLS
+                            }
                     ));
                     tableObjectDetails.setColumnSelectionAllowed(true);
                     tableObjectDetails.setComponentPopupMenu(popupMenu1);
@@ -861,4 +841,4 @@ public class REditor extends JPanel implements PropertyChangeListener, Represent
         this.r = r;
     }
 
-    }
+}

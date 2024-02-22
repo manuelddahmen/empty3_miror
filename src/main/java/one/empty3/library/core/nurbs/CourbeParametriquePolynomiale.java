@@ -26,11 +26,12 @@ import one.empty3.library.Point3D;
 import one.empty3.library.StructureMatrix;
 
 /*__
- * @author Manuel Dahmen _manuel.dahmen@gmx.com_
+ * Meta Description missing
+ * @author Manuel Dahmen dathewolf@gmail.com
  */
 public class CourbeParametriquePolynomiale extends ParametricCurve {
 
-    protected final StructureMatrix<Point3D> coefficients=  new StructureMatrix<>(1, Point3D.class);
+    protected final StructureMatrix<Point3D> coefficients = new StructureMatrix<>(1, Point3D.class);
     protected final StructureMatrix<Integer> power = new StructureMatrix<>(0, Integer.class);
 
     public CourbeParametriquePolynomiale(Point3D[] coefficients) {
@@ -41,8 +42,9 @@ public class CourbeParametriquePolynomiale extends ParametricCurve {
 
     public CourbeParametriquePolynomiale() {
         super();
-        power.setElem( 2);
+        power.setElem(2);
     }
+
     public void declareProperties() {
         super.declareProperties();
         power.setElem(coefficients.getData1d().size());
@@ -79,6 +81,7 @@ public class CourbeParametriquePolynomiale extends ParametricCurve {
     public Integer getPower() {
         return power.getElem();
     }
+
     public void setPower(Integer pow) {
         power.setElem(pow);
     }

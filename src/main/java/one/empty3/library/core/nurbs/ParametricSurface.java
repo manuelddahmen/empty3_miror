@@ -36,7 +36,8 @@ import one.empty3.library.Representable;
 import one.empty3.library.StructureMatrix;
 
 /*__
- * @author Manuel Dahmen _manuel.dahmen@gmx.com_
+ * Meta Description missing
+ * @author Manuel Dahmen dathewolf@gmail.com
  */
 public abstract class ParametricSurface extends Representable {
 

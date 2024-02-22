@@ -33,21 +33,22 @@ import java.util.ResourceBundle;
  */
 
 
-
 /**
- * @author Manuel Dahmen
+ * My class description missing
+ *
+ * @author Manuel Dahmen dathewolf@gmail.com
  */
 public class MainFrame extends JFrame {
-	public MainFrame() {
-		initComponents();
-	}
+    public MainFrame() {
+        initComponents();
+    }
 
-	private void buttonObjectsWindowsActionPerformed(ActionEvent e) {
-		// TODO add your code here
-	}
+    private void buttonObjectsWindowsActionPerformed(ActionEvent e) {
+        // TODO add your code here
+    }
 
-	private void initComponents() {
-		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
+    private void initComponents() {
+        // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         ResourceBundle bundle = ResourceBundle.getBundle("gui");
         panel1 = new JPanel();
         scrollPane2 = new JScrollPane();
@@ -61,28 +62,28 @@ public class MainFrame extends JFrame {
         //======== this ========
         Container contentPane = getContentPane();
         contentPane.setLayout(new MigLayout(
-            "fill,hidemode 3",
-            // columns
-            "[fill]" +
-            "[fill]",
-            // rows
-            "[]" +
-            "[]" +
-            "[]" +
-            "[]" +
-            "[]"));
+                "fill,hidemode 3",
+                // columns
+                "[fill]" +
+                        "[fill]",
+                // rows
+                "[]" +
+                        "[]" +
+                        "[]" +
+                        "[]" +
+                        "[]"));
 
         //======== panel1 ========
         {
             panel1.setLayout(new MigLayout(
-                "hidemode 3",
-                // columns
-                "[fill]" +
-                "[fill]",
-                // rows
-                "[]" +
-                "[]" +
-                "[]"));
+                    "hidemode 3",
+                    // columns
+                    "[fill]" +
+                            "[fill]",
+                    // rows
+                    "[]" +
+                            "[]" +
+                            "[]"));
         }
         contentPane.add(panel1, "cell 0 0 2 3");
 
@@ -111,15 +112,15 @@ public class MainFrame extends JFrame {
         contentPane.add(scrollPane1, "cell 0 4");
         pack();
         setLocationRelativeTo(getOwner());
-		// JFormDesigner - End of component initialization  //GEN-END:initComponents
-	}
+        // JFormDesigner - End of component initialization  //GEN-END:initComponents
+    }
 
     private void initComponentsI18n() {
         // JFormDesigner - Component i18n initialization - DO NOT MODIFY  //GEN-BEGIN:initI18n
         // JFormDesigner - End of component i18n initialization  //GEN-END:initI18n
     }
 
-	// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
+    // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
     private JPanel panel1;
     private JScrollPane scrollPane2;
     private JList list1;
@@ -128,5 +129,5 @@ public class MainFrame extends JFrame {
     private JButton button2;
     private JScrollPane scrollPane1;
     private JTextArea textArea1;
-	// JFormDesigner - End of variables declaration  //GEN-END:variables
+    // JFormDesigner - End of variables declaration  //GEN-END:variables
 }

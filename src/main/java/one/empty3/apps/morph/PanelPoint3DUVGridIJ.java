@@ -37,7 +37,9 @@ import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 
 /**
- * @author manuel
+ * @author Manuel D. Dahmen
+ * This class represents a panel for displaying and editing 3D points with UV coordinates in a grid format.
+ * It extends the javax.swing.JPanel class.
  */
 public class PanelPoint3DUVGridIJ extends JPanel {
     private ImageControls imageControls;
@@ -225,6 +227,7 @@ public class PanelPoint3DUVGridIJ extends JPanel {
         }
 
     }
+
     private void shape(ActionEvent event) {
         switch (((JComboBox) (event.getSource())).getSelectedIndex()) {
             case 0:
@@ -247,7 +250,7 @@ public class PanelPoint3DUVGridIJ extends JPanel {
         ImageControls imageControls1 = imageControls.getMorphUI().getImageControls1();
         ImageControls imageControls2 = imageControls.getMorphUI().getImageControls2();
         StructureMatrix<Point3D>[] imageControlsArr = new StructureMatrix[]{
-                imageControls1.getGrid(),imageControls1.getGridUv(),
+                imageControls1.getGrid(), imageControls1.getGridUv(),
                 imageControls2.getGrid(), imageControls2.getGridUv()};
         switch (((JComboBox) (e.getSource())).getSelectedIndex()) {
             //Update
@@ -360,7 +363,6 @@ public class PanelPoint3DUVGridIJ extends JPanel {
     public JComboBox<String> getComboBoxShape() {
         return comboBoxShape;
     }
-
 
 
     private void initComponents() {

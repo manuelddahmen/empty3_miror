@@ -34,7 +34,8 @@ package one.empty3.apps.opad;
 
 /*__
  *
- * @author Manuel Dahmen _manuel.dahmen@gmx.com_
+ * Meta Description missing
+ * @author Manuel Dahmen dathewolf@gmail.com
  */
 public class Timer {
     double timeEllapsed = 0.0;
@@ -56,7 +57,7 @@ public class Timer {
         return timeEllapsed;
     }
 
-    public void reset(){
+    public void reset() {
         init();
     }
 
