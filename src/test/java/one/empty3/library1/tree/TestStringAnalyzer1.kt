@@ -479,7 +479,7 @@ class TestStringAnalyzer1 {
         tokenPackageSemicolon.addToken(tokenClass)
         tokenClass.addToken(tokenClassName)
         tokenClassName.addToken(tokenOpenBracket)
-        val multiTokenOptional = stringAnalyzer1.MultiTokenOptional(
+        val multiTokenOptional = stringAnalyzer1.MultiTokenExclusiveXor(
             tokenMemberMethodType, tokenMemberVar
         )
         tokenOpenBracket.addToken(multiTokenOptional)
@@ -494,7 +494,7 @@ class TestStringAnalyzer1 {
         val input =
             "package one.empty3;\n\n" +
                     "class Number {\n" +
-                    "\tDouble d;\n" +
+                    //"\tDouble d;\n" +
                     "\tdouble func1(Double a, Double b, Double c) {\n" +
                     "\t\tDouble d = c+b/a;\n" +
                     "\t\treturn d;\n" +

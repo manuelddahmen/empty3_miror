@@ -232,7 +232,7 @@ public class StringAnalyzer1 {
         public int parse(String input, int position) {
             if (position >= input.length() || input.substring(position).trim().isEmpty()) {
                 mPosition = position;
-                throw new RuntimeException("SingleTokenExclusiveXor : position>=input.length()");
+                throw new RuntimeException(getClass() + " : position>=input.length()");
             }
             position = super.skipBlanks(input, position);
             int position1 = position;
@@ -254,7 +254,7 @@ public class StringAnalyzer1 {
                 }
 
                 if (first && !next) {
-                    setSuccessful(false);
+                    setSuccessful(true);
                     return position;
                 }
                 first = false;
@@ -288,10 +288,9 @@ public class StringAnalyzer1 {
             int position0 = position1;
             for (Token token : choices) {
                 position1 = token.parse(input, position0);
-                if (token.isSuccessful() && position1 != position0) {
+                if (token.isSuccessful()) {
                     return processNext(input, position1);
                 }
-                position0 = position;
             }
             setSuccessful(false);
             return position0;
@@ -527,6 +526,9 @@ public class StringAnalyzer1 {
             if (position < input.length() && input.substring(position).startsWith(name)) {
                 int position1 = position + name.length();
                 return processNext(input, position1);
+            } else if (position >= input.length()) {
+                setSuccessful(true);
+                return input.length();
             } else {
                 setSuccessful(false);
                 return position;
@@ -880,7 +882,7 @@ public class StringAnalyzer1 {
         }
 
         protected boolean isNotValid2(String input, int p) {
-            return p >= input.length() || (input.charAt(p) == '{' || input.charAt(p) == '}');
+            return !(p < input.length() && !(input.charAt(p) == '{' || input.charAt(p) == '}'));
         }
 
         @Override
