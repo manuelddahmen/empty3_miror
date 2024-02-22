@@ -82,8 +82,6 @@ public class StringAnalyzer1 {
             } else {
                 setSuccessful(true);
             }
-            if (getAction() != null)
-                action();
             return position;
         }
 
@@ -190,6 +188,7 @@ public class StringAnalyzer1 {
          * @return the new position after processing the next token
          */
         protected int processNext(String input, int position) {
+            if (action != null) action();
             if (nextToken() != null) {
                 int nextToken = nextToken(input, position);
                 if (nextToken().isSuccessful()) {
@@ -232,9 +231,10 @@ public class StringAnalyzer1 {
         @Override
         public int parse(String input, int position) {
             if (position >= input.length() || input.substring(position).trim().isEmpty()) {
+                mPosition = position;
                 throw new RuntimeException("SingleTokenExclusiveXor : position>=input.length()");
             }
-            position = super.parse(input, position);
+            position = super.skipBlanks(input, position);
             int position1 = position;
             int i = 0;
             int position0 = position1;
@@ -259,7 +259,7 @@ public class StringAnalyzer1 {
                 }
                 first = false;
             }
-            return nextToken(input, position0);
+            return processNext(input, position0);
 
         }
     }
@@ -280,15 +280,15 @@ public class StringAnalyzer1 {
         public int parse(String input, int position) {
             if (position >= input.length() || input.substring(position).trim().isEmpty()) {
                 mPosition = position;
-                throw new RuntimeException("SingleTokenExclusiveXor : position>=input.length()");
+                throw new RuntimeException(getClass() + " : position>=input.length()");
             }
-            position = super.parse(input, position);
+            position = super.skipBlanks(input, position);
             int position1 = position;
             int i = 0;
             int position0 = position1;
             for (Token token : choices) {
                 position1 = token.parse(input, position0);
-                if (token.isSuccessful()) {
+                if (token.isSuccessful() && position1 != position0) {
                     return processNext(input, position1);
                 }
                 position0 = position;
@@ -318,7 +318,7 @@ public class StringAnalyzer1 {
                 mPosition = position;
                 throw new RuntimeException(getClass() + " : position>=input.length()");
             }
-            int position1 = super.parse(input, position);
+            int position1 = super.skipBlanks(input, position);
             int position2 = position1;
             boolean success = false;
             for (String s : names) {
@@ -373,7 +373,7 @@ public class StringAnalyzer1 {
                 mPosition = position;
                 throw new RuntimeException(getClass() + " : position>=input.length()");
             }
-            position = super.parse(input, position);
+            position = super.skipBlanks(input, position);
             return processNext(input, position);
 
         }
@@ -398,7 +398,7 @@ public class StringAnalyzer1 {
                 int position1 = position;
                 position1 = token.parse(input, position);
                 if (token.isSuccessful()) {
-                    return nextToken(input, position1);
+                    return processNext(input, position1);
                 }
             }
             setSuccessful(false);
@@ -431,7 +431,7 @@ public class StringAnalyzer1 {
                 mPosition = position;
                 throw new RuntimeException(getClass() + " : position>=input.length()");
             }
-            position = super.parse(input, position) + position;
+            position = super.skipBlanks(input, position) + position;
             int position1 = position;
             for (Token token : choices) {
                 position1 = position;
@@ -441,7 +441,7 @@ public class StringAnalyzer1 {
                     return position;
                 }
             }
-            return nextToken(input, position);
+            return processNext(input, position);
         }
 
         @Override
@@ -479,7 +479,7 @@ public class StringAnalyzer1 {
                 passed = true;
                 i++;
             }
-            if (passed) {
+            if (passed && i < input.length()) {
                 if (!input.substring(position1, i).isEmpty()) {
                     setName(input.substring(position1, i));
                     return processNext(input, i);
@@ -517,14 +517,13 @@ public class StringAnalyzer1 {
         @Override
         public int parse(String input, int position) {
             if (position >= input.length() || input.substring(position).trim().isEmpty()) {
-                setSuccessful(true);
-                return position;
-                //throw new RuntimeException(getClass() + " : position>=input.length()");
+                mPosition = position;
+                throw new RuntimeException(getClass() + " : position>=input.length()");
                 //                setSuccessful(true);
                 //                return input.length();
 
             }
-            position = super.parse(input, position);
+            position = super.skipBlanks(input, position);
             if (position < input.length() && input.substring(position).startsWith(name)) {
                 int position1 = position + name.length();
                 return processNext(input, position1);
@@ -598,7 +597,7 @@ public class StringAnalyzer1 {
                 mPosition = position;
                 throw new RuntimeException(getClass() + " : position>=input.length()");
             }
-            position = super.parse(input, position);
+            position = super.skipBlanks(input, position);
             boolean allNotOk = false;
             int position1 = position;
             int position2 = position1;
@@ -616,7 +615,7 @@ public class StringAnalyzer1 {
                 }
                 i++;
             }
-            return nextToken(input, position1);
+            return processNext(input, position1);
         }
 
         @Override
@@ -656,7 +655,7 @@ public class StringAnalyzer1 {
                 mPosition = position;
                 throw new RuntimeException(getClass() + " : position>=input.length()");
             }
-            position = super.parse(input, position);
+            position = super.skipBlanks(input, position);
             int position1 = position;
             int position2 = choice.parse(input, position1);
             if (choice.isSuccessful()) {
@@ -702,7 +701,7 @@ public class StringAnalyzer1 {
                 mPosition = position;
                 throw new RuntimeException(getClass() + " : position>=input.length()");
             }
-            position = super.parse(input, position);
+            position = super.skipBlanks(input, position);
             boolean allOk = true;
             int position1 = position;
             int i = 0;
@@ -778,7 +777,7 @@ public class StringAnalyzer1 {
                 mPosition = position;
                 throw new RuntimeException(getClass() + " : position>=input.length()");
             }
-            int position1 = super.parse(input, position);
+            int position1 = super.skipBlanks(input, position);
             int i = position1;
             boolean passed = false;
             while (i < input.length() && (Character.isLetterOrDigit(input.charAt(i)) || input.charAt(i) == '_' || input.charAt(i) == '.')) {
@@ -849,7 +848,7 @@ public class StringAnalyzer1 {
                 mPosition = position;
                 throw new RuntimeException(getClass() + " : position>=input.length()");
             }
-            position = super.parse(input, position);
+            position = super.skipBlanks(input, position);
             int i = position;
             boolean passed = false;
             while (i < input.length() && input.charAt(i) != ';') {
@@ -870,6 +869,8 @@ public class StringAnalyzer1 {
      * Represents a specific type of Token.
      */
     class TokenExpression1 extends Token {
+        protected String expression;
+
         public TokenExpression1() {
             super();
         }
@@ -888,15 +889,18 @@ public class StringAnalyzer1 {
                 mPosition = position;
                 throw new RuntimeException(getClass() + " : position>=input.length()");
             }
-            position = super.parse(input, position);
+            position = super.skipBlanks(input, position);
             int i = position;
             boolean passed = false;
 
-            while (i < input.length() && (isValid(input, i) /*&& !isNotValid2(input, i)*/)) {
+            while (i < input.length() && (isValid(input, i) && !isNotValid2(input, i))) {
                 i++;
                 passed = true;
             }
-            if (passed && (i >= input.length() || !isValid(input, i) /*|| isNotValid2(input, i)*/)) {
+            if (passed && (i >= input.length() || !isValid(input, i) || isNotValid2(input, i))) {
+                if (i < input.length()) {
+                    expression = input.substring(position, i);
+                }
                 return processNext(input, i);
 
             } else {
@@ -1264,7 +1268,7 @@ public class StringAnalyzer1 {
         protected Class currentClass = new Class();
         protected HashMap<String, Class> cited = new HashMap<>();
         protected HashMap<String, Variable> fieldMembers = new HashMap<>();
-        protected HashMap<String, Method> methodMembers = new HashMap<>();
+        protected ArrayList<Method> methodMembers = new ArrayList<>();
         protected ArrayList<Class> classes = new ArrayList<>();
 
 
@@ -1296,11 +1300,8 @@ public class StringAnalyzer1 {
                 }
             });
             final String[] methodStr = {""};
-            methodMembers.forEach(new BiConsumer<String, Method>() {
-                @Override
-                public void accept(String s, Method method) {
-                    methodStr[0] += "\n" + s + "\n" + method.toString();
-                }
+            methodMembers.forEach(method -> {
+                methodStr[0] += "\n" + method.getName() + "\n" + method.toString();
             });
             String[] string = {"Construct{" +
                     "packageName='" + packageName +
@@ -1344,12 +1345,7 @@ public class StringAnalyzer1 {
 
     public int parse(@NotNull Token token1, @Nullable String input) {
         int position1 = 0;
-        try {
-            position1 = token1.parse(input, position1);
-            return position1;
-        } catch (RuntimeException ex) {
-            ex.printStackTrace();
-        }
+        position1 = token1.parse(input, position1);
         return position1;
     }
 }

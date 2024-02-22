@@ -54,7 +54,6 @@ class TestStringAnalyzer1 {
             Assert.assertTrue(false)
         }
 
-        println("TestStringAnalyzer1.testStringAnalyzerPackage")
         println("parse = " + stringAnalyzer1.mPosition + "/" + input.length)
         println("isSuccessful = " + token.isSuccessful)
 
@@ -297,8 +296,10 @@ class TestStringAnalyzer1 {
 
         class ActionPackageName : Action(tokenPackageName) {
             public override fun action(): Boolean {
-                stringAnalyzer1.construct.currentClass.setPackageName(tokenPackageName.name)
-                stringAnalyzer1.construct.packageName = tokenPackageName.name
+                if (!tokenPackageName.name.isEmpty()) {
+                    stringAnalyzer1.construct.currentClass.setPackageName(tokenPackageName.name)
+                    stringAnalyzer1.construct.packageName = tokenPackageName.name
+                }
                 return true
             }
         }
@@ -306,11 +307,8 @@ class TestStringAnalyzer1 {
 
         class ActionClassKeyword : Action(tokenClass) {
             public override fun action(): Boolean {
-
-                stringAnalyzer1.construct.currentClass = Class()
                 stringAnalyzer1.construct.classes.add(stringAnalyzer1.construct.currentClass)
-                stringAnalyzer1.construct.packageName = tokenPackageName.name
-                stringAnalyzer1.construct.currentClass.setPackageName(tokenPackageName.name)
+                stringAnalyzer1.construct.currentClass.setPackageName(stringAnalyzer1.construct.packageName)
                 return true
             }
         }
@@ -320,7 +318,9 @@ class TestStringAnalyzer1 {
 
         class ActionClassname : Action(tokenClassName) {
             override fun action(): Boolean {
-                stringAnalyzer1.construct.currentClass.name = tokenClassName.name
+                if (tokenClassName.name != null) {
+                    stringAnalyzer1.construct.currentClass.name = tokenClassName.name
+                }
                 return true
             }
         }
@@ -411,26 +411,33 @@ class TestStringAnalyzer1 {
 
         class ActionTokenOpenParenthesizedMethodParameter : Action(tokenOpenParenthesizedMethodParameter) {
             override fun action(): Boolean {
-                stringAnalyzer1.construct.currentMethod.ofClass = Variable()
-                stringAnalyzer1.construct.currentMethod.ofClass.classStr = tokenMemberMethodType.name
-                stringAnalyzer1.construct.currentMethod.name = tokenMemberMethodType.name
+                if (tokenMemberMethodType.name != null) {
+//                    stringAnalyzer1.construct.currentMethod.ofClass = Variable()
+//                    stringAnalyzer1.construct.currentMethod.ofClass.classStr = tokenMemberMethodType.name
+//                    stringAnalyzer1.construct.currentMethod.name = tokenMemberMethodName.name
+                }
                 return true
             }
         }
 
         class ActionParamName : Action(tokenNameMethodParameter) {
             override fun action(): Boolean {
-                val parameterList = stringAnalyzer1.construct.currentMethod.parameterList
-                parameterList[parameterList.size - 1].name = tokenNameMethodParameter.name
+                if (tokenNameMethodParameter.name != null) {
+                    val parameterList = stringAnalyzer1.construct.currentMethod.parameterList
+                    parameterList[parameterList.size - 1].name = tokenNameMethodParameter.name
+                }
                 return true
             }
         }
 
         class ActionParamType : Action(tokenQualifiedNameMethodParameter) {
             override fun action(): Boolean {
-                val parameterList = stringAnalyzer1.construct.currentMethod.parameterList
-                parameterList.add(Variable())
-                parameterList[parameterList.size - 1].classStr = tokenNameMethodParameter.name
+                println("tokenQualifiedNameMethodParameter: " + tokenQualifiedNameMethodParameter.name)
+                if (tokenQualifiedNameMethodParameter.name != null) {
+                    val parameterList = stringAnalyzer1.construct.currentMethod.parameterList
+                    parameterList.add(Variable())
+                    parameterList[parameterList.size - 1].classStr = tokenQualifiedNameMethodParameter.name
+                }
                 return true
             }
         }
@@ -452,13 +459,21 @@ class TestStringAnalyzer1 {
         val tokenMemberMethodExpression = stringAnalyzer1.TokenExpression1()
         val tokenMemberMethodSemicolon = stringAnalyzer1.TokenSemiColon()
 
-
         // End of Instructions
 
         val tokenCloseBracketMethod = stringAnalyzer1.TokenCloseBracket()
         tokenOpenBracketMethod.addToken(tokenMultiMembersInstructions)
         tokenMultiMembersInstructions.addToken(tokenCloseBracketMethod)
-        //tokenOpenBracketMethod.addToken(tokenMultiMembersInstructions)
+
+        class ActionPushMethod : Action(tokenCloseBracketMethod) {
+            override fun action(): Boolean {
+                stringAnalyzer1.construct.methodMembers[stringAnalyzer1.construct.methodMembers.size] =
+                    stringAnalyzer1.construct.currentMethod
+                stringAnalyzer1.construct.currentMethod = Method()
+                return true
+            }
+        }
+
         tokenPackage.addToken(tokenPackageName)
         tokenPackageName.addToken(tokenPackageSemicolon)
         tokenPackageSemicolon.addToken(tokenClass)
@@ -479,6 +494,7 @@ class TestStringAnalyzer1 {
         val input =
             "package one.empty3;\n\n" +
                     "class Number {\n" +
+                    "\tDouble d;\n" +
                     "\tdouble func1(Double a, Double b, Double c) {\n" +
                     "\t\tDouble d = c+b/a;\n" +
                     "\t\treturn d;\n" +
@@ -490,14 +506,13 @@ class TestStringAnalyzer1 {
             parse = stringAnalyzer1.parse(token, input)
             parse = stringAnalyzer1.mPosition
         } catch (ex: RuntimeException) {
-            ex.printStackTrace()
             if (parse >= input.length) {
                 Assert.assertTrue(true)
             } else {
                 Assert.assertTrue(false)
             }
         }
-        println("TestStringAnalyzer1.testStringAnalyzerPackage")
+        println("TestStringAnalyzer1")
         println("parse = " + parse + "/" + input.length)
         println("isSuccessful = " + token.isSuccessful + " tokenSemicolon : " + tokenPackageSemicolon.isSuccessful)
         println("Name : " + tokenPackageName.name)
