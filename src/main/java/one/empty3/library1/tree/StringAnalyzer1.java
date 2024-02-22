@@ -253,7 +253,7 @@ public class StringAnalyzer1 {
                     }
                 }
 
-                if (first && !passed) {
+                if (first && !next) {
                     setSuccessful(false);
                     return position;
                 }
