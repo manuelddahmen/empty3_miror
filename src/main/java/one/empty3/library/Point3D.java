@@ -828,7 +828,7 @@ public class Point3D extends Representable {
     /**
      * Retrieves the coordinate array as a
      *
-     * @return a StructureMatrix<Double> containing the coordinate array
+     * @return a containing the coordinate array
      */
     public StructureMatrix<Double> getCoordArr() {
         point3DStructureMatrix = new StructureMatrix<>(1, Double.class);
