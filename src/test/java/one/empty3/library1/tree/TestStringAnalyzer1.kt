@@ -22,7 +22,9 @@
 
 package one.empty3.library1.tree
 
+import one.empty3.library1.tree.StringAnalyser.TokenString
 import org.junit.Assert
+import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
@@ -471,12 +473,43 @@ class TestStringAnalyzer1 {
                 println("tokenQualifiedNameMethodParameter: " + tokenQualifiedNameMethodParameter2.name)
                 if (tokenQualifiedNameMethodParameter2.name != null) {
                     val parameterList = stringAnalyzer1.construct.currentMethod.parameterList
-                    parameterList.add(Variable())
                     parameterList[parameterList.size - 1].classStr = tokenQualifiedNameMethodParameter2.name
                 }
                 return true
             }
         }
+
+
+        class ActionVarType(token: StringAnalyzer1.Token?) : Action(token) {
+            override fun action(): Boolean {
+                val name = (token as StringAnalyzer1.TokenName).name
+                println("tokenMemberVarType: $name")
+                if (name != null) {
+                    val parameterList = stringAnalyzer1.construct.currentMethod.parameterList
+                    parameterList.add(Variable())
+                    parameterList[parameterList.size - 1].classStr = name
+                }
+                return true
+            }
+        }
+
+        class ActionVarName(token: StringAnalyzer1.Token?) : Action(token) {
+            override fun action(): Boolean {
+                val name = (token as StringAnalyzer1.TokenName).name
+                println("tokenMemberVarType: $name")
+                if (name != null) {
+                    val parameterList = stringAnalyzer1.construct.currentMethod.parameterList
+                    parameterList[parameterList.size - 1].name = name
+                }
+                return true
+            }
+        }
+        tokenMemberVarType1.setAction(ActionVarType(tokenMemberVarType1))
+        tokenMemberVarType2.setAction(ActionVarType(tokenMemberVarType1))
+        tokenMemberVarType3.setAction(ActionVarType(tokenMemberVarType1))
+        tokenMemberVarName1.setAction(ActionVarType(tokenMemberVarType1))
+        tokenMemberVarName2.setAction(ActionVarType(tokenMemberVarType1))
+        tokenMemberVarName3.setAction(ActionVarType(tokenMemberVarType1))
 
 
         tokenMemberMethodType.addToken(tokenMemberMethodName)
@@ -501,11 +534,18 @@ class TestStringAnalyzer1 {
         tokenOpenBracketMethod.addToken(tokenMultiMembersInstructions)
         tokenMultiMembersInstructions.addToken(tokenCloseBracketMethod)
 
-        class ActionPushMethod : Action(tokenCloseBracketMethod) {
+        class ActionPushMethod : Action(tokenOpenParenthesizedMethodParameter) {
             override fun action(): Boolean {
-                stringAnalyzer1.construct.currentClass.methodList[stringAnalyzer1.construct.methodMembers.size - 1] =
-                    stringAnalyzer1.construct.currentMethod
-                stringAnalyzer1.construct.currentMethod = Method()
+                if (tokenMemberMethodName.name != null && !tokenMemberMethodName.name.isEmpty() &&
+                    tokenMemberMethodType.name != null && !tokenMemberMethodType.name.isEmpty()
+                ) {
+                    stringAnalyzer1.construct.currentClass.methodList[stringAnalyzer1.construct.methodMembers.size - 1] =
+                        stringAnalyzer1.construct.currentMethod
+                    stringAnalyzer1.construct.currentMethod.name = tokenMemberMethodName.name
+                    stringAnalyzer1.construct.currentMethod.ofClass.classStr = tokenMemberMethodType.name
+                    stringAnalyzer1.construct.currentMethod.ofClass.name = tokenMemberMethodType.name
+                    stringAnalyzer1.construct.currentMethod = Method()
+                }
                 return true
             }
         }
@@ -558,8 +598,6 @@ class TestStringAnalyzer1 {
         } catch (ex: RuntimeException) {
             if (parse >= input.length) {
                 Assert.assertTrue(true)
-            } else {
-                Assert.assertTrue(false)
             }
         }
         println("TestStringAnalyzer1")

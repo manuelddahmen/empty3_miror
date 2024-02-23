@@ -25,6 +25,7 @@ package one.empty3.library1.tree;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Consumer;
 
 public class Class {
     private String name;
@@ -96,13 +97,30 @@ public class Class {
 
     @Override
     public String toString() {
-        return "Class{" +
+        String[] variableListStr = new String[]{""};
+        variableList.forEach(new Consumer<Variable>() {
+            @Override
+            public void accept(Variable variable) {
+                variableListStr[0] += variable.toString();
+            }
+        });
+
+        String[] methodListStr = new String[]{""};
+        methodList.forEach(new Consumer<Method>() {
+            @Override
+            public void accept(Method method) {
+                methodListStr[0] += method.toString();
+            }
+        });
+        String string = "Class{" +
                 "name='" + name + '\'' +
-                ", variableList=[" + variableList +
-                "], methodList=[" + methodList +
+                ", variableList=[" + variableListStr[0] +
+                "], methodList=[" + methodListStr[0] +
                 "], accessModifier='" + accessModifier + '\'' +
                 ", mFinal=" + mFinal +
                 ", packageName='" + packageName + '\'' +
                 '}';
+
+        return string;
     }
 }

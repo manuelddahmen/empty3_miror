@@ -26,10 +26,7 @@ import one.empty3.library.StructureMatrix;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -79,6 +76,7 @@ public class StringAnalyzer1 {
             int parse = position;
             if (!nextTokens.getData1d().isEmpty()) {
                 position = nextTokens.getData1d().get(0).parse(input, position);
+                if (getAction() != null) action();
                 setSuccessful(nextTokens.getData1d().get(0).isSuccessful());
 
             } else {
@@ -222,6 +220,12 @@ public class StringAnalyzer1 {
         public StructureMatrix<Token> getNextToken() {
             return nextTokens;
         }
+
+        protected void choose(Token token) {
+            definitions.put(definitions.size(), token);
+        }
+
+        public abstract Token copy();
     }
 
     class MultiTokenExclusiveXor extends Token {
@@ -230,6 +234,10 @@ public class StringAnalyzer1 {
         public MultiTokenExclusiveXor(Token... mandatory) {
             super();
             this.choices = Arrays.stream(mandatory).toList();
+        }
+
+        public MultiTokenExclusiveXor(ArrayList<Token> objects) {
+            this.choices = objects;
         }
 
         @Override
@@ -263,10 +271,20 @@ public class StringAnalyzer1 {
                     setSuccessful(false);
                     return position;
                 }
+
+                action();
+
                 first = false;
             }
             return processNext(input, position0);
 
+        }
+
+        @Override
+        public Token copy() {
+            ArrayList<Token> objects = new ArrayList<>();
+            Collections.copy(objects, this.choices);
+            return new MultiTokenExclusiveXor(objects);
         }
     }
 
@@ -280,6 +298,10 @@ public class StringAnalyzer1 {
         public SingleTokenExclusiveXor(Token... mandatory) {
             super();
             this.choices = Arrays.stream(mandatory).toList();
+        }
+
+        public SingleTokenExclusiveXor(ArrayList<Token> objects) {
+            this.choices = objects;
         }
 
         @Override
@@ -304,6 +326,14 @@ public class StringAnalyzer1 {
             return position0;
 
         }
+
+
+        @Override
+        public Token copy() {
+            ArrayList<Token> objects = new ArrayList<>();
+            Collections.copy(objects, this.choices);
+            return new SingleTokenExclusiveXor(objects);
+        }
     }
 
     /**
@@ -311,12 +341,17 @@ public class StringAnalyzer1 {
      * Extends the {@link Token} class.
      */
     class TokenChoiceStringMandatory extends Token {
-        protected final String[] names;
+        protected String[] names = new String[0];
         protected String choice = "";
 
         public TokenChoiceStringMandatory(String[] values) {
             super();
             this.names = values;
+        }
+
+        public TokenChoiceStringMandatory(ArrayList<String> objects) {
+            names = new String[objects.size()];
+            objects.toArray(this.names);
         }
 
         @Override
@@ -352,6 +387,13 @@ public class StringAnalyzer1 {
                     ", choice='" + choice + '\'' +
                     "}\n";
         }
+
+        @Override
+        public Token copy() {
+            ArrayList<String> objects = new ArrayList<>();
+            Collections.copy(objects, Arrays.stream(this.names).toList());
+            return new TokenChoiceStringMandatory(objects);
+        }
     }
 
     class TokenClassScope extends TokenChoiceStringMandatory {
@@ -386,8 +428,16 @@ public class StringAnalyzer1 {
             return processNext(input, position);
 
         }
+
+        @Override
+        public Token copy() {
+            return null;
+        }
     }
 
+    /**
+     * Represents a token that provides inclusive choices for parsing.
+     */
     class TokenChoiceInclusive extends Token {
         protected List<Token> choices;
 
@@ -422,6 +472,11 @@ public class StringAnalyzer1 {
                     "choices=" + choices +
                     "}\n";
         }
+
+        @Override
+        public Token copy() {
+            return null;
+        }
     }
 
 
@@ -444,17 +499,16 @@ public class StringAnalyzer1 {
                 return position;
                 //throw new RuntimeException(getClass() + " : position>=input.length()");
             }
-            position = super.skipBlanks(input, position) + position;
+            position = super.skipBlanks(input, position);
             int position1 = position;
             for (Token token : choices) {
-                position1 = position;
-                position1 = token.parse(input.substring(position1), position);
-                if (token.isSuccessful()) {
+                position1 = token.parse(input, position1);
+                if (!token.isSuccessful()) {
                     setSuccessful(false);
                     return position;
                 }
             }
-            return processNext(input, position);
+            return processNext(input, position1);
         }
 
         @Override
@@ -462,6 +516,12 @@ public class StringAnalyzer1 {
             return "TokenChoiceExclusive{" +
                     "choices=" + Arrays.toString(choices) +
                     "}\n";
+        }
+
+        @Override
+        public Token copy() {
+            ArrayList<Token> objects = new ArrayList<>();
+            return new TokenChoiceExclusive(this.choices);
         }
     }
 
@@ -513,6 +573,11 @@ public class StringAnalyzer1 {
             }
             setSuccessful(false);
             return position1;
+        }
+
+        @Override
+        public Token copy() {
+            return new TokenQualifiedName();
         }
     }
 
@@ -567,6 +632,11 @@ public class StringAnalyzer1 {
                     "name='" + name + '\'' +
                     "}\n";
         }
+
+        @Override
+        public Token copy() {
+            return new TokenString(this.name);
+        }
     }
 
     class TokenOpenBracket extends TokenString {
@@ -612,7 +682,7 @@ public class StringAnalyzer1 {
      */
     class MultiTokenOptional extends Token {
 
-        private final Token[] choices;
+        final Token[] choices;
 
         public MultiTokenOptional(Token... choices) {
             super();
@@ -637,8 +707,10 @@ public class StringAnalyzer1 {
                 for (Token token : choices) {
                     position2 = token.parse(input, position1);
                     if (position2 != position1 && token.isSuccessful()) {
+                        this.choose(token);
                         allNotOk = false;
                         position1 = position2;
+                        action();
                     } else if (!token.isSuccessful()) {
                         position2 = position1;
                     }
@@ -663,6 +735,13 @@ public class StringAnalyzer1 {
             }
             s.append("\n");
             return s.toString();
+        }
+
+        @Override
+        public Token copy() {
+            Token[] tokens = new Token[this.choices.length];
+            Arrays.stream(this.choices).toList().toArray(tokens);
+            return new MultiTokenOptional(tokens);
         }
     }
 
@@ -711,6 +790,11 @@ public class StringAnalyzer1 {
             s.append("\n");
             return s.toString();
         }
+
+        @Override
+        public Token copy() {
+            return new SingleTokenOptional(this.choice);
+        }
     }
 
     /**
@@ -754,6 +838,8 @@ public class StringAnalyzer1 {
                         }
                     }
                 }
+                if (allOk)
+                    action();
                 i++;
             }
             if (i >= 1) {
@@ -779,6 +865,13 @@ public class StringAnalyzer1 {
             }
             s.append("\n");
             return s.toString();
+        }
+
+        @Override
+        public Token copy() {
+            Token[] tokens = new Token[this.choices.size()];
+            this.choices.toArray(tokens);
+            return new MultiTokenMandatory(tokens);
         }
     }
 
@@ -848,6 +941,11 @@ public class StringAnalyzer1 {
                     "name='" + name + '\'' +
                     "}\n";
         }
+
+        @Override
+        public Token copy() {
+            return new TokenName();
+        }
     }
 
     class TokenVariableMemberDefinitionClassName extends TokenName {
@@ -901,6 +999,11 @@ public class StringAnalyzer1 {
                 return position;
             }
         }
+
+        @Override
+        public Token copy() {
+            return new TokenExpression();
+        }
     }
 
     /**
@@ -947,6 +1050,12 @@ public class StringAnalyzer1 {
                 setSuccessful(false);
                 return position;
             }
+        }
+
+
+        @Override
+        public Token copy() {
+            return new TokenExpression1();
         }
     }
 
@@ -1319,26 +1428,11 @@ public class StringAnalyzer1 {
         @Override
         public String toString() {
             final String[] fieldsStr = {""};
-            fieldMembers.forEach(new BiConsumer<String, Variable>() {
-                @Override
-                public void accept(String s, Variable variable) {
-                    fieldsStr[0] += "\n" + s + "\n" + variable.toString();
-                }
-            });
+            fieldMembers.forEach((s, variable) -> fieldsStr[0] += "\n" + s + "\n" + variable.toString());
             final String[] classesStr = {""};
-            classes.forEach(new Consumer<Class>() {
-                @Override
-                public void accept(Class aClass) {
-                    classesStr[0] += "\n" + "\n" + aClass.toString();
-                }
-            });
+            classes.forEach(aClass -> classesStr[0] += "\n" + "\n" + aClass.toString());
             final String[] citedStr = {""};
-            cited.forEach(new BiConsumer<String, Class>() {
-                @Override
-                public void accept(String s, Class aClass) {
-                    citedStr[0] += aClass.toString();
-                }
-            });
+            cited.forEach((s, aClass) -> citedStr[0] += aClass.toString());
             final String[] methodStr = {""};
             methodMembers.forEach(method -> {
                 methodStr[0] += "\n" + method.getName() + "\n" + method.toString();
@@ -1360,7 +1454,7 @@ public class StringAnalyzer1 {
 
     private final Construct construct = new Construct();
 
-    public int parse(@Nullable String input) {
+    public int parse(@NotNull String input) {
         /*new Thread() {
             @Override
             public void run() {
@@ -1387,5 +1481,173 @@ public class StringAnalyzer1 {
         int position1 = 0;
         position1 = token1.parse(input, position1);
         return position1;
+    }
+
+    public class TokenAttribute extends TokenString {
+        private String requiredName;
+        private String attributeName;
+        private String attributeValue;
+
+        public TokenAttribute(String version) {
+            super("version");
+            this.requiredName = version;
+        }
+
+        public String getRequiredName() {
+            return requiredName;
+        }
+
+        public String getAttributeName() {
+            return attributeName;
+        }
+
+        public String getAttributeValue() {
+            return attributeValue;
+        }
+
+        @Override
+        public int parse(String input, int position) {
+            if (position >= input.length() || input.substring(position).trim().isEmpty()) {
+                //mPosition = position;
+                setSuccessful(false);
+                return position;
+                //throw new RuntimeException(getClass() + " : position>=input.length()");
+            }
+            int position1 = super.skipBlanks(input, position);
+            int i = position1;
+            boolean passed = false;
+            while (i < input.length() && (Character.isLetterOrDigit(input.charAt(i)) || input.charAt(i) == '_' || input.charAt(i) == '-')) {
+                i++;
+                passed = true;
+            }
+            if (passed && i - position1 > 0) {
+                this.setAttributeName(input.substring(position1, i));
+                position1 = i;
+                passed = false;
+                position1 = skipBlanks(input, position1);
+                if (input.charAt(position1) == '=') {
+                    position1 = skipBlanks(input, position1 + 1);
+                    char start = 0;
+                    i = position1;
+                    int i1 = i;
+                    char end = 0;
+                    if (input.charAt(i) == '\'' || input.charAt(i) == '"') {
+                        start = input.charAt(i);
+                        i++;
+                        while (i < input.length() && (input.charAt(i) != /*'\\' +*/ start)) {
+                            i++;
+                            passed = true;
+                        }
+                        if (passed)
+                            end = input.charAt(i);
+                    }
+                    if (passed && start != 0 && end == start) {
+                        setAttributeValue(input.substring(i1 + 1, i));
+                    }
+                }
+                return processNext(input, position1);
+            } else if (i >= input.length()) {
+                setSuccessful(true);
+                return input.length();
+            } else {
+                setSuccessful(false);
+                return position1;
+            }
+
+        }
+
+        private void setAttributeValue(String substring) {
+            this.attributeValue = substring;
+        }
+
+        private void setAttributeName(String substring) {
+            this.attributeName = substring;
+        }
+
+        @Override
+        public Token copy() {
+            TokenAttribute tokenAttribute = new TokenAttribute(requiredName);
+            tokenAttribute.setAttributeValue(attributeValue);
+            tokenAttribute.setAttributeName(attributeName);
+            return super.copy();
+        }
+    }
+
+    class TokenElementOpening extends Token {
+        private final String requiredName;
+        private String elementName;
+
+        public TokenElementOpening(String requiredName) {
+            this.requiredName = requiredName;
+        }
+
+        @Override
+        public int parse(String input, int position) {
+            if (position >= input.length() || input.substring(position).trim().isEmpty()) {
+                //mPosition = position;
+                setSuccessful(false);
+                return position;
+                //throw new RuntimeException(getClass() + " : position>=input.length()");
+            }
+            int position1 = super.skipBlanks(input, position);
+            int i = position1;
+            boolean passed = false;
+            if (i >= input.length() || (!Character.isLetterOrDigit(input.charAt(i)) && input.charAt(i) != '_' && input.charAt(i) != '-')) {
+                i++;
+                setSuccessful(false);
+                return position1;
+            }
+            i = position1;
+            if (i < input.length() && input.charAt(i) == '<') {
+                position1 = i + 1;
+                position1 = skipBlanks(input, position1);
+                i = position1;
+                while (i < input.length() && (Character.isLetterOrDigit(input.charAt(i)) || input.charAt(i) == '_' || input.charAt(i) == '-')) {
+                    i++;
+                    passed = true;
+                }
+            }
+            if (passed && i - position1 > 0) {
+                this.setElementName(input.substring(position1, i));
+                return processNext(input, i);
+            } else if (i >= input.length()) {
+                setSuccessful(true);
+                return input.length();
+            } else {
+                setSuccessful(false);
+                return position1;
+            }
+
+        }
+
+        @Override
+        public Token copy() {
+            TokenElementOpening tokenElementOpening = new TokenElementOpening(requiredName);
+            tokenElementOpening.elementName = elementName;
+            return tokenElementOpening;
+        }
+
+        private void setElementName(String substring) {
+            this.elementName = substring;
+        }
+
+    }
+
+    class TokenCloseElement extends TokenString {
+        public TokenCloseElement() {
+            super(">");
+        }
+    }
+
+    class TokenCloseElementShort extends TokenString {
+        public TokenCloseElementShort() {
+            super("/>");
+        }
+    }
+
+    class TokenCloseElementShortXmlDeclaration extends TokenString {
+        public TokenCloseElementShortXmlDeclaration() {
+            super("?>");
+        }
     }
 }
