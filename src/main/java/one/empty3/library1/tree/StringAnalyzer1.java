@@ -72,41 +72,21 @@ public class StringAnalyzer1 {
             this.nextTokens.setElem(token, this.nextTokens.getData1d().size());
         }
 
-        public int nextToken(String input, int position) {
+        private int nextToken(String input, int position) {
             int parse = position;
             if (!nextTokens.getData1d().isEmpty()) {
                 position = nextTokens.getData1d().get(0).parse(input, position);
-                if (getAction() != null) action();
-                setSuccessful(nextTokens.getData1d().get(0).isSuccessful());
-
+                setSuccessful(true);
             } else {
                 setSuccessful(true);
             }
             return position;
         }
 
-        public Token nextToken() {
+        private Token nextToken() {
             if (!nextTokens.getData1d().isEmpty()) {
                 return nextTokens.getData1d().get(0);
-            } /*else {
-                return new Token() {
-
-                    @Override
-                    public int parse(String input, int position) {
-                        return super.parse(input, position);
-                    }
-
-                    @Override
-                    public Token nextToken() {
-                        return this;
-                    }
-
-                    @Override
-                    public boolean isSuccessful() {
-                        return true;
-                    }
-                };
-            }*/
+            }
             return null;
         }
 
@@ -190,7 +170,7 @@ public class StringAnalyzer1 {
         protected int processNext(String input, int position) {
             if (nextToken() != null) {
                 int nextToken = nextToken(input, position);
-                if (nextToken().isSuccessful()) {
+                if (Objects.requireNonNull(nextToken()).isSuccessful()) {
                     setSuccessful(true);
                     if (action != null) action();
                     return nextToken;

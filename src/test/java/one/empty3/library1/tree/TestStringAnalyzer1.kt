@@ -23,6 +23,8 @@
 package one.empty3.library1.tree
 
 import one.empty3.library1.tree.StringAnalyser.TokenString
+import one.empty3.library1.tree.StringAnalyzer1.TokenName
+import one.empty3.library1.tree.StringAnalyzer1.TokenQualifiedName
 import org.junit.Assert
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -411,12 +413,7 @@ class TestStringAnalyzer1 {
         val multiTokenOptionalMethodParameter = stringAnalyzer1.MultiTokenExclusiveXor(
             multiTokenOptionalMethodParameter1, multiTokenOptionalMethodParameter2
         )
-        /*
-        multiTokenOptionalMethodParameter1.addToken(
-            stringAnalyzer1.MultiTokenOptional(
-                multiTokenOptionalMethodParameter2
-            )
-        )*/
+
         tokenOpenParenthesizedMethodParameter.addToken(multiTokenOptionalMethodParameter)
         multiTokenOptionalMethodParameter.addToken(tokenCloseParenthesizedMethodParameter)
         //multiTokenOptionalMethodParameter2.addToken(tokenCloseParenthesizedMethodParameter)//???
@@ -427,58 +424,41 @@ class TestStringAnalyzer1 {
         class ActionTokenOpenParenthesizedMethodParameter : Action(tokenOpenParenthesizedMethodParameter) {
             override fun action(): Boolean {
                 if (tokenMemberMethodType.name != null) {
-//                    stringAnalyzer1.construct.currentMethod.ofClass = Variable()
-//                    stringAnalyzer1.construct.currentMethod.ofClass.classStr = tokenMemberMethodType.name
-//                    stringAnalyzer1.construct.currentMethod.name = tokenMemberMethodName.name
+                    stringAnalyzer1.construct.currentMethod.ofClass = Variable()
+                    stringAnalyzer1.construct.currentMethod.ofClass.classStr = tokenMemberMethodType.name
+                    stringAnalyzer1.construct.currentMethod.name = tokenMemberMethodName.name
                 }
                 return true
             }
         }
 
-        class ActionParamName1 : Action(tokenNameMethodParameter1) {
+        class ActionParamType(token: StringAnalyzer1.Token?) : Action(token) {
             override fun action(): Boolean {
-                if (tokenNameMethodParameter1.name != null) {
-                    val parameterList = stringAnalyzer1.construct.currentMethod.parameterList
-                    parameterList[parameterList.size].name = tokenNameMethodParameter1.name
-                }
-                return true
-            }
-        }
-
-        class ActionParamName2 : Action(tokenNameMethodParameter2) {
-            override fun action(): Boolean {
-                if (tokenNameMethodParameter2.name != null) {
-                    val parameterList = stringAnalyzer1.construct.currentMethod.parameterList
-                    parameterList[parameterList.size].name = tokenNameMethodParameter2.name
-                }
-                return true
-            }
-        }
-
-
-        class ActionParamType1 : Action(tokenQualifiedNameMethodParameter1) {
-            override fun action(): Boolean {
-                println("tokenQualifiedNameMethodParameter: " + tokenQualifiedNameMethodParameter1.name)
+                println("ActionParamType: " + (token as TokenQualifiedName).name)
                 if (tokenQualifiedNameMethodParameter1.name != null) {
                     val parameterList = stringAnalyzer1.construct.currentMethod.parameterList
-                    parameterList.add(Variable())
-                    parameterList[parameterList.size].classStr = tokenQualifiedNameMethodParameter1.name
+                    parameterList[parameterList.size - 1].classStr = (token as TokenQualifiedName).name
                 }
                 return true
             }
         }
 
-        class ActionParamType2 : Action(tokenQualifiedNameMethodParameter2) {
+        class ActionParamName(token: StringAnalyzer1.Token?) : Action(token) {
             override fun action(): Boolean {
-                println("tokenQualifiedNameMethodParameter: " + tokenQualifiedNameMethodParameter2.name)
-                if (tokenQualifiedNameMethodParameter2.name != null) {
+                println("ActionParamName: " + (token as TokenName).name)
+                if ((token as TokenName).name != null) {
                     val parameterList = stringAnalyzer1.construct.currentMethod.parameterList
-                    parameterList[parameterList.size].classStr = tokenQualifiedNameMethodParameter2.name
+                    parameterList.add(Variable())
+                    parameterList[parameterList.size - 1].name = (token as TokenName).name
                 }
                 return true
             }
         }
 
+        tokenQualifiedNameMethodParameter1.setAction(ActionParamType(tokenQualifiedNameMethodParameter1))
+        tokenQualifiedNameMethodParameter2.setAction(ActionParamType(tokenQualifiedNameMethodParameter2))
+        tokenNameMethodParameter1.setAction(ActionParamName(tokenNameMethodParameter1))
+        tokenNameMethodParameter2.setAction(ActionParamName(tokenNameMethodParameter2))
 
         class ActionVarType(token: StringAnalyzer1.Token?) : Action(token) {
             override fun action(): Boolean {
@@ -566,8 +546,7 @@ class TestStringAnalyzer1 {
         class ActionCloseBracketClass : Action(tokenCloseBracketClass) {
             override fun action(): Boolean {
                 if (tokenCloseBracketClass.isSuccessful) {
-                    stringAnalyzer1.construct.classes[stringAnalyzer1.construct.classes.size] =
-                        stringAnalyzer1.construct.currentClass
+                    stringAnalyzer1.construct.classes.add(stringAnalyzer1.construct.currentClass)
                     stringAnalyzer1.construct.currentClass = Class()
                 }
                 return true
