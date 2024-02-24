@@ -502,7 +502,7 @@ public class StringAnalyzer1 {
             position = super.skipBlanks(input, position);
             int position1 = position;
             for (Token token : choices) {
-                position1 = token.parse(input, position1);
+                position1 = token.skipBlanks(input, position1);
                 if (!token.isSuccessful()) {
                     setSuccessful(false);
                     return position;
@@ -682,7 +682,7 @@ public class StringAnalyzer1 {
      */
     class MultiTokenOptional extends Token {
 
-        final Token[] choices;
+        Token[] choices;
 
         public MultiTokenOptional(Token... choices) {
             super();
@@ -707,10 +707,8 @@ public class StringAnalyzer1 {
                 for (Token token : choices) {
                     position2 = token.parse(input, position1);
                     if (position2 != position1 && token.isSuccessful()) {
-                        this.choose(token);
                         allNotOk = false;
                         position1 = position2;
-                        action();
                     } else if (!token.isSuccessful()) {
                         position2 = position1;
                     }

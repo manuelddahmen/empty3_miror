@@ -68,7 +68,7 @@ public class Variable {
     public String toString() {
         return "Variable{" +
                 "name='" + name + '\'' +
-                ", value=" + classStr +
+                ", class=" + classStr +
                 ", scope='" + scope + '\'' +
                 '}';
     }
