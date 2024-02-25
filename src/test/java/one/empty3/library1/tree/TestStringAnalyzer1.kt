@@ -23,6 +23,7 @@
 package one.empty3.library1.tree
 
 import one.empty3.library1.tree.StringAnalyser.TokenString
+import one.empty3.library1.tree.StringAnalyzer1.MultiTokenMandatory
 import one.empty3.library1.tree.StringAnalyzer1.TokenName
 import one.empty3.library1.tree.StringAnalyzer1.TokenQualifiedName
 import org.junit.Assert
@@ -309,6 +310,11 @@ class TestStringAnalyzer1 {
         }
         tokenPackageName.setAction(ActionPackageName())
 
+        val tokenImport = stringAnalyzer1.TokenString("import")
+        val tokenImportName = stringAnalyzer1.TokenQualifiedName()
+        val tokenImportSemicolon = stringAnalyzer1.TokenSemiColon()
+
+
         class ActionClassKeyword : Action(tokenClass) {
             public override fun action(): Boolean {
                 stringAnalyzer1.construct.classes.add(stringAnalyzer1.construct.currentClass)
@@ -421,9 +427,9 @@ class TestStringAnalyzer1 {
         tokenCloseParenthesizedMethodParameter.addToken(tokenOpenBracketMethod)
 
 
-        class ActionTokenOpenParenthesizedMethodParameter : Action(tokenOpenParenthesizedMethodParameter) {
+        class ActionTokenOpenParenthesizedMethodParameter(token: StringAnalyzer1.Token?) : Action(token) {
             override fun action(): Boolean {
-                if (tokenMemberMethodType.name != null) {
+                if (tokenMemberMethodType.name != null && tokenMemberMethodName.name != null) {
                     stringAnalyzer1.construct.currentMethod.ofClass = Variable()
                     stringAnalyzer1.construct.currentMethod.ofClass.classStr = tokenMemberMethodType.name
                     stringAnalyzer1.construct.currentMethod.name = tokenMemberMethodName.name
@@ -431,13 +437,15 @@ class TestStringAnalyzer1 {
                 return true
             }
         }
-
+        ActionTokenOpenParenthesizedMethodParameter(tokenOpenParenthesizedMethodParameter)
         class ActionParamType(token: StringAnalyzer1.Token?) : Action(token) {
             override fun action(): Boolean {
                 println("ActionParamType: " + (token as TokenQualifiedName).name)
                 if (tokenQualifiedNameMethodParameter1.name != null) {
                     val parameterList = stringAnalyzer1.construct.currentMethod.parameterList
-                    parameterList[parameterList.size - 1].classStr = (token as TokenQualifiedName).name
+                    if (parameterList.size > 0) {
+                        parameterList[parameterList.size - 1].classStr = (token as TokenQualifiedName).name
+                    }
                 }
                 return true
             }
@@ -516,30 +524,45 @@ class TestStringAnalyzer1 {
         val tokenCloseBracketMethod = stringAnalyzer1.TokenCloseBracket()
         tokenOpenBracketMethod.addToken(tokenMultiMembersInstructions)
         tokenMultiMembersInstructions.addToken(tokenCloseBracketMethod)
-        /*
-                class ActionPushMethod : Action(tokenOpenParenthesizedMethodParameter) {
-                    override fun action(): Boolean {
-                        if (tokenMemberMethodName.name != null && !tokenMemberMethodName.name.isEmpty() &&
-                            tokenMemberMethodType.name != null && !tokenMemberMethodType.name.isEmpty()
-                        ) {
-                            stringAnalyzer1.construct.currentClass.methodList[stringAnalyzer1.construct.methodMembers.size] =
-                                stringAnalyzer1.construct.currentMethod
-                            stringAnalyzer1.construct.currentMethod.name = tokenMemberMethodName.name
-                            stringAnalyzer1.construct.currentMethod.ofClass.classStr = tokenMemberMethodType.name
-                            stringAnalyzer1.construct.currentMethod.ofClass.name = tokenMemberMethodType.name
-                            stringAnalyzer1.construct.currentMethod = Method()
-                        }
-                        return true
-                    }
+
+        class ActionPushMethod(token: StringAnalyzer1.Token?) : Action(token) {
+            override fun action(): Boolean {
+                if (tokenMemberMethodName.name != null && !tokenMemberMethodName.name.isEmpty() &&
+                    tokenMemberMethodType.name != null && !tokenMemberMethodType.name.isEmpty()
+                ) {
+                    val methodList = stringAnalyzer1.construct.currentClass.methodList
+                    methodList.add(stringAnalyzer1.construct.currentMethod)
+                    /*stringAnalyzer1.construct.currentMethod.name = tokenMemberMethodName.name
+                    stringAnalyzer1.construct.currentMethod.ofClass.classStr = tokenMemberMethodType.name
+                    stringAnalyzer1.construct.currentMethod.ofClass.name = tokenMemberMethodType.name
+                    */
+                    stringAnalyzer1.construct.currentMethod = Method()
                 }
-        */
+                return true
+            }
+        }
+        ActionPushMethod(tokenCloseBracketMethod)
+
         tokenPackage.addToken(tokenPackageName)
         tokenPackageName.addToken(tokenPackageSemicolon)
-        tokenPackageSemicolon.addToken(tokenClass)
+        val tokenPackageOptional =
+            stringAnalyzer1.SingleTokenOptional(
+                tokenPackage
+            )
+        tokenImport.addToken(tokenImportName)
+        tokenImportName.addToken(tokenImportSemicolon)
+
+        val multiTokenMandatoryImport =
+            stringAnalyzer1.MultiTokenOptional(
+                tokenImport
+            )
+
+        tokenPackageOptional.addToken(multiTokenMandatoryImport)
+        multiTokenMandatoryImport.addToken(tokenClass)
         tokenClass.addToken(tokenClassName)
         tokenClassName.addToken(tokenOpenBracket)
         val multiTokenOptional = stringAnalyzer1.MultiTokenExclusiveXor(
-            tokenMemberMethodType, tokenMemberVar
+            tokenMemberMethodType, tokenMemberVar//, tokenCloseBracketClass
         )
         tokenOpenBracket.addToken(multiTokenOptional)
         multiTokenOptional.addToken(tokenCloseBracketClass)
@@ -553,9 +576,9 @@ class TestStringAnalyzer1 {
             }
         }
 
-        val token = tokenPackage
+        val token = tokenPackageOptional
 
-        //token.addToken(tokenClass)
+//token.addToken(tokenClass)
 
 //        val input = "package com.example;\nclass Graph {\n}\n"
         val input =
@@ -576,7 +599,7 @@ class TestStringAnalyzer1 {
         var parse = -1
         try {
             parse = stringAnalyzer1.parse(token, input)
-            //     parse = stringAnalyzer1.mPosition
+//     parse = stringAnalyzer1.mPosition
         } catch (ex: RuntimeException) {
             ex.printStackTrace()
             if (parse >= input.length) {
@@ -592,12 +615,12 @@ class TestStringAnalyzer1 {
         println("Name : " + tokenPackageName.name)
         println("Method name : " + tokenMemberMethodName.name)
         println(stringAnalyzer1.construct)
-        if (parse >= input.length)
+        if (parse >= input.length || input.substring(parse).isBlank())
             println("")
         else
             println(input.substring(stringAnalyzer1.mPosition))
 
-        if (parse >= input.length) {
+        if (parse >= input.length || input.substring(parse).isBlank()) {
             Assert.assertTrue(true)
             return
         } else {

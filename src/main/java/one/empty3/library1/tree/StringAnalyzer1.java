@@ -251,9 +251,6 @@ public class StringAnalyzer1 {
                     setSuccessful(false);
                     return position;
                 }
-
-                action();
-
                 first = false;
             }
             return processNext(input, position0);
@@ -740,7 +737,8 @@ public class StringAnalyzer1 {
         public int parse(String input, int position) {
             if (position >= input.length() || input.substring(position).trim().isEmpty()) {
                 mPosition = position;
-                throw new RuntimeException(getClass() + " : position>=input.length()");
+                setSuccessful(false);
+                return position;
             }
             position = super.skipBlanks(input, position);
             int position1 = position;
@@ -791,7 +789,8 @@ public class StringAnalyzer1 {
         public int parse(String input, int position) {
             if (position >= input.length() || input.substring(position).trim().isEmpty()) {
                 mPosition = position;
-                throw new RuntimeException(getClass() + " : position>=input.length()");
+                setSuccessful(true);
+                return position;
             }
             assert choices.size() > 0;
             position = skipBlanks(input, position);
@@ -816,8 +815,8 @@ public class StringAnalyzer1 {
                         }
                     }
                 }
-                if (allOk)
-                    action();
+//                if (allOk)
+//                    action();
                 i++;
             }
             if (i >= 1) {
@@ -850,6 +849,73 @@ public class StringAnalyzer1 {
             Token[] tokens = new Token[this.choices.size()];
             this.choices.toArray(tokens);
             return new MultiTokenMandatory(tokens);
+        }
+    }
+
+    class SingleTokenMandatory extends Token {
+
+        private final List<Token> choices;
+
+        public SingleTokenMandatory(Token... mandatory) {
+            super();
+            this.choices = Arrays.stream(mandatory).toList();
+        }
+
+        @Override
+        public int parse(String input, int position) {
+            if (position >= input.length() || input.substring(position).trim().isEmpty()) {
+                mPosition = position;
+                setSuccessful(true);
+                return position;
+            }
+            assert choices.size() > 0;
+            position = skipBlanks(input, position);
+            boolean allOk = true;
+            int position1 = position;
+            int i = 0;
+            int position0 = position;
+            int j = 0;
+            position0 = position1;
+            for (j = 0; j < choices.size(); j++) {
+                Token token = choices.get(j);
+                position1 = token.parse(input, position1);
+                if (!token.isSuccessful()) {
+                    allOk = false;
+                    position1 = position0;
+
+                    setSuccessful(false);
+                    return position;
+                }
+            }
+//                if (allOk)
+//                    action();
+            return processNext(input, position1);
+
+
+        }
+
+        @Override
+        public String toString() {
+            StringBuilder s = new StringBuilder("SingleTokenMandatory {" +
+                    ", action=" + action +
+                    ", aClass=" + aClass +
+                    ", method=" + method +
+                    ", variable=" + variable +
+                    ", successful=" + isSuccessful() +
+                    "}\n");
+            s.append("choices=");
+            for (int i = 0; i < choices.size(); i++) {
+                s.append(choices.get(i).toString());
+            }
+            s.append("\n");
+            return s.toString();
+        }
+
+        @Override
+        public Token copy() {
+            Token[] tokens = new Token[this.choices.size()];
+            this.choices.toArray(tokens);
+            return new SingleTokenMandatory(tokens);
         }
     }
 
