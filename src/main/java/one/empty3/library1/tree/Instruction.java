@@ -38,4 +38,29 @@ public class Instruction {
     public void setType(String name) {
         this.type = name;
     }
+
+    public String getType() {
+        return type;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public ListInstructions.Instruction getExpression() {
+        return expression;
+    }
+
+    public void setExpression(ListInstructions.Instruction expression) {
+        this.expression = expression;
+    }
+
+    @Override
+    public String toString() {
+        return "Instruction{" +
+                "type='" + type + '\'' +
+                ", name='" + name + '\'' +
+                ", expression=" + expression +
+                '}';
+    }
 }

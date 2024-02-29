@@ -31,6 +31,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
+import java.util.*
 
 /**
  * Test class for AlgebraicTree.
@@ -512,6 +513,18 @@ class TestStringAnalyzer1 {
                 tokenMemberMethodVarType2,
                 tokenMemberMethodExpression3,
             )
+        val tokenSingleInstructionIf =
+            stringAnalyzer1.MultiTokenExclusiveXor(
+                tokenMemberMethodVarType1,
+                tokenMemberMethodVarType2,
+                tokenMemberMethodExpression3,
+            )
+        val tokenSingleInstructionElse =
+            stringAnalyzer1.MultiTokenExclusiveXor(
+                tokenMemberMethodVarType1,
+                tokenMemberMethodVarType2,
+                tokenMemberMethodExpression3,
+            )
 
         val tokenMemberMethodVarType = stringAnalyzer1.TokenQualifiedName()
         val tokenMemberMethodVarName = stringAnalyzer1.TokenName()
@@ -525,6 +538,113 @@ class TestStringAnalyzer1 {
         tokenOpenBracketMethod.addToken(tokenMultiMembersInstructions)
         tokenMultiMembersInstructions.addToken(tokenCloseBracketMethod)
 
+        // Instructions' flow controls (if-else, while, do while, for-i, for-:, switch)
+
+        // Block without controls
+        val instructionBlockOpenBracket = stringAnalyzer1.TokenString("{")
+        val instructionBlockCloseBracket = stringAnalyzer1.TokenString("}")
+        val instructionBlock = stringAnalyzer1.SingleTokenMandatory(
+            instructionBlockOpenBracket,
+            tokenMultiMembersInstructions,
+            instructionBlockCloseBracket
+        )
+        // Logical expression
+        val logicalExpressionOpenParenthesis = stringAnalyzer1.TokenOpenParenthesized()
+        val logicalExpressionCloseParenthesis = stringAnalyzer1.TokenCloseParenthesized()
+        val logicalExpressionExpression = stringAnalyzer1.TokenExpression1()
+        val logicalExpression = stringAnalyzer1.SingleTokenMandatory(
+            logicalExpressionOpenParenthesis, logicalExpressionExpression, logicalExpressionCloseParenthesis
+        )
+        val logicalExpressionOpenParenthesisElse = stringAnalyzer1.TokenOpenParenthesized()
+        val logicalExpressionCloseParenthesisElse = stringAnalyzer1.TokenCloseParenthesized()
+        val logicalExpressionExpressionElse = stringAnalyzer1.TokenExpression1()
+        val logicalExpressionElse = stringAnalyzer1.SingleTokenMandatory(
+            logicalExpressionOpenParenthesisElse, logicalExpressionExpressionElse, logicalExpressionCloseParenthesisElse
+        )
+        // if flow control
+        val tokenIf = stringAnalyzer1.TokenString("if")
+        val tokenElse = stringAnalyzer1.TokenString("else")
+
+        val instructionsIf = stringAnalyzer1.SingleTokenExclusiveXor(instructionBlock, tokenSingleInstructionIf)
+        val instructionsElse = stringAnalyzer1.SingleTokenExclusiveXor(instructionBlock, tokenSingleInstructionElse)
+
+        tokenIf.addToken(logicalExpression)
+        logicalExpression.addToken(instructionsIf)
+        instructionsIf.addToken(
+            stringAnalyzer1.SingleTokenOptional(
+                stringAnalyzer1.SingleTokenMandatory(
+                    tokenElse
+                )
+            )
+        )
+
+        class ActionExpressionType(token: StringAnalyzer1.Token) : Action(token) {
+            override fun action(): Boolean {
+                if (tokenMemberMethodVarType1 != null) {
+                    var name = tokenMemberMethodVarType1.name
+                    //tokenMemberMethodVarType1.name = null
+                    val instructions = stringAnalyzer1.construct.currentMethod.instructions
+                    instructions.add(Instruction())
+                    val get = instructions.get(instructions.size - 1)
+                    get.setType(name)
+                }
+                if (tokenMemberMethodVarName1.name != null) {
+                    var name = tokenMemberMethodVarName1.name
+                    //tokenMemberMethodVarName1.name = null
+                    val instructions = stringAnalyzer1.construct.currentMethod.instructions
+                    //instructions.add(Instruction())
+                    val get = instructions.get(instructions.size - 1)
+                    get.setName(name)
+                    return true
+                }
+                if (tokenMemberMethodVarType2 != null) {
+                    var name = tokenMemberMethodVarType2.name
+                    //tokenMemberMethodVarType2.name = null
+                    val instructions = stringAnalyzer1.construct.currentMethod.instructions
+                    instructions.add(Instruction())
+                    val get = instructions.get(instructions.size - 1)
+                    get.setType(name)
+                }
+                if (tokenMemberMethodVarName2.name != null) {
+                    var name = tokenMemberMethodVarName2.name
+                    //tokenMemberMethodVarName2.name = null
+                    val instructions = stringAnalyzer1.construct.currentMethod.instructions
+                    //instructions.add(Instruction())
+                    val get = instructions.get(instructions.size - 1)
+                    get.setName(name)
+                }
+                if (tokenMemberMethodExpression2.expression != null && tokenMemberMethodVarName2.name != null) {
+                    var name = tokenMemberMethodExpression2.expression
+                    //tokenMemberMethodVarName2.name = null
+                    val instructions = stringAnalyzer1.construct.currentMethod.instructions
+                    //instructions.add(Instruction())
+                    val get = instructions.get(instructions.size - 1)
+                    get.setExpression(
+                        ListInstructions.Instruction(
+                            UUID.randomUUID().variant(), tokenMemberMethodVarName2.name,
+                            name
+                        )
+                    )
+                }
+                if (tokenMemberMethodExpression3.expression != null) {
+                    var name = tokenMemberMethodExpression3.expression
+                    //tokenMemberMethodVarName2.name = null
+                    val instructions = stringAnalyzer1.construct.currentMethod.instructions
+                    //instructions.add(Instruction())
+                    val get = instructions.get(instructions.size - 1)
+                    get.setExpression(
+                        ListInstructions.Instruction(UUID.randomUUID().variant(), "", name)
+                    )
+                }
+                return true
+            }
+        }
+        tokenMemberMethodVarType1.setAction(ActionExpressionType(tokenMemberMethodVarType1))
+        tokenMemberMethodVarType2.setAction(ActionExpressionType(tokenMemberMethodVarType2))
+        tokenMemberMethodVarName1.setAction(ActionExpressionType(tokenMemberMethodVarName1))
+        tokenMemberMethodVarName2.setAction(ActionExpressionType(tokenMemberMethodVarName2))
+        tokenElse.addToken(logicalExpressionElse)
+        logicalExpressionElse.addToken(instructionsElse)///??? Imbriquées ?
         class ActionPushMethod(token: StringAnalyzer1.Token?) : Action(token) {
             override fun action(): Boolean {
                 if (tokenMemberMethodName.name != null && !tokenMemberMethodName.name.isEmpty() &&

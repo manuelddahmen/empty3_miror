@@ -201,10 +201,12 @@ public class StringAnalyzer1 {
             return nextTokens;
         }
 
-        protected void choose(Token token) {
-            definitions.put(definitions.size(), token);
-        }
-
+        /**
+         * Creates a copy of the current Token object.
+         *
+         * @return a new Token object that is a copy of the current Token (further step: make a deep copy with
+         * nextTokens and Token type fields.
+         */
         public abstract Token copy();
     }
 
