@@ -25,9 +25,9 @@ package one.empty3.pointset;
 import one.empty3.library.Point3D;
 import one.empty3.library.TextureCol;
 import one.empty3.library.core.lighting.Colors;
-import one.empty3.library.core.raytracer.tree.AlgebraicFormulaSyntaxException;
-import one.empty3.library.core.raytracer.tree.AlgebricTree;
-import one.empty3.library.core.raytracer.tree.TreeNodeEvalException;
+import one.empty3.library1.tree.AlgebraicFormulaSyntaxException;
+import one.empty3.library1.tree.AlgebraicTree;
+import one.empty3.library1.tree.TreeNodeEvalException;
 
 import java.util.HashMap;
 import java.util.function.Consumer;
@@ -40,14 +40,12 @@ public class Move {
     private int itereFrame = 1;
     private static final double G = 1;
     protected final PCont<Gravity> container;
-    private AlgebricTree x;
+    private AlgebraicTree x;
     private HashMap<Gravity, ComposanteForceSurface> composanteForceSurface;
     private ComposanteForceAttraction composanteForceAttraction;
     private HashMap<String, Double> map;
 
-    public Move(PCont<Gravity> cont)
-
-    {
+    public Move(PCont<Gravity> cont) {
         container = cont;
         composanteForceAttraction = new ComposanteForceAttraction();
         composanteForceSurface = new HashMap<>();
@@ -81,7 +79,7 @@ public class Move {
     }
 
     public void initMoveSurface(String formula, HashMap<String, Double> map) throws AlgebraicFormulaSyntaxException {
-        x = new AlgebricTree(formula, map).construct();
+        x = new AlgebraicTree(formula, map).construct();
     }
 
     public void computeMoveSurface(Gravity t1) {
@@ -90,8 +88,8 @@ public class Move {
             if (!composanteForceSurface.containsKey(t1))
                 composanteForceSurface.put(t1, new ComposanteForceSurface(x, t1.dv));
 
-            int i=0;
-            while(i<itereFrame) {
+            int i = 0;
+            while (i < itereFrame) {
                 composanteForceSurface.get(t1).diff();
                 i++;
             }

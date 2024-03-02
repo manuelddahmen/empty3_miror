@@ -31,8 +31,8 @@ import one.empty3.library.Matrix33;
 import one.empty3.library.Point3D;
 import one.empty3.library.Representable;
 import one.empty3.library.Rotation;
-import one.empty3.library.core.raytracer.tree.AlgebraicFormulaSyntaxException;
-import one.empty3.library.core.raytracer.tree.TreeNodeEvalException;
+import one.empty3.library1.tree.AlgebraicFormulaSyntaxException;
+import one.empty3.library1.tree.TreeNodeEvalException;
 
 import javax.swing.*;
 import javax.swing.event.CaretEvent;
@@ -171,7 +171,7 @@ public class ObjectEditorBase extends JPanel implements RepresentableEditor {
 
     public Matrix33 loadMatrix(Matrix33 m, JTextField[] strings, JTextArea text) throws AlgebraicFormulaSyntaxException, TreeNodeEvalException {
         for (int i = 0; i < strings.length; i++) {
-            //AlgebricTree treeI = new AlgebricTree(strings[i].getText());
+            //AlgebraicTree treeI = new AlgebraicTree(strings[i].getText());
             //treeI.construct();
             m.set(i / 3, i % 3, ((double) Double.parseDouble(strings[i].getText())));
 

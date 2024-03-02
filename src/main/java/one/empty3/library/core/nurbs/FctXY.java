@@ -23,9 +23,9 @@
 package one.empty3.library.core.nurbs;
 
 import one.empty3.library.StructureMatrix;
-import one.empty3.library.core.raytracer.tree.AlgebraicFormulaSyntaxException;
-import one.empty3.library.core.raytracer.tree.AlgebricTree;
-import one.empty3.library.core.raytracer.tree.TreeNodeEvalException;
+import one.empty3.library1.tree.AlgebraicFormulaSyntaxException;
+import one.empty3.library1.tree.AlgebraicTree;
+import one.empty3.library1.tree.TreeNodeEvalException;
 import org.jetbrains.annotations.NotNull;
 
 /*__
@@ -33,22 +33,20 @@ import org.jetbrains.annotations.NotNull;
  */
 public class FctXY extends Fct1D_1D {
     private StructureMatrix<String> formulaX = new StructureMatrix<>(0, String.class);
-    private AlgebricTree treeX;
+    private AlgebraicTree treeX;
 
-    public FctXY()
-    {
+    public FctXY() {
 
         formulaX.setElem("10.0");
         setFormulaX(formulaX.getElem());
 
     }
 
-    public @NotNull FctXY setFormulaX(String formulaX)
-    {
+    public @NotNull FctXY setFormulaX(String formulaX) {
         this.formulaX.setElem(formulaX);
 
         try {
-            treeX = new AlgebricTree(formulaX);
+            treeX = new AlgebraicTree(formulaX);
             treeX.getParametersValues().put("x", 0.0);
             treeX.construct();
         } catch (AlgebraicFormulaSyntaxException e) {
@@ -61,11 +59,10 @@ public class FctXY extends Fct1D_1D {
         return formulaX.getElem();
     }
 
-    public double result(double input)
-    {
+    public double result(double input) {
         treeX.getParametersValues().put("x", input);
         try {
-            return treeX.eval();
+            return treeX.eval().getElem();
         } catch (TreeNodeEvalException | AlgebraicFormulaSyntaxException e) {
             e.printStackTrace();
         }
@@ -80,6 +77,6 @@ public class FctXY extends Fct1D_1D {
 
     @Override
     public String toString() {
-        return "fctXY( \""+formulaX+"\" )\n";
+        return "fctXY( \"" + formulaX + "\" )\n";
     }
 }

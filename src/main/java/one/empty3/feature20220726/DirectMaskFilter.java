@@ -22,7 +22,8 @@
 
 package one.empty3.feature20220726;
 
-import one.empty3.apps.tree.altree.*;
+import one.empty3.library1.tree.*;
+
 
 public class DirectMaskFilter {
     PixM m1;
@@ -39,14 +40,14 @@ public class DirectMaskFilter {
 , p2x, p2y,c1r,c2g b a, w, h, ww, wh */
     public PixM applyOperator(String[] formulaColorComps) {
         PixM m3 = new PixM(m1.getColumns(), m1.getLines());
-        AlgebricTree[] treeA = new AlgebricTree[formulaColorComps.length];
+        AlgebraicTree[] treeA = new AlgebraicTree[formulaColorComps.length];
         try {
             for (int c = 0; c < formulaColorComps.length; c++) {
-                treeA[c] = new AlgebricTree(formulaColorComps[c]);
+                treeA[c] = new AlgebraicTree(formulaColorComps[c]);
 
                 for (int i = 0; i < m1.getColumns(); i++)
                     for (int j = 0; j < m1.getLines(); j++) {
-                        AlgebricTree tree = treeA[c];
+                        AlgebraicTree tree = treeA[c];
                         tree.setParameter("p1x", (double) i);
                         tree.setParameter("p2x", (double) i);
                         tree.setParameter("p1y", (double) j);
@@ -82,7 +83,7 @@ public class DirectMaskFilter {
 
                         tree.construct();
 
-                        double value = (double) (Double) (tree.eval());
+                        double value = (double) (Double) (tree.eval().getElem());
                         m3.setCompNo(c);
                         m3.set(i, j, value);
 

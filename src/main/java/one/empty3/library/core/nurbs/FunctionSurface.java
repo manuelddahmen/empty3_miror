@@ -24,9 +24,9 @@ package one.empty3.library.core.nurbs;
 
 import one.empty3.library.Point3D;
 import one.empty3.library.StructureMatrix;
-import one.empty3.library.core.raytracer.tree.AlgebraicFormulaSyntaxException;
-import one.empty3.library.core.raytracer.tree.AlgebricTree;
-import one.empty3.library.core.raytracer.tree.TreeNodeEvalException;
+import one.empty3.library1.tree.AlgebraicFormulaSyntaxException;
+import one.empty3.library1.tree.AlgebraicTree;
+import one.empty3.library1.tree.TreeNodeEvalException;
 
 import java.util.HashMap;
 
@@ -34,9 +34,9 @@ public class FunctionSurface extends ParametricSurface {
     private StructureMatrix<String> x = new StructureMatrix<>(0, String.class);
     private StructureMatrix<String> y = new StructureMatrix<>(0, String.class);
     private StructureMatrix<String> z = new StructureMatrix<>(0, String.class);
-    private AlgebricTree treeX;
-    private AlgebricTree treeY;
-    private AlgebricTree treeZ;
+    private AlgebraicTree treeX;
+    private AlgebraicTree treeY;
+    private AlgebraicTree treeZ;
     final HashMap<String, Double> hashMap = new HashMap<>(2);
     private boolean drawable;
 
@@ -58,15 +58,13 @@ public class FunctionSurface extends ParametricSurface {
         this.z.setElem(zEqFuv);
 
 
-
-
-        treeX = new AlgebricTree(xEqFuv);
+        treeX = new AlgebraicTree(xEqFuv);
         treeX.getParametersValues().putAll(hashMap);
         treeX.construct();
-        treeY = new AlgebricTree(yEqFuv);
+        treeY = new AlgebraicTree(yEqFuv);
         treeY.getParametersValues().putAll(hashMap);
         treeY.construct();
-        treeZ = new AlgebricTree(zEqFuv);
+        treeZ = new AlgebraicTree(zEqFuv);
         treeZ.getParametersValues().putAll(hashMap);
         treeZ.construct();
         setDrawable(true);
@@ -77,19 +75,19 @@ public class FunctionSurface extends ParametricSurface {
     }
 
     public void setX(String x) {
-        this.x .setElem(x);
+        this.x.setElem(x);
         recomputeTrees();
     }
 
     private void recomputeTrees() {
         try {
-            treeX = new AlgebricTree(x.getElem());
+            treeX = new AlgebraicTree(x.getElem());
             treeX.setParametersValues(hashMap);
             treeX.construct();
-            treeY = new AlgebricTree(y.getElem());
+            treeY = new AlgebraicTree(y.getElem());
             treeY.setParametersValues(hashMap);
             treeY.construct();
-            treeZ = new AlgebricTree(z.getElem());
+            treeZ = new AlgebraicTree(z.getElem());
             treeZ.setParametersValues(hashMap);
             treeZ.construct();
             setDrawable(true);
@@ -122,9 +120,9 @@ public class FunctionSurface extends ParametricSurface {
         try {
             hashMap.put("u", u);
             hashMap.put("v", v);
-            double evalX = treeX.eval();
-            double evalY = treeY.eval();
-            double evalZ = treeZ.eval();
+            double evalX = treeX.eval().getElem();
+            double evalY = treeY.eval().getElem();
+            double evalZ = treeZ.eval().getElem();
             return new Point3D(evalX, evalY, evalZ);
         } catch (TreeNodeEvalException | AlgebraicFormulaSyntaxException | NullPointerException exceptione) {
             exceptione.printStackTrace();

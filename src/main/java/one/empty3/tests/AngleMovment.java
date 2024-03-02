@@ -22,21 +22,22 @@
 
 package one.empty3.tests;
 
-import one.empty3.library.core.raytracer.tree.AlgebraicFormulaSyntaxException;
-import one.empty3.library.core.raytracer.tree.AlgebricTree;
-import one.empty3.library.core.raytracer.tree.TreeNodeEvalException;
+import one.empty3.library1.tree.AlgebraicFormulaSyntaxException;
+import one.empty3.library1.tree.AlgebraicTree;
+import one.empty3.library1.tree.TreeNodeEvalException;
 import one.empty3.library.*;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 public class AngleMovment {
-    AlgebricTree[] tree;
-    List<AlgebricTree> fxs = new ArrayList();
+    AlgebraicTree[] tree;
+    List<AlgebraicTree> fxs = new ArrayList();
     HashMap<String, Double> vars;
 
     public AngleMovment(int size) {
-        tree = new AlgebricTree[size];
+        tree = new AlgebraicTree[size];
         vars = new HashMap<>(size);
     }
 
@@ -46,7 +47,7 @@ public class AngleMovment {
 
     public void setFormula(int index, String chars) {
 
-        tree[index] = new AlgebricTree(chars, vars);
+        tree[index] = new AlgebraicTree(chars, vars);
         tree[index].setParametersValues(vars);
         try {
             tree[index].construct();
@@ -59,7 +60,7 @@ public class AngleMovment {
         try {
             tree[index].setParametersValues(vars);
             tree[index].construct();
-            return (double) (tree[index].eval());
+            return (double) (tree[index].eval().getElem());
         } catch (TreeNodeEvalException | AlgebraicFormulaSyntaxException e) {
             e.printStackTrace();
         }
@@ -67,21 +68,16 @@ public class AngleMovment {
     }
 
     public void addFx(String formulaN) {
-        try {
-            fxs.add(new AlgebricTree(formulaN));
+        fxs.add(new AlgebraicTree(formulaN));
 
-        }
-        catch (AlgebraicFormulaSyntaxException ex) {
-            ex.printStackTrace();
-        }
     }
 
     public Point3D getPoint3D() {
-        double [] values = new double[tree.length];
-        for(int i=0; i<tree.length; i++) {
+        double[] values = new double[tree.length];
+        for (int i = 0; i < tree.length; i++) {
             try {
-                values[i] = tree[i].eval();
-            } catch(TreeNodeEvalException | AlgebraicFormulaSyntaxException ex){
+                values[i] = tree[i].eval().getElem();
+            } catch (TreeNodeEvalException | AlgebraicFormulaSyntaxException ex) {
                 ex.printStackTrace();
             }
 

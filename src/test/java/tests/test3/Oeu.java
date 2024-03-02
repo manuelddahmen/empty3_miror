@@ -25,7 +25,7 @@ package tests.test3;
 import one.empty3.library.Camera;
 import one.empty3.library.Point3D;
 import one.empty3.library.Sphere;
-import one.empty3.library.core.raytracer.tree.AlgebraicFormulaSyntaxException;
+import one.empty3.library1.tree.AlgebraicFormulaSyntaxException;
 import one.empty3.library.core.testing.TestObjetSub;
 import one.empty3.pointset.Gravity;
 import one.empty3.pointset.Move;
@@ -43,20 +43,18 @@ import java.util.HashMap;
  * combiner et calibrer
  * accrocher les points sur la surface
  */
-public class Oeu extends TestObjetSub{
+public class Oeu extends TestObjetSub {
     PCont<Gravity> point3DPCont = new PCont<Gravity>();
     Move move = new Move(point3DPCont);
     HashMap<String, Double> map;
     private int pointCount;
 
-    public static void main(String [] args)
-   {
-       Oeu oeu = new Oeu();
-       new Thread(oeu).start();
-   }
-    public void ginit()
+    public static void main(String[] args) {
+        Oeu oeu = new Oeu();
+        new Thread(oeu).start();
+    }
 
-    {
+    public void ginit() {
         map = new HashMap();
         move.setItereFrame(100);
         scene().add(point3DPCont);
@@ -74,12 +72,13 @@ public class Oeu extends TestObjetSub{
         }
         scene().cameraActive(new Camera(Point3D.Z.mult(-10d), Point3D.O0, Point3D.Y));
     }
-   public void finit() {
-       for (int i = 0; i < pointCount; i++) {
-           move.computeMoveSurface(point3DPCont.get(i));
-       }
 
-   }
+    public void finit() {
+        for (int i = 0; i < pointCount; i++) {
+            move.computeMoveSurface(point3DPCont.get(i));
+        }
+
+    }
 
     public Move getMove() {
         return move;

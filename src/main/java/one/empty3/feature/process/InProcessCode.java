@@ -22,7 +22,7 @@
 
 package one.empty3.feature.process;
 
-import one.empty3.apps.tree.altree.AlgebricTree;
+import one.empty3.library1.tree.AlgebraicTree;
 import one.empty3.io.ProcessFile;
 
 import java.util.ArrayList;

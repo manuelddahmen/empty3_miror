@@ -28,7 +28,7 @@ import one.empty3.library.Point3D;
 import one.empty3.library.StructureMatrix;
 import one.empty3.library.core.nurbs.FunctionSurface;
 import one.empty3.library.core.nurbs.ParametricSurface;
-import one.empty3.library.core.raytracer.tree.AlgebraicFormulaSyntaxException;
+import one.empty3.library1.tree.AlgebraicFormulaSyntaxException;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;

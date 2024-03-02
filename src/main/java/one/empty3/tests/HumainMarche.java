@@ -24,7 +24,7 @@ package one.empty3.tests;
 
 import one.empty3.library.*;
 import one.empty3.library.core.nurbs.*;
-import one.empty3.library.core.raytracer.tree.*;
+import one.empty3.library1.tree.*;
 import one.empty3.library.core.tribase.*;
 
 import java.awt.*;
@@ -33,18 +33,19 @@ import java.util.function.Predicate;
 
 public class HumainMarche extends RepresentableConteneur {
     protected double t;
+
     public void rotateZ(Tubulaire3 tubulaire3, int index0, int indexP, double angle, double fract) {
         Point3D elem0 = tubulaire3.getSoulCurve().getElem().getCoefficients().getElem(index0);
         int size = tubulaire3.getSoulCurve().getElem().getCoefficients().getData1d().size();
         int signum = (int) Math.signum(indexP - index0);
 
-        Matrix33 matrix33 = Matrix33.rotationZ(angle*fract);
+        Matrix33 matrix33 = Matrix33.rotationZ(angle * fract);
 
-        for(int i=index0+signum; i<size&&i>=0; i+=signum) {
+        for (int i = index0 + signum; i < size && i >= 0; i += signum) {
             Point3D elemI = tubulaire3.getSoulCurve().getElem().getCoefficients().getElem(i);
             Point3D mult = matrix33.mult(elemI.moins(elem0)).plus(elem0);
             tubulaire3.getSoulCurve().getElem().getCoefficients().getData1d().set(i, mult);
-            System.out.print("i:" + i+" p:" + mult);
+            System.out.print("i:" + i + " p:" + mult);
         }
     }
 
@@ -54,12 +55,14 @@ public class HumainMarche extends RepresentableConteneur {
     public void move0(ParametricSurface parametricSurface, double u0, double v0, double pas0, double u1, double v1) {
 
     }
+
     public void tubeAddPoint(Tubulaire3 tube, Point3D p) {
         tube.getSoulCurve().getElem().getCoefficients().getData1d().add(p);
     }
 
     public HumainMarche() {
     }
+
     public void init() {
         getListRepresentable().clear();
         Tubulaire3[] patte = new Tubulaire3[4];
@@ -94,22 +97,22 @@ public class HumainMarche extends RepresentableConteneur {
             tubeAddPoint(patte[i], new Point3D(0., 15., 0.));
             tubeAddPoint(patte[i], new Point3D(0., 20., 0.));
             tubeAddPoint(patte[i], new Point3D(0., 21., 0.));
-            rotateZ(patte[i], 3, 0, Math.signum(i - 0.5), Math.sin(2.*Math.PI*2*t)/8.);
+            rotateZ(patte[i], 3, 0, Math.signum(i - 0.5), Math.sin(2. * Math.PI * 2 * t) / 8.);
 
         }
         for (int i = 0; i < 2; i++) {
-            tubeAddPoint(patte[i+2], new Point3D(0., 20., 1. * (2 * i - 1)));
-            tubeAddPoint(patte[i+2], new Point3D(0., 20., 2. * (2 * i - 1)));
-            tubeAddPoint(patte[i+2], new Point3D(0., 15., 2. * (2 * i - 1)));
-            tubeAddPoint(patte[i+2], new Point3D(0., 10., 2. * (2 * i - 1)));
-            tubeAddPoint(patte[i+2], new Point3D(0., 9., 2. * (2 * i - 1)));
-            rotateZ(patte[i+2], 1, 4, Math.signum(i - 0.5), Math.sin(2.*Math.PI*2*t)/8.);
+            tubeAddPoint(patte[i + 2], new Point3D(0., 20., 1. * (2 * i - 1)));
+            tubeAddPoint(patte[i + 2], new Point3D(0., 20., 2. * (2 * i - 1)));
+            tubeAddPoint(patte[i + 2], new Point3D(0., 15., 2. * (2 * i - 1)));
+            tubeAddPoint(patte[i + 2], new Point3D(0., 10., 2. * (2 * i - 1)));
+            tubeAddPoint(patte[i + 2], new Point3D(0., 9., 2. * (2 * i - 1)));
+            rotateZ(patte[i + 2], 1, 4, Math.signum(i - 0.5), Math.sin(2. * Math.PI * 2 * t) / 8.);
         }
 
         Tubulaire3 basVentre = new Tubulaire3();
-        basVentre.getSoulCurve().add(new CourbeParametriquePolynomialeBezier(new Point3D[] {
-                new Point3D(0.,9.,0.),
-                new Point3D(0.,10.,0.)}));
+        basVentre.getSoulCurve().add(new CourbeParametriquePolynomialeBezier(new Point3D[]{
+                new Point3D(0., 9., 0.),
+                new Point3D(0., 10., 0.)}));
         basVentre.getDiameterFunction().getElem().setFormulaX("1.6");
 
         add(corps);

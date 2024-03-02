@@ -18,9 +18,9 @@
 // */
 //package one.empty3.apps.simplecalculator;
 //
-//import one.empty3.library.core.raytracer.tree.AlgebraicFormulaSyntaxException;
-//import one.empty3.library.core.raytracer.tree.AlgebricTree;
-//import one.empty3.library.core.raytracer.tree.TreeNodeEvalException;
+//import one.empty3.library1.tree.AlgebraicFormulaSyntaxException;
+//import one.empty3.library1.tree.AlgebraicTree;
+//import one.empty3.library1.tree.TreeNodeEvalException;
 //
 //import java.util.HashMap;
 //import java.util.Map;
@@ -72,17 +72,17 @@
 //    }
 //
 //    private void testResultVariable(String expr, double expectedResult, Map<String, Double> map, boolean echo) {
-//        AlgebricTree algebricTree = null;
+//        AlgebraicTree AlgebraicTree = null;
 //        try {
 //            System.out.println("Expression string : " + expr);
-//            algebricTree = new AlgebricTree(expr);
-//            algebricTree.setParametersValues(map);
-//            algebricTree.construct();
+//            AlgebraicTree = new AlgebraicTree(expr);
+//            AlgebraicTree.setParametersValues(map);
+//            AlgebraicTree.construct();
 //            if (echo)
-//                System.out.println(algebricTree);
+//                System.out.println(AlgebraicTree);
 //            try {
 //                double result;
-//                result = algebricTree.eval();
+//                result = AlgebraicTree.eval();
 //                if (echo)
 //                    System.out.println("Result : " + result);
 //                if (echo)
@@ -108,16 +108,16 @@
 //    }
 //
 //    protected boolean testResult(String expr, double expectedResult, boolean echo) {
-//        AlgebricTree algebricTree = null;
+//        AlgebraicTree AlgebraicTree = null;
 //        try {
 //            System.out.println("Expression string : " + expr);
-//            algebricTree = new AlgebricTree(expr);
-//            algebricTree.construct();
+//            AlgebraicTree = new AlgebraicTree(expr);
+//            AlgebraicTree.construct();
 //            if (echo)
-//                System.out.println(algebricTree);
+//                System.out.println(AlgebraicTree);
 //            try {
 //                double result;
-//                result = algebricTree.eval();
+//                result = AlgebraicTree.eval();
 //                if (echo)
 //                    System.out.println("Result : " + result);
 //                if (echo)
@@ -137,16 +137,16 @@
 //    }
 //
 //    protected boolean testConstructOrEvalFails(String expr, double expectedResult, boolean echo) {
-//        AlgebricTree algebricTree = null;
+//        AlgebraicTree AlgebraicTree = null;
 //        try {
 //            System.out.println("Expression string : " + expr);
-//            algebricTree = new AlgebricTree(expr);
-//            algebricTree.construct();
+//            AlgebraicTree = new AlgebraicTree(expr);
+//            AlgebraicTree.construct();
 //            if (echo)
-//                System.out.println(algebricTree);
+//                System.out.println(AlgebraicTree);
 //            try {
 //                Object result;
-//                result = algebricTree.eval();
+//                result = AlgebraicTree.eval();
 //                if (echo)
 //                    System.out.println("Result : " + result);
 //                if (echo)

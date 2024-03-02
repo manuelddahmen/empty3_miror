@@ -98,7 +98,7 @@ public class VecMeshEditor implements Runnable {
                     ListInstructions listInstructions = new ListInstructions();
                     listInstructions.addInstructions(vecMeshEditorGui.getDefaultCode());
                     listInstructions.runInstructions();
-                    //algebricTree.construct();
+                    //AlgebraicTree.construct();
                     StructureMatrix<Double> heights = listInstructions.getCurrentParamsValuesVecComputed().get("heights");
                     if (heights != null && !heights.data1d.isEmpty()) {
                         Double[] doubles = new Double[heights.data1d.size()];

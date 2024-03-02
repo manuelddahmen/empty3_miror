@@ -22,9 +22,11 @@
 
 package one.empty3.growth;
 
-import one.empty3.library.core.raytracer.tree.AlgebraicFormulaSyntaxException;
-import one.empty3.library.core.raytracer.tree.AlgebricTree;
-import one.empty3.library.core.raytracer.tree.TreeNodeEvalException;
+import one.empty3.library1.tree.AlgebraicTree;
+import one.empty3.library1.tree.AlgebraicTree;
+import one.empty3.library1.tree.AlgebraicFormulaSyntaxException;
+import one.empty3.library1.tree.AlgebraicTree;
+import one.empty3.library1.tree.TreeNodeEvalException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -77,17 +79,17 @@ public class FunctionalParameter extends Parameter {
 
                 }
             });
-            AlgebricTree tree = null;
+            AlgebraicTree tree = null;
             try {
-                tree = new AlgebricTree(getFormula(), parametersValues);
+                tree = new AlgebraicTree(getFormula(), parametersValues);
                 tree.construct();
             } catch (AlgebraicFormulaSyntaxException e) {
                 e.printStackTrace();
-}
+            }
             try {
-                Double d = (Double) (tree.eval());
+                Double d = (Double) (tree.eval().getElem());
                 setValue(d);
-                Logger.getAnonymousLogger().log(Level.INFO,""+ d);
+                Logger.getAnonymousLogger().log(Level.INFO, "" + d);
                 return d;
             } catch (TreeNodeEvalException | AlgebraicFormulaSyntaxException e) {
                 e.printStackTrace();
