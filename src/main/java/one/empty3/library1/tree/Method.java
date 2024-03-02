@@ -29,14 +29,13 @@ import java.util.function.Consumer;
 
 public class Method {
     private String name;
-    private Variable ofClass;
+    private Variable ofClass = new Variable();
     private List<Variable> parameterList = new ArrayList<>();
     private List<Variable> variableList = new ArrayList<>();
     private List<Instruction> instructions = new ArrayList<>();
     private String scope;
 
     public Method() {
-
     }
 
     public String getName() {

@@ -1496,6 +1496,40 @@ public class StringAnalyzer1 {
 
             return string[0];
         }
+
+        public String toLangStringJava() {
+            StringBuilder sb = new StringBuilder();
+            if (!this.packageName.isEmpty()) {
+                sb.append("package ").append(packageName).append(";\n");
+            }
+            if (classes.isEmpty() && currentClass.getName() != null) {
+                classes.add(currentClass);
+            }///
+            classes.forEach(aClass -> {
+                sb.append("class ").append(aClass.getName()).append(" {\n");
+                aClass.getVariableList().forEach(variable -> sb.append("\t").append(variable.getClassStr()).append(" ").append(variable.getName()).append(";\n"));
+                aClass.getMethodList().forEach(method -> {
+                    sb.append("\t").append(method.getOfClass() != null ? method.getOfClass().getClassStr() : "").append(" ").append(method.getName()).append(" ( ");
+                    if (!method.getParameterList().isEmpty()) {
+                        Variable variable = method.getParameterList().get(0);
+                        sb.append(variable.getClassStr()).append(" ").append(variable.getName());
+                        for (int i = 1; i < method.getParameterList().size(); i++) {
+                            variable = method.getParameterList().get(i);
+                            sb.append(", ").append(variable.getClassStr()).append(" ").append(variable.getName());
+                        }
+                    }
+                    sb.append(" )");
+                    sb.append(" {\n");
+                    method.getInstructions().forEach(instruction -> sb.append("\t\t").append(instruction.getType() != null ? instruction.getType() : "")
+                            .append(" ").append(instruction.getName() != null ? instruction.getName() : "")
+                            .append(" ").append(instruction.getExpression() != null ? " = " +
+                                    instruction.getExpression() : "").append(";\n"));
+                    sb.append("\t}\n");
+                });
+                sb.append("}");
+            });
+            return sb.toString();
+        }
     }
 
     private final Construct construct = new Construct();
