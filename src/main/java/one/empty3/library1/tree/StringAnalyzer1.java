@@ -1522,7 +1522,7 @@ public class StringAnalyzer1 {
                     sb.append(" {\n");
                     method.getInstructions().forEach(instruction -> sb.append("\t\t").append(instruction.getType() != null ? instruction.getType() : "")
                             .append(" ").append(instruction.getName() != null ? instruction.getName() : "")
-                            .append(" ").append(instruction.getExpression() != null ? " = " +
+                            .append(" ").append(instruction.getExpression() != null ? " " +
                                     instruction.getExpression() : "").append(";\n"));
                     sb.append("\t}\n");
                 });

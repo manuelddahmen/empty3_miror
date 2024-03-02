@@ -29,7 +29,7 @@ public class Instruction {
     private String type;
     @Nullable
     private String name;
-    private ListInstructions.Instruction expression;
+    private ListInstructions.Instruction expression = new ListInstructions.Instruction(0, null, null);
 
     public void setName(String name) {
 
