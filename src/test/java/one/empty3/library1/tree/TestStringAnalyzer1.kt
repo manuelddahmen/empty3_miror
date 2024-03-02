@@ -809,7 +809,7 @@ class TestStringAnalyzer1 {
 
         val token = tokenPackageOptional
 
-        val input = readString("resources/text_parser/Number.java1.java_code")
+        val input = readString("resources/text_parser/Number1.java.java_code")
         println(input)
         var parse = -1
         try {
