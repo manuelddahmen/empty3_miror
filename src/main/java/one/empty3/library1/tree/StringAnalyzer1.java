@@ -1057,6 +1057,7 @@ public class StringAnalyzer1 {
      */
     class TokenExpression1 extends Token {
         protected String expression;
+        protected AlgebraicTree algebraicTree;
 
         public TokenExpression1() {
             super();
@@ -1089,6 +1090,13 @@ public class StringAnalyzer1 {
             if (passed && (i >= input.length() || !isValid(input, i) || isNotValid2(input, i))) {
                 if (i < input.length()) {
                     expression = input.substring(position, i);
+                    try {
+                        AlgebraicTree algebraicTree = new AlgebraicTree(expression);
+                        algebraicTree.construct();
+                        this.algebraicTree = algebraicTree;
+                    } catch (AlgebraicFormulaSyntaxException e) {
+                        System.out.println("Error constructing : " + expression);
+                    }
                 }
                 return processNext(input, i);
 
@@ -1098,6 +1106,21 @@ public class StringAnalyzer1 {
             }
         }
 
+        public String getExpression() {
+            return expression;
+        }
+
+        public void setExpression(String expression) {
+            this.expression = expression;
+        }
+
+        public AlgebraicTree getAlgebraicTree() {
+            return algebraicTree;
+        }
+
+        public void setAlgebraicTree(AlgebraicTree algebraicTree) {
+            this.algebraicTree = algebraicTree;
+        }
 
         @Override
         public Token copy() {

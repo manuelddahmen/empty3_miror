@@ -5,10 +5,6 @@ class Number1 {
 
     double func1(Double a, Double b, Double c) {
         Double d = c + b / a;
-        if (d < 0)
-            d = -d / 2;
-        else
-            d = d * 2;
         return d;
     }
 
@@ -16,11 +12,6 @@ class Number1 {
 
     double func2(Double a, Double b, Double c) {
         Double d = c + b * a;
-        if (d < 0) {
-            d = -d / 2;
-        } else {
-            d = d * 2;
-        }
         return d;
     }
 }

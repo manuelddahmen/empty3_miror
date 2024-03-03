@@ -28,7 +28,6 @@ import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
-import java.io.FileInputStream
 import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.Paths
@@ -304,11 +303,7 @@ class TestStringAnalyzer1 {
 
         }
     */
-    @Test
-    fun testStringAnalyzerPackageAndClassDeclarationAndImpl() {
-        val stringAnalyzer1: StringAnalyzer1 = StringAnalyzer1()
-
-
+    fun getJavaToken(stringAnalyzer1: StringAnalyzer1): StringAnalyzer1.Token {
         val tokenPackage = stringAnalyzer1.TokenPackage()
         val tokenPackageName = stringAnalyzer1.TokenQualifiedName()
         val tokenPackageSemicolon = stringAnalyzer1.TokenSemiColon()
@@ -404,35 +399,26 @@ class TestStringAnalyzer1 {
                 val instructions = stringAnalyzer1.construct.currentMethod.instructions
                 instructions.add(Instruction())
                 if (tokenMemberMethodVarType1.name != null) {
-                    //stringAnalyzer1.construct.currentMethod.instructions.add(Instruction())
-                    val instructions = stringAnalyzer1.construct.currentMethod.instructions
                     instructions[instructions.size - 1].type = tokenMemberMethodVarType1.name
                 }
                 if (tokenMemberMethodVarType2.name != null) {
-                    val instructions = stringAnalyzer1.construct.currentMethod.instructions
                     instructions[instructions.size - 1].type = tokenMemberMethodVarType2.name
                 }
                 if (tokenMemberMethodVarName1.name != null) {
-                    //stringAnalyzer1.construct.currentMethod.instructions.add(Instruction())
-                    val instructions = stringAnalyzer1.construct.currentMethod.instructions
                     instructions[instructions.size - 1].name = tokenMemberMethodVarName1.name
                 }
                 if (tokenMemberMethodVarName2.name != null) {
-                    val instructions = stringAnalyzer1.construct.currentMethod.instructions
                     instructions[instructions.size - 1].name = tokenMemberMethodVarName2.name
                     instructions[instructions.size - 1].expression.leftHand = tokenMemberMethodVarName2.name
                 }
                 if (tokenMemberMethodVarName4.name != null) {
-                    val instructions = stringAnalyzer1.construct.currentMethod.instructions
                     instructions[instructions.size - 1].name = tokenMemberMethodVarName4.name
                     instructions[instructions.size - 1].expression.leftHand = tokenMemberMethodVarName2.name
                 }
                 if (tokenMemberMethodExpression2.expression != null) {
-                    val instructions = stringAnalyzer1.construct.currentMethod.instructions
                     instructions[instructions.size - 1].expression.expression = tokenMemberMethodExpression2.expression
                 }
                 if (tokenMemberMethodExpression4.expression != null) {
-                    val instructions = stringAnalyzer1.construct.currentMethod.instructions
                     instructions[instructions.size - 1].expression.expression = tokenMemberMethodExpression4.expression
                 }
                 return true
@@ -471,7 +457,7 @@ class TestStringAnalyzer1 {
         val tokenQualifiedNameMethodParameter1 = stringAnalyzer1.TokenQualifiedName()
         val tokenNameMethodParameter1 = stringAnalyzer1.TokenName()
 
-        val tokenComaMethodParameter2 = stringAnalyzer1.TokenComa()
+        //val tokenComaMethodParameter2 = stringAnalyzer1.TokenComa()
         val tokenQualifiedNameMethodParameter2 = stringAnalyzer1.TokenQualifiedName()
         val tokenNameMethodParameter2 = stringAnalyzer1.TokenName()
 
@@ -582,12 +568,17 @@ class TestStringAnalyzer1 {
 
         tokenMemberMethodType.addToken(tokenMemberMethodName)
         tokenMemberMethodName.addToken(tokenOpenParenthesizedMethodParameter)
+
+        val tokenIf = stringAnalyzer1.TokenString("if")
+        val tokenElse = stringAnalyzer1.TokenString("else")
+
         // Instructions
         val tokenMultiMembersInstructions =
             stringAnalyzer1.MultiTokenExclusiveXor(
                 tokenMemberMethodVarType1,
                 tokenMemberMethodVarType2,
                 tokenMemberMethodExpression3,
+                tokenIf
             )
         val tokenSingleInstructionIf =
             stringAnalyzer1.MultiTokenExclusiveXor(
@@ -602,11 +593,6 @@ class TestStringAnalyzer1 {
                 tokenMemberMethodExpression3,
             )
 
-        val tokenMemberMethodVarType = stringAnalyzer1.TokenQualifiedName()
-        val tokenMemberMethodVarName = stringAnalyzer1.TokenName()
-        val tokenMemberMethodEquals = stringAnalyzer1.TokenEquals()
-        val tokenMemberMethodExpression = stringAnalyzer1.TokenExpression1()
-        val tokenMemberMethodSemicolon = stringAnalyzer1.TokenSemiColon()
 
         // End of Instructions
 
@@ -638,8 +624,6 @@ class TestStringAnalyzer1 {
             logicalExpressionOpenParenthesisElse, logicalExpressionExpressionElse, logicalExpressionCloseParenthesisElse
         )
         // if flow control
-        val tokenIf = stringAnalyzer1.TokenString("if")
-        val tokenElse = stringAnalyzer1.TokenString("else")
 
         val instructionsIf = stringAnalyzer1.SingleTokenExclusiveXor(instructionBlock, tokenSingleInstructionIf)
         val instructionsElse = stringAnalyzer1.SingleTokenExclusiveXor(instructionBlock, tokenSingleInstructionElse)
@@ -806,9 +790,23 @@ class TestStringAnalyzer1 {
                 return true
             }
         }
+        println("TestStringAnalyzer1")
+        //println("parse = " + parse + "/" + input.length)
+        //println("isSuccessful = " + token.isSuccessful + " tokenClass : " + tokenClassName.isSuccessful)
+        println("Name : " + tokenPackageName.name)
+        println("Method name : " + tokenMemberMethodName.name)
+        println("if token : " + tokenIf.isSuccessful)
+        println("if token expression logique : " + logicalExpressionExpression.expression)
+        println(stringAnalyzer1.construct.toLangStringJava())
 
-        val token = tokenPackageOptional
+        return tokenPackageOptional
+    }
 
+    @Test
+    fun testJavaClass1() {
+        val stringAnalyzer1 = StringAnalyzer1()
+        val javaToken = getJavaToken(stringAnalyzer1)
+        val token = javaToken
         val input = readString("resources/text_parser/Number1.java.java_code")
         println(input)
         var parse = -1
@@ -824,11 +822,41 @@ class TestStringAnalyzer1 {
                 Assert.assertTrue(false)
             }
         }
-        println("TestStringAnalyzer1")
-        println("parse = " + parse + "/" + input.length)
-        println("isSuccessful = " + token.isSuccessful + " tokenClass : " + tokenClassName.isSuccessful)
-        println("Name : " + tokenPackageName.name)
-        println("Method name : " + tokenMemberMethodName.name)
+        println(stringAnalyzer1.construct.toLangStringJava())
+        if (parse >= input.length || input.substring(parse).isBlank())
+            println("")
+        else
+            println(input.substring(stringAnalyzer1.mPosition))
+
+        if (parse >= input.length || input.substring(parse).isBlank()) {
+            Assert.assertTrue(true)
+            return
+        } else {
+            Assert.assertTrue(false)
+        }
+
+    }
+
+    @Test
+    fun testJavaClass2() {
+        val stringAnalyzer1 = StringAnalyzer1()
+        val javaToken = getJavaToken(stringAnalyzer1)
+        val token = javaToken
+        val input = readString("resources/text_parser/Number2.java.java_code")
+        println(input)
+        var parse = -1
+        try {
+            parse = stringAnalyzer1.parse(token, input)
+//     parse = stringAnalyzer1.mPosition
+        } catch (ex: RuntimeException) {
+            ex.printStackTrace()
+            if (parse >= input.length) {
+                Assert.assertTrue(true)
+            } else {
+                ex.printStackTrace()
+                Assert.assertTrue(false)
+            }
+        }
         println(stringAnalyzer1.construct.toLangStringJava())
         if (parse >= input.length || input.substring(parse).isBlank())
             println("")
