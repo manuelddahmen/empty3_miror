@@ -29,6 +29,12 @@ public class Instruction extends InstructionBlock {
     private String type;
     @Nullable
     private String name;
+    protected ListInstructions.Instruction expression;
+
+    public Instruction(ListInstructions.Instruction expression) {
+        super();
+        this.expression = expression;
+    }
 
     public void setName(String name) {
 
@@ -46,12 +52,12 @@ public class Instruction extends InstructionBlock {
         return name;
     }
 
-    public ListInstructions.Instruction getExpression() {
+    public InstructionBlock getExpression() {
         return instructionList.get(0);
     }
 
     public void setExpression(ListInstructions.Instruction expression) {
-        this.instructionList.set(0, expression);
+        this.instructionList.set(0, new Instruction(expression));
     }
 
     @Override

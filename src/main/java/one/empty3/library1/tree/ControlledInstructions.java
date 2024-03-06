@@ -7,7 +7,7 @@ public class ControlledInstructions extends Instruction {
     public String controlExpression;
 
     public ControlledInstructions(String controlExpression) {
-        super();
+        super(null);
         this.controlExpression = controlExpression;
     }
 
@@ -19,16 +19,16 @@ public class ControlledInstructions extends Instruction {
         this.controlExpression = controlExpression;
     }
 
-    public List<ListInstructions.Instruction> getInstructions() {
+    public List<InstructionBlock> getInstructions() {
         return instructionList;
     }
 
-    public void setInstructions(ArrayList<ListInstructions.Instruction> instructions) {
+    public void setInstructions(ArrayList<InstructionBlock> instructions) {
         this.instructionList = instructions;
     }
 
     public static class If extends ControlledInstructions {
-        public List<Instruction> instructionsElse = new ArrayList<>();
+        public InstructionBlock instructionsElse = new InstructionBlock();
 
         public If(String controlExpression) {
             super(controlExpression);
@@ -60,7 +60,7 @@ public class ControlledInstructions extends Instruction {
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
         StringBuilder array1 = new StringBuilder();
-        for (ListInstructions.Instruction instruction : getInstructions()) {
+        for (InstructionBlock instruction : getInstructions()) {
             array1.append(instruction.toString() + ";");
         }
 

@@ -1269,9 +1269,11 @@ public class StringAnalyzer1 {
                 if (token.isSuccessful()) {
                     String name = ((TokenVariableInMethodName) token).getName();
                     if (name != null && !name.isEmpty()) {
-                        List<Instruction> instructions = construct.methodMembers.get(construct.methodMembers.size() - 1).getInstructions();
-                        Instruction instruction = instructions.get(instructions.size() - 1);
-                        instruction.setType(name);
+                        List<InstructionBlock> instructions = construct.methodMembers.get(construct.methodMembers.size() - 1).getInstructions();
+                        InstructionBlock instruction = instructions.get(instructions.size() - 1);
+                        if (instruction instanceof Instruction) {
+                            ((Instruction) instruction).setType(name);
+                        }
                     }
                 }
                 return true;
@@ -1283,11 +1285,11 @@ public class StringAnalyzer1 {
             @Override
             public boolean action() {
                 if (token.isSuccessful()) {
-                    List<Instruction> instructions = construct.methodMembers.get(construct.methodMembers.size() - 1).getInstructions();
-                    instructions.add(new Instruction());
+                    List<InstructionBlock> instructions = construct.methodMembers.get(construct.methodMembers.size() - 1).getInstructions();
+                    instructions.add(new InstructionBlock());
                     //construct.methodMembers.get(construct.methodMembers.size() - 1)
                     //       .setInstructions(instructions);
-                    Instruction instruction = instructions.get(instructions.size() - 1);
+                    InstructionBlock instruction = instructions.get(instructions.size() - 1);
                     return true;
                 }
                 return false;
@@ -1298,8 +1300,8 @@ public class StringAnalyzer1 {
             @Override
             public boolean action() {
                 if (token.isSuccessful()) {
-                    construct.methodMembers.get(construct.methodMembers.size() - 1).setInstructions(new ArrayList<>());
-                    construct.methodMembers.get(construct.methodMembers.size() - 1).getInstructions().add(new Instruction());
+                    construct.methodMembers.get(construct.methodMembers.size() - 1).setInstructions(new InstructionBlock());
+                    construct.methodMembers.get(construct.methodMembers.size() - 1).getInstructions().add(new InstructionBlock());
                     return true;
                 }
                 return false;
@@ -1470,10 +1472,16 @@ public class StringAnalyzer1 {
         protected HashMap<String, Variable> fieldMembers = new HashMap<>();
         protected ArrayList<Method> methodMembers = new ArrayList<>();
         protected ArrayList<Class> classes = new ArrayList<>();
-
+        protected List<InstructionBlock> currentInstructions = new ArrayList<>();
 
         public Construct() {
 
+        }
+
+        public void pushInstructions(InstructionBlock instructionBlock) {
+            if (currentInstructions.size() == 0) {
+                currentInstructions.add(currentMethod.getInstructions().get(0));
+            }
         }
 
         @Override
@@ -1537,15 +1545,20 @@ public class StringAnalyzer1 {
                     }
                     sb.append(debugString(debug, " )"));
                     sb.append(debugString(debug, " {\n"));
-                    method.getInstructions().forEach(instruction -> sb.append("\t\t")
-                            .append(instruction.getType() != null ? debugString(debug, instruction.getType()) : "")
-                            .append(" ").append(instruction.getName() != null ? debugString(debug, instruction.getName()) : "")
-                            .append(" ").append(instruction.getExpression() != null ? " " +
-                                    debugString(debug, instruction.getExpression().toString()) : "").append(";\n"));
-                    sb.append("\t}\n");
+                    method.getInstructions().forEach(instruction0 -> {
+                        sb.append("\t\t");
+                        if (instruction0 instanceof Instruction) {
+                            Instruction instruction = (Instruction) instruction0;
+                            sb.append(instruction.getType() != null ? debugString(debug, instruction.getType()) : "")
+                                    .append(" ").append(instruction.getName() != null ? debugString(debug, instruction.getName()) : "")
+                                    .append(" ").append(instruction.getExpression() != null ? " " +
+                                            debugString(debug, instruction.getExpression().toString()) : "").append(";\n");
+                        }
+                    });
                 });
-                sb.append("}");
+                sb.append("\t}\n");
             });
+            sb.append("}");
             return sb.toString();
         }
     }

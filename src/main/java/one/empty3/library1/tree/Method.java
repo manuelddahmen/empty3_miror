@@ -32,7 +32,7 @@ public class Method {
     private Variable ofClass = new Variable();
     private List<Variable> parameterList = new ArrayList<>();
     private List<Variable> variableList = new ArrayList<>();
-    private List<Instruction> instructions = new ArrayList<>();
+    private InstructionBlock instructions = new InstructionBlock();
     private String scope;
 
     public Method() {
@@ -62,11 +62,11 @@ public class Method {
         this.variableList = variableList;
     }
 
-    public List<Instruction> getInstructions() {
-        return instructions;
+    public List<InstructionBlock> getInstructions() {
+        return instructions.instructionList;
     }
 
-    public void setInstructions(List<Instruction> instructions) {
+    public void setInstructions(InstructionBlock instructions) {
         this.instructions = instructions;
     }
 
@@ -128,12 +128,7 @@ public class Method {
             }
         });
         String[] instructionsListStr = {""};
-        instructions.forEach(new Consumer<Instruction>() {
-            @Override
-            public void accept(Instruction instruction) {
-                instructionsListStr[0] += instruction.toString();
-            }
-        });
+        instructions.instructionList.forEach(instructionBlock -> instructionsListStr[0] += instructionBlock.toString());
         string[0] = "Method{" +
                 "name='" + name + '\'' +
                 ", ofClass=" + ofClass +

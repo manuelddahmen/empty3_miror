@@ -777,18 +777,29 @@ class TestStringAnalyzer1 {
                 if (this.token == tokenIf) {
                     if (token.isSuccessful) {
                         stringAnalyzer1.construct.currentMethod.instructions.add(
-                            ControlledInstructions.If(
-                                (tokenIf.nextToken as StringAnalyzer1.TokenLogicalExpression)
-                                    .expression
-                            )
+                            ControlledInstructions.If(logicalExpressionExpression.expression)
                         )
-
                     }
                 }
                 return true
             }
         }
 
+        class ActionElse(token: StringAnalyzer1.Token) : Action(token) {
+            override fun action(): Boolean {
+                if (this.token == tokenElse) {
+                    if (token.isSuccessful) {
+                        val instructions = stringAnalyzer1.construct.currentMethod.instructions
+                        //       (instructions.get(instructions.size-1) as ControlledInstructions.If)
+                        //           .instructionsElse.instructionList.add(ListInstructions.Instruction("", logicalExpressionExpression.expression))
+                        //       )
+                    }
+                }
+                return true
+            }
+        }
+        ActionIf(tokenIf)
+        ActionElse(tokenElse)
         println("TestStringAnalyzer1")
         //println("parse = " + parse + "/" + input.length)
         //println("isSuccessful = " + token.isSuccessful + " tokenClass : " + tokenClassName.isSuccessful)
