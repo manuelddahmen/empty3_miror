@@ -103,12 +103,18 @@ public class EcDrawer extends Drawer implements Runnable {
             Scene scene = new Scene();
 
             if (mover != null) {
-                scene.add(mover.getCircuit());
-                scene.add(terrain);
+                //scene.add(mover.getCircuit());
+                //scene.add(terrain);
                 scene.add(bonus);
                 scene.add(vaisseau.getObject());
 
-
+                if (toggleMenu.isDisplayBonus()) {
+                    bonus.getListRepresentable().forEach(representable -> {
+                        Point3D center = ((TRISphere2) representable).getCoords();
+                        ((TRISphere2) representable).getCircle().getAxis().getElem().setCenter(terrain.p3(center));
+                        scene.add(representable);
+                    });
+                }
                 Camera camera;
                 if (mover.getPlotter3D() != null && mover.getPlotter3D().isActive())
                     camera = mover.getPositionMobile().calcCameraMobile();
@@ -121,15 +127,10 @@ public class EcDrawer extends Drawer implements Runnable {
 
 
                 Point3D posCam = pos;//.moins(dir.norme1());
-                Point3D vertical = up.norme1();
-                Point3D vert2 = vertical.prodVect(dir).mult(-1);
 
                 posCam = posCam.plus(camera.getLookat().moins(posCam).mult(-0.05));
 
-                up = dir.prodVect(up.prodVect(dir));
-
-
-                scene.cameraActive(new Camera(posCam, dir, up));
+                scene.cameraActive(new Camera(posCam, pos.plus(dir), up));
                 scene.cameraActive().declareProperties();
             }
             try {

@@ -5,6 +5,7 @@ class Number1 {
 
     double func1(Double a, Double b, Double c) {
         Double d = c + b / a;
+        d = d + 1;
         return d;
     }
 
@@ -12,6 +13,7 @@ class Number1 {
 
     double func2(Double a, Double b, Double c) {
         Double d = c + b * a;
+        d = d + 1;
         return d;
     }
 }

@@ -9,6 +9,7 @@ class Number1 {
             d = -d / 2;
         else
             d = d * 2;
+        d = d + 1;
         return d;
     }
 
@@ -21,6 +22,7 @@ class Number1 {
         } else {
             d = d * 2;
         }
+        d = d + 1;
         return d;
     }
 }

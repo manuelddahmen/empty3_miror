@@ -66,9 +66,9 @@ public class TestStringAnalyzer1xml {
         parser.parse(xmlToken, "<?xml version='1.0' encoding='UTF-8' ?>");
         StringAnalyzer1.MultiTokenOptional token = (StringAnalyzer1.MultiTokenOptional) xmlToken.getNextToken().getData1d().get(0);
 
-        int length = token.choices.length;
+        int length = token.choices.size();
         for (int i = 0; i < length; i++) {
-            StringAnalyzer1.Token tokenAttribute = token.choices[i];
+            StringAnalyzer1.Token tokenAttribute = token.choices.get(i);
             if (tokenAttribute instanceof StringAnalyzer1.TokenAttribute) {
 
                 System.out.printf("token.getAttributeName()==" +

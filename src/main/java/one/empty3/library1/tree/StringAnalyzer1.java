@@ -23,6 +23,7 @@
 package one.empty3.library1.tree;
 
 import one.empty3.library.StructureMatrix;
+import one.empty3.library.T;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -207,11 +208,19 @@ public class StringAnalyzer1 {
          * @return a new Token object that is a copy of the current Token (further step: make a deep copy with
          * nextTokens and Token type fields.
          */
-        public abstract Token copy();
+        public Token copy(Token token0) {
+            token0.nextTokens.data1d.forEach(new Consumer<Token>() {
+                @Override
+                public void accept(Token token) {
+                    Token copy = token.copy(token);
+                    token0.addToken(copy);
+                }
+            });
+            return token0;
+        }
     }
 
-    class MultiTokenExclusiveXor extends Token {
-        private final List<Token> choices;
+    class MultiTokenExclusiveXor extends MultiToken {
 
         public MultiTokenExclusiveXor(Token... mandatory) {
             super();
@@ -260,10 +269,11 @@ public class StringAnalyzer1 {
         }
 
         @Override
-        public Token copy() {
-            ArrayList<Token> objects = new ArrayList<>();
-            Collections.copy(objects, this.choices);
-            return new MultiTokenExclusiveXor(objects);
+        public Token copy(Token token) {
+            token = new SingleTokenExclusiveXor();
+            super.copy(token);
+            return token;
+
         }
     }
 
@@ -271,9 +281,7 @@ public class StringAnalyzer1 {
      * The SingleTokenExclusiveXor class represents a token that matches only one of the specified tokens in an exclusive XOR manner.
      * It extends the Token class and overrides the parse method to implement the exclusive XOR logic.
      */
-    class SingleTokenExclusiveXor extends Token {
-        private final List<Token> choices;
-
+    class SingleTokenExclusiveXor extends MultiToken {
         public SingleTokenExclusiveXor(Token... mandatory) {
             super();
             this.choices = Arrays.stream(mandatory).toList();
@@ -308,10 +316,10 @@ public class StringAnalyzer1 {
 
 
         @Override
-        public Token copy() {
-            ArrayList<Token> objects = new ArrayList<>();
-            Collections.copy(objects, this.choices);
-            return new SingleTokenExclusiveXor(objects);
+        public Token copy(Token token) {
+            token = new SingleTokenExclusiveXor();
+            super.copy(token);
+            return token;
         }
     }
 
@@ -368,10 +376,10 @@ public class StringAnalyzer1 {
         }
 
         @Override
-        public Token copy() {
-            ArrayList<String> objects = new ArrayList<>();
-            Collections.copy(objects, Arrays.stream(this.names).toList());
-            return new TokenChoiceStringMandatory(objects);
+        public Token copy(Token token) {
+            token = new TokenChoiceStringMandatory(this.names);
+            super.copy(token);
+            return token;
         }
     }
 
@@ -408,18 +416,13 @@ public class StringAnalyzer1 {
 
         }
 
-        @Override
-        public Token copy() {
-            return null;
-        }
+
     }
 
     /**
      * Represents a token that provides inclusive choices for parsing.
      */
-    class TokenChoiceInclusive extends Token {
-        protected List<Token> choices;
-
+    class TokenChoiceInclusive extends MultiToken {
         public TokenChoiceInclusive(Token... choices) {
             super();
             this.choices = Arrays.stream(choices).toList();
@@ -453,8 +456,10 @@ public class StringAnalyzer1 {
         }
 
         @Override
-        public Token copy() {
-            return null;
+        public Token copy(Token token) {
+            token = new TokenChoiceInclusive();
+            super.copy(token);
+            return token;
         }
     }
 
@@ -462,12 +467,10 @@ public class StringAnalyzer1 {
     /***
      * Tous les tokens choisis et aucun autre.
      */
-    class TokenChoiceExclusive extends Token {
-        protected final Token[] choices;
-
+    class TokenChoiceExclusive extends MultiToken {
         public TokenChoiceExclusive(Token... choices) {
             super();
-            this.choices = choices;
+            this.choices.addAll(Arrays.stream(choices).toList());
         }
 
         @Override
@@ -493,15 +496,17 @@ public class StringAnalyzer1 {
         @Override
         public String toString() {
             return "TokenChoiceExclusive{" +
-                    "choices=" + Arrays.toString(choices) +
+                    "choices=" + Arrays.toString(choices.toArray()) +
                     "}\n";
         }
 
         @Override
-        public Token copy() {
-            ArrayList<Token> objects = new ArrayList<>();
-            return new TokenChoiceExclusive(this.choices);
+        public Token copy(Token token) {
+            token = new TokenChoiceExclusive();
+            super.copy(token);
+            return token;
         }
+
     }
 
     class TokenPackage extends TokenString {
@@ -511,7 +516,7 @@ public class StringAnalyzer1 {
     }
 
     class TokenQualifiedName extends Token {
-        private String name = null;
+        protected String name = null;
 
         public TokenQualifiedName() {
             super();
@@ -555,7 +560,7 @@ public class StringAnalyzer1 {
         }
 
         @Override
-        public Token copy() {
+        public Token copy(Token token) {
             return new TokenQualifiedName();
         }
     }
@@ -608,12 +613,13 @@ public class StringAnalyzer1 {
         @Override
         public String toString() {
             return getClass().getName() + "<=TokenString{" +
-                    "name='" + name + '\'' +
+                    "name='" + name + '\'' + ", sucessful=" + isSuccessful() +
                     "}\n";
         }
 
         @Override
-        public Token copy() {
+        public Token copy(Token token) {
+
             return new TokenString(this.name);
         }
     }
@@ -659,13 +665,11 @@ public class StringAnalyzer1 {
     /**
      * Represents a token class for handling multiple optional tokens.
      */
-    class MultiTokenOptional extends Token {
-
-        Token[] choices;
+    class MultiTokenOptional extends MultiToken {
 
         public MultiTokenOptional(Token... choices) {
             super();
-            this.choices = choices;
+            this.choices.addAll(Arrays.stream(choices).toList());
         }
 
         @Override
@@ -715,10 +719,10 @@ public class StringAnalyzer1 {
         }
 
         @Override
-        public Token copy() {
-            Token[] tokens = new Token[this.choices.length];
-            Arrays.stream(this.choices).toList().toArray(tokens);
-            return new MultiTokenOptional(tokens);
+        public Token copy(Token token0) {
+            token0 = new MultiTokenOptional();
+            super.copy(token0);
+            return token0;
         }
     }
 
@@ -726,12 +730,9 @@ public class StringAnalyzer1 {
      * Represents a single optional token in a parsing process.
      * Extends the base class Token.
      */
-    class SingleTokenOptional extends Token {
-
-        private final Token choice;
-
+    class SingleTokenOptional extends SingleToken {
         public SingleTokenOptional(Token choice) {
-            super();
+            super(choice);
             this.choice = choice;
         }
 
@@ -770,17 +771,17 @@ public class StringAnalyzer1 {
         }
 
         @Override
-        public Token copy() {
-            return new SingleTokenOptional(this.choice);
+        public Token copy(Token token0) {
+            token0 = new SingleTokenOptional(choice.copy(choice));
+            super.copy(token0);
+            return token0;
         }
     }
 
     /**
      * Represents a multi-token that is mandatory for the parsing process.
      */
-    class MultiTokenMandatory extends Token {
-
-        private final List<Token> choices;
+    class MultiTokenMandatory extends MultiToken {
 
         public MultiTokenMandatory(Token... mandatory) {
             super();
@@ -847,16 +848,17 @@ public class StringAnalyzer1 {
         }
 
         @Override
-        public Token copy() {
+        public Token copy(Token token) {
             Token[] tokens = new Token[this.choices.size()];
             this.choices.toArray(tokens);
+            for (int i = 0; i < tokens.length; i++) {
+                tokens[i] = tokens[i].copy(tokens[i]);
+            }
             return new MultiTokenMandatory(tokens);
         }
     }
 
-    class SingleTokenMandatory extends Token {
-
-        private final List<Token> choices;
+    class SingleTokenMandatory extends MultiToken {
 
         public SingleTokenMandatory(Token... mandatory) {
             super();
@@ -914,9 +916,12 @@ public class StringAnalyzer1 {
         }
 
         @Override
-        public Token copy() {
+        public Token copy(Token token) {
             Token[] tokens = new Token[this.choices.size()];
             this.choices.toArray(tokens);
+            for (int i = 0; i < tokens.length; i++) {
+                tokens[i] = tokens[i].copy(tokens[i]);
+            }
             return new SingleTokenMandatory(tokens);
         }
     }
@@ -989,8 +994,11 @@ public class StringAnalyzer1 {
         }
 
         @Override
-        public Token copy() {
-            return new TokenName();
+        public Token copy(Token token) {
+
+            TokenName tokenName = new TokenName();
+            tokenName.name = name;
+            return tokenName;
         }
     }
 
@@ -1014,45 +1022,6 @@ public class StringAnalyzer1 {
 
 
     /**
-     * Represents a token for parsing expressions in a given input string.
-     * Extends the Token class.
-     */
-    class TokenExpression extends Token {
-        public TokenExpression() {
-            super();
-        }
-
-        @Override
-        public int parse(String input, int position) {
-            if (position >= input.length() || input.substring(position).trim().isEmpty()) {
-                mPosition = position;
-                setSuccessful(false);
-                return position;
-                //throw new RuntimeException(getClass() + " : position>=input.length()");
-            }
-            position = super.skipBlanks(input, position);
-            int i = position;
-            boolean passed = false;
-            while (i < input.length() && input.charAt(i) != ';') {
-                i++;
-                passed = true;
-            }
-            if (passed && (i >= input.length() || input.charAt(i) == ';')) {
-                return processNext(input, i);
-
-            } else {
-                setSuccessful(false);
-                return position;
-            }
-        }
-
-        @Override
-        public Token copy() {
-            return new TokenExpression();
-        }
-    }
-
-    /**
      * Represents a specific type of Token.
      */
     class TokenExpression1 extends Token {
@@ -1068,7 +1037,15 @@ public class StringAnalyzer1 {
         }
 
         protected boolean isNotValid2(String input, int p) {
-            return !(p < input.length() && !(input.charAt(p) == '{' || input.charAt(p) == '}'));
+            return !(p < input.length() && input.charAt(p) != '{' && input.charAt(p) != '}');
+        }
+
+        protected boolean containsNoKeyword(String input, int pos1, int pos2) {
+            if (pos2 <= input.length() && !input.substring(pos1, pos2).contains("if")
+                    && !input.substring(pos1, pos2).contains("else")) {
+                return true;
+            }
+            return false;
         }
 
         @Override
@@ -1077,17 +1054,18 @@ public class StringAnalyzer1 {
                 mPosition = position;
                 setSuccessful(false);
                 return position;
-                //throw new RuntimeException(getClass() + " : position>=input.length()");
             }
-            position = super.skipBlanks(input, position);
+            position = skipBlanks(input, position);
             int i = position;
             boolean passed = false;
 
-            while (i < input.length() && (isValid(input, i) && !isNotValid2(input, i))) {
+            while (i < input.length() && (isValid(input, i) && !isNotValid2(input, i))
+                    && containsNoKeyword(input, position, i)) {
                 i++;
                 passed = true;
             }
-            if (passed && (i >= input.length() || !isValid(input, i) || isNotValid2(input, i))) {
+            if (passed && (i >= input.length() || !isValid(input, i) || isNotValid2(input, i)) && (i - position > 0
+                    && containsNoKeyword(input, position, i))) {
                 if (i < input.length()) {
                     expression = input.substring(position, i);
                     try {
@@ -1095,11 +1073,12 @@ public class StringAnalyzer1 {
                         algebraicTree.construct();
                         this.algebraicTree = algebraicTree;
                     } catch (AlgebraicFormulaSyntaxException e) {
-                        System.out.println("Error constructing : " + expression);
+                        System.err.println("Error constructing : " + expression);
                     }
+                    return processNext(input, i);
                 }
-                return processNext(input, i);
-
+                setSuccessful(false);
+                return position;
             } else {
                 setSuccessful(false);
                 return position;
@@ -1123,8 +1102,11 @@ public class StringAnalyzer1 {
         }
 
         @Override
-        public Token copy() {
-            return new TokenExpression1();
+        public Token copy(Token token) {
+            super.copy(token);
+            token = new TokenExpression1();
+            ((TokenExpression1) token).expression = expression;
+            return token;
         }
     }
 
@@ -1351,7 +1333,7 @@ public class StringAnalyzer1 {
                         // Variables
                         new MultiTokenOptional(new MultiTokenMandatory(
                                 new MultiTokenOptional(tokenVariableScope, tokenConstantModifier), tokenQualifiedNameVariable),
-                                new MultiTokenOptional(new TokenEquals(), new TokenExpression(),
+                                new MultiTokenOptional(new TokenEquals(), new TokenExpression1(),
                                         new TokenSemiColon())),// Commit changes
                         // Methods
                         new MultiTokenOptional(
@@ -1520,33 +1502,46 @@ public class StringAnalyzer1 {
             return string[0];
         }
 
-        public String toLangStringJava() {
+        private String debugString(boolean isDebug, String tokenLangString) {
+            return isDebug ? "{" + tokenLangString + "}" : tokenLangString;
+        }
+
+        public String toLangStringJava(boolean debug) {
             StringBuilder sb = new StringBuilder();
             if (!this.packageName.isEmpty()) {
-                sb.append("package ").append(packageName).append(";\n");
+                sb.append(debugString(debug, "package "))
+                        .append(debugString(debug, packageName)).append(debugString(debug, ";\n"));
             }
             if (classes.isEmpty() && currentClass.getName() != null) {
                 classes.add(currentClass);
             }///
             classes.forEach(aClass -> {
-                sb.append("class ").append(aClass.getName()).append(" {\n");
-                aClass.getVariableList().forEach(variable -> sb.append("\t").append(variable.getClassStr()).append(" ").append(variable.getName()).append(";\n"));
+                sb.append(debugString(debug, "class ")).append(debugString(debug, aClass.getName()))
+                        .append(debugString(debug, " {\n"));
+                aClass.getVariableList().forEach(variable -> sb.append(debugString(debug, "\t"))
+                        .append(debugString(debug, variable.getClassStr()))
+                        .append(" ").append(debugString(debug, variable.getName()))
+                        .append(debugString(debug, ";\n")));
                 aClass.getMethodList().forEach(method -> {
-                    sb.append("\t").append(method.getOfClass() != null ? method.getOfClass().getClassStr() : "").append(" ").append(method.getName()).append(" ( ");
+                    sb.append("\t")
+                            .append(method.getOfClass() != null ? debugString(debug, method.getOfClass().getClassStr()) : "").append(" ").append(debugString(debug, method.getName())).append(" ( ");
                     if (!method.getParameterList().isEmpty()) {
                         Variable variable = method.getParameterList().get(0);
-                        sb.append(variable.getClassStr()).append(" ").append(variable.getName());
+                        sb.append(debugString(debug, variable.getClassStr())).append(" ").append(debugString(debug, variable.getName()));
                         for (int i = 1; i < method.getParameterList().size(); i++) {
                             variable = method.getParameterList().get(i);
-                            sb.append(", ").append(variable.getClassStr()).append(" ").append(variable.getName());
+                            sb.append(debugString(debug, ", "))
+                                    .append(debugString(debug, variable.getClassStr()))
+                                    .append(" ").append(debugString(debug, variable.getName()));
                         }
                     }
-                    sb.append(" )");
-                    sb.append(" {\n");
-                    method.getInstructions().forEach(instruction -> sb.append("\t\t").append(instruction.getType() != null ? instruction.getType() : "")
-                            .append(" ").append(instruction.getName() != null ? instruction.getName() : "")
+                    sb.append(debugString(debug, " )"));
+                    sb.append(debugString(debug, " {\n"));
+                    method.getInstructions().forEach(instruction -> sb.append("\t\t")
+                            .append(instruction.getType() != null ? debugString(debug, instruction.getType()) : "")
+                            .append(" ").append(instruction.getName() != null ? debugString(debug, instruction.getName()) : "")
                             .append(" ").append(instruction.getExpression() != null ? " " +
-                                    instruction.getExpression() : "").append(";\n"));
+                                    debugString(debug, instruction.getExpression().toString()) : "").append(";\n"));
                     sb.append("\t}\n");
                 });
                 sb.append("}");
@@ -1592,7 +1587,7 @@ public class StringAnalyzer1 {
         private String attributeValue;
 
         public TokenAttribute(String version) {
-            super("version");
+            super(version);
             this.requiredName = version;
         }
 
@@ -1668,11 +1663,11 @@ public class StringAnalyzer1 {
         }
 
         @Override
-        public Token copy() {
+        public Token copy(Token token) {
             TokenAttribute tokenAttribute = new TokenAttribute(requiredName);
             tokenAttribute.setAttributeValue(attributeValue);
             tokenAttribute.setAttributeName(attributeName);
-            return super.copy();
+            return super.copy(token);
         }
     }
 
@@ -1723,13 +1718,6 @@ public class StringAnalyzer1 {
 
         }
 
-        @Override
-        public Token copy() {
-            TokenElementOpening tokenElementOpening = new TokenElementOpening(requiredName);
-            tokenElementOpening.elementName = elementName;
-            return tokenElementOpening;
-        }
-
         private void setElementName(String substring) {
             this.elementName = substring;
         }
@@ -1751,6 +1739,91 @@ public class StringAnalyzer1 {
     class TokenCloseElementShortXmlDeclaration extends TokenString {
         public TokenCloseElementShortXmlDeclaration() {
             super("?>");
+        }
+    }
+
+    public class TokenLogicalExpression extends Token {
+        @NotNull
+        public String expression;
+
+        public TokenLogicalExpression() {
+        }
+
+        @Override
+        public int parse(String input, int position) {
+            if (position >= input.length() || input.substring(position).trim().isEmpty()) {
+                setSuccessful(false);
+                return position;
+            }
+            int position1 = skipBlanks(input, position);
+            if (input.charAt(position1) == '(') {
+                int position2 = position1;
+                position1++;
+                int countParenthesis = 1;
+                while (position1 < input.length() && countParenthesis > 0) {
+                    if (input.charAt(position1) == '(')
+                        countParenthesis++;
+                    if (input.charAt(position1) == ')')
+                        countParenthesis--;
+                    position1++;
+                }
+
+                position1 = skipBlanks(input, position1);
+
+                if (position1 < input.length() && countParenthesis == 0) {
+                    expression = input.substring(position2, position1);
+                    setSuccessful(true);
+                    return processNext(input, position1);
+                }
+            }
+            setSuccessful(false);
+            return position;
+        }
+
+        public Token copy(Token token) {
+            TokenLogicalExpression tokenLogicalExpression = new TokenLogicalExpression();
+            super.copy(tokenLogicalExpression);
+            return tokenLogicalExpression;
+        }
+
+        @Override
+        public String toString() {
+            return "TokenLogicalExpression{" +
+                    "successful=" + isSuccessful() +
+                    ", expression='" + expression + '\'' +
+                    '}';
+        }
+    }
+
+    public class MultiToken extends Token {
+        protected List<Token> choices = new ArrayList<>();
+
+
+        @Override
+        public Token copy(Token token0) {
+            super.copy(token0);
+            synchronized (Collections.unmodifiableList(choices)) {
+                choices.forEach(token -> {
+                    Token copy1 = token.copy(token);
+                    ((MultiToken) token0).choices.add(copy1);
+                });
+            }
+            return token0;
+        }
+    }
+
+    public class SingleToken extends Token {
+        protected Token choice;
+
+        public SingleToken(Token choice) {
+            this.choice = choice;
+        }
+
+        @Override
+        public Token copy(Token token0) {
+            super.copy(token0);
+            ((SingleToken) token0).choice = this.choice;
+            return token0;
         }
     }
 }

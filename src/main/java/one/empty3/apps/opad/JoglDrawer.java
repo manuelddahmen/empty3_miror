@@ -181,12 +181,12 @@ public class JoglDrawer extends Drawer implements GLEventListener {
 
 
         Point3D posCam = pos;//.moins(dir.norme1());
-        Point3D vertical = up.norme1();
-        Point3D vert2 = vertical.prodVect(dir).mult(-1);
+        //Point3D vertical = up.norme1();
+        //Point3D vert2 = vertical.prodVect(dir).mult(-1);
 
         posCam = posCam.plus(camera.getLookat().moins(posCam).mult(-0.05));
 
-        up = dir.prodVect(up.prodVect(dir));
+        //up = dir.prodVect(up.prodVect(dir));
 
         glu.gluLookAt(posCam.get(0), posCam.get(1), posCam.get(2),
                 dir.get(0), dir.get(1), dir.get(2),

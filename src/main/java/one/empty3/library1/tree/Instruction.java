@@ -24,12 +24,11 @@ package one.empty3.library1.tree;
 
 import org.jetbrains.annotations.Nullable;
 
-public class Instruction {
+public class Instruction extends InstructionBlock {
     @Nullable
     private String type;
     @Nullable
     private String name;
-    private ListInstructions.Instruction expression = new ListInstructions.Instruction(0, null, null);
 
     public void setName(String name) {
 
@@ -48,11 +47,11 @@ public class Instruction {
     }
 
     public ListInstructions.Instruction getExpression() {
-        return expression;
+        return instructionList.get(0);
     }
 
     public void setExpression(ListInstructions.Instruction expression) {
-        this.expression = expression;
+        this.instructionList.set(0, expression);
     }
 
     @Override
@@ -60,7 +59,7 @@ public class Instruction {
         return "Instruction{" +
                 "type='" + type + '\'' +
                 ", name='" + name + '\'' +
-                ", expression=" + expression +
+                ", expression=" + instructionList.get(0) +
                 '}';
     }
 }

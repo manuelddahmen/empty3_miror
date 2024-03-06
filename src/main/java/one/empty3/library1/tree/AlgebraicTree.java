@@ -176,7 +176,7 @@ public class AlgebraicTree extends Tree {
 
         int i = 1;
         boolean added = false;
-        int last = 12;
+        int last = 13;
         while (i <= last && !added) {
             boolean exception = false;
             src.getChildren().clear();
@@ -411,19 +411,19 @@ public class AlgebraicTree extends Tree {
             values = addSpaces(values, i);
             if (i >= values.length())
                 break;
-            if (values.charAt(i) == '^' && /*9(i < values.length() - 1 || values.charAt(i + 1) != '*') &&*/ count == 0) {
+            if (values.charAt(i) == '^' && /*(i < values.length() - 1 || values.charAt(i + 1) != '*') &&*/ count == 0) {
                 newExp = '^';
                 newExpPos = i;
                 isNewExp = true;
                 firstExpFound = true;
                 newExpSign = 1;
-            } else if (values.charAt(i) == '/' && count == 0) {
+            }/* else if (values.charAt(i) == '/' && count == 0) {
                 newExp = '/';
                 isNewExp = true;
                 newExpPos = i;
                 firstExpFound = true;
                 newExpSign = -1;
-            }
+            }*/
             if (i == values.length() - 1 && firstExpFound) {
                 isNewExp = true;
                 newExpPos = i + 1;
@@ -433,7 +433,7 @@ public class AlgebraicTree extends Tree {
             } else if (values.charAt(i) == ')') {
                 count--;
             }
-            if (values.charAt(values.length() - 1) == '*' || values.charAt(values.length() - 1) == '/')
+            if (values.charAt(values.length() - 1) == '^')
                 return false;
 
 
@@ -450,7 +450,14 @@ public class AlgebraicTree extends Tree {
 
                         t2 = new TreeNode(t2, new Object[]{subsubstring}, signTreeNodeType);
                     }
-                    if (subsubstring.length() > 0 && !add(t2, subsubstring)) {
+                    /*if (subsubstring.length() > 0 && !add(t2, subsubstring)) {
+                        return false;
+                    } else {
+                        t.getChildren().add(t2);
+                        countTerms++;
+                    }
+*/
+                    if (!add(t2, subsubstring)) {
                         return false;
                     } else {
                         t.getChildren().add(t2);
@@ -458,8 +465,6 @@ public class AlgebraicTree extends Tree {
                     }
                 }
 
-//ab44md78
-//gen44md78
                 isNewExp = false;
                 newExpPos = i + 1;
                 oldExpPos = i + 1;
@@ -876,10 +881,10 @@ public class AlgebraicTree extends Tree {
 
 
                 TreeTreeNodeType mathFunctionTreeNodeType = new TreeTreeNodeType(
-                        "", parametersValues
+                        fName, parametersValues
                 );
 
-                t2 = new TreeTreeNode(t, new Object[]{fName, parametersValues, fParamString},
+                t2 = new TreeTreeNode(t, new Object[]{fName, parametersValues, fParamString, false},
                         mathFunctionTreeNodeType);
                 if (!add(t2, fParamString))
                     return false;

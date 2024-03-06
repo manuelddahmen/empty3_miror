@@ -65,7 +65,7 @@ import java.util.ArrayList;
  * Created by Manuel Dahmen on 15-12-16.
  */
 public class TreeNode {
-    protected AlgebraicTree algebraicTree;
+    //protected AlgebraicTree algebraicTree;
     protected Object[] objects;
     protected TreeNodeType type = null;
     protected ArrayList<TreeNode> children = new ArrayList<TreeNode>();
@@ -74,7 +74,7 @@ public class TreeNode {
     private TreeNodeValue value;
 
     public TreeNode(AlgebraicTree algebraicTree, String expStr) {
-        this.algebraicTree = algebraicTree;
+        //this.algebraicTree = algebraicTree;
         this.parent = null;
         if (expStr.trim().isEmpty()) expressionString = "0.0";
         this.expressionString = expStr;
@@ -88,7 +88,7 @@ public class TreeNode {
      */
     public TreeNode(TreeNode src, Object[] objects, TreeNodeType clazz) {
         this.parent = src;
-        this.algebraicTree = src.algebraicTree;
+        //this.algebraicTree = src.algebraicTree;
         this.objects = objects;
         clazz.instantiate(objects);
         this.type = clazz;
@@ -161,7 +161,7 @@ public class TreeNode {
                 if (childrenVars.get(i).type.getClass().equals(VariableTreeNodeType.class)) {
                     String varName = childrenVars.get(i).expressionString;
                     if (varName != null) {
-                        StructureMatrix<Double> put = algebraicTree.getParametersValuesVecComputed().put(varName, childrenValues.get(i).eval());
+                        //StructureMatrix<Double> put = algebraicTree.getParametersValuesVecComputed().put(varName, childrenValues.get(i).eval());
                     }
                 }
             }
@@ -206,6 +206,14 @@ public class TreeNode {
                 }
             } else if (evalRes.getDim() == 0) {
                 return evalRes.setElem(Math.pow((Double) getChildren().get(0).eval().getElem(), (Double) getChildren().get(1).eval().getElem()));
+
+/*
+ double pow = evalRes.getElem();
+                for (int i = 1; i < getChildren().size(); i++) {
+                    pow = Math.pow(pow, getChildren().get(i).eval().getElem());
+                }
+                return evalRes.setElem(pow);
+ */
             }
         } else if (cType instanceof FactorTreeNodeType) {
             if (getChildren().size() == 1) {

@@ -31,6 +31,7 @@ import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
+import kotlin.math.pow
 
 /**
  * Test class for AlgebraicTree.
@@ -446,6 +447,26 @@ class TestAlgebraicTreeVector() {
     @Test
     fun testSimple14() {
         testResult("6+6-(6+6)", 6.0 + 6 - (6 + 6), true)
+    }
+
+    @Test
+    fun testSimple15() {
+        testResult("3^4^5", Math.pow(Math.pow(3.0, 4.0), 5.0), true)
+    }
+
+    @Test
+    fun testSimple16() {
+        testResult("3^4+2^3", Math.pow(3.0, 4.0) + Math.pow(2.0, 3.0), false)
+    }
+
+    @Test
+    fun testSimple17() {
+        testResult("3^(4^5)", Math.pow(3.0, Math.pow(4.0, 5.0)), false)
+    }
+
+    @Test
+    fun testSimple18() {
+        testResult("pow(3, pow(4, 5))", Math.pow(3.0, Math.pow(4.0, 5.0)), false)
     }
 
     @Test
