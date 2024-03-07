@@ -23,12 +23,10 @@
 package one.empty3.library1.tree;
 
 import one.empty3.library.StructureMatrix;
-import one.empty3.library.T;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 /**
@@ -1472,16 +1470,25 @@ public class StringAnalyzer1 {
         protected HashMap<String, Variable> fieldMembers = new HashMap<>();
         protected ArrayList<Method> methodMembers = new ArrayList<>();
         protected ArrayList<Class> classes = new ArrayList<>();
-        protected List<InstructionBlock> currentInstructions = new ArrayList<>();
+        protected InstructionBlock currentInstructions = new InstructionBlock();
 
         public Construct() {
 
         }
 
         public void pushInstructions(InstructionBlock instructionBlock) {
-            if (currentInstructions.size() == 0) {
-                currentInstructions.add(currentMethod.getInstructions().get(0));
+            if (currentInstructions.instructionList.size() == 0) {
+                currentInstructions.instructionList.add(currentMethod.getInstructions().get(0));
             }
+        }
+
+        public InstructionBlock popInstructions() {
+            if (currentInstructions.instructionList.size() > 0) {
+                InstructionBlock instructionBlock = currentMethod.getInstructions().get(currentMethod.getInstructions().size() - 1);
+                currentMethod.getInstructions().remove(currentMethod.getInstructions().size() - 1);
+                return instructionBlock;
+            }
+            return null;
         }
 
         @Override
@@ -1547,13 +1554,17 @@ public class StringAnalyzer1 {
                     sb.append(debugString(debug, " {\n"));
                     method.getInstructions().forEach(instruction0 -> {
                         sb.append("\t\t");
+                        sb.append(instruction0.toLangStringJava(debug));
+
                         if (instruction0 instanceof Instruction) {
                             Instruction instruction = (Instruction) instruction0;
+
                             sb.append(instruction.getType() != null ? debugString(debug, instruction.getType()) : "")
                                     .append(" ").append(instruction.getName() != null ? debugString(debug, instruction.getName()) : "")
                                     .append(" ").append(instruction.getExpression() != null ? " " +
                                             debugString(debug, instruction.getExpression().toString()) : "").append(";\n");
                         }
+
                     });
                 });
                 sb.append("\t}\n");

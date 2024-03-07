@@ -38,7 +38,7 @@ import kotlin.RuntimeException
  * Test class for AlgebraicTree.
  */
 @RunWith(JUnit4::class)
-class TestStringAnalyzer1 {
+class TestStringAnalyzer2 {
     private val isDebug: Boolean = true
 
     fun readString(file_path: String): String {

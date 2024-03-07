@@ -36,6 +36,11 @@ public class Instruction extends InstructionBlock {
         this.expression = expression;
     }
 
+    public Instruction() {
+        super();
+        this.expression = new ListInstructions.Instruction(0, null, null);
+    }
+
     public void setName(String name) {
 
     }
@@ -52,8 +57,8 @@ public class Instruction extends InstructionBlock {
         return name;
     }
 
-    public InstructionBlock getExpression() {
-        return instructionList.get(0);
+    public ListInstructions.Instruction getExpression() {
+        return expression;
     }
 
     public void setExpression(ListInstructions.Instruction expression) {

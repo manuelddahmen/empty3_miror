@@ -30,4 +30,48 @@ public class InstructionBlock {
 
     public InstructionBlock() {
     }
+
+    public List<InstructionBlock> getInstructionList() {
+        return instructionList;
+    }
+
+    public void setInstructionList(List<InstructionBlock> instructionList) {
+        this.instructionList = instructionList;
+    }
+
+    private String debugString(boolean isDebug, String tokenLangString) {
+        return isDebug ? "{" + tokenLangString + "}" : tokenLangString;
+    }
+
+    public String toLangStringJava(boolean debug) {
+        StringBuilder stringBuilder = new StringBuilder();
+        StringBuilder array1 = new StringBuilder();
+        if (this.getClass().isAssignableFrom(InstructionBlock.class)) {
+            array1.append(debugString(debug, "{\n"));
+        }
+        for (InstructionBlock instruction : getInstructionList()) {
+            array1.append(instruction.toLangStringJava(debug)).append(debugString(debug, ";"));
+        }
+        if (this.getClass().isAssignableFrom(InstructionBlock.class)) {
+            array1.append(debugString(debug, "}\n"));
+        }
+        System.out.println(getClass().getSimpleName());
+        switch (getClass().getSimpleName()) {
+            case "If" ->
+                    stringBuilder.append(debugString(debug, "if(")).append(debugString(debug, ((ControlledInstructions.If) this).controlExpression)).append(debugString(debug, ") {\n")).append(debugString(debug, array1.toString())).append("\n");
+            case "While" -> stringBuilder.append(debugString(debug, "while(")).append(
+                            debugString(debug, ((ControlledInstructions.While) this).controlExpression))
+                    .append(debugString(debug, ") {\n")).append(debugString(debug, ";"))
+                    .append(debugString(debug, array1.toString())).append("}\n");
+            case "Do" ->
+                    stringBuilder.append(debugString(debug, "do {\n")).append(debugString(debug, array1.toString())).append(debugString(debug, "} while("))
+                            .append(debugString(debug, ((ControlledInstructions.DoWhile) this).controlExpression))
+                            .append(debugString(debug, ")\n"));
+            case "ControlledInstructions" -> stringBuilder.append(debugString(debug, "{\n"))
+                    .append(debugString(debug, array1.toString()))
+                    .append(debugString(debug, "}\n"));
+        }
+        return stringBuilder.toString();
+
+    }
 }
