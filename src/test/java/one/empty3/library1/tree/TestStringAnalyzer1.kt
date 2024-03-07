@@ -416,7 +416,7 @@ class TestStringAnalyzer1 {
                 if (tokenMemberMethodExpression4.expression != null) {
                     instruction.expression.expression = tokenMemberMethodExpression4.expression
                 }
-                instructions.add(Instruction())
+                instructions.instructionList.add(instruction)
                 return true
             }
 
@@ -631,8 +631,8 @@ class TestStringAnalyzer1 {
                             val name = tokenMemberMethodVarType1.name
                             //tokenMemberMethodVarType1.name = null
                             val instructions = stringAnalyzer1.construct.currentMethod.instructions
-                            instructions.add(Instruction())
-                            val get = instructions.get(instructions.size - 1)
+                            instructions.instructionList.add(Instruction())
+                            val get = instructions.instructionList.get(instructions.instructionList.size - 1)
                             (get as Instruction).setType(name)
                             tokenMemberMethodVarType1.name = null
                         }
@@ -641,7 +641,8 @@ class TestStringAnalyzer1 {
                             //tokenMemberMethodVarName1.name = null
                             val instructions = stringAnalyzer1.construct.currentMethod.instructions
                             //instructions.add(Instruction())
-                            val get = instructions.get(instructions.size - 1) as Instruction
+                            val get =
+                                instructions.instructionList.get(instructions.instructionList.size - 1) as Instruction
                             get.setName(name)
                             get.expression.leftHand = name
                             tokenMemberMethodVarName1.name = null
@@ -651,8 +652,8 @@ class TestStringAnalyzer1 {
                         if (tokenMemberMethodVarType2.name != null) {
                             val name = tokenMemberMethodVarType2.name
                             val instructions = stringAnalyzer1.construct.currentMethod.instructions
-                            instructions.add(Instruction())
-                            val get = instructions.get(instructions.size - 1)
+                            instructions.instructionList.add(Instruction())
+                            val get = instructions.instructionList.get(instructions.instructionList.size - 1)
                             (get as Instruction).setType(name)
                             tokenMemberMethodVarType2.name = null
                         }
@@ -660,7 +661,7 @@ class TestStringAnalyzer1 {
                             var name = tokenMemberMethodVarName2.name
                             val instructions = stringAnalyzer1.construct.currentMethod.instructions
                             //instructions.add(Instruction())
-                            val get = instructions.get(instructions.size - 1)
+                            val get = instructions.instructionList.get(instructions.instructionList.size - 1)
                             (get as Instruction).setName(name)
                             get.expression.leftHand = name
                             tokenMemberMethodVarName2.name = null
@@ -671,8 +672,8 @@ class TestStringAnalyzer1 {
                             var name = tokenMemberMethodVarName4.name
                             //tokenMemberMethodVarName2.name = null
                             val instructions = stringAnalyzer1.construct.currentMethod.instructions
-                            instructions.add(Instruction())
-                            val get = instructions.get(instructions.size - 1)
+                            instructions.instructionList.add(Instruction())
+                            val get = instructions.instructionList.get(instructions.instructionList.size - 1)
                             (get as Instruction).setName(name)
                             get.expression.leftHand = name
                             tokenMemberMethodVarName4.name = null
@@ -684,7 +685,7 @@ class TestStringAnalyzer1 {
                             //tokenMemberMethodVarName2.name = null
                             val instructions = stringAnalyzer1.construct.currentMethod.instructions
                             //instructions.add(Instruction())
-                            val get = instructions.get(instructions.size - 1)
+                            val get = instructions.instructionList.get(instructions.instructionList.size - 1)
                             (get as Instruction).getExpression().expression = name
                             tokenMemberMethodExpression2.expression = null
                         }
@@ -694,8 +695,8 @@ class TestStringAnalyzer1 {
                             var name = tokenMemberMethodExpression3.expression
                             //tokenMemberMethodVarName2.name = null
                             val instructions = stringAnalyzer1.construct.currentMethod.instructions
-                            instructions.add(Instruction())
-                            val get = instructions.get(instructions.size - 1)
+                            instructions.instructionList.add(Instruction())
+                            val get = instructions.instructionList.get(instructions.instructionList.size - 1)
                             (get as Instruction).getExpression().expression = name
                             tokenMemberMethodExpression3.expression = null
                         }
@@ -704,8 +705,8 @@ class TestStringAnalyzer1 {
                         if (tokenMemberMethodExpression4.expression != null) {
                             var name = tokenMemberMethodExpression4.expression
                             val instructions = stringAnalyzer1.construct.currentMethod.instructions
-                            instructions.add(Instruction())
-                            val get = instructions.get(instructions.size - 1)
+                            instructions.instructionList.add(Instruction())
+                            val get = instructions.instructionList.get(instructions.instructionList.size - 1)
                             (get as Instruction).getExpression().expression = name
                             tokenMemberMethodExpression4.expression = null
                         }

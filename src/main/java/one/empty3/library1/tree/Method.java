@@ -62,8 +62,8 @@ public class Method {
         this.variableList = variableList;
     }
 
-    public List<InstructionBlock> getInstructions() {
-        return instructions.instructionList;
+    public InstructionBlock getInstructions() {
+        return instructions;
     }
 
     public void setInstructions(InstructionBlock instructions) {

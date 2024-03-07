@@ -70,6 +70,13 @@ public class InstructionBlock {
             case "ControlledInstructions" -> stringBuilder.append(debugString(debug, "{\n"))
                     .append(debugString(debug, array1.toString()))
                     .append(debugString(debug, "}\n"));
+            case "Instruction" -> {
+                Instruction instruction = (Instruction) this;
+                stringBuilder.append(instruction.getType() != null ? debugString(debug, instruction.getType()) : "")
+                        .append(" ").append(instruction.getName() != null ? debugString(debug, instruction.getName()) : "")
+                        .append(" ").append(instruction.getExpression() != null ? " " +
+                                debugString(debug, instruction.getExpression().toString()) : "").append(";\n");
+            }
         }
         return stringBuilder.toString();
 

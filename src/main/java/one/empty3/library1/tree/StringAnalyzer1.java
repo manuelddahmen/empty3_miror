@@ -1267,8 +1267,8 @@ public class StringAnalyzer1 {
                 if (token.isSuccessful()) {
                     String name = ((TokenVariableInMethodName) token).getName();
                     if (name != null && !name.isEmpty()) {
-                        List<InstructionBlock> instructions = construct.methodMembers.get(construct.methodMembers.size() - 1).getInstructions();
-                        InstructionBlock instruction = instructions.get(instructions.size() - 1);
+                        InstructionBlock instructions = construct.methodMembers.get(construct.methodMembers.size() - 1).getInstructions();
+                        InstructionBlock instruction = instructions;
                         if (instruction instanceof Instruction) {
                             ((Instruction) instruction).setType(name);
                         }
@@ -1283,11 +1283,11 @@ public class StringAnalyzer1 {
             @Override
             public boolean action() {
                 if (token.isSuccessful()) {
-                    List<InstructionBlock> instructions = construct.methodMembers.get(construct.methodMembers.size() - 1).getInstructions();
-                    instructions.add(new InstructionBlock());
+                    InstructionBlock instructions = construct.methodMembers.get(construct.methodMembers.size() - 1).getInstructions();
+                    instructions.instructionList.add(new InstructionBlock());
                     //construct.methodMembers.get(construct.methodMembers.size() - 1)
                     //       .setInstructions(instructions);
-                    InstructionBlock instruction = instructions.get(instructions.size() - 1);
+                    InstructionBlock instruction = instructions.instructionList.get(instructions.instructionList.size() - 1);
                     return true;
                 }
                 return false;
@@ -1299,7 +1299,7 @@ public class StringAnalyzer1 {
             public boolean action() {
                 if (token.isSuccessful()) {
                     construct.methodMembers.get(construct.methodMembers.size() - 1).setInstructions(new InstructionBlock());
-                    construct.methodMembers.get(construct.methodMembers.size() - 1).getInstructions().add(new InstructionBlock());
+                    construct.methodMembers.get(construct.methodMembers.size() - 1).getInstructions().instructionList.add(new InstructionBlock());
                     return true;
                 }
                 return false;
@@ -1477,15 +1477,13 @@ public class StringAnalyzer1 {
         }
 
         public void pushInstructions(InstructionBlock instructionBlock) {
-            if (currentInstructions.instructionList.size() == 0) {
-                currentInstructions.instructionList.add(currentMethod.getInstructions().get(0));
-            }
+            currentInstructions.instructionList.add(instructionBlock);
         }
 
         public InstructionBlock popInstructions() {
             if (currentInstructions.instructionList.size() > 0) {
-                InstructionBlock instructionBlock = currentMethod.getInstructions().get(currentMethod.getInstructions().size() - 1);
-                currentMethod.getInstructions().remove(currentMethod.getInstructions().size() - 1);
+                InstructionBlock instructionBlock = currentInstructions.instructionList.get(currentInstructions.instructionList.size() - 1);
+                currentInstructions.instructionList.remove(currentInstructions.instructionList.size() - 1);
                 return instructionBlock;
             }
             return null;
@@ -1552,7 +1550,8 @@ public class StringAnalyzer1 {
                     }
                     sb.append(debugString(debug, " )"));
                     sb.append(debugString(debug, " {\n"));
-                    method.getInstructions().forEach(instruction0 -> {
+                    System.err.println("Method " + method.getName() + "instruction length : " + method.getInstructions().getInstructionList().size());
+                    method.getInstructions().instructionList.forEach(instruction0 -> {
                         sb.append("\t\t");
                         sb.append(instruction0.toLangStringJava(debug));
 
