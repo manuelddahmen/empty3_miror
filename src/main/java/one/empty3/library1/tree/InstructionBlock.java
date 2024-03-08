@@ -50,15 +50,26 @@ public class InstructionBlock {
             array1.append(debugString(debug, "{\n"));
         }
         for (InstructionBlock instruction : getInstructionList()) {
-            array1.append(instruction.toLangStringJava(debug)).append(debugString(debug, ";"));
+            array1.append(instruction.toLangStringJava(debug))
+                    .append(debugString(debug, ";"));
         }
         if (this.getClass().isAssignableFrom(InstructionBlock.class)) {
             array1.append(debugString(debug, "}\n"));
         }
         System.out.println(getClass().getSimpleName());
         switch (getClass().getSimpleName()) {
-            case "If" ->
-                    stringBuilder.append(debugString(debug, "if(")).append(debugString(debug, ((ControlledInstructions.If) this).controlExpression)).append(debugString(debug, ") {\n")).append(debugString(debug, array1.toString())).append("\n");
+            case "If" -> {
+                ControlledInstructions.If anIf = (ControlledInstructions.If) this;
+                stringBuilder.append(debugString(debug, "if("))
+                        .append(debugString(debug, anIf.controlExpression))
+                        .append(debugString(debug, ") {\n"))
+                        .append(debugString(debug, array1.toString())).append(debugString(debug, "}\n"));
+                if (!anIf.instructionsElse.getInstructionList().isEmpty()) {
+                    stringBuilder.append(debugString(debug, "else"))
+                            .append(debugString(debug, " { \n"))
+                            .append(debugString(debug, array1.toString())).append(debugString(debug, "}\n"));
+                }
+            }
             case "While" -> stringBuilder.append(debugString(debug, "while(")).append(
                             debugString(debug, ((ControlledInstructions.While) this).controlExpression))
                     .append(debugString(debug, ") {\n")).append(debugString(debug, ";"))

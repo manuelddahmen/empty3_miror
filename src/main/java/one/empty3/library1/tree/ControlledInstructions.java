@@ -19,11 +19,11 @@ public class ControlledInstructions extends Instruction {
         this.controlExpression = controlExpression;
     }
 
-    public List<InstructionBlock> getInstructions() {
+    public List<InstructionBlock> getInstructionsList() {
         return instructionList;
     }
 
-    public void setInstructions(ArrayList<InstructionBlock> instructions) {
+    public void setInstructionsList(ArrayList<InstructionBlock> instructions) {
         this.instructionList = instructions;
     }
 

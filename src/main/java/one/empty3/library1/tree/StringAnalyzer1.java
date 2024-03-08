@@ -546,7 +546,7 @@ public class StringAnalyzer1 {
                 passed = true;
                 i++;
             }
-            if (passed && i < input.length()) {
+            if (passed && i < input.length() && containsNoKeyword(input.substring(position1, i))) {
                 if (!input.substring(position1, i).isEmpty()) {
                     setName(input.substring(position1, i));
                     return processNext(input, i);
@@ -958,11 +958,12 @@ public class StringAnalyzer1 {
             int position1 = super.skipBlanks(input, position);
             int i = position1;
             boolean passed = false;
-            while (i < input.length() && (Character.isLetterOrDigit(input.charAt(i)) || input.charAt(i) == '_' || input.charAt(i) == '.')) {
+            while (i < input.length() && (Character.isLetterOrDigit(input.charAt(i)) || input.charAt(i) == '_' || input.charAt(i) == '.')
+            ) {
                 i++;
                 passed = true;
             }
-            if (passed && i - position1 > 0) {
+            if (passed && i - position1 > 0 && containsNoKeyword(input.substring(position1, i))) {
                 this.setName(input.substring(position1, i));
                 return processNext(input, i);
             } else if (i >= input.length()) {
@@ -999,6 +1000,7 @@ public class StringAnalyzer1 {
             return tokenName;
         }
     }
+
 
     class TokenVariableMemberDefinitionClassName extends TokenName {
         public TokenVariableMemberDefinitionClassName() {
@@ -1470,7 +1472,7 @@ public class StringAnalyzer1 {
         protected HashMap<String, Variable> fieldMembers = new HashMap<>();
         protected ArrayList<Method> methodMembers = new ArrayList<>();
         protected ArrayList<Class> classes = new ArrayList<>();
-        protected InstructionBlock currentInstructions = new InstructionBlock();
+        private InstructionBlock currentInstructions = new InstructionBlock();
 
         public Construct() {
 
@@ -1481,12 +1483,21 @@ public class StringAnalyzer1 {
         }
 
         public InstructionBlock popInstructions() {
-            if (currentInstructions.instructionList.size() > 0) {
+            if (!currentInstructions.instructionList.isEmpty()) {
                 InstructionBlock instructionBlock = currentInstructions.instructionList.get(currentInstructions.instructionList.size() - 1);
                 currentInstructions.instructionList.remove(currentInstructions.instructionList.size() - 1);
                 return instructionBlock;
             }
             return null;
+        }
+
+        public InstructionBlock getCurrentInstructions() {
+            if (currentInstructions == null)
+                currentInstructions = new InstructionBlock();
+            if (!currentInstructions.instructionList.isEmpty()) {
+                return currentInstructions.instructionList.get(currentInstructions.instructionList.size() - 1);
+            }
+            return currentInstructions;
         }
 
         @Override
@@ -1554,10 +1565,7 @@ public class StringAnalyzer1 {
                     method.getInstructions().instructionList.forEach(instruction0 -> {
                         sb.append("\t\t");
                         sb.append(instruction0.toLangStringJava(debug));
-
-                        if (instruction0 instanceof Instruction) {
-                            Instruction instruction = (Instruction) instruction0;
-
+                        if (instruction0 instanceof Instruction instruction) {
                             sb.append(instruction.getType() != null ? debugString(debug, instruction.getType()) : "")
                                     .append(" ").append(instruction.getName() != null ? debugString(debug, instruction.getName()) : "")
                                     .append(" ").append(instruction.getExpression() != null ? " " +
@@ -1848,5 +1856,25 @@ public class StringAnalyzer1 {
             ((SingleToken) token0).choice = this.choice;
             return token0;
         }
+    }
+
+    public boolean containsNoKeyword(String substring) {
+        String[] keywords = {"if", "else", "while", "do", "for", "class", "package", "import"};
+        for (String keyword : keywords) {
+            if (substring.contains(keyword)) {
+                int i1 = substring.indexOf(keyword);
+                int i = i1 + keyword.length();
+                boolean caseStart = false, caseEnd = false;
+                if (i >= substring.length() || !Character.isAlphabetic(substring.charAt(i))) {
+                    caseEnd = true;
+                }
+                if (i1 == 0 || !Character.isAlphabetic(substring.charAt(i1 - 1))) {
+                    caseStart = true;
+                }
+                if (caseStart && caseEnd)
+                    return false;
+            }
+        }
+        return true;
     }
 }
