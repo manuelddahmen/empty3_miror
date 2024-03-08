@@ -73,4 +73,9 @@ public class Instruction extends InstructionBlock {
                 ", expression=" + instructionList.get(0) +
                 '}';
     }
+
+    @Override
+    public String toLangStringJava(boolean debug) {
+        return super.toLangStringJava(debug);
+    }
 }

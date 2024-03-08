@@ -34,6 +34,10 @@ public class ControlledInstructions extends Instruction {
             super(controlExpression);
         }
 
+        @Override
+        public String toLangStringJava(boolean debug) {
+            return super.toLangStringJava(debug);
+        }
     }
 
     public static class For extends ControlledInstructions {
@@ -44,6 +48,10 @@ public class ControlledInstructions extends Instruction {
             super(controlExpression);
         }
 
+        @Override
+        public String toLangStringJava(boolean debug) {
+            return super.toLangStringJava(debug);
+        }
     }
 
     public static class While extends ControlledInstructions {
@@ -51,6 +59,10 @@ public class ControlledInstructions extends Instruction {
             super(controlExpression);
         }
 
+        @Override
+        public String toLangStringJava(boolean debug) {
+            return super.toLangStringJava(debug);
+        }
     }
 
     public static class DoWhile extends ControlledInstructions {
@@ -58,7 +70,16 @@ public class ControlledInstructions extends Instruction {
             super(controlExpression);
         }
 
+        @Override
+        public String toLangStringJava(boolean debug) {
+            return super.toLangStringJava(debug);
+        }
 
+    }
+
+    @Override
+    public String toLangStringJava(boolean debug) {
+        return super.toLangStringJava(debug);
     }
 
 }

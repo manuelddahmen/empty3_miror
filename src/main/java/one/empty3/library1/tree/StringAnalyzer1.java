@@ -1472,20 +1472,20 @@ public class StringAnalyzer1 {
         protected HashMap<String, Variable> fieldMembers = new HashMap<>();
         protected ArrayList<Method> methodMembers = new ArrayList<>();
         protected ArrayList<Class> classes = new ArrayList<>();
-        private InstructionBlock currentInstructions = new InstructionBlock();
+        private List<InstructionBlock> currentInstructions = new ArrayList<>();
 
         public Construct() {
 
         }
 
         public void pushInstructions(InstructionBlock instructionBlock) {
-            currentInstructions.instructionList.add(instructionBlock);
+            currentInstructions.add(instructionBlock);
         }
 
         public InstructionBlock popInstructions() {
-            if (!currentInstructions.instructionList.isEmpty()) {
-                InstructionBlock instructionBlock = currentInstructions.instructionList.get(currentInstructions.instructionList.size() - 1);
-                currentInstructions.instructionList.remove(currentInstructions.instructionList.size() - 1);
+            if (!currentInstructions.isEmpty()) {
+                InstructionBlock instructionBlock = currentInstructions.get(currentInstructions.size() - 1);
+                currentInstructions.remove(currentInstructions.size() - 1);
                 return instructionBlock;
             }
             return null;
@@ -1493,11 +1493,11 @@ public class StringAnalyzer1 {
 
         public InstructionBlock getCurrentInstructions() {
             if (currentInstructions == null)
-                currentInstructions = new InstructionBlock();
-            if (!currentInstructions.instructionList.isEmpty()) {
-                return currentInstructions.instructionList.get(currentInstructions.instructionList.size() - 1);
+                currentInstructions = new ArrayList<>();
+            if (!currentInstructions.isEmpty()) {
+                return currentInstructions.get(currentInstructions.size() - 1);
             }
-            return currentInstructions;
+            return new InstructionBlock();//???
         }
 
         @Override
@@ -1561,16 +1561,15 @@ public class StringAnalyzer1 {
                     }
                     sb.append(debugString(debug, " )"));
                     sb.append(debugString(debug, " {\n"));
-                    System.err.println("Method " + method.getName() + "instruction length : " + method.getInstructions().getInstructionList().size());
                     method.getInstructions().instructionList.forEach(instruction0 -> {
                         sb.append("\t\t");
                         sb.append(instruction0.toLangStringJava(debug));
-                        if (instruction0 instanceof Instruction instruction) {
+                        /*if (instruction0 instanceof Instruction instruction) {
                             sb.append(instruction.getType() != null ? debugString(debug, instruction.getType()) : "")
                                     .append(" ").append(instruction.getName() != null ? debugString(debug, instruction.getName()) : "")
                                     .append(" ").append(instruction.getExpression() != null ? " " +
                                             debugString(debug, instruction.getExpression().toString()) : "").append(";\n");
-                        }
+                        }*/
 
                     });
                 });
