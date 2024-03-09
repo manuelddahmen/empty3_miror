@@ -27,6 +27,10 @@ package one.empty3.library1.tree;
  * It is an abstract class that must be subclassed to implement the action logic.
  */
 public class Action {
+    public static final int NONE = 0;
+    public static final int ON_NEXT_TOKEN_CALL = 1;
+    public static final int ON_RETURNS_TRUE_NEXT_TOKEN = 2;
+    protected int on = ON_RETURNS_TRUE_NEXT_TOKEN;
     protected StringAnalyzer1.Token token;
 
     /**
@@ -54,6 +58,26 @@ public class Action {
     }
 
     /**
+     * Retrieves the value of the 'on' property.
+     * (time of the call of action method)
+     *
+     * @return the value of the 'on' property
+     */
+    public int getOn() {
+        return on;
+    }
+
+    /**
+     * Sets the value for the 'on' property of the Action class.
+     * (time of the call of action method)
+     *
+     * @param on the value to set for the 'on' property
+     */
+    public void setOn(int on) {
+        this.on = on;
+    }
+
+    /**
      * Executes the action associated with the token.
      *
      * @return true if the action was executed successfully, false otherwise
@@ -61,4 +85,6 @@ public class Action {
     public boolean action() {
         return false;
     }
+
+
 }

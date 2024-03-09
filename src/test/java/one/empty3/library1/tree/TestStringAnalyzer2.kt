@@ -207,104 +207,6 @@ class TestStringAnalyzer2 {
 
     }
 
-    /*
-        private fun buildJavaClassTokenList(stringAnalyzer1: StringAnalyzer1): StringAnalyzer1.SingleTokenOptional {
-            val tokenPackage = stringAnalyzer1.TokenPackage()
-            val tokenPackageName = stringAnalyzer1.TokenQualifiedName()
-            val tokenPackageSemicolon = stringAnalyzer1.TokenSemiColon()
-            val tokenClass = stringAnalyzer1.TokenClassKeyword()
-            val tokenClassName = stringAnalyzer1.TokenName()
-            val tokenOpenBracket = stringAnalyzer1.TokenOpenBracket()
-            val tokenCloseBracket = stringAnalyzer1.TokenCloseBracket()
-
-            val tokenMemberVarType1 = stringAnalyzer1.TokenQualifiedName()
-            val tokenMemberVarName1 = stringAnalyzer1.TokenName()
-            val tokenMemberVarEquals1 = stringAnalyzer1.TokenEquals()
-            val tokenMemberExpression1 = stringAnalyzer1.TokenExpression1()
-            val tokenSemiColonVar1 = stringAnalyzer1.TokenSemiColon()
-
-            val tokenMemberVarType2 = stringAnalyzer1.TokenQualifiedName()
-            val tokenMemberVarName2 = stringAnalyzer1.TokenName()
-            val tokenSemiColonVar2 = stringAnalyzer1.TokenSemiColon()
-
-            tokenMemberVarType1.addToken(tokenMemberVarName1)
-            tokenMemberVarEquals1.addToken(tokenMemberVarEquals1)
-            tokenMemberVarEquals1.addToken(tokenMemberExpression1)
-            tokenMemberExpression1.addToken(tokenSemiColonVar1)
-
-            tokenMemberVarType2.addToken(tokenMemberVarName2)
-            tokenMemberVarName2.addToken(tokenSemiColonVar2)
-
-
-            val tokenMemberMethodVarType1 = stringAnalyzer1.TokenQualifiedName()
-            val tokenMemberMethodVarName1 = stringAnalyzer1.TokenName()
-            val tokenSemiMethodColonVar1 = stringAnalyzer1.TokenSemiColon()
-
-            val tokenMemberMethodVarType2 = stringAnalyzer1.TokenQualifiedName()
-            val tokenMemberMethodVarName2 = stringAnalyzer1.TokenName()
-            val tokenMemberMethodVarEquals2 = stringAnalyzer1.TokenEquals()
-            val tokenMemberMethodExpression2 = stringAnalyzer1.TokenExpression1()
-            val tokenMethodSemiColonVar2 = stringAnalyzer1.TokenSemiColon()
-
-
-            tokenMemberMethodVarType2.addToken(tokenMemberMethodVarName2)
-            tokenMemberMethodVarName2.addToken(tokenMemberMethodVarEquals2)
-            tokenMemberMethodVarEquals2.addToken(tokenMethodSemiColonVar2)
-            tokenMethodSemiColonVar2.addToken(tokenMemberMethodExpression2)
-
-            tokenMemberMethodVarType1.addToken(tokenMemberMethodVarName1)
-            tokenMemberMethodVarName1.addToken(tokenSemiMethodColonVar1)
-
-            val tokenMemberVar = stringAnalyzer1.SingleTokenExclusiveXor(
-                tokenMemberVarType1, tokenMemberVarType2
-            )
-
-            val tokenMemberMethodType = stringAnalyzer1.TokenQualifiedName()
-            val tokenMemberMethodName = stringAnalyzer1.TokenName()
-            val tokenOpenBracketMethod = stringAnalyzer1.TokenOpenBracket()
-
-            tokenMemberMethodType.addToken(tokenMemberMethodName)
-            tokenMemberMethodName.addToken(tokenOpenBracketMethod)
-
-            // Instructions
-            val singleTokenExclusiveXorMethodInstruction =
-                stringAnalyzer1.SingleTokenExclusiveXor(
-                    tokenMemberMethodVarType1,
-                    tokenMemberMethodVarType2
-                )
-
-            val tokenMemberMethodVarType = stringAnalyzer1.TokenQualifiedName()
-            val tokenMemberMethodVarName = stringAnalyzer1.TokenName()
-            val tokenMemberMethodEquals = stringAnalyzer1.TokenEquals()
-            val tokenMemberMethodExpression = stringAnalyzer1.TokenExpression1()
-
-
-            // End of Instructions
-
-            val tokenMultiMembersInstructions = stringAnalyzer1.MultiTokenOptional(
-                tokenMemberMethodVarType1, tokenMemberMethodVarType2
-            )
-
-            tokenMemberMethodType.addToken(tokenMultiMembersInstructions)
-
-            tokenPackage.addToken(tokenPackageName)
-            tokenPackageName.addToken(tokenPackageSemicolon)
-            tokenClass.addToken(tokenClassName)
-            tokenClassName.addToken(tokenOpenBracket)
-            val multiTokenOptional = stringAnalyzer1.MultiTokenOptional(
-                tokenMemberVar, tokenMemberMethodType
-            )
-            tokenOpenBracket.addToken(multiTokenOptional)
-            multiTokenOptional.addToken(tokenCloseBracket)
-
-            val token = stringAnalyzer1.SingleTokenOptional(tokenPackage)
-
-            token.addToken(tokenClass)
-
-            return token
-
-        }
-    */
     fun getJavaToken(stringAnalyzer1: StringAnalyzer1): StringAnalyzer1.Token {
         val tokenPackage = stringAnalyzer1.TokenPackage()
         val tokenPackageName = stringAnalyzer1.TokenQualifiedName()
@@ -480,16 +382,26 @@ class TestStringAnalyzer2 {
 
 
         class ActionTokenOpenParenthesizedMethodParameter(token: StringAnalyzer1.Token?) : Action(token) {
+            fun ActionTokenOpenParenthesizedMethodParameter(token: StringAnalyzer1.Token?) {
+                this.setOn(Action.ON_NEXT_TOKEN_CALL)
+            }
+
             override fun action(): Boolean {
+                println("ActionTokenOpenParenthesizedMethodParameter")
                 if (tokenMemberMethodType.name != null && tokenMemberMethodName.name != null) {
                     stringAnalyzer1.construct.currentMethod.ofClass = Variable()
                     stringAnalyzer1.construct.currentMethod.ofClass.classStr = tokenMemberMethodType.name
                     stringAnalyzer1.construct.currentMethod.name = tokenMemberMethodName.name
+
+                    if (stringAnalyzer1.construct.currentMethod.instructions.instructionList == null) {
+                        stringAnalyzer1.construct.currentMethod.instructions = InstructionBlock()
+                    }
+                    stringAnalyzer1.construct.pushInstructions(stringAnalyzer1.construct.currentMethod.instructions)
                 }
                 return true
             }
         }
-        ActionTokenOpenParenthesizedMethodParameter(tokenOpenParenthesizedMethodParameter)
+
         class ActionParamType(token: StringAnalyzer1.Token?) : Action(token) {
             override fun action(): Boolean {
                 println("ActionParamType1: " + (token as TokenQualifiedName).name)
@@ -588,6 +500,8 @@ class TestStringAnalyzer2 {
         val tokenCloseBracketMethod = stringAnalyzer1.TokenCloseBracket()
         tokenOpenBracketMethod.addToken(tokenMultiMembersInstructions)
         tokenMultiMembersInstructions.addToken(tokenCloseBracketMethod)
+
+        ActionTokenOpenParenthesizedMethodParameter(tokenCloseBracketMethod)
 
         // Instructions' flow controls (if-else, while, do while, for-i, for-:, switch)
 
@@ -732,13 +646,26 @@ class TestStringAnalyzer2 {
                     stringAnalyzer1.construct.currentMethod.name = tokenMemberMethodName.name
                     stringAnalyzer1.construct.currentMethod.ofClass.classStr = tokenMemberMethodType.name
                     stringAnalyzer1.construct.currentMethod.ofClass.name = tokenMemberMethodType.name
-
+                    stringAnalyzer1.construct.popInstructions()
                     stringAnalyzer1.construct.currentMethod = Method()
                 }
                 return true
             }
         }
         ActionPushMethod(tokenCloseBracketMethod)
+
+        class ActionPopContext(token: StringAnalyzer1.Token) : Action(token) {
+            override fun action(): Boolean {
+                //val popInstructions = stringAnalyzer1.construct.popInstructions()
+                //stringAnalyzer1.construct.currentInstructions.instructionList.add(popInstructions)
+                return true
+            }
+        }
+
+        ActionPopContext(instructionsIf)
+        ActionPopContext(instructionsElse)
+        //ActionPopContext(instructionBlock)
+        //ActionPopContext(instructionBlockCloseBracket)
 
         tokenPackage.addToken(tokenPackageName)
         tokenPackageName.addToken(tokenPackageSemicolon)
@@ -776,12 +703,17 @@ class TestStringAnalyzer2 {
         class ActionIf(token: StringAnalyzer1.Token) : Action(token) {
             override fun action(): Boolean {
                 if (this.token == tokenIf) {
-                    if (token.isSuccessful) {
-                        val value: ControlledInstructions.If =
-                            ControlledInstructions.If(logicalExpressionExpression.expression)
-                        stringAnalyzer1.construct.pushInstructions(value)
+                    try {
+                        if (token.isSuccessful) {
+                            val value: ControlledInstructions.If =
+                                ControlledInstructions.If(logicalExpressionExpression.expression)
+                            stringAnalyzer1.construct.currentInstructions.instructionList.add(value)
+                            stringAnalyzer1.construct.pushInstructions(value)
+                        }
+                    } catch (ex: IndexOutOfBoundsException) {
                     }
                 }
+                println("TokenIf detected")
                 return true
             }
         }
@@ -789,15 +721,20 @@ class TestStringAnalyzer2 {
         class ActionElse(token: StringAnalyzer1.Token) : Action(token) {
             override fun action(): Boolean {
                 if (this.token == tokenElse) {
-                    if (token.isSuccessful) {
-                        val popInstructionsElse = stringAnalyzer1.construct.currentInstructions
-                        if (popInstructionsElse is ControlledInstructions.If) {
-                            popInstructionsElse.instructionsElse.instructionList.add(
-                                (popInstructionsElse as ControlledInstructions.If).instructionsElse
-                            )
+                    //if (token.isSuccessful) {
+                    try {
+                        var instructionIf = stringAnalyzer1.construct.currentInstructions
+                        if (instructionIf is ControlledInstructions.If) {
+                            instructionIf = stringAnalyzer1.construct.popInstructions() as ControlledInstructions.If
+                            stringAnalyzer1.construct.pushInstructions(instructionIf.instructionsElse)
+                            println("TokenElse detected -> ${instructionIf.instructionsElse != null}")
                         }
+                    } catch (ex: IndexOutOfBoundsException) {
+                        ex.printStackTrace()
                     }
+                    //}
                 }
+                println("TokenElse detected")
                 return true
             }
         }

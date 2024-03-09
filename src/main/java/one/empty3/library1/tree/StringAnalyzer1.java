@@ -167,15 +167,17 @@ public class StringAnalyzer1 {
          * @return the new position after processing the next token
          */
         protected int processNext(String input, int position) {
+            if (action != null && action.on == Action.ON_NEXT_TOKEN_CALL) action();
             if (nextToken() != null) {
                 int nextToken = nextToken(input, position);
                 if (Objects.requireNonNull(nextToken()).isSuccessful()) {
                     setSuccessful(true);
-                    if (action != null) action();
+                    if (action != null && action.getOn() == Action.ON_RETURNS_TRUE_NEXT_TOKEN) action();
                     return nextToken;
                 } else {
                     setSuccessful(false);
-                    if (action != null) action();
+                    ///????
+                    if (action != null && action.getOn() == Action.ON_RETURNS_TRUE_NEXT_TOKEN) action();
                     return position;
                 }
             } else {
@@ -1475,7 +1477,6 @@ public class StringAnalyzer1 {
         private List<InstructionBlock> currentInstructions = new ArrayList<>();
 
         public Construct() {
-
         }
 
         public void pushInstructions(InstructionBlock instructionBlock) {
@@ -1497,7 +1498,7 @@ public class StringAnalyzer1 {
             if (!currentInstructions.isEmpty()) {
                 return currentInstructions.get(currentInstructions.size() - 1);
             }
-            return new InstructionBlock();//???
+            return null;//???
         }
 
         @Override
