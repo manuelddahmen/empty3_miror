@@ -30,7 +30,7 @@ public class Action {
     public static final int NONE = 0;
     public static final int ON_NEXT_TOKEN_CALL = 1;
     public static final int ON_RETURNS_TRUE_NEXT_TOKEN = 2;
-    protected int on = ON_RETURNS_TRUE_NEXT_TOKEN;
+    protected int on = ON_NEXT_TOKEN_CALL;
     protected StringAnalyzer1.Token token;
 
     /**
