@@ -78,7 +78,7 @@ public class Matrix33 extends Representable {
             throw new IndexOutOfBoundsException("Matrix33 9 " + d.length);
         }
         for (int i = 0; i < d.length; i++) {
-            d[i] = d[i]==null?0.0:d[i];
+            d[i] = d[i] == null ? 0.0 : d[i];
         }
         this.d.setAll(d);
     }
@@ -99,10 +99,10 @@ public class Matrix33 extends Representable {
     public Matrix33(Point3D[] p) {
         this();
         for (int i = 0; i < 3; i++) {
-            if(p[i]==null)
+            if (p[i] == null)
                 p[i] = Point3D.O0;
             for (int j = 0; j < 3; j++) {
-                if(p[i].get(j)==null)
+                if (p[i].get(j) == null)
                     p[i].set(j, 0.0);
                 d.setElem(p[i].get(j), i * 3 + j);
             }
@@ -111,9 +111,13 @@ public class Matrix33 extends Representable {
     }
 
     public Matrix33(int columns, int lines) {
-        for(int i=0; i<columns*lines; i++) {
+        for (int i = 0; i < columns * lines; i++) {
             d.setElem(0.0, i);
         }
+    }
+
+    public Matrix33(Point3D a, Point3D b, Point3D c) {
+        this(new Point3D[]{a, b, c});
     }
 
     public static Matrix33 rot(double a, double b) {
@@ -138,7 +142,7 @@ public class Matrix33 extends Representable {
         return new Matrix33(
                 new Double[]{Math.cos(a), 0d, Math.sin(a),
                         0d, 1d, 0d,
-                        - Math.sin(a), 0d, Math.cos(a)}).tild();
+                        -Math.sin(a), 0d, Math.cos(a)}).tild();
     }
 
     public static Matrix33 rotationZ(double a) {
@@ -340,9 +344,9 @@ public class Matrix33 extends Representable {
 
     public double determinant() {
         double det = 0.0;
-        for(int i=0; i<getDim1(); i++)
-            for(int j=0; j<getDim2(); j++) {
-                det += cofactor(i, j).determinant()*(d.getElem(j*getDim1()+j));
+        for (int i = 0; i < getDim1(); i++)
+            for (int j = 0; j < getDim2(); j++) {
+                det += cofactor(i, j).determinant() * (d.getElem(j * getDim1() + j));
             }
         return det;
     }
@@ -352,27 +356,27 @@ public class Matrix33 extends Representable {
     }
 
     private Matrix33 cofactor(int i, int j) {
-        if(getDim1()==2&&getDim2()==2)
-            return new Matrix33( new double[] {
-                    get((i-1)%3,((j-1)%3)),
-                    get((i-1)%3,((j+1)%3)),
-                    get((i+1)%3,((j+1)%3)),
-                    get((i-1)%3,((j+1)%3)) });
-        else if(dim1==1&&dim2==1){
-            return new Matrix33(new double[] {get(0, 0)});
+        if (getDim1() == 2 && getDim2() == 2)
+            return new Matrix33(new double[]{
+                    get((i - 1) % 3, ((j - 1) % 3)),
+                    get((i - 1) % 3, ((j + 1) % 3)),
+                    get((i + 1) % 3, ((j + 1) % 3)),
+                    get((i - 1) % 3, ((j + 1) % 3))});
+        else if (dim1 == 1 && dim2 == 1) {
+            return new Matrix33(new double[]{get(0, 0)});
         }
         Matrix33 matrix33 = new Matrix33(dim1 - 1, dim2 - 1);
-        int row=0, column=0;
-        for(int r=0; r<dim1; r++) {
-            for(int c=0; c<dim2; c++) {
-                if(r!=i && c!=j) {
+        int row = 0, column = 0;
+        for (int r = 0; r < dim1; r++) {
+            for (int c = 0; c < dim2; c++) {
+                if (r != i && c != j) {
                     matrix33.set(column, row, d.getElem(dim1 - 1) * row + column);
                 } else {
 
                 }
                 column++;
             }
-            column=0;
+            column = 0;
             row++;
         }
         return matrix33;

@@ -37,6 +37,8 @@ import one.empty3.library.core.testing.TestObjetStub;
 import one.empty3.library.core.tribase.TRISphere;
 import one.empty3.growth.test.TestCaseExtended;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -44,6 +46,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static one.empty3.growth.graphics.Rotation.rotate;
+
+@RunWith(JUnit4.class)
 
 public class Turtle3DTest extends TestCaseExtended {
 
@@ -74,6 +78,7 @@ public class Turtle3DTest extends TestCaseExtended {
         turtle3D.line(100);
         return z;
     }
+
     @Test
     public void testSquaresXYZaxis() {
         //writeImage(fct());
@@ -134,12 +139,12 @@ public class Turtle3DTest extends TestCaseExtended {
 
             lSystem.setCurrentSymbols("A");
 
-            Logger.getAnonymousLogger().log(Level.INFO,""+ lSystem);
+            Logger.getAnonymousLogger().log(Level.INFO, "" + lSystem);
 
             lSystem.applyRules();
 
 
-            Logger.getAnonymousLogger().log(Level.INFO,""+ lSystem);
+            Logger.getAnonymousLogger().log(Level.INFO, "" + lSystem);
 
             SymbolSequence a2 = new SymbolSequence(new Symbol('A'));
             a2.add(new Symbol('A'));
@@ -428,9 +433,7 @@ public class Turtle3DTest extends TestCaseExtended {
         private Rotation2 rot = new Rotation2();
 
         private Point3D rotate(Point3D A, Point3D B,
-                               double angle, Point3D X)
-
-        {
+                               double angle, Point3D X) {
             return rot.rotation(X, A, B, angle);
         }
 
@@ -576,7 +579,7 @@ public class Turtle3DTest extends TestCaseExtended {
                         angle, y);
 
                 Point3D plus = y.plus(new Point3D(image.getWidth() / 2., image.getHeight() / 2., 0.));
-                graphics.drawLine((int)(double) plus.getX(), (int)(double) plus.getY(), (int)(double) plus.getX(), (int)(double) plus.getY());
+                graphics.drawLine((int) (double) plus.getX(), (int) (double) plus.getY(), (int) (double) plus.getX(), (int) (double) plus.getY());
 
                 Point3D y2 = y;
 
@@ -587,7 +590,7 @@ public class Turtle3DTest extends TestCaseExtended {
                     y2 = rotate(c, d,
                             angleB, y2);
                     plus = y2.plus(new Point3D(image.getWidth() / 2., image.getHeight() / 2., 0.));
-                    graphics.drawLine((int) (double) plus.getX(), (int)(double) plus.getY(), (int)(double) plus.getX(), (int) (double)plus.getY());
+                    graphics.drawLine((int) (double) plus.getX(), (int) (double) plus.getY(), (int) (double) plus.getX(), (int) (double) plus.getY());
 
                 }
             }

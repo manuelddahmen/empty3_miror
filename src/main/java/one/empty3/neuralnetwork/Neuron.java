@@ -24,8 +24,13 @@ package one.empty3.neuralnetwork;
 
 import one.empty3.feature.PixM;
 
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.Scanner;
+
 public class Neuron implements Comparable {
-    private final int length;
+    private int length;
     private Net<? extends Neuron> network;
     private Layer<? extends Neuron> layer;
     private double[] w;
@@ -74,7 +79,7 @@ public class Neuron implements Comparable {
 
 
     public double function() {
-        return dot(input, w)+bias;
+        return dot(input, w) + bias;
     }
 
     private double dot(double[] inputs, double[] w) {
@@ -144,11 +149,12 @@ public class Neuron implements Comparable {
             w[i] = (Math.random() - 0.5) * 2;
         }
     }
+
     public double activation() {
         switch (activationMethod) {
             case None:
-                return activationFunction!=null?
-                        activationFunction.activation(this):
+                return activationFunction != null ?
+                        activationFunction.activation(this) :
                         getOutput();
             case ReLU:
                 //# rectified linear function
@@ -160,13 +166,13 @@ public class Neuron implements Comparable {
                 break;
             case MinMax:
                 double min = Math.min(1.0, Math.max(0.0, function()));
-                return min<1.0?0.0:1.0;
+                return min < 1.0 ? 0.0 : 1.0;
             case Logisitic:
-                return 1.0/(1.0+Math.exp(-getOutput()));
+                return 1.0 / (1.0 + Math.exp(-getOutput()));
             case MinMax01:
                 return Math.min(1.0, Math.max(0.0, function()));
         }
-        return function()+bias >0?1:0;
+        return function() + bias > 0 ? 1 : 0;
     }
 /*
     public int ordPix(int x, int y, int comp) {
@@ -231,5 +237,63 @@ public class Neuron implements Comparable {
 
     public void setActivationMethod(ActivationMethod activationMethod) {
         this.activationMethod = activationMethod;
+    }
+
+    public double[] softMax(double[] x, double[] w) {
+        double[] res = new double[w.length];
+        for (int i = 0; i < w.length; i++) {
+            res[i] = 0;
+        }
+        double sum = 0.0;
+        for (int i = 0; i < w.length; i++) {
+            res[i] = Math.exp(w[i]);
+            sum += res[i];
+        }
+        for (int i = 0; i < w.length; i++) {
+            res[i] = res[i] /= sum;
+        }
+        return res;
+    }
+
+    public boolean save(DataOutputStream outputStream) {
+        double[] byteString = new double[w.length];
+        for (int i = 0; i < w.length; i++) {
+            byteString[i] = w[i];
+        }
+        String lengthStr = "" + w.length;
+        try {
+            outputStream.writeInt(w.length);
+            for (int i = 0; i < byteString.length; i++) {
+                outputStream.writeDouble(byteString[i]);
+            }
+            return true;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public boolean read(DataInputStream inputStream) {
+        String lengthStr = "" + w.length;
+        try {
+
+            int size = inputStream.readInt();
+            double[] byteString = new double[size];
+
+            for (int i = 0; i < byteString.length; i++) {
+                byteString[i] = inputStream.readDouble();
+            }
+            setW(byteString);
+            length = byteString.length;
+            return true;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public class Connection {
+    }
+
+    public void addNext(Connection connection, Neuron neuron) {
+
     }
 }

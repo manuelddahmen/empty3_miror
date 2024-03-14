@@ -34,10 +34,14 @@ import org.junit.Test;
 import one.empty3.growth.graphics.Turtle2D;
 import one.empty3.library.Point2D;
 import one.empty3.library.Point3D;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+
+@RunWith(JUnit4.class)
 
 public class Turtle2DTest extends TestCase {
 

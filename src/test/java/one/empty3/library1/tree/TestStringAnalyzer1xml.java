@@ -24,10 +24,13 @@ package one.empty3.library1.tree;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 import java.io.PrintStream;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+@RunWith(JUnit4.class)
 
 public class TestStringAnalyzer1xml {
     class Parser {

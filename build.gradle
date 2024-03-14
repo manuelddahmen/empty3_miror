@@ -20,7 +20,10 @@ sourceSets {
         java {
             srcDirs 'src/test/java'
         }
-
+        mainClasses {
+            "one.empty3.library1.tree.TestStringAnalyzer3"
+            "one.empty3.library1.tree.TestStringAnalyzer2"
+        }
     }
 }
 
@@ -182,6 +185,12 @@ tasks.register('one.empty3.tests.TestCourseChatPS', JavaExec) {
     dependsOn(jar)
 }
 
+tasks.register('RunPerceptronAndCharacterClassifiers', JavaExec) {
+    classpath sourceSets.test.runtimeClasspath
+    mainClass = "one.empty3.neuralnetwork.of.RunPerceptronAndCharacterClassifiers"
+    args ""
+    dependsOn(jar)
+}
 
 signing {
     def signingKey = load.get("signing.keyId")
@@ -390,4 +399,3 @@ publishing {
 kotlin {
     jvmToolchain(20)
 }
-

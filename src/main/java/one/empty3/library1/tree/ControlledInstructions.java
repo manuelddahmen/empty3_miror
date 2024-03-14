@@ -28,6 +28,7 @@ public class ControlledInstructions extends Instruction {
     }
 
     public static class If extends ControlledInstructions {
+        public InstructionBlock instructionsIf = new InstructionBlock();
         public InstructionBlock instructionsElse = new InstructionBlock();
 
         public If(String controlExpression) {

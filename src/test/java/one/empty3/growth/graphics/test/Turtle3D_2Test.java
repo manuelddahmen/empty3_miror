@@ -25,8 +25,12 @@ package one.empty3.growth.graphics.test;
 import one.empty3.growth.test.TestCaseExtended;
 import one.empty3.growth.graphics.Turtle3D;
 import one.empty3.library.*;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 import java.awt.*;
+
+@RunWith(JUnit4.class)
 
 public class Turtle3D_2Test extends TestCaseExtended {
 

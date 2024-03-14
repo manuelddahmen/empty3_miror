@@ -25,12 +25,16 @@ package one.empty3.growth.graphics.test;
 import one.empty3.growth.graphics.Turtle3D_4;
 import one.empty3.library.*;
 import one.empty3.growth.test.TestCaseExtended;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+@RunWith(JUnit4.class)
 
 public class Turtle3D_4Test extends TestCaseExtended {
     @Override
@@ -46,8 +50,8 @@ public class Turtle3D_4Test extends TestCaseExtended {
         z.scene(new Scene());
         z.scene().cameraActive(new Camera(new Point3D(0., 0., -200.), new Point3D(0., 0., 0.)));
         //z.suivante();
-        
-      //  z.scene().cameraActive(z.camera());
+
+        //  z.scene().cameraActive(z.camera());
         Turtle3D_4 turtle3D_4;
         turtle3D_4 = new Turtle3D_4(z);
         turtle3D_4.setColor(Color.BLACK);
@@ -76,10 +80,10 @@ public class Turtle3D_4Test extends TestCaseExtended {
             java.io.File imageFile = getUniqueFilenameForProduction("testResults", getClass().getCanonicalName() + "___test1", "jpg");
             ImageIO.write(z.image(), "jpg", imageFile);
             Logger.getAnonymousLogger().log(Level.INFO, imageFile + " written");
-          } catch (Exception ex) {
-          ex.printStackTrace();
-    }    
-    
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
 
     }
 }

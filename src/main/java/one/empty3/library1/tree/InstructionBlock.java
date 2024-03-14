@@ -22,6 +22,8 @@
 
 package one.empty3.library1.tree;
 
+import com.badlogic.gdx.utils.StringBuilder;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,7 +43,10 @@ public class InstructionBlock {
     }
 
     private String debugString(boolean isDebug, String tokenLangString) {
-        return isDebug ? "{" + tokenLangString.trim() + "}" : tokenLangString;
+        if (tokenLangString != null && !tokenLangString.isBlank()) {
+            return isDebug ? "{" + tokenLangString.trim() + "}" : tokenLangString;
+        } else
+            return "";
     }
 
     private String tabs() {
@@ -89,14 +94,21 @@ public class InstructionBlock {
                             .append(debugString(debug, array2.toString()));
                 }
             }
-            case "one.empty3.library1.tree.ControlledInstructions.While" ->
-                    stringBuilder.append(debugString(debug, "while")).append(
-                                    debugString(debug, ((ControlledInstructions.While) this).controlExpression)).append("\n")
-                            .append(debugString(debug, array1.toString())).append("\n");
-            case "one.empty3.library1.tree.ControlledInstructions.Do" ->
-                    stringBuilder.append(debugString(debug, "do {\n")).append(debugString(debug, array1.toString())).append(debugString(debug, "} while("))
-                            .append(debugString(debug, ((ControlledInstructions.DoWhile) this).controlExpression))
-                            .append(debugString(debug, "\n"));
+            case "one.empty3.library1.tree.ControlledInstructions.While" -> {
+                StringBuilder array2 = new StringBuilder();
+                for (InstructionBlock instruction : ((ControlledInstructions.While) this).instructionList) {
+                    array2.append(tabs(1)).append(instruction.toLangStringJava(debug)).append("\n");
+                }
+                ControlledInstructions.While aWhile = (ControlledInstructions.While) this;
+                stringBuilder.append(debugString(debug, tabs() + "while"))
+                        .append(debugString(debug, aWhile.controlExpression))
+                        .append(debugString(debug, array2.toString()));
+            }
+            case "one.empty3.library1.tree.ControlledInstructions.DoWhile" -> {
+                stringBuilder.append(debugString(debug, "do \n")).append(debugString(debug, array1.toString())).append(debugString(debug, " while"))
+                        .append(debugString(debug, ((ControlledInstructions.DoWhile) this).controlExpression))
+                        .append(debugString(debug, "\n"));
+            }
             case "one.empty3.library1.tree.ControlledInstructions.ControlledInstructions" ->
                     stringBuilder.append(debugString(debug, "\n"))
                             .append(debugString(debug, array1.toString()))

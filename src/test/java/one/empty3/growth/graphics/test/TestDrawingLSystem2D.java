@@ -27,6 +27,9 @@ import one.empty3.growth.graphics.DrawingLSystem2D;
 import one.empty3.growth.graphics.Turtle2D;
 import one.empty3.growth.test.TestCaseExtended;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runner.notification.RunListener;
+import org.junit.runners.JUnit4;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -39,6 +42,7 @@ import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+@RunWith(JUnit4.class)
 public class TestDrawingLSystem2D extends TestCaseExtended {
     private int MAX = 3;
 
@@ -145,10 +149,11 @@ public class TestDrawingLSystem2D extends TestCaseExtended {
 
 
     }
+
     @Test
     public void testFractaleKoch() throws Exception {
         double angle = Math.PI / 2;
-        String angleStr = ""+angle;
+        String angleStr = "" + angle;
 
         Turtle2D turtle2D;
 

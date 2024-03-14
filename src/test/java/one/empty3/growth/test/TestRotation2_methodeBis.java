@@ -22,41 +22,62 @@
 
 package one.empty3.growth.test;
 
+import one.empty3.feature.snakes.Matrix;
 import one.empty3.growth.graphics.Rotation2;
+import one.empty3.library.Matrix33;
 import one.empty3.library.Point3D;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
+@RunWith(JUnit4.class)
 public class TestRotation2_methodeBis extends TestCaseExtended {
 
     private Rotation2 rot = new Rotation2();
 
+    /***
+     *
+     * @param A
+     * @param B
+     * @param angle
+     * @param X
+     * @return y rotated by matrix (a,b, a^b)
+     */
     private Point3D rotate(Point3D A, Point3D B,
-                           double angle, Point3D X)
+                           double angle, Point3D X) {
+        //return rot.rotation(X, A, B, angle);
+        Matrix33 mRotate = new Matrix33(A, B, A.prodVect(B));
 
-    {
-        return rot.rotation(X, A, B, angle);
+        //Point3D res = new Point3D(3d, -5d, 0d);
+
+        return mRotate.rotationX(angle).mult(X);
     }
 
+    @Test
     public void testRotationIdent1() {
-        Point3D x = rot.rotation(Point3D.Y, Point3D.X,
-                Point3D.O0, 2 * Math.PI);
+        Point3D x = rotate(Point3D.Y, Point3D.X,
+                2 * Math.PI, Point3D.O0);
         Point3D y = Point3D.Y;
 
         assertEqualsPoint3D(x, y, 0.1);
 
     }
-// Fails???
-    /*public void testRotationIdent2() {
+
+    // Fails???
+    @Test
+    public void testRotationIdent2() {
         Point3D x = rotate(Point3D.O0, Point3D.X,
                 2 * Math.PI, Point3D.X);
         Point3D y = Point3D.X;
 
         assertEqualsNaNPoint3D(x);
-    }*/
+    }
 
 
+    @Test
     public void testRotationIdent3() {
         Point3D x = rotate(Point3D.O0, Point3D.X,
                 2 * Math.PI, Point3D.Z);
@@ -66,6 +87,7 @@ public class TestRotation2_methodeBis extends TestCaseExtended {
 
     }
 
+    @Test
     public void testRotation90() {
         Point3D x = rotate(Point3D.O0, Point3D.X,
                 Math.PI, Point3D.Z);
@@ -76,24 +98,30 @@ public class TestRotation2_methodeBis extends TestCaseExtended {
 
     }
 
-    public void testRotationNonO() {
-        Point3D x = rotate(Point3D.X, new Point3D(10d, 0d, 0d),
-                Math.PI, new Point3D(3d, 5d, 5d));
-        Point3D y = new Point3D(3d, -5d, -5d);
+    @Test
+    public void testRotationNon180X() {
+        Point3D x = Matrix33.rotationX(Math.PI).mult(new Point3D(10d, 3d, 0d));
+        Point3D y = new Point3D(10d, -3d, 0d);
 
         assertEqualsPoint3D(x, y, 0.1);
 
     }
 
-    public void testRotation180() {
-        Point3D x = rotate(new Point3D(11d, 0d, 0d), new Point3D(10d, 0d, 0d),
-                Math.PI, new Point3D(3d, 5d, 0d));
-        Point3D y = new Point3D(3d, -5d, 0d);
+    @Test
+    public void testRotation180Y() {
+        Point3D a = new Point3D(11d, 0d, 0d);
+        Point3D b = new Point3D(10d, 0d, 0d);
+        Point3D x = new Point3D(3d, 5d, 0d);
+        Matrix33 mRotate = new Matrix33(a, b, a.prodVect(b));
+        Point3D resComputed = mRotate.rotationX(Math.PI).mult(x);
 
-        assertEqualsPoint3D(x, y, 0.1);
+        Point3D res = new Point3D(3d, -5d, 0d);
+
+        assertEqualsPoint3D(res, resComputed, 0.1);
 
     }
 
+    @Test
     public void testRotation30deg() {
         Point3D x = new Point3D(3d, 5d, 5d);
         Point3D y = x;
@@ -108,6 +136,7 @@ public class TestRotation2_methodeBis extends TestCaseExtended {
 
     }
 
+    @Test
     public void testRotation30degRandomAxe() {
         Point3D A = Point3D.random(100.);
         Point3D B = Point3D.random(100.);
@@ -123,6 +152,7 @@ public class TestRotation2_methodeBis extends TestCaseExtended {
 
     }
 
+    @Test
     public void testRotation0degRandomPoint() {
         Point3D x = Point3D.random(10.);
 
@@ -133,6 +163,7 @@ public class TestRotation2_methodeBis extends TestCaseExtended {
 
     }
 
+    @Test
     public void testRotation0degRandomAxe() {
         Point3D a = Point3D.random(10.);
         Point3D b = Point3D.random(10.);
@@ -144,6 +175,7 @@ public class TestRotation2_methodeBis extends TestCaseExtended {
 
     }
 
+    @Test
     public void testRotation360degRandomAxe() {
         Point3D a = Point3D.random(10.);
         Point3D b = Point3D.random(10.);
@@ -155,6 +187,7 @@ public class TestRotation2_methodeBis extends TestCaseExtended {
 
     }
 
+    @Test
     public void testRotation360deg300RandomAxe() {
         BufferedImage image = new BufferedImage(1600, 1200, BufferedImage.TYPE_INT_RGB);
         Graphics graphics = image.getGraphics();
@@ -169,7 +202,7 @@ public class TestRotation2_methodeBis extends TestCaseExtended {
                     angle, y);
 
             Point3D plus = y.plus(new Point3D(image.getWidth() / 2., image.getHeight() / 2., 0.));
-            graphics.drawLine((int)(double) plus.getX(), (int)(double) plus.getY(), (int) (double)plus.getX(), (int)(double) plus.getY());
+            graphics.drawLine((int) (double) plus.getX(), (int) (double) plus.getY(), (int) (double) plus.getX(), (int) (double) plus.getY());
 
             Point3D y2 = y;
 
@@ -180,7 +213,7 @@ public class TestRotation2_methodeBis extends TestCaseExtended {
                 y2 = rotate(c, d,
                         angleB, y2);
                 plus = y2.plus(new Point3D(image.getWidth() / 2., image.getHeight() / 2., 0.));
-                graphics.drawLine((int) (double)plus.getX(), (int)(double) plus.getY(), (int) (double)plus.getX(), (int)(double)plus.getY());
+                graphics.drawLine((int) (double) plus.getX(), (int) (double) plus.getY(), (int) (double) plus.getX(), (int) (double) plus.getY());
 
             }
         }
@@ -188,6 +221,7 @@ public class TestRotation2_methodeBis extends TestCaseExtended {
     }
 
 
+    @Test
     public void testRotationMethode2() {
         Rotation2 rotation2 = new Rotation2();
 
