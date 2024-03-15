@@ -22,142 +22,87 @@
 
 package one.empty3.neuralnetwork.of;
 
-import atlasgen.CsvAction;
-import atlasgen.CsvLine;
-import atlasgen.CsvReader;
+import javaAnd.awt.image.imageio.ImageIO;
+import one.empty3.feature.M;
+import one.empty3.feature.PixM;
+import one.empty3.library.core.math.Matrix;
+import one.empty3.library.core.nurbs.F;
 import one.empty3.neuralnetwork.HiddenNeuron;
-import one.empty3.neuralnetwork.Net;
+import one.empty3.neuralnetwork.LossFunction;
 import one.empty3.neuralnetwork.Neuron;
-import one.empty3.neuralnetwork.OutputNeuron;
 
+import java.awt.geom.RectangularShape;
+import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.HashMap;
-import java.util.Objects;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.function.Function;
 
 public class Run {
-    private static HashMap<String, String> options;
+    private static File dir = null;
+    public static int MAX_RES = 36;
+    private Neuron inputNeuron = new Neuron(MAX_RES);
 
-    public static double and(double x1, double x2) {
-        Neuron l = new Neuron(2);
-        l.setInput(new double[]{0, 1});
-        l.setW(new double[]{0.5, 0.5});
-        double b = 0.5;
-        double z = l.function();
-        z += b;
-        double a = z > 0 ? 1.0 : 0.0;
+    public static void main(String[] args) {
+        String file = null;
+        if (args.length < 1) {
+            file = "C:\\Users\\manue\\OneDrive\\Bureau\\Dropbox\\Dropbox\\Chargements appareil photo\\IMG_20231202_223159.jpg";
+        } else
+            file = args[0];
 
-        System.out.printf("A:" + a);
-        return a;
+        int sqrt = (int) Math.sqrt(MAX_RES);
+        System.out.println("sqrt: " + sqrt);
+
+        dir = new File(file);
+        Run run = new Run();
+        run.inputNeuron = new Neuron(MAX_RES);
+
+        double[] x = new double[MAX_RES];
+        for (int i = 0; i < (MAX_RES); i++) {
+            run.inputNeuron.getW()[i] = Math.random() - 0.5;
+        }
+
+        Matrix matrixRandomInput = new Matrix(x, sqrt, sqrt);
+        run.loadImageInput(ImageIO.read(new File(file)), sqrt, run.inputNeuron);
+        Matrix matrixNeuron = new Matrix(run.inputNeuron.getW(), sqrt, sqrt);
+        Matrix actual =
+                matrixNeuron.multiply(matrixRandomInput).softmax();
+        Matrix expectedMatrix = Util.createExpectedMatrix(sqrt, sqrt);
+        Matrix loss = LossFunction.crossEntropy(actual, expectedMatrix);
+
+        Matrix calculateError = actual.apply((index, value) -> value - expectedMatrix.get(index));
+
+        System.out.println("Actual result\n" + actual);
+        System.out.println("Matrix neuron image\n" + matrixNeuron);
+        System.out.println("Loss Matrix\n" + loss);
+        System.out.println("Calculate error Matrix\n" + calculateError);
     }
 
-    public static void main(String[] args) throws Exception {
-        int res = 14;
-        options = new HashMap<>();
-        for (String s : args) {
-            String option;
-            String value;
-            if (s != null) {
-                String[] split = s.split("=");
-                if (split.length == 2 && split[0] != null && split[1] != null) {
-                    option = split[0].substring(2);
-                    value = split[1];
-                    options.put(option, value);
-                }
-            }
-        }
-        if (args.length == 0) {
-            Neuron l = new Neuron(2);
-            l.setInput(new double[]{0, 1});
-            l.setW(new double[]{0.5, 0.5});
-            l.setBias(-1);
-            double b = 0.5;
-            double z = l.function();
-            z += b;
-            double a = z > 0 ? 1.0 : 0.0;
-
-            System.out.printf("A:" + a);
-
-            for (int i = 0; i < 4; i++) {
-                double x1 = i / 2;
-                double x2 = i % 2;
-                double output = and(x1, x2);
-
-                System.out.printf("%d%d\t%d", x1, x2, output);
-            }
-        }
-        if (options.get("directory") != null) {
-            File directory = new File(options.get("directory"));
-            if (directory.exists() && directory.isDirectory()) {
-                Logger.getAnonymousLogger().log(Level.INFO, "New network");
-                Net net = new Net();
-                //net.setInputLayer(new InputNeuron(res, res));
-                net.getHiddenLayerList().add(new HiddenNeuron(res * res));
-                net.getHiddenLayerList().add(new HiddenNeuron(res * res));
-                net.getHiddenLayerList().add(new HiddenNeuron(res * res));
-                net.getHiddenLayerList().add(new HiddenNeuron(res * res));
-                net.getHiddenLayerList().add(new HiddenNeuron(res * res));
-                net.getOutputLayerList().add(new OutputNeuron(res * res));
-                for (File image : Objects.requireNonNull(directory.listFiles())) {
-                    //if (net.getInputLayer().loadData(image)) {
-
-                    Logger.getAnonymousLogger().log(Level.INFO, "Train network");
-                    net.train();
-                    //}
-                }
-                Logger.getAnonymousLogger().log(Level.INFO, "Result: net");
-
-                Logger.getAnonymousLogger().log(Level.INFO, net.toString());
-            } else
-                Logger.getAnonymousLogger().log(Level.INFO, "Directory not found" + directory.getAbsolutePath());
-
-        } else if (options.get("csv") != null) {
-            if (options.get("csv") != null) {
-
-                File directory = new File(options.get("csv"));
-                CsvReader reader = new CsvReader(directory, "\t", "\n", false);
-                if (directory.exists() && directory.isFile()) {
-                    Logger.getAnonymousLogger().log(Level.INFO, "New network");
-                    Net net = new Net();
-                    //net.setInputLayer(new InputNeuron(res, res));
-                    net.getHiddenLayerList().add(new HiddenNeuron(res * res));
-                    net.getHiddenLayerList().add(new HiddenNeuron(res * res));
-                    net.getHiddenLayerList().add(new HiddenNeuron(res * res));
-                    net.getHiddenLayerList().add(new HiddenNeuron(res * res));
-                    net.getHiddenLayerList().add(new HiddenNeuron(res * res));
-                    net.getOutputLayerList().add(new OutputNeuron(res * res));
-                    reader.setAction(new CsvAction() {
-                        @Override
-                        public void init() {
-
-                        }
-
-                        @Override
-                        public void processLine(CsvLine csvLine) {
-                            /*
-                            try {
-                                if (net.getInputLayer().loadData(new File(csvLine.getValue()[1]))) {
-
-                                    Logger.getAnonymousLogger().log(Level.INFO, "Train network");
-                                    net.train();
-                                }
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                            */
-                        }
-                    });
-                    Logger.getAnonymousLogger().log(Level.INFO, "Result: net");
-
-                    Logger.getAnonymousLogger().log(Level.INFO, net.toString());
-                } else
-                    Logger.getAnonymousLogger().log(Level.INFO, "Directory not found" + directory.getAbsolutePath());
-
-            }
-
-        }
-
+    public Matrix weightTransform(Matrix weights, Function<Matrix, Matrix> transform) {
+        final double INC = 0.0001;
+        Matrix loss1 = transform.apply(weights);
+        Matrix result = new Matrix(weights.getColumns(), weights.getLines(), i -> 0);
+        weights.forEach(((row, col, index, value) -> {
+            Matrix incremented = weights.addIncrement(row, col, INC);
+            Matrix loss2 = transform.apply(incremented);
+            double rate = (loss2.get(0) - loss1.get(0)) / INC;
+            result.set(row, col, rate);
+        }));
+        return result;
     }
 
+    public Run() {
+    }
+
+    public void train(File inputFile, File outputFile) {
+        loadImageInput(ImageIO.read(dir), MAX_RES, inputNeuron
+        );
+    }
+
+    private void loadImageInput(BufferedImage read, int maxRes, Neuron inputNeuron) {
+        PixM pixM = PixM.getPixM(read, maxRes);
+        for (int i = 0; i < pixM.getColumns(); i++) {
+            for (int j = 0; j < pixM.getLines(); j++) {
+                inputNeuron.getInput()[pixM.index(i, j) / 3] = pixM.luminance(i, j);
+            }
+        }
+    }
 }

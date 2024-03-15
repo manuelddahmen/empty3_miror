@@ -30,13 +30,16 @@ public class Matrix extends PixM {
     public static final double DOUBLE_MIN = 0.0001;
     public static final String NUMBER_FORMAT = "%+12.5f";
     private static final double TOLERANCE = 0.000001;
+
     public Matrix(int lines, int columns, int countComp) {
         super(lines, columns);
         this.lines = lines;
         this.columns = columns;
         this.compCount = countComp;
         x = new double[lines * columns * compCount];
+        compNo = 0;
     }
+
     public Matrix(int lines, int columns) {
         super(lines, columns);
         this.lines = lines;
@@ -50,6 +53,15 @@ public class Matrix extends PixM {
         for (int i = 0; i < x.length; i++) {
             x[i] = producer.produce(i);
 
+        }
+    }
+
+    public Matrix(double[] w, int resX, int resY) {
+        this(resX, resY);
+        for (int j = 0; j < resY; j++) {
+            for (int i = 0; i < resX; i++) {
+                x[j * resX + i] = w[j * resX + i];
+            }
         }
     }
 
@@ -129,34 +141,49 @@ public class Matrix extends PixM {
     }
 
     public double get(int row, int col) {
-        return x[row*columns+col];
+        compNo = 0;
+        return x[index(row, col)];
     }
+
     public void set(int row, int col, double value) {
-        x[row*columns+col] = value;
+
+        compNo = 0;
+        x[index(row, col)] = value;
     }
+
     public void set(int row, double value) {
+        compNo = 0;
         x[row] = value;
     }
 
     public double get(int index) {
+
+        compNo = 0;
         return x[index];
     }
 
     public Matrix softmax() {
-        Matrix matrix = new Matrix(lines, columns, 1);
+        compNo = 0;
+        Matrix matrix = new Matrix(lines, columns, compCount);
         double sumExp = 0.0;
         for (int i = 0; i < lines; i++) {
             for (int j = 0; j < columns; j++) {
-                sumExp += Math.exp(get(i,j));
+                sumExp += Math.exp(get(i, j));
             }
         }
         for (int i = 0; i < lines; i++) {
             for (int j = 0; j < columns; j++) {
-                matrix.set(i, j, Math.exp(get(i,j))/sumExp);
+                matrix.set(i, j, Math.exp(get(i, j)) / sumExp);
             }
         }
         return matrix;
     }
+
+    public Matrix addIncrement(int row, int col, double inc) {
+        set(row, col, get(row, col) + inc);
+        return this;
+    }
+
 
     public interface Producer {
         double produce(int index);
@@ -165,12 +192,13 @@ public class Matrix extends PixM {
     public interface ValueProducer {
         double produce(int index, double value);
     }
+
     public interface RowColProducer {
         double produce(int row, int col, double value);
     }
 
     public Matrix modify(RowColProducer producer) {
-        int index=0;
+        int index = 0;
         for (int row = 0; row < lines; row++) {
             for (int col = 0; col < columns; col++) {
                 x[index] = producer.produce(row, col, x[index]);
@@ -191,32 +219,39 @@ public class Matrix extends PixM {
     public interface IndexValueConsumer {
         public void consume(int index, double value);
     }
+
     public void forEach(IndexValueConsumer consumer) {
         for (int i = 0; i < x.length; i++) {
             consumer.consume(i, x[i]);
         }
     }
+
     public interface RowColIndexValueConsumer {
         public void consume(int row, int col, int index, double value);
     }
+
     public void forEach(RowColIndexValueConsumer consumer) {
         int index = 0;
-            for (int row = 0; row < lines; row++) {
-                for (int col = 0; col < columns; col++) {
-                    consumer.consume(row, col, index, get(row, col));
-                    index++;
-                }
+        this.compNo = 0;
+        for (int row = 0; row < lines; row++) {
+            for (int col = 0; col < columns; col++) {
+                consumer.consume(row, col, index, get(row, col));
+                index++;
             }
+        }
 
     }
+
     public Matrix sumColumns() {
         Matrix matrix = new Matrix(1, columns, 1);
-        forEach((row, col, index, value) -> matrix.set(0, col, matrix.get(0, col)+value));
+        matrix.setColumns(0);
+        forEach((row, col, index, value) -> matrix.set(0, col, matrix.get(row, col) + value));
         return matrix;
     }
+
     public Matrix sumlines() {
         Matrix matrix = new Matrix(lines, 1, 1);
-        forEach((row, col, index, value) -> matrix.set(row, 0, matrix.get(row, 0)+value));
+        forEach((row, col, index, value) -> matrix.set(row, 0, matrix.get(row, 0) + value));
         return matrix;
     }
 

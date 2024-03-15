@@ -40,7 +40,7 @@ import kotlin.RuntimeException
  */
 @RunWith(JUnit4::class)
 class TestStringAnalyzer3 {
-    private val isDebug: Boolean = true
+    private var isDebug: Boolean = true
 
     fun readString(file_path: String): String {
         try {
@@ -725,6 +725,7 @@ class TestStringAnalyzer3 {
 
     @Test
     fun testJavaClass3() {
+        isDebug = false
         val stringAnalyzer1 = StringAnalyzer1()
         val javaToken = TestStringAnalyzer3().getJavaToken3(stringAnalyzer1)
         val token = javaToken
@@ -753,7 +754,7 @@ class TestStringAnalyzer3 {
                 Assert.assertTrue(true)
                 return
             } else {
-                Assert.assertTrue(false)
+                Assert.assertFalse(true)
             }
 
     }

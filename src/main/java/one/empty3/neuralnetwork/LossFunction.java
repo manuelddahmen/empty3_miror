@@ -23,6 +23,7 @@
 package one.empty3.neuralnetwork;
 
 import one.empty3.library.core.math.Matrix;
+import one.empty3.library.shader.Mat;
 
 public class LossFunction {
     public static Matrix crossEntropy(Matrix expected, Matrix actual) {
@@ -30,6 +31,36 @@ public class LossFunction {
             return -expected.get(index) * Math.log(value);
         }).sumColumns();
 
+        return result;
+    }
+
+    public static Matrix crossEntropy2(Matrix expected, Matrix actual) {
+        Matrix result = actual.apply((index, value) -> {
+            // Additional check to prevent NaN values when value = 0.0 or 1.0
+            double epsilon = 1e-15;
+            value = Math.max(Math.min(value, 1.0 - epsilon), epsilon);
+
+            return -expected.get(index) * Math.log(value);
+        }).sumColumns();
+
+        return result;
+    }
+
+    public static Matrix crossEntropy2arrays(double[] expected, double[] actual, int dimX, int dimY) {
+        Matrix actualMatrix = new Matrix(dimX, dimY);
+        Matrix expectedMatrix = new Matrix(dimX, dimY);
+
+        Matrix result = new Matrix(dimX, dimY, new Matrix.Producer() {
+            @Override
+            public double produce(int index) {
+                // Additional check to prevent NaN values when value = 0.0 or 1.0
+                double value = actual[index];
+                double epsilon = 1e-15;
+                value = Math.max(Math.min(value, 1.0 - epsilon), epsilon);
+
+                return -expectedMatrix.get(index) * Math.log(value);
+            }
+        });
         return result;
     }
 }

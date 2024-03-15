@@ -181,40 +181,58 @@ public class TreeNode {
             if (eval1.getDim() == 1 && eval2.getDim() == 1) {
                 dim1 = eval1.data1d.size();
                 dim2 = eval2.data1d.size();
-                for (int i = 0; i < getChildren().size(); i++) {
+                Point3D res3 = Point3D.O0;
+                Point2D res2 = new Point2D();
+                double res1 = 1;
+                for (int i = 0; i < getChildren().size() - 1; i++) {
+                    StructureMatrix<Double> evalI = getChildren().get(i).eval();
+                    StructureMatrix<Double> evalI1 = getChildren().get(i + 1).eval();
                     if (dim1 == dim2 && dim1 == 3) {
-                        Point3D point3D1 = new Point3D(eval1.data1d.get(0), eval1.data1d.get(1), eval1.data1d.get(2));
                         Point3D point3D2 = new Point3D(eval2.data1d.get(0), eval2.data1d.get(1), eval2.data1d.get(2));
-                        Point3D point3Dres = point3D1.prodVect(point3D2);
+                        if (i == 0)
+                            res3 = p3(evalI);
+                        res3 = res3.prodVect(p3(evalI1));
                         evalRes = new StructureMatrix<>(1, Double.class);
-                        evalRes.setElem(point3Dres.get(0), 0);
-                        evalRes.setElem(point3Dres.get(1), 1);
-                        evalRes.setElem(point3Dres.get(2), 2);
-
-                        return evalRes;
-                    } else if (dim1 == dim2 && dim1 == 2) {
-                        Point2D point2D1 = new Point2D(eval1.data1d.get(0), eval1.data1d.get(1));
-                        Point2D point2D2 = new Point2D(eval2.data1d.get(0), eval2.data1d.get(1));
-                        Point2D point3Dres = new Point2D(eval1.data1d.get(0) * eval2.data1d.get(1), eval1.data1d.get(1) * eval2.data1d.get(0));
+                        evalRes.setElem(res3.get(0), 0);
+                        evalRes.setElem(res3.get(1), 1);
+                        evalRes.setElem(res3.get(2), 2);
+                    } else if (dim1 == dim2 && dim1 == 2) {//???
+                        if (i == 0)
+                            res2 = p2(evalI);
+                        Point2D point2D2 = new Point2D(evalI1.data1d.get(0), evalI1.data1d.get(1));
+                        res2 = res2.mult(point2D2);
                         evalRes = new StructureMatrix<>(1, Double.class);
-                        evalRes.setElem(point3Dres.get(0), 0);
-                        evalRes.setElem(point3Dres.get(1), 1);
-
-                        return evalRes;
+                        evalRes.setElem(res2.get(0), 0);
+                        evalRes.setElem(res2.get(1), 1);
+                    } else if (dim1 == dim2 && dim1 == 0) {
+                        if (i == 0)
+                            res1 = evalI.getElem(0);
+                        res1 = Math.pow(res1, evalI1.getElem(0));
+                        evalRes = new StructureMatrix<>(1, Double.class);
+                        evalRes.setElem(res1, 0);
                     }
 
                 }
-            } else if (evalRes.getDim() == 0) {
-                return evalRes.setElem(Math.pow((Double) getChildren().get(0).eval().getElem(), (Double) getChildren().get(1).eval().getElem()));
-
+            } else if (eval1.getDim() == 0 && eval2.getDim() == 0) {
+                double res1 = 1.0;
+                for (int i = 0; i < getChildren().size() - 1; i++) {
+                    StructureMatrix<Double> evalI = getChildren().get(i).eval();
+                    StructureMatrix<Double> evalI1 = getChildren().get(i + 1).eval();
+                    if (i == 0)
+                        res1 = evalI.getElem();
+                    res1 = Math.pow(res1, evalI1.getElem());
+                    evalRes = new StructureMatrix<>(0, Double.class);
+                    evalRes.setElem(res1);
+                }
+            }
 /*
  double pow = evalRes.getElem();
                 for (int i = 1; i < getChildren().size(); i++) {
                     pow = Math.pow(pow, getChildren().get(i).eval().getElem());
                 }
-                return evalRes.setElem(pow);
  */
-            }
+            return evalRes;
+
         } else if (cType instanceof FactorTreeNodeType) {
             if (getChildren().size() == 1) {
                 evalRes = getChildren().get(0).eval();///SIGN
@@ -524,6 +542,10 @@ public class TreeNode {
 
     }
 
+    private Point2D p2(StructureMatrix<Double> evalI) {
+        return new Point2D(evalI.getElem(0), evalI.getElem(1));
+    }
+
     private StructureMatrix<Double> initVoid(TreeNode treeNode, double val) throws TreeNodeEvalException, AlgebraicFormulaSyntaxException {
         StructureMatrix<Double> evalRes = treeNode.eval();
         switch (evalRes.getDim()) {
@@ -573,5 +595,9 @@ public class TreeNode {
             s += "Child (" + i++ + ") : " + t.toString() + "\n";
         }
         return s + "\n";
+    }
+
+    private Point3D p3(StructureMatrix<Double> eval1) {
+        return new Point3D(eval1.data1d.get(0), eval1.data1d.get(1), eval1.data1d.get(2));
     }
 }

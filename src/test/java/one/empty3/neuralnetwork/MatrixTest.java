@@ -53,8 +53,7 @@ public class MatrixTest {
             String[] values = row.split("\t");
             for (String value : values) {
                 Logger.getAnonymousLogger().log(Level.INFO, value);
-                var doubleValue = Double.valueOf(value);
-                //assertTrue(Math.abs(doubleValue-expected[index])<0.0001);
+                double parsedValue = Double.parseDouble(value);
                 index++;
             }
         }

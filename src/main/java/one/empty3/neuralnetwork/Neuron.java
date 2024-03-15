@@ -25,9 +25,6 @@ package one.empty3.neuralnetwork;
 import one.empty3.feature.PixM;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.Scanner;
 
 public class Neuron implements Comparable {
     private int length;
@@ -44,7 +41,7 @@ public class Neuron implements Comparable {
         this.length = length;
         w = new double[length];
         input = new double[length];
-        initW(1.0);
+        initConstant(0.0);
     }
 
     public void compute() {
@@ -144,9 +141,15 @@ public class Neuron implements Comparable {
         return -1;
     }
 
-    public void initW(double random) {
+    public void initRandom(double random) {
         for (int i = 0; i < w.length; i++) {
             w[i] = (Math.random() - 0.5) * 2;
+        }
+    }
+
+    public void initConstant(double random) {
+        for (int i = 0; i < w.length; i++) {
+            w[i] = random;
         }
     }
 
@@ -295,5 +298,16 @@ public class Neuron implements Comparable {
 
     public void addNext(Connection connection, Neuron neuron) {
 
+    }
+
+    public double[] multiply(double[] input) {
+        int sqrt = (int) Math.sqrt(w.length + 1);
+        double[] res = new double[sqrt];
+        for (int j = 0; j < sqrt; j++) {
+            for (int i = 0; i < sqrt; i++) {
+                res[j] += w[i * sqrt + j] * input[j];
+            }
+        }
+        return res;
     }
 }
