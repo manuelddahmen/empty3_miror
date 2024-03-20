@@ -22,8 +22,6 @@
 
 package one.empty3.library1.tree;
 
-import com.badlogic.gdx.utils.StringBuilder;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,7 +44,7 @@ public class InstructionBlock {
         if (tokenLangString != null && !tokenLangString.isBlank()) {
             return isDebug ? "{" + tokenLangString.trim() + "}" : tokenLangString;
         } else
-            return "";
+            return (tokenLangString == null || tokenLangString.isEmpty()) ? "" : tokenLangString;
     }
 
     private String tabs() {
@@ -68,37 +66,47 @@ public class InstructionBlock {
     public String toLangStringJava(boolean debug) {
         deepth++;
         StringBuilder stringBuilder = new StringBuilder();
+
         StringBuilder array1 = new StringBuilder();
-        if (this.getClass().isAssignableFrom(InstructionBlock.class)) {
-            array1.append(debugString(debug, "{\n"));
-        }
+        array1.append(debugString(debug, "{\n"));
         for (InstructionBlock instruction : getInstructionList()) {
             array1.append(tabs(1)).append(instruction.toLangStringJava(debug)).append(";\n");
         }
-        if (this.getClass().isAssignableFrom(InstructionBlock.class)) {
-            array1.append(debugString(debug, tabs() + "}\n"));
-        }
+        array1.append(debugString(debug, tabs() + "}\n"));
+
         System.out.println(getClass().getSimpleName());
         switch (getClass().getCanonicalName()) {
             case "one.empty3.library1.tree.ControlledInstructions.If" -> {
-                StringBuilder array2 = new StringBuilder();
-                for (InstructionBlock instruction : ((ControlledInstructions.If) this).instructionsElse.instructionList) {
-                    array2.append(tabs(1)).append(instruction.toLangStringJava(debug)).append("\n");
-                }
                 ControlledInstructions.If anIf = (ControlledInstructions.If) this;
-                stringBuilder.append(debugString(debug, "if"))
+                StringBuilder array3 = new StringBuilder();
+                array3.append(debugString(debug, tabs() + "{\n"));
+                for (InstructionBlock instruction : anIf.getInstructionsList()) {
+                    array3.append(tabs(1)).append(instruction.toLangStringJava(debug)).append("\n");
+                }
+                array3.append(debugString(debug, tabs() + "}\n"));
+                StringBuilder array2 = new StringBuilder();
+                if (!anIf.instructionsElse.instructionList.isEmpty()) {
+                    array2.append(debugString(debug, tabs() + "{\n"));
+                    for (InstructionBlock instruction : anIf.instructionsElse.instructionList) {
+                        array2.append(tabs(1)).append(instruction.toLangStringJava(debug)).append("\n");
+                    }
+                    array2.append(debugString(debug, tabs() + "}\n"));
+                }
+                stringBuilder.append(debugString(debug, tabs() + "if"))
                         .append(debugString(debug, anIf.controlExpression))
-                        .append(debugString(debug, array1.toString()));
+                        .append(debugString(debug, array3.toString()));
                 if (!anIf.instructionsElse.getInstructionList().isEmpty()) {
-                    stringBuilder.append(debugString(debug, "else")).append("\n")
+                    stringBuilder.append(debugString(debug, tabs() + "else")).append("\n")
                             .append(debugString(debug, array2.toString()));
                 }
             }
             case "one.empty3.library1.tree.ControlledInstructions.While" -> {
                 StringBuilder array2 = new StringBuilder();
-                for (InstructionBlock instruction : ((ControlledInstructions.While) this).instructionList) {
-                    array2.append(tabs(1)).append(instruction.toLangStringJava(debug)).append("\n");
+                array2.append(debugString(debug, tabs() + "{\n"));
+                for (InstructionBlock instruction : this.instructionList) {
+                    array2.append(tabs(1)).append(tabs(1) + instruction.toLangStringJava(debug)).append("\n");
                 }
+                array2.append(debugString(debug, tabs() + "}\n"));
                 ControlledInstructions.While aWhile = (ControlledInstructions.While) this;
                 stringBuilder.append(debugString(debug, tabs() + "while"))
                         .append(debugString(debug, aWhile.controlExpression))
@@ -109,17 +117,20 @@ public class InstructionBlock {
                         .append(debugString(debug, ((ControlledInstructions.DoWhile) this).controlExpression))
                         .append(debugString(debug, "\n"));
             }
-            case "one.empty3.library1.tree.ControlledInstructions.ControlledInstructions" ->
-                    stringBuilder.append(debugString(debug, "\n"))
-                            .append(debugString(debug, array1.toString()))
-                            .append(debugString(debug, "\n"));
+//            case "one.empty3.library1.tree.ControlledInstructions.ControlledInstructions" ->
+//                    stringBuilder.append(debugString(debug, "\n"))
+//                            .append(debugString(debug, array1.toString()))
+//                            .append(debugString(debug, "\n"));
             case "one.empty3.library1.tree.Instruction" -> {
                 Instruction instruction = (Instruction) this;
-                stringBuilder.append(tabs(1)).append(instruction.getType() != null ? debugString(debug, instruction.getType()) : "")
+                stringBuilder.append(tabs()).append(instruction.getType() != null ? debugString(debug, instruction.getType()) : "")
                         .append(" ").append(instruction.getName() != null ? debugString(debug, instruction.getName()) : "")
                         .append(" ").append(instruction.getExpression() != null ? " " +
                                 debugString(debug, instruction.getExpression().toString()) : "").append(";\n");
             }
+            //case "one.empty3.library1.tree.InstructionBlock" -> {
+            //    stringBuilder.append(array1);
+            //}
         }
         deepth--;
         return stringBuilder.toString();

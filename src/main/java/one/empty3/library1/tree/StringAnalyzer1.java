@@ -1493,12 +1493,22 @@ public class StringAnalyzer1 {
         }
 
         public InstructionBlock getCurrentInstructions() {
-            if (currentInstructions == null)
+            if (currentInstructions == null) {
                 currentInstructions = new ArrayList<>();
+                currentInstructions.add(new InstructionBlock());
+            }
+
             if (!currentInstructions.isEmpty()) {
                 return currentInstructions.get(currentInstructions.size() - 1);
             }
             return null;//???
+        }
+
+        public void setCurrentInstructions(InstructionBlock instructionBlock) {
+            if (currentInstructions == null) {
+                currentInstructions = new ArrayList<>();
+            }
+            currentInstructions.add(instructionBlock);
         }
 
         @Override
@@ -1563,15 +1573,7 @@ public class StringAnalyzer1 {
                     sb.append(debugString(debug, " )"));
                     sb.append(debugString(debug, " {\n"));
                     method.getInstructions().instructionList.forEach(instruction0 -> {
-                        sb.append("\t\t");
                         sb.append(instruction0.toLangStringJava(debug));
-                        /*if (instruction0 instanceof Instruction instruction) {
-                            sb.append(instruction.getType() != null ? debugString(debug, instruction.getType()) : "")
-                                    .append(" ").append(instruction.getName() != null ? debugString(debug, instruction.getName()) : "")
-                                    .append(" ").append(instruction.getExpression() != null ? " " +
-                                            debugString(debug, instruction.getExpression().toString()) : "").append(";\n");
-                        }*/
-
                     });
                 });
                 sb.append("\t}\n");
@@ -1832,13 +1834,12 @@ public class StringAnalyzer1 {
 
         @Override
         public Token copy(Token token0) {
-            super.copy(token0);
-            synchronized (Collections.unmodifiableList(choices)) {
-                choices.forEach(token -> {
-                    Token copy1 = token.copy(token);
-                    ((MultiToken) token0).choices.add(copy1);
-                });
-            }
+            Token copy = super.copy(token0);
+            choices.forEach(token -> {
+                Token copy1 = token.copy(token);
+                ((MultiToken) copy).choices.add(copy1);
+
+            });
             return token0;
         }
     }
