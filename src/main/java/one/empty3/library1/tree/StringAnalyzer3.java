@@ -30,12 +30,12 @@ import java.util.*;
 import java.util.function.Consumer;
 
 /**
- * The StringAnalyzer1 class is responsible for analyzing string inputs and performing parsing operations.
+ * The StringAnalyzer3 class is responsible for analyzing string inputs and performing parsing operations.
  * It contains methods for parsing and retrieving constructs.
  *
  * @see AlgebraicTree
  */
-public class StringAnalyzer1 {
+public class StringAnalyzer3 {
     protected HashMap<Integer, Token> definitions = new HashMap<>();
     protected int mPosition;
     private HashMap<String, Class> classes;
@@ -55,7 +55,7 @@ public class StringAnalyzer1 {
      * Represents a token in a parsing process.
      */
     public abstract class Token {
-        protected Action action;
+        protected Action3 action;
         protected Class aClass;
         protected Method method;
         protected Variable variable;
@@ -89,7 +89,7 @@ public class StringAnalyzer1 {
             return null;
         }
 
-        public Token setAction(Action action) {
+        public Token setAction(Action3 action) {
             this.action = action;
             return this;
         }
@@ -150,7 +150,7 @@ public class StringAnalyzer1 {
          *
          * @return the action associated with the token
          */
-        public Action getAction() {
+        public Action3 getAction3() {
             return action;
         }
 
@@ -158,7 +158,7 @@ public class StringAnalyzer1 {
          * Executes the action associated with the token, if it is not null.
          */
         public void action() {
-            if (getAction() != null) getAction().action();
+            if (getAction3() != null) getAction3().action();
         }
 
         /**
@@ -169,17 +169,17 @@ public class StringAnalyzer1 {
          * @return the new position after processing the next token
          */
         protected int processNext(String input, int position) {
-            if (action != null && action.on == Action.ON_NEXT_TOKEN_CALL) action();
+            if (action != null && action.on == Action3.ON_NEXT_TOKEN_CALL) action();
             if (nextToken() != null) {
                 int nextToken = nextToken(input, position);
                 if (Objects.requireNonNull(nextToken()).isSuccessful()) {
                     setSuccessful(true);
-                    if (action != null && action.getOn() == Action.ON_RETURNS_TRUE_NEXT_TOKEN) action();
+                    if (action != null && action.getOn() == Action3.ON_RETURNS_TRUE_NEXT_TOKEN) action();
                     return nextToken;
                 } else {
                     setSuccessful(false);
                     ///????
-                    if (action != null && action.getOn() == Action.ON_RETURNS_TRUE_NEXT_TOKEN) action();
+                    if (action != null && action.getOn() == Action3.ON_RETURNS_TRUE_NEXT_TOKEN) action();
                     return position;
                 }
             } else {
@@ -636,9 +636,9 @@ public class StringAnalyzer1 {
         public int parse(String input, int position) {
             if (position >= input.length() || input.substring(position).trim().isEmpty()) {
                 mPosition = position;
-                //throw new RuntimeException(getClass() + " : position>=input.length()");
-                setSuccessful(false);
-                return position;
+                setSuccessful(true);
+                throw new RuntimeException(getClass() + " : position>=input.length()");
+                //return position;
 
             }
             position = super.skipBlanks(input, position);
@@ -1163,11 +1163,11 @@ public class StringAnalyzer1 {
     }
 
     /**
-     * This class represents a StringAnalyzer1 object that can perform parsing operations on a string input.
+     * This class represents a StringAnalyzer3 object that can perform parsing operations on a string input.
      */
-    public StringAnalyzer1() {
+    public StringAnalyzer3() {
         TokenQualifiedName packageQualifiedName = new TokenQualifiedName();
-        Action actionPackageName = new Action(packageQualifiedName) {
+        Action3 actionPackageName = new Action3(packageQualifiedName) {
             @Override
             public boolean action() {
                 String string = getToken().isSuccessful() ? ((TokenQualifiedName) getToken()).getName() : "";
@@ -1179,7 +1179,7 @@ public class StringAnalyzer1 {
             }
         };
         Token isFinal = new TokenConstantModifier();
-        Action actionConstantModifier = new Action(isFinal) {
+        Action3 actionConstantModifier = new Action3(isFinal) {
             @Override
             public boolean action() {
                 if (getToken().isSuccessful()) {
@@ -1192,7 +1192,7 @@ public class StringAnalyzer1 {
             }
         };
         TokenName className = new TokenName();
-        Action setNewClassName = new Action(className) {
+        Action3 setNewClassName = new Action3(className) {
             @Override
             public boolean action() {
                 if (token.isSuccessful()) {
@@ -1207,7 +1207,7 @@ public class StringAnalyzer1 {
             }
         };
         Token closeBracketClass = new TokenCloseBracket();
-        Action actionCloseClassBracket = new Action(closeBracketClass) {
+        Action3 actionCloseClassBracket = new Action3(closeBracketClass) {
             @Override
             public boolean action() {
                 //((TokenCloseBracket)getToken())
@@ -1219,7 +1219,7 @@ public class StringAnalyzer1 {
             }
         };
         Token closeBracketMethod = new TokenCloseBracket();
-        actionCloseClassBracket = new Action(closeBracketMethod) {
+        actionCloseClassBracket = new Action3(closeBracketMethod) {
             @Override
             public boolean action() {
                 //((TokenCloseBracket)getToken())
@@ -1232,7 +1232,7 @@ public class StringAnalyzer1 {
         };
 
         TokenClassScope tokenVariableScope = new TokenClassScope();
-        Action action = new Action(tokenVariableScope) {
+        Action3 action = new Action3(tokenVariableScope) {
             @Override
             public boolean action() {
                 if (token.isSuccessful()) {
@@ -1251,7 +1251,7 @@ public class StringAnalyzer1 {
         };
         TokenQualifiedName tokenQualifiedNameVariable = new TokenQualifiedName();
 
-        Action actionQualifiedNameVariable = new Action(tokenQualifiedNameVariable) {
+        Action3 actionQualifiedNameVariable = new Action3(tokenQualifiedNameVariable) {
             @Override
             public boolean action() {
                 if (token.isSuccessful()) {
@@ -1268,7 +1268,7 @@ public class StringAnalyzer1 {
             }
         };
         TokenClassScope tokenMethodScope = new TokenClassScope();
-        Action actionClassScope = new Action(tokenMethodScope) {
+        Action3 actionClassScope = new Action3(tokenMethodScope) {
             @Override
             public boolean action() {
                 List<Method> methodList = construct.currentClass.getMethodList();
@@ -1285,7 +1285,7 @@ public class StringAnalyzer1 {
             }
         };
         TokenMethodMemberDefinition tokenMethodMemberDefinition = new TokenMethodMemberDefinition();
-        Action actionMethodName = new Action(tokenMethodScope) {
+        Action3 actionMethodName = new Action3(tokenMethodScope) {
             @Override
             public boolean action() {
                 List<Method> methodList = construct.currentClass.getMethodList();
@@ -1309,7 +1309,7 @@ public class StringAnalyzer1 {
 
 
         TokenVariableInMethodName tokenVariableInMethodName = new TokenVariableInMethodName();
-        Action actionTokenVariableInMethodName = new Action(tokenVariableInMethodName) {
+        Action3 actionTokenVariableInMethodName = new Action3(tokenVariableInMethodName) {
             @Override
             public boolean action() {
                 if (token.isSuccessful()) {
@@ -1327,7 +1327,7 @@ public class StringAnalyzer1 {
         };
 
         Token endOfInstruction = new TokenSemiColon();
-        Action actionEndOfInstruction = new Action(endOfInstruction) {
+        Action3 actionEndOfInstruction = new Action3(endOfInstruction) {
             @Override
             public boolean action() {
                 if (token.isSuccessful()) {
@@ -1342,7 +1342,7 @@ public class StringAnalyzer1 {
             }
         };
         Token tokenBeginOfMethod = new TokenOpenBracket();
-        Action actionBeginOfInstructions = new Action(tokenBeginOfMethod) {
+        Action3 actionBeginOfInstructions = new Action3(tokenBeginOfMethod) {
             @Override
             public boolean action() {
                 if (token.isSuccessful()) {
@@ -1354,7 +1354,7 @@ public class StringAnalyzer1 {
             }
         };
         TokenClassKeyword tokenClassKeyword = new TokenClassKeyword();
-        Action actionClassKeyword = new Action(tokenClassKeyword) {
+        Action3 actionClassKeyword = new Action3(tokenClassKeyword) {
             @Override
             public boolean action() {
                 if (token.isSuccessful()) {

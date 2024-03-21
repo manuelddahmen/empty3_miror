@@ -1,3 +1,4 @@
+package one.empty3.library1.tree
 /*
  *
  *  * Copyright (c) 2024. Manuel Daniel Dahmen
@@ -19,7 +20,8 @@
  *
  *
  */
-package one.empty3.library1.tree
+
+
 
 import one.empty3.library1.tree.StringAnalyzer1.TokenName
 import one.empty3.library1.tree.StringAnalyzer1.TokenQualifiedName
@@ -30,12 +32,13 @@ import org.junit.runners.JUnit4
 import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.Paths
+import kotlin.system.exitProcess
 
 /**
  * Test class for AlgebraicTree.
  */
 @RunWith(JUnit4::class)
-class TestStringAnalyzer3 {
+class TestStringAnalyzer4 {
     private var isDebug: Boolean = true
 
     fun readString(file_path: String): String {
@@ -51,8 +54,7 @@ class TestStringAnalyzer3 {
         throw RuntimeException("Not found or read fails")
     }
 
-
-    public fun getJavaToken3(stringAnalyzer1: StringAnalyzer1): StringAnalyzer1.Token {
+    public fun getJavaToken4(stringAnalyzer1: StringAnalyzer1): StringAnalyzer1.Token {
         val tokenPackage = stringAnalyzer1.TokenPackage()
         val tokenPackageName = stringAnalyzer1.TokenQualifiedName()
         val tokenPackageSemicolon = stringAnalyzer1.TokenSemiColon()
@@ -345,6 +347,7 @@ class TestStringAnalyzer3 {
         val tokenSingleInstructionWhile = instruction//.copy(instruction)
         val tokenMultiMembersInstructions = stringAnalyzer1.MultiTokenExclusiveXor(instruction)
         val tokenMultiMembersInstructionsWhile = stringAnalyzer1.MultiTokenExclusiveXor(instruction)
+        val tokenMultiMembersInstructionsIf = stringAnalyzer1.MultiTokenExclusiveXor(instruction)
 
 
         // End of Instructions
@@ -361,14 +364,19 @@ class TestStringAnalyzer3 {
         val instructionBlockOpenBracket = stringAnalyzer1.TokenString("{")
         val instructionBlockCloseBracket = stringAnalyzer1.TokenString("}")
         val instructionBlock = stringAnalyzer1.SingleTokenMandatory(
-            instructionBlockOpenBracket,
+            stringAnalyzer1.TokenString("{"),
             tokenMultiMembersInstructions,
-            instructionBlockCloseBracket
+            stringAnalyzer1.TokenString("}")
         )
         val instructionBlockWhile = stringAnalyzer1.SingleTokenMandatory(
-            instructionBlockOpenBracket,
+            stringAnalyzer1.TokenString("{"),
             tokenMultiMembersInstructionsWhile,
-            instructionBlockCloseBracket
+            stringAnalyzer1.TokenString("}")
+        )
+        val instructionBlockIf = stringAnalyzer1.SingleTokenMandatory(
+            stringAnalyzer1.TokenString("{"),
+            tokenMultiMembersInstructionsIf,
+            stringAnalyzer1.TokenString("}")
         )
         // Logical expression
         val logicalExpressionExpression = stringAnalyzer1.TokenLogicalExpression()
@@ -379,7 +387,7 @@ class TestStringAnalyzer3 {
         // if flow control
 
         val instructionsIf = stringAnalyzer1.SingleTokenExclusiveXor(
-            tokenSingleInstructionIf, instructionBlock
+            tokenSingleInstructionIf, instructionBlockIf
         )
         val instructionsElse = stringAnalyzer1.SingleTokenExclusiveXor(
             tokenSingleInstructionElse, instructionBlock
@@ -504,6 +512,8 @@ class TestStringAnalyzer3 {
                     stringAnalyzer1.construct.currentMethod.ofClass.name = tokenMemberMethodType.name
                     stringAnalyzer1.construct.popInstructions()
                     stringAnalyzer1.construct.currentMethod = Method()
+                } else {
+
                 }
                 return true
             }
@@ -700,13 +710,14 @@ class TestStringAnalyzer3 {
         return tokenPackageOptional
     }
 
+
     @Test
-    fun testJavaClass3() {
+    fun testJavaClass4() {
         isDebug = false
         val stringAnalyzer1 = StringAnalyzer1()
-        val javaToken = TestStringAnalyzer3().getJavaToken3(stringAnalyzer1)
+        val javaToken = TestStringAnalyzer4().getJavaToken4(stringAnalyzer1)
         val token = javaToken
-        val input = readString("resources/text_parser/Number3.java.java_code")
+        val input = readString("resources/text_parser/Number4.java.java_code")
 
         var parse = -1
         try {
@@ -720,9 +731,9 @@ class TestStringAnalyzer3 {
                 Assert.assertTrue(false)
             }
         }
-        println(stringAnalyzer1.construct.toLangStringJava(isDebug))
+        println(stringAnalyzer1.construct.toLangStringJava(false));
+
         if (parse >= input.length || input.substring(parse).isBlank())
-            ;
         else
             if (parse >= input.length || input.substring(parse).isBlank()) {
                 Assert.assertTrue(true)
