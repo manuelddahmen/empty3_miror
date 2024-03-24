@@ -103,7 +103,7 @@ public class BalleClous2 extends Sphere {
     public Point3D calculerPoint3D(double u, double v) {
         Point3D p = super.calculerPoint3D(u, v);
 
-        Point2D p0 = new Point2D((u - 5.0) * 2, (v - 5.0) * 2);
+        Point2D p0 = new Point2D((u - .5) * 2, (v - .5) * 2);
 
         double mult = 1.0;
 

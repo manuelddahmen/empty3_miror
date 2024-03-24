@@ -92,14 +92,11 @@ public class TestBalleCouleur001 extends TestObjetSub {
         v = new Point3D[N];
         for (int i = 0; i < N; i++) {
 
-            s[i] = new Point3D((Math.random() - 0.5) * 2 * D, (Math.random() - 0.5) * 2 * D, (Math.random() - 0.5) * 2 * D);
+            s[i] = new Point3D((Math.random() - 0.5) * 2, (Math.random() - 0.5) * 2, (Math.random() - 0.5) * 2);
 
-            v[i] = new Point3D((Math.random() - 0.5) * (2 * V), (Math.random() - 0.5) * (2 * V), (Math.random() - 0.5) * (2 * V));
+            v[i] = new Point3D((Math.random() - 0.5) * (2), (Math.random() - 0.5) * (2), (Math.random() - 0.5) * (2));
 
         }
-
-
-        //scene().lumieres().add(new LumierePonctuelle(Point3D.O0, Color.WHITE));
 
         Camera camera;
         camera = new Camera(new Point3D(0d, 0d, 3d),
@@ -113,22 +110,22 @@ public class TestBalleCouleur001 extends TestObjetSub {
         s[i].changeTo(s[i].plus(v[i]));
 
         if (s[i].getX() > D && v[i].getX() > 0) {
-            v[i].setX(-v[i].getX());
+            v[i].setX(-Math.min(v[i].getX(), D));
         }
         if (s[i].getX() < -D && v[i].getX() < 0) {
-            v[i].setX(-v[i].getX());
+            v[i].setX(-Math.max(v[i].getX(), -D));
         }
         if (s[i].getY() > D && v[i].getY() > 0) {
-            v[i].setY(-v[i].getY());
+            v[i].setY(-Math.min(v[i].getY(), D));
         }
         if (s[i].getY() < -D && v[i].getY() < 0) {
-            v[i].setY(-v[i].getY());
+            v[i].setY(-Math.max(v[i].getY(), -D));
         }
         if (s[i].getZ() > D && v[i].getZ() > 0) {
-            v[i].setZ(-v[i].getZ());
+            v[i].setZ(-Math.min(v[i].getZ(), D));
         }
         if (s[i].getZ() < -D && v[i].getZ() < 0) {
-            v[i].setZ(-v[i].getZ());
+            v[i].setZ(-Math.max(v[i].getZ(), -D));
         }
     }
 
