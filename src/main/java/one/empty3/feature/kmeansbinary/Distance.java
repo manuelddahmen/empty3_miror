@@ -20,25 +20,22 @@
  *
  */
 
+package one.empty3.feature.kmeansbinary;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Programmed by Shephalika Shekhar
+ * class containing methods to calculate distance between two points with features
+ * based on distance metric
  */
-package one.empty3.library.core.gdximports;
+public abstract class Distance {
+    public static float[] r;
 
-import one.empty3.library.*;
-
-/*__
- * Meta Description missing
- * @author Manuel Dahmen dathewolf@gmail.com
- */
-public class Conv {
-    public static Point3D conv(Point3D out, Point3D in) {
-        out.set(0, (double) in.get(0));
-        out.set(1, (double) in.get(1));
-        out.set(2, (double) in.get(2));
-        return out;
+    public Distance() {
+       
     }
 
+    public abstract double distance(double[] point1, double[] point2);
 }

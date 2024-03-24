@@ -39,7 +39,6 @@ import javax.swing.event.CaretEvent;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
-import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
 /**
@@ -125,7 +124,7 @@ public class ObjectEditorBase extends JPanel implements RepresentableEditor {
     private void saveValues(Representable r, JTextField[] point3d, JTextField[] jTextFieldMatrix, JTextArea textAreaPoint3D,
                             JTextArea textAreaMatrix33,
                             JTextField[] jTextFieldsScale) {
-        Rotation rotation = new Rotation();
+        //Rotation rotation = new Rotation(vU, getPosition(), a);
         Point3D centreRot = new Point3D();
         Matrix33 rot = new Matrix33();
         Point3D scale = new Point3D();

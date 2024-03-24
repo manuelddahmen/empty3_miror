@@ -25,7 +25,6 @@
  */
 package one.empty3.library.core.testing2;
 
-import com.badlogic.gdx.utils.Null;
 import com.formdev.flatlaf.*;
 import net.miginfocom.swing.MigLayout;
 import one.empty3.library.ECBufferedImage;

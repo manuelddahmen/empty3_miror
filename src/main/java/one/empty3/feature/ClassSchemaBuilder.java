@@ -1040,6 +1040,7 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
             listProcessClasses.add(GFG.class.newInstance());
             listProcessClasses.add(Hist4Contour2.class.newInstance());
             listProcessClasses.add(CustomProcessFileRGB.class.newInstance());
+            listProcessClasses.add(KMeansBinaryDistances.class.newInstance());
             listProcessClasses.forEach(new Consumer<ProcessFile>() {
                 @Override
                 public void accept(ProcessFile processFile) {

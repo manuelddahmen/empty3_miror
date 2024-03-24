@@ -82,7 +82,7 @@ public class InstructionBlock {
 
                 array3.append(debugString(debug, tabs(1) + "{\n"));
                 for (InstructionBlock instruction : anIf.getInstructionsList()) {
-                    array3.append(tabs(1)).append(instruction.toLangStringJava(debug)).append("\n");
+                    array3.append(tabs()).append(instruction.toLangStringJava(debug)).append("\n");
                 }
                 array3.append(debugString(debug, tabs() + "}\n"));
 
@@ -93,7 +93,7 @@ public class InstructionBlock {
                 if (!anIf.instructionsElse.instructionList.isEmpty()) {
                     array2.append(debugString(debug, tabs(1) + "{\n"));
                     for (InstructionBlock instruction : anIf.instructionsElse.instructionList) {
-                        array2.append(tabs(1)).append(instruction.toLangStringJava(debug)).append("\n");
+                        array2.append(tabs()).append(instruction.toLangStringJava(debug)).append("\n");
                     }
                     array2.append(debugString(debug, tabs(1) + "}\n"));
                 }

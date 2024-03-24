@@ -54,8 +54,8 @@ public class Point2D {
 
     public static double dist(Point2D p0, Point2D plus) {
         double xx = p0.x - plus.x;
-        double xy = p0.y - plus.y;
-        return xx * xx + xy * xy;
+        double yy = p0.y - plus.y;
+        return Math.sqrt(xx * xx + yy * yy);
     }
 
     public static Point2D plus(Point2D p1, Point2D p2) {
@@ -82,12 +82,13 @@ public class Point2D {
         double distance = Math.sqrt((x - p2a.getX()) * (x - p2a.getX()) + (y - p2a.getY()) * (y - p2a.getY()));
         return distance > d && distance < e;
     }
+
     public double prodScalaire(Point2D v2) {
-        return getX()*v2.getX()+getY()*v2.getY();
+        return getX() * v2.getX() + getY() * v2.getY();
     }
 
     public Point2D prodVect(Point2D v2) {
-        return new Point2D(v2.getY() - getX(),   getY() - v2.getX());
+        return new Point2D(v2.getY() - getX(), getY() - v2.getX());
 
     }
 
@@ -161,8 +162,9 @@ public class Point2D {
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         return result;
     }
+
     public Point2D mult(Point2D p2) {
-        return new Point2D(x*p2.y, y*p2.x);
+        return new Point2D(x * p2.y, y * p2.x);
     }
 
 }

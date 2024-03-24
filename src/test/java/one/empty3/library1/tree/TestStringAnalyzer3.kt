@@ -571,6 +571,7 @@ class TestStringAnalyzer3 {
                         stringAnalyzer1.construct.currentInstructions.instructionList.add(value)
                         stringAnalyzer1.construct.pushInstructions(value)
                         tokenIf.isSuccessful = false
+                        logicalExpressionExpression.isSuccessful = false
                     }
                 } catch (ex: IndexOutOfBoundsException) {
                     ex.printStackTrace()
@@ -641,20 +642,20 @@ class TestStringAnalyzer3 {
 
         class ActionWhile(token: StringAnalyzer1.Token) : Action(token) {
             override fun action(): Boolean {
-                //if (token.isSuccessful) {
-                try {
-                    val value: ControlledInstructions.While =
-                        ControlledInstructions.While(logicalExpressionExpression.expression)
-                    stringAnalyzer1.construct.currentInstructions.instructionList.add(value)
-                    stringAnalyzer1.construct.pushInstructions(value)
-                } catch (ex: IndexOutOfBoundsException) {
-                    ex.printStackTrace()
+                if (token.isSuccessful) {
+                    try {
+                        val value: ControlledInstructions.While =
+                            ControlledInstructions.While(logicalExpressionExpression.expression)
+                        stringAnalyzer1.construct.currentInstructions.instructionList.add(value)
+                        stringAnalyzer1.construct.pushInstructions(value)
+                        tokenWhile.isSuccessful = false
+                        logicalExpressionExpression.isSuccessful = false
+                    } catch (ex: IndexOutOfBoundsException) {
+                        ex.printStackTrace()
+                    }
                 }
                 return true
-                //}
-
             }
-
         }
 
         class ActionWhileStart(token: StringAnalyzer1.Token) : Action(token) {

@@ -28,7 +28,6 @@ package one.empty3.library;
 import one.empty3.library.core.TemporalComputedObject3D;
 import one.empty3.library.core.lighting.Colors;
 import one.empty3.library.core.raytracer.RtIntersectInfo;
-import one.empty3.library.core.raytracer.RtMatiere;
 import one.empty3.library.core.raytracer.RtRay;
 import one.empty3.tests.Path;
 
@@ -148,7 +147,7 @@ public class Representable implements Serializable, Comparable, XmlRepresentable
      */
     public Representable() {
         if (!(this instanceof Matrix33 || this instanceof Point3D || this instanceof Camera)) {
-            rotation.setElem(new Rotation());
+            //rotation.setElem(new Rotation(vU, getPosition(), a));
             //scale = new Point3D(1d, 1d, 1d);
             //texture = new TextureCol(Colors.random());
             vectors = new StructureMatrix<>(1, Point3D.class);

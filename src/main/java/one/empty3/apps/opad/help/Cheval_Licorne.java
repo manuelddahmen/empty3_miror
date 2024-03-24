@@ -28,21 +28,16 @@
 package one.empty3.apps.opad.help;
 
 import one.empty3.apps.opad.Bonus;
-import one.empty3.library.core.gdximports.gdx_BSplineCurve;
 
 /*__
  *  Court et vole pendant un laps de temps prédéfini.
  * le long d'un b-spline 30 objets/1000 en 20 secondes.
  * @author Se7en
  */
-public class Cheval_Licorne  extends BonusClass {
+public class Cheval_Licorne extends BonusClass {
     public Cheval_Licorne() {
         super();
         value = Double.parseDouble(bundle.getString("licorne.point"));
     }
 
-    public gdx_BSplineCurve bspline(Bonus b, double chevalSize, double chevalVelocity) {
-        throw new UnsupportedOperationException("Pas encore implanté");
-
-    }
 }

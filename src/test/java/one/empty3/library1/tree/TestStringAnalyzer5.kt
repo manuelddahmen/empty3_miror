@@ -542,9 +542,9 @@ class TestStringAnalyzer5 {
                 ) {
                     val methodList = stringAnalyzer3.construct.currentClass.methodList
                     methodList.add(stringAnalyzer3.construct.currentMethod)
-                    stringAnalyzer3.construct.currentMethod.name = tokenMemberMethodName.name
-                    stringAnalyzer3.construct.currentMethod.ofClass.classStr = tokenMemberMethodType.name
-                    stringAnalyzer3.construct.currentMethod.ofClass.name = tokenMemberMethodType.name
+                    //stringAnalyzer3.construct.currentMethod.name = tokenMemberMethodName.name
+                    //stringAnalyzer3.construct.currentMethod.ofClass.classStr = tokenMemberMethodType.name
+                    //stringAnalyzer3.construct.currentMethod.ofClass.name = tokenMemberMethodType.name
                     stringAnalyzer3.construct.popInstructions()
                     stringAnalyzer3.construct.currentMethod = Method()
                 } else {

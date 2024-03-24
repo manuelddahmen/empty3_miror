@@ -145,6 +145,8 @@ public class ListInstructions {
                     }
                 }
             }
+        } else {
+            assignations = new ArrayList<>();
         }
     }
 

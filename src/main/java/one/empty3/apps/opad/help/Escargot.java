@@ -28,7 +28,6 @@
 package one.empty3.apps.opad.help;
 
 import one.empty3.apps.opad.Bonus;
-import one.empty3.library.core.gdximports.gdx_BSplineCurve;
 
 /*__
  *  Gros escargot mais lent. Fonctionne pendant 40 sec.
@@ -41,9 +40,5 @@ public class Escargot extends BonusClass {
         super();
         value = Double.parseDouble(bundle.getString("escargot.point"));
 
-    }
-
-    public gdx_BSplineCurve bspline(Bonus b, double escargotSize, double escargotVelocity) {
-        throw new UnsupportedOperationException("Pas encore implanté");
     }
 }

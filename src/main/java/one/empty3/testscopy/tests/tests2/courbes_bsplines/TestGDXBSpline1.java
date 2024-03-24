@@ -24,7 +24,7 @@ package one.empty3.testscopy.tests.tests2.courbes_bsplines;
 
 import one.empty3.library.Point3D;
 import one.empty3.library.TextureCol;
-import one.empty3.library.core.gdximports.gdx_BSplineCurve;
+import one.empty3.library.core.nurbs.BSpline;
 import one.empty3.library.core.testing.TestObjet;
 import one.empty3.library.core.tribase.TubulaireN2;
 
@@ -37,7 +37,7 @@ import java.awt.*;
 public class TestGDXBSpline1 extends TestObjet {
     private static final double INCR_PRECISION = 0.00001;
     TubulaireN2 t = new TubulaireN2();
-    private gdx_BSplineCurve b;
+    private BSpline b;
 
     public static void main(String[] args) {
         TestGDXBSpline1 ts = new TestGDXBSpline1();
@@ -56,12 +56,13 @@ public class TestGDXBSpline1 extends TestObjet {
     public void finit() {
 
 
-        b = new gdx_BSplineCurve();
+        b = new one.empty3.library.core.nurbs.BSpline();
 
         b.getParameters().setIncrU(INCR_PRECISION);
 
 
-        b.instantiate(TestsBSpline.p2(frame()), 6);
+        for (Point3D p : TestsBSpline.p2(frame()))
+            b.add(p);
 
         b.texture(new TextureCol(Color.WHITE));
 

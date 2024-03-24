@@ -24,7 +24,7 @@ package one.empty3.apps.opad.help;
 
 import one.empty3.apps.opad.Timer;
 import one.empty3.library.Point3D;
-import one.empty3.library.core.gdximports.gdx_BSplineCurve;
+//import one.empty3.library.core.gdximports.gdx_BSplineCurve;
 
 /*__
  *
@@ -32,7 +32,7 @@ import one.empty3.library.core.gdximports.gdx_BSplineCurve;
  */
 public class PiloteAuto extends BonusClass {
     public Timer t;
-    gdx_BSplineCurve bspline ;
+    //  gdx_BSplineCurve bspline;
     private final double duration;
     private final double timeStart;
 
@@ -56,18 +56,18 @@ public class PiloteAuto extends BonusClass {
     }
 
     public double tempsEcoule() {
-        return System.nanoTime()-timeStart();
+        return System.nanoTime() - timeStart();
     }
 
     public boolean begins() {
-        return System.nanoTime()>timeStart();
+        return System.nanoTime() > timeStart();
     }
 
     public boolean ends() {
-        return System.nanoTime()>timeStart()+duration();
+        return System.nanoTime() > timeStart() + duration();
     }
 
-    public Point3D getDirectionAtTimeT(double t) {
-        return bspline.calculerPoint3D(t);
-    }
+    //public Point3D getDirectionAtTimeT(double t) {
+    //    return bspline.calculerPoint3D(t);
+    //}
 }

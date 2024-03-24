@@ -713,14 +713,14 @@ public class Point3D extends Representable {
     /**
      * Changes the coordinates and texture of this Point3D to the coordinates and texture of the given Point3D.
      *
-     * @param dst the Point3D object whose coordinates and texture will be copied
+     * @param src the Point3D object whose coordinates and texture will be copied
      * @return this Point3D object with updated coordinates and texture
      */
-    public Point3D changeTo(Point3D dst) {
+    public Point3D changeTo(Point3D src) {
         for (int i = 0; i < 3; i++)
-            this.coordArr[i] = dst.coordArr[i];
+            this.coordArr[i] = src.coordArr[i];
 
-        texture(dst.texture());
+        texture(src.texture());
         return this;
     }
 

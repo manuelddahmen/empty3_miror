@@ -922,9 +922,11 @@ public abstract class TestObjet implements Test, Runnable {
                         threadGLafterHasRun = true;
                         threadGLafter = null;
                     }
-                    if (scene() != null && scene().cameraActive() != null)
+                    z.scene(scene);
+                    if (scene() != null && scene().cameraActive() != null) {
                         scene().cameraActive().declareProperties();
-
+                        z.camera(scene().cameraActive());
+                    }
                     z.idzpp();
 
                     z.draw(scene());

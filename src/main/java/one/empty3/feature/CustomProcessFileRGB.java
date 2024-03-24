@@ -93,6 +93,7 @@ public class CustomProcessFileRGB extends ProcessFile {
                     currentVars.put("x", x);
                     currentVars.put("y", y);
                     currentVecs.put("rgb", (String.format("(%f,%f,%f)", r, g, b)));
+                    listInstructions.addInstructions("");
                     listInstructions.runInstructions();
 
                     System.out.println(listInstructions.evaluate("(r,g,b"));

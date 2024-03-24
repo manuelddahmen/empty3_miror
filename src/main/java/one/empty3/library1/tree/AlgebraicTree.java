@@ -371,14 +371,14 @@ public class AlgebraicTree extends Tree {
 
     private boolean addDouble(TreeNode src, String subformula) {
         try {
-            Double d = Double.parseDouble(subformula);
+            double d = Double.parseDouble(subformula);
             DoubleTreeNodeType doubleTreeNodeType = new DoubleTreeNodeType(this);
             doubleTreeNodeType.setValues(new Object[]{subformula, d});
             src.getChildren().add(new TreeNodeDouble(src, new Object[]{subformula, d}, doubleTreeNodeType));
 
             return true;
         } catch (NumberFormatException ex) {
-            return src.getChildren().size() > 0;
+            return !src.getChildren().isEmpty();
         }
     }
 

@@ -97,7 +97,7 @@ public class TestBalleClous1111 extends TestObjetSub {
             ballec.setIncrV(0.01);
 
             balles[i] = ballec;
-            ballec.texture(new TextureCol(Colors.random()));
+            ballec.texture(new ColorTexture(Colors.random()));
             //textureMov = new TextureMov("C:\\Emptycanvas\\Resources\\BigFloEtOlie.mp4");
             //textureMov.setTransparent(Color.BLACK);
             //ballec.texture(textureMov);

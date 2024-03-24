@@ -22,15 +22,18 @@
 
 package one.empty3.growth.graphics;
 
-import com.badlogic.gdx.math.Matrix4;
-import com.badlogic.gdx.math.Vector3;
+//import com.badlogic.gdx.math.Matrix4;
+//import com.badlogic.gdx.math.Vector3;
+
+import com.jogamp.opengl.math.Matrix4;
+import one.empty3.library.Matrix33;
 import one.empty3.library.Point3D;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Rotation {
-    private Matrix4 matriceRotation;
+    private Matrix33 matriceRotation;
     private Point3D origin;
 
     public Rotation(Point3D vecteur, Point3D origin, double angle) {
@@ -41,8 +44,8 @@ public class Rotation {
         float[] mat44 = new float[16];
         qm(mat44, pointAngle);
 
-        matriceRotation = new Matrix4();
-        matriceRotation.set(mat44);
+        matriceRotation = new Matrix33();
+        //matriceRotation.set(mat44);
 
 
     }
@@ -59,9 +62,9 @@ public class Rotation {
 
     public Point3D rotate(Point3D p) {
         p = p.moins(origin);
-        Vector3 p2 = new Vector3((float)(double)(p.getX()), (float)(double)(p.getY()), (float)(double)(p.getZ()));
-        p2.rot(matriceRotation);
-        return new Point3D((double)p2.x, (double)p2.y, (double)p2.z).plus(origin);
+        Point3D p2 = new Point3D((double) p.getX(), (double) p.getY(), (double) p.getZ());
+        //p2.rot(matriceRotation);
+        return new Point3D((double) p2.getX(), (double) p2.getY(), (double) p2.getZ()).plus(origin);
     }
 
     private void rq(double[] _q, double a, double x, double y, double z) {

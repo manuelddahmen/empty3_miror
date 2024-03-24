@@ -48,9 +48,9 @@ public class TestBalleClous111 extends TestObjetSub {
 
         th.loop(true);
 
-        th.setResx(1920/4);
+        th.setResx(1920 / 4);
 
-        th.setResy(1080/4);
+        th.setResy(1080 / 4);
 
         th.MAXFRAMES = 4000;
 
@@ -90,7 +90,7 @@ public class TestBalleClous111 extends TestObjetSub {
         ballec = new BalleClous2(Point3D.O0, 1.0);
 
 
-        ballec.texture(new TextureCol(Color.WHITE));
+        ballec.texture(new ColorTexture(Color.WHITE));
 
         scene().add(ballec);
 

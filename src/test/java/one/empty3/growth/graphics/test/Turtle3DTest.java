@@ -20,7 +20,6 @@
  *
  *
  */
-
 package one.empty3.growth.graphics.test;
 
 
@@ -45,7 +44,7 @@ import java.awt.image.BufferedImage;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static one.empty3.growth.graphics.Rotation.rotate;
+import static one.empty3.growth.graphics.Rotation2.*;
 
 @RunWith(JUnit4.class)
 
@@ -252,7 +251,7 @@ public class Turtle3DTest extends TestCaseExtended {
 
         @Test
         public void testRotationIdent1() {
-            Point3D x = rotate(Point3D.O0, Point3D.X,
+            Point3D x = Rotation.rotate(Point3D.O0, Point3D.X,
                     2 * Math.PI, Point3D.Y);
             Point3D y = Point3D.Y;
 
@@ -262,7 +261,7 @@ public class Turtle3DTest extends TestCaseExtended {
 
         @Test
         public void testRotationIdent2() {
-            Point3D x = rotate(Point3D.O0, Point3D.X,
+            Point3D x = Rotation.rotate(Point3D.O0, Point3D.X,
                     2 * Math.PI, Point3D.X);
             Point3D y = Point3D.X;
 
@@ -272,7 +271,7 @@ public class Turtle3DTest extends TestCaseExtended {
 
         @Test
         public void testRotationIdent3() {
-            Point3D x = rotate(Point3D.O0, Point3D.X,
+            Point3D x = Rotation.rotate(Point3D.O0, Point3D.X,
                     2 * Math.PI, Point3D.Z);
             Point3D y = Point3D.Z;
 
@@ -282,7 +281,7 @@ public class Turtle3DTest extends TestCaseExtended {
 
         @Test
         public void testRotation90() {
-            Point3D x = rotate(Point3D.O0, Point3D.X,
+            Point3D x = Rotation.rotate(Point3D.O0, Point3D.X,
                     Math.PI, Point3D.Z);
             Point3D y = Point3D.Z.mult(-1);
 
@@ -293,7 +292,7 @@ public class Turtle3DTest extends TestCaseExtended {
 
         @Test
         public void testRotationNonO() {
-            Point3D x = rotate(Point3D.X, new Point3D(10., 0., 0.),
+            Point3D x = Rotation.rotate(Point3D.X, new Point3D(10., 0., 0.),
                     Math.PI, new Point3D(3., 5., 5.));
             Point3D y = new Point3D(3., -5., -5.);
 
@@ -303,7 +302,7 @@ public class Turtle3DTest extends TestCaseExtended {
 
         @Test
         public void testRotation180() {
-            Point3D x = rotate(new Point3D(11., 0., 0.), new Point3D(10., 0., 0.),
+            Point3D x = Rotation.rotate(new Point3D(11., 0., 0.), new Point3D(10., 0., 0.),
                     Math.PI, new Point3D(3., 5., 0.));
             Point3D y = new Point3D(3., -5., 0.);
 
@@ -317,7 +316,7 @@ public class Turtle3DTest extends TestCaseExtended {
             Point3D y = x;
 
             for (int i = 0; i < 12 * 2; i++) {
-                x = rotate(Point3D.X, new Point3D(10., 0., 0.),
+                x = Rotation.rotate(Point3D.X, new Point3D(10., 0., 0.),
                         Math.PI / 6, x);
             }
 
@@ -330,7 +329,7 @@ public class Turtle3DTest extends TestCaseExtended {
         public void testRotation0degRandomPoint() {
             Point3D x = Point3D.random(10.);
 
-            Point3D y = rotate(Point3D.X, new Point3D(10., 0., 0.),
+            Point3D y = Rotation.rotate(Point3D.X, new Point3D(10., 0., 0.),
                     0., x);
 
             assertEqualsPoint3D(x, y, 0.1);
@@ -342,7 +341,7 @@ public class Turtle3DTest extends TestCaseExtended {
             Point3D a = Point3D.random(10.);
             Point3D b = Point3D.random(10.);
 
-            Point3D y = rotate(a, b,
+            Point3D y = Rotation.rotate(a, b,
                     0., Point3D.X);
 
             assertEqualsPoint3D(Point3D.X, y, 0.1);
@@ -354,7 +353,7 @@ public class Turtle3DTest extends TestCaseExtended {
             Point3D a = Point3D.random(10.);
             Point3D b = Point3D.random(10.);
 
-            Point3D y = rotate(a, b,
+            Point3D y = Rotation.rotate(a, b,
                     2 * Math.PI, Point3D.X);
 
             assertEqualsPoint3D(Point3D.X, y, 0.1);
