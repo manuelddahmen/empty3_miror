@@ -72,7 +72,7 @@ public class TestBalleCouleur001 extends TestObjetSub {
 //        ParametricSurface.getGlobals().setIncrU(0.1);
 //        ParametricSurface.getGlobals().setIncrV(0.1);
 
-        z().setDisplayType(ZBufferImpl.DISPLAY_ALL);
+        z().setDisplayType(ZBufferImpl.SURFACE_DISPLAY_TEXT_QUADS);
 
         LumierePonctuelle lumierePonctuelle = new LumierePonctuelle(Point3D.X, Color.RED);
         lumierePonctuelle.setR0(1);
@@ -146,6 +146,9 @@ public class TestBalleCouleur001 extends TestObjetSub {
         ballec.texture(new ColorTexture(balleColor));
 
         scene().add(ballec);
+
+        ballec.setIncrU(0.01);
+        ballec.setIncrV(0.01);
 
         for (int i = 0; i < s.length; i++) {
             bounce(i);
