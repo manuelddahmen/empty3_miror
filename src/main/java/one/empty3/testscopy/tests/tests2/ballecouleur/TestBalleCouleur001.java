@@ -48,10 +48,11 @@ public class TestBalleCouleur001 extends TestObjetSub {
     private BalleClous2 ballec;
     private Point3D[] s;
     private Point3D[] v;
-    private final double V = 1.5;
-    private final double D = 1.5;
+    private final double V = 1.0;
+    private final double D = 3.0;
     private final double ballecparam = 0.01;
     private final double TUBE_RAYON = 0.02;
+    private final double vMax = 0.1;
     private final HashMap<Point2D, Color> map = new HashMap<Point2D, Color>();
     private final Color balleColor = Color.BLUE;
 
@@ -94,7 +95,7 @@ public class TestBalleCouleur001 extends TestObjetSub {
 
             s[i] = new Point3D((Math.random() - 0.5) * 2, (Math.random() - 0.5) * 2, (Math.random() - 0.5) * 2);
 
-            v[i] = new Point3D((Math.random() - 0.5) * (2), (Math.random() - 0.5) * (2), (Math.random() - 0.5) * (2));
+            v[i] = new Point3D((Math.random() - 0.5) * (2), (Math.random() - 0.5) * (2), (Math.random() - 0.5) * (2)).mult(vMax);
 
         }
 
@@ -109,38 +110,34 @@ public class TestBalleCouleur001 extends TestObjetSub {
     public void bounce(int i) {
         s[i].changeTo(s[i].plus(v[i]));
 
-        if (s[i].getX() > D && v[i].getX() > 0) {
-            v[i].setX(-Math.min(v[i].getX(), D));
+        if (s[i].getX() > 1.0 && v[i].getX() > 0) {
+            v[i].setX(Math.max(-v[i].getX(), -vMax));
         }
-        if (s[i].getX() < -D && v[i].getX() < 0) {
-            v[i].setX(-Math.max(v[i].getX(), -D));
+        if (s[i].getX() < -1.0 && v[i].getX() < 0) {
+            v[i].setX(Math.min(-v[i].getX(), -vMax));
         }
-        if (s[i].getY() > D && v[i].getY() > 0) {
-            v[i].setY(-Math.min(v[i].getY(), D));
+        if (s[i].getY() > 1.0 && v[i].getY() > 0) {
+            v[i].setY(Math.max(-v[i].getY(), -vMax));
         }
-        if (s[i].getY() < -D && v[i].getY() < 0) {
-            v[i].setY(-Math.max(v[i].getY(), -D));
+        if (s[i].getY() < -1.0 && v[i].getY() < 0) {
+            v[i].setY(Math.min(-v[i].getY(), vMax));
         }
-        if (s[i].getZ() > D && v[i].getZ() > 0) {
-            v[i].setZ(-Math.min(v[i].getZ(), D));
+        if (s[i].getZ() > 1.0 && v[i].getZ() > 0) {
+            v[i].setZ(Math.max(-v[i].getZ(), -vMax));
         }
-        if (s[i].getZ() < -D && v[i].getZ() < 0) {
-            v[i].setZ(-Math.max(v[i].getZ(), -D));
+        if (s[i].getZ() < -1.0 && v[i].getZ() < 0) {
+            v[i].setZ(Math.min(-v[i].getZ(), vMax));
         }
     }
 
     @Override
     public void finit() {
 
+
         scene().clear();
-        ballec = new BalleClous2(Point3D.O0, V);
+        ballec = new BalleClous2(Point3D.O0, D);
 
-
-        for (int i = 0; i < s.length; i++) {
-            ballec.addPoint(s[i].to2DwoZ());
-        }
-
-        ballec.param(ballecparam);
+        ballec.param(ballecparam, BalleClous2.METHOD_SUM);
 
 
         ballec.texture(new ColorTexture(balleColor));
@@ -154,30 +151,10 @@ public class TestBalleCouleur001 extends TestObjetSub {
             bounce(i);
         }
 
-        ballec.points().clear();
-        double totalA = 0;
-        double totalB = 0;
-
         for (int j = 0; j < s.length; j++) {
-            if (s[j].getX() < 0) {
-                s[j].setX(s[j].getX() + D);
-            }
-            if (s[j].getY() < 0) {
-                s[j].setY(s[j].getY() + D);
-            }
-            if (s[j].getX() > D) {
-                s[j].setX(s[j].getX() - D);
-            }
-            if (s[j].getY() > D) {
-                s[j].setY(s[j].getY() - D);
-            }
+            scene().add(s[j]);
 
-            totalA += s[j].getX();
-            totalB += s[j].getY();
-
-            scene().add(s[j]);//?
-
-            ballec.addPoint(new Point2D(s[j].getX(), s[j].getY()));
+            ballec.addPoint(s[j].get2D());
 
             CourbeParametriquePolynomialeBezier gdx_BSplineCurve = new CourbeParametriquePolynomialeBezier();
 
@@ -195,10 +172,7 @@ public class TestBalleCouleur001 extends TestObjetSub {
                 e.printStackTrace();
             }
 
-            scene().add(tubulaireN2);
-//ballec.be.manudahmen.empty3.tests.tests2.position().be.manudahmen.empty3.tests.tests2.rotation = ballec.be.manudahmen.empty3.tests.tests2.position().be.manudahmen.empty3.tests.tests2.rotation.mult(matrix1(totalA, totalB));
-
+            //scene().add(tubulaireN2);
         }
-        scene().add(ballec);
     }
 }

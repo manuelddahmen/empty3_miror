@@ -36,16 +36,19 @@ import java.util.ArrayList;
  * @author Manuel Dahmen
  */
 public class BalleClous2 extends Sphere {
+    public static final int METHOD_EXTREMUM = 1;
+    public static final int METHOD_SUM = 2;
     private final ArrayList<Point2D> points = new ArrayList<Point2D>();
     private double paramD;
-    private static double maxMultStatic1;
-    private static double maxMultStatic0;
+    public static double maxMulStatic1;
+    public static double maxMulStatic0;
+    protected int method = 1;
 
     public BalleClous2(Point3D c, double r) {
         super(c, r);
-        if (maxMultStatic1 == 0.0)
-            maxMultStatic1 = getCircle().getRadius();
-        maxMultStatic0 = maxMultStatic1;
+        if (maxMulStatic1 == 0.0)
+            maxMulStatic1 = getCircle().getRadius();
+        maxMulStatic0 = maxMulStatic1;
     }
 
     public void addPoint(Point2D p) {
@@ -57,14 +60,15 @@ public class BalleClous2 extends Sphere {
     }
 
     public double formula(Point2D p1, Point2D p2) {
-        double d = Math.min(dmaxdist(p1, p2), dmindist(p1, p2));
-        //d = dmindist(p1, p2);
-
+        double d = dmindist(p1, p2);
         return 1 / (d * d + paramD);
     }
 
-    public void param(double paramD) {
+    public void param(double paramD, int method) {
+
         this.paramD = paramD;
+        this.method = method;
+
     }
 
     public double param() {
@@ -76,7 +80,7 @@ public class BalleClous2 extends Sphere {
         double[] x = new double[]{-1, 0, 1, -1, 0, 1, -1, 0, 1};
         double[] y = new double[]{-1, -1, -1, 0, 0, 0, 1, 1, 1};
         double min = Double.MAX_VALUE;
-        for (int i = 0; i < 9; i++) {
+        for (int i = 0; i < x.length; i++) {
             double cur;
             cur = Point2D.dist(p0, Point2D.plus(p1, new Point2D(x[i], y[i])));
             if (cur < min)
@@ -105,18 +109,26 @@ public class BalleClous2 extends Sphere {
 
         Point2D p0 = new Point2D((u - .5) * 2, (v - .5) * 2);
 
-        double mult = 1.0;
+        double mult = 0.0;
 
         for (Point2D point : points) {
-            mult += formula(p0, point);
+            if (method == METHOD_EXTREMUM) {
+                mult = Math.max(formula(p0, point), mult);
+            } else if (method == METHOD_SUM) {
+                mult = formula(p0, point) + mult;
+            }
         }
-        if (mult > Math.max(getCircle().getRadius() / 2, Math.max(maxMultStatic0 / 2, maxMultStatic1 / 2))) {
-            maxMultStatic1 = mult * 2;
+        if (mult > maxMulStatic1) {
+            maxMulStatic1 = mult;
         }
 
-        mult = mult / maxMultStatic0;
+        Point3D ret = getCircle().getCenter().plus(p.moins(getCircle().getCenter()).mult(mult / maxMulStatic0 / 2 * 0.7));
 
-        return getCircle().getCenter().plus(p.moins(getCircle().getCenter()).mult(mult));
+        double distance = Point3D.distance(ret, getCircle().getCenter());
+        if (distance > maxMulStatic1) {
+            maxMulStatic1 = distance;
+        }
+        return ret;
 
     }
 
