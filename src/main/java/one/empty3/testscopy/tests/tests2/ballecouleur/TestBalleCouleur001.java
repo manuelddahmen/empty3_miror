@@ -52,7 +52,7 @@ public class TestBalleCouleur001 extends TestObjetSub {
     private final double D = 3.0;
     private final double ballecparam = 0.01;
     private final double TUBE_RAYON = 0.02;
-    private final double vMax = 0.1;
+    private final double vMax = 0.01;
     private final HashMap<Point2D, Color> map = new HashMap<Point2D, Color>();
     private final Color balleColor = Color.BLUE;
 
@@ -73,17 +73,17 @@ public class TestBalleCouleur001 extends TestObjetSub {
 //        ParametricSurface.getGlobals().setIncrU(0.1);
 //        ParametricSurface.getGlobals().setIncrV(0.1);
 
-        z().setDisplayType(ZBufferImpl.SURFACE_DISPLAY_TEXT_QUADS);
+        z().setDisplayType(ZBufferImpl.DISPLAY_ALL);
 
         LumierePonctuelle lumierePonctuelle = new LumierePonctuelle(Point3D.X, Color.RED);
         lumierePonctuelle.setR0(1);
 
-        //scene().lumieres().add(lumierePonctuelle);
+        scene().lumieres().add(lumierePonctuelle);
 
-        lumierePonctuelle = new LumierePonctuelle(Point3D.Y, Color.BLUE);
+        lumierePonctuelle = new LumierePonctuelle(Point3D.Y, Color.GREEN);
         lumierePonctuelle.setR0(1);
 
-        //scene().lumieres().add(lumierePonctuelle);
+        scene().lumieres().add(lumierePonctuelle);
 
         for (int c = 0; c < Ncolors; c++) {
             map.put(new Point2D(Math.random() * 100, Math.random() * 100), new Color((float) Math.random(), (float) Math.random(), (float) Math.random(), (float) Math.random()));
@@ -114,7 +114,7 @@ public class TestBalleCouleur001 extends TestObjetSub {
             v[i].setX(Math.max(-v[i].getX(), -vMax));
         }
         if (s[i].getX() < -1.0 && v[i].getX() < 0) {
-            v[i].setX(Math.min(-v[i].getX(), -vMax));
+            v[i].setX(Math.min(-v[i].getX(), vMax));
         }
         if (s[i].getY() > 1.0 && v[i].getY() > 0) {
             v[i].setY(Math.max(-v[i].getY(), -vMax));
