@@ -167,7 +167,7 @@ public class TestBalleCouleur001 extends TestObjetSub {
             TubulaireN2 tubulaireN2;
             tubulaireN2 = new TubulaireN2(gdx_BSplineCurve, TUBE_RAYON);
             try {
-                tubulaireN2.texture(new TextureImg(new ECBufferedImage(ImageIO.read(new File("samples/img/PHOTO-NU.jpg")))));
+                tubulaireN2.texture(new TextureImg(new ECBufferedImage(ImageIO.read(new File("samples/img/coeur.gif")))));
             } catch (IOException e) {
                 e.printStackTrace();
             }
