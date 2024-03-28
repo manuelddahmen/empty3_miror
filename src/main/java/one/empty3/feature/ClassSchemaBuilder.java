@@ -32,6 +32,7 @@ import one.empty3.feature.tryocr.ReadLines;
 import one.empty3.feature.tryocr.SelectColor;
 import one.empty3.io.ProcessFile;
 import one.empty3.io.ProcessNFiles;
+import one.empty3.library.Config;
 import one.empty3.library.Point2D;
 
 import javax.imageio.ImageIO;
@@ -70,7 +71,7 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
     private boolean cam;
     private int maxRes = 0;
     private String fileChooserDir = ".";
-    public String tempDir = "temp";
+    public String tempDir = new Config().getMap().get("folderoutput") + File.separator + "temp";
     private File fileOut;
     private TreeDiagram treeDiagram;
     private File webcamFile;
@@ -567,7 +568,6 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        tempDir = globalSettings.getProperty("tempDir") + File.separator;
         if (tempDir == null)
             tempDir = "temp/";
         new File(tempDir).mkdirs();

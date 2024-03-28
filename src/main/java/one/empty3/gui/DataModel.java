@@ -74,7 +74,7 @@ public class DataModel implements PropertyChangeListener {
                 e.printStackTrace();
             }
         }
-        Logger.getAnonymousLogger().log(Level.INFO, ""+this);
+        Logger.getAnonymousLogger().log(Level.INFO, "" + this);
         Logger.getAnonymousLogger().log(Level.INFO, "Model loaded");
     }
 
@@ -144,8 +144,7 @@ public class DataModel implements PropertyChangeListener {
                         elemLc = browser(cell.getChildElements().get(0), sm, dim, l, c);
                     if (valueOf != null || elemLc != null) {
 
-                        if(valueOf instanceof Representable && size>0 && size==3)
-                        {
+                        if (valueOf instanceof Representable && size > 0 && size == 3) {
                             Logger.getAnonymousLogger().log(Level.INFO, valueOf.toString());
                         }
 
@@ -245,6 +244,7 @@ public class DataModel implements PropertyChangeListener {
         }
         return null;
     }
+
     /*
             switch (localName)
             {
@@ -286,7 +286,8 @@ public class DataModel implements PropertyChangeListener {
 
     public String getDirectory(boolean isNew) {
         if (isNew) {
-            this.sceneDirectory = "./storage/scene-" + System.nanoTime();
+            this.sceneDirectory = new Config().getMap().get("folderoutput")
+                    + "/storage/scene-" + System.nanoTime();
             new File(sceneDirectory).mkdirs();
         }
         return sceneDirectory;
@@ -324,16 +325,17 @@ public class DataModel implements PropertyChangeListener {
         Path originalPath = a.toPath();
         Files.copy(originalPath, copied, StandardCopyOption.REPLACE_EXISTING);
     }
-/*
-    public static DataModel load(File file) throws FileNotFoundException {
-        XStream stream = new XStream();
-        DataModel dataModel = new DataModel();
-        dataModel.setScene((Scene) stream.fromXML(new FileInputStream(file)));
 
-        return dataModel;
+    /*
+        public static DataModel load(File file) throws FileNotFoundException {
+            XStream stream = new XStream();
+            DataModel dataModel = new DataModel();
+            dataModel.setScene((Scene) stream.fromXML(new FileInputStream(file)));
 
-    }
-*/
+            return dataModel;
+
+        }
+    */
     private void addFile(ZipOutputStream zipOut, FileInputStream fis, ZipEntry zipEntry) throws IOException {
         zipOut.putNextEntry(zipEntry);
         byte[] bytes = new byte[1024];
@@ -481,12 +483,11 @@ public class DataModel implements PropertyChangeListener {
     }
 
 
-
     @Override
     public String toString() {
         Scene scene = getScene();
         StringBuilder stringBuilder = new StringBuilder();
-        scene.xmlRepresentation(getDirectory(false),  stringBuilder, (Representable) scene);
+        scene.xmlRepresentation(getDirectory(false), stringBuilder, (Representable) scene);
         String xml = stringBuilder.toString();
         return xml;
     }

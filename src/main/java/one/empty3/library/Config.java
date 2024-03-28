@@ -23,6 +23,8 @@
 package one.empty3.library;
 
 import java.io.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 public class Config {
@@ -32,6 +34,8 @@ public class Config {
     public static final int DIR_MODELS = 2;
     public static final int DIR_TEXTURES = 3;
     private File fileDirectoryDefault;
+    private File file1;
+    protected Map<String, String> map = new HashMap<String, String>();
 
     public Config() {
         initIfEmpty();
@@ -40,10 +44,9 @@ public class Config {
     public boolean initIfEmpty() {
         Properties p = new Properties();
         Reader reader = null;
-        File file1 = new File("empty3.config");
-        if(!file1.exists()) {
-            file1 = new File(System.getProperty("user.home")+File.separator+"empty3.config");
-            if(!file1.exists()) {
+        file1 = new File(System.getProperty("user.home") + File.separator + "empty3.config");
+        if (!file1.exists()) {
+            if (!file1.exists()) {
                 createConfig();
             }
         }
@@ -53,16 +56,18 @@ public class Config {
 
             for (Object key : p.keySet()) {
                 String value = p.get(key).toString();
+
+                map.put((String) key, value);
+
                 // if is file reference..
-                if(key.equals("path")) {
+                if (key.equals("path")) {
                     fileDirectoryDefault = new File(value);
                     File path = fileDirectoryDefault.getParentFile();
-                    if (path.exists() || path.mkdir()) {
-                        return true;
-                    } else {
-                        System.err.println("Failed to make/find directory for " + path);
-                        return false;
-                    }
+                    //if (path.exists() || path.mkdir()) {
+                    //} else {
+                    //    System.err.println("Failed to make/find directory for " + path);
+                    //    return false;
+                    //}
                 }
             }
 
@@ -71,14 +76,14 @@ public class Config {
         }
         return false;
     }
+
     public boolean createConfig() {
-        File file1 = new File(System.getProperty("user.home") + File.separator + "empty3.config");
-        if(!file1.exists()) {
+        if (!file1.exists()) {
             try {
                 file1.createNewFile();
                 PrintWriter pw = new PrintWriter(file1);
-                pw.println("folderoutput=c\\"+System.getProperty("user.home")+"\\EmptyCanvasTest");
-                pw.println("path="+System.getProperty("user.home")+"\\EmptyCanvasTest");
+                pw.println("folderoutput=c\\" + System.getProperty("user.home") + "\\EmptyCanvasTest");
+                pw.println("path=" + System.getProperty("user.home") + "\\EmptyCanvasTest");
                 pw.close();
                 return true;
             } catch (IOException ex) {
@@ -87,6 +92,7 @@ public class Config {
         } else return true;
 
     }
+
     public String allDefaultStrings() {
         StringBuilder sb = new StringBuilder();
         sb.append("folder.samples=");
@@ -107,8 +113,12 @@ public class Config {
 
     public String getDefaultCodeVecMesh() {
 
-        String s =  getFileDirectoryDefault()+File.separator+"defaultCode.calcmath";
+        String s = getFileDirectoryDefault() + File.separator + "defaultCode.calcmath";
         System.out.println(s);
         return s;
+    }
+
+    public Map<String, String> getMap() {
+        return map;
     }
 }
