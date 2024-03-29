@@ -380,6 +380,14 @@ class TestStringAnalyzer5 {
             tokenMemberMethodVarType2,
             tokenMemberMethodExpression3,
             tokenMemberMethodVarName4
+            /*
+            tokenMethodSemiColonVar1,
+            tokenMethodSemiColonVar2,
+            tokenMethodSemiColonVar3,
+            tokenMethodSemiColonVar4,
+
+             */
+
         )
         // Instructions
         val tokenSingleInstructionIf = instruction//.copy(instruction)
@@ -447,8 +455,8 @@ class TestStringAnalyzer5 {
         )
         // Logical expression
         val logicalExpressionExpression = stringAnalyzer3.TokenLogicalExpression()
-        val logicalExpression = stringAnalyzer3.SingleTokenMandatory(logicalExpressionExpression)
-        val logicalExpressionWhile = stringAnalyzer3.TokenLogicalExpression()
+        val logicalExpressionIf = stringAnalyzer3.SingleTokenMandatory(logicalExpressionExpression)
+        val logicalExpressionWhile = stringAnalyzer3.SingleTokenMandatory(logicalExpressionExpression)
         val logicalExpressionDo = stringAnalyzer3.SingleTokenMandatory(logicalExpressionExpression)
 
         // if flow control
@@ -471,8 +479,8 @@ class TestStringAnalyzer5 {
         val instructionsForVariantColon = stringAnalyzer3.SingleTokenExclusiveXor(
             tokenSingleInstructionForVariantColon, instructionBlockForVariantColon
         )
-        tokenIf.addToken(logicalExpression)
-        logicalExpression.addToken(instructionsIf)
+        tokenIf.addToken(logicalExpressionIf)
+        logicalExpressionIf.addToken(instructionsIf)
         instructionsIf.addToken(
             stringAnalyzer3.SingleTokenOptional(
                 stringAnalyzer3.SingleTokenMandatory(
@@ -504,7 +512,7 @@ class TestStringAnalyzer5 {
         val tokenNameFor1 = stringAnalyzer3.TokenName()
         val tokenColonFor11 = stringAnalyzer3.TokenString(";")
         val tokenColonFor12 = stringAnalyzer3.TokenString(";")
-        val tokenVarFor1 = stringAnalyzer3.TokenExpression1()
+        val tokenVarFor1 = stringAnalyzer3.TokenLogicalExpression()
         val tokenCloseParenthesizedFor1 = stringAnalyzer3.TokenCloseParenthesized()
         tokenForVariantSemiColon.addToken(tokenOpenParenthesizedFor1)
         tokenOpenParenthesizedFor1.addToken(instructionsForInitControlVariantSemiColon)
@@ -656,11 +664,11 @@ class TestStringAnalyzer5 {
         multiTokenMandatoryImport.addToken(tokenClass)
         tokenClass.addToken(tokenClassName)
         tokenClassName.addToken(tokenOpenBracket)
-        val multiTokenOptional = stringAnalyzer3.MultiTokenExclusiveXor(
-            tokenCloseBracketClass, tokenMemberMethodType, tokenMemberVar
+        val multiTokenOptional = stringAnalyzer3.MultiTokenOptional(
+            /*tokenCloseBracketClass,*/ tokenMemberMethodType, tokenMemberVar
         )
         tokenOpenBracket.addToken(multiTokenOptional)
-        //multiTokenOptional.addToken(tokenCloseBracketClass)
+        multiTokenOptional.addToken(tokenCloseBracketClass)
         class ActionCloseBracketClass(token: StringAnalyzer3.Token) : Action3(token) {
             override fun action(): Boolean {
                 if (token.isSuccessful) {
@@ -680,9 +688,11 @@ class TestStringAnalyzer5 {
             override fun action(): Boolean {
                 //if (this.token == tokenIf) {
                 try {
-                    if (logicalExpressionExpression.expression != null) {
+                    val expression =
+                        (logicalExpressionIf.choices[0] as StringAnalyzer3.TokenLogicalExpression).expression
+                    if (expression != null) {
                         val value: ControlledInstructions.If =
-                            ControlledInstructions.If(logicalExpressionExpression.expression)
+                            ControlledInstructions.If(expression)
                         stringAnalyzer3.construct.currentInstructions.instructionList.add(value)
                         //value.instructionList.add(InstructionBlock())
                         stringAnalyzer3.construct.pushInstructions(value)
@@ -698,12 +708,13 @@ class TestStringAnalyzer5 {
         class ActionElseInstructions(token: StringAnalyzer3.Token) : Action3(token) {
             override fun action(): Boolean {
                 try {
-                    if (stringAnalyzer3.construct.currentInstructions != null &&
-                        stringAnalyzer3.construct.currentInstructions.instructionList.size > 0
-                    ) {
-                        stringAnalyzer3.construct.popInstructions()
-                    } else {
-                        throw EmptyEndOfBlockList("ElseInstruction : empty after end of block instructions\' list");
+                    if (token.isSuccessful) {
+                        if (stringAnalyzer3.construct.currentInstructions != null //&& stringAnalyzer3.construct.currentInstructions.instructionList.size > 0
+                        ) {
+                            stringAnalyzer3.construct.popInstructions()
+                        } else {
+                            throw EmptyEndOfBlockList("ElseInstruction : empty after end of block instructions\' list");
+                        }
                     }
                 } catch (ex: IndexOutOfBoundsException) {
                     ex.printStackTrace()
@@ -722,7 +733,7 @@ class TestStringAnalyzer5 {
                 if (instructionList.size > 0) {
                     val instructionIf = instructionList.get(instructionList.size - 1)
                     if (instructionIf is ControlledInstructions.If) {
-//                        stringAnalyzer3.construct.popInstructions()
+                        //stringAnalyzer3.construct.popInstructions()
                         stringAnalyzer3.construct.pushInstructions(instructionIf.instructionsElse)
                     }
                 }
@@ -732,6 +743,7 @@ class TestStringAnalyzer5 {
 
         // REFACTOR
         class ActionIfInstructions(token: StringAnalyzer3.Token) : Action3(token) {
+
             override fun action(): Boolean {
                 var instructionList: MutableList<InstructionBlock> =
                     stringAnalyzer3.construct.currentInstructions.instructionList
@@ -750,7 +762,7 @@ class TestStringAnalyzer5 {
             }
         }
 
-        ActionIf(logicalExpressionExpression)
+        ActionIf(logicalExpressionIf)
         ActionElse(tokenElse)
         ActionElseInstructions(instructionsElse)
         ActionIfInstructions(instructionsIf)
@@ -758,9 +770,10 @@ class TestStringAnalyzer5 {
         class ActionWhile(token: StringAnalyzer3.Token) : Action3(token) {
             override fun action(): Boolean {
                 try {
-                    if (logicalExpressionExpression.expression != null) {
-                        val value: ControlledInstructions.While =
-                            ControlledInstructions.While(logicalExpressionExpression.expression)
+                    val expression =
+                        (logicalExpressionWhile.choices[0] as StringAnalyzer3.TokenLogicalExpression).expression
+                    if (expression != null) {
+                        val value: ControlledInstructions.While = ControlledInstructions.While(expression)
                         stringAnalyzer3.construct.currentInstructions.instructionList.add(value)
                         stringAnalyzer3.construct.pushInstructions(value)
                         logicalExpressionExpression.expression = null
@@ -775,11 +788,11 @@ class TestStringAnalyzer5 {
 
         class ActionWhileStart(token: StringAnalyzer3.Token) : Action3(token) {
             override fun action(): Boolean {
-
                 val currentInstructions = stringAnalyzer3.construct.currentInstructions
                 if (currentInstructions is ControlledInstructions.While) {
-                    currentInstructions.controlExpression =
-                        logicalExpressionWhile.expression
+                    val expression =
+                        (logicalExpressionWhile.choices[0] as StringAnalyzer3.TokenLogicalExpression).expression
+                    currentInstructions.controlExpression = expression
                 }
                 return true
             }
@@ -787,7 +800,9 @@ class TestStringAnalyzer5 {
 
         class ActionWhileEnd(token: StringAnalyzer3.Token) : Action3(token) {
             override fun action(): Boolean {
-                //stringAnalyzer3.construct.popInstructions()
+                if (token.isSuccessful) {
+                    stringAnalyzer3.construct.popInstructions()
+                }
                 return true
             }
         }
@@ -842,10 +857,12 @@ class TestStringAnalyzer5 {
             (token: StringAnalyzer3.Token) : Action3(token) {
             override fun action(): Boolean {
                 try {
+                    val expression =
+                        (logicalExpressionDo.choices[0] as StringAnalyzer3.TokenLogicalExpression).expression
                     val currentInstructions = stringAnalyzer3.construct.currentInstructions
                     if (currentInstructions is ControlledInstructions.DoWhile) {
                         val value: ControlledInstructions.DoWhile =
-                            ControlledInstructions.DoWhile(logicalExpressionWhile.expression)
+                            ControlledInstructions.DoWhile(expression)
                         tokenIf.isSuccessful = false
                     }
                 } catch (ex: IndexOutOfBoundsException) {

@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class InstructionBlock {
-    private static int deepth = 0;
+    static int deepth = 0;
     protected List<InstructionBlock> instructionList = new ArrayList<>();
 
     public InstructionBlock() {
@@ -69,7 +69,7 @@ public class InstructionBlock {
 
 
         StringBuilder array1 = new StringBuilder();
-        if (!getInstructionList().isEmpty()) {
+        if (!getInstructionList().isEmpty() && !getClass().equals(Instruction.class)) {
             array1.append(debugString(debug, "{\n"));
             for (InstructionBlock instruction : getInstructionList()) {
                 array1.append(tabs(1)).append(instruction.toLangStringJava(debug)).append(";\n");
@@ -83,9 +83,9 @@ public class InstructionBlock {
 
 
                 if (!anIf.getInstructionsList().isEmpty()) {
-                    array3.append(debugString(debug, tabs(1) + "{\n"));
+                    array3.append(debugString(debug, tabs() + "{\n"));
                     for (InstructionBlock instruction : anIf.getInstructionsList()) {
-                        array3.append(tabs()).append(instruction.toLangStringJava(debug)).append("\n");
+                        array3.append(instruction.toLangStringJava(debug));
                     }
                     array3.append(debugString(debug, tabs() + "}\n"));
                 }
@@ -94,16 +94,16 @@ public class InstructionBlock {
 
 
                 if (!anIf.instructionsElse.instructionList.isEmpty()) {
-                    array2.append(debugString(debug, tabs(1) + "{\n"));
+                    array2.append(debugString(debug, tabs() + "{\n"));
                     for (InstructionBlock instruction : anIf.instructionsElse.instructionList) {
-                        array2.append(tabs()).append(instruction.toLangStringJava(debug)).append("\n");
+                        array2.append(instruction.toLangStringJava(debug));
                     }
-                    array2.append(debugString(debug, tabs(1) + "}\n"));
+                    array2.append(debugString(debug, tabs() + "}\n"));
                 }
 
 
                 if (!anIf.instructionList.isEmpty()) {
-                    stringBuilder.append(debugString(debug, tabs() + "if"))
+                    stringBuilder.append(debugString(debug, "\n" + tabs() + "if"))
                             .append(debugString(debug, anIf.controlExpression))
                             .append(debugString(debug, array3.toString())).append("\n");
                     if (!anIf.instructionsElse.getInstructionList().isEmpty()) {
@@ -116,12 +116,12 @@ public class InstructionBlock {
                 StringBuilder array2 = new StringBuilder();
                 array2.append(debugString(debug, tabs() + "{\n"));
                 for (InstructionBlock instruction : this.instructionList) {
-                    array2.append(tabs(1)).append(tabs(1) + instruction.toLangStringJava(debug)).append("\n");
+                    array2.append(instruction.toLangStringJava(debug)).append("\n");
                 }
                 array2.append(debugString(debug, tabs() + "}\n"));
                 ControlledInstructions.While aWhile = (ControlledInstructions.While) this;
                 stringBuilder.append(debugString(debug, tabs() + "while"))
-                        .append(debugString(debug, aWhile.controlExpression))
+                        .append(debugString(debug, aWhile.controlExpression)).append("\n")
                         .append(debugString(debug, array2.toString())).append("\n");
             }
             case "one.empty3.library1.tree.ControlledInstructions.DoWhile" -> {
@@ -135,10 +135,17 @@ public class InstructionBlock {
 //                            .append(debugString(debug, "\n"));
             case "one.empty3.library1.tree.Instruction" -> {
                 Instruction instruction = (Instruction) this;
-                stringBuilder.append(tabs()).append(instruction.getType() != null ? debugString(debug, instruction.getType()) : "")
-                        .append(" ").append(instruction.getName() != null ? debugString(debug, instruction.getName()) : "")
-                        .append(" ").append(instruction.getExpression() != null ? " " +
-                                debugString(debug, instruction.getExpression().toString()) : "").append(";\n");
+                String s = instruction.getType() != null ? debugString(debug, instruction.getType()) : "";
+                if (!s.isBlank()) {
+                    s = s + " ";
+                }
+                String s1 = instruction.getName() != null ? debugString(debug, instruction.getName()) : "";
+                if (!s1.isBlank()) {
+                    s1 = s1 + " ";
+                }
+                String s2 = instruction.getExpression() != null && instruction.getExpression().getExpression() != null ? " " +
+                        debugString(debug, instruction.getExpression().toString()) : "";
+                stringBuilder.append(tabs()).append(s).append(s1).append(s2).append(";\n");
             }
             case "one.empty3.library1.tree.InstructionBlock" -> {
                 stringBuilder.append(array1);

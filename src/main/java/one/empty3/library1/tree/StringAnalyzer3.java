@@ -1616,12 +1616,14 @@ public class StringAnalyzer3 {
                         }
                     }
                     sb.append(debugString(debug, " )"));
-                    sb.append(debugString(debug, " {\n"));
-                    method.getInstructions().instructionList.forEach(instruction0 -> {
+                    InstructionBlock instructions = method.getInstructions();
+                    instructions.deepth++;
+                    sb.append(instructions.toLangStringJava(debug));
+                    instructions.deepth--;
+                    /*instructionList.forEach(instruction0 -> {
                         sb.append(instruction0.toLangStringJava(debug));
-                    });
+                    });*/
                 });
-                sb.append("\t}\n");
             });
             sb.append("}");
             return sb.toString();
@@ -1829,7 +1831,7 @@ public class StringAnalyzer3 {
         @Override
         public int parse(String input, int position) {
             if (position >= input.length() || input.substring(position).trim().isEmpty()) {
-                setSuccessful(false);
+                setSuccessful(true);
                 return position;
             }
             int position1 = skipBlanks(input, position);
