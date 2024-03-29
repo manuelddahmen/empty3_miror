@@ -51,9 +51,11 @@ public class Camera extends CameraBox {
     }
 
     private Barycentre position;
+
     public Camera(boolean pass) {
         imposerMatrice.setElem(false);
     }
+
     public Camera() {
         this(new Point3D(100d, 0d, 0.0), Point3D.O0, Point3D.Y);
     }
@@ -62,6 +64,7 @@ public class Camera extends CameraBox {
         return verticale.getElem();
     }
 
+    @Deprecated
     public Camera(Point3D eye, Point3D lookat) {
         this(eye, lookat, null);
         scale.setElem(1.0);
@@ -72,7 +75,7 @@ public class Camera extends CameraBox {
         imposerMatrice.setElem(false);
         this.eye.setElem(eye);
         this.lookat.setElem(lookat);
-        if(up!=null)
+        if (up != null)
             verticale.setElem(up);
         calculerMatrice(up);
 
@@ -120,9 +123,10 @@ public class Camera extends CameraBox {
         }
         this.matrice.setElem(m.tild());
     }
+
     public void setMatrix(Matrix33 m) {
         // Z SORT DE L4ECRAN
-       
+
         this.matrice.setElem(m.tild());
     }
 
@@ -130,7 +134,7 @@ public class Camera extends CameraBox {
     public void calculerMatrice(Point3D vertical) {
         if (!imposerMatrice.getElem()) {
             if (vertical == null) {
-                verticale.setElem( calculerVerticaleParDefaut(getLookat().moins(eye.getElem())) );
+                verticale.setElem(calculerVerticaleParDefaut(getLookat().moins(eye.getElem())));
             } else {
                 verticale.setElem(vertical);
             }
@@ -147,7 +151,7 @@ public class Camera extends CameraBox {
         Point3D p2 = matrice.getElem().mult(p.moins(getEye()));
         //Point3D p2 = matrice.getElem().mult(p.moins(eye()).plus(getLookat()))
         //        .plus(getLookat().moins(p));
-        p2 = p2.mult(scale.getElem()!=null?scale.getElem():1.0);
+        p2 = p2.mult(scale.getElem() != null ? scale.getElem() : 1.0);
         p2.texture(p.texture());
         return p2;
     }
@@ -162,6 +166,7 @@ public class Camera extends CameraBox {
     public Point3D getEye() {
         return eye.getElem();
     }
+
     public void setEye(Point3D eye) {
         this.eye.setElem(eye);
     }
@@ -219,56 +224,58 @@ public class Camera extends CameraBox {
     private Point coordonneesPointEcranPerspective(Point3D x3d, int la, int ha) {
         boolean conditionInBounds =
                 (x3d.getZ() > 0 && -getAngleX() < Math.atan(x3d.getX() / x3d.getZ())
-                && Math.atan(x3d.getX() / x3d.getZ()) < getAngleX() && -getAngleY() < Math.atan(x3d.getY() / x3d.getZ())
-                && Math.atan(x3d.getY() / x3d.getZ()) < getAngleY());
+                        && Math.atan(x3d.getX() / x3d.getZ()) < getAngleX() && -getAngleY() < Math.atan(x3d.getY() / x3d.getZ())
+                        && Math.atan(x3d.getY() / x3d.getZ()) < getAngleY());
         if (!conditionInBounds) {
             x3d = pointIntersects(x3d, la, ha);
         }
 
-        if (x3d!=null && conditionInBounds) {
+        if (x3d != null && conditionInBounds) {
 
             double scale = (1.0 / (x3d.getZ()));
 
-            double r = (angleY.getElem()/angleX.getElem());
+            double r = (angleY.getElem() / angleX.getElem());
             return new Point(
-                    (int) ((   x3d.getX() * scale * la * r + la / 2)),
-                    (int) (( - x3d.getY() *scale * ha + ha / 2)));
+                    (int) ((x3d.getX() * scale * la * r + la / 2)),
+                    (int) ((-x3d.getY() * scale * ha + ha / 2)));
 /*
             Point p = new Point((int) (x + la / 2), (int) (y + ha / 2));
             Logger.getAnonymousLogger().log(Level.INFO, p.toString());
 
             return p;
-  */      }
+  */
+        }
         return null;
 
     }
 
     private double coordXfAxZ(double angleX, double z, double xBase, double la, double ha, boolean xOrY) {
-        return Math.sin(angleX)*Math.sqrt(z*z+xBase*xBase);//(xOrY?la:ha);//
+        return Math.sin(angleX) * Math.sqrt(z * z + xBase * xBase);//(xOrY?la:ha);//
     }
+
     private Point3D pointIntersects(Point3D x3d, int la, int ha) {
         if (x3d.get(2) < 0)
             return null;
-        double ax = getAngleX()/2.;
-        double ay = getAngleY()/2.;
-        if(!(-getAngleX() < Math.atan(x3d.get(0) / x3d.get(2)))) {
+        double ax = getAngleX() / 2.;
+        double ay = getAngleY() / 2.;
+        if (!(-getAngleX() < Math.atan(x3d.get(0) / x3d.get(2)))) {
             return new Point3D(
                     coordXfAxZ(-ax, x3d.get(2), x3d.get(0), la, ha, true),
                     x3d.get(1), x3d.get(2));
         }
-        if(!(Math.atan(x3d.get(0) / x3d.get(2)) < getAngleX())) {
+        if (!(Math.atan(x3d.get(0) / x3d.get(2)) < getAngleX())) {
             return new Point3D(coordXfAxZ(ax, x3d.get(2), x3d.get(0), la, ha, true),
                     x3d.get(1), x3d.get(2));
         }
-        if(!(-getAngleY() < Math.atan(x3d.get(1) / x3d.get(2)))) {
+        if (!(-getAngleY() < Math.atan(x3d.get(1) / x3d.get(2)))) {
             return new Point3D(x3d.get(0), coordXfAxZ(-ay, x3d.get(2), x3d.get(1), la, ha, false),
                     x3d.get(2));
         }
-        if(!(Math.atan(x3d.get(1) / x3d.get(2)) < getAngleY())) {
-            return new Point3D(x3d.get(0),  coordXfAxZ(ay, x3d.get(2), x3d.get(1), la, ha, false),
+        if (!(Math.atan(x3d.get(1) / x3d.get(2)) < getAngleY())) {
+            return new Point3D(x3d.get(0), coordXfAxZ(ay, x3d.get(2), x3d.get(1), la, ha, false),
                     x3d.get(2));
         }
-    return null;
+        return null;
     }
 
     public Point coordonneesPointEcranIsometrique(Point3D p, ZBufferImpl.Box2D box, int la, int ha) {

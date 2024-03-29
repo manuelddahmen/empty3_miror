@@ -36,7 +36,7 @@ public class TestBalleClous111 extends TestObjetSub {
 
     public int MAXFRAMES = 2000;
     public int N = 2;
-    private TextureCol tc = new TextureCol(Color.red);
+    private ColorTexture tc = new ColorTexture(Color.red);
     private BalleClous2 ballec;
     private Point3D[] s;
     private Point3D[] v;
@@ -48,9 +48,9 @@ public class TestBalleClous111 extends TestObjetSub {
 
         th.loop(true);
 
-        th.setResx(1920 / 4);
+        th.setResx(1920);
 
-        th.setResy(1080 / 4);
+        th.setResy(1080);
 
         th.MAXFRAMES = 4000;
 
@@ -60,7 +60,7 @@ public class TestBalleClous111 extends TestObjetSub {
     @Override
     public void ginit() {
         z().setFORCE_POSITIVE_NORMALS(true);
-        z().setDisplayType(Representable.SURFACE_DISPLAY_COL_TRI);
+        z().setDisplayType(Representable.DISPLAY_ALL);
 
         LumierePonctuelle lumierePonctuelle = new LumierePonctuelle(Point3D.X, Color.RED);
         lumierePonctuelle.setR0(1);
@@ -82,23 +82,21 @@ public class TestBalleClous111 extends TestObjetSub {
             v[i] = new Point3D(Math.random() * (V / 2 - V), Math.random() * (V / 2 - V), Math.random() * (V / 2 - V));
 
         }
-        tc =
-                new TextureCol(
-                        Color.YELLOW);
+        tc = new ColorTexture(Color.YELLOW);
 
 
-        ballec = new BalleClous2(Point3D.O0, 1.0);
+        ballec = new BalleClous2(Point3D.O0, 2.0);
 
 
-        ballec.texture(new ColorTexture(Color.WHITE));
+        ballec.texture(tc);
 
         scene().add(ballec);
 
         scene().lumieres().add(new LumierePonctuelle(Point3D.O0, Color.BLUE));
 
         Camera camera;
-        camera = new Camera(new Point3D(0d, 0d, -2d),
-                new Point3D(0d, 0d, 0d));
+        camera = new Camera(new Point3D(0d, 0d, 4d),
+                new Point3D(0d, 0d, 0d), Point3D.Y);
 
         scene().cameraActive(camera);
 
@@ -129,7 +127,7 @@ public class TestBalleClous111 extends TestObjetSub {
     }
 
     @Override
-    public void testScene() throws Exception {
+    public void finit() {
         for (int i = 0; i < s.length; i++) {
             bounce(i);
         }
@@ -162,11 +160,4 @@ public class TestBalleClous111 extends TestObjetSub {
 
     }
 
-    private Matrix33 matrix1(double a, double b) {
-        return Matrix33.rot(a, b);
-    }
-
-    @Override
-    public void finit() {
-    }
 }

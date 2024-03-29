@@ -34,14 +34,14 @@ import java.awt.*;
 public class TestBalleClous1111 extends TestObjetSub {
 
     public int N = 1;
-    private ITexture tc = new TextureCol(Color.red);
+    private ITexture tc = new ColorTexture(Color.red);
     private BalleClous2 ballec;
     private Point3D[][] s;
     private Point3D[][] v;
     private double V = 0.03;
     private double D = 1;
     private TextureMov textureMov;
-    private BalleClous2[] balles = new BalleClous2[1];
+    private BalleClous2[] balles = new BalleClous2[4];
     private int nBalles = 5;
 
     public static void main(String[] args) {
@@ -59,14 +59,14 @@ public class TestBalleClous1111 extends TestObjetSub {
         LumierePonctuelle lumierePonctuelle = new LumierePonctuelle(Point3D.X, Color.GREEN);
         lumierePonctuelle.setR0(1);
 
-        scene().lumieres().add(lumierePonctuelle);
+        //scene().lumieres().add(lumierePonctuelle);
 
-        lumierePonctuelle = new LumierePonctuelle(Point3D.Y, Color.BLUE);
+        lumierePonctuelle = new LumierePonctuelle(Point3D.Y, Color.WHITE);
         lumierePonctuelle.setR0(1);
 
-        scene().lumieres().add(lumierePonctuelle);
+        //scene().lumieres().add(lumierePonctuelle);
 
-        scene().lumieres().add(new LumierePonctuelle(Point3D.O0, Colors.random()));
+        //scene().lumieres().add(new LumierePonctuelle(Point3D.O0, Colors.random()));
 
 
         s = new Point3D[nBalles][N];
@@ -81,9 +81,7 @@ public class TestBalleClous1111 extends TestObjetSub {
                 v[b][i] = new Point3D(Math.random() * (V / 2 - V), Math.random() * (V / 2 - V), Math.random() * (V / 2 - V));
 
             }
-            tc =
-                    new TextureCol(
-                            Colors.random());
+            tc = new ColorTexture(Colors.random());
 
 
         }
@@ -91,7 +89,7 @@ public class TestBalleClous1111 extends TestObjetSub {
         ) {
 
 
-            ballec = new BalleClous2(Point3D.O0, 1);
+            ballec = new BalleClous2(Point3D.O0, 2.0);
 
             ballec.setIncrU(0.01);
             ballec.setIncrV(0.01);
@@ -106,14 +104,14 @@ public class TestBalleClous1111 extends TestObjetSub {
 
         }
         Camera camera;
-        camera = new Camera(new Point3D(-0d, 0d, -5d),
+        camera = new Camera(new Point3D(0d, 0d, 5d),
                 new Point3D(0d, 0d, 0d));
 
         scene().cameraActive(camera);
     }
 
     public void bounce(int numBalle, int i) {
-        s[numBalle][i] = s[numBalle][i].plus(v[numBalle][i]);
+        s[numBalle][i].changeTo(s[numBalle][i].plus(v[numBalle][i]));
 
 
         if (s[numBalle][i].getX() > D && v[numBalle][i].getX() > 0) {
@@ -137,11 +135,11 @@ public class TestBalleClous1111 extends TestObjetSub {
     }
 
     @Override
-    public void testScene() throws Exception {
+    public void finit() throws Exception {
         for (int b = 0; b < balles.length; b++) {
             ballec = balles[b];
 
-            for (int i = 0; i < s[0].length; i++) {
+            for (int i = 0; i < s[b].length; i++) {
                 bounce(b, i);
             }
 
