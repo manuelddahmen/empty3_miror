@@ -624,7 +624,6 @@ class TestStringAnalyzer5 {
                     //stringAnalyzer3.construct.currentMethod.ofClass.name = tokenMemberMethodType.name
                     stringAnalyzer3.construct.popInstructions()
                     stringAnalyzer3.construct.currentMethod = Method()
-                    stringAnalyzer3.construct.pushInstructions(stringAnalyzer3.construct.currentMethod.instructions)
                 } else {
 
                 }
@@ -708,6 +707,10 @@ class TestStringAnalyzer5 {
         }
 
         class ActionElseInstructions(token: StringAnalyzer3.Token) : Action3(token) {
+            init {
+                on = ON_RETURNS_TRUE_NEXT_TOKEN
+            }
+
             override fun action(): Boolean {
                 try {
                     if (token.isSuccessful) {
@@ -765,9 +768,9 @@ class TestStringAnalyzer5 {
         }
 
         ActionIf(logicalExpressionIf)
+        ActionIfInstructions(instructionsIf)
         ActionElse(tokenElse)
         ActionElseInstructions(instructionsElse)
-        ActionIfInstructions(instructionsIf)
 
         class ActionWhile(token: StringAnalyzer3.Token) : Action3(token) {
             override fun action(): Boolean {
@@ -789,6 +792,10 @@ class TestStringAnalyzer5 {
         }
 
         class ActionWhileStart(token: StringAnalyzer3.Token) : Action3(token) {
+            init {
+                on = ON_RETURNS_TRUE_NEXT_TOKEN
+            }
+
             override fun action(): Boolean {
                 val currentInstructions = stringAnalyzer3.construct.currentInstructions
                 if (currentInstructions is ControlledInstructions.While) {
