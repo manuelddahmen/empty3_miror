@@ -121,7 +121,7 @@ class TestStringAnalyzer5 {
                 return true
             }
         }
-        tokenClass.setAction(ActionClassKeyword(tokenClass))
+        ActionClassKeyword(tokenClass)
 
         val tokenClassName = stringAnalyzer3.TokenName()
 
@@ -462,16 +462,16 @@ class TestStringAnalyzer5 {
         // if flow control
 
         val instructionsIf = stringAnalyzer3.SingleTokenExclusiveXor(
-            tokenSingleInstructionIf, instructionBlockIf
+            instructionBlockIf, tokenSingleInstructionIf
         )
         val instructionsElse = stringAnalyzer3.SingleTokenExclusiveXor(
-            tokenSingleInstructionElse, instructionBlockElse
+            instructionBlockElse, tokenSingleInstructionElse
         )
         val instructionsWhile = stringAnalyzer3.SingleTokenExclusiveXor(
-            tokenSingleInstructionWhile, instructionBlockWhile
+            instructionBlockWhile, tokenSingleInstructionWhile
         )
         val instructionsDo = stringAnalyzer3.SingleTokenExclusiveXor(
-            tokenSingleInstructionDo, instructionBlockDo
+            instructionBlockDo, tokenSingleInstructionDo
         )
         val instructionsForVariantSemiColon = stringAnalyzer3.SingleTokenExclusiveXor(
             tokenSingleInstructionForVariantSemiColon, instructionBlockForVariantSemiColon
@@ -624,6 +624,7 @@ class TestStringAnalyzer5 {
                     //stringAnalyzer3.construct.currentMethod.ofClass.name = tokenMemberMethodType.name
                     stringAnalyzer3.construct.popInstructions()
                     stringAnalyzer3.construct.currentMethod = Method()
+                    stringAnalyzer3.construct.pushInstructions(stringAnalyzer3.construct.currentMethod.instructions)
                 } else {
 
                 }
@@ -674,6 +675,7 @@ class TestStringAnalyzer5 {
                 if (token.isSuccessful) {
                     stringAnalyzer3.construct.classes.add(stringAnalyzer3.construct.currentClass)
                     stringAnalyzer3.construct.currentClass = Class()
+                    stringAnalyzer3.construct.pushInstructions(InstructionBlock())
                 }
                 return true
             }
@@ -799,6 +801,10 @@ class TestStringAnalyzer5 {
         }
 
         class ActionWhileEnd(token: StringAnalyzer3.Token) : Action3(token) {
+            init {
+                on = ON_RETURNS_TRUE_NEXT_TOKEN
+            }
+
             override fun action(): Boolean {
                 if (token.isSuccessful) {
                     stringAnalyzer3.construct.popInstructions()
