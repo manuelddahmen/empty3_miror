@@ -42,11 +42,22 @@ public class ControlledInstructions extends Instruction {
     }
 
     public static class For extends ControlledInstructions {
-
+        public boolean forEachType = false;
+        private Instruction loopInstruction;
         public Instruction firstForInstruction;
 
-        public For(String controlExpression) {
+        public For(Instruction initInstruction, String controlExpression, Instruction loopInstruction) {
             super(controlExpression);
+            this.firstForInstruction = initInstruction;
+            this.loopInstruction = loopInstruction;
+            forEachType = false;
+        }
+
+        public For(String expression, Instruction loopInstruction) {
+            super(expression);
+            this.loopInstruction = loopInstruction;
+            this.controlExpression = expression;
+            forEachType = true;
         }
 
         @Override

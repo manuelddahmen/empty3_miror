@@ -67,25 +67,28 @@ public class InstructionBlock {
         deepth++;
         StringBuilder stringBuilder = new StringBuilder();
 
-        StringBuilder array1 = new StringBuilder();
-        array1.append(debugString(debug, "{\n"));
-        for (InstructionBlock instruction : getInstructionList()) {
-            array1.append(tabs(1)).append(instruction.toLangStringJava(debug)).append(";\n");
-        }
-        array1.append(debugString(debug, tabs() + "}\n"));
 
+        StringBuilder array1 = new StringBuilder();
+        if (!getInstructionList().isEmpty()) {
+            array1.append(debugString(debug, "{\n"));
+            for (InstructionBlock instruction : getInstructionList()) {
+                array1.append(tabs(1)).append(instruction.toLangStringJava(debug)).append(";\n");
+            }
+            array1.append(debugString(debug, tabs() + "}\n"));
+        }
         switch (getClass().getCanonicalName()) {
             case "one.empty3.library1.tree.ControlledInstructions.If" -> {
                 ControlledInstructions.If anIf = (ControlledInstructions.If) this;
                 StringBuilder array3 = new StringBuilder();
 
 
-                array3.append(debugString(debug, tabs(1) + "{\n"));
-                for (InstructionBlock instruction : anIf.getInstructionsList()) {
-                    array3.append(tabs()).append(instruction.toLangStringJava(debug)).append("\n");
+                if (!anIf.getInstructionsList().isEmpty()) {
+                    array3.append(debugString(debug, tabs(1) + "{\n"));
+                    for (InstructionBlock instruction : anIf.getInstructionsList()) {
+                        array3.append(tabs()).append(instruction.toLangStringJava(debug)).append("\n");
+                    }
+                    array3.append(debugString(debug, tabs() + "}\n"));
                 }
-                array3.append(debugString(debug, tabs() + "}\n"));
-
 
                 StringBuilder array2 = new StringBuilder();
 
@@ -102,7 +105,7 @@ public class InstructionBlock {
                 if (!anIf.instructionList.isEmpty()) {
                     stringBuilder.append(debugString(debug, tabs() + "if"))
                             .append(debugString(debug, anIf.controlExpression))
-                            .append(debugString(debug, array3.toString()));
+                            .append(debugString(debug, array3.toString())).append("\n");
                     if (!anIf.instructionsElse.getInstructionList().isEmpty()) {
                         stringBuilder.append(debugString(debug, tabs() + "else")).append("\n")
                                 .append(debugString(debug, array2.toString()));
@@ -119,7 +122,7 @@ public class InstructionBlock {
                 ControlledInstructions.While aWhile = (ControlledInstructions.While) this;
                 stringBuilder.append(debugString(debug, tabs() + "while"))
                         .append(debugString(debug, aWhile.controlExpression))
-                        .append(debugString(debug, array2.toString()));
+                        .append(debugString(debug, array2.toString())).append("\n");
             }
             case "one.empty3.library1.tree.ControlledInstructions.DoWhile" -> {
                 stringBuilder.append(debugString(debug, "do \n")).append(debugString(debug, array1.toString())).append(debugString(debug, " while"))

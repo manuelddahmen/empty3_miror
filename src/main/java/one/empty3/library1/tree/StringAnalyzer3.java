@@ -1540,6 +1540,7 @@ public class StringAnalyzer3 {
             if (currentInstructions == null) {
                 currentInstructions = new ArrayList<>();
                 currentInstructions.add(new InstructionBlock());
+                throw new RuntimeException("StringAnalyzer5::construct.currentInstructions : No current Instructions");
             }
 
             if (!currentInstructions.isEmpty()) {
@@ -1820,7 +1821,6 @@ public class StringAnalyzer3 {
     }
 
     public class TokenLogicalExpression extends Token {
-        @NotNull
         public String expression;
 
         public TokenLogicalExpression() {
