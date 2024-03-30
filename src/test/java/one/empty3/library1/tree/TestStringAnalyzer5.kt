@@ -116,8 +116,10 @@ class TestStringAnalyzer5 {
 
         class ActionClassKeyword(token: StringAnalyzer3.Token?) : Action3(token) {
             public override fun action(): Boolean {
-                stringAnalyzer3.construct.classes.add(stringAnalyzer3.construct.currentClass)
-                stringAnalyzer3.construct.currentClass.setPackageName(stringAnalyzer3.construct.packageName)
+                if (stringAnalyzer3.construct.classesWithName(stringAnalyzer3.construct.currentClass.name).size == 0) {
+                    stringAnalyzer3.construct.classes.add(stringAnalyzer3.construct.currentClass)
+                    stringAnalyzer3.construct.currentClass.setPackageName(stringAnalyzer3.construct.packageName)
+                }
                 return true
             }
         }
@@ -263,12 +265,12 @@ class TestStringAnalyzer5 {
         multiTokenOptionalMethodParameter.addToken(tokenCloseParenthesizedMethodParameter)
         //multiTokenOptionalMethodParameter2.addToken(tokenCloseParenthesizedMethodParameter)//???
         val tokenOpenBracketMethod = stringAnalyzer3.TokenOpenBracket()
-        tokenCloseParenthesizedMethodParameter.addToken(tokenOpenBracketMethod)
 
 
         class ActionTokenOpenParenthesizedMethodParameter(token: StringAnalyzer3.Token?) : Action3(token) {
 
             override fun action(): Boolean {
+                //if (token.isSuccessful) {
                 if (tokenMemberMethodType.name != null && tokenMemberMethodName.name != null) {
                     stringAnalyzer3.construct.currentMethod.ofClass = Variable()
                     stringAnalyzer3.construct.currentMethod.ofClass.classStr = tokenMemberMethodType.name
@@ -279,6 +281,7 @@ class TestStringAnalyzer5 {
                     }
                     stringAnalyzer3.construct.pushInstructions(stringAnalyzer3.construct.currentMethod.instructions)
                 }
+                //}
                 return true
             }
         }
@@ -410,19 +413,19 @@ class TestStringAnalyzer5 {
         val tokenMultiMembersInstructionsForVariantSemiColon = stringAnalyzer3.MultiTokenExclusiveXor(instruction)
         val tokenMultiMembersInstructionsForVariantColon = stringAnalyzer3.MultiTokenExclusiveXor(instruction)
         // End of Instructions
-
-        val tokenCloseBracketMethod = stringAnalyzer3.TokenCloseBracket()
-        tokenOpenBracketMethod.addToken(tokenMultiMembersInstructions)
-        tokenMultiMembersInstructions.addToken(tokenCloseBracketMethod)
-
-        ActionTokenOpenParenthesizedMethodParameter(tokenOpenBracketMethod)
+        /*
+                val tokenCloseBracketMethod = stringAnalyzer3.TokenCloseBracket()
+                tokenOpenBracketMethod.addToken(tokenMultiMembersInstructions)
+                tokenMultiMembersInstructions.addToken(tokenCloseBracketMethod)
+        */
+        ActionTokenOpenParenthesizedMethodParameter(tokenOpenParenthesizedMethodParameter)
 
         // Instructions' flow controls (if-else, while, do while, for-i, for-:, switch)
 
         // Block without controls
         val instructionBlockOpenBracket = stringAnalyzer3.TokenString("{")
         val instructionBlockCloseBracket = stringAnalyzer3.TokenString("}")
-        val instructionBlock = stringAnalyzer3.MultiTokenMandatory(
+        val instructionBlockMethod = stringAnalyzer3.MultiTokenMandatory(
             stringAnalyzer3.TokenString("{"),
             tokenMultiMembersInstructions,
             stringAnalyzer3.TokenString("}")
@@ -502,6 +505,7 @@ class TestStringAnalyzer5 {
         val tokenColonFor = stringAnalyzer3.TokenString(":")
         val tokenVarFor = stringAnalyzer3.TokenExpression1()
         val tokenCloseParenthesizedFor = stringAnalyzer3.TokenCloseParenthesized()
+        tokenCloseParenthesizedMethodParameter.addToken(instructionBlockMethod)
         tokenForVariantColon.addToken(tokenOpenParenthesizedFor)
         tokenOpenParenthesizedFor.addToken(tokenTypeFor)
         tokenTypeFor.addToken(tokenNameFor)
@@ -615,28 +619,28 @@ class TestStringAnalyzer5 {
         ActionExpressionType(tokenMethodSemiColonVar3)
         ActionExpressionType(tokenMethodSemiColonVar4)
 
-        tokenElse.addToken(instructionsElse)///??? Imbriquées ?
+        tokenElse.addToken(instructionsElse)
+
         class ActionPushMethod(token: StringAnalyzer3.Token?) : Action3(token) {
             override fun action(): Boolean {
-                if (tokenMemberMethodName.name != null && !tokenMemberMethodName.name.isEmpty() &&
-                    tokenMemberMethodType.name != null && !tokenMemberMethodType.name.isEmpty()
-                ) {
-                    val methodList = stringAnalyzer3.construct.currentClass.methodList
-                    methodList.add(stringAnalyzer3.construct.currentMethod)
-                    //stringAnalyzer3.construct.currentMethod.name = tokenMemberMethodName.name
-                    //stringAnalyzer3.construct.currentMethod.ofClass.classStr = tokenMemberMethodType.name
-                    //stringAnalyzer3.construct.currentMethod.ofClass.name = tokenMemberMethodType.name
-                    stringAnalyzer3.construct.popInstructions()
-                    stringAnalyzer3.construct.currentMethod = Method()
-                    tokenMemberMethodName.name = null
-                    tokenMemberMethodType.name = null
-                } else {
+                if (token.isSuccessful) {
+                    if (tokenMemberMethodName.name != null && !tokenMemberMethodName.name.isEmpty() &&
+                        tokenMemberMethodType.name != null && !tokenMemberMethodType.name.isEmpty()
+                    ) {
+                        val methodList = stringAnalyzer3.construct.currentClass.methodList
+                        methodList.add(stringAnalyzer3.construct.currentMethod)
+                        stringAnalyzer3.construct.popInstructions()
+                        stringAnalyzer3.construct.currentMethod = Method()
+                        tokenMemberMethodName.name = null
+                        tokenMemberMethodType.name = null
+                    } else {
 
+                    }
                 }
                 return true
             }
         }
-        ActionPushMethod(tokenCloseBracketMethod)
+        ActionPushMethod(instructionBlockMethod)
 
         class ActionPopContext(token: StringAnalyzer3.Token) : Action3(token) {
             override fun action(): Boolean {
@@ -645,12 +649,6 @@ class TestStringAnalyzer5 {
                 return true
             }
         }
-
-        //ActionPopContext(instructionsIf)
-        //ActionPopContext(instructionsElse)
-        //ActionPopContext(instructionsWhile)
-        //ActionPopContext(instructionBlock)
-        //ActionPopContext(instructionBlockCloseBracket)
 
         tokenPackage.addToken(tokenPackageName)
         tokenPackageName.addToken(tokenPackageSemicolon)
@@ -670,17 +668,22 @@ class TestStringAnalyzer5 {
         multiTokenMandatoryImport.addToken(tokenClass)
         tokenClass.addToken(tokenClassName)
         tokenClassName.addToken(tokenOpenBracket)
-        val multiTokenOptional = stringAnalyzer3.MultiTokenExclusiveXor(
-            tokenCloseBracketClass, tokenMemberMethodType, tokenMemberVar
+        val multiTokenOptional = stringAnalyzer3.MultiTokenOptional(
+            stringAnalyzer3.SingleTokenExclusiveXor(
+                tokenMemberVar, tokenMemberMethodType
+            )
         )
         tokenOpenBracket.addToken(multiTokenOptional)
-        //multiTokenOptional.addToken(tokenCloseBracketClass)
+        multiTokenOptional.addToken(tokenCloseBracketClass)
         class ActionCloseBracketClass(token: StringAnalyzer3.Token) : Action3(token) {
             override fun action(): Boolean {
                 if (token.isSuccessful) {
-                    stringAnalyzer3.construct.classes.add(stringAnalyzer3.construct.currentClass)
-                    stringAnalyzer3.construct.currentClass = Class()
-                    stringAnalyzer3.construct.pushInstructions(InstructionBlock())
+                    if (stringAnalyzer3.construct.classesWithName(stringAnalyzer3.construct.currentClass.name).size == 0) {
+                        stringAnalyzer3.construct.classes.add(stringAnalyzer3.construct.currentClass)
+                        stringAnalyzer3.construct.currentClass = Class()
+                        //stringAnalyzer3.construct.pushInstructions(InstructionBlock())
+
+                    }
                 }
                 return true
             }
@@ -896,10 +899,10 @@ class TestStringAnalyzer5 {
 
 
     @Test
-    fun testJavaClass4() {
+    fun testJavaClass5() {
         isDebug = false
         val stringAnalyzer3 = StringAnalyzer3()
-        val javaToken = TestStringAnalyzer5().getJavaToken5(stringAnalyzer3)
+        val javaToken = getJavaToken5(stringAnalyzer3)
         val token = javaToken
         val input = readString("resources/text_parser/Number4.java.java_code")
 

@@ -1166,240 +1166,6 @@ public class StringAnalyzer3 {
      * This class represents a StringAnalyzer3 object that can perform parsing operations on a string input.
      */
     public StringAnalyzer3() {
-        TokenQualifiedName packageQualifiedName = new TokenQualifiedName();
-        Action3 actionPackageName = new Action3(packageQualifiedName) {
-            @Override
-            public boolean action() {
-                String string = getToken().isSuccessful() ? ((TokenQualifiedName) getToken()).getName() : "";
-                if (string != null && !string.isEmpty()) {
-                    construct.packageName = string;
-                    construct.currentClass.setPackageName(construct.packageName);
-                }
-                return true;
-            }
-        };
-        Token isFinal = new TokenConstantModifier();
-        Action3 actionConstantModifier = new Action3(isFinal) {
-            @Override
-            public boolean action() {
-                if (getToken().isSuccessful()) {
-                    String choice = (((TokenConstantModifier) token)).getChoice();
-                    if (choice != null && !choice.isEmpty()) {
-                        construct.currentClass.setFinal(true);
-                    }
-                }
-                return true;
-            }
-        };
-        TokenName className = new TokenName();
-        Action3 setNewClassName = new Action3(className) {
-            @Override
-            public boolean action() {
-                if (token.isSuccessful()) {
-                    String string = getToken().isSuccessful() ? ((TokenName) getToken()).getName() : "";
-                    if (string != null && !string.isEmpty()) {
-                        construct.currentClass.setName(string);
-                    }
-
-                    return true;
-                }
-                return false;
-            }
-        };
-        Token closeBracketClass = new TokenCloseBracket();
-        Action3 actionCloseClassBracket = new Action3(closeBracketClass) {
-            @Override
-            public boolean action() {
-                //((TokenCloseBracket)getToken())
-                if (token.isSuccessful()) {
-                    //construct.cited.put(construct.packageName + "." + construct.currentClass.getName(), construct.currentClass);
-                    //construct.currentClass = new Class();
-                }
-                return true;
-            }
-        };
-        Token closeBracketMethod = new TokenCloseBracket();
-        actionCloseClassBracket = new Action3(closeBracketMethod) {
-            @Override
-            public boolean action() {
-                //((TokenCloseBracket)getToken())
-                if (token.isSuccessful()) {
-                    //construct.cited.put(construct.packageName + "." + construct.currentClass.getName(), construct.currentClass);
-                    //construct.currentClass = new Class();
-                }
-                return true;
-            }
-        };
-
-        TokenClassScope tokenVariableScope = new TokenClassScope();
-        Action3 action = new Action3(tokenVariableScope) {
-            @Override
-            public boolean action() {
-                if (token.isSuccessful()) {
-                    List<Variable> variableList = construct.currentClass.getVariableList();
-                    if (variableList.isEmpty())
-                        variableList.add(new Variable());
-                    String string = tokenVariableScope.getChoice();
-                    if (string != null && !string.isEmpty()) {
-                        //construct.currentClass.getVariableList().add(variable);
-                        variableList.get(variableList.size() - 1).setScope(string);
-                    }
-
-                }
-                return true;
-            }
-        };
-        TokenQualifiedName tokenQualifiedNameVariable = new TokenQualifiedName();
-
-        Action3 actionQualifiedNameVariable = new Action3(tokenQualifiedNameVariable) {
-            @Override
-            public boolean action() {
-                if (token.isSuccessful()) {
-                    List<Variable> variableList = construct.currentClass.getVariableList();
-                    if (variableList.isEmpty())
-                        variableList.add(new Variable());
-                    String name = ((TokenQualifiedName) token).getName();
-                    if (name != null && !name.isEmpty()) {
-                        variableList.get(variableList.size() - 1).setName(name);
-                    }
-
-                }
-                return true;
-            }
-        };
-        TokenClassScope tokenMethodScope = new TokenClassScope();
-        Action3 actionClassScope = new Action3(tokenMethodScope) {
-            @Override
-            public boolean action() {
-                List<Method> methodList = construct.currentClass.getMethodList();
-                if (methodList.isEmpty())
-                    methodList.add(new Method());
-                if (token.isSuccessful()) {
-                    String name = ((TokenClassScope) token).getChoice();
-                    if (name != null && !name.isEmpty()) {
-                        methodList.get(methodList.size() - 1).setScope(name);
-                    }
-                    return true;
-                }
-                return false;
-            }
-        };
-        TokenMethodMemberDefinition tokenMethodMemberDefinition = new TokenMethodMemberDefinition();
-        Action3 actionMethodName = new Action3(tokenMethodScope) {
-            @Override
-            public boolean action() {
-                List<Method> methodList = construct.currentClass.getMethodList();
-                if (methodList.isEmpty())
-                    methodList.add(new Method());
-                if (token.isSuccessful()) {
-                    String name = ((TokenName) token).getName();
-                    if (name != null && !name.isEmpty()) {
-                        methodList.get(methodList.size() - 1).setName(((TokenName) token).getName());
-                    }
-                    return true;
-                }
-                return false;
-            }
-        };
-
-
-        TokenConstantModifier tokenConstantModifierMethod = new TokenConstantModifier();
-        TokenConstantModifier tokenConstantModifier = new TokenConstantModifier();
-        TokenName tokenNameReturnType = new TokenName();
-
-
-        TokenVariableInMethodName tokenVariableInMethodName = new TokenVariableInMethodName();
-        Action3 actionTokenVariableInMethodName = new Action3(tokenVariableInMethodName) {
-            @Override
-            public boolean action() {
-                if (token.isSuccessful()) {
-                    String name = ((TokenVariableInMethodName) token).getName();
-                    if (name != null && !name.isEmpty()) {
-                        InstructionBlock instructions = construct.methodMembers.get(construct.methodMembers.size() - 1).getInstructions();
-                        InstructionBlock instruction = instructions;
-                        if (instruction instanceof Instruction) {
-                            ((Instruction) instruction).setType(name);
-                        }
-                    }
-                }
-                return true;
-            }
-        };
-
-        Token endOfInstruction = new TokenSemiColon();
-        Action3 actionEndOfInstruction = new Action3(endOfInstruction) {
-            @Override
-            public boolean action() {
-                if (token.isSuccessful()) {
-                    InstructionBlock instructions = construct.methodMembers.get(construct.methodMembers.size() - 1).getInstructions();
-                    instructions.instructionList.add(new InstructionBlock());
-                    //construct.methodMembers.get(construct.methodMembers.size() - 1)
-                    //       .setInstructions(instructions);
-                    InstructionBlock instruction = instructions.instructionList.get(instructions.instructionList.size() - 1);
-                    return true;
-                }
-                return false;
-            }
-        };
-        Token tokenBeginOfMethod = new TokenOpenBracket();
-        Action3 actionBeginOfInstructions = new Action3(tokenBeginOfMethod) {
-            @Override
-            public boolean action() {
-                if (token.isSuccessful()) {
-                    construct.methodMembers.get(construct.methodMembers.size() - 1).setInstructions(new InstructionBlock());
-                    construct.methodMembers.get(construct.methodMembers.size() - 1).getInstructions().instructionList.add(new InstructionBlock());
-                    return true;
-                }
-                return false;
-            }
-        };
-        TokenClassKeyword tokenClassKeyword = new TokenClassKeyword();
-        Action3 actionClassKeyword = new Action3(tokenClassKeyword) {
-            @Override
-            public boolean action() {
-                if (token.isSuccessful()) {
-//                    construct.currentClass = new Class();
-//                    construct.methodMembers = new HashMap<>();
-//                    construct.fieldMembers = new HashMap<>();
-//                    construct.currentClass = new Class();
-//                    construct.currentClass.setPackageName(construct.packageName);
-//                    construct.currentMethod = new Method();
-//                    construct.currentField = new Variable();
-                    return true;
-                }
-                return false;
-            }
-        };
-        TokenString aPackage1 = new TokenString("package");
-        aPackage1.addToken(packageQualifiedName);
-        packageQualifiedName.addToken(new TokenSemiColon());
-        Token aPackage = definitions.put(0, new MultiTokenMandatory(
-
-                new SingleTokenOptional(aPackage1),
-                new MultiTokenOptional(new TokenClassScope(), isFinal,
-                        new MultiTokenMandatory(tokenClassKeyword, className, new TokenOpenBracket()),
-                        // Variables
-                        new MultiTokenOptional(new MultiTokenMandatory(
-                                new MultiTokenOptional(tokenVariableScope, tokenConstantModifier), tokenQualifiedNameVariable),
-                                new MultiTokenOptional(new TokenEquals(), new TokenExpression1(),
-                                        new TokenSemiColon())),// Commit changes
-                        // Methods
-                        new MultiTokenOptional(
-                                new MultiTokenMandatory(new MultiTokenOptional(tokenNameReturnType, tokenMethodScope,
-                                        tokenConstantModifierMethod), tokenMethodMemberDefinition,
-                                        // Arguments' list
-                                        new MultiTokenMandatory(new TokenOpenParenthesized(),
-                                                new MultiTokenOptional(new MultiTokenMandatory(
-                                                        new TokenVariableMemberDefinitionClassName(), new TokenName(), new TokenComa()
-                                                ))),
-                                        new TokenCloseParenthesized(),
-                                        // Instructions' block
-                                        new MultiTokenMandatory(
-                                                tokenBeginOfMethod,
-                                                new MultiTokenOptional(new MultiTokenMandatory(tokenVariableInMethodName
-                                                        , new TokenName(), new TokenEquals()),
-                                                        new TokenExpression1()), endOfInstruction))),// Commit changes
-                        closeBracketMethod), closeBracketClass));// Commit changes
 
     }
 
@@ -1516,7 +1282,6 @@ public class StringAnalyzer3 {
         protected Class currentClass = new Class();
         protected HashMap<String, Class> cited = new HashMap<>();
         protected HashMap<String, Variable> fieldMembers = new HashMap<>();
-        protected ArrayList<Method> methodMembers = new ArrayList<>();
         protected ArrayList<Class> classes = new ArrayList<>();
         private List<InstructionBlock> currentInstructions = new ArrayList<>();
 
@@ -1565,14 +1330,10 @@ public class StringAnalyzer3 {
             final String[] citedStr = {""};
             cited.forEach((s, aClass) -> citedStr[0] += aClass.toString());
             final String[] methodStr = {""};
-            methodMembers.forEach(method -> {
-                methodStr[0] += "\n" + method.getName() + "\n" + method.toString();
-            });
             String[] string = {"Construct{" +
                     "packageName='" + packageName +
                     "', classes=[" + classesStr[0] +
                     "], fieldMembers=['" + fieldsStr[0] +
-                    "'], methodMembers=[" + methodStr[0] +
                     "], currentClass={" + currentClass +
                     "], currentMethod={" + currentMethod +
                     "], currentField={" + currentField +
@@ -1592,7 +1353,7 @@ public class StringAnalyzer3 {
                 sb.append(debugString(debug, "package "))
                         .append(debugString(debug, packageName)).append(debugString(debug, ";\n"));
             }
-            if (classes.isEmpty() && currentClass.getName() != null) {
+            if (classes.isEmpty() && currentClass.getName() != null && classesWithName(currentClass.getName()).isEmpty()) {
                 classes.add(currentClass);
             }///
             classes.forEach(aClass -> {
@@ -1627,6 +1388,19 @@ public class StringAnalyzer3 {
             });
             sb.append("}");
             return sb.toString();
+        }
+
+        public List<Class> classesWithName(String name) {
+            List<Class> selectedClasses = new ArrayList<>();
+            classes.forEach(new Consumer<Class>() {
+                @Override
+                public void accept(Class aClass) {
+                    if (aClass.getName().equals(name)) {
+                        selectedClasses.add(aClass);
+                    }
+                }
+            });
+            return selectedClasses;
         }
     }
 
