@@ -1088,7 +1088,7 @@ public class StringAnalyzer3 {
 
         protected boolean containsNoKeyword(String input, int pos1, int pos2) {
             if (pos2 <= input.length() && !input.substring(pos1, pos2).contains("if")
-                    && !input.substring(pos1, pos2).contains("else")) {
+                    && !input.substring(pos1, pos2).contains("else") && !input.substring(pos1, pos2).contains("while")) {
                 return true;
             }
             return false;
@@ -1404,7 +1404,7 @@ public class StringAnalyzer3 {
         }
     }
 
-    private final Construct construct = new Construct();
+    private Construct construct = new Construct();
 
     public int parse(@NotNull String input) {
         /*new Thread() {

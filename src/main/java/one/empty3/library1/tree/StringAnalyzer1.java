@@ -1116,8 +1116,8 @@ public class StringAnalyzer1 {
                     expression = input.substring(position, i);
                     try {
                         AlgebraicTree algebraicTree = new AlgebraicTree(expression);
-                        algebraicTree.construct();
                         this.algebraicTree = algebraicTree;
+                        algebraicTree.construct();
                     } catch (AlgebraicFormulaSyntaxException e) {
                         System.err.println("Error constructing : " + expression);
                     }

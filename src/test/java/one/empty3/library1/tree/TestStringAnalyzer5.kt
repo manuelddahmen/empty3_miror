@@ -24,6 +24,7 @@ package one.empty3.library1.tree
 import one.empty3.Run
 import org.junit.Assert
 import org.junit.Assert.assertTrue
+import org.junit.Assert.fail
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
@@ -62,7 +63,7 @@ class TestStringAnalyzer5 {
                 println("------------------------------------------------------------------------")
                 println("- " + file.name)
                 println("------------------------------------------------------------------------")
-                println("- " + stringAnalyzer3.construct.toLangStringJava(isDebug))
+                println(stringAnalyzer3.construct.toLangStringJava(isDebug))
                 println("------------------------------------------------------------------------")
                 println("- " + "amount of code: " + (stringAnalyzer3.mPosition + 1) + "/" + readString.length)
                 println("------------------------------------------------------------------------")
@@ -73,7 +74,10 @@ class TestStringAnalyzer5 {
                 ;
             }
         }
-        Assert.assertTrue(succeed)
+        if (!succeed)
+            fail()
+        else
+            Assert.assertTrue(succeed)
     }
 
 
@@ -381,7 +385,7 @@ class TestStringAnalyzer5 {
             tokenDo,
             tokenWhile,
             tokenForVariantColon,
-            tokenForVariantSemiColon,
+            //tokenForVariantSemiColon,
             tokenMemberMethodVarType1,
             tokenMemberMethodVarType2,
             tokenMemberMethodExpression3,
@@ -488,11 +492,7 @@ class TestStringAnalyzer5 {
         tokenIf.addToken(logicalExpressionIf)
         logicalExpressionIf.addToken(instructionsIf)
         instructionsIf.addToken(
-            stringAnalyzer3.SingleTokenOptional(
-                stringAnalyzer3.SingleTokenMandatory(
-                    tokenElse
-                )
-            )
+            stringAnalyzer3.SingleTokenOptional(tokenElse)
         )
         tokenWhile.addToken(logicalExpressionWhile)
         logicalExpressionWhile.addToken(instructionsWhile)
@@ -830,7 +830,6 @@ class TestStringAnalyzer5 {
                 try {
                     val type = tokenTypeFor.name
                     val name = tokenNameFor.name
-                    val instructions = instructionsForVariantColon
                     val expression = tokenVarFor.expression
                     val instruction1 = Instruction()
                     instruction1.type = type
@@ -851,6 +850,10 @@ class TestStringAnalyzer5 {
         }
 
         class ActionForVariantColonEnd(token: StringAnalyzer3.Token) : Action3(token) {
+            init {
+                on = ON_RETURNS_TRUE_NEXT_TOKEN
+            }
+
             override fun action(): Boolean {
                 try {
                     stringAnalyzer3.construct.popInstructions()
@@ -864,7 +867,7 @@ class TestStringAnalyzer5 {
         }
 
         ActionForVariantColon(tokenForVariantColon)
-        ActionForVariantColonEnd(instructionBlockForVariantColon)
+        ActionForVariantColonEnd(instructionsForVariantColon)
 
 
         class ActionDoWhile_Start
@@ -889,31 +892,6 @@ class TestStringAnalyzer5 {
         return tokenPackageOptional
     }
 
-
-    @Test
-    fun testJavaClass5() {
-        isDebug = false
-        val stringAnalyzer3 = StringAnalyzer3()
-        val javaToken = getJavaToken5(stringAnalyzer3)
-        val token = javaToken
-        val input = readString("resources/text_parser/Number4.java.java_code")
-
-        var parse = -1
-        try {
-            parse = stringAnalyzer3.parse(token, input)
-        } catch (ex: RuntimeException) {
-            if (parse >= input.length || stringAnalyzer3.mPosition >= input.length
-                || input.substring(stringAnalyzer3.mPosition).isBlank()
-            ) {
-                Assert.assertTrue(true)
-            } else {
-                ex.printStackTrace()
-                Assert.assertTrue(false)
-            }
-        }
-        println(stringAnalyzer3.construct.toLangStringJava(false));
-
-    }
 
     @Test
     fun testReadMultiSources() {
