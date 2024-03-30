@@ -69,9 +69,9 @@ public class Instruction extends InstructionBlock {
     public String toString() {
         return "Instruction{" +
                 "type='" + type + '\'' +
-                ", name='" + name + '\'' +
-                ", expression=" + instructionList.get(0) +
-                '}';
+                "', name='" + name + '\'' +
+                "', expression='" + this.expression +
+                "'}";
     }
 
     @Override

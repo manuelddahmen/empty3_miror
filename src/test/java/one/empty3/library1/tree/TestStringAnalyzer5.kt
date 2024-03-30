@@ -136,7 +136,7 @@ class TestStringAnalyzer5 {
         ActionClassname(tokenClassName)
 
         val tokenOpenBracket = stringAnalyzer3.TokenOpenBracket()
-        val tokenCloseBracketClass = stringAnalyzer3.TokenCloseBracket()
+        val tokenCloseBracketClass = stringAnalyzer3.SingleTokenOptional(stringAnalyzer3.TokenCloseBracket())
 
         // Variables members declarations
         val tokenMemberVarType1 = stringAnalyzer3.TokenQualifiedName()
@@ -324,10 +324,12 @@ class TestStringAnalyzer5 {
                 if (token.isSuccessful) {
 
                     var name: String? = null
-                    if (token == tokenMemberVarSemiColon1) {
+                    if (token == tokenMemberVarSemiColon1 && tokenMemberVarType1.name != null) {
                         name = tokenMemberVarType1.name
-                    } else if (token == tokenMemberVarSemiColon2) {
+                        tokenMemberVarType1.name = null
+                    } else if (token == tokenMemberVarSemiColon2 && tokenMemberVarType2.name != null) {
                         name = tokenMemberVarType2.name
+                        tokenMemberVarType2.name = null
                     }
 
                     if (name != null) {
@@ -339,8 +341,10 @@ class TestStringAnalyzer5 {
                     name = null
                     if (token == tokenMemberVarSemiColon1) {
                         name = tokenMemberVarName1.name
+                        tokenMemberVarName1.name = null
                     } else if (token == tokenMemberVarSemiColon2) {
                         name = tokenMemberVarName2.name
+                        tokenMemberVarName2.name = null
                     }
                     if (name != null) {
                         val parameterList = stringAnalyzer3.construct.currentClass.variableList
@@ -624,6 +628,8 @@ class TestStringAnalyzer5 {
                     //stringAnalyzer3.construct.currentMethod.ofClass.name = tokenMemberMethodType.name
                     stringAnalyzer3.construct.popInstructions()
                     stringAnalyzer3.construct.currentMethod = Method()
+                    tokenMemberMethodName.name = null
+                    tokenMemberMethodType.name = null
                 } else {
 
                 }
@@ -664,11 +670,11 @@ class TestStringAnalyzer5 {
         multiTokenMandatoryImport.addToken(tokenClass)
         tokenClass.addToken(tokenClassName)
         tokenClassName.addToken(tokenOpenBracket)
-        val multiTokenOptional = stringAnalyzer3.MultiTokenOptional(
-            /*tokenCloseBracketClass,*/ tokenMemberMethodType, tokenMemberVar
+        val multiTokenOptional = stringAnalyzer3.MultiTokenExclusiveXor(
+            tokenCloseBracketClass, tokenMemberMethodType, tokenMemberVar
         )
         tokenOpenBracket.addToken(multiTokenOptional)
-        multiTokenOptional.addToken(tokenCloseBracketClass)
+        //multiTokenOptional.addToken(tokenCloseBracketClass)
         class ActionCloseBracketClass(token: StringAnalyzer3.Token) : Action3(token) {
             override fun action(): Boolean {
                 if (token.isSuccessful) {

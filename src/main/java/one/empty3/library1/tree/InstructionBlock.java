@@ -143,7 +143,7 @@ public class InstructionBlock {
                 if (!s1.isBlank()) {
                     s1 = s1 + " ";
                 }
-                String s2 = instruction.getExpression() != null && instruction.getExpression().getExpression() != null ? " " +
+                String s2 = instruction.getExpression() != null ? " " +
                         debugString(debug, instruction.getExpression().toString()) : "";
                 stringBuilder.append("\n").append(tabs()).append(s).append(s1).append(s2).append(";\n");
             }
