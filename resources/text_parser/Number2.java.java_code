@@ -1,6 +1,6 @@
 package one.empty3;
 
-class Number1 {
+class Number2 {
     Double ar;
 
     double func1(Double a, Double b, Double c) {

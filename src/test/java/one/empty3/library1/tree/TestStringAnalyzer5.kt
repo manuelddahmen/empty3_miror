@@ -48,30 +48,29 @@ class TestStringAnalyzer5 {
             if (file != null && file.name.endsWith(".java_code")) {
                 val stringAnalyzer3: StringAnalyzer3 = StringAnalyzer3()
                 val javaToken5 = getJavaToken5(stringAnalyzer3)
-                if (javaToken5 != null) {
-                    val readString = readString(file.absolutePath)
-                    val parse = 0
-                    try {
-                        val parse = javaToken5.parse(readString, parse)
+                val readString = readString(file.absolutePath)
+                val parse = 0
+                try {
+                    val parse = javaToken5.parse(readString, parse)
 
-                    } catch (ex: RuntimeException) {
-                        if (stringAnalyzer3.mPosition < readString.length - 1) {
-                            ex.printStackTrace()
-                        }
+                } catch (ex: RuntimeException) {
+                    if (stringAnalyzer3.mPosition < readString.length - 1) {
+                        ex.printStackTrace()
                     }
+                }
 
-                    println("------------------------------------------------------------------------")
-                    println("- " + file.name)
-                    println("------------------------------------------------------------------------")
-                    println("- " + stringAnalyzer3.construct.toLangStringJava(isDebug))
-                    println("------------------------------------------------------------------------")
-                    println("- " + "amount of code: " + (stringAnalyzer3.mPosition + 1) + "/" + readString.length)
-                    println("------------------------------------------------------------------------")
+                println("------------------------------------------------------------------------")
+                println("- " + file.name)
+                println("------------------------------------------------------------------------")
+                println("- " + stringAnalyzer3.construct.toLangStringJava(isDebug))
+                println("------------------------------------------------------------------------")
+                println("- " + "amount of code: " + (stringAnalyzer3.mPosition + 1) + "/" + readString.length)
+                println("------------------------------------------------------------------------")
 
 
 
-                    succeed = succeed && (stringAnalyzer3.mPosition + 1 >= readString.length)
-                };
+                succeed = succeed && (stringAnalyzer3.mPosition + 1 >= readString.length)
+                ;
             }
         }
         Assert.assertTrue(succeed)
@@ -691,10 +690,6 @@ class TestStringAnalyzer5 {
         ActionCloseBracketClass(tokenCloseBracketClass)
 
         class ActionIf(token: StringAnalyzer3.Token) : Action3(token) {
-            init {
-                //on = ON_RETURNS_TRUE_NEXT_TOKEN
-            }
-
             override fun action(): Boolean {
                 //if (this.token == tokenIf) {
                 try {
@@ -801,9 +796,6 @@ class TestStringAnalyzer5 {
         }
 
         class ActionWhileStart(token: StringAnalyzer3.Token) : Action3(token) {
-            init {
-                on = ON_RETURNS_TRUE_NEXT_TOKEN
-            }
 
             override fun action(): Boolean {
                 val currentInstructions = stringAnalyzer3.construct.currentInstructions
