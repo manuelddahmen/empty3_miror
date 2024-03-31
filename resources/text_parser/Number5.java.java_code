@@ -46,6 +46,19 @@ class Number5 {
             d = d * 2;
 
         d = d + 1;
+
+        return d;
+    }
+
+    double func4(Double a, Double b, Double c) {
+        Double d = c + b * a;
+        if (d < 0)
+            d = -d / 2;
+        else
+            d = d * 2;
+
+        d = d + 1;
+
         return d;
     }
 

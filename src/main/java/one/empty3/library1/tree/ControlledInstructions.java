@@ -53,7 +53,7 @@ public class ControlledInstructions extends Instruction {
             forEachType = false;
         }
 
-        public For(String expression, Instruction loopInstruction) {
+        public For(Instruction loopInstruction, String expression) {
             super(expression);
             this.loopInstruction = loopInstruction;
             this.controlExpression = expression;

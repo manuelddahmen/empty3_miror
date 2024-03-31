@@ -916,7 +916,7 @@ public class StringAnalyzer3 {
                 setSuccessful(true);
                 return position;
             }
-            assert choices.size() > 0;
+            assert !choices.isEmpty();
             position = skipBlanks(input, position);
             boolean allOk = true;
             int position1 = position;
@@ -935,8 +935,6 @@ public class StringAnalyzer3 {
                     return position;
                 }
             }
-//                if (allOk)
-//                    action();
             return processNext(input, position1);
 
 
@@ -1642,6 +1640,63 @@ public class StringAnalyzer3 {
         @Override
         public String toString() {
             return "TokenLogicalExpression{" +
+                    "successful=" + isSuccessful() +
+                    ", expression='" + expression + '\'' +
+                    '}';
+        }
+    }
+
+    public class TokenLogicalExpression1 extends Token {
+        public String expression;
+
+        public TokenLogicalExpression1() {
+        }
+
+        @Override
+        public int parse(String input, int position) {
+            if (position >= input.length() || input.substring(position).trim().isEmpty()) {
+                setSuccessful(true);
+                return position;
+            }
+            int position1 = skipBlanks(input, position);
+            if (input.charAt(position1) == '(') {
+                int position2 = position1;
+                position1++;
+                int countParenthesis = 1;
+                while (position1 < input.length() && countParenthesis > 0) {
+                    if (input.charAt(position1) == '(')
+                        countParenthesis++;
+                    if (input.charAt(position1) == ')')
+                        countParenthesis--;
+                    if (input.charAt(position1) == ';')
+                        break;
+                    if (input.charAt(position1) == '+' || input.charAt(position1) == '-' || input.charAt(position1) == '*' || input.charAt(position1) == '/' ||
+                            input.charAt(position1) == '=')
+                        break;
+                    position1++;
+                }
+
+                position1 = skipBlanks(input, position1);
+
+                if (position1 < input.length() && countParenthesis == 0) {
+                    expression = input.substring(position2, position1);
+                    setSuccessful(true);
+                    return processNext(input, position1);
+                }
+            }
+            setSuccessful(false);
+            return position;
+        }
+
+        public Token copy(Token token) {
+            TokenLogicalExpression tokenLogicalExpression = new TokenLogicalExpression();
+            super.copy(tokenLogicalExpression);
+            return tokenLogicalExpression;
+        }
+
+        @Override
+        public String toString() {
+            return "TokenLogicalExpression1{" +
                     "successful=" + isSuccessful() +
                     ", expression='" + expression + '\'' +
                     '}';
