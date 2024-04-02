@@ -129,10 +129,24 @@ public class InstructionBlock {
                         .append(debugString(debug, ((ControlledInstructions.DoWhile) this).controlExpression))
                         .append(debugString(debug, "\n"));
             }
-//            case "one.empty3.library1.tree.ControlledInstructions.ControlledInstructions" ->
-//                    stringBuilder.append(debugString(debug, "\n"))
-//                            .append(debugString(debug, array1.toString()))
-//                            .append(debugString(debug, "\n"));
+            case "one.empty3.library1.tree.ControlledInstructions.For" -> {
+                ControlledInstructions.For aFor = (ControlledInstructions.For) this;
+                if (aFor.isForEachType()) {
+                    StringBuilder array3 = new StringBuilder();
+                    Instruction firstForInstruction = aFor.getLoopInstruction();
+                    array3.append(tabs()).append("for").append(firstForInstruction.getType()).append(" ").append(firstForInstruction.getName())
+                            .append(";").append(aFor.getExpression()).append(")\n").append(array1);
+                    stringBuilder.append(array3);
+                } else {
+                    StringBuilder array3 = new StringBuilder();
+                    Instruction third = aFor.getLoopInstruction();
+                    Instruction first = aFor.getFirstForInstruction();
+                    ListInstructions.Instruction second = aFor.getExpression();
+                    array3.append(tabs()).append("for").append(first).append(";").append(second).append(";").append(third)
+                            .append(")\n").append(array1);
+                    stringBuilder.append(array3);
+                }
+            }
             case "one.empty3.library1.tree.Instruction" -> {
                 Instruction instruction = (Instruction) this;
                 String s = instruction.getType() != null ? debugString(debug, instruction.getType()) : "";

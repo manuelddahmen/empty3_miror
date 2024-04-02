@@ -53,11 +53,42 @@ public class ControlledInstructions extends Instruction {
             forEachType = false;
         }
 
+        /***
+         * For (Type variableName : expression)
+         *     ==================  ===========
+         *     loopInstruction     controlExpression
+         * @param loopInstruction
+         * @param expression
+         */
         public For(Instruction loopInstruction, String expression) {
             super(expression);
             this.loopInstruction = loopInstruction;
             this.controlExpression = expression;
             forEachType = true;
+        }
+
+        public boolean isForEachType() {
+            return forEachType;
+        }
+
+        public void setForEachType(boolean forEachType) {
+            this.forEachType = forEachType;
+        }
+
+        public Instruction getLoopInstruction() {
+            return loopInstruction;
+        }
+
+        public void setLoopInstruction(Instruction loopInstruction) {
+            this.loopInstruction = loopInstruction;
+        }
+
+        public Instruction getFirstForInstruction() {
+            return firstForInstruction;
+        }
+
+        public void setFirstForInstruction(Instruction firstForInstruction) {
+            this.firstForInstruction = firstForInstruction;
         }
 
         @Override
