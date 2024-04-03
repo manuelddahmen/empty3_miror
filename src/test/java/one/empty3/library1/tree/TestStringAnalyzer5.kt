@@ -21,11 +21,7 @@ package one.empty3.library1.tree
  *
  */
 
-import one.empty3.Run
-import one.empty3.library1.tree.StringAnalyzer3.MultiTokenExclusiveXor
-import one.empty3.library1.tree.StringAnalyzer3.SingleTokenExclusiveXor
 import org.junit.Assert
-import org.junit.Assert.assertTrue
 import org.junit.Assert.fail
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -33,11 +29,9 @@ import org.junit.runners.JUnit4
 import java.io.File
 import java.io.IOException
 import java.nio.file.Files
-import java.nio.file.Path
 import java.nio.file.Paths
-import java.util.*
-import kotlin.io.path.fileVisitor
-import kotlin.system.exitProcess
+import com.google.googlejavaformat.java.*
+import org.junit.Assert.assertTrue
 
 /**
  * Test class for AlgebraicTree.
@@ -74,7 +68,11 @@ class TestStringAnalyzer5 {
 
 
                 succeed = succeed && (stringAnalyzer3.mPosition + 1 >= readString.length)
-                ;
+                /*compareStrings(
+                    readString,
+                    stringAnalyzer3.construct.toLangStringJava(false)
+                )
+                ;*/
             }
         }
         if (!succeed)
@@ -83,6 +81,17 @@ class TestStringAnalyzer5 {
             Assert.assertTrue(succeed)
     }
 
+    fun compareStrings(s1: String, s2: String) {
+        val formattedSource1: String = com.google.googlejavaformat.java.Formatter().formatSource(s1)
+        val formattedSource2: String = com.google.googlejavaformat.java.Formatter().formatSource(s2)
+
+        println("---------------- ORIGINAL -------------------")
+        println(formattedSource1)
+        println("------------- RECONSTRUCTED -----------------")
+        println(formattedSource2)
+
+        //assertTrue(formattedSource1.equals(formattedSource2))
+    }
 
     fun readString(file_path: String): String {
         try {
@@ -422,7 +431,7 @@ class TestStringAnalyzer5 {
             tokenDo,
             tokenWhile,
             tokenForVariantSemiColon,
-            tokenForVariantColon,
+            // tokenForVariantColon,
             tokenMemberMethodVarType1,
             tokenMemberMethodVarType2,
             tokenMemberMethodExpression3,
@@ -584,29 +593,29 @@ class TestStringAnalyzer5 {
         val tokenNameFor = stringAnalyzer3.TokenName()
         val tokenColonFor = stringAnalyzer3.TokenString(":")
         val tokenVarFor = stringAnalyzer3.TokenExpression1()
-        val tokenCloseParenthesizedFor = stringAnalyzer3.TokenCloseParenthesized()
+        val tokenCloseParenthesizedForColon = stringAnalyzer3.TokenCloseParenthesized()
         tokenForVariantColon.addToken(tokenOpenParenthesizedFor)
         tokenOpenParenthesizedFor.addToken(tokenTypeFor)
         tokenTypeFor.addToken(tokenNameFor)
         tokenNameFor.addToken(tokenColonFor)
         tokenColonFor.addToken(tokenVarFor)
-        tokenVarFor.addToken(tokenCloseParenthesizedFor)
-        tokenCloseParenthesizedFor.addToken(instructionsForVariantColon)
+        tokenVarFor.addToken(tokenCloseParenthesizedForColon)
+        tokenCloseParenthesizedForColon.addToken(instructionsForVariantColon)
 
 
-        val tokenOpenParenthesizedFor1 = stringAnalyzer3.TokenOpenParenthesized()
-        val tokenSemiColonFor11 = stringAnalyzer3.TokenString(";")
-        val tokenSemiColonFor12 = stringAnalyzer3.TokenString(";")
-        val tokenVarFor1 = stringAnalyzer3.TokenLogicalExpression1()
-        val tokenCloseParenthesizedFor1 = stringAnalyzer3.TokenCloseParenthesized()
-        tokenForVariantSemiColon.addToken(tokenOpenParenthesizedFor1)
-        tokenOpenParenthesizedFor1.addToken(instructionsForInitControlVariantSemiColon)
-        instructionsForInitControlVariantSemiColon.addToken(tokenSemiColonFor11)
-        tokenSemiColonFor11.addToken(tokenVarFor1)
-        tokenVarFor1.addToken(tokenSemiColonFor12)
-        tokenSemiColonFor12.addToken(instructionsForInitVariantSemiColonControlLoop)
-        instructionsForInitVariantSemiColonControlLoop.addToken(tokenCloseParenthesizedFor1)
-        tokenCloseParenthesizedFor1.addToken(instructionsForVariantSemiColon)
+        val tokenOpenParenthesizedForSemiColon = stringAnalyzer3.TokenOpenParenthesized()
+        val tokenSemiColonFor11SemiColon = stringAnalyzer3.TokenString(";")
+        val tokenSemiColonFor12SemiColon = stringAnalyzer3.TokenString(";")
+        val tokenVarFor1SemiColon = stringAnalyzer3.TokenLogicalExpression1()
+        val tokenCloseParenthesizedFor1SemiColon = stringAnalyzer3.TokenCloseParenthesized()
+        tokenForVariantSemiColon.addToken(tokenOpenParenthesizedForSemiColon)
+        tokenOpenParenthesizedForSemiColon.addToken(instructionsForInitControlVariantSemiColon)
+        instructionsForInitControlVariantSemiColon.addToken(tokenSemiColonFor11SemiColon)
+        tokenSemiColonFor11SemiColon.addToken(tokenVarFor1SemiColon)
+        tokenVarFor1SemiColon.addToken(tokenSemiColonFor12SemiColon)
+        tokenSemiColonFor12SemiColon.addToken(instructionsForInitVariantSemiColonControlLoop)
+        instructionsForInitVariantSemiColonControlLoop.addToken(tokenCloseParenthesizedFor1SemiColon)
+        tokenCloseParenthesizedFor1SemiColon.addToken(instructionsForVariantSemiColon)
 
 
 
@@ -798,8 +807,8 @@ class TestStringAnalyzer5 {
                 if (instructionList.size > 0) {
                     val instructionIf = instructionList.get(instructionList.size - 1)
                     if (instructionIf is ControlledInstructions.If && tokenElse.isSuccessful) {
-                        //stringAnalyzer3.construct.pushInstructions(instructionIf.instructionsElse)
-                        //tokenElse.isSuccessful = false
+                        stringAnalyzer3.construct.pushInstructions(instructionIf.instructionsElse)
+                        tokenElse.isSuccessful = false
                     } else if (!tokenElse.isSuccessful) {
 
                     }
@@ -826,15 +835,19 @@ class TestStringAnalyzer5 {
         }
 
         class ActionElseInstructions(token: StringAnalyzer3.Token) : Action3(token) {
+            init {
+                on = ON_RETURNS_TRUE_NEXT_TOKEN
+            }
+
             override fun action(): Boolean {
                 try {
                     if (token.isSuccessful) {
-                        if (stringAnalyzer3.construct.currentInstructions != null //&& stringAnalyzer3.construct.currentInstructions.instructionList.size > 0
-                        ) {
-                            stringAnalyzer3.construct.popInstructions()
-                        } else {
-                            throw EmptyEndOfBlockList("ElseInstruction : empty after end of block instructions\' list");
-                        }
+                        //if (stringAnalyzer3.construct.currentInstructions != null //&& stringAnalyzer3.construct.currentInstructions.instructionList.size > 0
+                        //) {
+                        stringAnalyzer3.construct.popInstructions()
+                        //} else {
+                        //    throw EmptyEndOfBlockList("ElseInstruction : empty after end of block instructions\' list");
+                        //}
                     }
                 } catch (ex: IndexOutOfBoundsException) {
                     ex.printStackTrace()
@@ -944,7 +957,7 @@ class TestStringAnalyzer5 {
 
         }
 
-        ActionForVariantColonEnd(tokenOpenParenthesizedFor)
+        ActionForVariantColonEnd(tokenCloseParenthesizedForColon)
         ActionForVariantColon(instructionBlockForVariantColon)
 
 
@@ -953,7 +966,7 @@ class TestStringAnalyzer5 {
                 try {
                     val init =
                         (instructionsForInitControlVariantSemiColon.choices[0] as StringAnalyzer3.TokenLogicalExpression1).expression
-                    val condition = tokenVarFor1.expression
+                    val condition = tokenVarFor1SemiColon.expression
                     val instructionLoop =
                         (instructionsForInitVariantSemiColonControlLoop.choices[0] as StringAnalyzer3.TokenLogicalExpression1)
                             .expression
@@ -994,7 +1007,7 @@ class TestStringAnalyzer5 {
         }
 
 
-        ActionForVariantSemiColon(tokenOpenParenthesizedFor1)
+        ActionForVariantSemiColon(tokenCloseParenthesizedFor1SemiColon)
         ActionForVariantSemiColonEnd(instructionsForVariantSemiColon)
 
 

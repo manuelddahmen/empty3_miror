@@ -1344,6 +1344,7 @@ public class StringAnalyzer3 {
         private String debugString(boolean isDebug, String tokenLangString) {
             return isDebug ? "{" + tokenLangString + "}" : tokenLangString;
         }
+        
 
         public String toLangStringJava(boolean debug) {
             StringBuilder sb = new StringBuilder();

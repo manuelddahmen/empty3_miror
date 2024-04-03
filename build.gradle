@@ -236,6 +236,7 @@ repositories {
 
 
 dependencies {
+    def googleJavaFormatVersion = '1.6'
 //    implementation(kotlin("stdlib"))
     implementation 'org.junit.jupiter:junit-jupiter:5.9.2'
     implementation 'junit:junit:4.13.2'
@@ -266,6 +267,8 @@ dependencies {
     testImplementation('org.junit.jupiter:junit-jupiter:5.9.2')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.20"
     implementation 'org.apache.santuario:xmlsec:4.0.1'
+    implementation "com.google.googlejavaformat:google-java-format:$googleJavaFormatVersion"
+    implementation 'com.google.android.gms:play-services-vision:20.1.3'
 
 }
 
