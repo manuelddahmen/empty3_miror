@@ -23,8 +23,10 @@
 package one.empty3.library1.tree;
 
 import one.empty3.library.StructureMatrix;
+import one.empty3.library.core.nurbs.BSpline;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.junit.jupiter.params.shadow.com.univocity.parsers.fixed.FixedWidthWriterSettings;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -40,6 +42,11 @@ public class StringAnalyzer3 {
     protected int mPosition;
     private HashMap<String, Class> classes;
     private int index = 0;
+    private List<Construct> constructs = new ArrayList<>();
+
+    public List<Construct> getConstructs() {
+        return constructs;
+    }
 
     /**
      * Retrieves the Construct object from the current instance.
@@ -65,6 +72,8 @@ public class StringAnalyzer3 {
         public Token() {
             index++;
             definitions.put(index, this);
+            if (constructs.isEmpty())
+                constructs.add(construct);
         }
 
         public void addToken(Token token) {
@@ -84,7 +93,7 @@ public class StringAnalyzer3 {
 
         private Token nextToken() {
             if (!nextTokens.getData1d().isEmpty()) {
-                return nextTokens.getData1d().get(0);
+                return nextTokens.getData1d().getFirst();
             }
             return null;
         }
@@ -219,6 +228,23 @@ public class StringAnalyzer3 {
                 }
             });
             return token0;
+        }
+
+        public Construct getConstruct() {
+            return this.clones().get(clones().size() - 1);
+        }
+
+        public void setConstruct(Construct clone) {
+            this.clones().add(clone);
+            construct = clone;
+        }
+
+        List<Construct> clones() {
+            return constructs;
+        }
+
+        public Construct getFirstConstructVersion() {
+            return clones().getFirst();
         }
     }
 
@@ -774,6 +800,7 @@ public class StringAnalyzer3 {
                     if (position2 != position1 && token.isSuccessful()) {
                         allNotOk = false;
                         position1 = position2;
+
                     } else if (!token.isSuccessful()) {
                         position2 = position1;
                     }
@@ -822,16 +849,17 @@ public class StringAnalyzer3 {
         public int parse(String input, int position) {
             if (position >= input.length() || input.substring(position).trim().isEmpty()) {
                 mPosition = position;
-                setSuccessful(false);
-                return position;
+                setSuccessful(true);
+                throw new RuntimeException(getClass() + " : position>=input.length()");
             }
             position = super.skipBlanks(input, position);
             int position1 = position;
             int position2 = choice.parse(input, position1);
             if (choice.isSuccessful()) {
+                setSuccessful(true);
                 return processNext(input, position2);
             } else {
-                setSuccessful(false);
+                setSuccessful(true);
                 return position1;
             }
         }
@@ -1311,7 +1339,7 @@ public class StringAnalyzer3 {
             }
         }
     */
-    public static class Construct {
+    public class Construct {
         public Variable currentField = new Variable();
         public Method currentMethod = new Method();
         protected String packageName = "";
@@ -1448,11 +1476,11 @@ public class StringAnalyzer3 {
             clone.currentClass = (Class) this.currentClass.clone();
             clone.cited = (HashMap<String, Class>) cited.clone();
             clone.currentField = (Variable) currentField.clone();
-            clone.currentInstructions = (List<InstructionBlock>) ((ArrayList<InstructionBlock>) clone.currentInstructions).clone();
+            clone.currentInstructions = (List<InstructionBlock>) ((ArrayList<InstructionBlock>) currentInstructions).clone();
             clone.currentMethod = (Method) currentMethod.clone();
             clone.fieldMembers = (HashMap<String, Variable>) fieldMembers.clone();
             clone.packageName = this.packageName;
-            return super.clone();
+            return clone;
         }
     }
 

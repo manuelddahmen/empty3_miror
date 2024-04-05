@@ -126,14 +126,14 @@ public class Class {
 
     @Override
     protected Object clone() throws CloneNotSupportedException {
-        Class clone = (Class) super.clone();
+        Class clone = new Class();
         clone.setFinal(getFinal());
         clone.setVariableList(getVariableList());
         clone.setMethodList(getMethodList());
         clone.setAccessModifier(getAccessModifier());
         clone.setMethodList((List<Method>) ((ArrayList) this.getMethodList()).clone());
         clone.setVariableList((List<Variable>) ((ArrayList<Variable>) this.getVariableList()).clone());
-        return super.clone();
+        return clone;
     }
 
     private String getAccessModifier() {

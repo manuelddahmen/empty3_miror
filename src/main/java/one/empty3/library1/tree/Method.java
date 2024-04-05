@@ -142,7 +142,7 @@ public class Method {
 
     @Override
     protected Object clone() throws CloneNotSupportedException {
-        Method method = (Method) super.clone();
+        Method method = new Method();
         method.parameterList = parameterList;
         method.variableList = variableList;
         method.instructions = instructions;

@@ -86,5 +86,31 @@ public class Action3 {
         return false;
     }
 
+    public void commitTokenVersion() {
+        try {
+            token.setConstruct((StringAnalyzer3.Construct) token.clones().getLast().clone());
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
+    public void revertOneVersionAhead() {
+        StringAnalyzer3.Construct last = token.clones().getLast();
+        token.clones().remove(last);
+        token.setConstruct(token.clones().getLast());
+    }
+
+    public void revertTokenVersionFirst() {
+        StringAnalyzer3.Construct first = token.clones().getFirst();
+        token.clones().clear();
+        token.setConstruct(first);
+    }
+
+    public void cloneTokenVersion() {
+        try {
+            token.clones().add((StringAnalyzer3.Construct) (token.clones().getLast().clone()));
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

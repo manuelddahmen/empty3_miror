@@ -75,7 +75,7 @@ public class Variable {
 
     @Override
     protected Object clone() throws CloneNotSupportedException {
-        Variable v = (Variable) super.clone();
+        Variable v = new Variable();
         v.name = this.name;
         v.classStr = this.classStr;
         v.value = this.value;
