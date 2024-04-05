@@ -321,6 +321,46 @@ public class StringAnalyzer3 {
         }
     }
 
+    class SingleTokenInclusiveXor extends MultiToken {
+
+        public SingleTokenInclusiveXor(Token... mandatory) {
+            super();
+            this.choices = Arrays.stream(mandatory).toList();
+        }
+
+        @Override
+        public int parse(String input, int position) {
+            if (position >= input.length() || input.substring(position).trim().isEmpty()) {
+                mPosition = position;
+                setSuccessful(false);
+                throw new RuntimeException(getClass() + " : position>=input.length()");
+            }
+            position = super.skipBlanks(input, position);
+            int position1 = position;
+            int i = 0;
+            int position0 = position1;
+            boolean passed = false;
+            boolean first = true;
+            for (Token token : choices) {
+                position1 = token.parse(input, position0);
+                if (token.isSuccessful()) {
+                    setSuccessful(true);
+                    return processNext(input, position1);
+                }
+            }
+            setSuccessful(true);
+            return processNext(input, position0);
+        }
+
+        @Override
+        public Token copy(Token token) {
+            token = new SingleTokenExclusiveXor();
+            super.copy(token);
+            return token;
+
+        }
+    }
+
     /**
      * The SingleTokenExclusiveXor class represents a token that matches only one of the specified tokens in an exclusive XOR manner.
      * It extends the Token class and overrides the parse method to implement the exclusive XOR logic.
@@ -340,8 +380,7 @@ public class StringAnalyzer3 {
             if (position >= input.length() || input.substring(position).trim().isEmpty()) {
                 mPosition = position;
                 setSuccessful(false);
-                return position;
-                //throw new RuntimeException(getClass() + " : position>=input.length()");
+                throw new RuntimeException(getClass() + " : position>=input.length()");
             }
             position = super.skipBlanks(input, position);
             int position1 = position;
@@ -721,8 +760,7 @@ public class StringAnalyzer3 {
             if (position >= input.length() || input.substring(position).trim().isEmpty()) {
                 mPosition = position;
                 setSuccessful(true);
-                return position;
-//                throw new RuntimeException(getClass() + " : position>=input.length()");
+                throw new RuntimeException(getClass() + " : position>=input.length()");
             }
             position = super.skipBlanks(input, position);
             boolean allNotOk = false;
@@ -1273,7 +1311,7 @@ public class StringAnalyzer3 {
             }
         }
     */
-    public class Construct {
+    public static class Construct {
         public Variable currentField = new Variable();
         public Method currentMethod = new Method();
         protected String packageName = "";
@@ -1344,7 +1382,7 @@ public class StringAnalyzer3 {
         private String debugString(boolean isDebug, String tokenLangString) {
             return isDebug ? "{" + tokenLangString + "}" : tokenLangString;
         }
-        
+
 
         public String toLangStringJava(boolean debug) {
             StringBuilder sb = new StringBuilder();
@@ -1400,6 +1438,21 @@ public class StringAnalyzer3 {
                 }
             });
             return selectedClasses;
+        }
+
+
+        @Override
+        protected Object clone() throws CloneNotSupportedException {
+            Construct clone = new Construct();
+            clone.classes = (ArrayList<Class>) this.classes.clone();
+            clone.currentClass = (Class) this.currentClass.clone();
+            clone.cited = (HashMap<String, Class>) cited.clone();
+            clone.currentField = (Variable) currentField.clone();
+            clone.currentInstructions = (List<InstructionBlock>) ((ArrayList<InstructionBlock>) clone.currentInstructions).clone();
+            clone.currentMethod = (Method) currentMethod.clone();
+            clone.fieldMembers = (HashMap<String, Variable>) fieldMembers.clone();
+            clone.packageName = this.packageName;
+            return super.clone();
         }
     }
 
@@ -1522,6 +1575,8 @@ public class StringAnalyzer3 {
             tokenAttribute.setAttributeName(attributeName);
             return super.copy(token);
         }
+
+
     }
 
     class TokenElementOpening extends Token {

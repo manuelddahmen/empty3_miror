@@ -139,4 +139,14 @@ public class Method {
                 '}';
         return string[0];
     }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        Method method = (Method) super.clone();
+        method.parameterList = parameterList;
+        method.variableList = variableList;
+        method.instructions = instructions;
+        method.scope = scope;
+        return method;
+    }
 }

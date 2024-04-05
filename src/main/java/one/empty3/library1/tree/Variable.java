@@ -72,4 +72,14 @@ public class Variable {
                 ", scope='" + scope + '\'' +
                 '}';
     }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        Variable v = (Variable) super.clone();
+        v.name = this.name;
+        v.classStr = this.classStr;
+        v.value = this.value;
+        v.scope = this.scope;
+        return v;
+    }
 }
