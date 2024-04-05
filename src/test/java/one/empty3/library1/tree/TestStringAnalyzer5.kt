@@ -901,7 +901,7 @@ class TestStringAnalyzer5 {
 
         class ActionWhileEnd(token: StringAnalyzer3.Token) : Action3(token) {
             init {
-                on = ON_RETURNS_TRUE_NEXT_TOKEN
+                //on = ON_RETURNS_TRUE_NEXT_TOKEN
             }
 
             override fun action(): Boolean {
@@ -942,7 +942,7 @@ class TestStringAnalyzer5 {
 
         class ActionForVariantColonEnd(token: StringAnalyzer3.Token) : Action3(token) {
             init {
-                on = ON_RETURNS_TRUE_NEXT_TOKEN
+                //on = ON_RETURNS_TRUE_NEXT_TOKEN
             }
 
             override fun action(): Boolean {
@@ -991,7 +991,7 @@ class TestStringAnalyzer5 {
 
         class ActionForVariantSemiColonEnd(token: StringAnalyzer3.Token) : Action3(token) {
             init {
-                on = ON_RETURNS_TRUE_NEXT_TOKEN
+                //on = ON_RETURNS_TRUE_NEXT_TOKEN
             }
 
             override fun action(): Boolean {

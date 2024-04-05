@@ -144,7 +144,7 @@ public class InstructionBlock {
                     ListInstructions.Instruction second = aFor.getExpression();
                     array3.append(tabs()).append("for").append(first).append(";").append(second).append(";").append(third)
                             .append(")\n").append(array1);
-                    stringBuilder.append(array3);
+                    stringBuilder.append(array3.toString());
                 }
             }
             case "one.empty3.library1.tree.Instruction" -> {
