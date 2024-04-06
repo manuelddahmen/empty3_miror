@@ -133,13 +133,13 @@ public class InstructionBlock {
                 ControlledInstructions.For aFor = (ControlledInstructions.For) this;
                 if (aFor.isForEachType()) {
                     StringBuilder array3 = new StringBuilder();
-                    Instruction firstForInstruction = aFor.getLoopInstruction();
+                    Instruction firstForInstruction = aFor.getFirstForInstruction();
                     array3.append(tabs()).append("for").append(firstForInstruction.getType()).append(" ").append(firstForInstruction.getName())
                             .append(";").append(aFor.getExpression()).append(")\n").append(array1);
                     stringBuilder.append(array3);
                 } else {
                     StringBuilder array3 = new StringBuilder();
-                    Instruction third = aFor.getLoopInstruction();
+                    Instruction third = (Instruction) aFor.getLoopInstruction();
                     Instruction first = aFor.getFirstForInstruction();
                     ListInstructions.Instruction second = aFor.getExpression();
                     array3.append(tabs()).append("for").append(first).append(";").append(second).append(";").append(third)

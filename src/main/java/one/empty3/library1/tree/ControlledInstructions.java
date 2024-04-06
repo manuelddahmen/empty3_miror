@@ -43,13 +43,13 @@ public class ControlledInstructions extends Instruction {
 
     public static class For extends ControlledInstructions {
         public boolean forEachType = false;
-        private Instruction loopInstruction;
-        public Instruction firstForInstruction;
+        private List<InstructionBlock> loopInstruction = new ArrayList<>();
+        public List<Instruction> firstForInstruction = new ArrayList();
 
-        public For(Instruction initInstruction, String controlExpression, Instruction loopInstruction) {
+        public For(String controlExpression) {
             super(controlExpression);
-            this.firstForInstruction = initInstruction;
-            this.loopInstruction = loopInstruction;
+            //this.firstForInstruction.add(initInstruction);
+            //this.loopInstruction.add(loopInstruction);
             forEachType = false;
         }
 
@@ -62,7 +62,7 @@ public class ControlledInstructions extends Instruction {
          */
         public For(Instruction loopInstruction, String expression) {
             super(expression);
-            this.loopInstruction = loopInstruction;
+            this.loopInstruction.add(loopInstruction);
             this.controlExpression = expression;
             forEachType = true;
         }
@@ -75,20 +75,20 @@ public class ControlledInstructions extends Instruction {
             this.forEachType = forEachType;
         }
 
-        public Instruction getLoopInstruction() {
+        public List<InstructionBlock> getLoopInstruction() {
             return loopInstruction;
         }
 
         public void setLoopInstruction(Instruction loopInstruction) {
-            this.loopInstruction = loopInstruction;
+            this.loopInstruction.add(loopInstruction);
         }
 
         public Instruction getFirstForInstruction() {
-            return firstForInstruction;
+            return firstForInstruction.getFirst();
         }
 
         public void setFirstForInstruction(Instruction firstForInstruction) {
-            this.firstForInstruction = firstForInstruction;
+            this.firstForInstruction.add(firstForInstruction);
         }
 
         @Override
