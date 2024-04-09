@@ -1125,9 +1125,13 @@ class TestStringAnalyzer5 {
         }
 
         class ActionForVariantSemiColonEnd(token: StringAnalyzer3.Token) : Action3(token) {
+            init {
+                on = ON_RETURNS_TRUE_NEXT_TOKEN
+            }
+
             override fun action(): Boolean {
                 println(token.javaClass.name + " " + token.isSuccessful)
-                val instructionForLoop = stringAnalyzer3.construct.currentInstructions as ControlledInstructions.For
+                //val instructionForLoop = stringAnalyzer3.construct.currentInstructions as ControlledInstructions.For
                 try {
                     stringAnalyzer3.construct.popInstructions()
                     stringAnalyzer3.construct.popInstructions()

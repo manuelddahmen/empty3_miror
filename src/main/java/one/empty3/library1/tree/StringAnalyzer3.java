@@ -59,7 +59,6 @@ public class StringAnalyzer3 {
             construct = constructs.getLast();
         if (construct == null)
             construct = new Construct();
-        System.err.println();
         return construct;
     }
 
