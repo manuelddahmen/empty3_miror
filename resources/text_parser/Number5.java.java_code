@@ -62,7 +62,7 @@ class Number5 {
         return d;
     }
 
-    double func4(double a, int s) {
+    double func5(double a, int s) {
         for (int i = 0; i < s; i++) {
             a = a + 0.5;
         }

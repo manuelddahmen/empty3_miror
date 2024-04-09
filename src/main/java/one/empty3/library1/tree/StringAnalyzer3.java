@@ -55,6 +55,11 @@ public class StringAnalyzer3 {
      */
     @NotNull
     protected Construct getConstruct() {
+        if (construct == null && !constructs.isEmpty())
+            construct = constructs.getLast();
+        if (construct == null)
+            construct = new Construct();
+        System.err.println();
         return construct;
     }
 
@@ -397,10 +402,6 @@ public class StringAnalyzer3 {
             this.choices = Arrays.stream(mandatory).toList();
         }
 
-        public SingleTokenExclusiveXor(ArrayList<Token> objects) {
-            this.choices = objects;
-        }
-
         @Override
         public int parse(String input, int position) {
             if (position >= input.length() || input.substring(position).trim().isEmpty()) {
@@ -709,10 +710,11 @@ public class StringAnalyzer3 {
             position = super.skipBlanks(input, position);
             if (position < input.length() && input.substring(position).startsWith(name)) {
                 int position1 = position + name.length();
+                setSuccessful(true);///????
                 return processNext(input, position1);
             } else if (position >= input.length()) {
                 setSuccessful(true);
-                return input.length();
+                return position;
             } else {
                 setSuccessful(false);
                 return position;
@@ -968,6 +970,9 @@ public class StringAnalyzer3 {
         }
     }
 
+    /***
+     *
+     */
     class SingleTokenMandatory extends MultiToken {
 
         public SingleTokenMandatory(Token... mandatory) {
@@ -1001,6 +1006,7 @@ public class StringAnalyzer3 {
                     return position;
                 }
             }
+            setSuccessful(true);
             return processNext(input, position1);
 
 
@@ -1169,13 +1175,27 @@ public class StringAnalyzer3 {
             int i = position;
             boolean passed = false;
 
+
+            int countParenthesis = 0;
+            if (input.charAt(i) == '(')
+                countParenthesis++;
+            if (input.charAt(i) == ')')
+                countParenthesis--;
             while (i < input.length() && (isValid(input, i) && !isNotValid2(input, i))
-                    && containsNoKeyword(input, position, i)) {
+                    && containsNoKeyword(input, position, i) && countParenthesis >= 0) {
                 i++;
+                if (input.charAt(i) == '(')
+                    countParenthesis++;
+                if (input.charAt(i) == ')' && countParenthesis == 0) {
+                    break;
+                } else if (countParenthesis > 0) {
+                    countParenthesis--;
+                }
+
                 passed = true;
             }
             if (passed && (i >= input.length() || !isValid(input, i) || isNotValid2(input, i)) && (i - position > 0
-                    && containsNoKeyword(input, position, i))) {
+                    && containsNoKeyword(input, position, i)) && countParenthesis == 0) {
                 if (i < input.length()) {
                     expression = input.substring(position, i);
                     try {
@@ -1365,17 +1385,16 @@ public class StringAnalyzer3 {
             return null;
         }
 
+        @NotNull
         public InstructionBlock getCurrentInstructions() {
             if (currentInstructions == null) {
                 currentInstructions = new ArrayList<>();
                 currentInstructions.add(new InstructionBlock());
-                throw new RuntimeException("StringAnalyzer5::construct.currentInstructions : No current Instructions");
             }
-
-            if (!currentInstructions.isEmpty()) {
-                return currentInstructions.get(currentInstructions.size() - 1);
+            if (currentInstructions.isEmpty() || currentInstructions.getLast() == null) {
+                currentInstructions.add(new InstructionBlock());
             }
-            return null;//???
+            return currentInstructions.getLast();
         }
 
         public void setCurrentInstructions(InstructionBlock instructionBlock) {
@@ -1743,30 +1762,28 @@ public class StringAnalyzer3 {
                 return position;
             }
             int position1 = skipBlanks(input, position);
-            if (input.charAt(position1) == '(') {
-                int position2 = position1;
+            int position2 = position1;
+            int countParenthesis = 0;
+            while (position1 < input.length() && countParenthesis >= 0) {
+                if (input.charAt(position1) == '(')
+                    countParenthesis++;
+                if (input.charAt(position1) == ')')
+                    countParenthesis--;
+                if (countParenthesis < 0) {
+                    countParenthesis = 0;
+                    break;
+                }
+                if (input.charAt(position1) == ';')
+                    break;
                 position1++;
-                int countParenthesis = 1;
-                while (position1 < input.length() && countParenthesis > 0) {
-                    if (input.charAt(position1) == '(')
-                        countParenthesis++;
-                    if (input.charAt(position1) == ')')
-                        countParenthesis--;
-                    if (input.charAt(position1) == ';')
-                        break;
-                    if (input.charAt(position1) == '+' || input.charAt(position1) == '-' || input.charAt(position1) == '*' || input.charAt(position1) == '/' ||
-                            input.charAt(position1) == '=')
-                        break;
-                    position1++;
-                }
+            }
 
-                position1 = skipBlanks(input, position1);
+            position1 = skipBlanks(input, position1);
 
-                if (position1 < input.length() && countParenthesis == 0) {
-                    expression = input.substring(position2, position1);
-                    setSuccessful(true);
-                    return processNext(input, position1);
-                }
+            if (position1 < input.length() && countParenthesis == 0) {
+                expression = input.substring(position2, position1);
+                setSuccessful(true);
+                return processNext(input, position1);
             }
             setSuccessful(false);
             return position;

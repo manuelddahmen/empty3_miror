@@ -43,8 +43,8 @@ public class ControlledInstructions extends Instruction {
 
     public static class For extends ControlledInstructions {
         public boolean forEachType = false;
-        private List<InstructionBlock> loopInstruction = new ArrayList<>();
-        public List<Instruction> firstForInstruction = new ArrayList();
+        private Instruction loopInstruction = new Instruction();
+        private Instruction firstForInstruction = new Instruction();
 
         public For(String controlExpression) {
             super(controlExpression);
@@ -62,7 +62,7 @@ public class ControlledInstructions extends Instruction {
          */
         public For(Instruction loopInstruction, String expression) {
             super(expression);
-            this.loopInstruction.add(loopInstruction);
+            this.loopInstruction = loopInstruction;
             this.controlExpression = expression;
             forEachType = true;
         }
@@ -75,20 +75,20 @@ public class ControlledInstructions extends Instruction {
             this.forEachType = forEachType;
         }
 
-        public List<InstructionBlock> getLoopInstruction() {
-            return loopInstruction;
+        public Instruction getLoopInstruction() {
+            return loopInstruction == null ? new Instruction() : loopInstruction;
         }
 
         public void setLoopInstruction(Instruction loopInstruction) {
-            this.loopInstruction.add(loopInstruction);
+            this.loopInstruction = loopInstruction;
         }
 
         public Instruction getFirstForInstruction() {
-            return firstForInstruction.getFirst();
+            return firstForInstruction == null ? new Instruction() : firstForInstruction;
         }
 
         public void setFirstForInstruction(Instruction firstForInstruction) {
-            this.firstForInstruction.add(firstForInstruction);
+            this.firstForInstruction = firstForInstruction;
         }
 
         @Override

@@ -21,8 +21,8 @@ sourceSets {
             srcDirs 'src/test/java'
         }
         mainClasses {
-            "one.empty3.library1.tree.TestStringAnalyzer3"
-            "one.empty3.library1.tree.TestStringAnalyzer2"
+            "one.empty3.library1.tree.TestStringAnalyzer5"
+            "one.empty3.library1.tree.TestAlgebraicTreeVector"
         }
     }
 }

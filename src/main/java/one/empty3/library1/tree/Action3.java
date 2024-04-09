@@ -108,7 +108,7 @@ public class Action3 {
 
     public void cloneTokenVersion() {
         try {
-            token.clones().add((StringAnalyzer3.Construct) (token.clones().getLast().clone()));
+            token.clones().add((StringAnalyzer3.Construct) token.clones().getLast().clone());
         } catch (CloneNotSupportedException e) {
             throw new RuntimeException(e);
         }

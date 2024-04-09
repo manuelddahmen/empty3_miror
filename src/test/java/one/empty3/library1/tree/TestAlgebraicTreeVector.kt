@@ -472,6 +472,11 @@ class TestAlgebraicTreeVector() {
     }
 
     @Test
+    fun testSimple19() {
+        testResult("-(1+10)+9", -(1.0 + 10) + 9, true)
+    }
+
+    @Test
     fun testSimpleVarMultVar() {
         val x = -2.0
         val vars = HashMap<String, Double>()

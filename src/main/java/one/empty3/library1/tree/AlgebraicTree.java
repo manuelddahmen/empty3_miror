@@ -384,7 +384,8 @@ public class AlgebraicTree extends Tree {
 
     private boolean addSingleSign(TreeNode src, String subformula) throws AlgebraicFormulaSyntaxException {
         if (subformula.length() > 1 && subformula.charAt(0) == '-') {
-            TreeNode treeNode = new TreeNode(src, new Object[]{subformula.substring(1)}, new SignTreeNodeType(-1.0));
+            TreeNode treeNode = new TreeNode(src, new Object[]{subformula.substring(1)}, new TermTreeNodeType(0));
+            treeNode.getChildren().add(new TreeNodeDouble(src, new Object[]{"0"}, new DoubleTreeNodeType(this)));
             if (add(treeNode, subformula.substring(1))) {
                 src.getChildren().add(treeNode);
                 return true;

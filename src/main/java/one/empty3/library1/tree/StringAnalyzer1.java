@@ -1105,10 +1105,19 @@ public class StringAnalyzer1 {
             int i = position;
             boolean passed = false;
 
+            int countParenthesis = 0;
+            if (input.charAt(i) == '(')
+                countParenthesis++;
+            if (input.charAt(i) == ')')
+                countParenthesis--;
             while (i < input.length() && (isValid(input, i) && !isNotValid2(input, i))
-                    && containsNoKeyword(input, position, i)) {
+                    && containsNoKeyword(input, position, i) && countParenthesis != 0) {
                 i++;
                 passed = true;
+                if (input.charAt(i) == '(')
+                    countParenthesis++;
+                if (input.charAt(i) == ')')
+                    countParenthesis--;
             }
             if (passed && (i >= input.length() || !isValid(input, i) || isNotValid2(input, i)) && (i - position > 0
                     && containsNoKeyword(input, position, i))) {
