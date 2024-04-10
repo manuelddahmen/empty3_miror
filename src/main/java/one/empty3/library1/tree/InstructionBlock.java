@@ -70,11 +70,11 @@ public class InstructionBlock {
 
         StringBuilder array1 = new StringBuilder();
         if (!getInstructionList().isEmpty() && !getClass().equals(Instruction.class)) {
-            array1.append(debugString(debug, "{"));
+            array1.append(debugString(debug, " {"));
             for (InstructionBlock instruction : getInstructionList()) {
                 array1.append(tabs(1)).append(instruction.toLangStringJava(debug));
             }
-            array1.append(debugString(debug, tabs() + "}\n"));
+            array1.append(debugString(debug, tabs() + "} \n"));
         }
         switch (getClass().getCanonicalName()) {
             case "one.empty3.library1.tree.ControlledInstructions.If" -> {
@@ -83,7 +83,7 @@ public class InstructionBlock {
 
 
                 if (!anIf.getInstructionsList().isEmpty()) {
-                    array3.append(debugString(debug, tabs() + "{\n"));
+                    array3.append(debugString(debug, tabs() + " {\n"));
                     for (InstructionBlock instruction : anIf.getInstructionsList()) {
                         array3.append(instruction.toLangStringJava(debug));
                     }
@@ -94,7 +94,7 @@ public class InstructionBlock {
 
 
                 if (!anIf.instructionsElse.instructionList.isEmpty()) {
-                    array2.append(debugString(debug, tabs() + "{\n"));
+                    array2.append(debugString(debug, tabs() + " {\n"));
                     for (InstructionBlock instruction : anIf.instructionsElse.instructionList) {
                         array2.append(instruction.toLangStringJava(debug));
                     }
@@ -114,7 +114,7 @@ public class InstructionBlock {
             }
             case "one.empty3.library1.tree.ControlledInstructions.While" -> {
                 StringBuilder array2 = new StringBuilder();
-                array2.append(debugString(debug, tabs() + "{\n"));
+                array2.append(debugString(debug, tabs() + "  {\n"));
                 for (InstructionBlock instruction : this.instructionList) {
                     array2.append(instruction.toLangStringJava(debug)).append("\n");
                 }
@@ -141,11 +141,20 @@ public class InstructionBlock {
                     StringBuilder array3 = new StringBuilder();
                     Instruction third = (Instruction) aFor.getLoopInstruction();
                     Instruction first = aFor.getFirstForInstruction();
-                    ListInstructions.Instruction second = aFor.getExpression();
-                    array3.append(tabs()).append("for").append((first != null ? first.toLangStringJava(debug) : ""))
-                            .append(";").append(second)
-                            .append(";").append((third != null ? third.toLangStringJava(debug) : ""))
-                            .append(")\n").append(array1.toString());
+                    String second = aFor.getControlExpression();
+
+                    String firstString = (first != null ? first.toLangStringJava(debug) : "").trim();
+                    String secondString = second.trim();
+                    String thirdString = (third != null ? third.toLangStringJava(debug) : "").trim();
+
+                    firstString = firstString.substring(0, firstString.lastIndexOf(';')).trim();
+                    secondString = secondString.trim();//.substring(0, secondString.lastIndexOf(';'));
+                    thirdString = firstString.substring(0, thirdString.lastIndexOf(';')).trim();
+
+                    array3.append(tabs()).append("for ").append('(').append(firstString)
+                            .append("; ").append(secondString)
+                            .append("; ").append(thirdString)
+                            .append(") ").append(array1.toString());
                     stringBuilder.append(array3.toString());
                 }
             }

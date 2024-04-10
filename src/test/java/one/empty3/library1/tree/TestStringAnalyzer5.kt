@@ -1092,8 +1092,8 @@ class TestStringAnalyzer5 {
                     stringAnalyzer3.construct.popInstructions()
                     val forInstruction: ControlledInstructions.For =
                         stringAnalyzer3.construct.getCurrentInstructions() as ControlledInstructions.For
-                    forInstruction.firstForInstruction = instructionFirst
-                    forInstruction.controlExpression = tokenVarForSemiColonExitCondition.expression
+                    forInstruction.firstForInstruction = instructionFirst.instructionList.get(0) as Instruction?
+                    forInstruction.controlExpression = (token as StringAnalyzer3.TokenLogicalExpression1).expression
                     (forInstruction.loopInstruction as InstructionBlock).instructionList.add(Instruction())
                     stringAnalyzer3.construct.pushInstructions(forInstruction.loopInstruction)
                     token.isSuccessful = false
@@ -1111,7 +1111,7 @@ class TestStringAnalyzer5 {
                     val forInstruction: ControlledInstructions.For =
                         stringAnalyzer3.construct.currentInstructions as ControlledInstructions.For
                     stringAnalyzer3.construct.pushInstructions(forInstruction)
-                    forInstruction.loopInstruction = instructionForLoop
+                    forInstruction.loopInstruction = instructionForLoop.instructionList.get(0) as Instruction?
                     (forInstruction.getFirstForInstruction() as InstructionBlock).instructionList.add(Instruction())
                     token.isSuccessful = false
                 }
