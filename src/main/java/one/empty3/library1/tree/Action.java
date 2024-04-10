@@ -26,65 +26,14 @@ package one.empty3.library1.tree;
  * The Action class represents an action that can be performed in a parsing process.
  * It is an abstract class that must be subclassed to implement the action logic.
  */
-public class Action {
-    public static final int NONE = 0;
-    public static final int ON_NEXT_TOKEN_CALL = 1;
-    public static final int ON_RETURNS_TRUE_NEXT_TOKEN = 2;
-    protected int on = ON_NEXT_TOKEN_CALL;
-    protected StringAnalyzer1.Token token;
-
-    /**
-     * Retrieves the token associated with the current action.
-     *
-     * @return the token associated with the current action
-     */
-    public StringAnalyzer1.Token getToken() {
-        return token;
-    }
-
+public class Action extends Action3 {
     /**
      * This class represents an action that can be performed in a parsing process.
      * It is an abstract class that must be subclassed to implement the action logic.
-     */
-    public Action(StringAnalyzer1.Token token) {
-        this.token = token;
-        token.setAction(this);
-
-    }
-
-    public void setToken(StringAnalyzer1.Token token) {
-        this.token = token;
-        token.setAction(this);
-    }
-
-    /**
-     * Retrieves the value of the 'on' property.
-     * (time of the call of action method)
      *
-     * @return the value of the 'on' property
+     * @param token
      */
-    public int getOn() {
-        return on;
+    public Action(StringAnalyzer3.Token token) {
+        super(token);
     }
-
-    /**
-     * Sets the value for the 'on' property of the Action class.
-     * (time of the call of action method)
-     *
-     * @param on the value to set for the 'on' property
-     */
-    public void setOn(int on) {
-        this.on = on;
-    }
-
-    /**
-     * Executes the action associated with the token.
-     *
-     * @return true if the action was executed successfully, false otherwise
-     */
-    public boolean action() {
-        return false;
-    }
-
-
 }
