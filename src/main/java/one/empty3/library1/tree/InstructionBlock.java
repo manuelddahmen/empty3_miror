@@ -142,8 +142,10 @@ public class InstructionBlock {
                     Instruction third = (Instruction) aFor.getLoopInstruction();
                     Instruction first = aFor.getFirstForInstruction();
                     ListInstructions.Instruction second = aFor.getExpression();
-                    array3.append(tabs()).append("for").append(first).append(";").append(second).append(";").append(third)
-                            .append(")\n").append(array1);
+                    array3.append(tabs()).append("for").append((first != null ? first.toLangStringJava(debug) : ""))
+                            .append(";").append(second)
+                            .append(";").append((third != null ? third.toLangStringJava(debug) : ""))
+                            .append(")\n").append(array1.toString());
                     stringBuilder.append(array3.toString());
                 }
             }

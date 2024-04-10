@@ -995,7 +995,6 @@ public class StringAnalyzer3 {
             position = skipBlanks(input, position);
             boolean allOk = true;
             int position1 = position;
-            int i = 0;
             int j = 0;
             for (j = 0; j < choices.size(); j++) {
                 Token token = choices.get(j);
@@ -1163,62 +1162,61 @@ public class StringAnalyzer3 {
             return false;
         }
 
-        /*
-                @Override
-                public int parse(String input, int position) {
-                    if (position >= input.length() || input.substring(position).trim().isEmpty()) {
-                        mPosition = position;
-                        setSuccessful(false);
-                        return position;
-                    }
-                    position = skipBlanks(input, position);
-                    int i = position;
-                    boolean passed = false;
+        @Override
+        public int parse(String input, int position) {
+            if (position >= input.length() || input.substring(position).trim().isEmpty()) {
+                mPosition = position;
+                setSuccessful(false);
+                return position;
+            }
+            position = skipBlanks(input, position);
+            int i = position;
+            boolean passed = false;
 
 
-                    int countParenthesis = 0;
-                    if (input.charAt(i) == '(')
-                        countParenthesis++;
-                    if (input.charAt(i) == ')') { // Empty expression ???
-                        countParenthesis--;
-                        setSuccessful(false);
-                        return position;
-                    }
-                    while ((i < input.length() && (isValid(input, i) && !isNotValid2(input, i))
-                            && containsNoKeyword(input, position, i)) && countParenthesis >= 0) {
-                        i++;
-                        if (input.charAt(i) == '(')
-                            countParenthesis++;
-                        if (input.charAt(i) == ')' && countParenthesis == 0) {
-                            passed = true;
-                            break;
-                        } else if (input.charAt(i) == ')' && countParenthesis > 0) {
-                            countParenthesis--;
-                        }
-                        passed = true;
-                    }
-                    if (passed && (i >= input.length() || !isValid(input, i) || isNotValid2(input, i)) && (i - position > 0
-                            && containsNoKeyword(input, position, i)) && countParenthesis == 0) {
-                        if (i < input.length()) {
-                            expression = input.substring(position, i);
-                            try {
-                                AlgebraicTree algebraicTree = new AlgebraicTree(expression);
-                                this.algebraicTree = algebraicTree;
-                                algebraicTree.construct();
-                            } catch (AlgebraicFormulaSyntaxException e) {
-                                System.err.println("Error constructing : " + expression);
-                            }
-                            setSuccessful(true);
-                            return processNext(input, i);
-                        }
-                        setSuccessful(false);
-                        return position;
-                    } else {
-                        setSuccessful(false);
-                        return position;
-                    }
+            int countParenthesis = 0;
+            if (input.charAt(i) == '(')
+                countParenthesis++;
+            if (input.charAt(i) == ')') { // Empty expression ???
+                setSuccessful(false);
+                return position;
+            }
+            while ((i < input.length() && (isValid(input, i) && !isNotValid2(input, i))
+                    && containsNoKeyword(input, position, i)) || countParenthesis > 0) {
+                passed = true;
+                i++;
+                if (input.charAt(i) == '(')
+                    countParenthesis++;
+                else if (input.charAt(i) == ')' && countParenthesis == 0) {
+                    passed = true;
+                    break;
+                } else if (input.charAt(i) == ')' && countParenthesis > 0) {
+                    countParenthesis--;
                 }
-        */
+            }
+            if (passed && (i >= input.length() || !isValid(input, i) || isNotValid2(input, i) || i - position <= 0
+                    || !containsNoKeyword(input, position, i) || countParenthesis <= 0)) {
+                if (i < input.length()) {
+                    expression = input.substring(position, i);
+                    try {
+                        AlgebraicTree algebraicTree = new AlgebraicTree(expression);
+                        this.algebraicTree = algebraicTree;
+                        algebraicTree.construct();
+                    } catch (AlgebraicFormulaSyntaxException e) {
+                        System.err.println("Error constructing : " + expression);
+                    }
+                    setSuccessful(true);
+                    //      System.out.println("(TokenExpression1)current expression: " + expression + "\n(TokenExpression1)Char at next position:" + "***" + input.substring(i, i + 10) + "***");
+                    return processNext(input, i);
+                }
+            }
+            //System.out.println("FAILED(TokenExpression1)current expression: " + expression + "\nFAILED(TokenExpression1)Char at next position:" + input.substring(i, i + 10) + "***");
+            setSuccessful(false);
+            return position;
+        }
+
+        /*
+
         @Override
         public int parse(String input, int position) {
             if (position >= input.length() || input.substring(position).trim().isEmpty()) {
@@ -1264,7 +1262,7 @@ public class StringAnalyzer3 {
                 return position;
             }
         }
-
+*/
         public String getExpression() {
             return expression;
         }
@@ -1747,6 +1745,7 @@ public class StringAnalyzer3 {
         }
     }
 
+    @Deprecated
     public class TokenLogicalExpression extends Token {
         public String expression;
 
@@ -1777,10 +1776,12 @@ public class StringAnalyzer3 {
                 if (position1 < input.length() && countParenthesis == 0) {
                     expression = input.substring(position2, position1);
                     setSuccessful(true);
+                    System.out.println("SUCCEEDED(TokenLogicalExpression)current expression: " + expression + "\nSUCCEEDED(TokenExpression1)Char at next position:" + input.charAt(position2));
                     return processNext(input, position1);
                 }
             }
             setSuccessful(false);
+            System.out.println("FAILED(TokenLogicalExpression)current expression: " + expression + "\nFAILED(TokenExpression1)Char at next position:" + input.charAt(position));
             return position;
         }
 
@@ -1835,9 +1836,11 @@ public class StringAnalyzer3 {
             if (position1 < input.length() && countParenthesis == 0 && position1 - position2 > 0) {
                 expression = input.substring(position2, position1);
                 setSuccessful(true);
+                System.out.println("SUCCEEDED(TokenLogicalExpression1)current expression: " + expression + "\n(TokenLogicalExpression1)Char at next position:" + input.charAt(position1));
                 return processNext(input, position1);
             }
             setSuccessful(false);
+            System.out.println("FAILED(TokenLogicalExpression1)current expression: " + expression + "\nFAILED(TokenLogicalExpression1)Char at next position:" + input.charAt(position));
             return position;
         }
 

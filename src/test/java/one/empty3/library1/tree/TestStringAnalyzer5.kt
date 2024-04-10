@@ -201,7 +201,6 @@ class TestStringAnalyzer5 {
         val tokenMemberMethodVarEquals2wo = stringAnalyzer3.TokenEquals()
         val tokenMemberMethodExpression2wo = stringAnalyzer3.TokenExpression1()
 
-
         val tokenMemberMethodExpression3wo = stringAnalyzer3.TokenExpression1()
 
         val tokenMemberMethodVarName4wo = stringAnalyzer3.TokenName()
@@ -401,9 +400,7 @@ class TestStringAnalyzer5 {
         }
 
         ActionVarType(tokenMemberVarSemiColon1)
-//        ActionVarName(tokenMemberVarSemiColon1)
         ActionVarType(tokenMemberVarSemiColon2)
-//        ActionVarName(tokenMemberVarSemiColon2)
 
         tokenMemberMethodType.addToken(tokenMemberMethodName)
         tokenMemberMethodName.addToken(tokenOpenParenthesizedMethodParameter)
@@ -426,19 +423,11 @@ class TestStringAnalyzer5 {
             tokenDo,
             tokenWhile,
             tokenForVariantSemiColon,
-            tokenForVariantColon,
+            //tokenForVariantColon,
             tokenMemberMethodVarType1,
             tokenMemberMethodVarType2,
             tokenMemberMethodExpression3,
             tokenMemberMethodVarName4
-            /*
-            tokenMethodSemiColonVar1,
-            tokenMethodSemiColonVar2,
-            tokenMethodSemiColonVar3,
-            tokenMethodSemiColonVar4,
-
-             */
-
         )
         val instructionIncr = stringAnalyzer3.SingleTokenExclusiveXor(
             tokenMemberMethodExpression3wo,
@@ -608,9 +597,9 @@ class TestStringAnalyzer5 {
 
 
         val tokenOpenParenthesizedForSemiColon = stringAnalyzer3.TokenOpenParenthesized()
-        val tokenSemiColonFor11SemiColon = stringAnalyzer3.TokenSemiColon()
+        val tokenSemiColonFor11SemiColon = stringAnalyzer3.TokenString(";")
         val tokenVarForSemiColonExitCondition = stringAnalyzer3.TokenLogicalExpression1()
-        val tokenSemiColonFor12SemiColon = stringAnalyzer3.TokenSemiColon()
+        val tokenSemiColonFor12SemiColon = stringAnalyzer3.TokenString(";")
         val tokenCloseParenthesizedForSemiColon = stringAnalyzer3.TokenCloseParenthesized()
 
         tokenForVariantSemiColon.addToken(tokenOpenParenthesizedForSemiColon)
@@ -718,8 +707,6 @@ class TestStringAnalyzer5 {
                     if (token == tokenMemberMethodVarName1wo) {
                         if (tokenMemberMethodVarType1wo.name != null) {
                             val name = tokenMemberMethodVarType1wo.name
-                            //tokenMemberMethodVarType1.name = null
-                            val get = instructions.get(instructions.size - 1)
                             (get as Instruction).setType(name)
                             tokenMemberMethodVarType1wo.name = null
                         }
@@ -737,7 +724,7 @@ class TestStringAnalyzer5 {
                             tokenMemberMethodVarType2wo.name = null
                         }
                         if (tokenMemberMethodVarName2wo.name != null) {
-                            var name = tokenMemberMethodVarName2wo.name
+                            val name = tokenMemberMethodVarName2wo.name
                             (get as Instruction).setName(name)
                             get.expression.leftHand = name
                             tokenMemberMethodVarName2wo.name = null
@@ -745,8 +732,7 @@ class TestStringAnalyzer5 {
                     }
                     if (token == tokenMemberMethodExpression4wo) {
                         if (tokenMemberMethodVarName4wo.name != null) {
-                            var name = tokenMemberMethodVarName4wo.name
-                            val get = instructions.get(instructions.size - 1)
+                            val name = tokenMemberMethodVarName4wo.name
                             (get as Instruction).setName(name)
                             get.expression.leftHand = name
                             tokenMemberMethodVarName4wo.name = null
@@ -754,16 +740,14 @@ class TestStringAnalyzer5 {
                     }
                     if (token == tokenMemberMethodExpression2wo) {
                         if (tokenMemberMethodExpression2wo.expression != null) {
-                            var name = tokenMemberMethodExpression2wo.expression
+                            val name = tokenMemberMethodExpression2wo.expression
                             (get as Instruction).getExpression().expression = name
                             tokenMemberMethodExpression2wo.expression = null
                         }
                     }
                     if (token == tokenMemberMethodExpression3wo) {
                         if (tokenMemberMethodExpression3wo.expression != null) {
-                            var name = tokenMemberMethodExpression3wo.expression
-                            instructions.add(Instruction())
-                            val get = instructions.get(instructions.size - 1)
+                            val name = tokenMemberMethodExpression3wo.expression
                             (get as Instruction).getExpression().expression = name
                             tokenMemberMethodExpression3wo.expression = null
                         }
@@ -771,7 +755,6 @@ class TestStringAnalyzer5 {
                     if (token == tokenMemberMethodExpression4wo) {
                         if (tokenMemberMethodExpression4wo.expression != null) {
                             val name = tokenMemberMethodExpression4wo.expression
-                            val get = instructions.get(instructions.size - 1)
                             (get as Instruction).getExpression().expression = name
                             tokenMemberMethodExpression4wo.expression = null
                         }
@@ -1104,21 +1087,14 @@ class TestStringAnalyzer5 {
             override fun action(): Boolean {
                 println(token.javaClass.name + " " + token.isSuccessful)
                 if (token.isSuccessful) {
-                    val instructionFirst: InstructionBlock =
-                        stringAnalyzer3.construct.getCurrentInstructions()
+                    val instructionFirst: Instruction =
+                        stringAnalyzer3.construct.getCurrentInstructions() as Instruction
                     stringAnalyzer3.construct.popInstructions()
                     val forInstruction: ControlledInstructions.For =
                         stringAnalyzer3.construct.getCurrentInstructions() as ControlledInstructions.For
-                    forInstruction.firstForInstruction =
-                        Instruction(
-                            ListInstructions.Instruction(
-                                0, "",
-                                instructionFirst.toString()
-                            )
-                        )
+                    forInstruction.firstForInstruction = instructionFirst
                     forInstruction.controlExpression = tokenVarForSemiColonExitCondition.expression
                     (forInstruction.loopInstruction as InstructionBlock).instructionList.add(Instruction())
-
                     stringAnalyzer3.construct.pushInstructions(forInstruction.loopInstruction)
                     token.isSuccessful = false
                 }
@@ -1130,20 +1106,13 @@ class TestStringAnalyzer5 {
             override fun action(): Boolean {
                 println(token.javaClass.name + " " + token.isSuccessful)
                 if (token.isSuccessful) {
-                    val instructionForLoop = stringAnalyzer3.construct.currentInstructions
+                    val instructionForLoop = stringAnalyzer3.construct.currentInstructions as Instruction
                     stringAnalyzer3.construct.popInstructions()
                     val forInstruction: ControlledInstructions.For =
                         stringAnalyzer3.construct.currentInstructions as ControlledInstructions.For
                     stringAnalyzer3.construct.pushInstructions(forInstruction)
-                    forInstruction.setLoopInstruction(
-                        Instruction(
-                            ListInstructions.Instruction(
-                                0,
-                                "",
-                                instructionForLoop.toString()
-                            )
-                        )
-                    )
+                    forInstruction.loopInstruction = instructionForLoop
+                    (forInstruction.getFirstForInstruction() as InstructionBlock).instructionList.add(Instruction())
                     token.isSuccessful = false
                 }
                 return true
@@ -1152,14 +1121,12 @@ class TestStringAnalyzer5 {
 
         class ActionForVariantSemiColonEnd(token: StringAnalyzer3.Token) : Action3(token) {
             init {
-                //on = ON_RETURNS_TRUE_NEXT_TOKEN
+                on = ON_RETURNS_TRUE_NEXT_TOKEN
             }
 
             override fun action(): Boolean {
                 println(token.javaClass.name + " " + token.isSuccessful)
-                //val instructionForLoop = stringAnalyzer3.construct.currentInstructions as ControlledInstructions.For
                 try {
-                    stringAnalyzer3.construct.popInstructions()
                     stringAnalyzer3.construct.popInstructions()
                 } catch (ex: IndexOutOfBoundsException) {
                     ex.printStackTrace()
