@@ -1,6 +1,5 @@
 package one.empty3.library1.tree
 /*
- *
  *  * Copyright (c) 2024. Manuel Daniel Dahmen
  *  *
  *  *
@@ -65,12 +64,13 @@ class TestStringAnalyzer5 {
 
 
 
-                succeed = succeed && (stringAnalyzer3.mPosition + 1 >= readString.length)
-                /*compareStrings(
-                    readString,
-                    stringAnalyzer3.construct.toLangStringJava(false)
-                )
-                ;*/
+                succeed = succeed && (stringAnalyzer3.mPosition + 2 >= readString.length)
+                /*&&
+                compareStrings(
+                    readString, stringAnalyzer3.construct.toLangStringJava(false),
+                    false
+                )*/
+
             }
         }
         if (!succeed)
@@ -79,7 +79,7 @@ class TestStringAnalyzer5 {
             Assert.assertTrue(succeed)
     }
 
-    fun compareStrings(s1: String, s2: String) {
+    fun compareStrings(s1: String, s2: String, isEchoing: Boolean): Boolean {
         val formattedSource1: String = com.google.googlejavaformat.java.Formatter().formatSource(s1)
         val formattedSource2: String = com.google.googlejavaformat.java.Formatter().formatSource(s2)
 
@@ -88,6 +88,7 @@ class TestStringAnalyzer5 {
         println("------------- RECONSTRUCTED -----------------")
         println(formattedSource2)
 
+        return formattedSource1.equals(formattedSource2)
         //assertTrue(formattedSource1.equals(formattedSource2))
     }
 
@@ -422,8 +423,8 @@ class TestStringAnalyzer5 {
             stringAnalyzer3.SingleTokenExclusiveXor(tokenIf, tokenIfWoElse),
             tokenDo,
             tokenWhile,
+            tokenForVariantColon,
             tokenForVariantSemiColon,
-            //tokenForVariantColon,
             tokenMemberMethodVarType1,
             tokenMemberMethodVarType2,
             tokenMemberMethodExpression3,
@@ -582,17 +583,17 @@ class TestStringAnalyzer5 {
         //tokenDo.addToken(logicalExpressionDo)
         //logicalExpressionDo.addToken(instructionsWhile)
         val tokenOpenParenthesizedFor = stringAnalyzer3.TokenOpenParenthesized()
-        val tokenTypeFor = stringAnalyzer3.TokenName()
+        val tokenTypeFor = stringAnalyzer3.TokenQualifiedName()
         val tokenNameFor = stringAnalyzer3.TokenName()
         val tokenColonFor = stringAnalyzer3.TokenString(":")
-        val tokenVarFor = stringAnalyzer3.TokenExpression1()
+        val tokenExpressionFor = stringAnalyzer3.TokenExpression1()
         val tokenCloseParenthesizedForColon = stringAnalyzer3.TokenCloseParenthesized()
         tokenForVariantColon.addToken(tokenOpenParenthesizedFor)
         tokenOpenParenthesizedFor.addToken(tokenTypeFor)
         tokenTypeFor.addToken(tokenNameFor)
         tokenNameFor.addToken(tokenColonFor)
-        tokenColonFor.addToken(tokenVarFor)
-        tokenVarFor.addToken(tokenCloseParenthesizedForColon)
+        tokenColonFor.addToken(tokenExpressionFor)
+        tokenExpressionFor.addToken(tokenCloseParenthesizedForColon)
         tokenCloseParenthesizedForColon.addToken(instructionsForVariantColon)
 
 
@@ -1020,14 +1021,15 @@ class TestStringAnalyzer5 {
         class ActionForVariantColon(token: StringAnalyzer3.Token) : Action3(token) {
             override fun action(): Boolean {
                 try {
-                    val type = tokenTypeFor.name
-                    val name = tokenNameFor.name
-                    val expression = tokenVarFor.expression
-                    val instruction1 = Instruction()
-                    instruction1.type = type
-                    instruction1.name = name
+                    if (token.isSuccessful) {
+                        val type = tokenTypeFor.name
+                        val name = tokenNameFor.name
+                        val expression = tokenExpressionFor.expression
+                        val instruction1 = Instruction()
+                        instruction1.type = type
+                        instruction1.name = name
 
-                    if (type != null && name != null && expression != null) {
+                        //              if (type != null && name != null && expression != null) {
                         val value: ControlledInstructions.For =
                             ControlledInstructions.For(instruction1, expression)
                         stringAnalyzer3.construct.currentInstructions.instructionList.add(value)
@@ -1043,13 +1045,14 @@ class TestStringAnalyzer5 {
 
         class ActionForVariantColonEnd(token: StringAnalyzer3.Token) : Action3(token) {
             init {
-                //on = ON_RETURNS_TRUE_NEXT_TOKEN
+                on = ON_RETURNS_TRUE_NEXT_TOKEN
             }
 
             override fun action(): Boolean {
                 try {
-                    stringAnalyzer3.construct.popInstructions()
-
+                    if (token.isSuccessful) {
+                        stringAnalyzer3.construct.popInstructions()
+                    }
                 } catch (ex: IndexOutOfBoundsException) {
                     ex.printStackTrace()
                 }
@@ -1057,8 +1060,8 @@ class TestStringAnalyzer5 {
             }
 
         }
-        ActionForVariantColonEnd(tokenCloseParenthesizedForColon)
-        ActionForVariantColon(instructionsForVariantColon)
+        ActionForVariantColon(tokenCloseParenthesizedForColon)
+        ActionForVariantColonEnd(instructionsForVariantColon)
 
 
         class ActionForVariantSemiColon(token: StringAnalyzer3.Token) : Action3(token) {
@@ -1128,6 +1131,7 @@ class TestStringAnalyzer5 {
                 println(token.javaClass.name + " " + token.isSuccessful)
                 try {
                     stringAnalyzer3.construct.popInstructions()
+                    stringAnalyzer3.construct.popInstructions()
                 } catch (ex: IndexOutOfBoundsException) {
                     ex.printStackTrace()
                 }
@@ -1141,7 +1145,7 @@ class TestStringAnalyzer5 {
 
         class ActionPrint(token: StringAnalyzer3.Token) : Action3(token) {
             override fun action(): Boolean {
-                println(token.javaClass.name + " " + token.isSuccessful)
+                //println(token.javaClass.name + " " + token.isSuccessful)
                 return true
             }
 

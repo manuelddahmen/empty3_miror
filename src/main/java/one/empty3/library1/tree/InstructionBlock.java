@@ -131,15 +131,15 @@ public class InstructionBlock {
             }
             case "one.empty3.library1.tree.ControlledInstructions.For" -> {
                 ControlledInstructions.For aFor = (ControlledInstructions.For) this;
-                if (aFor.isForEachType()) {
+                if (aFor.forEachType) {
                     StringBuilder array3 = new StringBuilder();
                     Instruction firstForInstruction = aFor.getFirstForInstruction();
                     array3.append(tabs()).append("for").append(firstForInstruction.getType()).append(" ").append(firstForInstruction.getName())
-                            .append(";").append(aFor.getExpression()).append(")\n").append(array1);
+                            .append(" : ").append(aFor.expression).append(")\n").append(array1);
                     stringBuilder.append(array3);
-                } else {
+                } else if (!aFor.forEachType) {
                     StringBuilder array3 = new StringBuilder();
-                    Instruction third = (Instruction) aFor.getLoopInstruction();
+                    Instruction third = aFor.getLoopInstruction();
                     Instruction first = aFor.getFirstForInstruction();
                     String second = aFor.getControlExpression();
 
@@ -149,13 +149,13 @@ public class InstructionBlock {
 
                     firstString = firstString.substring(0, firstString.lastIndexOf(';')).trim();
                     secondString = secondString.trim();//.substring(0, secondString.lastIndexOf(';'));
-                    thirdString = firstString.substring(0, thirdString.lastIndexOf(';')).trim();
+                    thirdString = thirdString.substring(0, thirdString.lastIndexOf(';')).trim();
 
-                    array3.append(tabs()).append("for ").append('(').append(firstString)
+                    array3.append("\n" + tabs()).append("for ").append('(').append(firstString)
                             .append("; ").append(secondString)
                             .append("; ").append(thirdString)
-                            .append(") ").append(array1.toString());
-                    stringBuilder.append(array3.toString());
+                            .append(") ").append(array1);
+                    stringBuilder.append(array3);
                 }
             }
             case "one.empty3.library1.tree.Instruction" -> {

@@ -25,6 +25,10 @@ sourceSets {
             "one.empty3.library1.tree.TestAlgebraicTreeVector"
         }
     }
+    main.kotlin.srcDirs += 'src/main/kotlin'
+    main.kotlin.srcDirs += 'src/main/java'
+    test.kotlin.srcDirs += 'test/main/kotlin'
+    test.kotlin.srcDirs += 'test/main/java'
 }
 
 //kotlin {

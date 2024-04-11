@@ -1,3 +1,8 @@
+/***
+ *  * (in this file only and .java_code files in the same directory this
+ *  * license text is provided for comments' testing only (java tests files samples)
+ *  +
+ */
 package one.empty3;
 
 class Number5 {

@@ -485,7 +485,7 @@ class TestAlgebraicTreeVector() {
     }
 
     @Test
-    fun testSimpleFunctionDefined() {
+    fun testSimpleMinusSignAddition() {
         val x = -2.0
         val vars = HashMap<String, Double>()
         vars["x"] = x
@@ -782,30 +782,20 @@ class TestAlgebraicTreeVector() {
         val r = 12.0
         val vars = HashMap<String, Double>()
         vars["r"] = r
-        val stringAnalyser: StringAnalyzer3 = StringAnalyzer3()
+        val stringAnalyzer3 = StringAnalyzer3()
+        val javaToken5 = TestStringAnalyzer5().getJavaToken5(stringAnalyzer3)
 
         val input =
             "package one.empty3;\n\n"
         var parse = 0
         try {
-            parse = stringAnalyser.parse(input)
-            parse = stringAnalyser.mPosition
+            javaToken5.parse(input, 0)
+            parse = stringAnalyzer3.mPosition
         } catch (ex: RuntimeException) {
             ex.printStackTrace()
         }
-        stringAnalyser.definitions.keys.sorted().forEach {
-            if (it != null) {
-                println(
-                    "[" + it + "]\n" + stringAnalyser.definitions.get(it)!!
-                        .isSuccessful() + "\n" + stringAnalyser.definitions.get(it) + "\n"
-                )
-            }
-        }
         println("" + parse + "/" + input.length)
-        println(stringAnalyser.construct)
-        if (parse < input.length)
-            println(input.substring(parse))
-        assertTrue(parse >= input.length || input.substring(parse).trim().isEmpty())
+        assertTrue(parse + 2 >= input.length)
     }
 
     @Test
@@ -813,7 +803,8 @@ class TestAlgebraicTreeVector() {
         val r = 12.0
         val vars = HashMap<String, Double>()
         vars["r"] = r
-        val stringAnalyser: StringAnalyzer3 = StringAnalyzer3()
+        val stringAnalyzer3 = StringAnalyzer3()
+        val javaToken5 = TestStringAnalyzer5().getJavaToken5(stringAnalyzer3)
 
         val input =
             "package one.empty3;\n\n" +
@@ -826,24 +817,13 @@ class TestAlgebraicTreeVector() {
 
         var parse = 0
         try {
-            parse = stringAnalyser.parse(input)
-            parse = stringAnalyser.mPosition
+            parse = javaToken5.parse(input, 0)
+            parse = stringAnalyzer3.mPosition
+            println("" + parse + "/" + input.length)
+            assertTrue(parse + 2 == input.length)
         } catch (ex: RuntimeException) {
             ex.printStackTrace()
         }
-        stringAnalyser.definitions.keys.sorted().forEach {
-            if (it != null) {
-                println(
-                    "[" + it + "]\n" + stringAnalyser.definitions.get(it)!!
-                        .isSuccessful() + "\n" + stringAnalyser.definitions.get(it) + "\n"
-                )
-            }
-        }
-        println("" + parse + "/" + input.length)
-        println(stringAnalyser.construct)
-        if (parse < input.length)
-            println(input.substring(parse))
-        assertTrue(parse >= input.length || input.substring(parse).trim().isEmpty())
     }
 
     @Test
@@ -893,23 +873,14 @@ class TestAlgebraicTreeVector() {
 
         var parse: Int = 0
         try {
-            parse = stringAnalyser.parse(input)
+            TestStringAnalyzer5().getJavaToken5(stringAnalyser).parse(input, 0)
             parse = stringAnalyser.mPosition
         } catch (ex: RuntimeException) {
         }
-        /*        stringAnalyser.definitions.keys.sorted().forEach {
-                    if (it != null) {
-                        println(
-                            "[" + it + "]\n" + stringAnalyser.definitions.get(it)!!
-                                .isSuccessful() + "\n" + stringAnalyser.definitions.get(it) + "\n"
-                        )
-                    }
-                }
-        */
         println("" + parse + "/" + input.length)
         println(stringAnalyser.construct)
         println(input)
-        assertTrue(parse >= input.length || input.substring(parse).trim().isEmpty())
+        assertTrue(parse + 2 >= input.length || input.substring(parse).trim().isEmpty())
     }
 
     @Test

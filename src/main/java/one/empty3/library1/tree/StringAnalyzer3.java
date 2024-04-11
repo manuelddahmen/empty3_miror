@@ -263,34 +263,24 @@ public class StringAnalyzer3 {
         @Override
         public int parse(String input, int position) {
             int position1 = position;
-            if (position + 2 <= input.length() && input.substring(position, position + 2).equals("//")) {
+
+            if (position1 + 2 <= input.length() && input.substring(position1, position1 + 2).equals("//")) {
                 position1 = position + 2;
-                while (position1 < input.length() && !input.substring(position, position1 + 1).equals("\n")) {
+                while (position1 + 1 < input.length() && !input.substring(position1, position1 + 1).equals("\n")) {
                     position1++;
-                }
-                if ((position1 + 1) - (position - 2) >= 0) {
-                    sstring = input.substring((position - 2), (position1 - 1));
                 }
                 setSuccessful(true);
                 return position1 + 1;
-            }
-            if (position + 2 <= input.length() && input.substring(position, position + 2).equals("/*")) {
+            } else if (position1 + 2 <= input.length() && input.substring(position1, position1 + 2).equals("/*")) {
                 position1 = position + 2;
-                while (position1 < input.length() && !input.substring(position, position1 + 2).equals("*/")) {
+                while (position1 + 2 < input.length() && !input.substring(position1, position1 + 2).equals("*/")) {
                     position1++;
-                }
-                if ((position1 + 2) - (position - 2) >= 0) {
-                    sstring = input.substring((position + 2), (position1 - 1));
                 }
                 setSuccessful(true);
                 return position1 + 2;
             }
             setSuccessful(false);
             return position;
-        }
-
-        public boolean isEmptyComment() {
-            return sstring != null && !sstring.isBlank();
         }
     }
 
@@ -1776,12 +1766,12 @@ public class StringAnalyzer3 {
                 if (position1 < input.length() && countParenthesis == 0) {
                     expression = input.substring(position2, position1);
                     setSuccessful(true);
-                    System.out.println("SUCCEEDED(TokenLogicalExpression)current expression: " + expression + "\nSUCCEEDED(TokenExpression1)Char at next position:" + input.charAt(position2));
+                    //System.out.println("SUCCEEDED(TokenLogicalExpression)current expression: " + expression + "\nSUCCEEDED(TokenExpression1)Char at next position:" + input.charAt(position2));
                     return processNext(input, position1);
                 }
             }
             setSuccessful(false);
-            System.out.println("FAILED(TokenLogicalExpression)current expression: " + expression + "\nFAILED(TokenExpression1)Char at next position:" + input.charAt(position));
+            //System.out.println("FAILED(TokenLogicalExpression)current expression: " + expression + "\nFAILED(TokenExpression1)Char at next position:" + input.charAt(position));
             return position;
         }
 
@@ -1836,11 +1826,11 @@ public class StringAnalyzer3 {
             if (position1 < input.length() && countParenthesis == 0 && position1 - position2 > 0) {
                 expression = input.substring(position2, position1);
                 setSuccessful(true);
-                System.out.println("SUCCEEDED(TokenLogicalExpression1)current expression: " + expression + "\n(TokenLogicalExpression1)Char at next position:" + input.charAt(position1));
+                //System.out.println("SUCCEEDED(TokenLogicalExpression1)current expression: " + expression + "\n(TokenLogicalExpression1)Char at next position:" + input.charAt(position1));
                 return processNext(input, position1);
             }
             setSuccessful(false);
-            System.out.println("FAILED(TokenLogicalExpression1)current expression: " + expression + "\nFAILED(TokenLogicalExpression1)Char at next position:" + input.charAt(position));
+            //System.out.println("FAILED(TokenLogicalExpression1)current expression: " + expression + "\nFAILED(TokenLogicalExpression1)Char at next position:" + input.charAt(position));
             return position;
         }
 
