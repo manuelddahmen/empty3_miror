@@ -134,8 +134,8 @@ public class InstructionBlock {
                 if (aFor.forEachType) {
                     StringBuilder array3 = new StringBuilder();
                     Instruction firstForInstruction = aFor.getFirstForInstruction();
-                    array3.append(tabs()).append("for").append(firstForInstruction.getType()).append(" ").append(firstForInstruction.getName())
-                            .append(" : ").append(aFor.expression).append(")\n").append(array1);
+                    array3.append(tabs()).append("for (").append(firstForInstruction.getType()).append(" ").append(firstForInstruction.getExpression().getLeftHand())
+                            .append(" : ").append(aFor.controlExpression).append(")\n").append(array1);
                     stringBuilder.append(array3);
                 } else if (!aFor.forEachType) {
                     StringBuilder array3 = new StringBuilder();

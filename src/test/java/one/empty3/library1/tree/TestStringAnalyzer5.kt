@@ -41,15 +41,15 @@ class TestStringAnalyzer5 {
         File(directory_path).listFiles()?.forEach {
             val file = it
             if (file != null && file.name.endsWith(".java_code")) {
-                val stringAnalyzer3 = StringAnalyzer3()
-                val javaToken5 = getJavaToken5(stringAnalyzer3)
+                val stringAnalyzer1java: StringAnalyzerJava1 = StringAnalyzerJava1()
+                val javaToken5 = getJavaToken5(stringAnalyzer1java)
                 val readString = readString(file.absolutePath)
                 val parse = 0
                 try {
                     javaToken5.parse(readString, parse)
                 } catch (ex: RuntimeException) {
                     ex.printStackTrace()
-                    if (stringAnalyzer3.mPosition < readString.length - 1) {
+                    if (stringAnalyzer1java.mPosition < readString.length - 1) {
                         println("Error: Parsing text not finished")
                     }
                 }
@@ -57,14 +57,14 @@ class TestStringAnalyzer5 {
                 println("------------------------------------------------------------------------")
                 println("- " + file.name)
                 println("------------------------------------------------------------------------")
-                println(stringAnalyzer3.construct.toLangStringJava(isDebug))
+                println(stringAnalyzer1java.construct.toLangStringJava(isDebug))
                 println("------------------------------------------------------------------------")
-                println("- " + "amount of code: " + (stringAnalyzer3.mPosition + 1) + "/" + readString.length)
+                println("- " + "amount of code: " + (stringAnalyzer1java.mPosition + 1) + "/" + readString.length)
                 println("------------------------------------------------------------------------")
 
 
 
-                succeed = succeed && (stringAnalyzer3.mPosition + 2 >= readString.length)
+                succeed = succeed && (stringAnalyzer1java.mPosition + 2 >= readString.length)
                 /*&&
                 compareStrings(
                     readString, stringAnalyzer3.construct.toLangStringJava(false),
@@ -105,7 +105,7 @@ class TestStringAnalyzer5 {
         throw RuntimeException("Not found or read fails")
     }
 
-    public fun getJavaToken5(stringAnalyzer3: StringAnalyzer3): StringAnalyzer3.Token {
+    public fun getJavaToken5(stringAnalyzer3: StringAnalyzerJava1): StringAnalyzer3.Token {
         val tokenPackage = stringAnalyzer3.TokenPackage()
         val tokenPackageName = stringAnalyzer3.TokenQualifiedName()
         val tokenPackageSemicolon = stringAnalyzer3.TokenSemiColon()
@@ -418,6 +418,113 @@ class TestStringAnalyzer5 {
         val tokenForVariantSemiColon = stringAnalyzer3.TokenString("for")
         val tokenForEach = stringAnalyzer3.TokenString("forEach")
 
+        /** Array type declaration */
+        val tokenDeclarationVarType2: StringAnalyzer3.Token = stringAnalyzer3.TokenQualifiedName()
+        val tokenDeclarationVarName2: StringAnalyzer3.Token = stringAnalyzer3.TokenName()
+        val tokenBracketDeclarationVar1: StringAnalyzer3.Token = stringAnalyzer3.TokenString("[")
+        val tokenBracketDeclarationVar2: StringAnalyzer3.Token = stringAnalyzer3.TokenString("]")
+        val tokenBracketDeclarationVar3: StringAnalyzer3.Token = stringAnalyzer3.TokenString("[")
+        val tokenBracketDeclarationVar4: StringAnalyzer3.Token = stringAnalyzer3.TokenString("]")
+        val tokenBracketAfterType = stringAnalyzer3.SingleTokenOptional(tokenBracketDeclarationVar1)
+        val tokenBracketAfterName = stringAnalyzer3.SingleTokenOptional(tokenBracketDeclarationVar3)
+        val tokenEqualsAssignment = stringAnalyzer3.TokenEquals()
+        val tokenBracketAfterDeclarationEquals = stringAnalyzer3.SingleTokenOptional(stringAnalyzer3.TokenString("="))
+        val tokenBracketAfterDeclarationSemiColon =
+            stringAnalyzer3.SingleTokenOptional(stringAnalyzer3.TokenSemiColon())
+        val tokenAssignmentOrDeclaration = stringAnalyzer3.SingleTokenExclusiveXor(
+            tokenBracketAfterDeclarationEquals, tokenBracketAfterDeclarationSemiColon
+        )
+        stringAnalyzer3.SingleTokenOptional(stringAnalyzer3.TokenSemiColon())
+        val singleTokenOptionalBracketVarDeclType = stringAnalyzer3.SingleTokenOptional(
+            stringAnalyzer3.MultiTokenMandatory(
+                tokenBracketDeclarationVar1,
+                tokenBracketDeclarationVar2
+            )
+        )
+        val singleTokenOptionalBracketVarDeclName = stringAnalyzer3.SingleTokenOptional(
+            stringAnalyzer3.MultiTokenMandatory(
+                tokenBracketDeclarationVar3,
+                tokenBracketDeclarationVar4
+            )
+        )
+        val tokenGeneralExpression = stringAnalyzer3.TokenExpression1()
+
+        tokenBracketAfterDeclarationEquals.addToken(tokenGeneralExpression)
+
+        /** Access to an array's element */
+        val arrayTypeAccess: StringAnalyzer3.Token =
+            stringAnalyzer3.SingleTokenOptional(stringAnalyzer3.TokenString(""))
+        val tokenQualifiedNameMethod = stringAnalyzer3.TokenQualifiedName()
+        val tokenQualifiedNameVariable = stringAnalyzer3.TokenQualifiedName()
+        val tokenCallMethod: StringAnalyzer3.Token =
+            stringAnalyzer3.SingleTokenExclusiveXor(
+                tokenQualifiedNameMethod,
+                tokenQualifiedNameVariable,
+                arrayTypeAccess
+            )
+        val tokenStringBracketCloseCallMethodstringAnalyzer3 = stringAnalyzer3.TokenString("[")
+        val tokenStringBracketOpenCallMethodstringAnalyzer3 = stringAnalyzer3.TokenString("]")
+        arrayTypeAccess.addToken(tokenStringBracketOpenCallMethodstringAnalyzer3)
+        val singleTokenMandatory = stringAnalyzer3.SingleTokenMandatory(tokenCallMethod)
+        tokenStringBracketCloseCallMethodstringAnalyzer3.addToken(singleTokenMandatory)
+        singleTokenMandatory.addToken(tokenStringBracketCloseCallMethodstringAnalyzer3)
+
+        /** Parameters of methods call */
+        /** Limit : method().variable, method()[], method.variable[] */
+        val tokenOpenParenthesisCallMethod: StringAnalyzer3.Token = stringAnalyzer3.TokenOpenParenthesized()
+        val tokenCloseParenthesisCallMethod: StringAnalyzer3.Token = stringAnalyzer3.TokenOpenParenthesized()
+        tokenCallMethod.addToken(tokenOpenParenthesisCallMethod)
+        val tokenCallArgumentParameter1 = stringAnalyzer3.SingleTokenOptional(tokenGeneralExpression)
+        val tokenCallArgumentParameter1followMandatory = stringAnalyzer3.SingleTokenMandatory(
+            stringAnalyzer3.TokenComa(), tokenGeneralExpression
+        )
+        val tokenCallArgumentParameter1follow =
+            stringAnalyzer3.MultiTokenOptional(tokenCallArgumentParameter1followMandatory)
+        val tokenParameterCall = stringAnalyzer3.SingleTokenOptional(
+            stringAnalyzer3.SingleTokenOptional(
+                tokenCallArgumentParameter1.addToken(
+                    stringAnalyzer3.MultiTokenOptional(
+                        tokenCallArgumentParameter1followMandatory
+                    )
+                )
+            )
+        )
+        tokenOpenParenthesisCallMethod.addToken(tokenParameterCall)
+        tokenParameterCall.addToken(tokenCloseParenthesisCallMethod)
+        val tokenDotCall = stringAnalyzer3.TokenString(".")
+        tokenDotCall.addToken(arrayTypeAccess)
+
+        /** Constructs a new array */
+        val tokenNew = stringAnalyzer3.TokenString("new ")
+        val tokenNewTypeConstructorMember = stringAnalyzer3.TokenQualifiedName()
+        val tokenNewTypeConstructorCallWorWOimplementation: StringAnalyzer3.Token = stringAnalyzer3.TokenQualifiedName()
+        val tokenNewArrayConstructor = stringAnalyzer3.TokenQualifiedName()
+
+        tokenNewTypeConstructorMember.addToken(tokenOpenParenthesizedMethodParameter)
+
+        tokenNewTypeConstructorCallWorWOimplementation.addToken(tokenCallMethod)
+
+        val tokenBracketArrayConstructorOpen = stringAnalyzer3.TokenString("[")
+        val tokenBracketArrayConstructorClose = stringAnalyzer3.TokenString("]")
+        val tokenArraySize = tokenGeneralExpression
+        tokenNewArrayConstructor.addToken(tokenBracketArrayConstructorOpen)
+        tokenBracketArrayConstructorOpen.addToken(tokenArraySize)
+        tokenArraySize.addToken(tokenBracketArrayConstructorClose)
+
+        tokenNew.addToken(
+            stringAnalyzer3.SingleTokenExclusiveXor(
+                tokenNewArrayConstructor, tokenNewTypeConstructorCallWorWOimplementation
+            )
+        )
+
+        /** Call a method in an expression or chaining methods' call */
+        val tokenMethodCall: StringAnalyzer3.Token? = stringAnalyzer3.TokenMethodCall()
+
+        /** Call a constructor in an expression or chaining methods' call */
+        val tokenConstructorCall: StringAnalyzer3.Token? = stringAnalyzer3.TokenConstructorCall()
+
+        /** Declaration and implementation of a constructor */
+
         val instruction = stringAnalyzer3.SingleTokenExclusiveXor(
             // Test keywords first.
             stringAnalyzer3.SingleTokenExclusiveXor(tokenIf, tokenIfWoElse),
@@ -448,7 +555,7 @@ class TestStringAnalyzer5 {
         val tokenSingleInstructionWhile = stringAnalyzer3.SingleTokenMandatory(instruction)//.copy(instruction)
         val tokenSingleInstructionForVariantSemiColon =
             stringAnalyzer3.SingleTokenMandatory(instruction)//.copy(instruction)
-        val tokenSingleInstructionForVariantColon = stringAnalyzer3.TokenExpression1()
+        val tokenSingleInstructionForVariantColon = stringAnalyzer3.SingleTokenMandatory(instruction)
         val tokenMultiMembersInstructions = stringAnalyzer3.MultiTokenExclusiveXor(instruction)
         val tokenMultiMembersInstructionsWhile = stringAnalyzer3.MultiTokenExclusiveXor(instruction)
         val tokenMultiMembersInstructionsIf = stringAnalyzer3.MultiTokenExclusiveXor(instruction)
@@ -548,6 +655,9 @@ class TestStringAnalyzer5 {
         val instructionsWoSemiColonForVariantSemiColon2 = stringAnalyzer3.SingleTokenExclusiveXor(
             instructionIncrForVariantSemiColon2, tokenSingleInstructionVariantSemiColon2
         )
+        val instructionsForVariantColon = stringAnalyzer3.SingleTokenExclusiveXor(
+            instructionBlockForVariantColon, tokenSingleInstructionForVariantColon
+        )
 
         val instructionsElse = stringAnalyzer3.SingleTokenExclusiveXor(
             instructionBlockElse, tokenSingleInstructionElse
@@ -560,9 +670,6 @@ class TestStringAnalyzer5 {
         )
         val instructionsForVariantSemiColon = stringAnalyzer3.SingleTokenExclusiveXor(
             tokenSingleInstructionForVariantSemiColon, instructionBlockForVariantSemiColon
-        )
-        val instructionsForVariantColon = stringAnalyzer3.SingleTokenExclusiveXor(
-            tokenSingleInstructionForVariantColon, instructionBlockForVariantColon
         )
 
         tokenIf.addToken(logicalExpressionIf)
@@ -582,18 +689,18 @@ class TestStringAnalyzer5 {
 
         //tokenDo.addToken(logicalExpressionDo)
         //logicalExpressionDo.addToken(instructionsWhile)
-        val tokenOpenParenthesizedFor = stringAnalyzer3.TokenOpenParenthesized()
-        val tokenTypeFor = stringAnalyzer3.TokenQualifiedName()
-        val tokenNameFor = stringAnalyzer3.TokenName()
-        val tokenColonFor = stringAnalyzer3.TokenString(":")
-        val tokenExpressionFor = stringAnalyzer3.TokenExpression1()
+        val tokenOpenParenthesizedForColon = stringAnalyzer3.TokenOpenParenthesized()
+        val tokenTypeForColon = stringAnalyzer3.TokenQualifiedName()
+        val tokenNameForColon = stringAnalyzer3.TokenName()
+        val tokenColonForColon = stringAnalyzer3.TokenString(":")
+        val tokenExpressionForColon = stringAnalyzer3.TokenExpression1()
         val tokenCloseParenthesizedForColon = stringAnalyzer3.TokenCloseParenthesized()
-        tokenForVariantColon.addToken(tokenOpenParenthesizedFor)
-        tokenOpenParenthesizedFor.addToken(tokenTypeFor)
-        tokenTypeFor.addToken(tokenNameFor)
-        tokenNameFor.addToken(tokenColonFor)
-        tokenColonFor.addToken(tokenExpressionFor)
-        tokenExpressionFor.addToken(tokenCloseParenthesizedForColon)
+        tokenForVariantColon.addToken(tokenOpenParenthesizedForColon)
+        tokenOpenParenthesizedForColon.addToken(tokenTypeForColon)
+        tokenTypeForColon.addToken(tokenNameForColon)
+        tokenNameForColon.addToken(tokenColonForColon)
+        tokenColonForColon.addToken(tokenExpressionForColon)
+        tokenExpressionForColon.addToken(tokenCloseParenthesizedForColon)
         tokenCloseParenthesizedForColon.addToken(instructionsForVariantColon)
 
 
@@ -819,7 +926,9 @@ class TestStringAnalyzer5 {
         tokenClassName.addToken(tokenOpenBracket)
         val multiTokenOptional = stringAnalyzer3.MultiTokenOptional(
             stringAnalyzer3.SingleTokenExclusiveXor(
-                tokenMemberVar, tokenMemberMethodType
+                tokenMemberVar,
+                tokenNewTypeConstructorMember, //// Function name==class name, return type empty
+                tokenMemberMethodType, ///
             )
         )
         tokenOpenBracket.addToken(multiTokenOptional)
@@ -1022,14 +1131,13 @@ class TestStringAnalyzer5 {
             override fun action(): Boolean {
                 try {
                     if (token.isSuccessful) {
-                        val type = tokenTypeFor.name
-                        val name = tokenNameFor.name
-                        val expression = tokenExpressionFor.expression
+                        val type = tokenTypeForColon.name
+                        val name = tokenNameForColon.name
+                        val expression = tokenExpressionForColon.expression
                         val instruction1 = Instruction()
                         instruction1.type = type
                         instruction1.name = name
-
-                        //              if (type != null && name != null && expression != null) {
+                        instruction1.expression = ListInstructions.Instruction(0, name, expression)
                         val value: ControlledInstructions.For =
                             ControlledInstructions.For(instruction1, expression)
                         stringAnalyzer3.construct.currentInstructions.instructionList.add(value)

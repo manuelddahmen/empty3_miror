@@ -23,10 +23,8 @@
 package one.empty3.library1.tree;
 
 import one.empty3.library.StructureMatrix;
-import one.empty3.library.core.nurbs.BSpline;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.junit.jupiter.params.shadow.com.univocity.parsers.fixed.FixedWidthWriterSettings;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -80,8 +78,9 @@ public class StringAnalyzer3 {
                 constructs.add(construct);
         }
 
-        public void addToken(Token token) {
+        public Token addToken(Token token) {
             this.nextTokens.setElem(token, this.nextTokens.getData1d().size());
+            return this;
         }
 
         private int nextToken(String input, int position) {
@@ -856,7 +855,7 @@ public class StringAnalyzer3 {
                 return processNext(input, position2);
             } else {
                 setSuccessful(true);
-                return position1;
+                return processNext(input, position1);
             }
         }
 

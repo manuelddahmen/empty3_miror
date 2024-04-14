@@ -57,12 +57,12 @@ public class ControlledInstructions extends Instruction {
          * For (Type variableName : expression)
          *     ==================  ===========
          *     loopInstruction     controlExpression
-         * @param loopInstruction
+         * @param firstForInstruction
          * @param controlExpression
          */
-        public For(Instruction loopInstruction, String controlExpression) {
+        public For(Instruction firstForInstruction, String controlExpression) {
             super(controlExpression);
-            this.loopInstruction = loopInstruction;
+            this.firstForInstruction = firstForInstruction;
             this.controlExpression = controlExpression;
             forEachType = true;
         }

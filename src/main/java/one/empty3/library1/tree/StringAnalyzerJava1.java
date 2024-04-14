@@ -1,9 +1,5 @@
 /*
- * * (in this file only and .java_code files in this directory the
- * license text is provided for comments testing only (java tests files samples)
- +
- */
-/*
+ *
  *  * Copyright (c) 2024. Manuel Daniel Dahmen
  *  *
  *  *
@@ -23,13 +19,41 @@
  *
  *
  */
-// lfe;zmo,vzemrgser,gmksd
-package one.empty3;
 
-class Number7 {
-    double func5() {
-        for (double d1 : d) {
-            d1 = d;
+package one.empty3.library1.tree;
+
+import one.empty3.library.T;
+
+public class StringAnalyzerJava1 extends StringAnalyzer3 {
+
+
+    public class TokenTypeArrayOrNot extends Token {
+        public TokenTypeArrayOrNot() {
+            super();
+        }
+    }
+
+    public class TokenArrayAccessor extends Token {
+        public TokenArrayAccessor() {
+
+        }
+    }
+
+    public class TokenConstructorArray extends Token {
+        public TokenConstructorArray() {
+            super();
+        }
+    }
+
+    public class TokenMethodCall extends Token {
+        public TokenMethodCall() {
+            super();
+        }
+    }
+
+    public class TokenConstructorCall extends Token {
+        public TokenConstructorCall() {
+            super();
         }
     }
 }

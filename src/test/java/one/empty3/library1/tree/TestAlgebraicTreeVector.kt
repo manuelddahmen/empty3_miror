@@ -782,7 +782,7 @@ class TestAlgebraicTreeVector() {
         val r = 12.0
         val vars = HashMap<String, Double>()
         vars["r"] = r
-        val stringAnalyzer3 = StringAnalyzer3()
+        val stringAnalyzer3 = StringAnalyzerJava1()
         val javaToken5 = TestStringAnalyzer5().getJavaToken5(stringAnalyzer3)
 
         val input =
@@ -803,7 +803,7 @@ class TestAlgebraicTreeVector() {
         val r = 12.0
         val vars = HashMap<String, Double>()
         vars["r"] = r
-        val stringAnalyzer3 = StringAnalyzer3()
+        val stringAnalyzer3 = StringAnalyzerJava1()
         val javaToken5 = TestStringAnalyzer5().getJavaToken5(stringAnalyzer3)
 
         val input =
@@ -869,7 +869,7 @@ class TestAlgebraicTreeVector() {
     }
 
     fun runCodeParser(input: String) {
-        val stringAnalyser: StringAnalyzer3 = StringAnalyzer3()
+        val stringAnalyser: StringAnalyzerJava1 = StringAnalyzerJava1()
 
         var parse: Int = 0
         try {
