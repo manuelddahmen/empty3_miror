@@ -23,6 +23,7 @@
 package one.empty3.library1.tree;
 
 import one.empty3.library.T;
+import org.jetbrains.annotations.NotNull;
 
 public class StringAnalyzerJava1 extends StringAnalyzer3 {
 
@@ -56,4 +57,5 @@ public class StringAnalyzerJava1 extends StringAnalyzer3 {
             super();
         }
     }
+
 }

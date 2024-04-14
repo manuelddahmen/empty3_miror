@@ -519,7 +519,119 @@ public class StringAnalyzer3 {
 
         }
 
+    }
 
+
+    public class MultiTokenInclusiveXor extends MultiToken {
+        public MultiTokenInclusiveXor(Token... choices) {
+            super();
+            this.choices = Arrays.stream(choices).toList();
+        }
+
+        @Override
+        public int parse(String input, int position) {
+            if (position >= input.length() || input.substring(position).trim().isEmpty()) {
+                mPosition = position;
+                setSuccessful(false);
+                return position;
+                //throw new RuntimeException(getClass() + " : position>=input.length()");
+            }
+            position = super.skipBlanks(input, position);
+            int position1 = position;
+            boolean chosen = true;
+            boolean passedOne = false;
+            while (chosen) {
+                chosen = false;
+                for (Token token : choices) {
+                    position1 = token.parse(input, position);
+                    if (token.isSuccessful() && position1 >= position) {
+                        chosen = true;
+                        passedOne = true;
+                        position = position1;
+                        break;
+                    } else {
+                        position1 = position;
+                    }
+                }
+            }
+            setSuccessful(true);
+            if (passedOne) {
+                return processNext(input, position1);
+            } else
+                return processNext(input, position1);
+        }
+
+        @Override
+        public String toString() {
+            return "TokenChoiceInclusive{" +
+                    "choices=" + choices +
+                    "}\n";
+        }
+
+        @Override
+        public Token copy(Token token) {
+            token = new TokenChoiceInclusive();
+            super.copy(token);
+            return token;
+        }
+    }
+
+    public class MultiTokenInclusiveXorAndOne extends MultiToken {
+        private final Token or;
+
+        public MultiTokenInclusiveXorAndOne(Token or, Token... choices) {
+            super();
+            this.or = or;
+            this.choices = Arrays.stream(choices).toList();
+        }
+
+        @Override
+        public int parse(String input, int position) {
+            if (position >= input.length() || input.substring(position).trim().isEmpty()) {
+                mPosition = position;
+                setSuccessful(false);
+                return position;
+                //throw new RuntimeException(getClass() + " : position>=input.length()");
+            }
+            position = super.skipBlanks(input, position);
+            int position1 = position;
+            boolean chosen = true;
+            boolean passedOne = false;
+            while (chosen) {
+                chosen = false;
+                for (Token token : choices) {
+                    position1 = token.parse(input, position);
+                    if (token.isSuccessful() && position1 >= position) {
+                        chosen = true;
+                        passedOne = true;
+                        position = position1;
+                        break;
+                    } else {
+                        position1 = position;
+                    }
+                }
+            }
+            setSuccessful(true);
+            if (passedOne) {
+                return or.parse(input, position1);
+            } else {
+                return or.parse(input, position1);
+            }
+        }
+
+        @Override
+        public String toString() {
+            return "TokenChoiceInclusive{" +
+                    "choices=" + choices +
+                    "}\n";
+        }
+
+        @Override
+        public Token copy(Token token) {
+            token = new TokenChoiceInclusive();
+            super.copy(token);
+            return token;
+        }
     }
 
     /**
@@ -540,15 +652,15 @@ public class StringAnalyzer3 {
                 //throw new RuntimeException(getClass() + " : position>=input.length()");
             }
             position = super.skipBlanks(input, position);
+            int position1 = position;
             for (Token token : choices) {
-                int position1 = position;
                 position1 = token.parse(input, position);
                 if (token.isSuccessful()) {
-                    return processNext(input, position1);
+                    position1 = processNext(input, position1);
                 }
             }
-            setSuccessful(false);
-            return position;
+            setSuccessful(true);
+            return position1;
         }
 
         @Override

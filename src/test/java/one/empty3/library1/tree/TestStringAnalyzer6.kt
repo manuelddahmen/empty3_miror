@@ -34,7 +34,7 @@ import java.nio.file.Paths
  * Test class for AlgebraicTree.
  */
 @RunWith(JUnit4::class)
-class TestStringAnalyzer5 {
+class TestStringAnalyzer6 {
     private var isDebug: Boolean = true
     fun readDir(directory_path: String) {
         var succeed = true
@@ -42,7 +42,7 @@ class TestStringAnalyzer5 {
             val file = it
             if (file != null && file.name.endsWith(".java_code")) {
                 val stringAnalyzer1java: StringAnalyzerJava1 = StringAnalyzerJava1()
-                val javaToken5 = getJavaToken5(stringAnalyzer1java)
+                val javaToken5 = getJavaToken6(stringAnalyzer1java)
                 val readString = readString(file.absolutePath)
                 val parse = 0
                 try {
@@ -105,7 +105,7 @@ class TestStringAnalyzer5 {
         throw RuntimeException("Not found or read fails")
     }
 
-    public fun getJavaToken5(stringAnalyzer3: StringAnalyzerJava1): StringAnalyzer3.Token {
+    public fun getJavaToken6(stringAnalyzer3: StringAnalyzerJava1): StringAnalyzer3.Token {
         val tokenPackage = stringAnalyzer3.TokenPackage()
         val tokenPackageName = stringAnalyzer3.TokenQualifiedName()
         val tokenPackageSemicolon = stringAnalyzer3.TokenSemiColon()

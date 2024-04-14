@@ -19,6 +19,7 @@
  *
  *
  */
+// Class with array constructor, array elements accesses
 package one.empty3;
 
 class Number8 {
