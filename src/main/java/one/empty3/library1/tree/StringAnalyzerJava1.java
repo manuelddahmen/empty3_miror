@@ -58,4 +58,266 @@ public class StringAnalyzerJava1 extends StringAnalyzer3 {
         }
     }
 
+    public class TokenConstructor extends Token {
+        public TokenConstructor() {
+
+        }
+
+    }
+
+    public class TokenType2 extends Token {
+        protected String name = null;
+        protected String[] brackets = new String[7];
+        private int passBrackets;
+
+        public TokenType2() {
+            super();
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String[] getBrackets() {
+            return brackets;
+        }
+
+        public void setBrackets(String[] brackets) {
+            this.brackets = brackets;
+        }
+
+        public int getPassBrackets() {
+            return passBrackets;
+        }
+
+        public void setPassBrackets(int passBrackets) {
+            this.passBrackets = passBrackets;
+        }
+
+        @Override
+        public int parse(String input, int position) {
+            if (position >= input.length() || input.substring(position).trim().isEmpty()) {
+                mPosition = position;
+                setSuccessful(false);
+                throw new RuntimeException(getClass() + " : position>=input.length()");
+            }
+            position = skipBlanks(input, position);
+            int position1 = position;
+            int i = position1;
+            int[] i1 = new int[14];
+            boolean passed = false;
+            int iWord = i;
+            passBrackets = 0;
+            while (i < input.length() && (((Character.isLetterOrDigit(input.charAt(i))
+                    || Character.isAlphabetic(input.charAt(i))
+                    || input.charAt(i) == '_' || input.charAt(i) == '.' || Character.isWhitespace(input.charAt(i))
+                    || input.charAt(i) == '[')))) {
+                passed = true;
+                if (Character.isWhitespace(input.charAt(i))) {
+                    passed = true;
+                    iWord = i;
+                    break;
+                }
+                i++;
+            }
+            boolean bStart = false;
+            while (i < input.length() && (((Character.isWhitespace(input.charAt(i))) || (input.charAt(i) == '[') || (input.charAt(i) == ']')))) {
+                if (input.charAt(i) == '[' && !bStart) {
+                    bStart = true;
+                    i1[passBrackets] = i;
+                }
+                if (input.charAt(i) == ']' && bStart) {
+                    bStart = false;
+                    i1[passBrackets + 1] = i;
+                    passBrackets += 2;
+                }
+                i++;
+            }
+
+            if (passed && iWord < input.length() && containsNoKeyword(input.substring(position1, iWord))) {
+                if (!input.substring(position1, iWord).isEmpty()) {
+                    setName(input.substring(position1, iWord));
+
+                }
+            }
+            for (int j = 0; j < passBrackets; j += 2) {
+                brackets[j / 2] = input.substring(i1[j], i1[j + 1]);
+            }
+            return i == position1 ? position1 : processNext(input, i);
+        }
+
+        @Override
+        public Token copy(Token token) {
+            return new TokenQualifiedName();
+        }
+
+    }
+
+    public class TokenName2 extends Token {
+        protected String name = null;
+        private String[] brackets = new String[7];
+        public boolean classVariable0;
+        public boolean classVariable1;
+        public boolean classMethodCall0;
+        public boolean classMethodCall1;
+        public boolean classArrayAccess;
+        public boolean classArrayNew;
+        public boolean classClassNew;
+        public boolean operator;
+        public boolean numberDouble;
+        public boolean numberFloat;
+        public boolean numberBoolean;
+        public boolean numberString;
+        public boolean numberChar;
+
+        public TokenName2() {
+            super();
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+
+        @Override
+        public int parse(String input, int position) {
+            if (position >= input.length() || input.substring(position).trim().isEmpty()) {
+                mPosition = position;
+                setSuccessful(false);
+                throw new RuntimeException(getClass() + " : position>=input.length()");
+            }
+            position = skipBlanks(input, position);
+            int position1 = position;
+            int i = position1;
+            int[] i1 = new int[14];
+            boolean passed = false;
+            int iWord = i;
+            int passBrackets = 0;
+            while (i < input.length() && (((Character.isLetterOrDigit(input.charAt(i))
+                    || Character.isAlphabetic(input.charAt(i))
+                    || input.charAt(i) == '_' || input.charAt(i) == '.' || Character.isWhitespace(input.charAt(i))
+                    || input.charAt(i) == '[')))) {
+                passed = true;
+                if (Character.isWhitespace(input.charAt(i))) {
+                    passed = true;
+                    iWord = i;
+                    break;
+                }
+                i++;
+            }
+            boolean bStart = false;
+            while (i < input.length() && (((Character.isWhitespace(input.charAt(i))) || (input.charAt(i) == '[') || (input.charAt(i) == ']')))) {
+                if (input.charAt(i) == '[' && !bStart) {
+                    bStart = true;
+                    i1[passBrackets] = i;
+                }
+                if (input.charAt(i) == ']' && bStart) {
+                    bStart = false;
+                    i1[passBrackets + 1] = i;
+                    passBrackets += 2;
+                }
+                i++;
+            }
+
+            if (passed && iWord < input.length() && containsNoKeyword(input.substring(position1, iWord))) {
+                if (!input.substring(position1, iWord).isEmpty()) {
+                    setName(input.substring(position1, iWord));
+
+                }
+            }
+            for (int j = 0; j < passBrackets; j += 2) {
+                brackets[j / 2] = input.substring(i1[j], i1[j + 1]);
+            }
+            return i == position1 ? position1 : processNext(input, i);
+        }
+
+        @Override
+        public Token copy(Token token) {
+            return new TokenQualifiedName();
+        }
+    }
+
+
+    public class TokenNameDeclaration2 extends Token {
+        protected String name = null;
+        private String[] brackets = new String[7];
+
+        public TokenNameDeclaration2() {
+            super();
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public int parse(String input, int position) {
+            if (position >= input.length() || input.substring(position).trim().isEmpty()) {
+                mPosition = position;
+                setSuccessful(false);
+                throw new RuntimeException(getClass() + " : position>=input.length()");
+            }
+            position = skipBlanks(input, position);
+            int position1 = position;
+            int i = position1;
+            int[] i1 = new int[14];
+            boolean passed = false;
+            int iWord = i;
+            int passBrackets = 0;
+            while (i < input.length() && (((Character.isLetterOrDigit(input.charAt(i))
+                    || Character.isAlphabetic(input.charAt(i))
+                    || input.charAt(i) == '_' || input.charAt(i) == '.' || Character.isWhitespace(input.charAt(i))
+                    || input.charAt(i) == '[')))) {
+                passed = true;
+                if (Character.isWhitespace(input.charAt(i))) {
+                    passed = true;
+                    iWord = i;
+                    break;
+                }
+                i++;
+            }
+            boolean bStart = false;
+            while (i < input.length() && (((Character.isWhitespace(input.charAt(i))) || (input.charAt(i) == '[') || (input.charAt(i) == ']')))) {
+                if (input.charAt(i) == '[' && !bStart) {
+                    bStart = true;
+                    i1[passBrackets] = i;
+                }
+                if (input.charAt(i) == ']' && bStart) {
+                    bStart = false;
+                    i1[passBrackets + 1] = i;
+                    passBrackets += 2;
+                }
+                i++;
+            }
+
+            if (passed && iWord < input.length() && containsNoKeyword(input.substring(position1, iWord))) {
+                if (!input.substring(position1, iWord).isEmpty()) {
+                    setName(input.substring(position1, iWord));
+
+                }
+            }
+            for (int j = 0; j < passBrackets; j += 2) {
+                brackets[j / 2] = input.substring(i1[j], i1[j + 1]);
+            }
+            return i == position1 ? position1 : processNext(input, i);
+        }
+
+        @Override
+        public Token copy(Token token) {
+            return new TokenQualifiedName();
+        }
+
+    }
 }

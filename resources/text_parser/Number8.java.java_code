@@ -41,4 +41,5 @@ class Number8 {
             d[i] = new String("" + i);
         }
     }
+
 }
