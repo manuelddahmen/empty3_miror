@@ -1298,6 +1298,10 @@ class TestStringAnalyzer6 {
         return tokenPackageOptional
     }
 
+    @Test
+    fun testTokenExpression2() {
+
+    }
 
     @Test
     fun testReadMultiSources() {

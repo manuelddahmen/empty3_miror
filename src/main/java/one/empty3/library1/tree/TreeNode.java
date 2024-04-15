@@ -432,23 +432,21 @@ public class TreeNode {
                 TreeNode treeNode1 = getChildren().get(i);
                 double op1 = treeNode1.type.getSign1();
                 StructureMatrix<Double> eval = treeNode1.eval();
-                if (treeNode1.type instanceof TermTreeNodeType) {
-                    if (eval.getDim() == 1) {
-                        for (int j = 0; j < eval.data1d.size(); j++) {
-                            double e = 0.0;
-                            if (evalRes.data1d != null && j < evalRes.data1d.size()) {
-                                e = evalRes.getElem(j);
-                            } else {
-                                evalRes.setElem(e, j);
-                            }
-                            evalRes.setElem(e + eval.getElem(j) * op1, j);
+                if (eval.getDim() == 1) {
+                    for (int j = 0; j < eval.data1d.size(); j++) {
+                        double e = 0.0;
+                        if (evalRes.data1d != null && j < evalRes.data1d.size()) {
+                            e = evalRes.getElem(j);
+                        } else {
+                            evalRes.setElem(e, j);
                         }
-                        System.err.println("In TreeNode.eval #TermTreeNodeType");
-                    } else if (eval.getDim() == 0) {
-                        sum = op1 * (Double) ((eval.getElem() == null) ? 0.0 : eval.getElem());
-                        double evalSum = (evalRes.getElem() == null) ? 0.0 : evalRes.getElem();
-                        evalRes.setElem(sum + evalSum);
+                        evalRes.setElem(e + eval.getElem(j) * op1, j);
                     }
+                    System.err.println("In TreeNode.eval #TermTreeNodeType");
+                } else if (eval.getDim() == 0) {
+                    double current = op1 * (Double) ((eval.getElem() == null) ? 0.0 : eval.getElem());
+                    double evalSum = (evalRes.getElem() == null) ? 0.0 : evalRes.getElem();
+                    evalRes.setElem(evalSum + current);
                 }
             }
             return evalRes;
@@ -492,7 +490,7 @@ public class TreeNode {
             }
             return null;
         } else if (cType instanceof SignTreeNodeType) {
-            double s1 = ((SignTreeNodeType) cType).getSign();
+            double s1 = /* ((SignTreeNodeType) cType).getSign(); */cType.sign1;
             StructureMatrix<Double> eval;
             if (!getChildren().isEmpty()) {
                 eval = getChildren().get(0).eval();
@@ -528,6 +526,10 @@ public class TreeNode {
                 evalRes.setElem(eval.getElem(i), i);
             }
             return evalRes;
+        } else if (cType instanceof LogicalNumericTreeNodeType) {
+
+        } else if (cType instanceof LogicalLogicalTreeNodeType) {
+
         }
 
         StructureMatrix<Double> eval = new StructureMatrix<>(0, Double.class);

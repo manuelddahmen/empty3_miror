@@ -468,7 +468,7 @@ class TestAlgebraicTreeVector() {
 
     @Test
     fun testSimple18() {
-        //testResult("pow(3, pow(4, 5))", Math.pow(3.0, Math.pow(4.0, 5.0)), true)
+        testResult("(-3)+(4* 5)", (-3) + (4 * 5.0), true)
     }
 
     @Test

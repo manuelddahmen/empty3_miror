@@ -22,8 +22,12 @@
 
 package one.empty3.library1.tree;
 
+import com.google.googlejavaformat.Input;
 import one.empty3.library.T;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class StringAnalyzerJava1 extends StringAnalyzer3 {
 
@@ -177,43 +181,72 @@ public class StringAnalyzerJava1 extends StringAnalyzer3 {
                 setSuccessful(false);
                 throw new RuntimeException(getClass() + " : position>=input.length()");
             }
-
             int position1 = start.parse(input, position);
+            boolean passOne = false;
+            int betweenTokens = 0;
             if (start.isSuccessful()) {
-                while (((position1 = tokenType.parse(input, position1)) > position)) {
-                    if (tokenType.isSuccessful()) {
-                        position = position1;
-                    } else {
-                        break;
+                betweenTokens = 1;
+                do {
+                    position1 = start.parse(input, position1);
+                    while (start.isSuccessful()) {
+                        betweenTokens++;
+                        position1 = start.parse(input, position1);
                     }
-                }
+                    position1 = end.parse(input, position1);
+                    while (end.isSuccessful() && betweenTokens > 0) {
+                        betweenTokens--;
+                        position1 = end.parse(input, position1);
+                    }
+                    if (!passOne && betweenTokens == 0) {
+                        position1 = separator.parse(input, position1);
+                        if (separator.isSuccessful()) {
+                            passOne = false;
+                        }
+                    }
+                    if (betweenTokens == 0) {
+                        position1 = tokenType.parse(input, position1);
+                        if (tokenType.isSuccessful()) {
+                            position = position1;
+                        }
+                    }
+                    position1 = start.parse(input, position1);
+                    while (start.isSuccessful()) {
+                        betweenTokens++;
+                        position1 = start.parse(input, position1);
+                    }
+                    position1 = end.parse(input, position1);
+                    while (end.isSuccessful() && betweenTokens > 0) {
+                        betweenTokens--;
+                        position1 = end.parse(input, position1);
+                    }
+                } while (betweenTokens > 0 || !end.isSuccessful());
             }
-            position1 = end.parse(input, position);
-            if (end.isSuccessful()) {
-                return processNext(input, position1);
-            } else {
-                return position;
-            }
+
+            return processNext(input, position1);
+            
         }
     }
 
 
     public class TokenExpression2 extends Token {
+        protected List<DataExpression> expressions = new ArrayList<DataExpression>();
         protected String name = null;
         private String[] brackets = new String[7];
-        public boolean classVariable0;
-        public boolean classVariable1;
-        public boolean classMethodCall0;
-        public boolean classMethodCall1;
-        public boolean classArrayAccess;
-        public boolean classArrayNew;
-        public boolean classClassNew;
+        public static int methodCall = 1;
+        public int variable = 2;
+        public int memberVariable = 4;
+        public int memberFunction = 8;
+        public int classNameReference = 16;
+        public int classArrayAccess = 32;
+        public int classArrayNew = 64;
+        public int classClassNew = 128;
         public boolean operator;
         public boolean numberDouble;
         public boolean numberFloat;
         public boolean numberBoolean;
         public boolean numberString;
         public boolean numberChar;
+        private boolean next = false;
 
         public TokenExpression2() {
             super();
@@ -240,55 +273,73 @@ public class StringAnalyzerJava1 extends StringAnalyzer3 {
             int i = position1;
             int[] i1 = new int[14];
             boolean passed = false;
-            int iWord = i;
+            int iWord = -1;
             int passBrackets = 0;
-            while (i < input.length() && (((Character.isLetterOrDigit(input.charAt(i))
+            if (input.charAt(i) == '.') {
+                next = true;
+            } else {
+                next = false;
+            }
+            while (i < input.length() && (Character.isLetterOrDigit(input.charAt(i))
                     || Character.isAlphabetic(input.charAt(i))
-                    || input.charAt(i) == '_' || input.charAt(i) == '.' || Character.isWhitespace(input.charAt(i))
-                    || input.charAt(i) == '[')))) {
+                    || input.charAt(i) == '_' || Character.isWhitespace(input.charAt(i)))) {
                 passed = true;
-                if (Character.isWhitespace(input.charAt(i))) {
-                    passed = true;
-                    iWord = i;
-                    break;
-                }
+                iWord = i;
                 i++;
+            }
+            i = skipBlanks(input, i);
+            if (input.charAt(i) == '.') {
+                setName(input.substring(position1, iWord));
+                TokenExpression2 tokenExpression2 = new TokenExpression2();
+                return tokenExpression2.parse(input, i);
             }
             boolean bStart = false;
             boolean pStart = false;
+            int bCount = 0;
+            int pCount = 0;
             while (i < input.length() && (((Character.isWhitespace(input.charAt(i))) || (input.charAt(i) == '[') || (input.charAt(i) == ']')))) {
-                if (input.charAt(i) == '[' && !bStart) {
+                if (input.charAt(i) == '[' && bStart) {
+                    bCount++;
+                } else if (input.charAt(i) == ']' && bStart) {
+                    bCount--;
+                }
+                if (input.charAt(i) == '[' && !bStart && !pStart) {
                     bStart = true;
                     i1[passBrackets] = i;
                 } else if (input.charAt(i) == ']' && bStart) {
                     bStart = false;
                     i1[passBrackets + 1] = i;
                     passBrackets += 2;
-                } else if (bStart) {
+                } else if (input.charAt(i) == '(' && pStart) {
+                    pCount++;
+                } else if (input.charAt(i) == ')' && pStart) {
+                    pCount--;
+                }
+                if (bStart) {
                     TokenExpression2 tokenName2 = new TokenExpression2();
-                    int parse = tokenName2.parse(input, i);
+                    int parse = tokenName2.parse(input, i + 1);
                     if (tokenName2.isSuccessful()) {
                         i = parse;
                     }
                 }
-                if (input.charAt(i) == '(' && !pStart) {
+                if (input.charAt(i) == '(' && !pStart && !bStart) {
                     pStart = true;
                 } else if (input.charAt(i) == ')' && pStart) {
                     MultiTokenSequence multiTokenSequence = new MultiTokenSequence(new TokenOpenParenthesized(), new TokenCloseParenthesized(),
                             new TokenComa(), new TokenExpression2());
-                    int parse = multiTokenSequence.parse(input, i);
+                    int parse = multiTokenSequence.parse(input, i + 1);
                     i = parse;
                     pStart = false;
                 }
                 i++;
             }
 
-            if (passed && iWord < input.length() && containsNoKeyword(input.substring(position1, iWord))) {
-                if (!input.substring(position1, iWord).isEmpty()) {
-                    setName(input.substring(position1, iWord));
-
-                }
+            i = skipBlanks(input, i);
+            if (input.charAt(i) == '.') {
+                TokenExpression2 tokenExpression2 = new TokenExpression2();
+                return tokenExpression2.parse(input, i);
             }
+
             for (int j = 0; j < passBrackets; j += 2) {
                 brackets[j / 2] = input.substring(i1[j], i1[j + 1]);
             }
