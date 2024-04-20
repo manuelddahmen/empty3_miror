@@ -195,7 +195,12 @@ tasks.register('RunPerceptronAndCharacterClassifiers', JavaExec) {
     args ""
     dependsOn(jar)
 }
-
+tasks.register('TestHumanHeadTexturing', JavaExec) {
+    classpath sourceSets.test.runtimeClasspath
+    mainClass = "one.empty3.tests.humanheadtexturing.TestHumanHeadTexturing"
+    args ""
+    dependsOn(jar)
+}
 signing {
     def signingKey = load.get("signing.keyId")
     def signingPassword = load.get("signing.password")

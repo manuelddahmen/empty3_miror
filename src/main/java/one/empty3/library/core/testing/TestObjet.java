@@ -43,6 +43,7 @@ import org.jcodec.common.model.Rational;
 import javax.imageio.ImageIO;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -1298,5 +1299,9 @@ public abstract class TestObjet implements Test, Runnable {
 
     public void setThreadGLafter(Thread thread) {
         this.threadGLafter = thread;
+    }
+
+    public JPanel getPanelDraw() {
+        return str != null ? str.getJPanel1() : null;
     }
 }

@@ -30,7 +30,7 @@ import java.awt.*;
 
 public class Camera2Quad extends Camera {
     protected final StructureMatrix<Polygon> near = new StructureMatrix(0, Polygon.class);
-    protected final StructureMatrix<Polygon>  far = new StructureMatrix(0, Polygon.class);
+    protected final StructureMatrix<Polygon> far = new StructureMatrix(0, Polygon.class);
     protected ZBuffer z;
 
     /***
@@ -46,6 +46,7 @@ public class Camera2Quad extends Camera {
 
         init();
     }
+
     public void init() {
         Point3D pa1 = near.getElem().getPoints().getElem(0);
         Point3D pb1 = near.getElem().getPoints().getElem(1);
@@ -96,7 +97,7 @@ public class Camera2Quad extends Camera {
         if (!z.checkScreen(p4))
             return;
         */
-        if (!z.checkScreen(p1)&&!z.checkScreen(p2)&&!z.checkScreen(p3)&&!z.checkScreen(p4))
+        if (!z.checkScreen(p1) && !z.checkScreen(p2) && !z.checkScreen(p3) && !z.checkScreen(p4))
             return;
         int col = texture.getColorAt(u0, v0);
 
@@ -105,6 +106,7 @@ public class Camera2Quad extends Camera {
         TRI triBas = new TRI(pp1, pp2, pp3, texture);
         Point3D normale = triBas.normale();
         double inter = 1 / (z.maxDistance(p1, p2, p3, p4) + 1) / 3;
+
         for (double a = 0; a < 1.0; a += inter) {
             Point3D pElevation1 = pp1.plus(pp1.mult(-1d).plus(pp2).mult(a));
             Point3D pElevation2 = pp4.plus(pp4.mult(-1d).plus(pp3).mult(a));
@@ -113,7 +115,7 @@ public class Camera2Quad extends Camera {
                 pFinal.setNormale(normale);
                 pFinal.texture(texture);
                 if (n != null) {
-                    if (z.getDisplayType()== DISPLAY_ALL) {
+                    if (z.getDisplayType() == DISPLAY_ALL) {
                         pFinal = n.calculerPoint3D(u0 + (u1 - u0) * a, v0 + (v1 - v0) * b);
                         pFinal.setNormale(normale);
                         pFinal.texture(texture);

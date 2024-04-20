@@ -73,6 +73,12 @@ public class TreeNode {
     protected String expressionString;
     private TreeNodeValue value;
 
+    private enum TreeNodeClassType {
+        Double, Integer, Boolean, String, Char
+    }
+
+    private TreeNodeClassType treeNodeClassType = TreeNodeClassType.Double;
+
     public TreeNode(AlgebraicTree algebraicTree, String expStr) {
         //this.algebraicTree = algebraicTree;
         this.parent = null;

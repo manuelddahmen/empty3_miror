@@ -281,6 +281,7 @@ public class ZBufferImpl8 extends ZBufferImpl {
 
     /**
      * Textures and lights
+     *
      * @return image null
      */
     public BufferedImage finishDraw() {
@@ -393,6 +394,7 @@ public class ZBufferImpl8 extends ZBufferImpl {
                 }
             } else if (r instanceof TRI) {
                 TRI tri = (TRI) r;
+
                 switch (displayType) {
                     case SURFACE_DISPLAY_LINES:
                         for (int i = 0; i < 3; i++)
@@ -623,8 +625,6 @@ public class ZBufferImpl8 extends ZBufferImpl {
     }
 
 
-
-
     public double echelleEcran() {
         return box.echelleEcran();
     }
@@ -789,7 +789,6 @@ public class ZBufferImpl8 extends ZBufferImpl {
         return Map;
 
     }
-
 
 
     public void plotPoint(Color color, Point3D p) {

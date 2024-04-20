@@ -26,6 +26,8 @@
 package one.empty3.library.core.testing2;
 
 import com.formdev.flatlaf.*;
+import com.formdev.flatlaf.FlatDarkLaf;
+import com.formdev.flatlaf.FlatLightLaf;
 import net.miginfocom.swing.MigLayout;
 import one.empty3.library.ECBufferedImage;
 import one.empty3.library.core.testing.*;
