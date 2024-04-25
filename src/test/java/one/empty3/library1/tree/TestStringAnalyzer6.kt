@@ -192,6 +192,11 @@ class TestStringAnalyzer6 {
         val tokenMemberMethodExpression4 = stringAnalyzer3.TokenExpression1()
         val tokenMethodSemiColonVar4 = stringAnalyzer3.TokenSemiColon()
 
+        val tokenType5 = stringAnalyzer3.TokenType2()
+        val tokenEquals5 = stringAnalyzer3.TokenEquals()
+        val tokenExpression5 = stringAnalyzer3.TokenExpression2()
+        val tokenSemiColon5 = stringAnalyzer3.TokenSemiColon()
+
         //Variant without end semicolon ";"
         // Method's instructions
         val tokenMemberMethodVarType1wo = stringAnalyzer3.TokenQualifiedName()
@@ -269,6 +274,10 @@ class TestStringAnalyzer6 {
         tokenMemberMethodVarName4.addToken(tokenMemberMethodVarEquals4)
         tokenMemberMethodVarEquals4.addToken(tokenMemberMethodExpression4)
         tokenMemberMethodExpression4.addToken(tokenMethodSemiColonVar4)
+
+        tokenType5.addToken(tokenEquals5)
+        tokenEquals5.addToken(tokenExpression5)
+        tokenExpression5.addToken(tokenSemiColon5)
 
         val tokenMemberVar = stringAnalyzer3.SingleTokenExclusiveXor(
             tokenMemberVarType1, tokenMemberVarType2
@@ -535,7 +544,8 @@ class TestStringAnalyzer6 {
             tokenMemberMethodVarType1,
             tokenMemberMethodVarType2,
             tokenMemberMethodExpression3,
-            tokenMemberMethodVarName4
+            tokenMemberMethodVarName4,
+            tokenType5
         )
         val instructionIncr = stringAnalyzer3.SingleTokenExclusiveXor(
             tokenMemberMethodExpression3wo,
@@ -611,7 +621,6 @@ class TestStringAnalyzer6 {
             tokenMultiMembersInstructionsForVariantSemiColon2,
             instructionBlockCloseBracket
         )
-
         val instructionBlockElse = stringAnalyzer3.SingleTokenMandatory(
             instructionBlockOpenBracket,
             tokenMultiMembersInstructionsElse,

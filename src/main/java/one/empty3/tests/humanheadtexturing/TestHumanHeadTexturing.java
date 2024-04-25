@@ -78,7 +78,7 @@ public class TestHumanHeadTexturing extends TestObjetStub {
                     int g = (int) Math.min(i.get() % (256 * 256), 255);
                     int b = i.get() % 256;
                     Color def = new Color(r, g, b);
-                    if (g < 222 && b > 16) {
+                    if ((g < 222 && b > 16) || i.get() <= 221) {
                         def = Color.BLACK;
                         printWriter.println(i);
                     } else {
@@ -198,5 +198,21 @@ public class TestHumanHeadTexturing extends TestObjetStub {
         new Thread(testHumanHeadTexturing).start();
 
 
+    }
+
+    public Rectangle getRectangleFace() {
+        return rectangleFace;
+    }
+
+    public void setRectangleFace(Rectangle rectangleFace) {
+        this.rectangleFace = rectangleFace;
+    }
+
+    public BufferedImage getTrueFace() {
+        return trueFace;
+    }
+
+    public void setTrueFace(BufferedImage trueFace) {
+        this.trueFace = trueFace;
     }
 }
