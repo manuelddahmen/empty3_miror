@@ -1156,7 +1156,7 @@ public class StringAnalyzer3 {
      * Represents a token that identifies a name in a parsing process.
      */
     class TokenName extends Token {
-        private String name;
+        protected String name;
 
         public TokenName() {
             super();

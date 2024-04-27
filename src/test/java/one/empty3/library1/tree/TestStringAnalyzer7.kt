@@ -1,3 +1,25 @@
+/*
+ *
+ *  * Copyright (c) 2024. Manuel Daniel Dahmen
+ *  *
+ *  *
+ *  *    Copyright 2024 Manuel Daniel Dahmen
+ *  *
+ *  *    Licensed under the Apache License, Version 2.0 (the "License");
+ *  *    you may not use this file except in compliance with the License.
+ *  *    You may obtain a copy of the License at
+ *  *
+ *  *        http://www.apache.org/licenses/LICENSE-2.0
+ *  *
+ *  *    Unless required by applicable law or agreed to in writing, software
+ *  *    distributed under the License is distributed on an "AS IS" BASIS,
+ *  *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  *    See the License for the specific language governing permissions and
+ *  *    limitations under the License.
+ *
+ *
+ */
+
 package one.empty3.library1.tree
 /*
  *  * Copyright (c) 2024. Manuel Daniel Dahmen
@@ -34,7 +56,7 @@ import java.nio.file.Paths
  * Test class for AlgebraicTree.
  */
 @RunWith(JUnit4::class)
-class TestStringAnalyzer6 {
+class TestStringAnalyzer7 {
     private var isDebug: Boolean = true
     fun readDir(directory_path: String) {
         var succeed = true
@@ -155,14 +177,14 @@ class TestStringAnalyzer6 {
         val tokenCloseBracketClass = stringAnalyzer3.SingleTokenOptional(stringAnalyzer3.TokenCloseBracket())
 
         // Variables members declarations
-        val tokenMemberVarType1 = stringAnalyzer3.TokenQualifiedName()
-        val tokenMemberVarName1 = stringAnalyzer3.TokenName()
+        val tokenMemberVarType1 = stringAnalyzer3.TokenType2()
+        val tokenMemberVarName1 = stringAnalyzer3.TokenNameDeclaration2()
         val tokenMemberVarEquals1 = stringAnalyzer3.TokenEquals()
-        val tokenMemberExpression1 = stringAnalyzer3.TokenExpression1()
+        val tokenMemberExpression1 = stringAnalyzer3.TokenExpression2()
         val tokenMemberVarSemiColon1 = stringAnalyzer3.TokenSemiColon()
 
-        val tokenMemberVarType2 = stringAnalyzer3.TokenQualifiedName()
-        val tokenMemberVarName2 = stringAnalyzer3.TokenName()
+        val tokenMemberVarType2 = stringAnalyzer3.TokenType2()
+        val tokenMemberVarName2 = stringAnalyzer3.TokenNameDeclaration2()
         val tokenMemberVarSemiColon2 = stringAnalyzer3.TokenSemiColon()
 
         tokenMemberVarType1.addToken(tokenMemberVarName1)
@@ -174,45 +196,49 @@ class TestStringAnalyzer6 {
         tokenMemberVarName2.addToken(tokenMemberVarSemiColon2)
 
         // Method's instructions
-        val tokenMemberMethodVarType1 = stringAnalyzer3.TokenQualifiedName()
-        val tokenMemberMethodVarName1 = stringAnalyzer3.TokenName()
+        val tokenMemberMethodVarType1 = stringAnalyzer3.TokenType2()
+        val tokenMemberMethodVarName1 = stringAnalyzer3.TokenNameDeclaration2()
         val tokenMethodSemiColonVar1 = stringAnalyzer3.TokenSemiColon()
 
-        val tokenMemberMethodVarType2 = stringAnalyzer3.TokenQualifiedName()
-        val tokenMemberMethodVarName2 = stringAnalyzer3.TokenName()
+        val tokenMemberMethodVarType2 = stringAnalyzer3.TokenType2()
+        val tokenMemberMethodVarName2 = stringAnalyzer3.TokenNameDeclaration2()
         val tokenMemberMethodVarEquals2 = stringAnalyzer3.TokenEquals()
-        val tokenMemberMethodExpression2 = stringAnalyzer3.TokenExpression1()
+        val tokenMemberMethodExpression2 = stringAnalyzer3.TokenExpression2()
         val tokenMethodSemiColonVar2 = stringAnalyzer3.TokenSemiColon()
 
-        val tokenMemberMethodExpression3 = stringAnalyzer3.TokenExpression1()
+        val tokenMemberMethodExpression3 = stringAnalyzer3.TokenExpression2()
         val tokenMethodSemiColonVar3 = stringAnalyzer3.TokenSemiColon()
 
-        val tokenMemberMethodVarName4 = stringAnalyzer3.TokenName()
+        val tokenMemberMethodVarName4 = stringAnalyzer3.TokenNameDeclaration2()
         val tokenMemberMethodVarEquals4 = stringAnalyzer3.TokenEquals()
-        val tokenMemberMethodExpression4 = stringAnalyzer3.TokenExpression1()
+        val tokenMemberMethodExpression4 = stringAnalyzer3.TokenExpression2()
         val tokenMethodSemiColonVar4 = stringAnalyzer3.TokenSemiColon()
 
         val tokenType5 = stringAnalyzer3.TokenType2()
-        val tokenName5 = stringAnalyzer3.TokenName()
+        val tokenName5 = stringAnalyzer3.TokenNameDeclaration2()
         val tokenEquals5 = stringAnalyzer3.TokenEquals()
         val tokenExpression5 = stringAnalyzer3.TokenExpression2()
         val tokenSemiColon5 = stringAnalyzer3.TokenSemiColon()
 
+        val tokenType5woEquals = stringAnalyzer3.TokenType2()
+        val tokenName5woEquals = stringAnalyzer3.TokenNameDeclaration2()
+        val tokenSemiColon5woEquals = stringAnalyzer3.TokenSemiColon()
+
         //Variant without end semicolon ";"
         // Method's instructions
-        val tokenMemberMethodVarType1wo = stringAnalyzer3.TokenQualifiedName()
-        val tokenMemberMethodVarName1wo = stringAnalyzer3.TokenName()
+        val tokenMemberMethodVarType1wo = stringAnalyzer3.TokenType2()
+        val tokenMemberMethodVarName1wo = stringAnalyzer3.TokenNameDeclaration2()
 
-        val tokenMemberMethodVarType2wo = stringAnalyzer3.TokenQualifiedName()
-        val tokenMemberMethodVarName2wo = stringAnalyzer3.TokenName()
+        val tokenMemberMethodVarType2wo = stringAnalyzer3.TokenType2()
+        val tokenMemberMethodVarName2wo = stringAnalyzer3.TokenNameDeclaration2()
         val tokenMemberMethodVarEquals2wo = stringAnalyzer3.TokenEquals()
-        val tokenMemberMethodExpression2wo = stringAnalyzer3.TokenExpression1()
+        val tokenMemberMethodExpression2wo = stringAnalyzer3.TokenExpression2()
 
-        val tokenMemberMethodExpression3wo = stringAnalyzer3.TokenExpression1()
+        val tokenMemberMethodExpression3wo = stringAnalyzer3.TokenExpression2()
 
-        val tokenMemberMethodVarName4wo = stringAnalyzer3.TokenName()
+        val tokenMemberMethodVarName4wo = stringAnalyzer3.TokenNameDeclaration2()
         val tokenMemberMethodVarEquals4wo = stringAnalyzer3.TokenEquals()
-        val tokenMemberMethodExpression4wo = stringAnalyzer3.TokenExpression1()
+        val tokenMemberMethodExpression4wo = stringAnalyzer3.TokenExpression2()
 
 
         tokenMemberMethodVarType1wo.addToken(tokenMemberMethodVarName1wo)
@@ -281,8 +307,11 @@ class TestStringAnalyzer6 {
         tokenEquals5.addToken(tokenExpression5)
         tokenExpression5.addToken(tokenSemiColon5)
 
+        tokenType5woEquals.addToken(tokenName5)
+        tokenName5woEquals.addToken(tokenSemiColon5)
+
         val tokenMemberVar = stringAnalyzer3.SingleTokenExclusiveXor(
-            tokenMemberVarType1, tokenMemberVarType2
+            tokenMemberVarType1, tokenMemberVarType2, tokenType5, tokenType5woEquals
         )
 
         val tokenMemberMethodType = stringAnalyzer3.TokenQualifiedName()
@@ -291,11 +320,11 @@ class TestStringAnalyzer6 {
         // Arguments' list
         val tokenOpenParenthesizedMethodParameter = stringAnalyzer3.TokenOpenParenthesized()
         val tokenComaMethodParameter1 = stringAnalyzer3.TokenComa()
-        val tokenQualifiedNameMethodParameter1 = stringAnalyzer3.TokenQualifiedName()
+        val tokenQualifiedNameMethodParameter1 = stringAnalyzer3.TokenType2()
         val tokenNameMethodParameter1 = stringAnalyzer3.TokenName()
 
         //val tokenComaMethodParameter2 = stringAnalyzer3.TokenComa()
-        val tokenQualifiedNameMethodParameter2 = stringAnalyzer3.TokenQualifiedName()
+        val tokenQualifiedNameMethodParameter2 = stringAnalyzer3.TokenType2()
         val tokenNameMethodParameter2 = stringAnalyzer3.TokenName()
 
         val tokenCloseParenthesizedMethodParameter = stringAnalyzer3.TokenCloseParenthesized()
@@ -341,13 +370,13 @@ class TestStringAnalyzer6 {
         class ActionParamType(token: StringAnalyzer3.Token?) : Action3(token) {
             override fun action(): Boolean {
                 if (token.isSuccessful) {
-                    val name = (token as StringAnalyzer3.TokenQualifiedName).name
+                    val name = (token as StringAnalyzerJava1.TokenType2).name
                     if (name != null) {
                         val parameterList = stringAnalyzer3.construct.currentMethod.parameterList
                         parameterList.add(Variable())
                         if (parameterList.size > 0) {
                             parameterList[parameterList.size - 1].classStr = name
-                            (token as StringAnalyzer3.TokenQualifiedName).name = null
+                            (token as StringAnalyzerJava1.TokenType2).name = null
                         }
                     }
                 }
@@ -430,7 +459,7 @@ class TestStringAnalyzer6 {
         val tokenForEach = stringAnalyzer3.TokenString("forEach")
 
         /** Array type declaration */
-        val tokenDeclarationVarType2: StringAnalyzer3.Token = stringAnalyzer3.TokenQualifiedName()
+        val tokenDeclarationVarType2: StringAnalyzer3.Token = stringAnalyzer3.TokenType2()
         val tokenDeclarationVarName2: StringAnalyzer3.Token = stringAnalyzer3.TokenName()
         val tokenBracketDeclarationVar1: StringAnalyzer3.Token = stringAnalyzer3.TokenString("[")
         val tokenBracketDeclarationVar2: StringAnalyzer3.Token = stringAnalyzer3.TokenString("]")
@@ -534,8 +563,6 @@ class TestStringAnalyzer6 {
         /** Call a constructor in an expression or chaining methods' call */
         val tokenConstructorCall: StringAnalyzer3.Token? = stringAnalyzer3.TokenConstructorCall()
 
-        /** Declaration and implementation of a constructor */
-
         val instruction = stringAnalyzer3.SingleTokenExclusiveXor(
             // Test keywords first.
             stringAnalyzer3.SingleTokenExclusiveXor(tokenIf, tokenIfWoElse),
@@ -547,7 +574,8 @@ class TestStringAnalyzer6 {
             tokenMemberMethodVarType2,
             tokenMemberMethodExpression3,
             tokenMemberMethodVarName4,
-            tokenType5
+            tokenType5,
+            tokenGeneralExpression
         )
         val instructionIncr = stringAnalyzer3.SingleTokenExclusiveXor(
             tokenMemberMethodExpression3wo,
@@ -701,7 +729,7 @@ class TestStringAnalyzer6 {
         //tokenDo.addToken(logicalExpressionDo)
         //logicalExpressionDo.addToken(instructionsWhile)
         val tokenOpenParenthesizedForColon = stringAnalyzer3.TokenOpenParenthesized()
-        val tokenTypeForColon = stringAnalyzer3.TokenQualifiedName()
+        val tokenTypeForColon = stringAnalyzer3.TokenType2()
         val tokenNameForColon = stringAnalyzer3.TokenName()
         val tokenColonForColon = stringAnalyzer3.TokenString(":")
         val tokenExpressionForColon = stringAnalyzer3.TokenExpression1()
@@ -782,28 +810,28 @@ class TestStringAnalyzer6 {
                             }
                         }
                         if (token == tokenMethodSemiColonVar2) {
-                            if (tokenMemberMethodExpression2.expression != null) {
-                                var name = tokenMemberMethodExpression2.expression
+                            if (expression2toString(tokenMemberMethodExpression2) != null) {
+                                var name = expression2toString(tokenMemberMethodExpression2)
                                 val get = instructions.get(instructions.size - 1)
                                 (get as Instruction).getExpression().expression = name
-                                tokenMemberMethodExpression2.expression = null
+                                //tokenMemberMethodExpression2.expression = null
                             }
                         }
                         if (token == tokenMethodSemiColonVar3) {
-                            if (tokenMemberMethodExpression3.expression != null) {
-                                var name = tokenMemberMethodExpression3.expression
+                            if (expression2toString(tokenMemberMethodExpression3) != null) {
+                                var name = expression2toString(tokenMemberMethodExpression3)
                                 instructions.add(Instruction())
                                 val get = instructions.get(instructions.size - 1)
                                 (get as Instruction).getExpression().expression = name
-                                tokenMemberMethodExpression3.expression = null
+                                //tokenMemberMethodExpression3.expression = null
                             }
                         }
                         if (token == tokenMethodSemiColonVar4) {
-                            if (tokenMemberMethodExpression4.expression != null) {
-                                val name = tokenMemberMethodExpression4.expression
+                            if (expression2toString(tokenMemberMethodExpression4) != null) {
+                                val name = expression2toString(tokenMemberMethodExpression4)
                                 val get = instructions.get(instructions.size - 1)
                                 (get as Instruction).getExpression().expression = name
-                                tokenMemberMethodExpression4.expression = null
+                                //tokenMemberMethodExpression4.expression = null
                             }
                         }
                     }
@@ -858,24 +886,24 @@ class TestStringAnalyzer6 {
                         }
                     }
                     if (token == tokenMemberMethodExpression2wo) {
-                        if (tokenMemberMethodExpression2wo.expression != null) {
-                            val name = tokenMemberMethodExpression2wo.expression
+                        if (expression2toString(tokenMemberMethodExpression2wo) != null) {
+                            val name = expression2toString(tokenMemberMethodExpression2wo)
                             (get as Instruction).getExpression().expression = name
-                            tokenMemberMethodExpression2wo.expression = null
+                            //tokenMemberMethodExpression2wo.expression = null
                         }
                     }
                     if (token == tokenMemberMethodExpression3wo) {
-                        if (tokenMemberMethodExpression3wo.expression != null) {
-                            val name = tokenMemberMethodExpression3wo.expression
+                        if (expression2toString(tokenMemberMethodExpression3wo) != null) {
+                            val name = expression2toString(tokenMemberMethodExpression3wo)
                             (get as Instruction).getExpression().expression = name
-                            tokenMemberMethodExpression3wo.expression = null
+                            //tokenMemberMethodExpression3wo.expression = null
                         }
                     }
                     if (token == tokenMemberMethodExpression4wo) {
-                        if (tokenMemberMethodExpression4wo.expression != null) {
-                            val name = tokenMemberMethodExpression4wo.expression
+                        if (expression2toString(tokenMemberMethodExpression4wo) != null) {
+                            val name = expression2toString(tokenMemberMethodExpression4wo)
                             (get as Instruction).getExpression().expression = name
-                            tokenMemberMethodExpression4wo.expression = null
+                            //tokenMemberMethodExpression4wo.expression = null
                         }
                     }
                 }
@@ -1312,6 +1340,26 @@ class TestStringAnalyzer6 {
     @Test
     fun testTokenExpression2() {
 
+    }
+
+    fun expression2toString(te: StringAnalyzerJava1.TokenExpression2): String {
+        val sb: StringBuilder = StringBuilder()
+        var i: Int = 0
+        te.expressions.forEach {
+            if (it.type == StringAnalyzerJava1.TokenExpression2.methodCall) {
+                if (i > 0 && te.expressions[i - 1].type() == StringAnalyzerJava1.TokenExpression2.methodCall)
+                    sb.append(")")
+                sb.append("." + te.name).append("(")
+                sb.append(expression2toString(it.token))
+            } else {
+                if (it.token.passBrackets > 0) {
+                    for (n in 0 until it.token.passBrackets step 2) {
+                        sb.append(it.token.bracketsExpressions.get(n / 2).expression())
+                    }
+                }
+            }
+        }
+        return sb.toString()
     }
 
     @Test
