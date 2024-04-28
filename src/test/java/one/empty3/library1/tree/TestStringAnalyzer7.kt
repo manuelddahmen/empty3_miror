@@ -51,6 +51,7 @@ import java.io.File
 import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.Paths
+import java.util.ArrayList
 
 /**
  * Test class for AlgebraicTree.
@@ -1337,27 +1338,57 @@ class TestStringAnalyzer7 {
         return tokenPackageOptional
     }
 
-    @Test
-    fun testTokenExpression2() {
 
-    }
+    fun next(sb: StringBuilder, it: DataExpression, current: StringAnalyzerJava1.TokenExpression2) {
 
-    fun expression2toString(te: StringAnalyzerJava1.TokenExpression2): String {
-        val sb: StringBuilder = StringBuilder()
-        var i: Int = 0
-        te.expressions.forEach {
-            if (it.type == StringAnalyzerJava1.TokenExpression2.methodCall) {
-                if (i > 0 && te.expressions[i - 1].type() == StringAnalyzerJava1.TokenExpression2.methodCall)
-                    sb.append(")")
-                sb.append("." + te.name).append("(")
-                sb.append(expression2toString(it.token))
-            } else {
-                if (it.token.passBrackets > 0) {
-                    for (n in 0 until it.token.passBrackets step 2) {
-                        sb.append(it.token.bracketsExpressions.get(n / 2).expression())
-                    }
+        if (it.type == StringAnalyzerJava1.TokenExpression2.dotCall) {
+            sb.append("." + current.name)
+        }
+        if (it.type == StringAnalyzerJava1.TokenExpression2.methodCallArgument) {
+            sb.append(current.name)
+            sb.append("(")
+            if (it.type() == StringAnalyzerJava1.TokenExpression2.methodCallArgument) {
+                sb.append(it.expression)
+            }
+            //sb.append(expression2toString(it.token))
+            sb.append(")")
+        } else if (it.type == StringAnalyzerJava1.TokenExpression2.classArrayAccess) {
+            sb.append(current.name)
+            if (it.token.passBrackets > 0) {
+                for (n in 0 until it.token.passBrackets step 2) {
+                    sb.append(it.token.bracketsExpressions.get(n / 2).expression())
                 }
             }
+        }
+    }
+
+
+    fun expression2toString(tokenExpression2: StringAnalyzerJava1.TokenExpression2): String {
+        var te = tokenExpression2
+        var next: StringAnalyzerJava1.TokenExpression2? = null
+        val sb: StringBuilder = StringBuilder()
+        var i: Int = 0
+        sb.append(te.name)
+        var hasNext = true
+        while (hasNext) {
+            next = null
+            te.expressions.forEach {
+                if (next != null)
+                    return@forEach
+                if (it.type == StringAnalyzerJava1.TokenExpression2.dotCall) {
+                    next = it.token
+                }
+                if (next != null)
+                    return@forEach
+                next(sb, it, te)
+            }
+
+            if (next == null) {
+                hasNext = false
+            } else {
+                te = next!!
+            }
+
         }
         return sb.toString()
     }
@@ -1367,5 +1398,29 @@ class TestStringAnalyzer7 {
         isDebug = false
         val directory_path = "resources/text_parser/"
         readDir(directory_path)
+    }
+
+    @Test
+    fun testExpression2() {
+        val stringAnalyzer3: StringAnalyzerJava1 = StringAnalyzerJava1()
+        val tokenExpression2 = stringAnalyzer3.TokenExpression2()
+
+        val strings: ArrayList<String> = ArrayList<String>()
+        strings.add("name")
+        strings.add("1+1")
+        strings.add("func2(i1).func3().a")
+        strings.add("func2(i1);\nb = func3().a")
+
+
+        for (s in strings) {
+            var input = tokenExpression2.parse(s, 0)
+            println("----------------" + s + "-------------------")
+            println("---------------------------------------")
+            println(expression2toString(tokenExpression2))
+            println("---------------------------------------")
+            println(tokenExpression2)
+            println("---------------------------------------")
+        }
+
     }
 }
