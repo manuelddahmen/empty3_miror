@@ -22,15 +22,11 @@
 
 package one.empty3.library1.tree;
 
-public record DataExpression(int type, StringAnalyzerJava1.TokenExpression2 token, String expression) {
+public record DataExpression(int type, String expression) {
 
-    public DataExpression(int type, StringAnalyzerJava1.TokenExpression2 token, String expression) {
+    public DataExpression(int type, String expression) {
         this.type = type;
         this.expression = expression;
-        this.token = token;
     }
-
-    public static int typeText;
-    public static String expressionText;
 
 }

@@ -1340,55 +1340,39 @@ class TestStringAnalyzer7 {
 
 
     fun next(sb: StringBuilder, it: DataExpression, current: StringAnalyzerJava1.TokenExpression2) {
-
-        if (it.type == StringAnalyzerJava1.TokenExpression2.dotCall) {
-            sb.append("." + current.name)
-        }
-        if (it.type == StringAnalyzerJava1.TokenExpression2.methodCallArgument) {
-            sb.append(current.name)
+        if (it.type == StringAnalyzerJava1.TokenExpression2.methodName)
+            sb.append("." + it.expression())
+        else if (it.type == StringAnalyzerJava1.TokenExpression2.methodCallArgument) {
             sb.append("(")
-            if (it.type() == StringAnalyzerJava1.TokenExpression2.methodCallArgument) {
-                sb.append(it.expression)
-            }
-            //sb.append(expression2toString(it.token))
+            sb.append(it.expression())
             sb.append(")")
         } else if (it.type == StringAnalyzerJava1.TokenExpression2.classArrayAccess) {
-            sb.append(current.name)
-            if (it.token.passBrackets > 0) {
-                for (n in 0 until it.token.passBrackets step 2) {
-                    sb.append(it.token.bracketsExpressions.get(n / 2).expression())
+            sb.append(it.expression())
+            if (current.passBrackets > 0) {
+                for (n in 0 until current.passBrackets step 2) {
+                    sb.append("[")
+                    //sb.append(current.bracketsExpressions.get(n / 2).expression())
+                    sb.append(it.expression())
+                    sb.append("]")
                 }
             }
+        } else if (it.type == StringAnalyzerJava1.TokenExpression2.variable) {
+            sb.append("." + it.expression())
+        } else if (it.type == StringAnalyzerJava1.TokenExpression2.dotCall) {
+            //sb.append("." + it.expression())
         }
     }
 
 
     fun expression2toString(tokenExpression2: StringAnalyzerJava1.TokenExpression2): String {
-        var te = tokenExpression2
-        var next: StringAnalyzerJava1.TokenExpression2? = null
+        var te: StringAnalyzerJava1.TokenExpression2 = tokenExpression2
         val sb: StringBuilder = StringBuilder()
-        var i: Int = 0
-        sb.append(te.name)
         var hasNext = true
-        while (hasNext) {
-            next = null
-            te.expressions.forEach {
-                if (next != null)
-                    return@forEach
-                if (it.type == StringAnalyzerJava1.TokenExpression2.dotCall) {
-                    next = it.token
-                }
-                if (next != null)
-                    return@forEach
-                next(sb, it, te)
-            }
-
-            if (next == null) {
-                hasNext = false
-            } else {
-                te = next!!
-            }
-
+        te.expressions.forEach {
+            //println("Type      :" + it.type() + "\nExpression:" + it.expression())
+        }
+        te.expressions.forEach {
+            next(sb, it, te)
         }
         return sb.toString()
     }
@@ -1403,16 +1387,17 @@ class TestStringAnalyzer7 {
     @Test
     fun testExpression2() {
         val stringAnalyzer3: StringAnalyzerJava1 = StringAnalyzerJava1()
-        val tokenExpression2 = stringAnalyzer3.TokenExpression2()
 
         val strings: ArrayList<String> = ArrayList<String>()
         strings.add("name")
         strings.add("1+1")
         strings.add("func2(i1).func3().a")
+        strings.add("func2(i1).func3().ab.cd")
         strings.add("func2(i1);\nb = func3().a")
 
 
         for (s in strings) {
+            val tokenExpression2 = stringAnalyzer3.TokenExpression2()
             var input = tokenExpression2.parse(s, 0)
             println("----------------" + s + "-------------------")
             println("---------------------------------------")

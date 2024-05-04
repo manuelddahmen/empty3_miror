@@ -236,14 +236,16 @@ public class StringAnalyzerJava1 extends StringAnalyzer3 {
         protected List<DataExpression> expressions = new ArrayList<DataExpression>();
         protected List<DataExpression> bracketsExpressions = new ArrayList<DataExpression>();
         public String[] brackets = new String[7];
-        public static int methodCallArgument = 1;
-        public int variable = 2;
-        public int memberVariable = 4;
-        public static int dotCall = 8;
-        public int classNameReference = 16;
-        public static int classArrayAccess = 32;
-        public int classArrayNew = 64;
-        public int classClassNew = 128;
+        public static final int methodCallArgument = 1;
+        public static final int variable = 2;
+        public static final int memberVariable = 4;
+        public static final int dotCall = 8;
+        public static final int classNameReference = 16;
+        public static final int classArrayAccess = 32;
+        public static final int classArrayNew = 64;
+        public static final int classClassNew = 128;
+        public static final int methodName = 256;
+        public static final int argumentValue = 512;
         public boolean operator;
         public boolean numberDouble;
         public boolean numberFloat;
@@ -251,6 +253,7 @@ public class StringAnalyzerJava1 extends StringAnalyzer3 {
         public boolean numberString;
         public boolean numberChar;
         protected int passBrackets;
+        private int current = -1;
 
 
         public TokenExpression2() {
@@ -267,7 +270,7 @@ public class StringAnalyzerJava1 extends StringAnalyzer3 {
 
         @Override
         public int parse(String input, int position) {
-            reinit();
+            //reinit();
 
             if (position >= input.length() || input.substring(position).trim().isEmpty()) {
                 mPosition = position;
@@ -283,16 +286,16 @@ public class StringAnalyzerJava1 extends StringAnalyzer3 {
             int iWord = -1;
             passBrackets = 0;
 
-            if (i < input.length() && (input.charAt(i) == ']' || input.charAt(i) == ')' || input.charAt(i) == ';' || input.charAt(i) == ',' || input.charAt(i) == '.')) {
+            if (i < input.length() && (input.charAt(i) == ']' || input.charAt(i) == ')' || input.charAt(i) == ';' || input.charAt(i) == ',')) {
                 setSuccessful(true);
                 return i - 1;
             }
             boolean newOperator = false;
             int i0 = i;
-            String charsAlgebraic = new Character[]{'+', '-', '*', '/', '=', '^'}.toString();
+            String charsAlgebraic = "" + '+' + '-' + '*' + '/' + '=' + '^';
             while (i < input.length() && (Character.isLetterOrDigit(input.charAt(i))
                     || Character.isAlphabetic(input.charAt(i)) || charsAlgebraic.contains("" + input.charAt(i))
-                    || input.charAt(i) == '_' || Character.isWhitespace(input.charAt(i)))) {
+                    || input.charAt(i) == '_' || Character.isWhitespace(input.charAt(i))) && input.charAt(i) != '.') {
                 if (i < input.length() - 4 && input.substring(i, i + 3).equals("new") && Character.isWhitespace(input.charAt(i + 4))) {
                     i += 4;
                     newOperator = true;
@@ -308,8 +311,9 @@ public class StringAnalyzerJava1 extends StringAnalyzer3 {
             int pCount = 0;
             int iStart = 0;
             int iEnd = 0;
-            if (iWord >= 0) {
+            if (iWord >= i0) {
                 setName(input.substring(i0, iWord));
+                current = -1;
                 bStart = false;
                 pStart = false;
                 bCount = 0;
@@ -318,68 +322,58 @@ public class StringAnalyzerJava1 extends StringAnalyzer3 {
                 int pEndI = 0;
                 int bStartI = 0;
                 int bEndI = 0;
+                i = skipBlanks(input, i);
+                boolean firstAdded = false;
                 while (i < input.length()) {
                     if (input.charAt(i) == '[' && !bStart) {
+                        if (!firstAdded)
+                            firstAdded = expressions.add(new DataExpression(variable, name));
                         bCount++;
                         bStart = true;
                         bStartI = i + 1;
                     } else if (input.charAt(i) == ']' && bStart) {
-                        iEnd = i;
+                        bEndI = i;
                         bCount--;
-                    }
-                    if (input.charAt(i) == '(' && pStart) {
+                    } else if (input.charAt(i) == '(' && !pStart) {
                         pCount++;
                         pStart = true;
+                        pStartI = i;
+                        if (!firstAdded)
+                            firstAdded = expressions.add(new DataExpression(methodName, name));
                     } else if (input.charAt(i) == ')' && pStart) {
                         pCount--;
+                        pEndI = i;
+                    } else if (input.charAt(i) == '.' && pCount == 0 && bCount == 0) {
+                        if (!firstAdded)
+                            firstAdded = expressions.add(new DataExpression(variable, name));
+                        int i2 = parse(input, i + 1);
+                        i = skipBlanks(input, i2);
+                        return i;
                     }
-                    if (input.charAt(i) == '(' && !pStart && !bStart) {
-                        pStartI = i + 1;
-                        pStart = true;
-                        pCount++;
-                    }
-                    if (input.charAt(i) == ')' && pStart && pCount == 0 && bCount == 0) {
+
+
+                    if (input.charAt(i) == ')' && pStart && pCount == 0) {
+                        String substring = input.substring(pStartI + 1, pEndI);
+                        int parse = parse(substring, 0);
+                        current = methodCallArgument;
+                        expressions.add(new DataExpression(methodCallArgument, substring.substring(0, parse)));
+                        i = parse + pStartI;
+                        i = skipBlanks(input, i);
+                        return i;
+                    } else if (input.charAt(i) == ']' && bStart && bCount == 0) {
                         TokenExpression2 tokenExpression2 = new TokenExpression2();
-                        String substring = input.substring(pStartI, i);
-                        int parse = tokenExpression2.parse(substring, 0);
-                        if (tokenExpression2.isSuccessful()) {
-                            expressions.add(new DataExpression(methodCallArgument, tokenExpression2, tokenExpression2.name));
-                            i = pStartI + parse + 1;
-                            i = skipBlanks(input, i + 1);
-                        }
-                        pStart = false;
-                    } else if (input.charAt(i) == ']' && bStart && bCount == 0 && pCount == 0) {
-                        TokenExpression2 tokenExpression2 = new TokenExpression2();
-                        String substring = input.substring(bStartI, i);
-                        int parse = tokenExpression2.parse(substring, 0);
-                        if (tokenExpression2.isSuccessful()) {
-                            expressions.add(new DataExpression(classArrayAccess, tokenExpression2, tokenExpression2.name));
-                            i = parse + bStartI + 1;
-                            i = skipBlanks(input, i);
-                        }
+                        String substring = input.substring(bStartI + 1, bEndI);
+                        current = classArrayAccess;
+                        int parse = parse(substring, 0);
+                        expressions.add(new DataExpression(classArrayAccess, substring.substring(0, parse)));
+                        i = bStartI + parse;
+                        i = skipBlanks(input, i);
                         bStart = false;
-                    } else if ((input.charAt(i) == ';' || input.charAt(i) == ',')
-                            && pCount == 0 && bCount == 0) {
-                        break;
-                    } else if (input.charAt(i) == '.') {
-                        i++;
-                        TokenExpression2 tokenExpression2 = new TokenExpression2();
-                        int posCall = tokenExpression2.parse(input, i);
-                        if (tokenExpression2.isSuccessful()) {
-                            expressions.add(new DataExpression(dotCall, tokenExpression2, null));
-                            addToken(tokenExpression2);
-                            i = posCall;
-                            setSuccessful(true);
-                            return processNext(input, i);
-                        }
                     }
                     i++;
                 }
-            }/* else {
-                setSuccessful(false);
-                setName(null);
-                return position1;
-            }*/
+
+            }
             i = skipBlanks(input, i);
             //while (i < input.length() && (((Character.isWhitespace(input.charAt(i))) || (input.charAt(i) == '[') || (input.charAt(i) == ']')))) {
             //if (i < input.length() - 4 && input.substring(i, i + 3).equals("new") && Character.isWhitespace(input.charAt(i + 4))) {
@@ -431,19 +425,8 @@ public class StringAnalyzerJava1 extends StringAnalyzer3 {
                 }
             }
   */
-            if (i == position1 || name == null) {
-                setSuccessful(false);
-                return i;
-            } else {
-                TokenExpression2 token = new TokenExpression2();
-                int parse = token.parse(input, i);
-                setSuccessful(true);
-                if (parse > i) {
-                    addToken(token);
-                }
-                return processNext(input, parse);
-
-            }
+            setSuccessful(true);
+            return i;
 
         }
 

@@ -897,6 +897,7 @@ class TestAlgebraicTreeVector() {
         println("y: " + listInstructions.getCurrentParamsValuesVecComputed()!!["y"]!!)
         println("z: " + listInstructions.getCurrentParamsValuesVecComputed()!!["z"]!!)
 
+
         var assertion = false
         try {
             if (listInstructions.getCurrentParamsValuesVecComputed() != null &&
