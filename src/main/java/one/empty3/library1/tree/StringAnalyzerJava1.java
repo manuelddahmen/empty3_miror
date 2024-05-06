@@ -271,7 +271,7 @@ public class StringAnalyzerJava1 extends StringAnalyzer3 {
         @Override
         public int parse(String input, int position) {
             //reinit();
-
+            int recursiions = 0;
             if (position >= input.length() || input.substring(position).trim().isEmpty()) {
                 mPosition = position;
                 setSuccessful(true);
@@ -286,9 +286,12 @@ public class StringAnalyzerJava1 extends StringAnalyzer3 {
             int iWord = -1;
             passBrackets = 0;
 
+            recursiions++;
+
             if (i < input.length() && (input.charAt(i) == ']' || input.charAt(i) == ')' || input.charAt(i) == ';' || input.charAt(i) == ',')) {
                 System.err.println("Char not allowed");
                 setSuccessful(false);
+                recursiions--;
                 return i - 1;
             }
             boolean newOperator = false;
@@ -336,7 +339,7 @@ public class StringAnalyzerJava1 extends StringAnalyzer3 {
                             firstAdded = expressions.add(new DataExpression(variable, name));
                         bCount++;
                         bStart = true;
-                        bStartI = i + 1;
+                        bStartI = i;
                     } else if (input.charAt(i) == ']' && bStart) {
                         bEndI = i;
                         bCount--;
@@ -354,31 +357,50 @@ public class StringAnalyzerJava1 extends StringAnalyzer3 {
                     if (input.charAt(i) == ')' && pStart && pCount == 0) {
                         String substring = input.substring(pStartI + 1, pEndI);
                         int parse = parse(substring, 0);
+                        recursiions--;
                         System.out.println("fct arg : " + substring);
                         current = methodCallArgument;
                         expressions.add(new DataExpression(methodCallArgument, substring.substring(0, parse)));
                         i = parse + pStartI + 1;
-                        i = skipBlanks(input, i);
+                        System.out.println("After add function argument : " + input.substring(i));
                         //return i;
-                    } else if ((input.charAt(i) == '.' && pCount == 0 && bCount == 0) || lastToken) {
-                        String substring = input.substring(bStartI, bEndI);
+                    } else if (input.charAt(i) == ']' && bStart && bCount == 0) {
+                        String substring = input.substring(bStartI + 1, bEndI);
                         current = classArrayAccess;
                         int parse = parse(substring, 0);
+                        recursiions--;
                         System.out.println("Next tokens remainder (1): " + input.substring(i));
                         expressions.add(new DataExpression(classArrayAccess, substring.substring(0, parse)));
                         i = bStartI + parse + 1;
-                        return skipBlanks(input, i);
-                        //      bStart = false;
-                    }
-                    /*else if (bCount == 0 && pCount == 0 && input.charAt(i) != '.') {
+                        bStart = false;
+                    } else if ((input.charAt(i) == '.' && pCount == 0 && bCount == 0) || lastToken) {
+                        if (!firstAdded)
+                            firstAdded = expressions.add(new DataExpression(variable, name));
+                        System.out.println("Next tokens remainder (2): " + input.substring(i));
+                        int i2 = parse(input, i + 1);
+                        recursiions--;
+                        setSuccessful(true);
+                        recursiions--;
+                        return skipBlanks(input, i2);
+                    } else if (bCount == 0 && pCount == 0 && input.charAt(i) != '.') {
                         setSuccessful(true);
                         return i;
-                    }*/
+                    }
                     i++;
                 }
 
             }
-            i = skipBlanks(input, i);
+
+            if (i >= input.length() - 1 && recursiions == 1) {
+                i = input.length() - 1;
+                if (Character.isLetterOrDigit(i))
+                    expressions.add(new DataExpression(variable, name));
+                if (input.charAt(i) == ')')
+                    expressions.add(new DataExpression(methodCallArgument, name));
+                if (input.charAt(i) == ']')
+                    expressions.add(new DataExpression(classArrayAccess, name));
+                i = skipBlanks(input, i);
+            }
             //while (i < input.length() && (((Character.isWhitespace(input.charAt(i))) || (input.charAt(i) == '[') || (input.charAt(i) == ']')))) {
             //if (i < input.length() - 4 && input.substring(i, i + 3).equals("new") && Character.isWhitespace(input.charAt(i + 4))) {
             //    i += 4;
@@ -430,6 +452,7 @@ public class StringAnalyzerJava1 extends StringAnalyzer3 {
             }
   */
             setSuccessful(true);
+            recursiions--;
             return i;
 
         }
