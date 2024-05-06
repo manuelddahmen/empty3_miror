@@ -287,7 +287,8 @@ public class StringAnalyzerJava1 extends StringAnalyzer3 {
             passBrackets = 0;
 
             if (i < input.length() && (input.charAt(i) == ']' || input.charAt(i) == ')' || input.charAt(i) == ';' || input.charAt(i) == ',')) {
-                setSuccessful(true);
+                System.err.println("Char not allowed");
+                setSuccessful(false);
                 return i - 1;
             }
             boolean newOperator = false;
@@ -311,7 +312,7 @@ public class StringAnalyzerJava1 extends StringAnalyzer3 {
             int pCount = 0;
             int iStart = 0;
             int iEnd = 0;
-            if (iWord >= i0) {
+            if (iWord > i0) {
                 setName(input.substring(i0, iWord));
                 current = -1;
                 bStart = false;
@@ -324,7 +325,12 @@ public class StringAnalyzerJava1 extends StringAnalyzer3 {
                 int bEndI = 0;
                 i = skipBlanks(input, i);
                 boolean firstAdded = false;
+                boolean lastToken = false;
                 while (i < input.length()) {
+                    if (i == input.length() - 1) {
+                        lastToken = true;
+                    }
+                    i = skipBlanks(input, i);
                     if (input.charAt(i) == '[' && !bStart) {
                         if (!firstAdded)
                             firstAdded = expressions.add(new DataExpression(variable, name));
@@ -340,36 +346,34 @@ public class StringAnalyzerJava1 extends StringAnalyzer3 {
                         pStartI = i;
                         if (!firstAdded)
                             firstAdded = expressions.add(new DataExpression(methodName, name));
+                        System.out.println("End of call fct arg : " + input.substring(i));
                     } else if (input.charAt(i) == ')' && pStart) {
                         pCount--;
                         pEndI = i;
-                    } else if (input.charAt(i) == '.' && pCount == 0 && bCount == 0) {
-                        if (!firstAdded)
-                            firstAdded = expressions.add(new DataExpression(variable, name));
-                        int i2 = parse(input, i + 1);
-                        i = skipBlanks(input, i2);
-                        return i;
                     }
-
-
                     if (input.charAt(i) == ')' && pStart && pCount == 0) {
                         String substring = input.substring(pStartI + 1, pEndI);
                         int parse = parse(substring, 0);
+                        System.out.println("fct arg : " + substring);
                         current = methodCallArgument;
                         expressions.add(new DataExpression(methodCallArgument, substring.substring(0, parse)));
-                        i = parse + pStartI;
+                        i = parse + pStartI + 1;
                         i = skipBlanks(input, i);
-                        return i;
-                    } else if (input.charAt(i) == ']' && bStart && bCount == 0) {
-                        TokenExpression2 tokenExpression2 = new TokenExpression2();
-                        String substring = input.substring(bStartI + 1, bEndI);
+                        //return i;
+                    } else if ((input.charAt(i) == '.' && pCount == 0 && bCount == 0) || lastToken) {
+                        String substring = input.substring(bStartI, bEndI);
                         current = classArrayAccess;
                         int parse = parse(substring, 0);
+                        System.out.println("Next tokens remainder (1): " + input.substring(i));
                         expressions.add(new DataExpression(classArrayAccess, substring.substring(0, parse)));
-                        i = bStartI + parse;
-                        i = skipBlanks(input, i);
-                        bStart = false;
+                        i = bStartI + parse + 1;
+                        return skipBlanks(input, i);
+                        //      bStart = false;
                     }
+                    /*else if (bCount == 0 && pCount == 0 && input.charAt(i) != '.') {
+                        setSuccessful(true);
+                        return i;
+                    }*/
                     i++;
                 }
 

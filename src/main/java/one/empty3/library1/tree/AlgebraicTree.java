@@ -59,8 +59,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import one.empty3.gui.TranslateR;
 import one.empty3.library.StructureMatrix;
+
 import org.jetbrains.annotations.NotNull;
 
 
@@ -176,9 +176,10 @@ public class AlgebraicTree extends Tree {
         if (src == null || subformula == null || subformula.length() == 0)
             return false;
 
-        int i = -1;
+        int i = 1;
         boolean added = false;
         int last = 13;
+        subformula = addSkipComments(subformula);
         while (i <= last && !added) {
             boolean exception = false;
             src.getChildren().clear();
@@ -189,7 +190,7 @@ public class AlgebraicTree extends Tree {
                 switch (i) {
                     case -1:
                         added = addLogicalNumericOperator(src, subformula);
-                        if (added) caseChoice = 0;
+                        if (added) caseChoice = -1;
                         break;
 
                     case 0:
@@ -262,7 +263,21 @@ public class AlgebraicTree extends Tree {
 
             //System.out.println("formula = " + subformula);
         }
-        throw new AlgebraicFormulaSyntaxException("Cannot add to treeNode or root.", this);
+        if (formula == null || formula.isBlank())
+            return true;
+        throw new AlgebraicFormulaSyntaxException("Cannot add to treeNode or root." + formula, this);
+    }
+
+    private String addSkipComments(String formula) {
+        StringBuilder formulaReplaced = new StringBuilder();
+        for (String s : formula.split("\n")) {
+            if (!s.startsWith("#")) {
+                formulaReplaced.append(s);
+            }
+            formula = formulaReplaced.toString();
+        }
+        return formula;
+
     }
 
     private boolean addLogicalNumericOperator(TreeNode t, String values) {

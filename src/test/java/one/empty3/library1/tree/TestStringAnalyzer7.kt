@@ -1386,7 +1386,6 @@ class TestStringAnalyzer7 {
 
     @Test
     fun testExpression2() {
-        val stringAnalyzer3: StringAnalyzerJava1 = StringAnalyzerJava1()
 
         val strings: ArrayList<String> = ArrayList<String>()
         strings.add("name")
@@ -1397,6 +1396,7 @@ class TestStringAnalyzer7 {
 
 
         for (s in strings) {
+            val stringAnalyzer3: StringAnalyzerJava1 = StringAnalyzerJava1()
             val tokenExpression2 = stringAnalyzer3.TokenExpression2()
             var input = tokenExpression2.parse(s, 0)
             println("----------------" + s + "-------------------")
