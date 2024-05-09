@@ -84,7 +84,10 @@ class TestStringAnalyzer7 {
                 println("------------------------------------------------------------------------")
                 println("- " + "amount of code: " + (stringAnalyzer1java.mPosition + 1) + "/" + readString.length)
                 println("------------------------------------------------------------------------")
-
+                println("- " + "errors (characters remainers): ")
+                println("------------------------------------------------------------------------")
+                println(readString.substring(stringAnalyzer1java.mPosition))
+                println("------------------------------------------------------------------------")
 
 
                 succeed = succeed && (stringAnalyzer1java.mPosition + 2 >= readString.length)
@@ -162,7 +165,7 @@ class TestStringAnalyzer7 {
         }
         ActionClassKeyword(tokenClass)
 
-        val tokenClassName = stringAnalyzer3.TokenName()
+        val tokenClassName = stringAnalyzer3.TokenName2()
 
         class ActionClassname(token: StringAnalyzer3.Token) : Action3(token) {
             override fun action(): Boolean {
@@ -316,17 +319,17 @@ class TestStringAnalyzer7 {
         )
 
         val tokenMemberMethodType = stringAnalyzer3.TokenQualifiedName()
-        val tokenMemberMethodName = stringAnalyzer3.TokenName()
+        val tokenMemberMethodName = stringAnalyzer3.TokenName2()
 
         // Arguments' list
         val tokenOpenParenthesizedMethodParameter = stringAnalyzer3.TokenOpenParenthesized()
         val tokenComaMethodParameter1 = stringAnalyzer3.TokenComa()
         val tokenQualifiedNameMethodParameter1 = stringAnalyzer3.TokenType2()
-        val tokenNameMethodParameter1 = stringAnalyzer3.TokenName()
+        val tokenNameMethodParameter1 = stringAnalyzer3.TokenName2()
 
         //val tokenComaMethodParameter2 = stringAnalyzer3.TokenComa()
         val tokenQualifiedNameMethodParameter2 = stringAnalyzer3.TokenType2()
-        val tokenNameMethodParameter2 = stringAnalyzer3.TokenName()
+        val tokenNameMethodParameter2 = stringAnalyzer3.TokenName2()
 
         val tokenCloseParenthesizedMethodParameter = stringAnalyzer3.TokenCloseParenthesized()
 
@@ -461,7 +464,7 @@ class TestStringAnalyzer7 {
 
         /** Array type declaration */
         val tokenDeclarationVarType2: StringAnalyzer3.Token = stringAnalyzer3.TokenType2()
-        val tokenDeclarationVarName2: StringAnalyzer3.Token = stringAnalyzer3.TokenName()
+        val tokenDeclarationVarName2: StringAnalyzer3.Token = stringAnalyzer3.TokenName2()
         val tokenBracketDeclarationVar1: StringAnalyzer3.Token = stringAnalyzer3.TokenString("[")
         val tokenBracketDeclarationVar2: StringAnalyzer3.Token = stringAnalyzer3.TokenString("]")
         val tokenBracketDeclarationVar3: StringAnalyzer3.Token = stringAnalyzer3.TokenString("[")
@@ -731,7 +734,7 @@ class TestStringAnalyzer7 {
         //logicalExpressionDo.addToken(instructionsWhile)
         val tokenOpenParenthesizedForColon = stringAnalyzer3.TokenOpenParenthesized()
         val tokenTypeForColon = stringAnalyzer3.TokenType2()
-        val tokenNameForColon = stringAnalyzer3.TokenName()
+        val tokenNameForColon = stringAnalyzer3.TokenName2()
         val tokenColonForColon = stringAnalyzer3.TokenString(":")
         val tokenExpressionForColon = stringAnalyzer3.TokenExpression1()
         val tokenCloseParenthesizedForColon = stringAnalyzer3.TokenCloseParenthesized()
@@ -1347,7 +1350,7 @@ class TestStringAnalyzer7 {
             sb.append(it.expression())
             sb.append(")")
         } else if (it.type == StringAnalyzerJava1.TokenExpression2.classArrayAccess) {
-            sb.append(it.expression())
+            sb.append("[" + it.expression() + "]")
             if (current.passBrackets > 0) {
                 for (n in 0 until current.passBrackets step 2) {
                     sb.append("[")
@@ -1392,6 +1395,7 @@ class TestStringAnalyzer7 {
         strings.add("1+1")
         strings.add("func2(i1).func3().a")
         strings.add("func2(i1).func3().ab.cd")
+        strings.add("func2(i1).func3().func4()")
         strings.add("func2(i1);\nb = func3().a")
         strings.add("pixels[x][y].red")
 
@@ -1405,6 +1409,28 @@ class TestStringAnalyzer7 {
             println(expression2toString(tokenExpression2))
             println("---------------------------------------")
             println(tokenExpression2)
+            println("---------------------------------------")
+        }
+
+
+        val strings2 = ArrayList<String>()
+
+        strings2.add("Double double")
+
+
+        for (s in strings2) {
+            val stringAnalyzer3: StringAnalyzerJava1 = StringAnalyzerJava1()
+            val tokenType2 = stringAnalyzer3.TokenType2()
+            val tokenName2 = stringAnalyzer3.TokenName2()
+            tokenType2.addToken(tokenName2)
+            var input = tokenType2.parse(s, 0)
+            println("----------------" + s + "-------------------")
+            println("---------------------------------------")
+            println(tokenType2.toString())
+            println("---------------------------------------")
+            println(tokenName2.toString())
+            println("---------------------------------------")
+            println(tokenType2)
             println("---------------------------------------")
         }
 

@@ -95,7 +95,7 @@ public class StringAnalyzerJava1 extends StringAnalyzer3 {
         public int parse(String input, int position) {
             if (position >= input.length() || input.substring(position).trim().isEmpty()) {
                 mPosition = position;
-                setSuccessful(false);
+                setSuccessful(true);
                 throw new RuntimeException(getClass() + " : position>=input.length()");
             }
             position = skipBlanks(input, position);
@@ -110,7 +110,7 @@ public class StringAnalyzerJava1 extends StringAnalyzer3 {
                     || input.charAt(i) == '_' || input.charAt(i) == '.' || Character.isWhitespace(input.charAt(i))
                     || input.charAt(i) == '[')))) {
                 passed = true;
-                if (Character.isWhitespace(input.charAt(i))) {
+                if (Character.isWhitespace(input.charAt(i)) || input.charAt(i) == '[') {
                     passed = true;
                     iWord = i;
                     break;
@@ -131,7 +131,7 @@ public class StringAnalyzerJava1 extends StringAnalyzer3 {
                 i++;
             }
 
-            if (passed && iWord < input.length() && containsNoKeyword(input.substring(position1, iWord))) {
+            if (passed && containsNoKeyword(input.substring(position1, iWord))) {
                 if (!input.substring(position1, iWord).isEmpty()) {
                     setName(input.substring(position1, iWord));
 
@@ -162,6 +162,16 @@ public class StringAnalyzerJava1 extends StringAnalyzer3 {
 
         public void setBracketsCount(int bracketsCount) {
             this.bracketsCount = bracketsCount;
+        }
+
+        @Override
+        public String toString() {
+            return "TokenType2{" +
+                    "name='" + name + '\'' +
+                    ", bracketsCount=" + bracketsCount +
+                    ", passBrackets=" + passBrackets +
+                    ", brackets=" + Arrays.toString(brackets) +
+                    '}';
         }
     }
 
@@ -231,6 +241,18 @@ public class StringAnalyzerJava1 extends StringAnalyzer3 {
         }
     }
 
+    public class TokenName2 extends TokenType2 {
+        @Override
+        public String toString() {
+            return "TokenName2{" +
+                    "name='" + name + '\'' +
+                    ", bracketsCount=" + bracketsCount +
+                    ", passBrackets=" + passBrackets +
+                    ", brackets=" + Arrays.toString(brackets) +
+                    '}';
+        }
+    }
+
 
     public class TokenExpression2 extends TokenName {
         protected List<DataExpression> expressions = new ArrayList<DataExpression>();
@@ -268,10 +290,15 @@ public class StringAnalyzerJava1 extends StringAnalyzer3 {
             name = null;
         }
 
+        private boolean nextTokenCharsListConditionTrue(String input, int i) {
+            return i < input.length() && (input.charAt(i) == ']' || input.charAt(i) == ')' || input.charAt(i) == '}'
+                    || input.charAt(i) == ';' || input.charAt(i) == ',');
+        }
+
         @Override
         public int parse(String input, int position) {
             //reinit();
-            int recursiions = 0;
+            int recurssions = 0;
             if (position >= input.length() || input.substring(position).trim().isEmpty()) {
                 mPosition = position;
                 setSuccessful(true);
@@ -286,20 +313,21 @@ public class StringAnalyzerJava1 extends StringAnalyzer3 {
             int iWord = -1;
             passBrackets = 0;
 
-            recursiions++;
+            recurssions++;
 
-            if (i < input.length() && (input.charAt(i) == ']' || input.charAt(i) == ')' || input.charAt(i) == ';' || input.charAt(i) == ',')) {
+            if (nextTokenCharsListConditionTrue(input, i)) {
                 System.err.println("Char not allowed");
                 setSuccessful(false);
-                recursiions--;
+                recurssions--;
                 return i - 1;
             }
             boolean newOperator = false;
             int i0 = i;
             String charsAlgebraic = "" + '+' + '-' + '*' + '/' + '=' + '^';
-            while (i < input.length() && (Character.isLetterOrDigit(input.charAt(i))
+            while (i < input.length() && (Character.isLetterOrDigit(input.charAt(i)) || !nextTokenCharsListConditionTrue(input, i)
                     || Character.isAlphabetic(input.charAt(i)) || charsAlgebraic.contains("" + input.charAt(i))
-                    || input.charAt(i) == '_' || Character.isWhitespace(input.charAt(i))) && input.charAt(i) != '.') {
+                    || input.charAt(i) == '_' || Character.isWhitespace(input.charAt(i))) && input.charAt(i) != '.'
+                    && nextTokenCharsListConditionTrue(input, i)) {
                 if (i < input.length() - 4 && input.substring(i, i + 3).equals("new") && Character.isWhitespace(input.charAt(i + 4))) {
                     i += 4;
                     newOperator = true;
@@ -357,7 +385,7 @@ public class StringAnalyzerJava1 extends StringAnalyzer3 {
                     if (input.charAt(i) == ')' && pStart && pCount == 0) {
                         String substring = input.substring(pStartI + 1, pEndI);
                         int parse = parse(substring, 0);
-                        recursiions--;
+                        recurssions--;
                         System.out.println("fct arg : " + substring);
                         current = methodCallArgument;
                         expressions.add(new DataExpression(methodCallArgument, substring.substring(0, parse)));
@@ -368,20 +396,20 @@ public class StringAnalyzerJava1 extends StringAnalyzer3 {
                         String substring = input.substring(bStartI + 1, bEndI);
                         current = classArrayAccess;
                         int parse = parse(substring, 0);
-                        recursiions--;
-                        System.out.println("Next tokens remainder (1): " + input.substring(i));
+                        recurssions--;
                         expressions.add(new DataExpression(classArrayAccess, substring.substring(0, parse)));
                         i = bStartI + parse + 1;
+                        System.out.println("Next tokens remainder (1): " + input.substring(i));
                         bStart = false;
                     } else if ((input.charAt(i) == '.' && pCount == 0 && bCount == 0) || lastToken) {
                         if (!firstAdded)
                             firstAdded = expressions.add(new DataExpression(variable, name));
-                        System.out.println("Next tokens remainder (2): " + input.substring(i));
-                        int i2 = parse(input, i + 1);
-                        recursiions--;
+                        i = parse(input, i + 1);
+                        recurssions--;
                         setSuccessful(true);
-                        recursiions--;
-                        return skipBlanks(input, i2);
+                        recurssions--;
+                        System.out.println("Next tokens remainder (2): " + input.substring(i));
+                        return skipBlanks(input, i);
                     } else if (bCount == 0 && pCount == 0 && input.charAt(i) != '.') {
                         setSuccessful(true);
                         return i;
@@ -390,8 +418,8 @@ public class StringAnalyzerJava1 extends StringAnalyzer3 {
                 }
 
             }
-
-            if (i >= input.length() - 1 && recursiions == 1) {
+/*
+            if (i >= input.length() - 1 && recurssions == 1) {
                 i = input.length() - 1;
                 if (Character.isLetterOrDigit(i))
                     expressions.add(new DataExpression(variable, name));
@@ -401,7 +429,7 @@ public class StringAnalyzerJava1 extends StringAnalyzer3 {
                     expressions.add(new DataExpression(classArrayAccess, name));
                 i = skipBlanks(input, i);
             }
-            //while (i < input.length() && (((Character.isWhitespace(input.charAt(i))) || (input.charAt(i) == '[') || (input.charAt(i) == ']')))) {
+ */           //while (i < input.length() && (((Character.isWhitespace(input.charAt(i))) || (input.charAt(i) == '[') || (input.charAt(i) == ']')))) {
             //if (i < input.length() - 4 && input.substring(i, i + 3).equals("new") && Character.isWhitespace(input.charAt(i + 4))) {
             //    i += 4;
             //    //constructor = 3;
@@ -452,10 +480,11 @@ public class StringAnalyzerJava1 extends StringAnalyzer3 {
             }
   */
             setSuccessful(true);
-            recursiions--;
+            recurssions--;
             return i;
 
         }
+
 
         @Override
         public Token copy(Token token) {
