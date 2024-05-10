@@ -41,6 +41,8 @@ public class TestHumanHeadTexturing extends TestObjetStub {
     private boolean isset = false;
     private Rectangle rectangleFace;
     private BufferedImage trueFace;
+    private String jpgFile;
+    private String objFile;
 
     public TestHumanHeadTexturing() {
     }
@@ -53,7 +55,7 @@ public class TestHumanHeadTexturing extends TestObjetStub {
     public void ginit() {
         super.ginit();
         z().setDisplayType(ZBufferImpl.DISPLAY_ALL);
-        File file = new File("resources/models/head.obj69A757E0-9740-44E9-AE25-FBEA2C6928BD.obj");
+        File file = new File(objFile);
         File dirModel = new File("resources/models/heads");
         if (!dirModel.exists())
             dirModel.mkdir();
@@ -67,7 +69,7 @@ public class TestHumanHeadTexturing extends TestObjetStub {
         try {
             BufferedReader bufferedInputStream = new BufferedReader(new FileReader(file));
             E3Model e3Model = new E3Model(bufferedInputStream, false, "resources/models/head.obj69A757E0-9740-44E9-AE25-FBEA2C6928BD.obj");
-            e3Model.texture(new ImageTexture(new File("res/img/IMG_20240510_152936.jpg")));
+            e3Model.texture(new ImageTexture(new File(jpgFile)));
             scene().add(e3Model);
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
@@ -193,14 +195,41 @@ public class TestHumanHeadTexturing extends TestObjetStub {
 
 
     public static void main(String[] args) {
+        String jpgFile = "res/img/IMG_20240510_152936.jpg";
+        String objFile = "resources/models/head.obj69A757E0-9740-44E9-AE25-FBEA2C6928BD.obj";
+        if (args.length > 0) {
+            if (new File(args[0]).exists()) {
+                jpgFile = args[0];
+                if (args.length > 1) {
+                    if (new File(args[1]).exists()) {
+                        objFile = args[1];
+                    } else {
+                        System.err.println("Obj model file doesn't exist : " + args[0] + "\n");
+                    }
+                } else {
+                    System.err.println("Photo file doesn't exist : " + args[0] + "\n");
+                }
+            }
+        }
+        System.out.println("Jpg Obj Mapping...");
 
         TestHumanHeadTexturing testHumanHeadTexturing = new TestHumanHeadTexturing();
+        testHumanHeadTexturing.setJpg(jpgFile);
+        testHumanHeadTexturing.setObj(objFile);
         testHumanHeadTexturing.loop(true);
         testHumanHeadTexturing.setMaxFrames(1000);
         testHumanHeadTexturing.setPublish(true);
         new Thread(testHumanHeadTexturing).start();
 
 
+    }
+
+    private void setJpg(String jpgFile) {
+        this.jpgFile = jpgFile;
+    }
+
+    private void setObj(String objFile) {
+        this.objFile = objFile;
     }
 
     public Rectangle getRectangleFace() {
