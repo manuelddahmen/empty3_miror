@@ -29,6 +29,8 @@ package one.empty3.library;
 
 import one.empty3.library.core.nurbs.*;
 import one.empty3.library.core.tribase.Precomputable;
+import one.empty3.library.objloader.E3Model;
+import one.empty3.modelling.Face;
 import one.empty3.pointset.PCont;
 
 import java.awt.*;
@@ -258,6 +260,8 @@ public class ZBufferImpl extends Representable implements ZBuffer {
                         , tri.texture());
                 //System.out.print("Triangle");
             }
+        } else if (r instanceof E3Model.FaceWithUv) {
+            tracerQuadRefined((E3Model.FaceWithUv) r);
         } else if (r instanceof ParametricSurface) {
             ParametricSurface n = (ParametricSurface) r;
             setCurrentRepresentable(r);
@@ -921,6 +925,94 @@ public class ZBufferImpl extends Representable implements ZBuffer {
 
     }
 
+    public void tracerQuad(E3Model.FaceWithUv face) {
+        Polygon polygon = face.getPolygon();
+        tracerQuad(polygon.getPoints().getElem(0), polygon.getPoints().getElem(1),
+                polygon.getPoints().getElem(2), polygon.getPoints().getElem(3), face.texture(),
+                face.getU1(), face.getU2(), face.getV1(), face.getV2(), null);
+    }
+
+    public void tracerQuadRefined(E3Model.FaceWithUv face) {
+        Polygon polygon = face.getPolygon();
+        tracerQuad(polygon.getPoints().getElem(0), polygon.getPoints().getElem(1),
+                polygon.getPoints().getElem(2), polygon.getPoints().getElem(3), face.texture(),
+                face.getTextUv(), null);
+    }
+
+    private void tracerQuad(Point3D pp1, Point3D pp2, Point3D pp3, Point3D pp4, ITexture texture, double[] textUv, ParametricSurface n) {
+
+
+        Point p1, p2, p3, p4;
+        p1 = camera().coordonneesPoint2D(pp1, this);
+        p2 = camera().coordonneesPoint2D(pp2, this);
+        p3 = camera().coordonneesPoint2D(pp3, this);
+        p4 = camera().coordonneesPoint2D(pp4, this);
+
+        int checkedFalse = 0;
+        if (!checkScreen(p1) || isOccupied(pp1))
+            checkedFalse++;
+        if (!checkScreen(p2) || isOccupied(pp2))
+            checkedFalse++;
+        if (!checkScreen(p3) || isOccupied(pp3))
+            checkedFalse++;
+        if (!checkScreen(p4) || isOccupied(pp4))
+            checkedFalse++;
+
+
+        if (p1 == null || p2 == null || p3 == null || p4 == null || checkedFalse >= CHECKED_POINT_SIZE_QUADS)
+            return;
+
+
+        TRI triBas = new TRI(pp1, pp2, pp3, texture);
+        Point3D normale = triBas.normale();
+        double inter = Math.max(1 / (maxDistance(p1, p2, p3, p4) + 1) / 3, MIN_INCR);
+        //if (inter > MIN_INCR) {
+        for (double a = 0; a < 1.0; a += inter) {
+            Point3D pElevation1 = pp1.plus(pp1.mult(-1d).plus(pp2).mult(a));
+            Point3D pElevation2 = pp4.plus(pp4.mult(-1d).plus(pp3).mult(a));
+            double u00 = textUv[0] + (textUv[2] - textUv[0]) * a;
+            double u01 = textUv[4] + (textUv[2] - textUv[4]) * a;
+            double u = (u00 + u01) / 2;
+            double inter2 = Math.max(1. / (maxDistance(camera().coordonneesPoint2D(pElevation1, this),
+                    camera().coordonneesPoint2D(pElevation2, this)) + 1.) / 3., MIN_INCR);
+            //if (inter2 > MIN_INCR)
+            for (double b = 0; b < 1.0; b += inter2) {
+                Point3D pFinal = (pElevation1.plus(pElevation1.mult(-1d).plus(pElevation2).mult(b)));
+                double v00 = textUv[1] + (textUv[7] - textUv[1]) * b;
+                double v01 = textUv[3] + (textUv[5] - textUv[3]) * b;
+                double v = (v00 + v01) / 2;
+                double uPoint = u;
+                double vPoint = v;
+                pFinal.setNormale(normale);
+                pFinal.texture(texture);
+                if (n != null) {
+                    pFinal.setNormale(n.calculerNormale3D(uPoint, vPoint));
+                    if (displayType == DISPLAY_ALL) {
+                        pFinal = n.calculerPoint3D(uPoint, vPoint);
+                        pFinal.texture(new ColorTexture(texture.getColorAt(u, v)));
+                    } else {
+                        pFinal.setNormale(normale);
+                        pFinal.texture(new ColorTexture(texture.getColorAt(u, v)));
+                    }
+                }
+                if (displayType <= SURFACE_DISPLAY_TEXT_QUADS) {
+                    if (n != null) {
+                        testDeep(pFinal, n.texture().getColorAt(uPoint, vPoint));
+                    } else if (texture != null) {
+                        testDeep(pFinal, texture.getColorAt(uPoint, vPoint));
+                    } else {
+                        testDeep(pFinal, 0);
+                    }
+                } else {
+                    int col = 0;
+                    testDeep(pFinal, col);
+                }
+            }
+        }
+
+        //}
+    }
+
     public void tracerQuad(Point3D pp1, Point3D pp2, Point3D pp3, Point3D pp4, ITexture texture, double u0, double u1,
                            double v0, double v1, ParametricSurface n) {
 
@@ -966,8 +1058,8 @@ public class ZBufferImpl extends Representable implements ZBuffer {
                 double vPoint = v0 + (v1 - v0) * b;
                 pFinal.setNormale(normale);
                 pFinal.texture(texture);
-                pFinal.setNormale(n.calculerNormale3D(uPoint, vPoint));
                 if (n != null) {
+                    pFinal.setNormale(n.calculerNormale3D(uPoint, vPoint));
                     if (displayType == DISPLAY_ALL) {
                         pFinal = n.calculerPoint3D(uPoint, vPoint);
                         pFinal.texture(texture);
@@ -978,7 +1070,13 @@ public class ZBufferImpl extends Representable implements ZBuffer {
                     }
                 }
                 if (displayType <= SURFACE_DISPLAY_TEXT_QUADS) {
-                    testDeep(pFinal, n.texture().getColorAt(uPoint, vPoint));
+                    if (n != null) {
+                        testDeep(pFinal, n.texture().getColorAt(uPoint, vPoint));
+                    } else if (texture != null) {
+                        testDeep(pFinal, texture.getColorAt(uPoint, vPoint));
+                    } else {
+                        testDeep(pFinal, col);
+                    }
                 } else {
                     testDeep(pFinal, col);
                 }

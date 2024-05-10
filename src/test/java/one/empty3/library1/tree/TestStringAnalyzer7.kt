@@ -86,7 +86,7 @@ class TestStringAnalyzer7 {
                 println("------------------------------------------------------------------------")
                 println("- " + "errors (characters remainers): ")
                 println("------------------------------------------------------------------------")
-                println(readString.substring(stringAnalyzer1java.mPosition))
+                System.err.println(readString.substring(stringAnalyzer1java.mPosition));
                 println("------------------------------------------------------------------------")
 
 
@@ -1429,8 +1429,6 @@ class TestStringAnalyzer7 {
             println(tokenType2.toString())
             println("---------------------------------------")
             println(tokenName2.toString())
-            println("---------------------------------------")
-            println(tokenType2)
             println("---------------------------------------")
         }
 

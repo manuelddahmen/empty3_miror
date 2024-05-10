@@ -52,6 +52,7 @@ public class TestHumanHeadTexturing extends TestObjetStub {
     @Override
     public void ginit() {
         super.ginit();
+        z().setDisplayType(ZBufferImpl.DISPLAY_ALL);
         File file = new File("resources/models/head.obj69A757E0-9740-44E9-AE25-FBEA2C6928BD.obj");
         File dirModel = new File("resources/models/heads");
         if (!dirModel.exists())
@@ -66,12 +67,13 @@ public class TestHumanHeadTexturing extends TestObjetStub {
         try {
             BufferedReader bufferedInputStream = new BufferedReader(new FileReader(file));
             E3Model e3Model = new E3Model(bufferedInputStream, false, "resources/models/head.obj69A757E0-9740-44E9-AE25-FBEA2C6928BD.obj");
+            e3Model.texture(new ImageTexture(new File("res/img/IMG_20240510_152936.jpg")));
             scene().add(e3Model);
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
         printWriter.println("# Face elements without eyes month and nose");
-        AtomicInteger i = new AtomicInteger(0);
+        /*AtomicInteger i = new AtomicInteger(0);
         ((RepresentableConteneur) (scene().getObjets().getElem(0))).
                 getListRepresentable().forEach(representable -> {
                     int r = (int) Math.min((i.get() / (256)) % 256, 255);
@@ -86,7 +88,7 @@ public class TestHumanHeadTexturing extends TestObjetStub {
                     }
                     representable.setTexture(new ColorTexture(def));
                     i.getAndIncrement();
-                });
+                });*/
         printWriter.flush();
         printWriter.close();
 
@@ -176,6 +178,7 @@ public class TestHumanHeadTexturing extends TestObjetStub {
                 });
             }
         });
+
     }
 
     @Override

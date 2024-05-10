@@ -32,6 +32,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -70,6 +71,70 @@ public class E3Model extends RepresentableConteneur {
     private double[] knotV;
     private double[] knotU;
     private final RepresentableConteneur objects = new RepresentableConteneur();
+
+    public static class FaceWithUv extends ParametricSurface {
+        Polygon polygon;
+        double[] textUv;
+        double u1, u2, v1, v2;
+
+        public FaceWithUv(Polygon orig, double[] textureIndices) {
+            this.polygon = orig;
+            u1 = textureIndices[0];
+            u2 = textureIndices[6];
+            v1 = textureIndices[1];
+            v2 = textureIndices[3];
+
+            textUv = textureIndices;
+//            this.texture(texture);
+/*            for (int i = 0; i < faces.get(faceNo).length; i++) {
+                int[] ints = faces.get(faceNo);
+                for (int j = 0; j < ints.length; j++) {
+                    Double[] vertex = vertexsets.get(ints[j]);
+                    Double[] uv = vertexsetstexs.get(ints[j]);
+                    Point3D point1 = new Point3D(vertex);
+                    for (int k = 0; k < this.polygon.getPoints().data1d.size(); k++) {
+                        if (this.polygon.getPoints().getElem(k).equals(point1)) {
+                            textUv[k] = new Point3D(uv);
+                        }
+                    }
+                }
+            }
+  */
+        }
+
+        @Override
+        public Point3D calculerPoint3D(double u, double v) {
+            Point3D resA1 = getPolygon().getPoints().getElem(0).plus(getPolygon().getPoints().getElem(2).moins(getPolygon().getPoints().getElem(1)).mult(u));
+            Point3D resA2 = getPolygon().getPoints().getElem(3).plus(getPolygon().getPoints().getElem(2).moins(getPolygon().getPoints().getElem(2)).mult(u));
+            Point3D res = resA2.plus(resA1.moins(resA2).mult(v));
+            res.texture(texture());
+            return res;
+        }
+
+        public Polygon getPolygon() {
+            return polygon;
+        }
+
+        public double getU1() {
+            return u1;
+        }
+
+        public double getU2() {
+            return u2;
+        }
+
+        public double getV1() {
+            return v1;
+        }
+
+        public double getV2() {
+            return v2;
+        }
+
+        public double[] getTextUv() {
+            return textUv;
+        }
+    }
 
     //THIS CLASS LOADS THE MODELS
     public E3Model(BufferedReader ref, boolean centerit, String path) {
@@ -492,8 +557,10 @@ public class E3Model extends RepresentableConteneur {
                 ////////////////////////////
 
                 //// Quad Begin Header ////
-
+                double[] colorVertex = new double[3];
+                double[] textureListUv1234 = new double[tempfaces.length * 2];
                 for (int w = 0; w < tempfaces.length; w++) {
+
                     if (tempfacesnorms[w] != 0) {
                         Double normtempx = ((Double[]) vertexsetsnorms.get(tempfacesnorms[w] - 1))[0];
                         Double normtempy = ((Double[]) vertexsetsnorms.get(tempfacesnorms[w] - 1))[1];
@@ -506,7 +573,7 @@ public class E3Model extends RepresentableConteneur {
                         Double textempy = ((Double[]) vertexsetstexs.get(tempfacestexs[w] - 1))[1];
                         Double textempz = ((Double[]) vertexsetstexs.get(tempfacestexs[w] - 1))[2];
 // TODO                    gl.glTexCoord3f(textempx,1f-textempy,textempz);
-
+                        colorVertex = new double[]{textempx, 1f - textempy, 0};
                     }
 
                     Double tempx = ((Double[]) vertexsets.get(tempfaces[w] - 1))[0];
@@ -526,6 +593,8 @@ public class E3Model extends RepresentableConteneur {
                     }
                     if (quad instanceof Polygon) {
                         ((Polygon) quad).add(point3D);
+                        textureListUv1234[w * 2] = colorVertex[0];
+                        textureListUv1234[w * 2 + 1] = colorVertex[1];
                     }
                 }
 
@@ -533,8 +602,8 @@ public class E3Model extends RepresentableConteneur {
                 ///////////////////////////
 
                 quad.texture(new TextureCol(pointCol));
-                add(quad);
-
+                //add(quad);
+                add(new FaceWithUv((Polygon) quad, textureListUv1234));
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -557,5 +626,11 @@ public class E3Model extends RepresentableConteneur {
         for (int j = 0; j < s.data1d.size(); j++)
             t[j] = s.data1d.get(j);
         return t;
+    }
+
+    @Override
+    public void texture(ITexture tc) {
+        texture = tc;
+        getListRepresentable().forEach(representable -> representable.texture(tc));
     }
 }
