@@ -26,6 +26,7 @@ import com.github.sarxos.webcam.Webcam;
 import com.github.sarxos.webcam.WebcamLockException;
 import one.empty3.feature.gui.LiveEffect;
 import one.empty3.feature.motion.Motion;
+import one.empty3.library.Config;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -88,7 +89,9 @@ public class ThreadEffectDisplay extends Thread {
 
 
         do {
-            File fileOrigin = new File(tempDir + File.separator + "webcam.jpg");
+            File fileOrigin = new File(new Config().getFileDirectoryDefault() + File.separator + "FeaturesVideo" + File.separator + "webcam.jpg");
+            fileOrigin.mkdirs();
+
 
             main.files.clear();
             main.files.add(new File[]{fileOrigin});
@@ -139,7 +142,7 @@ public class ThreadEffectDisplay extends Thread {
             }
         }
         if (!webcam.isOpen()) {
-            webcam.setViewSize(new Dimension(directEffect.viewSizes[0]));
+            webcam.setViewSize(new Dimension(directEffect.viewSizes[directEffect.viewSizes.length - 1]));
             try {
                 webcam.open();
             } catch (WebcamLockException exception) {

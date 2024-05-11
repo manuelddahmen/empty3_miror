@@ -26,14 +26,13 @@ import one.empty3.feature.app.replace.javax.imageio.ImageIO;
 import one.empty3.io.ProcessFile;
 import one.empty3.library.StructureMatrix;
 import one.empty3.library1.shader.Vec;
+import one.empty3.library1.tree.AlgebraicFormulaSyntaxException;
 import one.empty3.library1.tree.ListInstructions;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
 
 /**
  * $
@@ -90,19 +89,16 @@ public class CustomProcessFileRGB extends ProcessFile {
                     currentVars.put("r", r);
                     currentVars.put("g", g);
                     currentVars.put("b", b);
-                    currentVars.put("x", x);
-                    currentVars.put("y", y);
+                    currentVars.put("x", (double) i);
+                    currentVars.put("y", (double) j);
                     currentVecs.put("rgb", (String.format("(%f,%f,%f)", r, g, b)));
-                    listInstructions.addInstructions("");
+
+                    
                     listInstructions.runInstructions();
 
-                    System.out.println(listInstructions.evaluate("(r,g,b"));
-
-                    currentVecsComputed = listInstructions.getCurrentParamsValuesVecComputed();
-
-                    r = currentVecsComputed.getOrDefault("r", (new StructureMatrix<Double>(0, Double.class).setElem(r))).getElem();
-                    g = currentVecsComputed.getOrDefault("g", (new StructureMatrix<Double>(0, Double.class).setElem(g))).getElem();
-                    b = currentVecsComputed.getOrDefault("b", (new StructureMatrix<Double>(0, Double.class).setElem(b))).getElem();
+                    r = currentVars.getOrDefault("r", r);// (new StructureMatrix<Double>(0, Double.class).setElem(r))).getElem();
+                    g = currentVars.getOrDefault("g", r);// (new StructureMatrix<Double>(0, Double.class).setElem(g))).getElem();
+                    b = currentVars.getOrDefault("b", r);// (new StructureMatrix<Double>(0, Double.class).setElem(b))).getElem();
                     pixOut.setValues(i, j, r, g, b);
                 }
             }

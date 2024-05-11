@@ -201,6 +201,14 @@ tasks.register('TestHumanHeadTexturing', JavaExec) {
     args ""
     dependsOn(jar)
 }
+
+tasks.register('FaceDetectApp', JavaExec) {
+    classpath sourceSets.test.runtimeClasspath
+    mainClass = "one.empty3.apps.FaceDetectApp"
+    dependsOn(jar)
+}
+
+
 signing {
     def signingKey = load.get("signing.keyId")
     def signingPassword = load.get("signing.password")
@@ -276,9 +284,11 @@ dependencies {
     testImplementation('org.junit.jupiter:junit-jupiter:5.9.2')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.20"
     implementation 'org.apache.santuario:xmlsec:4.0.1'
-    implementation "com.google.googlejavaformat:google-java-format:$googleJavaFormatVersion"
     implementation 'com.google.android.gms:play-services-vision:20.1.3'
-
+    implementation platform('com.google.cloud:libraries-bom:26.39.0')
+    implementation 'com.google.cloud:google-cloud-vision'
+    implementation 'com.google.apis:google-api-services-vision:v1-rev20231219-2.0.0'
+    implementation 'com.google.cloud:google-cloud-vision:3.41.0'
 }
 
 
