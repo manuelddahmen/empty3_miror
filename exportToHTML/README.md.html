@@ -1,0 +1,155 @@
+<html>
+<head>
+<title>README.md</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cf8e6d;}
+.s1 { color: #bcbec4;}
+.s2 { color: #bcbec4;}
+.s3 { color: #56a8f5;}
+.s4 { color: #c77dbb; font-style: italic;}
+.s5 { color: #6aab73;}
+</style>
+</head>
+<body bgcolor="#1e1f22">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+README.md</font>
+</center></td></tr></table>
+<pre><span class="s0"># </span><span class="s2">empty3</span>
+<span class="s2">empty3.one</span>
+<span class="s2">Rendering engine. Shapes</span><span class="s1">: </span><span class="s2">surfaces, math-related</span>
+<span class="s2">Drawings, curves, textures with pictures, movies</span>
+<span class="s2">or colors.</span>
+
+<span class="s2">#In progress or not</span><span class="s1">:</span>
+<span class="s0">- </span><span class="s2">Lighting model. </span>
+<span class="s0">- </span><span class="s2">Texture with geometric structure.</span>
+<span class="s0">- </span><span class="s2">Burbs? Nurbs.</span>
+<span class="s0">- </span><span class="s2">real modelling interface. Graphical or</span>
+  <span class="s2">touch.</span>
+<span class="s0">- </span><span class="s2">Glsl clone compiler, interpreter and </span>
+  <span class="s2">rendering.</span>
+
+<span class="s2">When you build with maven tool, assuming you have</span>
+<span class="s2">correctly set jdk home and exe path, and maven</span>
+<span class="s2">too, internet connection, space disk and memory</span>
+<span class="s2">size enough...</span>
+
+<span class="s2">If you miss a property check this</span>
+<span class="s3">https://maven.apache.org/guides/introduction/introduction-to-profiles.html</span>
+
+<span class="s2">Or make a new issue.</span>
+
+<span class="s2">#In progress </span>
+<span class="s2">##October 2021 </span><span class="s1">: </span><span class="s2">move</span>
+<span class="s2">Movement </span><span class="s1">: </span><span class="s2">make persona walk. Idea</span><span class="s1">: </span><span class="s2">program object for moving</span>
+<span class="s2">cylinder and sphere and beziers. Make it move from/to </span><span class="s1">(</span><span class="s2">Vec3 </span>
+<span class="s2">linear displacement</span><span class="s1">)</span><span class="s2">.</span>
+<span class="s2">MoveCollection</span><span class="s1">: </span><span class="s2">actions </span><span class="s1">(</span><span class="s2">to walk, to run, to sit, to smoke</span><span class="s1">)</span>
+<span class="s2">Move</span><span class="s1">: </span><span class="s2">individual member move. </span>
+
+<span class="s2">2022 Automn</span>
+
+<span class="s0">``` </span><span class="s4">_._</span>
+<span class="s0">```</span>
+
+<span class="s0"># </span><span class="s2">Feature</span>
+
+<span class="s3">https://drive.google.com/folderview?id=10CXWU2JPVsNMbHrAssxN23KzizzNkvHg</span>
+<span class="s2">Documentation utilisée.</span>
+
+<span class="s0">## </span><span class="s2">Filtres d'images</span>
+
+<span class="s2">Filtres </span><span class="s1">: </span><span class="s2">flou Gauss, Gradient X, Y, outter dot product. SobelX, SobelY. localextrema, histogramme des densites, harris</span>
+<span class="s2">matrix c</span><span class="s1">(</span><span class="s2">x,y</span><span class="s1">)</span>
+
+<span class="s0">## </span><span class="s2">Formats et classes d'images.</span>
+
+<span class="s0">- </span><span class="s2">BufferedImage Int Rgb </span><span class="s1">(</span><span class="s2">sans rgb</span><span class="s1">)</span>
+<span class="s0">- </span><span class="s2">format jpg en sortie</span>
+<span class="s0">- </span><span class="s2">PixM components matrix of pictures. color component based.</span>
+<span class="s0">- </span><span class="s2">M3 components</span>
+  <span class="s0">+ </span><span class="s2">matrix </span><span class="s1">(</span><span class="s2">columnsIn, linesIn</span><span class="s1">) </span><span class="s2">internal matrix at x, y</span>
+<span class="s0">- </span><span class="s2">conversion to BufferedImage, minMax normalize linear</span>
+<span class="s0">- </span><span class="s2">gradient. dx, dy, phase atan dy/dy atan dx/dy</span>
+<span class="s0">- </span><span class="s2">detecteur de contours</span>
+
+<span class="s0">## </span><span class="s2">maven use with pom.xml dependency</span>
+
+<span class="s0">```</span>
+<span class="s5">&lt;dependency&gt;</span>
+    <span class="s5">&lt;groupId&gt;one.empty3&lt;/groupId&gt;</span>
+    <span class="s5">&lt;artifactId&gt;feature&lt;/artifactId&gt;</span>
+    <span class="s5">&lt;version&gt;2020.4.4&lt;/version&gt;</span>
+<span class="s5">&lt;/dependency&gt;</span>
+<span class="s0">```</span>
+
+<span class="s0">## </span><span class="s2">En développement. Ambitions.</span>
+
+<span class="s3">https://github.com/manuelddahmen/feature</span>
+
+<span class="s0">## </span><span class="s2">La conception de features 2d 3d.</span>
+
+<span class="s2">Les collections d'images contenant des</span>
+<span class="s1">_</span><span class="s2">feature</span><span class="s1">_ (</span><span class="s2">caractéristiques</span><span class="s1">) </span><span class="s2">ou d'un ensemble de </span><span class="s1">_</span><span class="s2">features</span><span class="s1">_</span><span class="s2">.</span>
+
+<span class="s2">Features matching</span>
+
+<span class="s2">Base de données à mettre au point. sum</span><span class="s1">(</span><span class="s2">Circle.i</span><span class="s1">) </span><span class="s2">dist/ c.r2</span>
+
+<span class="s0">#    </span>
+
+<span class="s0">```</span>
+<span class="s5">file : ./settings.properties</span>
+
+<span class="s5">username=user98</span>
+<span class="s5">password=ghhyvj</span>
+<span class="s5">host=ftp.example.net</span>
+<span class="s5">port=21</span>
+<span class="s5">directory=/myimages/selection/input</span>
+<span class="s5">classname=one.empty3.feature.Transform1,one.empty3.feature.Histogram2,one.empty3.feature.GradProcess</span>
+<span class="s0">```</span>
+
+<span class="s0">## </span><span class="s2">Feature extraction, classification</span>
+
+<span class="s2">Faire les histogrammes de toutes les parties des images. Rechercher les histogrammes de différences minimales</span>
+<span class="s1">(</span><span class="s2">-autour des features.</span><span class="s1">)</span>
+
+<span class="s0">## </span><span class="s2">Exemple</span>
+<span class="s2">Voici un exemple de run</span><span class="s1">:</span>
+<span class="s2">Run class</span><span class="s1">: </span><span class="s2">one.empty3.Run</span>
+<span class="s2">Args </span><span class="s1">: &quot;</span><span class="s2">originalHarris_PasteBlank</span><span class="s1">&quot;</span>
+<span class="s2">settings.properties</span>
+<span class="s0">```</span>
+<span class="s5"># Effect blue eyes white hairs</span>
+<span class="s5">username=empty3.one</span>
+<span class="s5">password=yfgvu75rtr44fsfii8yr</span>
+<span class="s5">host=empty3.one</span>
+<span class="s5">port=21</span>
+<span class="s5">in.device=local</span>
+<span class="s5">in.directory=../images_faces/</span>
+<span class="s5">out.device=local</span>
+<span class="s5">out.directory=../o/originalHarris_PasteBlank/</span>
+<span class="s5">directory=/empty3/feature/processes</span>
+<span class="s5">classname=one.empty3.feature.TrueHarrisProcess,one.empty3.feature.TrueHarrisProcess</span>
+<span class="s5">#  ,one.empty3.feature.selection.PasteBlank</span>
+<span class="s5">#classname=one.empty3.feature.DiffE</span>
+<span class="s5">effect.0.min=double:0.3</span>
+<span class="s5">maxRes=400</span>
+<span class="s0">```</span>
+<span class="s1">![</span><span class="s2">image</span><span class="s1">](</span><span class="s3">https://user-images.githubusercontent.com/38113629/158326067-4e881cae-26f1-42cf-b529-20a6f99d7ada.png</span><span class="s1">)</span>
+<span class="s1">![</span><span class="s2">image</span><span class="s1">](</span><span class="s3">https://user-images.githubusercontent.com/38113629/158326114-f577abd5-0af4-4dc6-9061-aaaa7eb0d61d.png</span><span class="s1">)</span>
+
+<span class="s2">Avec une application Android.</span>
+<span class="s1">![</span><span class="s2">image</span><span class="s1">](</span><span class="s3">https://github.com/manuelddahmen/empty3_miror/assets/38113629/6a27f5db-e0c4-44ed-9731-23799b72fe10</span><span class="s1">)</span>
+
+<span class="s1">![</span><span class="s2">Screenshot_20230701_095233</span><span class="s1">](</span><span class="s3">https://github.com/manuelddahmen/empty3_miror/assets/38113629/827310f3-3823-4577-a3e9-784a50934e78</span><span class="s1">)</span>
+
+
+
+<span class="s2">Manuel DAHMEN.</span>
+</pre>
+</body>
+</html>
