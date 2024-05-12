@@ -289,6 +289,9 @@ dependencies {
     implementation 'com.google.cloud:google-cloud-vision'
     implementation 'com.google.apis:google-api-services-vision:v1-rev20231219-2.0.0'
     implementation 'com.google.cloud:google-cloud-vision:3.41.0'
+    implementation platform('com.google.cloud:libraries-bom:26.38.0')
+    implementation 'com.google.cloud:google-cloud-storage'
+
 }
 
 

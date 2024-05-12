@@ -32,6 +32,12 @@ import com.google.cloud.vision.v1.ImageSource;
 import com.google.cloud.vision.v1.SafeSearchAnnotation;
 import com.google.gson.JsonObject;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
+import com.google.cloud.storage.Blob;
+import com.google.cloud.storage.Bucket;
+import com.google.cloud.storage.BucketInfo;
+
 import java.awt.*;
 import java.io.IOException;
 import java.nio.file.Files;
