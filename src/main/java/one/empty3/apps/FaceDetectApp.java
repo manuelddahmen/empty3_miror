@@ -201,12 +201,12 @@ public class FaceDetectApp {
         storage = StorageOptions.newBuilder().setProjectId(projectId).build().getService();
         // The blob ID identifies the newly created blob, which consists of a bucket name and an object
         // name
-        BlobId blobId = BlobId.of(BLURRED_BUCKET_NAME, filename);
+        BlobId blobId = BlobId.of(BLURRED_BUCKET_NAME, filename.getName());
         BlobInfo blobInfo = BlobInfo.newBuilder(blobId).build();
 
 
         // upload the file and print the status
         storage.createFrom(blobInfo, Paths.get(filename.getAbsolutePath()));
-        System.out.println("File " + filePath + " uploaded to bucket " + BLURRED_BUCKET_NAME + " as " + filename);
+        System.out.println("File " + filename.getAbsolutePath() + " uploaded to bucket " + BLURRED_BUCKET_NAME + " as " + filename);
     }
 }
