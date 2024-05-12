@@ -145,17 +145,18 @@ public class FaceDetectApp {
         sendToBucket("gs:output-pictures", outputPath);
     }
 
-public static void sendToBucket(String BLURRED_BUCKET_NAME, Path outputPath) {
-    // Upload image to blurred bucket.
-    BlobId blurredBlobId = BlobId.of(BLURRED_BUCKET_NAME, outputPath);
-    BlobInfo blurredBlobInfo =
-            BlobInfo.newBuilder(blurredBlobId).setContentType(blob.getContentType()).build();
-    try {
-        byte[] blurredFile = Files.readAllBytes(outputPath);
-        Blob blurredBlob = storage.create(blurredBlobInfo, blurredFile);
-        System.out.println(
-                String.format("Applied effects image to: gs://%s/%s", BLURRED_BUCKET_NAME, outputPath));
-    } catch (Exception e) {
-        System.out.println(String.format("Error in upload: %s", e.getMessage()));
+    public static void sendToBucket(String BLURRED_BUCKET_NAME, Path outputPath) {
+        // Upload image to blurred bucket.
+        BlobId blurredBlobId = BlobId.of(BLURRED_BUCKET_NAME, outputPath);
+        BlobInfo blurredBlobInfo =
+                BlobInfo.newBuilder(blurredBlobId).setContentType(blob.getContentType()).build();
+        try {
+            byte[] blurredFile = Files.readAllBytes(outputPath);
+            Blob blurredBlob = storage.create(blurredBlobInfo, blurredFile);
+            System.out.println(
+                    String.format("Applied effects image to: gs://%s/%s", BLURRED_BUCKET_NAME, outputPath));
+        } catch (Exception e) {
+            System.out.println(String.format("Error in upload: %s", e.getMessage()));
+        }
     }
 }
