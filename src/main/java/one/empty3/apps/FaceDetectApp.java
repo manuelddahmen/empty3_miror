@@ -62,7 +62,7 @@ import java.util.List;
 import javax.imageio.ImageIO;
 
 public class FaceDetectApp {
-    private static final String BLURRED_BUCKET_NAME = "gs:output-pictures";
+    private static final String BLURRED_BUCKET_NAME = "output-pictures";
     private static Storage storage = StorageOptions.getDefaultInstance().getService();
     private static final String APPLICATION_NAME = "MeshMask";
     private static final int MAX_RESULTS = 10;
