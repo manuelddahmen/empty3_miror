@@ -27,6 +27,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.GeneralSecurityException;
+import java.sql.Blob;
 import java.util.List;
 import javax.imageio.ImageIO;
 
@@ -140,7 +141,21 @@ public class FaceDetectApp {
         System.out.printf("Found %d face%s\n", faces.size(), faces.size() == 1 ? "" : "s");
         System.out.printf("Writing to file %s\n", outputPath);
         app.writeWithFaces(inputPath, outputPath, faces);
+
+        sendToBucket("gs:output-pictures", outputPath);
     }
 
-
+public static void sendToBucket(String BLURRED_BUCKET_NAME, Path outputPath) {
+    // Upload image to blurred bucket.
+    BlobId blurredBlobId = BlobId.of(BLURRED_BUCKET_NAME, outputPath);
+    BlobInfo blurredBlobInfo =
+            BlobInfo.newBuilder(blurredBlobId).setContentType(blob.getContentType()).build();
+    try {
+        byte[] blurredFile = Files.readAllBytes(upload);
+        Blob blurredBlob = storage.create(blurredBlobInfo, blurredFile);
+        System.out.println(
+                String.format("Applied effects image to: gs://%s/%s", BLURRED_BUCKET_NAME, outputPath));
+    } catch (Exception e) {
+        System.out.println(String.format("Error in upload: %s", e.getMessage()));
+    }
 }
