@@ -1,18 +1,5 @@
 package one.empty3.apps;
 
-import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
-import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.gson.GsonFactory;
-import com.google.api.services.vision.v1.Vision;
-import com.google.api.services.vision.v1.VisionScopes;
-import com.google.api.services.vision.v1.model.AnnotateImageRequest;
-import com.google.api.services.vision.v1.model.AnnotateImageResponse;
-import com.google.api.services.vision.v1.model.BatchAnnotateImagesRequest;
-import com.google.api.services.vision.v1.model.BatchAnnotateImagesResponse;
-import com.google.api.services.vision.v1.model.FaceAnnotation;
-import com.google.api.services.vision.v1.model.Feature;
-import com.google.api.services.vision.v1.model.Image;
-import com.google.api.services.vision.v1.model.Vertex;
 import com.google.auth.http.HttpCredentialsAdapter;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.common.collect.ImmutableList;
@@ -177,10 +164,10 @@ public class FaceDetectApp {
     }
 
     public static void sendToBucket(String BLURRED_BUCKET_NAME, Path outputPath) {
-        // Upload image to blurred bucket.
         BlobId blurredBlobId = BlobId.of(BLURRED_BUCKET_NAME, outputPath);
         BlobInfo blurredBlobInfo =
                 BlobInfo.newBuilder(blurredBlobId).setContentType(blob.getContentType()).build();
+        // Upload image to blurred bucket.
         try {
             byte[] blurredFile = Files.readAllBytes(outputPath);
             Blob blurredBlob = storage.create(blurredBlobInfo, blurredFile);
