@@ -3,16 +3,16 @@ package one.empty3.apps;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
-//import com.google.api.services.vision.v1.Vision;
-//import com.google.api.services.vision.v1.VisionScopes;
-//import com.google.api.services.vision.v1.model.AnnotateImageRequest;
-//import com.google.api.services.vision.v1.model.AnnotateImageResponse;
-//import com.google.api.services.vision.v1.model.BatchAnnotateImagesRequest;
-//import com.google.api.services.vision.v1.model.BatchAnnotateImagesResponse;
-//import com.google.api.services.vision.v1.model.FaceAnnotation;
-//import com.google.api.services.vision.v1.model.Feature;
-//import com.google.api.services.vision.v1.model.Image;
-//import com.google.api.services.vision.v1.model.Vertex;
+import com.google.api.services.vision.v1.Vision;
+import com.google.api.services.vision.v1.VisionScopes;
+import com.google.api.services.vision.v1.model.AnnotateImageRequest;
+import com.google.api.services.vision.v1.model.AnnotateImageResponse;
+import com.google.api.services.vision.v1.model.BatchAnnotateImagesRequest;
+import com.google.api.services.vision.v1.model.BatchAnnotateImagesResponse;
+import com.google.api.services.vision.v1.model.FaceAnnotation;
+import com.google.api.services.vision.v1.model.Feature;
+import com.google.api.services.vision.v1.model.Image;
+import com.google.api.services.vision.v1.model.Vertex;
 import com.google.auth.http.HttpCredentialsAdapter;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.common.collect.ImmutableList;
@@ -21,14 +21,14 @@ import com.google.cloud.storage.BlobId;
 import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageOptions;
-import com.google.cloud.vision.v1.AnnotateImageRequest;
-import com.google.cloud.vision.v1.AnnotateImageResponse;
-import com.google.cloud.vision.v1.BatchAnnotateImagesResponse;
-import com.google.cloud.vision.v1.Feature;
-import com.google.cloud.vision.v1.Feature.Type;
-import com.google.cloud.vision.v1.Image;
-import com.google.cloud.vision.v1.ImageAnnotatorClient;
-import com.google.cloud.vision.v1.ImageSource;
+//import com.google.cloud.vision.v1.AnnotateImageRequest;
+//import com.google.cloud.vision.v1.AnnotateImageResponse;
+//import com.google.cloud.vision.v1.BatchAnnotateImagesResponse;
+//import com.google.cloud.vision.v1.Feature;
+//import com.google.cloud.vision.v1.Feature.Type;
+//import com.google.cloud.vision.v1.Image;
+//import com.google.cloud.vision.v1.ImageAnnotatorClient;
+//import com.google.cloud.vision.v1.ImageSource;
 import com.google.cloud.vision.v1.SafeSearchAnnotation;
 import com.google.gson.JsonObject;
 
@@ -207,6 +207,6 @@ public class FaceDetectApp {
 
         // upload the file and print the status
         storage.createFrom(blobInfo, Paths.get(filename.getAbsolutePath()));
-        System.out.println("File " + filename.getAbsolutePath() + " uploaded to bucket " + BLURRED_BUCKET_NAME + " as " + filename);
+        System.out.println("File " + filePath + " uploaded to bucket " + BLURRED_BUCKET_NAME + " as " + filename);
     }
 }
