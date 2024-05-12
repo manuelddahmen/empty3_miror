@@ -57,7 +57,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.GeneralSecurityException;
-import java.sql.Blob;
 import java.util.List;
 import javax.imageio.ImageIO;
 
