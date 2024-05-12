@@ -1,5 +1,18 @@
 package one.empty3.apps;
 
+import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.gson.GsonFactory;
+import com.google.api.services.vision.v1.Vision;
+import com.google.api.services.vision.v1.VisionScopes;
+import com.google.api.services.vision.v1.model.AnnotateImageRequest;
+import com.google.api.services.vision.v1.model.AnnotateImageResponse;
+import com.google.api.services.vision.v1.model.BatchAnnotateImagesRequest;
+import com.google.api.services.vision.v1.model.BatchAnnotateImagesResponse;
+import com.google.api.services.vision.v1.model.FaceAnnotation;
+import com.google.api.services.vision.v1.model.Feature;
+import com.google.api.services.vision.v1.model.Image;
+import com.google.api.services.vision.v1.model.Vertex;
 import com.google.auth.http.HttpCredentialsAdapter;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.common.collect.ImmutableList;
@@ -26,6 +39,7 @@ import com.google.cloud.storage.Bucket;
 import com.google.cloud.storage.BucketInfo;
 
 import java.awt.*;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -52,6 +66,7 @@ public class FaceDetectApp {
     private static Storage storage = StorageOptions.getDefaultInstance().getService();
     private static final String APPLICATION_NAME = "MeshMask";
     private static final int MAX_RESULTS = 10;
+    private static String projectId;
     private final Vision vision;
 
     public FaceDetectApp(Vision visionService) {
@@ -160,21 +175,38 @@ public class FaceDetectApp {
         System.out.printf("Writing to file %s\n", outputPath);
         app.writeWithFaces(inputPath, outputPath, faces);
 
-        sendToBucket(BLURRED_BUCKET_NAME, outputPath);
+        //sendToBucket(BLURRED_BUCKET_NAME, outputPath);
+        uploadFile(outputPath.toFile());
     }
 
-    public static void sendToBucket(String BLURRED_BUCKET_NAME, Path outputPath) {
-        BlobId blurredBlobId = BlobId.of(BLURRED_BUCKET_NAME, outputPath);
-        BlobInfo blurredBlobInfo =
-                BlobInfo.newBuilder(blurredBlobId).setContentType(blob.getContentType()).build();
-        // Upload image to blurred bucket.
-        try {
-            byte[] blurredFile = Files.readAllBytes(outputPath);
-            Blob blurredBlob = storage.create(blurredBlobInfo, blurredFile);
-            System.out.println(
-                    String.format("Applied effects image to: gs://%s/%s", BLURRED_BUCKET_NAME, outputPath));
-        } catch (Exception e) {
-            System.out.println(String.format("Error in upload: %s", e.getMessage()));
+    /*
+        public static void sendToBucket(String BLURRED_BUCKET_NAME, Path outputPath) {
+            // Upload image to blurred bucket.
+            BlobId blurredBlobId = BlobId.of(BLURRED_BUCKET_NAME, outputPath);
+            BlobInfo blurredBlobInfo =
+                    BlobInfo.newBuilder(blurredBlobId).setContentType(blob.getContentType()).build();
+            try {
+                byte[] blurredFile = Files.readAllBytes(outputPath);
+                Blob blurredBlob = storage.create(blurredBlobInfo, blurredFile);
+                System.out.println(
+                        String.format("Applied effects image to: gs://%s/%s", BLURRED_BUCKET_NAME, outputPath));
+            } catch (Exception e) {
+                System.out.println(String.format("Error in upload: %s", e.getMessage()));
+            }
         }
+    */
+    // upload file to GCS
+    public static void uploadFile(File filename) throws IOException {
+        // Create a new GCS client
+        storage = StorageOptions.newBuilder().setProjectId(projectId).build().getService();
+        // The blob ID identifies the newly created blob, which consists of a bucket name and an object
+        // name
+        BlobId blobId = BlobId.of(BLURRED_BUCKET_NAME, filename);
+        BlobInfo blobInfo = BlobInfo.newBuilder(blobId).build();
+
+
+        // upload the file and print the status
+        storage.createFrom(blobInfo, Paths.get(filename.getAbsolutePath()));
+        System.out.println("File " + filePath + " uploaded to bucket " + BLURRED_BUCKET_NAME + " as " + filename);
     }
 }
