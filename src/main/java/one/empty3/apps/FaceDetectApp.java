@@ -16,6 +16,30 @@ import com.google.api.services.vision.v1.model.Vertex;
 import com.google.auth.http.HttpCredentialsAdapter;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.common.collect.ImmutableList;
+import com.google.cloud.storage.Blob;
+import com.google.cloud.storage.BlobId;
+import com.google.cloud.storage.BlobInfo;
+import com.google.cloud.storage.Storage;
+import com.google.cloud.storage.StorageOptions;
+import com.google.cloud.vision.v1.AnnotateImageRequest;
+import com.google.cloud.vision.v1.AnnotateImageResponse;
+import com.google.cloud.vision.v1.BatchAnnotateImagesResponse;
+import com.google.cloud.vision.v1.Feature;
+import com.google.cloud.vision.v1.Feature.Type;
+import com.google.cloud.vision.v1.Image;
+import com.google.cloud.vision.v1.ImageAnnotatorClient;
+import com.google.cloud.vision.v1.ImageSource;
+import com.google.cloud.vision.v1.SafeSearchAnnotation;
+import com.google.gson.JsonObject;
+
+import java.awt.*;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.security.GeneralSecurityException;
+import java.util.ArrayList;
+import java.util.List;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -32,6 +56,8 @@ import java.util.List;
 import javax.imageio.ImageIO;
 
 public class FaceDetectApp {
+    private static final String BLURRED_BUCKET_NAME = "gs:output-pictures";
+    private static Storage storage = StorageOptions.getDefaultInstance().getService();
     private static final String APPLICATION_NAME = "MeshMask";
     private static final int MAX_RESULTS = 10;
     private final Vision vision;
@@ -142,7 +168,7 @@ public class FaceDetectApp {
         System.out.printf("Writing to file %s\n", outputPath);
         app.writeWithFaces(inputPath, outputPath, faces);
 
-        sendToBucket("gs:output-pictures", outputPath);
+        sendToBucket(BLURRED_BUCKET_NAME, outputPath);
     }
 
     public static void sendToBucket(String BLURRED_BUCKET_NAME, Path outputPath) {
