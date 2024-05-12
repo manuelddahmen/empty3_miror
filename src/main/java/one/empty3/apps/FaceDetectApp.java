@@ -151,7 +151,7 @@ public static void sendToBucket(String BLURRED_BUCKET_NAME, Path outputPath) {
     BlobInfo blurredBlobInfo =
             BlobInfo.newBuilder(blurredBlobId).setContentType(blob.getContentType()).build();
     try {
-        byte[] blurredFile = Files.readAllBytes(upload);
+        byte[] blurredFile = Files.readAllBytes(outputPath);
         Blob blurredBlob = storage.create(blurredBlobInfo, blurredFile);
         System.out.println(
                 String.format("Applied effects image to: gs://%s/%s", BLURRED_BUCKET_NAME, outputPath));
