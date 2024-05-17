@@ -32,6 +32,8 @@ import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.Bucket;
 import com.google.cloud.storage.BucketInfo;
 import one.empty3.feature.jviolajones.Rect;
+import one.empty3.modelling.Face;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.io.File;
@@ -53,6 +55,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.GeneralSecurityException;
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import javax.imageio.ImageIO;
 
@@ -63,6 +66,8 @@ public class FaceDetectApp {
     private static final int MAX_RESULTS = 10;
     private static String projectId;
     private final Vision vision;
+
+    private String[][] landmarks = {{"LEFT_EYE", "TYPE LEFT_EYE", "RIGHT_EYE", "LEFT_OF_LEFT_EYEBROW", "RIGHT_OF_LEFT_EYEBROW", "LEFT_OF_RIGHT_EYEBROW", "RIGHT_OF_RIGHT_EYEBROW", "MIDPOINT_BETWEEN_EYES", "NOSE_TIP", "UPPER_LIP", "LOWER_LIP", "MOUTH_LEFT", "MOUTH_RIGHT", "MOUTH_CENTER", "NOSE_BOTTOM_RIGHT", "NOSE_BOTTOM_LEFT", "NOSE_BOTTOM_CENTER", "LEFT_EYE_TOP_BOUNDARY", "LEFT_EYE_RIGHT_CORNER", "LEFT_EYE_BOTTOM_BOUNDARY", "LEFT_EYE_BOTTOM_BOUNDARY", "LEFT_EYE_LEFT_CORNER", "RIGHT_EYE_TOP_BOUNDARY", "RIGHT_EYE_RIGHT_CORNER", "RIGHT_EYE_BOTTOM_BOUNDARY", "RIGHT_EYE_LEFT_CORNER", "LEFT_EYEBROW_UPPER_MIDPOINT", "RIGHT_EYEBROW_UPPER_MIDPOINT", "LEFT_EAR_TRAGION", "RIGHT_EAR_TRAGION", "FOREHEAD_GLABELLA", "CHIN_GNATHION", "CHIN_LEFT_GONION", "CHIN_RIGHT_GONION", "CHIN_RIGHT_GONION", "LEFT_CHEEK_CENTER", "LEFT_CHEEK_CENTER", "RIGHT_CHEEK_CENTER", "RIGHT_CHEEK_CENTER"}};
 
     public FaceDetectApp(Vision visionService) {
         this.vision = visionService;
@@ -119,25 +124,26 @@ public class FaceDetectApp {
      */
     private void writeWithFaces(Path inputPath, Path outputPath, List<FaceAnnotation> faces)
             throws IOException {
-        BufferedImage img = ImageIO.read(inputPath.toFile());
-        annotateWithFaces(img, faces);
-        ImageIO.write(img, "jpg", outputPath.toFile());
     }
+
 
     /**
      * Annotates an image {@code img} with a polygon around each face in {@code faces}.
      */
-    public void annotateWithFaces(BufferedImage img, List<FaceAnnotation> faces) {
-        for (FaceAnnotation face : faces) {
-            annotateWithFace(img, face);
-            writePolygonsData(img, face);
+    private void annotateWithFaces2(BufferedImage img, FaceAnnotation face) {
+        Graphics g = img.getGraphics();
+        g.setColor(Color.BLUE);
+        BoundingPoly boundingPoly = face.getBoundingPoly();
+        for (int i = 0; i < boundingPoly.getVertices().size() - 1; i++) {
+            Vertex current = boundingPoly.getVertices().get(i);
+            Vertex next = boundingPoly.getVertices().get(i % boundingPoly.getVertices().size());
+            g.drawLine(current.getX(), current.getY(), next.getX(), next.getY());
         }
     }
 
     int landmarkIndex = 0;
 
     private void writePolygonsData(BufferedImage img, FaceAnnotation face) {
-
         face.getLandmarks().forEach(new Consumer<Landmark>() {
             @Override
             public void accept(Landmark landmark) {
@@ -231,7 +237,7 @@ public class FaceDetectApp {
     /**
      * Annotates an image {@code img} with a polygon defined by {@code face}.
      */
-    private static void annotateWithFace(BufferedImage img, FaceAnnotation face) {
+    private void annotateWithFace(BufferedImage img, FaceAnnotation face) {
         Graphics2D gfx = img.createGraphics();
         Polygon poly = new Polygon();
         for (Vertex vertex : face.getFdBoundingPoly().getVertices()) {
@@ -263,10 +269,23 @@ public class FaceDetectApp {
         List<FaceAnnotation> faces = app.detectFaces(inputPath, MAX_RESULTS);
         System.out.printf("Found %d face%s\n", faces.size(), faces.size() == 1 ? "" : "s");
         System.out.printf("Writing to file %s\n", outputPath);
-        app.writeWithFaces(inputPath, outputPath, faces);
+        BufferedImage img = ImageIO.read(inputPath.toFile());
+        faces.forEach(new Consumer<FaceAnnotation>() {
+            @Override
+            public void accept(FaceAnnotation faceAnnotation) {
+                app.annotateWithFaces(img, faceAnnotation);
+                app.annotateWithFaces2(img, faceAnnotation);
+                app.writePolygonsData(img, faceAnnotation);
 
-        //sendToBucket(BLURRED_BUCKET_NAME, outputPath);
+            }
+        });
+
+        ImageIO.write(img, "jpg", inputPath.toFile());
+
         uploadFile(outputPath.toFile());
+    }
+
+    private void annotateWithFaces(BufferedImage img, FaceAnnotation faceAnnotation) {
     }
 
     /*
