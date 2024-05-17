@@ -119,29 +119,23 @@ public class FaceDetectApp {
         return response.getFaceAnnotations();
     }
 
-    /**
-     * Reads image {@code inputPath} and writes {@code outputPath} with {@code faces} outlined.
-     */
-    private void writeWithFaces(Path inputPath, Path outputPath, List<FaceAnnotation> faces)
-            throws IOException {
-    }
-
 
     /**
      * Annotates an image {@code img} with a polygon around each face in {@code faces}.
      */
     private void annotateWithFaces2(BufferedImage img, FaceAnnotation face) {
-        Graphics g = img.getGraphics();
-        g.setColor(Color.BLUE);
+        Graphics2D gfx = img.createGraphics();
+        Polygon poly = new Polygon();
         BoundingPoly boundingPoly = face.getBoundingPoly();
         for (int i = 0; i < boundingPoly.getVertices().size() - 1; i++) {
             Vertex current = boundingPoly.getVertices().get(i);
-            Vertex next = boundingPoly.getVertices().get(i % boundingPoly.getVertices().size());
-            if (current.getX() != null && current.getY() != null
-                    && next.getX() != null && next.getY() != null) {
-                g.drawLine(current.getX(), current.getY(), next.getX(), next.getY());
+            if (current.getX() != null && current.getY() != null) {
+                poly.addPoint(current.getX(), current.getY());
             }
         }
+        gfx.setStroke(new BasicStroke(5));
+        gfx.setColor(new Color(0x00ff00));
+        gfx.draw(poly);
     }
 
     int landmarkIndex = 0;
