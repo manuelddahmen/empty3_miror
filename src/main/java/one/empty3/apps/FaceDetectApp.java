@@ -141,6 +141,7 @@ public class FaceDetectApp {
     int landmarkIndex = 0;
 
     private void writePolygonsData(BufferedImage img, FaceAnnotation face) {
+        Graphics2D gfx = img.createGraphics();
         face.getLandmarks().forEach(new Consumer<Landmark>() {
             @Override
             public void accept(Landmark landmark) {
@@ -151,6 +152,14 @@ public class FaceDetectApp {
                 while (iterator.hasNext()) {
                     Map.Entry<String, Object> next = iterator.next();
                     System.out.printf("Landmark # %d KEY{%s} TYPE {%s}: %s\n", landmarkIndex, String.valueOf(next.getKey()), String.valueOf(next.getValue().getClass().getCanonicalName()), String.valueOf(next.getValue()));
+                    if (next.getValue() instanceof com.google.api.services.vision.v1.model.Position p) {
+                        if (p.getX() != null && p.getY() != null) {
+                            gfx.setStroke(new BasicStroke(5));
+                            gfx.setColor(new Color(0x00ff00));
+                            gfx.drawOval((int) (double) p.getX(), (int) (double) p.getY(), 2, 2);
+                            gfx.drawString(landmark.getType(), (int) (double) p.getX(), (int) (double) p.getY());
+                        }
+                    }
                 }
                 landmarkIndex++;
             }
