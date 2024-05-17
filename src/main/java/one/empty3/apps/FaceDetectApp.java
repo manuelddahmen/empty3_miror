@@ -68,7 +68,7 @@ public class FaceDetectApp {
     private static String projectId;
     private final Vision vision;
 
-    private String[][][] landmarks = {{{"LEFT_EYE", "TYPE LEFT_EYE", "RIGHT_EYE", "LEFT_OF_LEFT_EYEBROW", "RIGHT_OF_LEFT_EYEBROW", "LEFT_OF_RIGHT_EYEBROW", "RIGHT_OF_RIGHT_EYEBROW", "MIDPOINT_BETWEEN_EYES", "NOSE_TIP", "NOSE_BOTTOM_RIGHT", "NOSE_BOTTOM_LEFT", "NOSE_BOTTOM_CENTER", "LEFT_EYE_TOP_BOUNDARY", "LEFT_EYE_RIGHT_CORNER", "LEFT_EYE_BOTTOM_BOUNDARY", "LEFT_EYE_BOTTOM_BOUNDARY", "LEFT_EYE_LEFT_CORNER", "RIGHT_EYE_TOP_BOUNDARY", "RIGHT_EYE_RIGHT_CORNER", "RIGHT_EYE_BOTTOM_BOUNDARY", "RIGHT_EYE_LEFT_CORNER", "LEFT_EYEBROW_UPPER_MIDPOINT", "RIGHT_EYEBROW_UPPER_MIDPOINT", "FOREHEAD_GLABELLA", "CHIN_LEFT_GONION", "LEFT_CHEEK_CENTER", "LEFT_CHEEK_CENTER", "RIGHT_CHEEK_CENTER", "RIGHT_CHEEK_CENTER"}}};
+    private String[][][] landmarks = {{{"LEFT_OF_LEFT_EYEBROW", "RIGHT_OF_LEFT_EYEBROW", "LEFT_OF_RIGHT_EYEBROW", "RIGHT_OF_RIGHT_EYEBROW", "MIDPOINT_BETWEEN_EYES", "NOSE_TIP", "NOSE_BOTTOM_RIGHT", "NOSE_BOTTOM_LEFT", "NOSE_BOTTOM_CENTER", "LEFT_EYEBROW_UPPER_MIDPOINT", "RIGHT_EYEBROW_UPPER_MIDPOINT", "FOREHEAD_GLABELLA", "CHIN_LEFT_GONION", "LEFT_CHEEK_CENTER", "LEFT_CHEEK_CENTER", "RIGHT_CHEEK_CENTER", "RIGHT_CHEEK_CENTER"}}};
 
     public FaceDetectApp(Vision visionService) {
         this.vision = visionService;
@@ -78,11 +78,13 @@ public class FaceDetectApp {
         landmarks = new String[][][]{
                 {
                         {"LEFT_EAR_TRAGION", "CHIN_RIGHT_GONION", "CHIN_GNATHION"},
-                        {"MOUTH_LEFT", "UPPER_LIP", "MOUTH_RIGHT", "MOUTH_CENTER"}
+                        {"MOUTH_LEFT", "UPPER_LIP", "MOUTH_RIGHT", "MOUTH_CENTER"},
+                        {"LEFT_EYE", "LEFT_EYE_LEFT_CORNER", "LEFT_EYE_TOP_BOUNDARY", "LEFT_EYE_RIGHT_CORNER", "LEFT_EYE_BOTTOM_BOUNDARY"}
                 },
                 {
                         {"RIGHT_EAR_TRAGION", "CHIN_RIGHT_GONION", "CHIN_GNATHION"},
-                        {"MOUTH_LEFT", "LOWER_LIP", "MOUTH_RIGHT", "MOUTH_CENTER"}
+                        {"MOUTH_LEFT", "LOWER_LIP", "MOUTH_RIGHT", "MOUTH_CENTER"},
+                        {"RIGHT_EYE", "RIGHT_EYE_LEFT_CORNER", "RIGHT_EYE_TOP_BOUNDARY", "RIGHT_EYE_RIGHT_CORNER", "RIGHT_EYE_BOTTOM_BOUNDARY"}
                 }
         };
     }
@@ -147,6 +149,8 @@ public class FaceDetectApp {
                 poly.addPoint(current.getX(), current.getY());
             }
         }
+        poly.addPoint(boundingPoly.getVertices().get(0).getX(),
+                boundingPoly.getVertices().get(0).getY());
         gfx.setStroke(new BasicStroke(5));
         gfx.setColor(new Color(0x00ff00));
         gfx.draw(poly);
