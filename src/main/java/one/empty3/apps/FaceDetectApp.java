@@ -147,7 +147,7 @@ public class FaceDetectApp {
                 Iterator<Map.Entry<String, Object>> iterator = landmark.entrySet().iterator();
                 while (iterator.hasNext()) {
                     Map.Entry<String, Object> next = iterator.next();
-                    System.out.printf("Landmark #%d KEY{%s} TYPE {%s}: %s\n" + landmarkIndex, String.valueOf(next.getKey()), String.valueOf(next.getValue().getClass().getCanonicalName()), String.valueOf(next.getValue()));
+                    System.out.printf("Landmark # %d KEY{%s} TYPE {%s}: %s\n", landmarkIndex, String.valueOf(next.getKey()), String.valueOf(next.getValue().getClass().getCanonicalName()), String.valueOf(next.getValue()));
                 }
                 landmarkIndex++;
             }
