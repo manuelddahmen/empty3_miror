@@ -68,10 +68,23 @@ public class FaceDetectApp {
     private static String projectId;
     private final Vision vision;
 
-    private String[][] landmarks = {{"LEFT_EYE", "TYPE LEFT_EYE", "RIGHT_EYE", "LEFT_OF_LEFT_EYEBROW", "RIGHT_OF_LEFT_EYEBROW", "LEFT_OF_RIGHT_EYEBROW", "RIGHT_OF_RIGHT_EYEBROW", "MIDPOINT_BETWEEN_EYES", "NOSE_TIP", "UPPER_LIP", "LOWER_LIP", "MOUTH_LEFT", "MOUTH_RIGHT", "MOUTH_CENTER", "NOSE_BOTTOM_RIGHT", "NOSE_BOTTOM_LEFT", "NOSE_BOTTOM_CENTER", "LEFT_EYE_TOP_BOUNDARY", "LEFT_EYE_RIGHT_CORNER", "LEFT_EYE_BOTTOM_BOUNDARY", "LEFT_EYE_BOTTOM_BOUNDARY", "LEFT_EYE_LEFT_CORNER", "RIGHT_EYE_TOP_BOUNDARY", "RIGHT_EYE_RIGHT_CORNER", "RIGHT_EYE_BOTTOM_BOUNDARY", "RIGHT_EYE_LEFT_CORNER", "LEFT_EYEBROW_UPPER_MIDPOINT", "RIGHT_EYEBROW_UPPER_MIDPOINT", "LEFT_EAR_TRAGION", "RIGHT_EAR_TRAGION", "FOREHEAD_GLABELLA", "CHIN_GNATHION", "CHIN_LEFT_GONION", "CHIN_RIGHT_GONION", "CHIN_RIGHT_GONION", "LEFT_CHEEK_CENTER", "LEFT_CHEEK_CENTER", "RIGHT_CHEEK_CENTER", "RIGHT_CHEEK_CENTER"}};
+    private String[][][] landmarks = {{{"LEFT_EYE", "TYPE LEFT_EYE", "RIGHT_EYE", "LEFT_OF_LEFT_EYEBROW", "RIGHT_OF_LEFT_EYEBROW", "LEFT_OF_RIGHT_EYEBROW", "RIGHT_OF_RIGHT_EYEBROW", "MIDPOINT_BETWEEN_EYES", "NOSE_TIP", "NOSE_BOTTOM_RIGHT", "NOSE_BOTTOM_LEFT", "NOSE_BOTTOM_CENTER", "LEFT_EYE_TOP_BOUNDARY", "LEFT_EYE_RIGHT_CORNER", "LEFT_EYE_BOTTOM_BOUNDARY", "LEFT_EYE_BOTTOM_BOUNDARY", "LEFT_EYE_LEFT_CORNER", "RIGHT_EYE_TOP_BOUNDARY", "RIGHT_EYE_RIGHT_CORNER", "RIGHT_EYE_BOTTOM_BOUNDARY", "RIGHT_EYE_LEFT_CORNER", "LEFT_EYEBROW_UPPER_MIDPOINT", "RIGHT_EYEBROW_UPPER_MIDPOINT", "FOREHEAD_GLABELLA", "CHIN_LEFT_GONION", "LEFT_CHEEK_CENTER", "LEFT_CHEEK_CENTER", "RIGHT_CHEEK_CENTER", "RIGHT_CHEEK_CENTER"}}};
 
     public FaceDetectApp(Vision visionService) {
         this.vision = visionService;
+    }
+
+    public void initStructurePolygons() {
+        landmarks = new String[][][]{
+                {
+                        {"LEFT_EAR_TRAGION", "CHIN_RIGHT_GONION", "CHIN_GNATHION"},
+                        {"MOUTH_LEFT", "UPPER_LIP", "MOUTH_RIGHT", "MOUTH_CENTER"}
+                },
+                {
+                        {"RIGHT_EAR_TRAGION", "CHIN_RIGHT_GONION", "CHIN_GNATHION"},
+                        {"MOUTH_LEFT", "LOWER_LIP", "MOUTH_RIGHT", "MOUTH_CENTER"}
+                }
+        };
     }
 
     /**
@@ -150,19 +163,25 @@ public class FaceDetectApp {
                 System.out.println("TYPE " + landmark.getType());
                 System.out.println("POSITION " + landmark.getPosition());
                 Iterator<Map.Entry<String, Object>> iterator = landmark.entrySet().iterator();
-                while (iterator.hasNext()) {
-                    Map.Entry<String, Object> next = iterator.next();
-                    System.out.printf("Landmark # %d KEY{%s} TYPE {%s}: %s\n", landmarkIndex, String.valueOf(next.getKey()), String.valueOf(next.getValue().getClass().getCanonicalName()), String.valueOf(next.getValue()));
-                    if (next.getValue() instanceof com.google.api.services.vision.v1.model.Position p) {
-                        if (p.getX() != null && p.getY() != null) {
-                            gfx.setStroke(new BasicStroke(5));
-                            gfx.setColor(new Color(0x00ff00));
-                            gfx.drawOval((int) (double) p.getX(), (int) (double) p.getY(), 2, 2);
-                            gfx.drawString(landmark.getType(), (int) (double) p.getX(), (int) (double) p.getY());
+                iterator.forEachRemaining(new Consumer<Map.Entry<String, Object>>() {
+                    @Override
+                    public void accept(Map.Entry<String, Object> stringObjectEntry) {
+                        Map.Entry<String, Object> next = iterator.next();
+                        System.out.printf("Landmark # %d KEY{%s} TYPE {%s}: %s\n", landmarkIndex, String.valueOf(next.getKey()), String.valueOf(next.getValue().getClass().getCanonicalName()), String.valueOf(next.getValue()));
+                        if (next.getValue() instanceof com.google.api.services.vision.v1.model.Position p) {
+                            if (p.getX() != null && p.getY() != null) {
+                                gfx.setStroke(new BasicStroke(2));
+                                gfx.setColor(new Color(0x00ff00));
+                                gfx.drawOval((int) (double) p.getX(), (int) (double) p.getY(), 1, 1);
+                                gfx.drawString(landmark.getType(), (int) (double) p.getX(), (int) (double) p.getY());
+                            }
                         }
+                        landmarkIndex++;
+
                     }
+                });
+                {
                 }
-                landmarkIndex++;
             }
         });
 /*
