@@ -137,7 +137,10 @@ public class FaceDetectApp {
         for (int i = 0; i < boundingPoly.getVertices().size() - 1; i++) {
             Vertex current = boundingPoly.getVertices().get(i);
             Vertex next = boundingPoly.getVertices().get(i % boundingPoly.getVertices().size());
-            g.drawLine(current.getX(), current.getY(), next.getX(), next.getY());
+            if (current.getX() != null && current.getY() != null
+                    && next.getX() != null && next.getY() != null) {
+                g.drawLine(current.getX(), current.getY(), next.getX(), next.getY());
+            }
         }
     }
 
@@ -241,7 +244,9 @@ public class FaceDetectApp {
         Graphics2D gfx = img.createGraphics();
         Polygon poly = new Polygon();
         for (Vertex vertex : face.getFdBoundingPoly().getVertices()) {
-            poly.addPoint(vertex.getX(), vertex.getY());
+            if (vertex.getX() != null && vertex.getY() != null) {
+                poly.addPoint(vertex.getX(), vertex.getY());
+            }
         }
         gfx.setStroke(new BasicStroke(5));
         gfx.setColor(new Color(0x00ff00));
