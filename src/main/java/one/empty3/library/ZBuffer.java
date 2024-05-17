@@ -30,10 +30,8 @@
  */
 package one.empty3.library;
 
-import one.empty3.library.core.nurbs.ParametricCurve;
 import one.empty3.library.core.nurbs.ParametricSurface;
 import one.empty3.library.core.nurbs.ParametricVolume;
-import one.empty3.library.core.nurbs.RPv;
 
 import java.awt.*;
 import java.io.File;
@@ -89,6 +87,7 @@ public interface ZBuffer {
      * @return image
      */
     ECBufferedImage image();
+
     ECBufferedImage imageInvX();
 
     /*__
@@ -164,7 +163,7 @@ public interface ZBuffer {
      *
      * @param point3D point
      */
-    void testDeep(Point3D point3D);
+    boolean testDeep(Point3D point3D);
 
     /*__
      * Dessine un point
@@ -172,9 +171,9 @@ public interface ZBuffer {
      * @param p point
      * @param c couleur
      */
-    void testDeep(Point3D p, Color c);
+    boolean testDeep(Point3D p, Color c);
 
-    void testDeep(Point3D p, int c);
+    boolean testDeep(Point3D p, int c);
 
     void tracerLumineux();
 
@@ -217,7 +216,7 @@ public interface ZBuffer {
 
     double maxDistance(Point... points);
 
-    void testDeep(Point3D pFinal, ITexture texture, double u, double v, ParametricSurface n);
+    boolean testDeep(Point3D pFinal, ITexture texture, double u, double v, ParametricSurface n);
 
     int la();
 

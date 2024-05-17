@@ -24,10 +24,10 @@ package one.empty3.library;
 
 import one.empty3.library.core.nurbs.ParametricSurface;
 import one.empty3.library.core.nurbs.ParametricVolume;
-import one.empty3.library.core.nurbs.RPv;
 
 import java.awt.*;
 import java.io.File;
+
 /*__
  * Created by manue on 15-06-19.
  */
@@ -109,11 +109,12 @@ public class ZBufferGL implements ZBuffer {
     public int resY() {
         return 0;
     }
-    
+
     @Override
     public boolean checkScreen(Point p1) {
         return false;
     }
+
     @Override
     public Scene scene() {
         return null;
@@ -130,18 +131,20 @@ public class ZBufferGL implements ZBuffer {
     }
 
     @Override
-    public void testDeep(Point3D point3D) {
+    public boolean testDeep(Point3D point3D) {
+
+        return false;
+    }
+
+    @Override
+    public boolean testDeep(Point3D p, Color c) {
+        return false;
 
     }
 
     @Override
-    public void testDeep(Point3D p, Color c) {
-
-    }
-
-    @Override
-    public void testDeep(Point3D p, int c) {
-
+    public boolean testDeep(Point3D p, int c) {
+        return false;
     }
 
     @Override
@@ -183,8 +186,10 @@ public class ZBufferGL implements ZBuffer {
     public void setDimension(int width, int height) {
 
     }
-    public void copyResourceFiles(File destDirectory){}
- 
+
+    public void copyResourceFiles(File destDirectory) {
+    }
+
     @Override
     public Point3D clickAt(double x, double y) {
         return null;
@@ -213,8 +218,8 @@ public class ZBufferGL implements ZBuffer {
     }
 
     @Override
-    public void testDeep(Point3D pFinal, ITexture texture, double u, double v, ParametricSurface n) {
-
+    public boolean testDeep(Point3D pFinal, ITexture texture, double u, double v, ParametricSurface n) {
+        return false;
     }
 
     @Override

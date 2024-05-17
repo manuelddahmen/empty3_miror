@@ -852,31 +852,30 @@ public class ZBufferImpl8 extends ZBufferImpl {
         }
     */
     @Override
-    public void testDeep(Point3D p, Color c) {
-
-        ime.testDeep(p, c);
+    public boolean testDeep(Point3D p, Color c) {
+        return ime.testDeep(p, c);
     }
 
     @Override
-    public void testDeep(Point3D p, int c) {
-        ime.testDeep(p, c);
-        ime.testDeep(p, c);
+    public boolean testDeep(Point3D p, int c) {
+        return ime.testDeep(p, c);
 
     }
 
-    public void testDeep(Point3D p) {
+    public boolean testDeep(Point3D p) {
         if (p != null && p.texture() != null) {
-            ime.testDeep(p, p.texture());
+            return ime.testDeep(p, p.texture());
         }
+        return false;
     }
 
-    public void testPoint(Point3D p, Color c) {
+    public boolean testPoint(Point3D p, Color c) {
         int cc = c.getRGB();
 
         if (scene().lumiereActive() != null) {
             cc = scene().lumiereActive().getCouleur(c.getRGB(), p, p.getNormale());
         }
-        ime.testDeep(p, cc);
+        return ime.testDeep(p, cc);
     }
 
 
@@ -1348,13 +1347,13 @@ public class ZBufferImpl8 extends ZBufferImpl {
             ime.setElementID(x, y, idImg);
         }
 
-        public void testDeep(Point3D x3d, int c) {
+        public boolean testDeep(Point3D x3d, int c) {
             if (x3d == null)
-                return;
+                return false;
             int cc = c;
             Point ce = camera().coordonneesPoint2D(x3d, that);
             if (ce == null)
-                return;
+                return false;
             double deep = camera().distanceCamera(x3d);
 
             int x = (int) ce.getX();
@@ -1371,21 +1370,23 @@ public class ZBufferImpl8 extends ZBufferImpl {
                 ime.setElementCouleur(x, y, cc);
                 ime.setDeep(x, y, deep);
                 ime.setElementPoint(x, y, x3d);
+                return true;
             }
+            return false;
         }
 
-        public void testDeep(Point3D p, Point3D n, Color c) {
+        public boolean testDeep(Point3D p, Point3D n, Color c) {
             // Color cc = c.getCouleur();
             p.setNormale(n);
-            testDeep(p, c.getRGB());
+            return testDeep(p, c.getRGB());
         }
 
         public void testDeep(Point3D p, Point3D n, int c) {
             testDeep(p, n, new Color(c));
         }
 
-        public void testDeep(Point3D p, ITexture texture) {
-            testDeep(p, texture.getColorAt(0.5, 0.5));
+        public boolean testDeep(Point3D p, ITexture texture) {
+            return testDeep(p, texture.getColorAt(0.5, 0.5));
 
         }
 
@@ -1398,8 +1399,8 @@ public class ZBufferImpl8 extends ZBufferImpl {
             testDeep(p, (p != null && p.texture() != null) ? p.texture() : CFAST);//WTF
         }
 
-        public void testDeep(Point3D p, Color c) {
-            testDeep(p, p.getNormale(), c);
+        public boolean testDeep(Point3D p, Color c) {
+            return testDeep(p, p.getNormale(), c);
         }
 
         public void testDeep(Point3D pFinal, Point3D point3D, int colorAt, Representable n) {

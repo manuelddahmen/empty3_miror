@@ -30,7 +30,6 @@ package one.empty3.library;
 import one.empty3.library.core.nurbs.*;
 import one.empty3.library.core.tribase.Precomputable;
 import one.empty3.library.objloader.E3Model;
-import one.empty3.modelling.Face;
 import one.empty3.pointset.PCont;
 
 import java.awt.*;
@@ -479,8 +478,8 @@ public class ZBufferImpl extends Representable implements ZBuffer {
         this.toDrawR = r;
     }
 
-    private void testDeep(Point3D rotate, ITexture texture) {
-        testDeep(rotate, texture.getColorAt(0, 0));
+    private boolean testDeep(Point3D rotate, ITexture texture) {
+        return testDeep(rotate, texture.getColorAt(0, 0));
     }
 
 
@@ -690,12 +689,12 @@ public class ZBufferImpl extends Representable implements ZBuffer {
     }
 
     @Override
-    public void testDeep(Point3D pFinal, ITexture texture, double u, double v, ParametricSurface n) {
-        testDeep(pFinal, texture);
+    public boolean testDeep(Point3D pFinal, ITexture texture, double u, double v, ParametricSurface n) {
+        return testDeep(pFinal, texture);
     }
 
-    public void testDeep(Point3D pFinal, ITexture texture, double u, double v, ParametricCurve n) {
-        testDeep(pFinal, texture);
+    public boolean testDeep(Point3D pFinal, ITexture texture, double u, double v, ParametricCurve n) {
+        return testDeep(pFinal, texture);
     }
 
     @Override
@@ -805,24 +804,24 @@ public class ZBufferImpl extends Representable implements ZBuffer {
     }
 
     @Override
-    public void testDeep(Point3D point3D) {
-        ime.testDeep(point3D);
+    public boolean testDeep(Point3D point3D) {
+        return ime.testDeep(point3D);
     }
 
     @Override
-    public void testDeep(Point3D p, Color c) {
-        ime.testDeep(p, c);
+    public boolean testDeep(Point3D p, Color c) {
+        return ime.testDeep(p, c);
     }
 
     @Override
-    public void testDeep(Point3D p, int c) {
-        ime.testDeep(p, c);
+    public boolean testDeep(Point3D p, int c) {
+        return ime.testDeep(p, c);
     }
 
-    public void testPoint(Point3D p, Color c) {
+    public boolean testPoint(Point3D p, Color c) {
         int cc = c.getRGB();
         cc = scene().lumiereActive().getCouleur(c.getRGB(), p, p.getNormale());
-        testDeep(p, cc);
+        return testDeep(p, cc);
     }
 
     protected void tracerAretes(Point3D point3d, Point3D point3d2, Color c) {
@@ -997,15 +996,35 @@ public class ZBufferImpl extends Representable implements ZBuffer {
                 }
                 if (displayType <= SURFACE_DISPLAY_TEXT_QUADS) {
                     if (n != null) {
-                        testDeep(pFinal, n.texture().getColorAt(uPoint, vPoint));
+                        if (testDeep(pFinal, n.texture(), uPoint, vPoint, n)) {
+                            Point ce = camera().coordonneesPoint2D(pFinal, that);
+                            ime.uMap[(int) ce.getX()][(int) ce.getY()] = uPoint;
+                            ime.vMap[(int) ce.getX()][(int) ce.getY()] = vPoint;
+
+                        }
                     } else if (texture != null) {
-                        testDeep(pFinal, texture.getColorAt(uPoint, vPoint));
+                        if (testDeep(pFinal, texture, uPoint, vPoint, n)) {
+                            Point ce = camera().coordonneesPoint2D(pFinal, that);
+                            ime.uMap[(int) ce.getX()][(int) ce.getY()] = uPoint;
+                            ime.vMap[(int) ce.getX()][(int) ce.getY()] = vPoint;
+
+                        }
                     } else {
-                        testDeep(pFinal, 0);
+                        if (testDeep(pFinal, 0)) {
+                            Point ce = camera().coordonneesPoint2D(pFinal, that);
+                            ime.uMap[(int) ce.getX()][(int) ce.getY()] = uPoint;
+                            ime.vMap[(int) ce.getX()][(int) ce.getY()] = vPoint;
+
+                        }
                     }
                 } else {
-                    int col = 0;
-                    testDeep(pFinal, col);
+                    TextureCol col = new TextureCol(Color.RED);
+                    if (testDeep(pFinal, col, uPoint, vPoint, n)) {
+                        Point ce = camera().coordonneesPoint2D(pFinal, that);
+                        ime.uMap[(int) ce.getX()][(int) ce.getY()] = uPoint;
+                        ime.vMap[(int) ce.getX()][(int) ce.getY()] = vPoint;
+
+                    }
                 }
             }
         }
@@ -1072,6 +1091,7 @@ public class ZBufferImpl extends Representable implements ZBuffer {
                 if (displayType <= SURFACE_DISPLAY_TEXT_QUADS) {
                     if (n != null) {
                         testDeep(pFinal, n.texture().getColorAt(uPoint, vPoint));
+
                     } else if (texture != null) {
                         testDeep(pFinal, texture.getColorAt(uPoint, vPoint));
                     } else {
@@ -1858,14 +1878,15 @@ public class ZBufferImpl extends Representable implements ZBuffer {
             }
         }
 
-        public void testDeep(Point3D p, Color c) {
-            testDeep(p, c.getRGB());
+        public boolean testDeep(Point3D p, Color c) {
+            return testDeep(p, c.getRGB());
         }
 
-        public void testDeep(Point3D p) {
+        public boolean testDeep(Point3D p) {
             if (p != null && p.texture() != null) {
-                testDeep(p, p.texture().getColorAt(0., 0.));
+                return testDeep(p, p.texture().getColorAt(0., 0.));
             }
+            return false;
         }
 
         public boolean testDeep(Point3D x3d, int c) {

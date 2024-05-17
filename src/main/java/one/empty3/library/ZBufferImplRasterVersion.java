@@ -131,17 +131,19 @@ public class ZBufferImplRasterVersion extends Representable implements ZBuffer {
         return p0;
         //return camera().calculerPointDansRepere(super.rotate(p0, ref));
     }
+
     public synchronized void draw(Collection<Object> collection) {
         collection.forEach(new Consumer() {
             @Override
             public void accept(Object o) {
-                if(o instanceof Representable) {
+                if (o instanceof Representable) {
                     draw((Representable) o);
-                } else if(o instanceof Collection)
+                } else if (o instanceof Collection)
                     draw((Collection) o);
             }
         });
     }
+
     public synchronized void draw(Representable r) {
         if (r == null) {
             Logger.getAnonymousLogger().log(Level.INFO, "r is null return");
@@ -461,6 +463,7 @@ public class ZBufferImplRasterVersion extends Representable implements ZBuffer {
         return bi2;
 
     }
+
     public boolean isLocked() {
         return locked;
     }
@@ -580,13 +583,14 @@ public class ZBufferImplRasterVersion extends Representable implements ZBuffer {
                 .max(Math.max(Math.max(Point.distance(p1.x, p1.y, p2.x, p2.y), Point.distance(p2.x, p2.y, p3.x, p3.y)),
                         Point.distance(p3.x, p3.y, p4.x, p4.y)), Point.distance(p4.x, p4.y, p1.x, p1.y));
     }
+
     public double maxDistance(Point... points) {
         return 0.0;
     }
 
     @Override
-    public void testDeep(Point3D pFinal, ITexture texture, double u, double v, ParametricSurface n) {
-        ime.testDeep(pFinal, texture, u, v, n);
+    public boolean testDeep(Point3D pFinal, ITexture texture, double u, double v, ParametricSurface n) {
+        return ime.testDeep(pFinal, texture, u, v, n);
     }
 
     @Override
@@ -697,22 +701,23 @@ public class ZBufferImplRasterVersion extends Representable implements ZBuffer {
     }
 
     @Override
-    public void testDeep(Point3D p, Color c) {
+    public boolean testDeep(Point3D p, Color c) {
         ime.testDeep(p, c);
-        ime.testDeep(p, c);
+        return ime.testDeep(p, c);
     }
 
     @Override
-    public void testDeep(Point3D p, int c) {
+    public boolean testDeep(Point3D p, int c) {
         ime.testDeep(p, c);
-        ime.testDeep(p, c);
+        return ime.testDeep(p, c);
 
     }
 
-    public void testDeep(Point3D p) {
+    public boolean testDeep(Point3D p) {
         if (p != null && p.texture() != null) {
             ime.testDeep(p, p.texture().getColorAt(0., 0.));
         }
+        return false;
     }
 
     public void testPoint(Point3D p, Color c) {
@@ -770,7 +775,7 @@ public class ZBufferImplRasterVersion extends Representable implements ZBuffer {
         if (p1 == null || p2 == null || p3 == null) {
             return;
         }
-        Point3D [] uvs = new Point3D[]
+        Point3D[] uvs = new Point3D[]
                 {Point3D.n(u0, v0, 0.0), Point3D.n(u1, v0, 0.0), Point3D.n(u1, v1, 0.0),
                         Point3D.n(u0, v1, 0.0)};
         Point3D n = pp1.moins(pp2).prodVect(pp3.moins(pp2)).norme1();
@@ -784,7 +789,7 @@ public class ZBufferImplRasterVersion extends Representable implements ZBuffer {
             if (pp != null) {
                 double iteres2 = 1.0 / (1 + mathUtilPow2(p3, pp));
                 Point3D p3ab;
-                for (double b = 0; b<=1.0/*Math.sqrt(p3a.moins(pp3).norme()*p3a.moins(pp3).norme()
+                for (double b = 0; b <= 1.0/*Math.sqrt(p3a.moins(pp3).norme()*p3a.moins(pp3).norme()
                         -pp2.moins(pp1).norme()*pp2.moins(pp1).norme())>=b*/; b += iteres2) {
                     p3ab = p3a.plus(pp3.moins(p3a).mult(b));
                     Point3D uv3ab = uv3a.plus(uvs[2].moins(uv3a).mult(b));
@@ -1389,10 +1394,10 @@ public class ZBufferImplRasterVersion extends Representable implements ZBuffer {
             return false;
         }
 
-        public void testDeep(Point3D p, Point3D n, Color c) {
+        public boolean testDeep(Point3D p, Point3D n, Color c) {
             // Color cc = c.getCouleur();
             p.setNormale(n);
-            testDeep(p, c.getRGB());
+            return testDeep(p, c.getRGB());
         }
 
         public void testDeep(Point3D p, Point3D n, int c) {
@@ -1427,8 +1432,8 @@ public class ZBufferImplRasterVersion extends Representable implements ZBuffer {
             testDeep(p, (p != null && p.texture() != null) ? p.texture() : CFAST);//WTF
         }
 
-        public void testDeep(Point3D p, Color c) {
-            testDeep(p, p.getNormale(), c);
+        public boolean testDeep(Point3D p, Color c) {
+            return testDeep(p, p.getNormale(), c);
         }
 
         public void testDeep(Point3D pFinal, Point3D point3D, int colorAt, Representable n) {
@@ -1504,7 +1509,7 @@ public class ZBufferImplRasterVersion extends Representable implements ZBuffer {
                     Simerepresentable[i][j] = null;
                 }
             }
-            if(wr==null) {
+            if (wr == null) {
                 bi = new ECBufferedImage(new BufferedImage(la, ha, BufferedImage.TYPE_INT_ARGB));
 
             }
@@ -1530,12 +1535,14 @@ public class ZBufferImplRasterVersion extends Representable implements ZBuffer {
             couleur_fond_int = texture().getColorAt(1.0 * x / largeur(), 1.0 * y / hauteur());
             return couleur_fond_int;
         }
+
         double[] defaultArray = new double[3];
+
         public int getElementCouleur(int x, int y) {
             if (checkCordinates(x, y)
                     && Simeid[x][y] == idImg
                     && Simeprof[x][y] < INFINITY.getZ()) {
-                defaultArray = wr.getPixel(x, y,defaultArray);
+                defaultArray = wr.getPixel(x, y, defaultArray);
                 return Lumiere.getInt(defaultArray);
             } else {
                 return COULEUR_FOND_INT(x, y);
@@ -1565,6 +1572,7 @@ public class ZBufferImplRasterVersion extends Representable implements ZBuffer {
             return sc[x + y * la];
 
         }
+
         public void setElementCouleur(int x, int y, int pc) {
             setElementID(x, y, idImg);
             wr.setPixel(x, y, Lumiere.getDoubles(pc));

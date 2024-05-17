@@ -1,5 +1,4 @@
 /*
- *
  *  * Copyright (c) 2024. Manuel Daniel Dahmen
  *  *
  *  *
@@ -52,8 +51,8 @@ public class TestHumanHeadTexturing extends TestObjetStub {
     }
 
     @Override
-    public void ginit() {
-        super.ginit();
+    public void finit() {
+        super.finit();
         z().setDisplayType(ZBufferImpl.DISPLAY_ALL);
         File file = new File(objFile);
         File dirModel = new File("resources/models/heads");
@@ -150,6 +149,12 @@ public class TestHumanHeadTexturing extends TestObjetStub {
             System.out.println("mouse adapter added");
         }
 
+        if (!isset && getPanelDraw() != null && img() != null) {
+            getPanelDraw().addMouseListener(mouseAdapter);
+            isset = true;
+            System.out.println("mouse adapter added");
+        }
+
 
     }
 
@@ -180,16 +185,6 @@ public class TestHumanHeadTexturing extends TestObjetStub {
                 });
             }
         });
-
-    }
-
-    @Override
-    public void finit() {
-        if (!isset && getPanelDraw() != null && img() != null) {
-            getPanelDraw().addMouseListener(mouseAdapter);
-            isset = true;
-            System.out.println("mouse adapter added");
-        }
 
     }
 
