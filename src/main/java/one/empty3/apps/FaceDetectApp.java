@@ -151,7 +151,7 @@ public class FaceDetectApp {
         }
         poly.addPoint(boundingPoly.getVertices().get(0).getX(),
                 boundingPoly.getVertices().get(0).getY());
-        gfx.setStroke(new BasicStroke(5));
+        gfx.setStroke(new BasicStroke(2));
         gfx.setColor(new Color(0x00ff00));
         gfx.draw(poly);
     }
@@ -264,6 +264,32 @@ public class FaceDetectApp {
   */
     }
 
+    private void writePolygonsDataPoly(BufferedImage img, FaceAnnotation face) {
+        Graphics2D gfx = img.createGraphics();
+        for (int i = 0; i < landmarks.length; i++) {
+            for (int j = 0; j < landmarks[i].length; j++) {
+                Polygon poly = new Polygon();
+                for (int i1 = landmarks[i][j].length - 1; i1 >= 0; i1--) {
+                    String landMarkType = landmarks[i][j][i1];
+                    face.getLandmarks().forEach(new Consumer<Landmark>() {
+                        @Override
+                        public void accept(Landmark landmark) {
+                            if (landmark.getType().equals(landMarkType) &&
+                                    landmark.getPosition().getX() != null && landmark.getPosition().getY() != null) {
+                                poly.addPoint((int) (double) landmark.getPosition().getX(),
+                                        (int) (double) landmark.getPosition().getY());
+                            }
+                        }
+                    });
+                }
+                gfx.setStroke(new BasicStroke(2));
+                gfx.setColor(new Color(0x0000ff));
+                gfx.drawPolygon(poly);
+
+            }
+        }
+    }
+
     /**
      * Annotates an image {@code img} with a polygon defined by {@code face}.
      */
@@ -307,6 +333,8 @@ public class FaceDetectApp {
             public void accept(FaceAnnotation faceAnnotation) {
                 app.annotateWithFaces(img, faceAnnotation);
                 app.annotateWithFaces2(img, faceAnnotation);
+                //app.writePolygonsData(img, faceAnnotation);
+                app.initStructurePolygons();
                 app.writePolygonsData(img, faceAnnotation);
 
             }
