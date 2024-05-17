@@ -32,6 +32,7 @@ import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.Bucket;
 import com.google.cloud.storage.BucketInfo;
 import one.empty3.feature.jviolajones.Rect;
+import one.empty3.library.Point3D;
 import one.empty3.modelling.Face;
 import org.jetbrains.annotations.NotNull;
 
@@ -67,8 +68,8 @@ public class FaceDetectApp {
     private static final int MAX_RESULTS = 10;
     private static String projectId;
     private final Vision vision;
-
-    private String[][][] landmarks = {{{"LEFT_OF_LEFT_EYEBROW", "RIGHT_OF_LEFT_EYEBROW", "LEFT_OF_RIGHT_EYEBROW", "RIGHT_OF_RIGHT_EYEBROW", "MIDPOINT_BETWEEN_EYES", "NOSE_TIP", "NOSE_BOTTOM_RIGHT", "NOSE_BOTTOM_LEFT", "NOSE_BOTTOM_CENTER", "LEFT_EYEBROW_UPPER_MIDPOINT", "RIGHT_EYEBROW_UPPER_MIDPOINT", "FOREHEAD_GLABELLA", "CHIN_LEFT_GONION", "LEFT_CHEEK_CENTER", "LEFT_CHEEK_CENTER", "RIGHT_CHEEK_CENTER", "RIGHT_CHEEK_CENTER"}}};
+    private HashMap<String, Polygon> polys = new HashMap<>();
+    private String[][][] landmarks = {{{"LEFT_EYE", "RIGHT_EYE", "LEFT_OF_LEFT_EYEBROW", "RIGHT_OF_LEFT_EYEBROW", "LEFT_OF_RIGHT_EYEBROW", "RIGHT_OF_RIGHT_EYEBROW", "MIDPOINT_BETWEEN_EYES", "NOSE_TIP", "NOSE_BOTTOM_RIGHT", "NOSE_BOTTOM_LEFT", "NOSE_BOTTOM_CENTER", "LEFT_EYEBROW_UPPER_MIDPOINT", "RIGHT_EYEBROW_UPPER_MIDPOINT", "FOREHEAD_GLABELLA"}}};
 
     public FaceDetectApp(Vision visionService) {
         this.vision = visionService;
@@ -77,16 +78,17 @@ public class FaceDetectApp {
     public void initStructurePolygons() {
         landmarks = new String[][][]{
                 {
-                        {"LEFT_EAR_TRAGION", "CHIN_RIGHT_GONION", "CHIN_GNATHION"},
+                        {"LEFT_EAR_TRAGION", "CHIN_LEFT_GONION", "CHIN_GNATHION", "LEFT_CHEEK_CENTER"},
                         {"MOUTH_LEFT", "UPPER_LIP", "MOUTH_RIGHT", "MOUTH_CENTER"},
-                        {"LEFT_EYE", "LEFT_EYE_LEFT_CORNER", "LEFT_EYE_TOP_BOUNDARY", "LEFT_EYE_RIGHT_CORNER", "LEFT_EYE_BOTTOM_BOUNDARY"}
+                        {"LEFT_EYE_LEFT_CORNER", "LEFT_EYE_TOP_BOUNDARY", "LEFT_EYE_RIGHT_CORNER", "LEFT_EYE_BOTTOM_BOUNDARY"}
                 },
                 {
-                        {"RIGHT_EAR_TRAGION", "CHIN_RIGHT_GONION", "CHIN_GNATHION"},
+                        {"RIGHT_EAR_TRAGION", "CHIN_RIGHT_GONION", "CHIN_GNATHION", "RIGHT_CHEEK_CENTER"},
                         {"MOUTH_LEFT", "LOWER_LIP", "MOUTH_RIGHT", "MOUTH_CENTER"},
-                        {"RIGHT_EYE", "RIGHT_EYE_LEFT_CORNER", "RIGHT_EYE_TOP_BOUNDARY", "RIGHT_EYE_RIGHT_CORNER", "RIGHT_EYE_BOTTOM_BOUNDARY"}
+                        {"RIGHT_EYE_LEFT_CORNER", "RIGHT_EYE_TOP_BOUNDARY", "RIGHT_EYE_RIGHT_CORNER", "RIGHT_EYE_BOTTOM_BOUNDARY"}
                 }
         };
+        polys = new HashMap<>();
     }
 
     /**
@@ -151,6 +153,7 @@ public class FaceDetectApp {
         }
         poly.addPoint(boundingPoly.getVertices().get(0).getX(),
                 boundingPoly.getVertices().get(0).getY());
+        polys.put("FACE", poly);
         gfx.setStroke(new BasicStroke(2));
         gfx.setColor(new Color(0x00ff00));
         gfx.draw(poly);
@@ -188,80 +191,6 @@ public class FaceDetectApp {
                 }
             }
         });
-/*
-        BoundingPoly bounds = face.getBoundingPoly();
-        float rotX = face.getHeadEulerAngleX();  // Head is rotated to the right rotY degrees
-        float rotY = face.getHeadEulerAngleY();  // Head is rotated to the right rotY degrees
-        float rotZ = face.getHeadEulerAngleZ();  // Head is tilted sideways rotZ degrees
-
-        // If landmark detection was enabled (mouth, ears, eyes, cheeks, and
-        // nose available):
-        //FaceLandmark leftEar = face.getLandmarks().get(GoogleCloudVisionV1p4beta1FaceAnnotationLandmark.LEFT_EAR);
-
-        paint.setColor(Color.BLUE);
-        paint.setStyle(Paint.Style.FILL);
-
-
-        PointF leftEarPos = null;
-        if (leftEar != null) {
-            leftEarPos = leftEar.getPosition();
-        }
-        // If landmark detection was enabled (mouth, ears, eyes, cheeks, and
-        // nose available):
-        PointF rightEarPos = null;
-        FaceLandmark rightEar = face.getLandmark(FaceLandmark.RIGHT_EAR);
-        if (rightEar != null) {
-            rightEarPos = rightEar.getPosition();
-        }
-
-        // If contour detection was enabled:
-        List<PointF> leftEyeContour = null;
-        try {
-            leftEyeContour =
-                    face.getContour(FaceContour.LEFT_EYE).getPoints();
-        } catch (NullPointerException ex) {
-            //ex.printStackTrace();
-        }
-        List<PointF> rightEyeContour = null;
-        try {
-            // If contour detection was enabled:
-            rightEyeContour =
-                    face.getContour(FaceContour.RIGHT_EYE).getPoints();
-        } catch (NullPointerException ex) {
-            //ex.printStackTrace();
-        }
-
-        // If classification was enabled:
-        float smileProb = 0f;
-        if (face.getSmilingProbability() != null) {
-            smileProb = face.getSmilingProbability();
-        }
-        float rightEyeOpenProb = 0f;
-        if (face.getRightEyeOpenProbability() != null) {
-            rightEyeOpenProb = face.getRightEyeOpenProbability();
-        }
-
-        // If face tracking was enabled:
-        int id = -1;
-        if (face.getTrackingId() != null) {
-            id = face.getTrackingId();
-        }
-
-        paint.setColor(Color.RED);
-
-        paint.setColor(Color.BLUE);
-        if (leftEyeContour != null && leftEyeContour.size() >= 2) {
-            for (int i = 0; i < leftEyeContour.size(); i++) {
-//                drawLine(coordCanvas(leftEyeContour.get(i)), coordCanvas(leftEyeContour.get((i + 1) % leftEyeContour.size())));
-            }
-        }
-        if (rightEyeContour != null && rightEyeContour.size() >= 2) {
-            for (int i = 0; i < rightEyeContour.size(); i++) {
-//                drawLine(coordCanvas(rightEyeContour.get(i)), coordCanvas(rightEyeContour.get((i + 1) % rightEyeContour.size())));
-            }
-        }
-        drawFace(face, faceData);
-  */
     }
 
     private void writePolygonsDataPoly(BufferedImage img, FaceAnnotation face) {
@@ -283,6 +212,7 @@ public class FaceDetectApp {
                 gfx.setStroke(new BasicStroke(2));
                 gfx.setColor(new Color(0x0000ff));
                 gfx.drawPolygon(poly);
+                polys.put(landmarks[i][j][0], poly);
 
             }
         }
@@ -330,7 +260,7 @@ public class FaceDetectApp {
             @Override
             public void accept(FaceAnnotation faceAnnotation) {
 //                app.annotateWithFaces(img, faceAnnotation);
-//                app.annotateWithFaces2(img, faceAnnotation);
+                app.annotateWithFaces2(img, faceAnnotation);
                 app.writePolygonsDataPoly(img, faceAnnotation);
 
             }
