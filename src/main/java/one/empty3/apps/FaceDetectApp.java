@@ -265,20 +265,18 @@ public class FaceDetectApp {
     }
 
     private void writePolygonsDataPoly(BufferedImage img, FaceAnnotation face) {
+        initStructurePolygons();
         Graphics2D gfx = img.createGraphics();
         for (int i = 0; i < landmarks.length; i++) {
             for (int j = 0; j < landmarks[i].length; j++) {
                 Polygon poly = new Polygon();
                 for (int i1 = landmarks[i][j].length - 1; i1 >= 0; i1--) {
                     String landMarkType = landmarks[i][j][i1];
-                    face.getLandmarks().forEach(new Consumer<Landmark>() {
-                        @Override
-                        public void accept(Landmark landmark) {
-                            if (landmark.getType().equals(landMarkType) &&
-                                    landmark.getPosition().getX() != null && landmark.getPosition().getY() != null) {
-                                poly.addPoint((int) (double) landmark.getPosition().getX(),
-                                        (int) (double) landmark.getPosition().getY());
-                            }
+                    face.getLandmarks().forEach(landmark -> {
+                        if (landmark.getType().equals(landMarkType) &&
+                                landmark.getPosition().getX() != null && landmark.getPosition().getY() != null) {
+                            poly.addPoint((int) (double) landmark.getPosition().getX(),
+                                    (int) (double) landmark.getPosition().getY());
                         }
                     });
                 }
@@ -331,11 +329,9 @@ public class FaceDetectApp {
         faces.forEach(new Consumer<FaceAnnotation>() {
             @Override
             public void accept(FaceAnnotation faceAnnotation) {
-                app.annotateWithFaces(img, faceAnnotation);
-                app.annotateWithFaces2(img, faceAnnotation);
-                //app.writePolygonsData(img, faceAnnotation);
-                app.initStructurePolygons();
-                app.writePolygonsData(img, faceAnnotation);
+//                app.annotateWithFaces(img, faceAnnotation);
+//                app.annotateWithFaces2(img, faceAnnotation);
+                app.writePolygonsDataPoly(img, faceAnnotation);
 
             }
         });
@@ -350,22 +346,6 @@ public class FaceDetectApp {
     private void annotateWithFaces(BufferedImage img, FaceAnnotation faceAnnotation) {
     }
 
-    /*
-        public static void sendToBucket(String BLURRED_BUCKET_NAME, Path outputPath) {
-            // Upload image to blurred bucket.
-            BlobId blurredBlobId = BlobId.of(BLURRED_BUCKET_NAME, outputPath);
-            BlobInfo blurredBlobInfo =
-                    BlobInfo.newBuilder(blurredBlobId).setContentType(blob.getContentType()).build();
-            try {
-                byte[] blurredFile = Files.readAllBytes(outputPath);
-                Blob blurredBlob = storage.create(blurredBlobInfo, blurredFile);
-                System.out.println(
-                        String.format("Applied effects image to: gs://%s/%s", BLURRED_BUCKET_NAME, outputPath));
-            } catch (Exception e) {
-                System.out.println(String.format("Error in upload: %s", e.getMessage()));
-            }
-        }
-    */
     // upload file to GCS
     public static void uploadFile(File filename) throws IOException {
         // Create a new GCS client
