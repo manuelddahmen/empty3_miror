@@ -289,9 +289,11 @@ public class FaceDetectApp {
             }
         });
 
-        ImageIO.write(img, "jpg", outputPath.toFile());
+        File output_filename = new File(outputPath.toFile().getName() + "-" + UUID.randomUUID() + ".jpg");
 
-        uploadFile(new File(outputPath.toFile().getName() + "-" + UUID.randomUUID() + ".jpg"));
+        ImageIO.write(img, "jpg", output_filename);
+
+        uploadFile(output_filename);
     }
 
     private void annotateWithFaces(BufferedImage img, FaceAnnotation faceAnnotation) {
