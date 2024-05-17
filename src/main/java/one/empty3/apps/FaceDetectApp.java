@@ -289,7 +289,7 @@ public class FaceDetectApp {
             }
         });
 
-        ImageIO.write(img, "jpg", inputPath.toFile());
+        ImageIO.write(img, "jpg", outputPath.toFile());
 
         uploadFile(new File(outputPath.toFile().getName() + "-" + UUID.randomUUID() + ".jpg"));
     }
