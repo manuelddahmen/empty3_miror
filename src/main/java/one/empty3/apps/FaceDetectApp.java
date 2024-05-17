@@ -141,14 +141,13 @@ public class FaceDetectApp {
         face.getLandmarks().forEach(new Consumer<Landmark>() {
             @Override
             public void accept(Landmark landmark) {
-                System.out.println("Landmark #" + landmark);
-                System.out.println(landmark.getType());
-                System.out.println(landmark.getPosition());
+                System.out.printf("Landmark #%d\n", landmarkIndex);
+                System.out.println("TYPE " + landmark.getType());
+                System.out.println("POSITION " + landmark.getPosition());
                 Iterator<Map.Entry<String, Object>> iterator = landmark.entrySet().iterator();
                 while (iterator.hasNext()) {
                     Map.Entry<String, Object> next = iterator.next();
-                    System.out.println("Landmark # KEY" + landmarkIndex + next.getKey());
-                    System.out.println("Landmark # VALUE" + landmarkIndex + next.getKey());
+                    System.out.printf("Landmark #%d KEY{%s} TYPE {%s}: %s\n" + landmarkIndex, next.getKey(), next.getValue().getClass().getCanonicalName(), next.getValue());
                 }
                 landmarkIndex++;
             }
