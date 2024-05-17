@@ -61,6 +61,7 @@ import javax.imageio.ImageIO;
 
 public class FaceDetectApp {
     private static final String BLURRED_BUCKET_NAME = "output-pictures";
+    private static final String INPUT_BUCKET_NAME = "input-pictures";
     private static Storage storage = StorageOptions.getDefaultInstance().getService();
     private static final String APPLICATION_NAME = "MeshMask";
     private static final int MAX_RESULTS = 10;
@@ -290,7 +291,7 @@ public class FaceDetectApp {
 
         ImageIO.write(img, "jpg", inputPath.toFile());
 
-        uploadFile(outputPath.toFile());
+        uploadFile(new File(outputPath.toFile().getName() + "-" + UUID.randomUUID() + ".jpg"));
     }
 
     private void annotateWithFaces(BufferedImage img, FaceAnnotation faceAnnotation) {
