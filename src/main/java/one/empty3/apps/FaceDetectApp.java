@@ -5,14 +5,8 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.vision.v1.Vision;
 import com.google.api.services.vision.v1.VisionScopes;
-import com.google.api.services.vision.v1.model.AnnotateImageRequest;
-import com.google.api.services.vision.v1.model.AnnotateImageResponse;
-import com.google.api.services.vision.v1.model.BatchAnnotateImagesRequest;
-import com.google.api.services.vision.v1.model.BatchAnnotateImagesResponse;
-import com.google.api.services.vision.v1.model.FaceAnnotation;
-import com.google.api.services.vision.v1.model.Feature;
+import com.google.api.services.vision.v1.model.*;
 import com.google.api.services.vision.v1.model.Image;
-import com.google.api.services.vision.v1.model.Vertex;
 import com.google.auth.http.HttpCredentialsAdapter;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.common.collect.ImmutableList;
@@ -37,6 +31,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.Bucket;
 import com.google.cloud.storage.BucketInfo;
+import one.empty3.feature.jviolajones.Rect;
 
 import java.awt.*;
 import java.io.File;
@@ -45,8 +40,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.GeneralSecurityException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -59,6 +53,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.GeneralSecurityException;
 import java.util.List;
+import java.util.function.Consumer;
 import javax.imageio.ImageIO;
 
 public class FaceDetectApp {
@@ -122,7 +117,7 @@ public class FaceDetectApp {
     /**
      * Reads image {@code inputPath} and writes {@code outputPath} with {@code faces} outlined.
      */
-    private static void writeWithFaces(Path inputPath, Path outputPath, List<FaceAnnotation> faces)
+    private void writeWithFaces(Path inputPath, Path outputPath, List<FaceAnnotation> faces)
             throws IOException {
         BufferedImage img = ImageIO.read(inputPath.toFile());
         annotateWithFaces(img, faces);
@@ -132,10 +127,106 @@ public class FaceDetectApp {
     /**
      * Annotates an image {@code img} with a polygon around each face in {@code faces}.
      */
-    public static void annotateWithFaces(BufferedImage img, List<FaceAnnotation> faces) {
+    public void annotateWithFaces(BufferedImage img, List<FaceAnnotation> faces) {
         for (FaceAnnotation face : faces) {
             annotateWithFace(img, face);
+            writePolygonsData(img, face);
         }
+    }
+
+    int landmarkIndex = 0;
+
+    private void writePolygonsData(BufferedImage img, FaceAnnotation face) {
+
+        face.getLandmarks().forEach(new Consumer<Landmark>() {
+            @Override
+            public void accept(Landmark landmark) {
+                System.out.println("Landmark #" + landmark);
+                System.out.println(landmark.getType());
+                System.out.println(landmark.getPosition());
+                Iterator<Map.Entry<String, Object>> iterator = landmark.entrySet().iterator();
+                while (iterator.hasNext()) {
+                    Map.Entry<String, Object> next = iterator.next();
+                    System.out.println("Landmark # KEY" + landmarkIndex + next.getKey());
+                    System.out.println("Landmark # VALUE" + landmarkIndex + next.getKey());
+                }
+                landmarkIndex++;
+            }
+        });
+/*
+        BoundingPoly bounds = face.getBoundingPoly();
+        float rotX = face.getHeadEulerAngleX();  // Head is rotated to the right rotY degrees
+        float rotY = face.getHeadEulerAngleY();  // Head is rotated to the right rotY degrees
+        float rotZ = face.getHeadEulerAngleZ();  // Head is tilted sideways rotZ degrees
+
+        // If landmark detection was enabled (mouth, ears, eyes, cheeks, and
+        // nose available):
+        //FaceLandmark leftEar = face.getLandmarks().get(GoogleCloudVisionV1p4beta1FaceAnnotationLandmark.LEFT_EAR);
+
+        paint.setColor(Color.BLUE);
+        paint.setStyle(Paint.Style.FILL);
+
+
+        PointF leftEarPos = null;
+        if (leftEar != null) {
+            leftEarPos = leftEar.getPosition();
+        }
+        // If landmark detection was enabled (mouth, ears, eyes, cheeks, and
+        // nose available):
+        PointF rightEarPos = null;
+        FaceLandmark rightEar = face.getLandmark(FaceLandmark.RIGHT_EAR);
+        if (rightEar != null) {
+            rightEarPos = rightEar.getPosition();
+        }
+
+        // If contour detection was enabled:
+        List<PointF> leftEyeContour = null;
+        try {
+            leftEyeContour =
+                    face.getContour(FaceContour.LEFT_EYE).getPoints();
+        } catch (NullPointerException ex) {
+            //ex.printStackTrace();
+        }
+        List<PointF> rightEyeContour = null;
+        try {
+            // If contour detection was enabled:
+            rightEyeContour =
+                    face.getContour(FaceContour.RIGHT_EYE).getPoints();
+        } catch (NullPointerException ex) {
+            //ex.printStackTrace();
+        }
+
+        // If classification was enabled:
+        float smileProb = 0f;
+        if (face.getSmilingProbability() != null) {
+            smileProb = face.getSmilingProbability();
+        }
+        float rightEyeOpenProb = 0f;
+        if (face.getRightEyeOpenProbability() != null) {
+            rightEyeOpenProb = face.getRightEyeOpenProbability();
+        }
+
+        // If face tracking was enabled:
+        int id = -1;
+        if (face.getTrackingId() != null) {
+            id = face.getTrackingId();
+        }
+
+        paint.setColor(Color.RED);
+
+        paint.setColor(Color.BLUE);
+        if (leftEyeContour != null && leftEyeContour.size() >= 2) {
+            for (int i = 0; i < leftEyeContour.size(); i++) {
+//                drawLine(coordCanvas(leftEyeContour.get(i)), coordCanvas(leftEyeContour.get((i + 1) % leftEyeContour.size())));
+            }
+        }
+        if (rightEyeContour != null && rightEyeContour.size() >= 2) {
+            for (int i = 0; i < rightEyeContour.size(); i++) {
+//                drawLine(coordCanvas(rightEyeContour.get(i)), coordCanvas(rightEyeContour.get((i + 1) % rightEyeContour.size())));
+            }
+        }
+        drawFace(face, faceData);
+  */
     }
 
     /**

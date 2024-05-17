@@ -690,7 +690,7 @@ public class ZBufferImpl extends Representable implements ZBuffer {
 
     @Override
     public boolean testDeep(Point3D pFinal, ITexture texture, double u, double v, ParametricSurface n) {
-        return testDeep(pFinal, texture);
+        return testDeep(pFinal, texture.getColorAt(u, v));
     }
 
     public boolean testDeep(Point3D pFinal, ITexture texture, double u, double v, ParametricCurve n) {
@@ -980,14 +980,12 @@ public class ZBufferImpl extends Representable implements ZBuffer {
                 double v00 = textUv[1] + (textUv[7] - textUv[1]) * b;
                 double v01 = textUv[3] + (textUv[5] - textUv[3]) * b;
                 double v = (v00 + v01) / 2;
-                double uPoint = u;
-                double vPoint = v;
                 pFinal.setNormale(normale);
                 pFinal.texture(texture);
                 if (n != null) {
-                    pFinal.setNormale(n.calculerNormale3D(uPoint, vPoint));
+                    pFinal.setNormale(n.calculerNormale3D(u, v));
                     if (displayType == DISPLAY_ALL) {
-                        pFinal = n.calculerPoint3D(uPoint, vPoint);
+                        pFinal = n.calculerPoint3D(u, v);
                         pFinal.texture(new ColorTexture(texture.getColorAt(u, v)));
                     } else {
                         pFinal.setNormale(normale);
@@ -996,33 +994,33 @@ public class ZBufferImpl extends Representable implements ZBuffer {
                 }
                 if (displayType <= SURFACE_DISPLAY_TEXT_QUADS) {
                     if (n != null) {
-                        if (testDeep(pFinal, n.texture(), uPoint, vPoint, n)) {
+                        if (testDeep(pFinal, n.texture(), u, v, n)) {
                             Point ce = camera().coordonneesPoint2D(pFinal, that);
-                            ime.uMap[(int) ce.getX()][(int) ce.getY()] = uPoint;
-                            ime.vMap[(int) ce.getX()][(int) ce.getY()] = vPoint;
+                            ime.uMap[(int) ce.getX()][(int) ce.getY()] = u;
+                            ime.vMap[(int) ce.getX()][(int) ce.getY()] = v;
 
                         }
                     } else if (texture != null) {
-                        if (testDeep(pFinal, texture, uPoint, vPoint, n)) {
+                        if (testDeep(pFinal, texture, u, v, n)) {
                             Point ce = camera().coordonneesPoint2D(pFinal, that);
-                            ime.uMap[(int) ce.getX()][(int) ce.getY()] = uPoint;
-                            ime.vMap[(int) ce.getX()][(int) ce.getY()] = vPoint;
+                            ime.uMap[(int) ce.getX()][(int) ce.getY()] = u;
+                            ime.vMap[(int) ce.getX()][(int) ce.getY()] = v;
 
                         }
                     } else {
-                        if (testDeep(pFinal, 0)) {
+                        if (testDeep(pFinal, Color.PINK.getRGB())) {
                             Point ce = camera().coordonneesPoint2D(pFinal, that);
-                            ime.uMap[(int) ce.getX()][(int) ce.getY()] = uPoint;
-                            ime.vMap[(int) ce.getX()][(int) ce.getY()] = vPoint;
+                            ime.uMap[(int) ce.getX()][(int) ce.getY()] = u;
+                            ime.vMap[(int) ce.getX()][(int) ce.getY()] = v;
 
                         }
                     }
                 } else {
                     TextureCol col = new TextureCol(Color.RED);
-                    if (testDeep(pFinal, col, uPoint, vPoint, n)) {
+                    if (testDeep(pFinal, col, u, v, n)) {
                         Point ce = camera().coordonneesPoint2D(pFinal, that);
-                        ime.uMap[(int) ce.getX()][(int) ce.getY()] = uPoint;
-                        ime.vMap[(int) ce.getX()][(int) ce.getY()] = vPoint;
+                        ime.uMap[(int) ce.getX()][(int) ce.getY()] = u;
+                        ime.vMap[(int) ce.getX()][(int) ce.getY()] = v;
 
                     }
                 }

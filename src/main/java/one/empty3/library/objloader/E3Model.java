@@ -72,7 +72,7 @@ public class E3Model extends RepresentableConteneur {
     private double[] knotU;
     private final RepresentableConteneur objects = new RepresentableConteneur();
 
-    public static class FaceWithUv extends ParametricSurface {
+    public class FaceWithUv extends ParametricSurface {
         Polygon polygon;
         double[] textUv;
         double u1, u2, v1, v2;
@@ -83,9 +83,9 @@ public class E3Model extends RepresentableConteneur {
             u2 = textureIndices[6];
             v1 = textureIndices[1];
             v2 = textureIndices[3];
-
             textUv = textureIndices;
-//            this.texture(texture);
+            this.polygon.texture(E3Model.this.texture);
+            //this.texture(texture);
 /*            for (int i = 0; i < faces.get(faceNo).length; i++) {
                 int[] ints = faces.get(faceNo);
                 for (int j = 0; j < ints.length; j++) {

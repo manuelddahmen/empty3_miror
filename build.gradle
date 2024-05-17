@@ -4,7 +4,7 @@ plugins {
     id 'java-library'
     id 'maven-publish'
     id 'signing'
-    id 'org.jetbrains.kotlin.jvm' version '1.9.20'
+    id 'org.jetbrains.kotlin.jvm' version '1.9.24'
 }
 
 sourceSets {
@@ -424,3 +424,5 @@ publishing {
 kotlin {
     jvmToolchain(21)
 }
+sourceCompatibility = 21
+targetCompatibility = 21

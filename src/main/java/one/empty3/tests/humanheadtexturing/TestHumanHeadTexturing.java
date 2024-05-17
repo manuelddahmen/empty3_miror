@@ -149,12 +149,6 @@ public class TestHumanHeadTexturing extends TestObjetStub {
             System.out.println("mouse adapter added");
         }
 
-        if (!isset && getPanelDraw() != null && img() != null) {
-            getPanelDraw().addMouseListener(mouseAdapter);
-            isset = true;
-            System.out.println("mouse adapter added");
-        }
-
 
     }
 

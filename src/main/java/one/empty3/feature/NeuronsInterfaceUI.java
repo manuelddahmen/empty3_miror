@@ -43,6 +43,7 @@ public class NeuronsInterfaceUI {
     private JEditorPane editorPane1;
     private JSplitPane splitPane1;
     private JTabbedPane tabbedOptions;
+    private JButton parcourirButton;
 
     public NeuronsInterfaceUI() {
         panel1 = new JPanel();
