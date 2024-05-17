@@ -83,16 +83,17 @@ public class FaceDetectApp {
                         {"LEFT_EYE_LEFT_CORNER", "LEFT_EYE_TOP_BOUNDARY", "LEFT_EYE_RIGHT_CORNER", "LEFT_EYE_BOTTOM_BOUNDARY"},
                         {"LEFT_OF_LEFT_EYEBROW", "LEFT_EYEBROW_UPPER_MIDPOINT", "RIGHT_OF_LEFT_EYEBROW"},
                         {"MIDPOINT_BETWEEN_EYES", "NOSE_TIP", "NOSE_BOTTOM_LEFT"},
-                        {"NOSE_BOTTOM_CENTER", "NOSE_BOTTOM_LEFT", "NOSE_TIP"}
                 },
                 {
                         {"RIGHT_EAR_TRAGION", "CHIN_RIGHT_GONION", "CHIN_GNATHION", "RIGHT_CHEEK_CENTER"},
                         {"MOUTH_LEFT", "LOWER_LIP", "MOUTH_RIGHT", "MOUTH_CENTER"},
                         {"RIGHT_EYE_LEFT_CORNER", "RIGHT_EYE_TOP_BOUNDARY", "RIGHT_EYE_RIGHT_CORNER", "RIGHT_EYE_BOTTOM_BOUNDARY"},
                         {"LEFT_OF_RIGHT_EYEBROW", "RIGHT_EYEBROW_UPPER_MIDPOINT", "RIGHT_OF_RIGHT_EYEBROW"},
-                        {"MIDPOINT_BETWEEN_EYES", "NOSE_TIP", "NOSE_BOTTOM_RIGHT", "NOSE_BOTTOM_CENTER"},
-                        {"NOSE_BOTTOM_CENTER", "NOSE_BOTTOM_RIGHT", "NOSE_TIP"}
-                }
+                        {"MIDPOINT_BETWEEN_EYES", "NOSE_TIP", "NOSE_BOTTOM_RIGHT"},
+                }, {
+                {"NOSE_TIP", "NOSE_BOTTOM_RIGHT", "NOSE_BOTTOM_CENTER", "NOSE_BOTTOM_LEFT"}
+
+        }
         };
         polys = new HashMap<>();
     }
