@@ -165,8 +165,8 @@ public class FaceDetectApp {
                 Iterator<Map.Entry<String, Object>> iterator = landmark.entrySet().iterator();
                 iterator.forEachRemaining(new Consumer<Map.Entry<String, Object>>() {
                     @Override
-                    public void accept(Map.Entry<String, Object> stringObjectEntry) {
-                        Map.Entry<String, Object> next = iterator.next();
+                    public void accept(Map.Entry<String, Object> next) {
+                        //Map.Entry<String, Object> next = iterator.next();
                         System.out.printf("Landmark # %d KEY{%s} TYPE {%s}: %s\n", landmarkIndex, String.valueOf(next.getKey()), String.valueOf(next.getValue().getClass().getCanonicalName()), String.valueOf(next.getValue()));
                         if (next.getValue() instanceof com.google.api.services.vision.v1.model.Position p) {
                             if (p.getX() != null && p.getY() != null) {
