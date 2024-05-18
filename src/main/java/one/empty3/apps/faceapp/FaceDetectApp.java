@@ -1,4 +1,26 @@
-package one.empty3.apps;
+/*
+ *
+ *  * Copyright (c) 2024. Manuel Daniel Dahmen
+ *  *
+ *  *
+ *  *    Copyright 2024 Manuel Daniel Dahmen
+ *  *
+ *  *    Licensed under the Apache License, Version 2.0 (the "License");
+ *  *    you may not use this file except in compliance with the License.
+ *  *    You may obtain a copy of the License at
+ *  *
+ *  *        http://www.apache.org/licenses/LICENSE-2.0
+ *  *
+ *  *    Unless required by applicable law or agreed to in writing, software
+ *  *    distributed under the License is distributed on an "AS IS" BASIS,
+ *  *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  *    See the License for the specific language governing permissions and
+ *  *    limitations under the License.
+ *
+ *
+ */
+
+package one.empty3.apps.faceapp;
 
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.json.JsonFactory;
@@ -10,7 +32,6 @@ import com.google.api.services.vision.v1.model.Image;
 import com.google.auth.http.HttpCredentialsAdapter;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.common.collect.ImmutableList;
-import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.BlobId;
 import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;
@@ -23,20 +44,7 @@ import com.google.cloud.storage.StorageOptions;
 //import com.google.cloud.vision.v1.Image;
 //import com.google.cloud.vision.v1.ImageAnnotatorClient;
 //import com.google.cloud.vision.v1.ImageSource;
-import com.google.cloud.vision.v1.SafeSearchAnnotation;
-import com.google.gson.JsonObject;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
-
-import com.google.cloud.storage.Blob;
-import com.google.cloud.storage.Bucket;
-import com.google.cloud.storage.BucketInfo;
-import one.empty3.feature.jviolajones.Rect;
-import one.empty3.library.Point3D;
-import one.empty3.modelling.Face;
-import org.jetbrains.annotations.NotNull;
-
-import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -50,18 +58,12 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Polygon;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.security.GeneralSecurityException;
 import java.util.List;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import javax.imageio.ImageIO;
 
 public class FaceDetectApp {
-    private static final String BLURRED_BUCKET_NAME = "output-pictures";
+    private static final String OUTPUT_BUCKET_NAME = "output-pictures";
     private static final String INPUT_BUCKET_NAME = "input-pictures";
     private static Storage storage = StorageOptions.getDefaultInstance().getService();
     private static final String APPLICATION_NAME = "MeshMask";
@@ -69,6 +71,7 @@ public class FaceDetectApp {
     private static String projectId;
     private final Vision vision;
     private HashMap<String, Polygon> polys = new HashMap<>();
+    private String[][][] landmarks0 = {{{"LEFT_EYE", "RIGHT_EYE", "FOREHEAD_GLABELLA"}}};
     private String[][][] landmarks = {{{"LEFT_EYE", "RIGHT_EYE", "FOREHEAD_GLABELLA"}}};
 
     public FaceDetectApp(Vision visionService) {
@@ -152,14 +155,14 @@ public class FaceDetectApp {
         Graphics2D gfx = img.createGraphics();
         Polygon poly = new Polygon();
         BoundingPoly boundingPoly = face.getBoundingPoly();
-        for (int i = 0; i < boundingPoly.getVertices().size() - 1; i++) {
+        for (int i = 0; i < boundingPoly.getVertices().size(); i++) {
             Vertex current = boundingPoly.getVertices().get(i);
             if (current.getX() != null && current.getY() != null) {
                 poly.addPoint(current.getX(), current.getY());
             }
         }
-        poly.addPoint(boundingPoly.getVertices().get(0).getX(),
-                boundingPoly.getVertices().get(0).getY());
+        //poly.addPoint(boundingPoly.getVertices().get(0).getX(),
+        //        boundingPoly.getVertices().get(0).getY());
         polys.put("FACE", poly);
         gfx.setStroke(new BasicStroke(2));
         gfx.setColor(new Color(0x00ff00));
@@ -182,7 +185,7 @@ public class FaceDetectApp {
                     public void accept(Map.Entry<String, Object> next) {
                         //Map.Entry<String, Object> next = iterator.next();
                         System.out.printf("Landmark # %d KEY{%s} TYPE {%s}: %s\n", landmarkIndex, String.valueOf(next.getKey()), String.valueOf(next.getValue().getClass().getCanonicalName()), String.valueOf(next.getValue()));
-                        if (next.getValue() instanceof com.google.api.services.vision.v1.model.Position p) {
+                        if ((next.getValue() instanceof Position p) && Arrays.asList(landmarks).contains(landmark.getType())) {
                             if (p.getX() != null && p.getY() != null) {
                                 gfx.setStroke(new BasicStroke(2));
                                 gfx.setColor(new Color(0x00ff00));
@@ -206,7 +209,7 @@ public class FaceDetectApp {
         for (int i = 0; i < landmarks.length; i++) {
             for (int j = 0; j < landmarks[i].length; j++) {
                 Polygon poly = new Polygon();
-                for (int i1 = landmarks[i][j].length - 1; i1 >= 0; i1--) {
+                for (int i1 = landmarks[i][j].length; i1 >= 0; i1--) {
                     String landMarkType = landmarks[i][j][i1];
                     face.getLandmarks().forEach(landmark -> {
                         if (landmark.getType().equals(landMarkType) &&
@@ -236,6 +239,7 @@ public class FaceDetectApp {
                 poly.addPoint(vertex.getX(), vertex.getY());
             }
         }
+        polys.put("FACE_RECT", poly);
         gfx.setStroke(new BasicStroke(5));
         gfx.setColor(new Color(0x00ff00));
         gfx.draw(poly);
@@ -266,9 +270,10 @@ public class FaceDetectApp {
         faces.forEach(new Consumer<FaceAnnotation>() {
             @Override
             public void accept(FaceAnnotation faceAnnotation) {
-//                app.annotateWithFaces(img, faceAnnotation);
+                app.annotateWithFaces(img, faceAnnotation);
                 app.annotateWithFaces2(img, faceAnnotation);
                 app.writePolygonsDataPoly(img, faceAnnotation);
+                app.writePolygonsData(img, faceAnnotation);
 
             }
         });
@@ -289,12 +294,12 @@ public class FaceDetectApp {
         storage = StorageOptions.newBuilder().setProjectId(projectId).build().getService();
         // The blob ID identifies the newly created blob, which consists of a bucket name and an object
         // name
-        BlobId blobId = BlobId.of(BLURRED_BUCKET_NAME, filename.getName());
+        BlobId blobId = BlobId.of(OUTPUT_BUCKET_NAME, filename.getName());
         BlobInfo blobInfo = BlobInfo.newBuilder(blobId).build();
 
 
         // upload the file and print the status
         storage.createFrom(blobInfo, Paths.get(filename.getAbsolutePath()));
-        System.out.println("File " + filename.getAbsolutePath() + " uploaded to bucket " + BLURRED_BUCKET_NAME + " as " + filename);
+        System.out.println("File " + filename.getAbsolutePath() + " uploaded to bucket " + OUTPUT_BUCKET_NAME + " as " + filename);
     }
 }
