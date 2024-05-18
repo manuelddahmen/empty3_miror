@@ -204,7 +204,7 @@ tasks.register('TestHumanHeadTexturing', JavaExec) {
 
 tasks.register('FaceDetectApp', JavaExec) {
     classpath sourceSets.test.runtimeClasspath
-    mainClass = "one.empty3.apps.FaceDetectApp"
+    mainClass = "one.empty3.apps.faceapp.FaceDetectApp"
     dependsOn(jar)
 }
 
