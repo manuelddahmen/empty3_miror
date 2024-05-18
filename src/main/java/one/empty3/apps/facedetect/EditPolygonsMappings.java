@@ -24,12 +24,11 @@
  * Created by JFormDesigner on Sat May 18 10:59:33 CEST 2024
  */
 
-package one.empty3.apps.faceapp;
+package one.empty3.apps.facedetect;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
@@ -37,7 +36,6 @@ import javax.swing.*;
 import javaAnd.awt.image.imageio.ImageIO;
 import net.miginfocom.swing.*;
 import one.empty3.apps.morph.*;
-import one.empty3.library.core.nurbs.F;
 import one.empty3.library.objloader.E3Model;
 
 /**

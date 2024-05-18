@@ -28,12 +28,12 @@ new FormModel {
 			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 				"value": "cell 0 0"
 			} )
-			add( new FormComponent( "one.empty3.apps.faceapp.EditPolygonsMappings" ) {
+			add( new FormComponent( "one.empty3.apps.facedetect.EditPolygonsMappings" ) {
 				name: "editPolygonsMappings2"
 			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 				"value": "cell 0 0 1 5"
 			} )
-			add( new FormComponent( "one.empty3.apps.faceapp.EditPolygonsMappings" ) {
+			add( new FormComponent( "one.empty3.apps.facedetect.EditPolygonsMappings" ) {
 				name: "editPolygonsMappings1"
 				"minimumSize": new java.awt.Dimension( 300, 240 )
 				"visible": false

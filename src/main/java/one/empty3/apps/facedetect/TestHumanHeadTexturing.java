@@ -20,7 +20,7 @@
  *
  */
 
-package one.empty3.apps.faceapp;
+package one.empty3.apps.facedetect;
 
 import one.empty3.feature.PixM;
 import one.empty3.library.*;
@@ -34,7 +34,6 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Consumer;
 
 public class TestHumanHeadTexturing extends TestObjetStub {
     private MouseAdapter mouseAdapter;

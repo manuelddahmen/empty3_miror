@@ -20,7 +20,7 @@
  *
  */
 
-package one.empty3.apps.faceapp;
+package one.empty3.apps.facedetect;
 
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.json.JsonFactory;

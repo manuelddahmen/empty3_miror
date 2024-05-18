@@ -24,7 +24,7 @@
  * Created by JFormDesigner on Sat May 18 12:25:12 CEST 2024
  */
 
-package one.empty3.apps.faceapp;
+package one.empty3.apps.facedetect;
 
 import java.awt.*;
 import java.awt.event.*;

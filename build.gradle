@@ -13,6 +13,11 @@ kotlin {
 sourceCompatibility = 21
 targetCompatibility = 21
 
+tasks.withType(JavaCompile) {
+    options.release = 21
+}
+
+
 sourceSets {
     main {
         java {
@@ -216,19 +221,19 @@ tasks.register('TestHumanHeadTexturing', JavaExec) {
 }
 tasks.register('Voronoi', JavaExec) {
     classpath sourceSets.test.runtimeClasspath
-    mainClass = "one.empty3.Voronoi"
+    mainClass = "one.empty3.exp.Voronoi"
     args ""
     dependsOn(jar)
 }
 
 tasks.register('FaceDetectApp', JavaExec) {
     classpath sourceSets.test.runtimeClasspath
-    mainClass = "one.empty3.apps.faceapp.FaceDetectApp"
+    mainClass = "one.empty3.apps.facedetect.FaceDetectApp"
     dependsOn(jar)
 }
 tasks.register('FaceDetectAppEditor', JavaExec) {
     classpath sourceSets.test.runtimeClasspath
-    mainClass = "one.empty3.apps.faceapp.JFrameEditPolygonsMappings"
+    mainClass = "one.empty3.apps.facedetect.JFrameEditPolygonsMappings"
     dependsOn(jar)
 }
 

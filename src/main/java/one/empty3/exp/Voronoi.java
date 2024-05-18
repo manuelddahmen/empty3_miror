@@ -38,7 +38,8 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class Voronoi extends ProcessFile {
-    private ArrayList<Point3D> points = new ArrayList<>();
+    private ArrayList<Point3D> pointsA = new ArrayList<>();
+    private ArrayList<Point3D> pointsB = new ArrayList<>();
 
     public void processTest() {
         try {
@@ -48,7 +49,7 @@ public class Voronoi extends ProcessFile {
             initPixMmIn(mIn);
 
             mOut = voronoi(mIn, mOut);
-            BufferedImage image = mIn.getImage();
+            BufferedImage image = mOut.getImage();
             ImageIO.write(image, "jpg", new File("results/voronoi.jpg"));
         } catch (Exception e) {
             e.printStackTrace();
@@ -59,8 +60,8 @@ public class Voronoi extends ProcessFile {
     private void initPixMmIn(PixM mIn) {
         for (int i = 0; i < mIn.getColumns(); i++) {
             for (int j = 0; j < mIn.getLines(); j++) {
-                mIn.setP(i, j, new Point3D((double) i / mIn.getColumns(),
-                        (double) j / mIn.getLines(), 0.0));
+                mIn.setP(i, j, new Point3D(1.0 * i / mIn.getColumns(),
+                        1.0 * j / mIn.getLines(), 0.0));
 
             }
 
@@ -86,18 +87,40 @@ public class Voronoi extends ProcessFile {
     public void genRandomPoints(PixM in, int n) {
         Random r = new Random();
         for (int i = 0; i < n; i++) {
-            points.add(new Point3D((double) r.nextInt(in.getColumns()), (double) (r.nextInt(in.getLines())), 0.0));
+            pointsA.add(new Point3D((double) r.nextInt(in.getColumns()), (double) (r.nextInt(in.getLines())), 0.0));
+            pointsB.add(new Point3D((double) r.nextInt(in.getColumns()), (double) (r.nextInt(in.getLines())), 0.0));
         }
     }
 
     private PixM voronoi(PixM mIn, PixM mOut) {
         genRandomPoints(mIn, 20);
+        double minX = Double.MAX_VALUE;
+        double minY = Double.MAX_VALUE;
+        double maxX = Double.MIN_VALUE;
+        double maxY = Double.MIN_VALUE;
         for (int i = 0; i < mIn.getColumns(); i++) {
             for (int j = 0; j < mIn.getLines(); j++) {
-                Point3D d = new Point3D((double) i, (double) j, 0.0);
-                for (int k = 0; k < points.size(); k++) {
-                    d = d.plus(mIn.getP(i, j).prodVect(points.get(k)));
+                Point3D d0 = new Point3D((double) i, (double) j, 0.0);
+                Point3D d = new Point3D(d0);
+                for (int k = 0; k < pointsA.size(); k++) {
+                    d = d.plus(mIn.getP(i, j).plus(Point3D.distance(pointsA.get(k).moins(d0), pointsB.get(k).moins(d0))));
                 }
+                d = d.mult(1.0 / pointsA.size());
+                mOut.setP(i, j, d);
+                maxX = Math.max(mIn.getP(i, j).getX(), maxX);
+                maxY = Math.max(mIn.getP(i, j).getY(), maxY);
+                minX = Math.min(mIn.getP(i, j).getX(), minX);
+                minY = Math.min(mIn.getP(i, j).getY(), minY);
+            }
+        }
+        double dx = maxX - minX;
+        double dy = maxY - minY;
+        double scaleX = 1.0 / dx;
+        double scaleY = 1.0 / dy;
+        for (int i = 0; i < mIn.getColumns(); i++) {
+            for (int j = 0; j < mIn.getLines(); j++) {
+                mOut.setP(i, j, mIn.getP((int) ((i - minX) * scaleX * mIn.getColumns()),
+                        (int) ((j - minY) * scaleY * mIn.getLines())));
             }
         }
         return mOut.normalize(0, 1);
