@@ -1,3 +1,3 @@
 Manifest-Version: 1.0
-Main-Class: one.empty3.apps.opad.PanelGraphics
+Main-Class: one.empty3.HelloWorld
 Class-Path: ./lib/jai_core.jar ./lib/jmf.jar ./lib/montemedia-0.7.7.jar ./lib/xuggle-xuggler-5.4.jar 

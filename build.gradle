@@ -7,6 +7,12 @@ plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.9.24'
 }
 
+kotlin {
+    jvmToolchain(21)
+}
+sourceCompatibility = 21
+targetCompatibility = 21
+
 sourceSets {
     main {
         java {
@@ -67,6 +73,13 @@ jar {
 def load = properties
 java {
     withSourcesJar()
+}
+
+tasks.register('Hello', JavaExec) {
+    classpath sourceSets.main.runtimeClasspath
+    mainClass = "one.empty3.HelloWorld"
+    args "arg1", "arg2"
+    dependsOn(jar)
 }
 tasks.register('FeatureAppGui', JavaExec) {
     classpath sourceSets.main.runtimeClasspath
@@ -201,10 +214,21 @@ tasks.register('TestHumanHeadTexturing', JavaExec) {
     args ""
     dependsOn(jar)
 }
+tasks.register('Voronoi', JavaExec) {
+    classpath sourceSets.test.runtimeClasspath
+    mainClass = "one.empty3.Voronoi"
+    args ""
+    dependsOn(jar)
+}
 
 tasks.register('FaceDetectApp', JavaExec) {
     classpath sourceSets.test.runtimeClasspath
     mainClass = "one.empty3.apps.faceapp.FaceDetectApp"
+    dependsOn(jar)
+}
+tasks.register('FaceDetectAppEditor', JavaExec) {
+    classpath sourceSets.test.runtimeClasspath
+    mainClass = "one.empty3.apps.faceapp.JFrameEditPolygonsMappings"
     dependsOn(jar)
 }
 
@@ -421,8 +445,3 @@ publishing {
         }*/
     }
 }
-kotlin {
-    jvmToolchain(21)
-}
-sourceCompatibility = 21
-targetCompatibility = 21

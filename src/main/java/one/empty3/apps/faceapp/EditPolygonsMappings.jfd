@@ -1,0 +1,93 @@
+JFDML JFormDesigner: "9.0.0.0.352" Java: "17.0.10" encoding: "UTF-8"
+
+new FormModel {
+	"i18n.autoExternalize": true
+	"i18n.bundlePackage": "one.empty3.library.core.testing"
+	"i18n.bundleName": "Bundle"
+	"i18n.keyPrefix": "EditPolygonsMappings"
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.BorderLayout ) ) {
+			name: "this"
+			"preferredSize": new java.awt.Dimension( 1280, 780 )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.BorderLayout ) ) {
+				name: "dialogPane"
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class net.miginfocom.swing.MigLayout ) {
+					"$layoutConstraints": "fill,insets dialog,hidemode 3"
+					"$columnConstraints": "[fill]"
+					"$rowConstraints": "[fill]"
+				} ) {
+					name: "contentPanel"
+					add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class net.miginfocom.swing.MigLayout ) {
+						"$layoutConstraints": "fill,hidemode 3"
+						"$columnConstraints": "[fill]"
+						"$rowConstraints": "[fill]"
+					} ) {
+						name: "panel1"
+						auxiliary() {
+							"JavaCodeGenerator.variableGetter": true
+							"JavaCodeGenerator.variableLocal": true
+						}
+						add( new FormContainer( "javax.swing.JSplitPane", new FormLayoutManager( class javax.swing.JSplitPane ) ) {
+							name: "splitPane1"
+							"orientation": 0
+							"resizeWeight": 0.5
+							add( new FormContainer( "javax.swing.JSplitPane", new FormLayoutManager( class javax.swing.JSplitPane ) ) {
+								name: "splitPane2"
+								"resizeWeight": 0.5
+								add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class net.miginfocom.swing.MigLayout ) {
+									"$layoutConstraints": "fill,hidemode 3"
+									"$columnConstraints": "[fill][fill]"
+									"$rowConstraints": "[][][]"
+								} ) {
+									name: "panelPicture"
+								}, new FormLayoutConstraints( class java.lang.String ) {
+									"value": "left"
+								} )
+								add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class net.miginfocom.swing.MigLayout ) {
+									"$layoutConstraints": "fill,hidemode 3"
+									"$columnConstraints": "[fill][fill]"
+									"$rowConstraints": "[][][]"
+								} ) {
+									name: "panelModelView"
+								}, new FormLayoutConstraints( class java.lang.String ) {
+									"value": "right"
+								} )
+							}, new FormLayoutConstraints( class java.lang.String ) {
+								"value": "left"
+							} )
+							add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+								name: "scrollPane1"
+								add( new FormComponent( "javax.swing.JTextArea" ) {
+									name: "textAreaTextOutput"
+								} )
+							}, new FormLayoutConstraints( class java.lang.String ) {
+								"value": "right"
+							} )
+						}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+							"value": "cell 0 0"
+						} )
+					}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+						"value": "cell 0 0"
+					} )
+				}, new FormLayoutConstraints( class java.lang.String ) {
+					"value": "Center"
+				} )
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class net.miginfocom.swing.MigLayout ) {
+					"$layoutConstraints": "insets dialog,alignx right"
+					"$columnConstraints": "[button,fill][button,fill]"
+					"$rowSpecs": "[fill]"
+				} ) {
+					name: "buttonBar"
+				}, new FormLayoutConstraints( class java.lang.String ) {
+					"value": "South"
+				} )
+			}, new FormLayoutConstraints( class java.lang.String ) {
+				"value": "Center"
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 0 )
+			"size": new java.awt.Dimension( 400, 300 )
+		} )
+	}
+}

@@ -1,0 +1,77 @@
+JFDML JFormDesigner: "9.0.0.0.352" Java: "17.0.10" encoding: "UTF-8"
+
+new FormModel {
+	"i18n.autoExternalize": true
+	"i18n.bundlePackage": "one.empty3.library.core.testing"
+	"i18n.bundleName": "Bundle"
+	"i18n.keyPrefix": "JFrameEditPolygonsMappings"
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class net.miginfocom.swing.MigLayout ) {
+			"$layoutConstraints": "fill,hidemode 3"
+			"$columnConstraints": "[fill]"
+			"$rowConstraints": "[][][][][]"
+		} ) {
+			name: "this"
+			"minimumSize": new java.awt.Dimension( 640, 480 )
+			"focusableWindowState": false
+			"enabled": false
+			"visible": true
+			"title": new FormMessage( null, "JFrameEditPolygonsMappings.this.title" )
+			auxiliary() {
+				"JavaCodeGenerator.variableGetter": true
+			}
+			add( new FormContainer( "javax.swing.JMenu", new FormLayoutManager( class javax.swing.JMenu ) ) {
+				name: "menu3"
+				"text": new FormMessage( null, "JFrameEditPolygonsMappings.menu3.text" )
+				"visible": false
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 0 0"
+			} )
+			add( new FormComponent( "one.empty3.apps.faceapp.EditPolygonsMappings" ) {
+				name: "editPolygonsMappings2"
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 0 0 1 5"
+			} )
+			add( new FormComponent( "one.empty3.apps.faceapp.EditPolygonsMappings" ) {
+				name: "editPolygonsMappings1"
+				"minimumSize": new java.awt.Dimension( 300, 240 )
+				"visible": false
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 0 0 1 5"
+			} )
+			menuBar: new FormContainer( "javax.swing.JMenuBar", new FormLayoutManager( class javax.swing.JMenuBar ) ) {
+				name: "menuBar1"
+				add( new FormContainer( "javax.swing.JMenu", new FormLayoutManager( class javax.swing.JMenu ) ) {
+					name: "menu2"
+					"text": new FormMessage( null, "JFrameEditPolygonsMappings.menu2.text" )
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "menuItem1"
+						"text": new FormMessage( null, "JFrameEditPolygonsMappings.menuItem1.text" )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItemLoadImage", true ) )
+					} )
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "menuItem2"
+						"text": new FormMessage( null, "JFrameEditPolygonsMappings.menuItem2.text" )
+					} )
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "menuItem3"
+						"text": new FormMessage( null, "JFrameEditPolygonsMappings.menuItem3.text" )
+					} )
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "menuItem4"
+						"text": new FormMessage( null, "JFrameEditPolygonsMappings.menuItem4.text" )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItemAdd3DModel", true ) )
+					} )
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "menuItem5"
+						"text": new FormMessage( null, "JFrameEditPolygonsMappings.menuItem5.text" )
+					} )
+				} )
+			}
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 0 )
+			"size": new java.awt.Dimension( 605, 445 )
+		} )
+	}
+}
