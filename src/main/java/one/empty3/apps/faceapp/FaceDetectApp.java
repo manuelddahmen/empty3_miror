@@ -209,7 +209,7 @@ public class FaceDetectApp {
         for (int i = 0; i < landmarks.length; i++) {
             for (int j = 0; j < landmarks[i].length; j++) {
                 Polygon poly = new Polygon();
-                for (int i1 = landmarks[i][j].length; i1 >= 0; i1--) {
+                for (int i1 = 0; i1 < landmarks[i][j].length; i1++) {
                     String landMarkType = landmarks[i][j][i1];
                     face.getLandmarks().forEach(landmark -> {
                         if (landmark.getType().equals(landMarkType) &&
