@@ -36,6 +36,8 @@ import com.google.cloud.storage.BlobId;
 import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageOptions;
+import one.empty3.library.Point3D;
+import one.empty3.modelling.Face;
 //import com.google.cloud.vision.v1.AnnotateImageRequest;
 //import com.google.cloud.vision.v1.AnnotateImageResponse;
 //import com.google.cloud.vision.v1.BatchAnnotateImagesResponse;
@@ -45,6 +47,9 @@ import com.google.cloud.storage.StorageOptions;
 //import com.google.cloud.vision.v1.ImageAnnotatorClient;
 //import com.google.cloud.vision.v1.ImageSource;
 
+import java.awt.*;
+import java.awt.Color;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -53,13 +58,10 @@ import java.nio.file.Paths;
 import java.security.GeneralSecurityException;
 import java.util.*;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.Polygon;
 import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 import javax.imageio.ImageIO;
 
 public class FaceDetectApp {
@@ -99,6 +101,39 @@ public class FaceDetectApp {
         }
         };
         polys = new HashMap<>();
+    }
+
+    public void frontal(BufferedImage img, FaceAnnotation faceAnnotation) {
+        String[] landmarks0 = new String[]{"LEFT_EAR_TRAGION", "RIGHT_EAR_TRAGION", "CHIN_GNATHION"};
+        Position[] leftTragion = {null};
+        final Position[] rightTragion = {null};
+        final Position[] chinGnathion = {null};
+        faceAnnotation.getLandmarks().stream().forEach(new Consumer<Landmark>() {
+            @Override
+            public void accept(Landmark landmark) {
+                if (landmark.getType().equals(landmarks0[0])) {
+                    leftTragion[0] = landmark.getPosition();
+                } else if (landmark.getType().equals(landmarks0[1])) {
+                    rightTragion[0] = landmark.getPosition();
+                } else if (landmark.getType().equals(landmarks0[2])) {
+                    chinGnathion[0] = landmark.getPosition();
+                }
+            }
+        });
+        if (leftTragion[0] != null && rightTragion[0] != null && chinGnathion[0] != null) {
+            Point3D le = new Point3D((double) leftTragion[0].getX(), (double) leftTragion[0].getY(), 0.0);
+            Point3D re = new Point3D((double) rightTragion[0].getX(), (double) rightTragion[0].getY(), 0.0)
+            Point3D me = new Point3D((double) chinGnathion[0].getX(), (double) chinGnathion[0].getY(), 0.0);
+
+            Double a = le.moins(re).norme();
+            Point3D vecLr = re.moins(le);
+            Point3D quatroFrontol = me.plus(le.plus(vecLr.mult(0.5)).moins(me).mult(2));
+
+            Graphics graphics = img.getGraphics();
+            graphics.setColor(Color.RED);
+            graphics.drawOval((int)(double)le.getX(), (int)(double)quatroFrontol.getY(),
+                    (int)(double)vecLr.norme(), (int)(double) quatroFrontol.moins(me).norme());
+        }
     }
 
     /**
