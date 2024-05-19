@@ -1,4 +1,4 @@
-JFDML JFormDesigner: "9.0.0.0.352" Java: "17.0.10" encoding: "UTF-8"
+JFDML JFormDesigner: "8.2.3.0.386" Java: "17.0.10" encoding: "UTF-8"
 
 new FormModel {
 	"i18n.autoExternalize": true
@@ -8,37 +8,31 @@ new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class net.miginfocom.swing.MigLayout ) {
-			"$layoutConstraints": "fill,hidemode 3"
+			"$layoutConstraints": "fill,novisualpadding,hidemode 3"
 			"$columnConstraints": "[fill]"
-			"$rowConstraints": "[][][][][]"
+			"$rowConstraints": "[]"
 		} ) {
 			name: "this"
-			"minimumSize": new java.awt.Dimension( 640, 480 )
+			"minimumSize": new java.awt.Dimension( 1280, 480 )
 			"focusableWindowState": false
-			"enabled": false
-			"visible": true
 			"title": new FormMessage( null, "JFrameEditPolygonsMappings.this.title" )
+			"autoRequestFocus": false
+			"preferredSize": new java.awt.Dimension( 1280, 480 )
+			"resizable": false
 			auxiliary() {
 				"JavaCodeGenerator.variableGetter": true
 			}
+			add( new FormComponent( "one.empty3.apps.facedetect.EditPolygonsMappings" ) {
+				name: "editPolygonsMappings2"
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 0 0"
+			} )
 			add( new FormContainer( "javax.swing.JMenu", new FormLayoutManager( class javax.swing.JMenu ) ) {
 				name: "menu3"
 				"text": new FormMessage( null, "JFrameEditPolygonsMappings.menu3.text" )
 				"visible": false
 			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 				"value": "cell 0 0"
-			} )
-			add( new FormComponent( "one.empty3.apps.facedetect.EditPolygonsMappings" ) {
-				name: "editPolygonsMappings2"
-			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
-				"value": "cell 0 0 1 5"
-			} )
-			add( new FormComponent( "one.empty3.apps.facedetect.EditPolygonsMappings" ) {
-				name: "editPolygonsMappings1"
-				"minimumSize": new java.awt.Dimension( 300, 240 )
-				"visible": false
-			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
-				"value": "cell 0 0 1 5"
 			} )
 			menuBar: new FormContainer( "javax.swing.JMenuBar", new FormLayoutManager( class javax.swing.JMenuBar ) ) {
 				name: "menuBar1"
@@ -71,7 +65,7 @@ new FormModel {
 			}
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )
-			"size": new java.awt.Dimension( 605, 445 )
+			"size": new java.awt.Dimension( 1375, 445 )
 		} )
 	}
 }

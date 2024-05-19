@@ -54,9 +54,12 @@ public class EditPolygonsMappings extends JPanel {
 
     }
 
+    public JPanel getContentPanel() {
+        return contentPanel;
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
-        // Generated using JFormDesigner Evaluation license - Dahmen Manuel
         dialogPane = new JPanel();
         contentPanel = new JPanel();
         var panel1 = new JPanel();
@@ -66,17 +69,9 @@ public class EditPolygonsMappings extends JPanel {
         panelModelView = new JPanel();
         scrollPane1 = new JScrollPane();
         textAreaTextOutput = new JTextArea();
-        buttonBar = new JPanel();
 
         //======== this ========
         setPreferredSize(new Dimension(1280, 780));
-        setBorder (new javax. swing. border. CompoundBorder( new javax .swing .border .TitledBorder (new javax
-        . swing. border. EmptyBorder( 0, 0, 0, 0) , "JF\u006frmD\u0065sig\u006eer \u0045val\u0075ati\u006fn", javax. swing
-        . border. TitledBorder. CENTER, javax. swing. border. TitledBorder. BOTTOM, new java .awt .
-        Font ("Dia\u006cog" ,java .awt .Font .BOLD ,12 ), java. awt. Color. red
-        ) , getBorder( )) );  addPropertyChangeListener (new java. beans. PropertyChangeListener( ){ @Override
-        public void propertyChange (java .beans .PropertyChangeEvent e) {if ("\u0062ord\u0065r" .equals (e .getPropertyName (
-        ) )) throw new RuntimeException( ); }} );
         setLayout(new BorderLayout());
 
         //======== dialogPane ========
@@ -85,8 +80,9 @@ public class EditPolygonsMappings extends JPanel {
 
             //======== contentPanel ========
             {
+                contentPanel.setMinimumSize(new Dimension(1280, 920));
                 contentPanel.setLayout(new MigLayout(
-                    "fill,insets dialog,hidemode 3",
+                    "fill,hidemode 3",
                     // columns
                     "[fill]",
                     // rows
@@ -112,6 +108,7 @@ public class EditPolygonsMappings extends JPanel {
 
                             //======== panelPicture ========
                             {
+                                panelPicture.setMinimumSize(new Dimension(640, 320));
                                 panelPicture.setLayout(new MigLayout(
                                     "fill,hidemode 3",
                                     // columns
@@ -126,6 +123,7 @@ public class EditPolygonsMappings extends JPanel {
 
                             //======== panelModelView ========
                             {
+                                panelModelView.setMinimumSize(new Dimension(640, 320));
                                 panelModelView.setLayout(new MigLayout(
                                     "fill,hidemode 3",
                                     // columns
@@ -142,6 +140,7 @@ public class EditPolygonsMappings extends JPanel {
 
                         //======== scrollPane1 ========
                         {
+                            scrollPane1.setMinimumSize(new Dimension(180, 320));
                             scrollPane1.setViewportView(textAreaTextOutput);
                         }
                         splitPane1.setBottomComponent(scrollPane1);
@@ -151,25 +150,12 @@ public class EditPolygonsMappings extends JPanel {
                 contentPanel.add(panel1, "cell 0 0");
             }
             dialogPane.add(contentPanel, BorderLayout.CENTER);
-
-            //======== buttonBar ========
-            {
-                buttonBar.setLayout(new MigLayout(
-                    "insets dialog,alignx right",
-                    // columns
-                    "[button,fill]" +
-                    "[button,fill]",
-                    // rows
-                    null));
-            }
-            dialogPane.add(buttonBar, BorderLayout.SOUTH);
         }
         add(dialogPane, BorderLayout.CENTER);
         // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
     }
 
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables  @formatter:off
-    // Generated using JFormDesigner Evaluation license - Dahmen Manuel
     private JPanel dialogPane;
     private JPanel contentPanel;
     private JSplitPane splitPane1;
@@ -178,7 +164,6 @@ public class EditPolygonsMappings extends JPanel {
     private JPanel panelModelView;
     private JScrollPane scrollPane1;
     private JTextArea textAreaTextOutput;
-    private JPanel buttonBar;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 
     public void loadImage(File selectedFile) {

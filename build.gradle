@@ -229,11 +229,13 @@ tasks.register('Voronoi', JavaExec) {
 tasks.register('FaceDetectApp', JavaExec) {
     classpath sourceSets.test.runtimeClasspath
     mainClass = "one.empty3.apps.facedetect.FaceDetectApp"
+    args ""
     dependsOn(jar)
 }
 tasks.register('FaceDetectAppEditor', JavaExec) {
     classpath sourceSets.test.runtimeClasspath
     mainClass = "one.empty3.apps.facedetect.JFrameEditPolygonsMappings"
+    args ""
     dependsOn(jar)
 }
 

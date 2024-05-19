@@ -39,25 +39,24 @@ import net.miginfocom.swing.*;
 public class JFrameEditPolygonsMappings extends JFrame {
     public JFrameEditPolygonsMappings() {
         initComponents();
-        setContentPane(new EditPolygonsMappings());
+        pack();
         setVisible(true);
     }
 
     private void menuItemLoadImage(ActionEvent e) {
         JFileChooser loadImage = new JFileChooser();
         loadImage.showOpenDialog(this);
-        editPolygonsMappings1.loadImage(loadImage.getSelectedFile());
+        editPolygonsMappings2.loadImage(loadImage.getSelectedFile());
     }
 
     private void menuItemAdd3DModel(ActionEvent e) {
         JFileChooser add3DModel = new JFileChooser();
         add3DModel.showOpenDialog(this);
-        editPolygonsMappings1.add3DModel(add3DModel.getSelectedFile());
+        editPolygonsMappings2.add3DModel(add3DModel.getSelectedFile());
     }
 
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
-        // Generated using JFormDesigner Evaluation license - Dahmen Manuel
         ResourceBundle bundle = ResourceBundle.getBundle("one.empty3.library.core.testing.Bundle");
         menuBar1 = new JMenuBar();
         menu2 = new JMenu();
@@ -66,26 +65,22 @@ public class JFrameEditPolygonsMappings extends JFrame {
         menuItem3 = new JMenuItem();
         menuItem4 = new JMenuItem();
         menuItem5 = new JMenuItem();
-        menu3 = new JMenu();
         editPolygonsMappings2 = new EditPolygonsMappings();
-        editPolygonsMappings1 = new EditPolygonsMappings();
+        menu3 = new JMenu();
 
         //======== this ========
-        setMinimumSize(new Dimension(640, 480));
+        setMinimumSize(new Dimension(1280, 480));
         setFocusableWindowState(false);
-        setEnabled(false);
-        setVisible(true);
         setTitle(bundle.getString("JFrameEditPolygonsMappings.this.title"));
+        setAutoRequestFocus(false);
+        setPreferredSize(new Dimension(1280, 480));
+        setResizable(false);
         var contentPane = getContentPane();
         contentPane.setLayout(new MigLayout(
-            "fill,hidemode 3",
+            "fill,novisualpadding,hidemode 3",
             // columns
             "[fill]",
             // rows
-            "[]" +
-            "[]" +
-            "[]" +
-            "[]" +
             "[]"));
 
         //======== menuBar1 ========
@@ -120,6 +115,7 @@ public class JFrameEditPolygonsMappings extends JFrame {
             menuBar1.add(menu2);
         }
         setJMenuBar(menuBar1);
+        contentPane.add(editPolygonsMappings2, "cell 0 0");
 
         //======== menu3 ========
         {
@@ -127,19 +123,12 @@ public class JFrameEditPolygonsMappings extends JFrame {
             menu3.setVisible(false);
         }
         contentPane.add(menu3, "cell 0 0");
-        contentPane.add(editPolygonsMappings2, "cell 0 0 1 5");
-
-        //---- editPolygonsMappings1 ----
-        editPolygonsMappings1.setMinimumSize(new Dimension(300, 240));
-        editPolygonsMappings1.setVisible(false);
-        contentPane.add(editPolygonsMappings1, "cell 0 0 1 5");
         pack();
         setLocationRelativeTo(getOwner());
         // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
     }
 
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables  @formatter:off
-    // Generated using JFormDesigner Evaluation license - Dahmen Manuel
     private JMenuBar menuBar1;
     private JMenu menu2;
     private JMenuItem menuItem1;
@@ -147,14 +136,12 @@ public class JFrameEditPolygonsMappings extends JFrame {
     private JMenuItem menuItem3;
     private JMenuItem menuItem4;
     private JMenuItem menuItem5;
-    private JMenu menu3;
     private EditPolygonsMappings editPolygonsMappings2;
-    private EditPolygonsMappings editPolygonsMappings1;
+    private JMenu menu3;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 
     public static void main(String[] args) {
         JFrameEditPolygonsMappings jFrameEditPolygonsMappings = new JFrameEditPolygonsMappings();
-        jFrameEditPolygonsMappings.setVisible(true);
     }
 
 }
