@@ -41,7 +41,7 @@ import one.empty3.library.objloader.E3Model;
 /**
  * @author manue
  */
-public class EditPolygonsMappings extends JPanel {
+public class EditPolygonsMappings extends JPanel implements Runnable {
 
     private BufferedImage image;
     private E3Model model;
@@ -175,9 +175,11 @@ public class EditPolygonsMappings extends JPanel {
         while (true) {
             try {
                 Thread.sleep(1000);
-                if (image != null) {
-                    Graphics graphics = getGraphics();
+                if (image != null && panelPicture != null) {
+                    // Display image
+                    Graphics graphics = panelPicture.getGraphics();
                     graphics.drawImage(image, 0, 0, getWidth(), getHeight(), null);
+                    // Display 3D scene
                 }
             } catch (InterruptedException ex) {
                 Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);

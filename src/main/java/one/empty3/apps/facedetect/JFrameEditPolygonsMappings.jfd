@@ -18,12 +18,12 @@ new FormModel {
 			"title": new FormMessage( null, "JFrameEditPolygonsMappings.this.title" )
 			"autoRequestFocus": false
 			"preferredSize": new java.awt.Dimension( 1280, 480 )
-			"resizable": false
 			auxiliary() {
 				"JavaCodeGenerator.variableGetter": true
 			}
 			add( new FormComponent( "one.empty3.apps.facedetect.EditPolygonsMappings" ) {
 				name: "editPolygonsMappings2"
+				"minimumSize": new java.awt.Dimension( 1280, 980 )
 			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 				"value": "cell 0 0"
 			} )

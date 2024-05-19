@@ -41,6 +41,8 @@ public class JFrameEditPolygonsMappings extends JFrame {
         initComponents();
         pack();
         setVisible(true);
+
+        new Thread(editPolygonsMappings2).start();
     }
 
     private void menuItemLoadImage(ActionEvent e) {
@@ -74,7 +76,6 @@ public class JFrameEditPolygonsMappings extends JFrame {
         setTitle(bundle.getString("JFrameEditPolygonsMappings.this.title"));
         setAutoRequestFocus(false);
         setPreferredSize(new Dimension(1280, 480));
-        setResizable(false);
         var contentPane = getContentPane();
         contentPane.setLayout(new MigLayout(
             "fill,novisualpadding,hidemode 3",
@@ -115,6 +116,9 @@ public class JFrameEditPolygonsMappings extends JFrame {
             menuBar1.add(menu2);
         }
         setJMenuBar(menuBar1);
+
+        //---- editPolygonsMappings2 ----
+        editPolygonsMappings2.setMinimumSize(new Dimension(1280, 980));
         contentPane.add(editPolygonsMappings2, "cell 0 0");
 
         //======== menu3 ========
