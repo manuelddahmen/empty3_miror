@@ -122,7 +122,7 @@ public class FaceDetectApp {
         });
         if (leftTragion[0] != null && rightTragion[0] != null && chinGnathion[0] != null) {
             Point3D le = new Point3D((double) leftTragion[0].getX(), (double) leftTragion[0].getY(), 0.0);
-            Point3D re = new Point3D((double) rightTragion[0].getX(), (double) rightTragion[0].getY(), 0.0)
+            Point3D re = new Point3D((double) rightTragion[0].getX(), (double) rightTragion[0].getY(), 0.0);
             Point3D me = new Point3D((double) chinGnathion[0].getX(), (double) chinGnathion[0].getY(), 0.0);
 
             Double a = le.moins(re).norme();
@@ -131,8 +131,8 @@ public class FaceDetectApp {
 
             Graphics graphics = img.getGraphics();
             graphics.setColor(Color.RED);
-            graphics.drawOval((int)(double)le.getX(), (int)(double)quatroFrontol.getY(),
-                    (int)(double)vecLr.norme(), (int)(double) quatroFrontol.moins(me).norme());
+            graphics.drawOval((int) (double) le.getX(), (int) (double) quatroFrontol.getY(),
+                    (int) (double) vecLr.norme(), (int) (double) quatroFrontol.moins(me).norme());
         }
     }
 
@@ -309,6 +309,7 @@ public class FaceDetectApp {
                 app.annotateWithFaces2(img, faceAnnotation);
                 app.writePolygonsDataPoly(img, faceAnnotation);
                 app.writePolygonsData(img, faceAnnotation);
+                app.frontal(img, faceAnnotation);
 
             }
         });
