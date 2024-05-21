@@ -118,28 +118,28 @@ public class FaceDetectApp {
                     rightTragion[0] = landmark.getPosition();
                 } else if (landmark.getType().equals(landmarks0[2])) {
                     chinGnathion[0] = landmark.getPosition();
-                } else if (landmark.getType().equals(landmarks0[3])) {
+                } /*else if (landmark.getType().equals(landmarks0[3])) {
                     noseTip[0] = landmark.getPosition();
-                }
+                }*/
             }
         });
         if (leftTragion[0] != null && rightTragion[0] != null && chinGnathion[0] != null) {
             Point3D le = new Point3D((double) leftTragion[0].getX(), (double) leftTragion[0].getY(), 0.0);
             Point3D re = new Point3D((double) rightTragion[0].getX(), (double) rightTragion[0].getY(), 0.0);
             Point3D me = new Point3D((double) chinGnathion[0].getX(), (double) chinGnathion[0].getY(), 0.0);
-            Point3D ne = new Point3D((double) noseTip[0].getX(), (double) noseTip[0].getY(), 0.0);
+            //Point3D ne = new Point3D((double) noseTip[0].getX(), (double) noseTip[0].getY(), 0.0);
 
             Double a = le.moins(re).norme();
             Point3D vecLr = re.moins(le);
-            Point3D quatroFrontol = me.plus(
+            Point3D frontal = me.plus(
                     le.plus(vecLr.mult(0.5)).moins(me).mult(2)
             );
-            Point3D quatroFrontol1 = me.plus(le.plus(vecLr.mult(0.5)).moins(me).mult(2));
+            //Point3D quatroFrontol1 = me.plus(le.plus(vecLr.mult(0.5)).moins(me).mult(2));
 
             Graphics graphics = img.getGraphics();
             graphics.setColor(Color.RED);
-            graphics.drawOval((int) (double) le.getX(), (int) (double) quatroFrontol.getY(),
-                    (int) (double) vecLr.norme(), (int) (double) quatroFrontol.moins(me).norme());
+            graphics.drawOval((int) (double) le.getX(), (int) (double) frontal.getY(),
+                    (int) (double) vecLr.norme(), (int) (double) frontal.moins(me).norme());
         }
     }
 
