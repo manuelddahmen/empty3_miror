@@ -138,7 +138,7 @@ public class FaceDetectApp {
 
             Graphics graphics = img.getGraphics();
             graphics.setColor(Color.RED);
-            graphics.drawOval((int) (double) le.getX(), (int) (double) frontal.getY(),
+            graphics.fillOval((int) (double) le.getX(), (int) (double) frontal.getY(),
                     (int) (double) vecLr.norme(), (int) (double) frontal.moins(me).norme());
         }
     }
@@ -263,7 +263,7 @@ public class FaceDetectApp {
                 }
                 gfx.setStroke(new BasicStroke(2));
                 gfx.setColor(new Color(0x0000ff));
-                gfx.drawPolygon(poly);
+                gfx.fillPolygon(poly);
                 polys.put(landmarks[i][j][0], poly);
 
             }
@@ -284,7 +284,7 @@ public class FaceDetectApp {
         polys.put("FACE_RECT", poly);
         gfx.setStroke(new BasicStroke(5));
         gfx.setColor(new Color(0x00ff00));
-        gfx.draw(poly);
+        //gfx.fill(poly);
     }
 
     /**
@@ -312,11 +312,11 @@ public class FaceDetectApp {
         faces.forEach(new Consumer<FaceAnnotation>() {
             @Override
             public void accept(FaceAnnotation faceAnnotation) {
+                app.frontal(img, faceAnnotation);
                 app.annotateWithFaces(img, faceAnnotation);
                 app.annotateWithFaces2(img, faceAnnotation);
                 app.writePolygonsDataPoly(img, faceAnnotation);
                 app.writePolygonsData(img, faceAnnotation);
-                app.frontal(img, faceAnnotation);
 
             }
         });
