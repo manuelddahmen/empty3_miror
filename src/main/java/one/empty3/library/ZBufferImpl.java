@@ -27,6 +27,8 @@
  */
 package one.empty3.library;
 
+import com.jogamp.opengl.util.texture.Texture;
+import javaAnd.awt.image.BufferedImage;
 import one.empty3.library.core.nurbs.*;
 import one.empty3.library.core.tribase.Precomputable;
 import one.empty3.library.objloader.E3Model;
@@ -929,6 +931,76 @@ public class ZBufferImpl extends Representable implements ZBuffer {
         tracerQuad(polygon.getPoints().getElem(0), polygon.getPoints().getElem(1),
                 polygon.getPoints().getElem(2), polygon.getPoints().getElem(3), face.texture(),
                 face.getU1(), face.getU2(), face.getV1(), face.getV2(), null);
+    }
+
+    public void tracerQuadInverse(E3Model.FaceWithUv face, Polygon polygonOnImage, BufferedImage original, double u, double v) {
+        Polygon polygon = face.getPolygon();
+        tracerQuad(polygon.getPoints().getElem(0), polygon.getPoints().getElem(1),
+                polygon.getPoints().getElem(2), polygon.getPoints().getElem(3), face.texture(),
+                face.getU1(), face.getU2(), face.getV1(), face.getV2(), null);
+
+
+        int width = original.getWidth();
+        int height = original.getHeight();
+
+        double u01, u02, v01, v02;
+        u01 = face.getU1() * width;
+        u02 = face.getU2() * width;
+        v01 = face.getV1() * height;
+        v02 = face.getV2() * height;
+
+        Point p1, p2, p3, p4;
+        p1 = camera().coordonneesPoint2D(polygon.getPoints().getElem(0), this);
+        p2 = camera().coordonneesPoint2D(polygon.getPoints().getElem(1), this);
+        p3 = camera().coordonneesPoint2D(polygon.getPoints().getElem(2), this);
+        p4 = camera().coordonneesPoint2D(polygon.getPoints().getElem(3), this);
+
+        double inter = Math.max(1 / (maxDistance(p1, p2, p3, p4) + 1) / 3, MIN_INCR);
+        for (double a = 0; a < 1.0; a += inter) {
+            Point3D pElevation1 = polygon.getPoints().getElem(0).plus(polygon.getPoints().getElem(0).mult(-1d).plus(polygon.getPoints().getElem(1)).mult(a));
+            Point3D pElevation2 = polygon.getPoints().getElem(3).plus(polygon.getPoints().getElem(3).mult(-1d).plus(polygon.getPoints().getElem(3)).mult(a));
+
+            Point3D pE1Image = polygonOnImage.getPoints().getElem(0).plus(polygonOnImage.getPoints().getElem(0).mult(-1d).plus(polygonOnImage.getPoints().getElem(1)).mult(a));
+            Point3D pE2Image = polygonOnImage.getPoints().getElem(3).plus(polygonOnImage.getPoints().getElem(3).mult(-1d).plus(polygonOnImage.getPoints().getElem(3)).mult(a));
+
+            double inter2 = Math.max(1. / (maxDistance(camera().coordonneesPoint2D(pElevation1, this),
+                    camera().coordonneesPoint2D(pElevation2, this)) + 1.) / 3., MIN_INCR);
+            //if (inter2 > MIN_INCR)
+            for (double b = 0; b < 1.0; b += inter2) {
+                Point3D pFinal = (pElevation1.plus(pElevation1.mult(-1d).plus(pElevation2).mult(b)));
+                Point3D pFinalOnImage = (pE1Image.plus(pE1Image.mult(-1d).plus(pE2Image).mult(b)));
+                double uPoint = u01 + (u02 - u01) * a;
+                double vPoint = v01 + (v02 - v01) * b;
+                pFinal.texture(texture);
+                if (face != null) {
+                    pFinal.setNormale(face.calculerNormale3D(uPoint, vPoint));
+                    if (displayType == DISPLAY_ALL) {
+                        pFinal = face.calculerPoint3D(uPoint, vPoint);
+                        pFinal.texture(texture);
+                    } else {
+                        pFinal.setNormale(face.calculerNormale3D(uPoint, vPoint));
+                        pFinal.texture(texture);
+
+                    }
+                }
+                int col = texture.getColorAt(uPoint, vPoint);
+                if (displayType <= SURFACE_DISPLAY_TEXT_QUADS) {
+                    if (face != null) {
+                        testDeep(pFinal, original.getRGB((int) (double) (pFinalOnImage.getX()), (int) (double) (pFinalOnImage.getY())));
+
+                    } else if (original != null) {
+                        testDeep(pFinal, original.getRGB((int) (double) (pFinalOnImage.getX()), (int) (double) (pFinalOnImage.getY())));
+                    } else {
+                        testDeep(pFinal, col);
+                    }
+                } else {
+                    testDeep(pFinal, col);
+                }
+            }
+        }
+
+        //}
+
     }
 
     public void tracerQuadRefined(E3Model.FaceWithUv face) {
