@@ -39,6 +39,8 @@ import net.miginfocom.swing.*;
 public class JFrameEditPolygonsMappings extends JFrame {
     public JFrameEditPolygonsMappings() {
         initComponents();
+        editPolygonsMappings2 = new EditPolygonsMappings(this);
+        setContentPane(editPolygonsMappings2);
         pack();
         setVisible(true);
 
@@ -71,11 +73,11 @@ public class JFrameEditPolygonsMappings extends JFrame {
         menu3 = new JMenu();
 
         //======== this ========
-        setMinimumSize(new Dimension(1280, 480));
+        setMinimumSize(new Dimension(830, 600));
         setFocusableWindowState(false);
         setTitle(bundle.getString("JFrameEditPolygonsMappings.this.title"));
         setAutoRequestFocus(false);
-        setPreferredSize(new Dimension(1280, 480));
+        setMaximizedBounds(null);
         var contentPane = getContentPane();
         contentPane.setLayout(new MigLayout(
             "fill,novisualpadding,hidemode 3",
@@ -118,7 +120,7 @@ public class JFrameEditPolygonsMappings extends JFrame {
         setJMenuBar(menuBar1);
 
         //---- editPolygonsMappings2 ----
-        editPolygonsMappings2.setMinimumSize(new Dimension(1280, 980));
+        editPolygonsMappings2.setMinimumSize(new Dimension(800, 600));
         contentPane.add(editPolygonsMappings2, "cell 0 0");
 
         //======== menu3 ========

@@ -1,4 +1,4 @@
-JFDML JFormDesigner: "8.2.3.0.386" Java: "17.0.10" encoding: "UTF-8"
+JFDML JFormDesigner: "9.0.0.0.352" Java: "17.0.11" encoding: "UTF-8"
 
 new FormModel {
 	"i18n.autoExternalize": true
@@ -13,17 +13,17 @@ new FormModel {
 			"$rowConstraints": "[]"
 		} ) {
 			name: "this"
-			"minimumSize": new java.awt.Dimension( 1280, 480 )
+			"minimumSize": new java.awt.Dimension( 830, 600 )
 			"focusableWindowState": false
 			"title": new FormMessage( null, "JFrameEditPolygonsMappings.this.title" )
 			"autoRequestFocus": false
-			"preferredSize": new java.awt.Dimension( 1280, 480 )
+			"maximizedBounds": sfield com.jformdesigner.model.FormObject NULL_VALUE
 			auxiliary() {
 				"JavaCodeGenerator.variableGetter": true
 			}
 			add( new FormComponent( "one.empty3.apps.facedetect.EditPolygonsMappings" ) {
 				name: "editPolygonsMappings2"
-				"minimumSize": new java.awt.Dimension( 1280, 980 )
+				"minimumSize": new java.awt.Dimension( 800, 600 )
 			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 				"value": "cell 0 0"
 			} )
@@ -65,7 +65,7 @@ new FormModel {
 			}
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )
-			"size": new java.awt.Dimension( 1375, 445 )
+			"size": new java.awt.Dimension( 1375, 660 )
 		} )
 	}
 }

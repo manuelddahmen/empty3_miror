@@ -52,6 +52,7 @@ import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -75,6 +76,7 @@ public class FaceDetectApp {
     private HashMap<String, Polygon> polys = new HashMap<>();
     private String[][][] landmarks0 = {{{"LEFT_EYE", "RIGHT_EYE", "FOREHEAD_GLABELLA"}}};
     private String[][][] landmarks = {{{"LEFT_EYE", "RIGHT_EYE", "FOREHEAD_GLABELLA"}}};
+    private PrintWriter dataWriter;
 
     public FaceDetectApp(Vision visionService) {
         this.vision = visionService;
@@ -299,8 +301,8 @@ public class FaceDetectApp {
         }
         Path inputPath = Paths.get(args[0]);
         Path outputPath = Paths.get(args[1]);
-        if (!outputPath.toString().toLowerCase().endsWith(".jpg")) {
-            System.err.println("outputImagePath must have the file extension 'jpg'.");
+        if (!outputPath.toString().toLowerCase().endsWith(".jpg") && !outputPath.toString().toLowerCase().endsWith(".png")) {
+            System.err.println("outputImagePath must have the file extension 'jpg' or 'png'.");
             System.exit(1);
         }
 
@@ -317,15 +319,37 @@ public class FaceDetectApp {
                 app.annotateWithFaces2(img, faceAnnotation);
                 app.writePolygonsDataPoly(img, faceAnnotation);
                 app.writePolygonsData(img, faceAnnotation);
-
+                app.writeFaceData(faceAnnotation);
             }
         });
-
+        File annotationData = new File(outputPath.toFile().getName() + "-" + UUID.randomUUID() + ".txt");
         File output_filename = new File(outputPath.toFile().getName() + "-" + UUID.randomUUID() + ".jpg");
 
         ImageIO.write(img, "jpg", output_filename);
 
+
         uploadFile(output_filename);
+    }
+
+    private void writeFaceData(FaceAnnotation faceAnnotation) {
+
+        for (int i = 0; i < landmarks.length; i++) {
+            for (int j = 0; j < landmarks[i].length; j++) {
+                for (int k = 0; k < landmarks[i][j].length; k++) {
+                    dataWriter.println(landmarks[i][j][k]);
+                    int finalI = i;
+                    int finalJ = j;
+                    int finalK = k;
+                    faceAnnotation.getLandmarks().forEach(landmark -> {
+                        if (landmark.getType().equals(landmarks[finalI][finalJ][finalK])) {
+                            dataWriter.println(landmark.getPosition().getX());
+                            dataWriter.println(landmark.getPosition().getY());
+                        }
+                    });
+                    dataWriter.println();
+                }
+            }
+        }
     }
 
     private void annotateWithFaces(BufferedImage img, FaceAnnotation faceAnnotation) {

@@ -1,4 +1,4 @@
-JFDML JFormDesigner: "8.2.3.0.386" Java: "17.0.10" encoding: "UTF-8"
+JFDML JFormDesigner: "9.0.0.0.352" Java: "17.0.11" encoding: "UTF-8"
 
 new FormModel {
 	"i18n.autoExternalize": true
@@ -18,7 +18,8 @@ new FormModel {
 					"$rowConstraints": "[fill]"
 				} ) {
 					name: "contentPanel"
-					"minimumSize": new java.awt.Dimension( 1280, 920 )
+					"minimumSize": new java.awt.Dimension( 800, 600 )
+					"preferredSize": new java.awt.Dimension( 0, 0 )
 					auxiliary() {
 						"JavaCodeGenerator.variableGetter": true
 					}
@@ -28,6 +29,7 @@ new FormModel {
 						"$rowConstraints": "[fill]"
 					} ) {
 						name: "panel1"
+						"minimumSize": new java.awt.Dimension( 800, 600 )
 						auxiliary() {
 							"JavaCodeGenerator.variableGetter": true
 							"JavaCodeGenerator.variableLocal": true
@@ -45,7 +47,8 @@ new FormModel {
 									"$rowConstraints": "[][][]"
 								} ) {
 									name: "panelPicture"
-									"minimumSize": new java.awt.Dimension( 640, 320 )
+									"minimumSize": new java.awt.Dimension( 400, 300 )
+									"preferredSize": new java.awt.Dimension( 0, 0 )
 								}, new FormLayoutConstraints( class java.lang.String ) {
 									"value": "left"
 								} )
@@ -55,7 +58,8 @@ new FormModel {
 									"$rowConstraints": "[][][]"
 								} ) {
 									name: "panelModelView"
-									"minimumSize": new java.awt.Dimension( 640, 320 )
+									"minimumSize": new java.awt.Dimension( 400, 300 )
+									"preferredSize": new java.awt.Dimension( 0, 0 )
 								}, new FormLayoutConstraints( class java.lang.String ) {
 									"value": "right"
 								} )
@@ -67,6 +71,8 @@ new FormModel {
 								"minimumSize": new java.awt.Dimension( 180, 320 )
 								add( new FormComponent( "javax.swing.JTextArea" ) {
 									name: "textAreaTextOutput"
+									"minimumSize": new java.awt.Dimension( 800, 300 )
+									"preferredSize": new java.awt.Dimension( 0, 0 )
 								} )
 							}, new FormLayoutConstraints( class java.lang.String ) {
 								"value": "right"
@@ -85,7 +91,7 @@ new FormModel {
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )
-			"size": new java.awt.Dimension( 400, 300 )
+			"size": new java.awt.Dimension( 1095, 590 )
 		} )
 	}
 }

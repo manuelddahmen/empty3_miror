@@ -36,6 +36,8 @@ import javax.swing.*;
 import javaAnd.awt.image.imageio.ImageIO;
 import net.miginfocom.swing.*;
 import one.empty3.apps.morph.*;
+import one.empty3.library.ECBufferedImage;
+import one.empty3.library.core.testing.Test;
 import one.empty3.library.objloader.E3Model;
 
 /**
@@ -45,6 +47,7 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
 
     private BufferedImage image;
     private E3Model model;
+    private TestHumanHeadTexturing testHumanHeadTexturing;
 
     public EditPolygonsMappings(Window owner) {
         initComponents();
@@ -80,7 +83,8 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
 
             //======== contentPanel ========
             {
-                contentPanel.setMinimumSize(new Dimension(1280, 920));
+                contentPanel.setMinimumSize(new Dimension(800, 600));
+                contentPanel.setPreferredSize(new Dimension(0, 0));
                 contentPanel.setLayout(new MigLayout(
                     "fill,hidemode 3",
                     // columns
@@ -90,6 +94,7 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
 
                 //======== panel1 ========
                 {
+                    panel1.setMinimumSize(new Dimension(800, 600));
                     panel1.setLayout(new MigLayout(
                         "fill,hidemode 3",
                         // columns
@@ -108,7 +113,8 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
 
                             //======== panelPicture ========
                             {
-                                panelPicture.setMinimumSize(new Dimension(640, 320));
+                                panelPicture.setMinimumSize(new Dimension(400, 300));
+                                panelPicture.setPreferredSize(new Dimension(0, 0));
                                 panelPicture.setLayout(new MigLayout(
                                     "fill,hidemode 3",
                                     // columns
@@ -123,7 +129,8 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
 
                             //======== panelModelView ========
                             {
-                                panelModelView.setMinimumSize(new Dimension(640, 320));
+                                panelModelView.setMinimumSize(new Dimension(400, 300));
+                                panelModelView.setPreferredSize(new Dimension(0, 0));
                                 panelModelView.setLayout(new MigLayout(
                                     "fill,hidemode 3",
                                     // columns
@@ -141,6 +148,10 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
                         //======== scrollPane1 ========
                         {
                             scrollPane1.setMinimumSize(new Dimension(180, 320));
+
+                            //---- textAreaTextOutput ----
+                            textAreaTextOutput.setMinimumSize(new Dimension(800, 300));
+                            textAreaTextOutput.setPreferredSize(new Dimension(0, 0));
                             scrollPane1.setViewportView(textAreaTextOutput);
                         }
                         splitPane1.setBottomComponent(scrollPane1);
@@ -168,30 +179,51 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
 
     public void loadImage(File selectedFile) {
         this.image = ImageIO.read(selectedFile);
-        // TODO
+        if (image != null && testHumanHeadTexturing != null)
+            testHumanHeadTexturing.setJpg(image);
     }
 
     public void run() {
+        testHumanHeadTexturing = TestHumanHeadTexturing.startAll(image, model);
         while (true) {
             try {
-                Thread.sleep(1000);
+                Thread.sleep(200);
                 if (image != null && panelPicture != null) {
                     // Display image
                     Graphics graphics = panelPicture.getGraphics();
-                    graphics.drawImage(image, 0, 0, getWidth(), getHeight(), null);
+                    graphics.drawImage(image, 0, 0, panelPicture.getWidth(), panelPicture.getHeight(), null);
                     // Display 3D scene
                 }
             } catch (InterruptedException ex) {
                 Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
             }
+            try {
+                // Display 3D scene
+                ECBufferedImage image1 = testHumanHeadTexturing.getZ().image();
+                if (image1 != null) {
+                    Graphics graphics = panelModelView.getGraphics();
+                    graphics.drawImage(image1, 0, 0, panelModelView.getWidth(), panelModelView.getHeight(), null);
+                }
+            } catch (RuntimeException ex) {
+                ex.printStackTrace();
+            }
+
+            if (model != null) {
+                testHumanHeadTexturing.setObj(model);
+            }
+            if (image != null) {
+                testHumanHeadTexturing.setJpg(image);
+            }
         }
+
     }
 
     public void add3DModel(File selectedFile) {
         try {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(selectedFile));
             model = new E3Model(bufferedReader, true, selectedFile.getAbsolutePath());
-
+            if (model != null && testHumanHeadTexturing != null)
+                testHumanHeadTexturing.setObj(model);
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
