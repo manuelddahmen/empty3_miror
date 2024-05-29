@@ -49,10 +49,7 @@ import one.empty3.modelling.Face;
 
 import java.awt.*;
 import java.awt.Color;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -305,15 +302,24 @@ public class FaceDetectApp {
             System.err.println("outputImagePath must have the file extension 'jpg' or 'png'.");
             System.exit(1);
         }
+        File annotationData = new File(outputPath.toFile().getName() + "-" + UUID.randomUUID() + ".txt");
 
         FaceDetectApp app = new FaceDetectApp(getVisionService());
         List<FaceAnnotation> faces = app.detectFaces(inputPath, MAX_RESULTS);
         System.out.printf("Found %d face%s\n", faces.size(), faces.size() == 1 ? "" : "s");
         System.out.printf("Writing to file %s\n", outputPath);
         BufferedImage img = ImageIO.read(inputPath.toFile());
+
+        File output_filename = new File(outputPath.toFile().getName() + "-" + UUID.randomUUID() + ".jpg");
+
         faces.forEach(new Consumer<FaceAnnotation>() {
             @Override
             public void accept(FaceAnnotation faceAnnotation) {
+                try {
+                    app.dataWriter = new PrintWriter(new FileOutputStream(annotationData));
+                } catch (FileNotFoundException e) {
+                    throw new RuntimeException(e);
+                }
                 app.frontal(img, faceAnnotation);
                 app.annotateWithFaces(img, faceAnnotation);
                 app.annotateWithFaces2(img, faceAnnotation);
@@ -322,8 +328,6 @@ public class FaceDetectApp {
                 app.writeFaceData(faceAnnotation);
             }
         });
-        File annotationData = new File(outputPath.toFile().getName() + "-" + UUID.randomUUID() + ".txt");
-        File output_filename = new File(outputPath.toFile().getName() + "-" + UUID.randomUUID() + ".jpg");
 
         ImageIO.write(img, "jpg", output_filename);
 
