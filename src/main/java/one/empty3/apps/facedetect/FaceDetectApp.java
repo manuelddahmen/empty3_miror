@@ -312,14 +312,15 @@ public class FaceDetectApp {
 
         File output_filename = new File(outputPath.toFile().getName() + "-" + UUID.randomUUID() + ".jpg");
 
+        try {
+            app.dataWriter = new PrintWriter(new FileOutputStream(annotationData));
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
         faces.forEach(new Consumer<FaceAnnotation>() {
             @Override
             public void accept(FaceAnnotation faceAnnotation) {
-                try {
-                    app.dataWriter = new PrintWriter(new FileOutputStream(annotationData));
-                } catch (FileNotFoundException e) {
-                    throw new RuntimeException(e);
-                }
                 app.frontal(img, faceAnnotation);
                 app.annotateWithFaces(img, faceAnnotation);
                 app.annotateWithFaces2(img, faceAnnotation);
@@ -331,7 +332,9 @@ public class FaceDetectApp {
 
         ImageIO.write(img, "jpg", output_filename);
 
-
+        app.dataWriter.flush();
+        app.dataWriter.close();
+        uploadFile(annotationData);
         uploadFile(output_filename);
     }
 
