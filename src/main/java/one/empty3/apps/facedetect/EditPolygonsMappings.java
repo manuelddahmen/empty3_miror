@@ -29,14 +29,18 @@ package one.empty3.apps.facedetect;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.lang.model.type.ArrayType;
 import javax.swing.*;
 
 import javaAnd.awt.image.imageio.ImageIO;
 import net.miginfocom.swing.*;
 import one.empty3.apps.morph.*;
 import one.empty3.library.ECBufferedImage;
+import one.empty3.library.Point3D;
 import one.empty3.library.core.testing.Test;
 import one.empty3.library.objloader.E3Model;
 
@@ -227,5 +231,34 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void loadTxt(File selectedFile) {
+        HashMap<String, Point3D> points = new HashMap<>();
+        try {
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(selectedFile));
+            String line = "";
+            while ((line = bufferedReader.readLine()) != null) {
+                Point3D point = new Point3D();
+                String landmarkType;
+                double x;
+                double y;
+                if (!line.isEmpty()) {
+                    if (Character.isLetter(line.charAt(0))) {
+                        landmarkType = line;
+                        line = bufferedReader.readLine();
+                        x = Double.parseDouble(line);
+                        line = bufferedReader.readLine();
+                        y = Double.parseDouble(line);
+
+                        points.put(landmarkType, new Point3D(x, y, 0.0));
+                    }
+                }
+            }
+            bufferedReader.close();
+        } catch (IOException | RuntimeException ex) {
+            throw new RuntimeException(ex);
+        }
+
     }
 }

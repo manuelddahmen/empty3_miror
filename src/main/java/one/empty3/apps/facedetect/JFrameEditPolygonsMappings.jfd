@@ -45,12 +45,13 @@ new FormModel {
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItemLoadImage", true ) )
 					} )
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
-						name: "menuItem2"
-						"text": new FormMessage( null, "JFrameEditPolygonsMappings.menuItem2.text" )
-					} )
-					add( new FormComponent( "javax.swing.JMenuItem" ) {
 						name: "menuItem3"
 						"text": new FormMessage( null, "JFrameEditPolygonsMappings.menuItem3.text" )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItemLoadTxt", true ) )
+					} )
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "menuItem2"
+						"text": new FormMessage( null, "JFrameEditPolygonsMappings.menuItem2.text" )
 					} )
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
 						name: "menuItem4"

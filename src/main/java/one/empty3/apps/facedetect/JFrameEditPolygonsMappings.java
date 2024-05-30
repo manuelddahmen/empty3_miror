@@ -49,14 +49,21 @@ public class JFrameEditPolygonsMappings extends JFrame {
 
     private void menuItemLoadImage(ActionEvent e) {
         JFileChooser loadImage = new JFileChooser();
-        loadImage.showOpenDialog(this);
-        editPolygonsMappings2.loadImage(loadImage.getSelectedFile());
+        if (loadImage.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+            editPolygonsMappings2.loadImage(loadImage.getSelectedFile());
+        }
     }
 
     private void menuItemAdd3DModel(ActionEvent e) {
         JFileChooser add3DModel = new JFileChooser();
-        add3DModel.showOpenDialog(this);
-        editPolygonsMappings2.add3DModel(add3DModel.getSelectedFile());
+        if (add3DModel.showOpenDialog(this) == JFileChooser.APPROVE_OPTION)
+            editPolygonsMappings2.add3DModel(add3DModel.getSelectedFile());
+    }
+
+    private void menuItemLoadTxt(ActionEvent e) {
+        JFileChooser loadImage = new JFileChooser();
+        if (loadImage.showOpenDialog(this) == JFileChooser.APPROVE_OPTION)
+            editPolygonsMappings2.loadTxt(loadImage.getSelectedFile());
     }
 
     private void initComponents() {
@@ -65,8 +72,8 @@ public class JFrameEditPolygonsMappings extends JFrame {
         menuBar1 = new JMenuBar();
         menu2 = new JMenu();
         menuItem1 = new JMenuItem();
-        menuItem2 = new JMenuItem();
         menuItem3 = new JMenuItem();
+        menuItem2 = new JMenuItem();
         menuItem4 = new JMenuItem();
         menuItem5 = new JMenuItem();
         editPolygonsMappings2 = new EditPolygonsMappings();
@@ -98,13 +105,14 @@ public class JFrameEditPolygonsMappings extends JFrame {
                 menuItem1.addActionListener(e -> menuItemLoadImage(e));
                 menu2.add(menuItem1);
 
+                //---- menuItem3 ----
+                menuItem3.setText(bundle.getString("JFrameEditPolygonsMappings.menuItem3.text"));
+                menuItem3.addActionListener(e -> menuItemLoadTxt(e));
+                menu2.add(menuItem3);
+
                 //---- menuItem2 ----
                 menuItem2.setText(bundle.getString("JFrameEditPolygonsMappings.menuItem2.text"));
                 menu2.add(menuItem2);
-
-                //---- menuItem3 ----
-                menuItem3.setText(bundle.getString("JFrameEditPolygonsMappings.menuItem3.text"));
-                menu2.add(menuItem3);
 
                 //---- menuItem4 ----
                 menuItem4.setText(bundle.getString("JFrameEditPolygonsMappings.menuItem4.text"));
@@ -138,8 +146,8 @@ public class JFrameEditPolygonsMappings extends JFrame {
     private JMenuBar menuBar1;
     private JMenu menu2;
     private JMenuItem menuItem1;
-    private JMenuItem menuItem2;
     private JMenuItem menuItem3;
+    private JMenuItem menuItem2;
     private JMenuItem menuItem4;
     private JMenuItem menuItem5;
     private EditPolygonsMappings editPolygonsMappings2;
