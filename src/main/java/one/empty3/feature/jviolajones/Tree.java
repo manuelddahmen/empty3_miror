@@ -24,6 +24,9 @@ package one.empty3.feature.jviolajones;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 public class Tree {
     final static int LEFT = 0;

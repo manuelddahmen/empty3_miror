@@ -26,6 +26,9 @@ import one.empty3.library.Point3D;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 public class Force {
     public double amortissement = 0;
@@ -35,7 +38,7 @@ public class Force {
     private double G = 10;
     private ArrayList<Bille> courant = new ArrayList<>();
     private ArrayList<Bille> next = new ArrayList<>();
-    private double dt = 1.0/25;
+    private double dt = 1.0 / 25;
     private Point3D cm;
     private double cmd;
     private double distMax = 0.0;
@@ -65,8 +68,8 @@ public class Force {
 
             Point3D vu = other.position.moins(p.position);
             return vu.mult(
-                    intensiteRepulsion * other.masse * p.masse / r / r / r
-            )
+                            intensiteRepulsion * other.masse * p.masse / r / r / r
+                    )
 
                     .plus(
 
@@ -88,7 +91,7 @@ public class Force {
         ArrayList<Bille> courantMinus1 = new ArrayList<Bille>(courant.size() - 1);
 
         int i = 0;
-        for (int a = 0; a < courant.size()- 1; a++) {
+        for (int a = 0; a < courant.size() - 1; a++) {
 
             if (a == ind)
                 continue;
@@ -147,12 +150,11 @@ public class Force {
     }
 
 
-
-    public void populateList(ArrayList<Bille> billes)
-    {
+    public void populateList(ArrayList<Bille> billes) {
         billes.clear();
         billes.addAll(courant);
     }
+
     public void calculer() {
         cm = Point3D.O0;
         cmd = 0.0;

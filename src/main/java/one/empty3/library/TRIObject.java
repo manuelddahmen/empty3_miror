@@ -29,6 +29,9 @@ package one.empty3.library;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 public class TRIObject extends Representable {
 

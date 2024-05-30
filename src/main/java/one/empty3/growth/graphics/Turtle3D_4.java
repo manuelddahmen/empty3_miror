@@ -64,6 +64,9 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public class Turtle3D_4 {
     private Point3D position;
     private Scene scene;
@@ -129,11 +132,11 @@ public class Turtle3D_4 {
         Double[][] doubleArray = R.getDoubleArray();
         Point3D d = new Point3D(R.get(0, 0), R.get(0, 1), R.get(0, 2));
         Point3D newPosition = getPosition().plus(d);
-        LineSegment  seg = new LineSegment(getPosition(), newPosition);
+        LineSegment seg = new LineSegment(getPosition(), newPosition);
         seg.texture(new ColorTexture(this.color));
         scene().add(seg);
         setPosition(newPosition);
-        Logger.getAnonymousLogger().log(Level.INFO, ""+newPosition);
+        Logger.getAnonymousLogger().log(Level.INFO, "" + newPosition);
     }
 
     private Scene scene() {

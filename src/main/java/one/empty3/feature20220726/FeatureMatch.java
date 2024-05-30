@@ -28,6 +28,9 @@ import one.empty3.library.Point3D;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 public class FeatureMatch extends ProcessFile {
     final Point3D point = new Point3D(1., 1., 1.);

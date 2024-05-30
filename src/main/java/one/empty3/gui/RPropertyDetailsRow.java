@@ -35,6 +35,9 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  * Created by manue on 15-07-19.
  */
@@ -177,13 +180,14 @@ public class RPropertyDetailsRow implements TableModel {
                 Representable value = null;
                 try {
                     Class<? extends Representable> r = objectDescription.getR();
-                    if(r!=null)
+                    if (r != null)
                         value = r.getConstructor().newInstance();
                     else
                         Logger.getAnonymousLogger().log(Level.INFO, "Class R is null");
-                } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+                } catch (InstantiationException | IllegalAccessException | NoSuchMethodException |
+                         InvocationTargetException e) {
                     //e.printStackTrace();
-                    Logger.getAnonymousLogger().log(Level.INFO, "Cannot instantiate: "+ objectDescription.getR());
+                    Logger.getAnonymousLogger().log(Level.INFO, "Cannot instantiate: " + objectDescription.getR());
 
                 }
                 if (value != null) {

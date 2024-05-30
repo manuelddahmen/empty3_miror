@@ -35,6 +35,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import java.util.Objects;
 import java.util.function.Predicate;
 
@@ -116,7 +119,7 @@ public class ExtractIntensityInfo extends
                 return circle.i > isumtot[0] / pix.getColumns() / pix.getLines();
             }
         }).forEach(circle -> {
-            //System.out.println(circle.toString());
+            //Logger.getAnonymousLogger().log(Level.INFO, circle.toString());
             pix2.setCompNo(0);
 
             pix2.set((int) circle.x, (int) circle.y, 1.0);

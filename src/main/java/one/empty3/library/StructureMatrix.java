@@ -30,6 +30,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import java.util.function.Consumer;
 
 /*__
@@ -137,7 +140,7 @@ public class StructureMatrix<T> implements Serializable, Serialisable {
             if (data0d != null) {
                 return this.data0d;
             } else {
-                // System.out.println("null structureMatrix elem dim=0");
+                // Logger.getAnonymousLogger().log(Level.INFO, "null structureMatrix elem dim=0");
                 return data0d;
             }
         }

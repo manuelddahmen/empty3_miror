@@ -37,11 +37,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class ZBufferImplRecursive extends ZBufferImpl  {
+public class ZBufferImplRecursive extends ZBufferImpl {
 }
 /*__
  * * Classe de rendu graphique

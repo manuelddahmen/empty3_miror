@@ -29,6 +29,9 @@ import one.empty3.library.Point3D;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 public class SelectionImpl extends Selection {
     public List<Point3D> select(List<Point3D> preSelection, PixM pix, int rgb, double threshold) {
@@ -70,7 +73,7 @@ public class SelectionImpl extends Selection {
 
     @Override
     public List<Point3D> selectColorPoint(List<Point3D> preSelection, PixM pix, int rgb,
-            int x, int y, double threshold) {
+                                          int x, int y, double threshold) {
         ArrayList<Point3D> selection = new ArrayList();
         double[] doubles = Lumiere.getDoubles(rgb);
         if (preSelection != null) {

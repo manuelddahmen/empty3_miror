@@ -25,11 +25,11 @@ package one.empty3.tests;
 import one.empty3.feature.app.replace.javax.imageio.ImageIO;
 import one.empty3.library.*;
 import one.empty3.library.core.testing.TestObjetSub;
-import one.empty3.testscopy.tests.tests2.balleclou.BalleClous2;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class TestPlanetEtLune1 extends TestObjetSub {
@@ -193,10 +193,10 @@ public class TestPlanetEtLune1 extends TestObjetSub {
         earth.setVectZ(colVectors[2]);
         /*int i = 0;
         for(Point3D v : colVectors) {
-            System.out.println("P3 ["+i+"] = " + v);
+            Logger.getAnonymousLogger().log(Level.INFO, "P3 ["+i+"] = " + v);
             i++;
         }
-        System.out.println(matrixB);
+        Logger.getAnonymousLogger().log(Level.INFO, matrixB);
 */
         Point3D lX = new Point3D();
         Point3D lY = new Point3D();
@@ -210,6 +210,6 @@ public class TestPlanetEtLune1 extends TestObjetSub {
         circle.setCalculerRepere1(true);
         earth.setQuad_not_computed(0);
         scene().add(circle);
-        System.out.println("Camera u : " + u);
+        Logger.getAnonymousLogger().log(Level.INFO, "Camera u : " + u);
     }
 }

@@ -35,6 +35,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 public class PartMatch extends ProcessFile {
     List<PixM> featuresDescriptors = new ArrayList<>();

@@ -26,6 +26,9 @@ import one.empty3.library.core.nurbs.ParametricSurface;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 public class OrientableRepresentableContainer extends RepresentableConteneur {
     private final Representable ref;
@@ -42,6 +45,7 @@ public class OrientableRepresentableContainer extends RepresentableConteneur {
     public Representable getRef() {
         return ref;
     }
+
     @Override
     public List<Representable> getListRepresentable() {
         List<Representable> listA = super.getListRepresentable();

@@ -43,6 +43,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
@@ -69,11 +72,11 @@ public class ResolutionCharacterFaces8 implements Runnable {
     private static final double MAX_BLACK_VALUE = 0.5;
     private static int SHAKE_SIZE = 20;
     private static CsvWriter writer;
-    private  String dirOutChars;
-    private  String dirOutChars2;
-    private  File dirOutDist;
+    private String dirOutChars;
+    private String dirOutChars2;
+    private File dirOutDist;
     private static PrintWriter pwTxt;
-    private  File dirOutGradient2;
+    private File dirOutGradient2;
     private String dirOutMethod3;
     private static File dirOut = null;
     final int epochs = 100;
@@ -145,7 +148,7 @@ public class ResolutionCharacterFaces8 implements Runnable {
                 resolutionCharacterFaces8.file = listFile;
                 if (!resolutionCharacterFaces8.file.isDirectory() && resolutionCharacterFaces8.file.isFile()) {
                     String lowerCase = resolutionCharacterFaces8.file.getName().toLowerCase(Locale.ROOT);
-                    String extension = lowerCase.substring(lowerCase.lastIndexOf('.')+1, lowerCase.length());
+                    String extension = lowerCase.substring(lowerCase.lastIndexOf('.') + 1, lowerCase.length());
                     if (Arrays.asList(javax.imageio.ImageIO.getReaderFileSuffixes()).contains(extension)) {
                         try {
                             resolutionCharacterFaces8.name = resolutionCharacterFaces8.file.getName();
@@ -160,21 +163,21 @@ public class ResolutionCharacterFaces8 implements Runnable {
                             resolutionCharacterFaces8.dirOutChars = dirOut.getAbsolutePath() + File.separator + resolutionCharacterFaces8.name + File.separator + "char";
                             resolutionCharacterFaces8.dirOutChars2 = dirOut.getAbsolutePath() + File.separator + resolutionCharacterFaces8.name + File.separator + "char2";
                             resolutionCharacterFaces8.dirOutMethod3 = dirOut.getAbsolutePath() + File.separator + resolutionCharacterFaces8.name + File.separator + "dirOut2";
-                            if(!new File(resolutionCharacterFaces8.dirOutMethod3).exists()) {
+                            if (!new File(resolutionCharacterFaces8.dirOutMethod3).exists()) {
                                 new File(resolutionCharacterFaces8.dirOutMethod3).mkdirs();
                             }
                             //System.out.printf("%s", resolutionCharacterFaces8.getClass().getSimpleName());
 
-                        Thread thread = new Thread(resolutionCharacterFaces8);
+                            Thread thread = new Thread(resolutionCharacterFaces8);
 
-                        thread.start();
+                            thread.start();
 
-                        try {
-                            thread.join();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                            throw new RuntimeException(e);
-                        }
+                            try {
+                                thread.join();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                                throw new RuntimeException(e);
+                            }
 
                             if (pwTxt != null) {
                                 pwTxt.close();
@@ -307,18 +310,17 @@ public class ResolutionCharacterFaces8 implements Runnable {
             dirOut.mkdirs();
 
 
-
         int size = 20;
 
         BufferedImage imageFullSize0 = ImageIO.read(file);
 
-        while(size<Math.max(imageFullSize0.getWidth(), imageFullSize0.getHeight())) {
+        while (size < Math.max(imageFullSize0.getWidth(), imageFullSize0.getHeight())) {
 
 
             FaceProcess faceProcess = new FaceProcess();
 
-            File file1 = new File(dirOut + File.separator +"size_"+size+ "_faces_preprocess_" + name);
-            File file10 = new File(dirOut + File.separator +"size_"+size+ "_faces_preprocess_0" + name);
+            File file1 = new File(dirOut + File.separator + "size_" + size + "_faces_preprocess_" + name);
+            File file10 = new File(dirOut + File.separator + "size_" + size + "_faces_preprocess_0" + name);
 
 
             IdentNullProcess identNullProcess = new IdentNullProcess();
@@ -333,10 +335,10 @@ public class ResolutionCharacterFaces8 implements Runnable {
 
             input = PixM.getPixM(imageFullSize, size);
 
-            if(input==null)
+            if (input == null)
                 System.exit(-1);
 
-            String nameSize = "size_"+size+"_"+name;
+            String nameSize = "size_" + size + "_" + name;
 
 
             try {
@@ -390,7 +392,7 @@ public class ResolutionCharacterFaces8 implements Runnable {
             Logger.getAnonymousLogger().log(Level.WARNING, "" + this.getClass() + "Compare end");
 
 
-            size = size*2;
+            size = size * 2;
         }
 
     }
@@ -416,7 +418,7 @@ public class ResolutionCharacterFaces8 implements Runnable {
         for (int k = 0, rectanglesSize = rectangles.size(); k < rectanglesSize; k++) {
             Rectangle2 rect1 = rectangles.get(k);
             j = 0;
-            if(rect1.getH()==0 || rect1.getW()==0)
+            if (rect1.getH() == 0 || rect1.getW() == 0)
                 continue;
             for (int i1 = 0, size = rectangles.size(); i1 < size; i1++) {
                 Rectangle2 rect2 = rectangles.get(i1);
@@ -468,7 +470,7 @@ public class ResolutionCharacterFaces8 implements Runnable {
 
         }
         PixM pSlide = new PixM((int) dimensionTotal.getWidth(), (int) maxheight * mean);
-        if(pSlide.getColumns()>0 && pSlide.getLines()>0 &&distances.getColumns()>0 && distances.getLines()>0) {
+        if (pSlide.getColumns() > 0 && pSlide.getLines() > 0 && distances.getColumns() > 0 && distances.getLines() > 0) {
 
             AtomicInteger iSlides = new AtomicInteger();
             int finalMaxheight = maxheight;

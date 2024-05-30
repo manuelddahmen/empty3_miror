@@ -29,7 +29,7 @@ class Number8 {
             d[c] = a + c;
         }
         for (double d1 : d) {
-            System.out.println(d1);
+            Logger.getAnonymousLogger().log(Level.INFO, d1);
         }
         return d;
     }

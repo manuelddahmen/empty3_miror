@@ -22,16 +22,15 @@
 
 package one.empty3.tests.coursecheval;
 
-import one.empty3.feature.app.replace.javax.imageio.ImageIO;
 import one.empty3.library.*;
 import one.empty3.library.core.nurbs.ParametricSurface;
-import one.empty3.library.core.nurbs.PcOnPs;
 import one.empty3.library.core.testing.TestObjetSub;
 import one.empty3.library.core.tribase.Plan3D;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class TestChat3 extends TestObjetSub {
@@ -198,6 +197,6 @@ public class TestChat3 extends TestObjetSub {
         scene().clear();
         scene().add(copy);
         scene().add(plane);
-        System.out.println("Camera u : " + u);
+        Logger.getAnonymousLogger().log(Level.INFO, "Camera u : " + u);
     }
 }

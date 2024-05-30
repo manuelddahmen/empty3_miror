@@ -24,6 +24,9 @@ package one.empty3.feature20220726;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 public class Cluster {
 
@@ -67,13 +70,13 @@ public class Cluster {
     }
 
     public void plotCluster() {
-        System.out.println("[Cluster: " + id + "]");
-        System.out.println("[Centroid: " + centroid + "]");
-        System.out.println("[Points: \n");
+        Logger.getAnonymousLogger().log(Level.INFO, "[Cluster: " + id + "]");
+        Logger.getAnonymousLogger().log(Level.INFO, "[Centroid: " + centroid + "]");
+        Logger.getAnonymousLogger().log(Level.INFO, "[Points: \n");
         for (DataPoint p : points) {
-            System.out.println(p);
+            Logger.getAnonymousLogger().log(Level.INFO, p.toString());
         }
-        System.out.println("]");
+        Logger.getAnonymousLogger().log(Level.INFO, "]");
     }
 
 }

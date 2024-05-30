@@ -27,6 +27,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 public class StringAnalyzerJava1 extends StringAnalyzer3 {
 
@@ -222,7 +225,7 @@ public class StringAnalyzerJava1 extends StringAnalyzer3 {
             }
 
             return processNext(input, position1);
-            
+
         }
     }
 

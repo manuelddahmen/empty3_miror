@@ -22,18 +22,18 @@
 
 package one.empty3.feature20220726;
 
+import javaAnd.awt.Color;
+import javaAnd.awt.image.imageio.ImageIO;
 import one.empty3.io.ProcessFile;
 import one.empty3.library.Point3D;
 
-import javaAnd.awt.image.imageio.ImageIO;
-import javaAnd.awt.*;
-
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Vectorize extends ProcessFile {
     private PixM pixM;
@@ -126,7 +126,7 @@ public class Vectorize extends ProcessFile {
 
         }
 
-        System.out.println("Number of blocks = " + lists.size());
+        Logger.getAnonymousLogger().log(Level.INFO, "Number of blocks = " + lists.size());
         for (ArrayList<Point3D> p3s : lists) {
             if (p3s.size() > 1) {
                 Color r = new Color(p3s.get(0).texture().getColorAt(0.5, 0.5));

@@ -30,6 +30,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -155,7 +158,7 @@ public class Histogram {
             List<Circle> pointsOfInterest = histogram.getPointsOfInterest(0.1);
             pointsOfInterest.stream().forEach(circle -> {
                 if (circle.i >= min /*<histogram.diffLevel* finalI*/) {
-                   ///?? img.drawOval((int) (circle.x - circle.r), (int) (circle.y - circle.r), (int) (circle.r * 2), (int) (circle.r * 2));
+                    ///?? img.drawOval((int) (circle.x - circle.r), (int) (circle.y - circle.r), (int) (circle.r * 2), (int) (circle.r * 2));
                     Color color = new Color((float) circle.i, 0f, (float) (circle.i / circle.r));
                     img3.drawOval((int) (circle.x - circle.r), (int) (circle.y - circle.r), (int) (circle.r * 2), (int) (circle.r * 2));
                     img3.setRGB((int) (circle.x), (int) (circle.y), color.getRGB());

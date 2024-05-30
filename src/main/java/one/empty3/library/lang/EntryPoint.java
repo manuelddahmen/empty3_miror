@@ -23,8 +23,11 @@
 package one.empty3.library.lang;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-public class EntryPoint extends Node{
+
+public class EntryPoint extends Node {
     public EntryPoint(List<Token> tokens) {
         super(tokens);
     }

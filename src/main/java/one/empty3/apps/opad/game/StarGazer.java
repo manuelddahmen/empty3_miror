@@ -24,8 +24,12 @@ package one.empty3.apps.opad.game;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 public abstract class StarGazer extends BlockUnit {
     private List<Product> products = new ArrayList<>();
+
     public abstract List<Unit> production();
 }

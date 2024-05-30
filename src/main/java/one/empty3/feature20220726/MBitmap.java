@@ -188,7 +188,7 @@ public class MBitmap /*implements InterfaceMatrix*/ {
                 }
             }
         }
-        //System.out.println("Columns=" + columns + "\n Lines = " + lines+ " \n Total size ="+x.length);
+        //Logger.getAnonymousLogger().log(Level.INFO, "Columns=" + columns + "\n Lines = " + lines+ " \n Total size ="+x.length);
     }
 
 

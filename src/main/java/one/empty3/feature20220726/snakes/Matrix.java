@@ -32,6 +32,9 @@ import one.empty3.library.Representable;
 import one.empty3.library.StructureMatrix;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 /*__
  * @author MANUEL DAHMEN
@@ -76,7 +79,7 @@ public class Matrix extends Representable {
     public Matrix(Double[] d) {
         dim1 = dim2 = (int) Math.sqrt(d.length);
         if (d.length != 9) {
-            System.out.println("Erreur dans Matrix33 . 9 éléments requis");
+            Logger.getAnonymousLogger().log(Level.INFO, "Erreur dans Matrix33 . 9 éléments requis");
             throw new IndexOutOfBoundsException("Matrix33 9 " + d.length);
         }
         this.d.setAll(d);
@@ -84,7 +87,7 @@ public class Matrix extends Representable {
 
     public Matrix(double[] d) {
         if (d.length != 9) {
-            System.out.println("Erreur dans Matrix33 . 9 éléments requis");
+            Logger.getAnonymousLogger().log(Level.INFO, "Erreur dans Matrix33 . 9 éléments requis");
             throw new IndexOutOfBoundsException("Matrix33 9 " + d.length);
         }
         dim1 = dim2 = (int) Math.sqrt(d.length);

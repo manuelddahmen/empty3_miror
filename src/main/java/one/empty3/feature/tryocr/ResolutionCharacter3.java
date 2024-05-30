@@ -39,6 +39,9 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -270,7 +273,7 @@ public class ResolutionCharacter3 implements Runnable {
             int heightBlackHistory = 0;
             int widthBlackHistory = 0;
             boolean firstPass = true;
-            while ((firstPass & Arrays.equals(testedRectangleBorder =testRectIs(input, i, j, w, h, testedRectangleBorder, WHITE_DOUBLES), TRUE_BOOLEANS)) || !(heightBlackHistory >= 2 && widthBlackHistory >= 2)
+            while ((firstPass & Arrays.equals(testedRectangleBorder = testRectIs(input, i, j, w, h, testedRectangleBorder, WHITE_DOUBLES), TRUE_BOOLEANS)) || !(heightBlackHistory >= 2 && widthBlackHistory >= 2)
                     & i + w < input.getColumns() & j + h < input.getLines() & w < stepMax & h < stepMax & h >= 0 && w >= 0) {
                 firstPass = false;
                 if (!testedRectangleBorder[XPLUS] && w >= 1 && (widthBlackHistory == 1 || heightBlackHistory >= 1)) {
@@ -317,12 +320,12 @@ public class ResolutionCharacter3 implements Runnable {
                 } else if (testedRectangleBorder[YPLUS] && heightBlackHistory == 1) {
                     heightBlackHistory = 2;
                 }
-                        if (heightBlackHistory == 1 || heightBlackHistory == 0 && widthBlackHistory == 2) {
-                            h++;
-                        }
-                        if (widthBlackHistory == 1 || widthBlackHistory == 0 && heightBlackHistory == 2) {
-                            w++;
-                        }
+                if (heightBlackHistory == 1 || heightBlackHistory == 0 && widthBlackHistory == 2) {
+                    h++;
+                }
+                if (widthBlackHistory == 1 || widthBlackHistory == 0 && heightBlackHistory == 2) {
+                    w++;
+                }
                 if (h > stepMax || w > stepMax) {
                     fail = true;
                     break;

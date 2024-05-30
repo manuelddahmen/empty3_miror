@@ -25,6 +25,9 @@ package one.empty3.library1.tree;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 public class StringAnalyzerJava1 extends StringAnalyzer3 {
 
@@ -376,7 +379,7 @@ public class StringAnalyzerJava1 extends StringAnalyzer3 {
                         pStartI = i;
                         if (!firstAdded)
                             firstAdded = expressions.add(new DataExpression(methodName, name));
-                        System.out.println("End of call fct arg : " + input.substring(i));
+                        Logger.getAnonymousLogger().log(Level.INFO, "End of call fct arg : " + input.substring(i));
                     } else if (input.charAt(i) == ')' && pStart) {
                         pCount--;
                         pEndI = i;
@@ -385,11 +388,11 @@ public class StringAnalyzerJava1 extends StringAnalyzer3 {
                         String substring = input.substring(pStartI + 1, pEndI);
                         int parse = parse(substring, 0);
                         recursions--;
-                        System.out.println("fct arg : " + substring);
+                        Logger.getAnonymousLogger().log(Level.INFO, "fct arg : " + substring);
                         current = methodCallArgument;
                         expressions.add(new DataExpression(methodCallArgument, substring.substring(0, parse)));
                         i = parse + pStartI + 1;
-                        System.out.println("After add function argument : " + input.substring(i));
+                        Logger.getAnonymousLogger().log(Level.INFO, "After add function argument : " + input.substring(i));
                         //return i;
                     } else if (input.charAt(i) == ']' && bStart && bCount == 0) {
                         String substring = input.substring(bStartI + 1, bEndI);
@@ -398,7 +401,7 @@ public class StringAnalyzerJava1 extends StringAnalyzer3 {
                         recursions--;
                         expressions.add(new DataExpression(classArrayAccess, substring.substring(0, parse)));
                         i = bStartI + parse + 1;
-                        System.out.println("Next tokens remainder (1): " + input.substring(i));
+                        Logger.getAnonymousLogger().log(Level.INFO, "Next tokens remainder (1): " + input.substring(i));
                         bStart = false;
                     } else if ((input.charAt(i) == '.' && pCount == 0 && bCount == 0) || lastToken) {
                         if (!firstAdded)
@@ -407,7 +410,7 @@ public class StringAnalyzerJava1 extends StringAnalyzer3 {
                         recursions--;
                         setSuccessful(true);
                         recursions--;
-                        System.out.println("Next tokens remainder (2): " + input.substring(i));
+                        Logger.getAnonymousLogger().log(Level.INFO, "Next tokens remainder (2): " + input.substring(i));
                         return skipBlanks(input, i);
                     } else if (bCount == 0 && pCount == 0 && input.charAt(i) != '.') {
                         setSuccessful(true);

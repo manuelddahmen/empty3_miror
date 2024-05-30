@@ -23,14 +23,15 @@
 package one.empty3.feature20220726;
 
 import javaAnd.awt.Color;
-
-import java.awt.image.BufferedImage;
-
 import one.empty3.library.ITexture;
 import one.empty3.library.LineSegment;
 import one.empty3.library.Lumiere;
 import one.empty3.library.Point3D;
 import one.empty3.library.core.nurbs.ParametricCurve;
+
+import java.awt.image.BufferedImage;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class PixMAndroidVersion extends MBitmap {
 
@@ -109,7 +110,7 @@ public class PixMAndroidVersion extends MBitmap {
         }
         double columns2 = 1.0 * image.getWidth() * f;
         double lines2 = 1.0 * image.getHeight() * f;
-        System.out.println("pixm resampling init  --> (" + maxRes + ", " + maxRes + ")  (" + columns2 + ", " + lines2 + ")");
+        Logger.getAnonymousLogger().log(Level.INFO, "pixm resampling init  --> (" + maxRes + ", " + maxRes + ")  (" + columns2 + ", " + lines2 + ")");
         one.empty3.feature20220726.PixMAndroidVersion pixM = new one.empty3.feature20220726.PixMAndroidVersion((int) (columns2), ((int) lines2));
 
 

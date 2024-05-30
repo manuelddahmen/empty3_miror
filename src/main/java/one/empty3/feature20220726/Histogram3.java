@@ -32,6 +32,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 /*
  * radial density of region (x, y, r)
@@ -174,7 +177,7 @@ public class Histogram3 extends ProcessFile {
         // de grands ou plus grands cercles =
         // coins, corners et possibles features.
 
-        System.out.println("getPointsOfInterest ");
+        Logger.getAnonymousLogger().log(Level.INFO, "getPointsOfInterest ");
 
 
         double[] i_ir = new double[]{0, 0};
@@ -197,7 +200,7 @@ public class Histogram3 extends ProcessFile {
                 return (int) Math.signum((o2.i - o1.i) / Math.abs(o2.r - o1.r));
             });
 */
-        System.out.println("draw ");
+        Logger.getAnonymousLogger().log(Level.INFO, "draw ");
 
         for (int i = 0; i < pointsOfInterest.size(); i++) {
             Circle circle = pointsOfInterest.get(i);

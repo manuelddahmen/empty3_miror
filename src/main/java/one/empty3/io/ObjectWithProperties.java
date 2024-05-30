@@ -28,6 +28,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
@@ -39,6 +42,7 @@ public class ObjectWithProperties {
     private HashMap<String, ProcessNFiles> propertyList = new HashMap<>();
     private HashMap<String, ClassTypes> types = new HashMap<>();
     private HashMap<String, StructureMatrix<Object>> values = new HashMap<>();
+
     public ObjectWithProperties(ProcessNFiles currentProcess) {
         this.currentProcess = currentProcess;
         realTypes.add(AtomicInteger.class);

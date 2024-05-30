@@ -28,12 +28,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 /*__
  * Created by manue on 08-02-20.
  */
-public class Runner
-{
+public class Runner {
     private List<TestObjet> testObjetList;
     private HashMap<String, List<Object>> defaultProperties;
     private HashMap<TestObjet, HashMap<String, List<Object>>> properties;
@@ -74,7 +76,7 @@ public class Runner
         ArrayList<Object> objects = new ArrayList<>();
         objects.addAll(Arrays.asList(values));
         HashMap<String, List<Object>> stringListObjectHashMap;
-        if(properties.containsKey(testObjet)) {
+        if (properties.containsKey(testObjet)) {
             stringListObjectHashMap = properties.get(testObjet);
         } else {
             stringListObjectHashMap = new HashMap<>();

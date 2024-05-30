@@ -32,6 +32,9 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import java.util.Properties;
 
 public class ProcessNFiles {
@@ -59,7 +62,7 @@ public class ProcessNFiles {
     }
 
     public void onInstanceInit() {
-        
+
     }
 
     protected static boolean isImage(File in) {

@@ -55,7 +55,7 @@ public class StringAnalyzer3 {
     @NotNull
     protected Construct getConstruct() {
         if (construct == null && !constructs.isEmpty())
-            construct = constructs.get(constructs.size()-1);
+            construct = constructs.get(constructs.size() - 1);
         if (construct == null)
             construct = new Construct();
         return construct;
@@ -1308,11 +1308,11 @@ public class StringAnalyzer3 {
                         System.err.println("Error constructing : " + expression);
                     }
                     setSuccessful(true);
-                    //      System.out.println("(TokenExpression1)current expression: " + expression + "\n(TokenExpression1)Char at next position:" + "***" + input.substring(i, i + 10) + "***");
+                    //      Logger.getAnonymousLogger().log(Level.INFO, "(TokenExpression1)current expression: " + expression + "\n(TokenExpression1)Char at next position:" + "***" + input.substring(i, i + 10) + "***");
                     return processNext(input, i);
                 }
             }
-            //System.out.println("FAILED(TokenExpression1)current expression: " + expression + "\nFAILED(TokenExpression1)Char at next position:" + input.substring(i, i + 10) + "***");
+            //Logger.getAnonymousLogger().log(Level.INFO, "FAILED(TokenExpression1)current expression: " + expression + "\nFAILED(TokenExpression1)Char at next position:" + input.substring(i, i + 10) + "***");
             setSuccessful(false);
             return position;
         }
@@ -1541,10 +1541,10 @@ public class StringAnalyzer3 {
                 currentInstructions = new ArrayList<>();
                 currentInstructions.add(new InstructionBlock());
             }
-            if (currentInstructions.isEmpty() || currentInstructions.get(currentInstructions.size()-1) == null) {
+            if (currentInstructions.isEmpty() || currentInstructions.get(currentInstructions.size() - 1) == null) {
                 currentInstructions.add(new InstructionBlock());
             }
-            return currentInstructions.get(currentInstructions.size()-1);
+            return currentInstructions.get(currentInstructions.size() - 1);
         }
 
         public void setCurrentInstructions(InstructionBlock instructionBlock) {
@@ -1878,12 +1878,12 @@ public class StringAnalyzer3 {
                 if (position1 < input.length() && countParenthesis == 0) {
                     expression = input.substring(position2, position1);
                     setSuccessful(true);
-                    //System.out.println("SUCCEEDED(TokenLogicalExpression)current expression: " + expression + "\nSUCCEEDED(TokenExpression1)Char at next position:" + input.charAt(position2));
+                    //Logger.getAnonymousLogger().log(Level.INFO, "SUCCEEDED(TokenLogicalExpression)current expression: " + expression + "\nSUCCEEDED(TokenExpression1)Char at next position:" + input.charAt(position2));
                     return processNext(input, position1);
                 }
             }
             setSuccessful(false);
-            //System.out.println("FAILED(TokenLogicalExpression)current expression: " + expression + "\nFAILED(TokenExpression1)Char at next position:" + input.charAt(position));
+            //Logger.getAnonymousLogger().log(Level.INFO, "FAILED(TokenLogicalExpression)current expression: " + expression + "\nFAILED(TokenExpression1)Char at next position:" + input.charAt(position));
             return position;
         }
 
@@ -1938,11 +1938,11 @@ public class StringAnalyzer3 {
             if (position1 < input.length() && countParenthesis == 0 && position1 - position2 > 0) {
                 expression = input.substring(position2, position1);
                 setSuccessful(true);
-                //System.out.println("SUCCEEDED(TokenLogicalExpression1)current expression: " + expression + "\n(TokenLogicalExpression1)Char at next position:" + input.charAt(position1));
+                //Logger.getAnonymousLogger().log(Level.INFO, "SUCCEEDED(TokenLogicalExpression1)current expression: " + expression + "\n(TokenLogicalExpression1)Char at next position:" + input.charAt(position1));
                 return processNext(input, position1);
             }
             setSuccessful(false);
-            //System.out.println("FAILED(TokenLogicalExpression1)current expression: " + expression + "\nFAILED(TokenLogicalExpression1)Char at next position:" + input.charAt(position));
+            //Logger.getAnonymousLogger().log(Level.INFO, "FAILED(TokenLogicalExpression1)current expression: " + expression + "\nFAILED(TokenLogicalExpression1)Char at next position:" + input.charAt(position));
             return position;
         }
 

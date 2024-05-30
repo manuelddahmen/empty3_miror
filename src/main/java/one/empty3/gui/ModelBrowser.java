@@ -31,6 +31,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -54,12 +57,13 @@ public class ModelBrowser {
         this.objects = new ArrayList<>();
         objects.add(new Cell(null, 0, 0, 0, representable, representable));
     }
+
     public ModelBrowser(List<Representable> representables, ZBufferImpl zimpl) {
         this.zimpl = zimpl;
         this.objects = new ArrayList<>();
-        if(representables!=null ) {
+        if (representables != null) {
             for (Representable representable : representables) {
-                if(clazz.getClass().isAssignableFrom(representable.getClass()))
+                if (clazz.getClass().isAssignableFrom(representable.getClass()))
                     objects.add(new Cell(null, 0,
                             0, 0, representable, representable));
             }
@@ -75,6 +79,7 @@ public class ModelBrowser {
         clazz = fromsClasses;
         throw new UnsupportedOperationException("");
     }
+
     public List<Cell> getObjects(Class fromsClasses, int dim, boolean isRow) {
         clazz = fromsClasses;
         this.dim = dim;
@@ -82,6 +87,7 @@ public class ModelBrowser {
 
         throw new UnsupportedOperationException("");
     }
+
     public List<Cell> getObjects(Class fromsClasses, int dim, boolean isRow, int rowNo, int colNo) {
         clazz = fromsClasses;
         this.dim = dim;
@@ -105,7 +111,7 @@ public class ModelBrowser {
             this.row = row;
             this.col = col;
             this.o = o;
-            this.pRot= oRot;
+            this.pRot = oRot;
         }
 
         public Cell(StructureMatrix structureMatrix, int dim, int row, int col, Representable ref, Object o) {
@@ -180,19 +186,17 @@ public class ModelBrowser {
      * @param scene
      * @param classes
      */
-    public ModelBrowser(ZBufferImpl impl, Scene scene, Class classes)
-    {
-        this.zimpl  = impl;
+    public ModelBrowser(ZBufferImpl impl, Scene scene, Class classes) {
+        this.zimpl = impl;
         this.classes = classes;
-        for(int i = 0; i<scene.getObjets().getData1d().size(); i++)
-        {
+        for (int i = 0; i < scene.getObjets().getData1d().size(); i++) {
             Representable representable = scene.getObjets().getData1d().get(i);
             browser(representable, scene);
         }
     }
 
     private void browser(Representable representable, Representable ref) {
-        if(representable!=null) {
+        if (representable != null) {
             try {
                 representable.declareProperties();
                 representable.declarations().forEach((s, structureMatrix) -> {
@@ -234,43 +238,32 @@ public class ModelBrowser {
         Object e = o;
 
 
-        if(e instanceof Integer)
-        {
-            if(classes.equals(Integer.class))
-            {
+        if (e instanceof Integer) {
+            if (classes.equals(Integer.class)) {
                 objects.add(new Cell(structureMatrix, dim, row, col, ref, e));
             }
-        }
-        else if(e instanceof Double) {
-            if(classes.equals(Double.class))
-            {
+        } else if (e instanceof Double) {
+            if (classes.equals(Double.class)) {
                 objects.add(new Cell(structureMatrix, dim, row, col, ref, e));
             }
 
-        }
-        else if(e instanceof Boolean) {
-            if(classes.equals(Boolean.class))
-            {
+        } else if (e instanceof Boolean) {
+            if (classes.equals(Boolean.class)) {
                 objects.add(new Cell(structureMatrix, dim, row, col, ref, e));
             }
 
-        }
-        else if(e instanceof String) {
-            if(classes.equals(String.class))
-            {
+        } else if (e instanceof String) {
+            if (classes.equals(String.class)) {
                 objects.add(new Cell(structureMatrix, dim, row, col, ref, e));
             }
 
-        }
-        else if(e instanceof File) {
-            if(classes.equals(File.class))
-            {
+        } else if (e instanceof File) {
+            if (classes.equals(File.class)) {
                 objects.add(new Cell(structureMatrix, dim, row, col, ref, e));
             }
-        }
-        else if(Representable.class.isAssignableFrom(e.getClass())) {
-            if(classes.equals(e.getClass())) {
-                if(e.getClass().equals(Point3D.class) && (ref!=null) && (ref.getRotation()!=null)) {
+        } else if (Representable.class.isAssignableFrom(e.getClass())) {
+            if (classes.equals(e.getClass())) {
+                if (e.getClass().equals(Point3D.class) && (ref != null) && (ref.getRotation() != null)) {
                     objects.add(new Cell(structureMatrix, dim, row, col, ref, e, zimpl.rotate((Point3D) e, ref)));
                     //objects.add(new Cell(structureMatrix, dim, row, col, ref, e));
                 }
@@ -280,53 +273,50 @@ public class ModelBrowser {
         }
     }
 
-    public void makeSelection(List<Cell> path)
-    {
+    public void makeSelection(List<Cell> path) {
 
     }
 
-    public void updateSelection()
-    {
+    public void updateSelection() {
 
     }
 
-    public void translateSelection(Point3D vect)
-    {
+    public void translateSelection(Point3D vect) {
         getObjects().forEach(cell -> {
             Representable r = cell.ref;
-            if (clone && r!=null && !(r instanceof Point3D)) {
-                    try {
-                        r = (Representable) r.copy();
-                        r.getRotation().getElem().getCentreRot().setElem(vect);
-                    } catch (CopyRepresentableError | IllegalAccessException | InstantiationException copyRepresentableError) {
-                        copyRepresentableError.printStackTrace();
-                    }
+            if (clone && r != null && !(r instanceof Point3D)) {
+                try {
+                    r = (Representable) r.copy();
+                    r.getRotation().getElem().getCentreRot().setElem(vect);
+                } catch (CopyRepresentableError | IllegalAccessException |
+                         InstantiationException copyRepresentableError) {
+                    copyRepresentableError.printStackTrace();
+                }
             }
             Point3D origin0 = new Point3D(((Point3D) cell.o));
 
             Point3D origin;
             if (cell.o instanceof Point3D) {
                 origin = (Point3D) cell.o;
-            } else if(cell.ref!=null && cell.ref!=null && !(cell.ref instanceof Point3D)){
+            } else if (cell.ref != null && cell.ref != null && !(cell.ref instanceof Point3D)) {
                 origin = cell.ref.getRotation().getElem().getCentreRot().getElem();
-            }
-            else {
+            } else {
                 Logger.getAnonymousLogger().log(Level.INFO, "Error in translate selection");
                 return;
             }
-            if(vect!=null && origin!=null) {
+            if (vect != null && origin != null) {
                 origin.changeTo(vect.plus(origin));
                 Logger.getAnonymousLogger().log(Level.INFO, "Moves " + origin0 + "\n to \n" + cell.o);
-            }else {
+            } else {
                 Logger.getAnonymousLogger().log(Level.INFO, "Error in translate selection");
             }
         });
     }
-    public void rotateSelection(Rotation rotation)
-    {
+
+    public void rotateSelection(Rotation rotation) {
         getObjects().forEach(cell -> {
             Representable r = cell.ref;
-            if(clone) {
+            if (clone) {
                 try {
                     r = (Representable) r.copy();
 
@@ -341,8 +331,8 @@ public class ModelBrowser {
             r.getRotation().setElem(rotation);
         });
     }
-    public boolean cloneSelection(boolean clone)
-    {
+
+    public boolean cloneSelection(boolean clone) {
         this.clone = clone;
         return clone;
     }

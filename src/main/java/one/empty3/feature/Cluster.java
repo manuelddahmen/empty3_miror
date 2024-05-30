@@ -27,6 +27,9 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public class Cluster {
 
     public List<DataPoint> points;
@@ -73,7 +76,7 @@ public class Cluster {
         Logger.getAnonymousLogger().log(Level.INFO, "[Centroid: " + centroid + "]");
         Logger.getAnonymousLogger().log(Level.INFO, "[Points: \n");
         for (DataPoint p : points) {
-            Logger.getAnonymousLogger().log(Level.INFO,""+ p);
+            Logger.getAnonymousLogger().log(Level.INFO, "" + p);
         }
         Logger.getAnonymousLogger().log(Level.INFO, "]");
     }

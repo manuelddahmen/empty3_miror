@@ -24,6 +24,9 @@ package one.empty3.gui;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 /**
  * Created by manue on 17-07-19.
@@ -78,7 +81,7 @@ public class History {
     public Object getCurrentRow() {
         if (current < 0)
             current = 0;
-        if (current >= history.size()-1)
+        if (current >= history.size() - 1)
             current = Math.max(history.size() - 1, 0);
 
         try {

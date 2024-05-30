@@ -23,12 +23,13 @@
 package one.empty3.feature20220726;
 
 
+import javaAnd.awt.image.imageio.ImageIO;
 import one.empty3.io.ProcessFile;
 import one.empty3.library.Point3D;
 
-import javaAnd.awt.image.imageio.ImageIO;
-
 import java.io.File;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ProxyValue2 extends ProcessFile {
 
@@ -69,7 +70,7 @@ public class ProxyValue2 extends ProcessFile {
         }
 
 
-        System.out.println("point " + p);
+        Logger.getAnonymousLogger().log(Level.INFO, "point " + p);
 
         return true;
     }
@@ -127,7 +128,7 @@ public class ProxyValue2 extends ProcessFile {
                 }
             }
         }
-        // System.out.println("error not found");
+        // Logger.getAnonymousLogger().log(Level.INFO, "error not found");
 
         return;
     }

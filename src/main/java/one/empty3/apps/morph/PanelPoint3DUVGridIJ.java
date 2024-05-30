@@ -32,9 +32,10 @@ import one.empty3.library.Point3D;
 import one.empty3.library.StructureMatrix;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author Manuel D. Dahmen
@@ -231,16 +232,16 @@ public class PanelPoint3DUVGridIJ extends JPanel {
     private void shape(ActionEvent event) {
         switch (((JComboBox) (event.getSource())).getSelectedIndex()) {
             case 0:
-                System.out.println("Model 1");
+                Logger.getAnonymousLogger().log(Level.INFO, "Model 1");
                 break;
             case 1:
-                System.out.println("Model 2");
+                Logger.getAnonymousLogger().log(Level.INFO, "Model 2");
                 break;
             case 2:
-                System.out.println("Model 3");
+                Logger.getAnonymousLogger().log(Level.INFO, "Model 3");
                 break;
             case 3:
-                System.out.println("Model 3");
+                Logger.getAnonymousLogger().log(Level.INFO, "Model 3");
                 break;
         }
         imageControls.setModelIndex((((JComboBox) (event.getSource())).getSelectedIndex()));

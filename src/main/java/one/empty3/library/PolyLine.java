@@ -26,6 +26,9 @@ import one.empty3.library.core.nurbs.ParametricCurve;
 
 import java.awt.*;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 /*__
  * Created by manue on 20-06-19.
@@ -43,6 +46,7 @@ public class PolyLine extends ParametricCurve {
         }
         texture(new ColorTexture(random));
     }
+
     public PolyLine(Point3D[] point3DS, ITexture random) {
         for (Point3D point3D : point3DS) {
             points.add(point3D);
@@ -65,7 +69,7 @@ public class PolyLine extends ParametricCurve {
         int i = (int) t * size;
         if (i >= size)
             i = size - 1;
-        int j = (i + 1) >= size? i : i + 1;
+        int j = (i + 1) >= size ? i : i + 1;
         Point3D p1 = points.getData1d().get(i);
         Point3D p2 = points.getData1d().get(j);
         double d = t - 1.0 * i / size;

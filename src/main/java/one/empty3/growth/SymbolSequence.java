@@ -25,6 +25,9 @@ package one.empty3.growth;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 public class SymbolSequence {
     private List<SymbolSequence> symbols = new ArrayList<SymbolSequence>();
@@ -74,7 +77,7 @@ public class SymbolSequence {
     }
 
     public SymbolSequence(List<Symbol> listOfSymbolsRes) {
-        for(int i=0; i<listOfSymbolsRes.size(); i++)
+        for (int i = 0; i < listOfSymbolsRes.size(); i++)
             symbols.add(listOfSymbolsRes.get(i));
     }
 
@@ -95,7 +98,7 @@ public class SymbolSequence {
         for (int index = 0; index < getSymbols().size(); index++) {
             SymbolSequence symbolSequence = getSymbols().get(index);
             if (symbolSequence instanceof Symbol) {
-                res.add((Symbol)symbolSequence);
+                res.add((Symbol) symbolSequence);
             } else {
                 res.addAll(symbolSequence);
             }
@@ -111,7 +114,7 @@ public class SymbolSequence {
         for (int index = 0; index < getSymbols().size(); index++) {
             SymbolSequence symbolSequence = getSymbols().get(index);
             if (symbolSequence instanceof Symbol) {
-                res.add((Symbol)symbolSequence);
+                res.add((Symbol) symbolSequence);
             } else {
                 res.addAll(symbolSequence.each());
             }
@@ -125,9 +128,9 @@ public class SymbolSequence {
 
     private Collection<? extends Symbol> toCollection() {
         List<Symbol> list = new ArrayList<>();
-        for(SymbolSequence ss : symbols) {
-            if(ss instanceof Symbol) {
-                list.add((Symbol)ss);
+        for (SymbolSequence ss : symbols) {
+            if (ss instanceof Symbol) {
+                list.add((Symbol) ss);
 
             } else {
                 list.addAll(ss.toCollection());
@@ -138,7 +141,7 @@ public class SymbolSequence {
 
     public String toString() {
         String s = "seq_:";
-        for(SymbolSequence ss : symbols) {
+        for (SymbolSequence ss : symbols) {
             s += ss.toString() + " &&";
         }
         return s;

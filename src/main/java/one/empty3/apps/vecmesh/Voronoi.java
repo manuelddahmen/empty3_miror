@@ -27,6 +27,9 @@ import one.empty3.library.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 public class Voronoi extends ITexture {
 
@@ -69,7 +72,7 @@ public class Voronoi extends ITexture {
             PixM pixM = in;
             for (int i = 0; i < pixM.getColumns(); i++) {
                 for (int j = 0; j < pixM.getLines(); j++) {
-                    if (pixM.luminance(i, j) > 0.4 && Math.random()<(1.+N)/out.getColumns()/out.getLines()) {
+                    if (pixM.luminance(i, j) > 0.4 && Math.random() < (1. + N) / out.getColumns() / out.getLines()) {
                         points.add(new Point3D((double) i, (double) j, pixM.luminance(i, j)));
                     }
                 }
@@ -89,8 +92,6 @@ public class Voronoi extends ITexture {
             }
 
 
-
-
             this.out = out;
 
 
@@ -101,10 +102,10 @@ public class Voronoi extends ITexture {
 
     @Override
     public int getColorAt(double x, double y) {
-        if(out==null && in!=null)
+        if (out == null && in != null)
             processInMemory();
         float[] colorOut1 = new float[4];
-        out.getColor((int) (x /out.getColumns()), (int) (y /out.getLines()), colorOut1);
+        out.getColor((int) (x / out.getColumns()), (int) (y / out.getLines()), colorOut1);
         double[] colorOut = new double[4];
         for (int i = 0; i < colorOut.length; i++) {
             colorOut[i] = colorOut1[i];

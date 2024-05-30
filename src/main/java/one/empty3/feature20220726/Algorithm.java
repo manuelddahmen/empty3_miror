@@ -23,6 +23,9 @@
 package one.empty3.feature20220726;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 public interface Algorithm {
 

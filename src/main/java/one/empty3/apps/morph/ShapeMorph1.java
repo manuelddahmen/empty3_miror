@@ -26,6 +26,9 @@ import one.empty3.library.*;
 import one.empty3.library.core.nurbs.ParametricSurface;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 public class ShapeMorph1 extends ParametricSurface {
     double t;
@@ -38,7 +41,7 @@ public class ShapeMorph1 extends ParametricSurface {
     private ITexture textTexture;
 
     ShapeMorph1(ITexture text1, ITexture text2, StructureMatrix<Point3D> grid1,
-               StructureMatrix<Point3D> grid2) {
+                StructureMatrix<Point3D> grid2) {
         this.text1 = text1;
         this.text2 = text2;
         this.grid1 = grid1;
@@ -102,7 +105,7 @@ public class ShapeMorph1 extends ParametricSurface {
         this.t = t;
     }
 
-    private Point3D calculerColorUVGridXY(Point3D [] gridT, double du, double dv) {
+    private Point3D calculerColorUVGridXY(Point3D[] gridT, double du, double dv) {
         Point3D pU0 = gridT[0].plus(gridT[1].moins(gridT[0]).mult(du));
         Point3D pU1 = gridT[3].plus(gridT[2].moins(gridT[3]).mult(du));
         Point3D pV0 = gridT[2].plus(gridT[1].moins(gridT[2]).mult(dv));
@@ -122,14 +125,15 @@ public class ShapeMorph1 extends ParametricSurface {
         double[] doubles2 = Lumiere.getDoubles(color2);
         double[] d3 = new double[3];
         for (int i = 0; i < d3.length; i++) {
-            d3[i] = doubles1[i] * (1-t) + doubles2[i] * t;
-            if(d3[i]>=1)
+            d3[i] = doubles1[i] * (1 - t) + doubles2[i] * t;
+            if (d3[i] >= 1)
                 d3[i] = 1;
-            else if(d3[i]<0)
+            else if (d3[i] < 0)
                 d3[i] = 0;
         }
         return Lumiere.getInt(d3);
     }
+
     /**
      * @param u ordonnée du point intersection texturé
      * @param v coordonnée du point intersection texturé
@@ -143,11 +147,11 @@ public class ShapeMorph1 extends ParametricSurface {
             int sizeGridY = grid1.getData2d().get(0).size();
             int xGrid1 = (int) ((sizeGridX) * u);
             int yGrid1 = (int) ((sizeGridY) * v);
-            int xGrid2 = xGrid1+1;
-            int yGrid2 = yGrid1+1;
+            int xGrid2 = xGrid1 + 1;
+            int yGrid2 = yGrid1 + 1;
 
-            double du = (u*(sizeGridX)-xGrid1);
-            double dv = (v*(sizeGridY)-yGrid1);
+            double du = (u * (sizeGridX) - xGrid1);
+            double dv = (v * (sizeGridY) - yGrid1);
 
 
             if (xGrid1 >= grid1.getData2d().size() || xGrid2 >= grid2.getData2d().size() ||
@@ -176,7 +180,7 @@ public class ShapeMorph1 extends ParametricSurface {
 
                 Point3D pT = calculerColorUVGridXY(gridT, du, dv);
                 int c;
-                if(texture instanceof TextureMorphing) {
+                if (texture instanceof TextureMorphing) {
                     c = texture.getColorAt(u, v);
                 } else
                     c = colorMean(text1.getColorAt(u, v),

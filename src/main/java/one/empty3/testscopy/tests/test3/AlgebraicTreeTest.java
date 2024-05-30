@@ -74,19 +74,19 @@
 //    private void testResultVariable(String expr, double expectedResult, Map<String, Double> map, boolean echo) {
 //        AlgebraicTree AlgebraicTree = null;
 //        try {
-//            System.out.println("Expression string : " + expr);
+//            Logger.getAnonymousLogger().log(Level.INFO, "Expression string : " + expr);
 //            AlgebraicTree = new AlgebraicTree(expr);
 //            AlgebraicTree.setParametersValues(map);
 //            AlgebraicTree.construct();
 //            if (echo)
-//                System.out.println(AlgebraicTree);
+//                Logger.getAnonymousLogger().log(Level.INFO, AlgebraicTree);
 //            try {
 //                double result;
 //                result = AlgebraicTree.eval();
 //                if (echo)
-//                    System.out.println("Result : " + result);
+//                    Logger.getAnonymousLogger().log(Level.INFO, "Result : " + result);
 //                if (echo)
-//                    System.out.println("Expected : " + expectedResult);
+//                    Logger.getAnonymousLogger().log(Level.INFO, "Expected : " + expectedResult);
 //                assertTrue((result<expectedResult+DELTA(expectedResult)
 //                        && result>expectedResult-DELTA(expectedResult)));
 //            } catch (TreeNodeEvalException e) {
@@ -110,18 +110,18 @@
 //    protected boolean testResult(String expr, double expectedResult, boolean echo) {
 //        AlgebraicTree AlgebraicTree = null;
 //        try {
-//            System.out.println("Expression string : " + expr);
+//            Logger.getAnonymousLogger().log(Level.INFO, "Expression string : " + expr);
 //            AlgebraicTree = new AlgebraicTree(expr);
 //            AlgebraicTree.construct();
 //            if (echo)
-//                System.out.println(AlgebraicTree);
+//                Logger.getAnonymousLogger().log(Level.INFO, AlgebraicTree);
 //            try {
 //                double result;
 //                result = AlgebraicTree.eval();
 //                if (echo)
-//                    System.out.println("Result : " + result);
+//                    Logger.getAnonymousLogger().log(Level.INFO, "Result : " + result);
 //                if (echo)
-//                    System.out.println("Expected : " + expectedResult);
+//                    Logger.getAnonymousLogger().log(Level.INFO, "Expected : " + expectedResult);
 //                assertTrue((result<expectedResult+DELTA(expectedResult)
 //                        && result>expectedResult-DELTA(expectedResult)));
 //                return true;
@@ -139,18 +139,18 @@
 //    protected boolean testConstructOrEvalFails(String expr, double expectedResult, boolean echo) {
 //        AlgebraicTree AlgebraicTree = null;
 //        try {
-//            System.out.println("Expression string : " + expr);
+//            Logger.getAnonymousLogger().log(Level.INFO, "Expression string : " + expr);
 //            AlgebraicTree = new AlgebraicTree(expr);
 //            AlgebraicTree.construct();
 //            if (echo)
-//                System.out.println(AlgebraicTree);
+//                Logger.getAnonymousLogger().log(Level.INFO, AlgebraicTree);
 //            try {
 //                Object result;
 //                result = AlgebraicTree.eval();
 //                if (echo)
-//                    System.out.println("Result : " + result);
+//                    Logger.getAnonymousLogger().log(Level.INFO, "Result : " + result);
 //                if (echo)
-//                    System.out.println("Expected : " + expectedResult);
+//                    Logger.getAnonymousLogger().log(Level.INFO, "Expected : " + expectedResult);
 //                fail();
 //                return false;
 //            } catch (TreeNodeEvalException e) {

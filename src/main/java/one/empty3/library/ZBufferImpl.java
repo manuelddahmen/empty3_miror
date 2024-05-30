@@ -27,7 +27,6 @@
  */
 package one.empty3.library;
 
-import com.jogamp.opengl.util.texture.Texture;
 import javaAnd.awt.image.BufferedImage;
 import one.empty3.library.core.nurbs.*;
 import one.empty3.library.core.tribase.Precomputable;
@@ -40,6 +39,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -89,6 +94,12 @@ public class ZBufferImpl extends Representable implements ZBuffer {
     ZBufferImpl that;
     private boolean isCheckedOccupied = false;
     private Representable toDrawR;
+
+
+    static {
+        Logger.getAnonymousLogger().log(Level.INFO, "ZBufferImpl");
+        Logger.getGlobal().setFilter(record -> false);
+    }
 
     public ZBufferImpl() {
         that = this;

@@ -28,12 +28,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
 
 import java.awt.Color;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javaAnd.awt.image.imageio.ImageIO;
 import one.empty3.feature20220726.Linear;
@@ -98,7 +103,7 @@ public class ResolutionCharacter0 implements Runnable {
                     String name = file.getName();
 
 
-                    System.out.println("ResolutionCharacter : " + name);
+                    Logger.getAnonymousLogger().log(Level.INFO, "ResolutionCharacter : " + name);
 
                     ResolutionCharacter0 resolutionCharacter = new ResolutionCharacter0(read, name, dirOut);
 
@@ -180,7 +185,7 @@ public class ResolutionCharacter0 implements Runnable {
         input = new PixM(read);
         output = input.copy();
 
-        System.out.println("Image size: " + output.getColumns() + ", " + output.getLines());
+        Logger.getAnonymousLogger().log(Level.INFO, "Image size: " + output.getColumns() + ", " + output.getLines());
 
         final ITexture texture = new TextureCol(Color.BLACK);
 
@@ -257,7 +262,7 @@ public class ResolutionCharacter0 implements Runnable {
                         if (candidates.size() > 0) {
                             System.out.printf("In %s, Rectangle = (%d,%d,%d,%d) \t\tCandidates: ", name, i, j, w, h);
                             candidates.forEach(System.out::print);
-                            System.out.println();
+                            Logger.getAnonymousLogger().log(Level.INFO, "");
                             output.plotCurve(rectangle, texture);
                         }
                     }

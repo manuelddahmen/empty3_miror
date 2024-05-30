@@ -27,6 +27,9 @@ import one.empty3.library.Point3D;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 public class SpaceNode {
     private PixM image;

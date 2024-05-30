@@ -29,6 +29,9 @@ import java.awt.image.RescaleOp;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 public class HoughTransformOutput {
 
@@ -91,7 +94,8 @@ public class HoughTransformOutput {
         try {
             ImageIO.write(in, "jpg", out);
 
-        } catch (Exception ex) {}
+        } catch (Exception ex) {
+        }
 
     }
 

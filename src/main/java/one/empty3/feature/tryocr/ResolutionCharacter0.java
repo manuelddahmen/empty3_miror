@@ -36,6 +36,9 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
@@ -247,7 +250,7 @@ public class ResolutionCharacter0 implements Runnable {
                     }
 
                     succeded = (hBout && wBout) || succeded;
-                    if (succeded && h >= charMinWidth && w >= charMinWidth && h<stepMax && w<stepMax &&
+                    if (succeded && h >= charMinWidth && w >= charMinWidth && h < stepMax && w < stepMax &&
                             Arrays.equals(testRectIs(input, i, j, w, h, WHITE_DOUBLES), new boolean[]{true, true, true, true})) {
                         Rectangle rectangle = new Rectangle(i, j, w, h);
                         List<Character> candidates = recognize(input, i, j, w, h);

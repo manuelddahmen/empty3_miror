@@ -24,12 +24,15 @@ package one.empty3.apps.opad.menu;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 /*__
  * Created by manuel on 21-05-17.
  */
 public class Menu {
-    private  MenuNavigation menuNavigation;
+    private MenuNavigation menuNavigation;
     public List<MenuItem> items = new ArrayList<MenuItem>();
 
     public List<MenuItem> getItems() {

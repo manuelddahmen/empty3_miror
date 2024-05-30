@@ -25,6 +25,9 @@ package one.empty3.library.core.testing;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 /*__
  * Created by manue on 08-02-20.
@@ -33,6 +36,7 @@ public enum BaseProperty {
     setResx, setResy, setResolution, setMaxFrames, loop;
 
     private static HashMap<BaseProperty, List<Class>> parameters = new HashMap<>();
+
     private static void add(String name, Class... parametersTypes) {
         List<Class> classes;
 
@@ -43,6 +47,7 @@ public enum BaseProperty {
         }
         parameters.put(BaseProperty.valueOf(name), classes);
     }
+
     static {
         add("setResx", Integer.class);
         add("setResy", Integer.class);
@@ -50,8 +55,8 @@ public enum BaseProperty {
         add("setMaxFrames", Integer.class);
         add("loop", Boolean.class);
     }
-    public String toString ()
-    {
+
+    public String toString() {
         return name();
     }
 }

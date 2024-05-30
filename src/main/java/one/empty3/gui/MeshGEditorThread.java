@@ -40,11 +40,13 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /***
  * main idea: replace structurematrix in representable objects after modifying it.
  */
 public class MeshGEditorThread extends Thread implements PropertyChangeListener {
-
 
 
     private Main main;
@@ -156,11 +158,11 @@ public class MeshGEditorThread extends Thread implements PropertyChangeListener 
                                                 } else {
                                                     pointsTranslate.add(mousePoint3D);
                                                     getMain().getMeshEditorProps().getInSelection().add(mousePoint3D);
-                                                    if(selectedObject instanceof ParametricSurface) {
-                                                        ParametricSurface ps = (ParametricSurface)selectedObject;
-                                                        if(ps instanceof SurfaceParametriquePolynomiale) {
+                                                    if (selectedObject instanceof ParametricSurface) {
+                                                        ParametricSurface ps = (ParametricSurface) selectedObject;
+                                                        if (ps instanceof SurfaceParametriquePolynomiale) {
                                                             getMain().getMeshEditorProps().getReplaces().add(
-                                                                    new MeshEditorBean.ReplaceMatrix(((SurfaceParametriquePolynomiale)ps).getCoefficients(), ps));
+                                                                    new MeshEditorBean.ReplaceMatrix(((SurfaceParametriquePolynomiale) ps).getCoefficients(), ps));
                                                         }
                                                     }
                                                 }
@@ -212,7 +214,7 @@ public class MeshGEditorThread extends Thread implements PropertyChangeListener 
                         Logger.getAnonymousLogger().log(Level.INFO, "Inverted location " + elem);
                         ModelBrowser modelBrowser = new ModelBrowser(getMain().getGraphicalEdit2().getSelectionIn(), zBuffer);
                         modelBrowser.translateSelection(elem);
-                        Logger.getAnonymousLogger().log(Level.INFO,""+ main.getGraphicalEdit2().getCurrentSelection());
+                        Logger.getAnonymousLogger().log(Level.INFO, "" + main.getGraphicalEdit2().getCurrentSelection());
                         //}
                     }
 

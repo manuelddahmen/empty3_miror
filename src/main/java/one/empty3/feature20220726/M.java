@@ -29,7 +29,7 @@ import java.awt.image.BufferedImage;
 import java.util.PrimitiveIterator;
 import java.util.Random;
 
-public class M  {
+public class M {
     public static PrimitiveIterator.OfDouble r = new Random().doubles().iterator();
     public static final Double noValue = r.next();
     protected int columns;
@@ -44,7 +44,7 @@ public class M  {
         x = new double[l * c * compCount];
         for (int i = 0; i < x.length; i++)
             x[i] = 0.0;
-        //System.out.println("Columns=" + columns + "\n Lines = " + lines+ " \n Total size ="+x.length);
+        //Logger.getAnonymousLogger().log(Level.INFO, "Columns=" + columns + "\n Lines = " + lines+ " \n Total size ="+x.length);
     }
 
 
@@ -94,8 +94,6 @@ public class M  {
         }
         return v;
     }
-
-
 
 
     public static double[] getVector(int add, double[]... vectors) {
@@ -150,7 +148,7 @@ public class M  {
                 }
             }
         }
-        //System.out.println("Columns=" + columns + "\n Lines = " + lines+ " \n Total size ="+x.length);
+        //Logger.getAnonymousLogger().log(Level.INFO, "Columns=" + columns + "\n Lines = " + lines+ " \n Total size ="+x.length);
     }
 
 

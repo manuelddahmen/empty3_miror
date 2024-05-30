@@ -124,7 +124,8 @@ public class DataModel {
                 zipOut.close();
                 fos.close();
             }
-        } catch (Exception ex) {}
+        } catch (Exception ex) {
+        }
     }
 
     private void saveObjectArray2d(File tmp, int xgrid) {
@@ -233,10 +234,10 @@ public class DataModel {
         morphUI.getImageControls2().setGridUv(grids[3]);
 
         for (int i = 0; i < grids.length; i++) {
-            System.out.println(grids[i].getData2d().toString());
+            Logger.getAnonymousLogger().log(Level.INFO, grids[i].getData2d().toString());
         }
         for (int i = 0; i < imagesFiles.length; i++) {
-            System.out.println(imagesFiles[i].getName());
+            Logger.getAnonymousLogger().log(Level.INFO, imagesFiles[i].getName());
         }
         ImageControls[] controls = new ImageControls[]{morphUI.getImageControls1(), morphUI.getImageControls2()};
         for (int c = 0; c < controls.length; c++) {
@@ -312,7 +313,7 @@ public class DataModel {
                 j++;
             }
         }
-        System.out.println(errors);
+        Logger.getAnonymousLogger().log(Level.INFO, "" + errors);
     }
 
     public File getFile() {

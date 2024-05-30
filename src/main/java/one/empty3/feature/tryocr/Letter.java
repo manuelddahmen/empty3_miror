@@ -24,23 +24,26 @@ package one.empty3.feature.tryocr;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 public class Letter {
-        char x;
-        List<Trait> traits = new ArrayList<Trait>();
+    char x;
+    List<Trait> traits = new ArrayList<Trait>();
 
-        public Letter(Trait... traits) {
-            for (Trait t :
-                    traits) {
-                this.traits.add(t);
-            }
-        }
-
-        public List<Trait> getTraits() {
-            return traits;
-        }
-
-        public void setTraits(List<Trait> traits) {
-            this.traits = traits;
+    public Letter(Trait... traits) {
+        for (Trait t :
+                traits) {
+            this.traits.add(t);
         }
     }
+
+    public List<Trait> getTraits() {
+        return traits;
+    }
+
+    public void setTraits(List<Trait> traits) {
+        this.traits = traits;
+    }
+}

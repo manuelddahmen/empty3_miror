@@ -23,6 +23,7 @@
 package one.empty3.feature20220726;
 
 import java.awt.Color;
+
 import one.empty3.feature20220726.shape.Rectangle;
 import one.empty3.io.ProcessFile;
 import one.empty3.library.Axe;
@@ -41,6 +42,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 public class CurveFitting extends ProcessFile {
     CourbeN11 curvePoints;
@@ -231,7 +235,7 @@ public class CurveFitting extends ProcessFile {
                 iter++;
             } // à détailler
             if (p.size() > maxRes * 4) {
-                System.out.println("ArrayList.size too long : " + p.size());
+                Logger.getAnonymousLogger().log(Level.INFO, "ArrayList.size too long : " + p.size());
                 break;
             }
         }
@@ -312,9 +316,9 @@ public class CurveFitting extends ProcessFile {
 
         curvePoints.setIncrU(1. / maxRes / curvePoints.getCoefficients().data1d.size());
 
-        System.out.println("Courbe 4/5");
+        Logger.getAnonymousLogger().log(Level.INFO, "Courbe 4/5");
         p.plotCurve(curvePoints, new ColorTexture(Color.WHITE));
-        System.out.println("Courbe 5/5");
+        Logger.getAnonymousLogger().log(Level.INFO, "Courbe 5/5");
         p.plotCurve(circle, new ColorTexture(Color.BLUE));
         for (Point3D c : curvePoints.getCoefficients().getData1d()) {
             Rectangle rectangle = new Rectangle(c.getX() - 3, c.getY() - 3, 6, 6);
@@ -339,7 +343,7 @@ public class CurveFitting extends ProcessFile {
         System.out.printf("Energy       %f\n", e);
 
 
-        System.out.println(curvePoints);
+        Logger.getAnonymousLogger().log(Level.INFO, curvePoints.toString());
 
         BufferedImage image = normalize.getImage();
 //

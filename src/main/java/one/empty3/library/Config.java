@@ -26,6 +26,8 @@ import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Config {
 
@@ -114,7 +116,7 @@ public class Config {
     public String getDefaultCodeVecMesh() {
 
         String s = getFileDirectoryDefault() + File.separator + "defaultCode.calcmath";
-        System.out.println(s);
+        Logger.getAnonymousLogger().log(Level.INFO, s);
         return s;
     }
 

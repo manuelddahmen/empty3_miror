@@ -37,6 +37,9 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /***
  * Created by manue on 02-10-19.
  * Thread . Dessine les points de contrôles des objets de la scène.
@@ -164,7 +167,7 @@ public class ThreadGraphicalEditor extends Thread implements PropertyChangeListe
                             ModelBrowser modelBrowser = new ModelBrowser(getMain().getGraphicalEdit2().getSelectionIn(), zBuffer);
                             if (getMain().getGraphicalEdit2().getActionToPerform().equals(GraphicalEdit2.Action.TRANSLATE)) {
                                 modelBrowser.translateSelection(elem);
-                                Logger.getAnonymousLogger().log(Level.INFO,""+ main.getGraphicalEdit2().getCurrentSelection());
+                                Logger.getAnonymousLogger().log(Level.INFO, "" + main.getGraphicalEdit2().getCurrentSelection());
                             }
                         }
                     }

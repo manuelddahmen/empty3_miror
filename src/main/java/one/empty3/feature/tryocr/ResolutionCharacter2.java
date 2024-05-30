@@ -39,6 +39,9 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -60,7 +63,7 @@ public class ResolutionCharacter2 implements Runnable {
     private static final boolean[] TRUE_BOOLEANS = new boolean[]{true, true, true, true};
     private static int SHAKE_SIZE = 20;
     private static CsvWriter writer;
-    private static boolean exporting = true ;
+    private static boolean exporting = true;
     private static String dirOutChars;
     final int epochs = 100;
     final boolean[] testedRectangleBorder = new boolean[4];
@@ -97,7 +100,7 @@ public class ResolutionCharacter2 implements Runnable {
 
         File dir = new File("C:\\Users\\manue\\EmptyCanvasTest\\ocr");
         File dirOut = new File("C:\\Users\\manue\\EmptyCanvasTest\\ocr\\TestsOutput");
-        if(isExporting()) {
+        if (isExporting()) {
 
         }
         if (dir.exists() && dir.isDirectory()) {
@@ -113,17 +116,14 @@ public class ResolutionCharacter2 implements Runnable {
                     String name = file.getName();
 
 
-
-
                     Logger.getAnonymousLogger().log(Level.INFO, "ResolutionCharacter2 : " + name);
 
                     ResolutionCharacter2 resolutionCharacter2 = new ResolutionCharacter2(read, name, dirOut);
-                    dirOutChars =dirOut.getAbsolutePath()+File.separator+name+File.separator+"char";
+                    dirOutChars = dirOut.getAbsolutePath() + File.separator + name + File.separator + "char";
 
                     System.out.printf("%s", resolutionCharacter2.getClass().getSimpleName());
 
                     Thread thread = new Thread(resolutionCharacter2);
-
 
 
                     thread.start();
@@ -370,7 +370,7 @@ public class ResolutionCharacter2 implements Runnable {
             boolean firstPass = true;
             while (firstPass ||
                     !(heightBlackHistory >= 2 && widthBlackHistory >= 2 && Arrays.equals(TRUE_BOOLEANS,
-            testRectIs(input, i, j, w, h, testedRectangleBorder, WHITE_DOUBLES)))
+                            testRectIs(input, i, j, w, h, testedRectangleBorder, WHITE_DOUBLES)))
                             && i + w < input.getColumns() && j + h < input.getLines() && h >= 0 && w >= 0 && w < stepMax && h < stepMax) {
                 firstPass = false;
                 int w0 = w;
@@ -417,7 +417,7 @@ public class ResolutionCharacter2 implements Runnable {
                 }
 
 
-                if ((h>stepMax || w > stepMax) || ((h0 == h) && (w0 == w))) {
+                if ((h > stepMax || w > stepMax) || ((h0 == h) && (w0 == w))) {
                     break;
                 }
 
@@ -449,11 +449,11 @@ public class ResolutionCharacter2 implements Runnable {
                     //writer.writeLine(new String[]{name, "" + i, "" + j, "" + w, "" + h, s[0]});
                     Color random = Colors.random();
                     output.plotCurve(rectangle, new TextureCol(random));
-                    countRects ++;
-                    if(isExporting()) {
-                        File file = new File(dirOutChars + "-" + i + "-" + j + "-" + w + "-" + h+".jpg");
+                    countRects++;
+                    if (isExporting()) {
+                        File file = new File(dirOutChars + "-" + i + "-" + j + "-" + w + "-" + h + ".jpg");
                         PixM outChar = input.copySubImage(i, j, w, h);
-                        if(!file.getParentFile().exists() || file.getParentFile().isDirectory()) {
+                        if (!file.getParentFile().exists() || file.getParentFile().isDirectory()) {
                             file.getParentFile().mkdirs();
                             try {
                                 ImageIO.write(outChar.getImage(), "jpg", file);
@@ -852,6 +852,7 @@ public class ResolutionCharacter2 implements Runnable {
             return copy;
         }
     }
+
     private static boolean isExporting() {
         return exporting;
     }

@@ -32,6 +32,9 @@ import javaAnd.awt.*;
 import javaAnd.awt.image.BufferedImage;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 public class FeatureMotion extends Motion {
     @Override

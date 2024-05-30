@@ -23,18 +23,16 @@
 package one.empty3.neuralnetwork.of;
 
 import javaAnd.awt.image.imageio.ImageIO;
-import one.empty3.feature.M;
 import one.empty3.feature.PixM;
 import one.empty3.library.core.math.Matrix;
-import one.empty3.library.core.nurbs.F;
-import one.empty3.neuralnetwork.HiddenNeuron;
 import one.empty3.neuralnetwork.LossFunction;
 import one.empty3.neuralnetwork.Neuron;
 
-import java.awt.geom.RectangularShape;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.function.Function;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Run {
     private static File dir = null;
@@ -49,7 +47,7 @@ public class Run {
             file = args[0];
 
         int sqrt = (int) Math.sqrt(MAX_RES);
-        System.out.println("sqrt: " + sqrt);
+        Logger.getAnonymousLogger().log(Level.INFO, "sqrt: " + sqrt);
 
         dir = new File(file);
         Run run = new Run();
@@ -70,10 +68,10 @@ public class Run {
 
         Matrix calculateError = actual.apply((index, value) -> value - expectedMatrix.get(index));
 
-        System.out.println("Actual result\n" + actual);
-        System.out.println("Matrix neuron image\n" + matrixNeuron);
-        System.out.println("Loss Matrix\n" + loss);
-        System.out.println("Calculate error Matrix\n" + calculateError);
+        Logger.getAnonymousLogger().log(Level.INFO, "Actual result\n" + actual);
+        Logger.getAnonymousLogger().log(Level.INFO, "Matrix neuron image\n" + matrixNeuron);
+        Logger.getAnonymousLogger().log(Level.INFO, "Loss Matrix\n" + loss);
+        Logger.getAnonymousLogger().log(Level.INFO, "Calculate error Matrix\n" + calculateError);
     }
 
     public Matrix weightTransform(Matrix weights, Function<Matrix, Matrix> transform) {

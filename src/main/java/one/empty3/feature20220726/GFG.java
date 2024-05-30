@@ -23,8 +23,9 @@
 package one.empty3.feature20220726;
 // Implementing Coppersmith Winograd Algorithm in Java
 
-import java.io.*;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 class GFG {
 
@@ -95,8 +96,8 @@ class GFG {
         double[][] M3 = {{4, 4}, {10, 8}};
 
         if (coppersmithWinograd(M1, M2, M3, n))
-            System.out.println("Resultant matrix is Matching");
+            Logger.getAnonymousLogger().log(Level.INFO, "Resultant matrix is Matching");
         else
-            System.out.println("Resultant matrix is not Matching");
+            Logger.getAnonymousLogger().log(Level.INFO, "Resultant matrix is not Matching");
     }
 }

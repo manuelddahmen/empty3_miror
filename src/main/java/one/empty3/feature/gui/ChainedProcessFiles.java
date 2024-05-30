@@ -27,6 +27,9 @@ import one.empty3.feature.TreeDiagram;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 public class ChainedProcessFiles {
     private final TreeDiagram treeDiagram;

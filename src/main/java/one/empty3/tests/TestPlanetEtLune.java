@@ -25,11 +25,11 @@ package one.empty3.tests;
 import one.empty3.feature.app.replace.javax.imageio.ImageIO;
 import one.empty3.library.*;
 import one.empty3.library.core.testing.TestObjetSub;
-import one.empty3.testscopy.tests.tests2.balleclou.BalleClous2;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class TestPlanetEtLune extends TestObjetSub {
@@ -37,21 +37,21 @@ public class TestPlanetEtLune extends TestObjetSub {
     public static final int FPS = 25;
     private static final int TURNS = 1;
     private final File planets = new File("res\\img\\planets2");
-    private File earthFilename = new File(planets.getAbsolutePath()+
-            File.separator+"_earth.jpg");
-    private File moonFilename = new File(planets.getAbsolutePath()+
-            File.separator+"8k_moon.jpg");
-    private File sunFilename = new File(planets.getAbsolutePath()+
-            File.separator+"8k_sun.jpg");
+    private File earthFilename = new File(planets.getAbsolutePath() +
+            File.separator + "_earth.jpg");
+    private File moonFilename = new File(planets.getAbsolutePath() +
+            File.separator + "8k_moon.jpg");
+    private File sunFilename = new File(planets.getAbsolutePath() +
+            File.separator + "8k_sun.jpg");
     private final double sunDistance = 150;
     private final double moonDistance = 0.384;
-    private final double sunRealSize = 13927E6/2;
-    private final double earthRealSize = (double) 12756 /2;
+    private final double sunRealSize = 13927E6 / 2;
+    private final double earthRealSize = (double) 12756 / 2;
     private final double moonRealSize = 3475;
     private final double earthPeriod = 365.256;
-    private final double moonPeriod = 655.7/24;
+    private final double moonPeriod = 655.7 / 24;
     private final double earthMass = 5.97;//E24
-    private final double sunMass = 1.98847E6 ;
+    private final double sunMass = 1.98847E6;
     private final double moonMass = 0.073;
 
     private int i = -1;
@@ -84,8 +84,8 @@ public class TestPlanetEtLune extends TestObjetSub {
 
     @Override
     public void ginit() {
-        sun = new Sphere(new Point3D(0., 0.,sunDistance), sunRealSize);
-        earth = new Sphere(new Point3D(0., 0.,0.), earthRealSize);
+        sun = new Sphere(new Point3D(0., 0., sunDistance), sunRealSize);
+        earth = new Sphere(new Point3D(0., 0., 0.), earthRealSize);
         moon = new Sphere(new Point3D(0., moonDistance, 0.0), moonRealSize);
 
         sun.texture(new ImageTexture(new ECBufferedImage(ImageIO.read(sunFilename))));
@@ -93,7 +93,7 @@ public class TestPlanetEtLune extends TestObjetSub {
         moon.texture(new ImageTexture(new ECBufferedImage(ImageIO.read(moonFilename))));
 
         logger = Logger.getLogger(this.getClass().getCanonicalName());
-        setMaxFrames( FPS * SECONDS );
+        setMaxFrames(FPS * SECONDS);
 
         z().ratioVerticalAngle();
 
@@ -104,7 +104,7 @@ public class TestPlanetEtLune extends TestObjetSub {
         scene().texture(new ColorTexture(Color.BLACK));
 
 
-        Camera c = new Camera(axeViseeVideo[1].mult((double)  earthRealSize*1.4), Point3D.O0, axeVerticalVideo);
+        Camera c = new Camera(axeViseeVideo[1].mult((double) earthRealSize * 1.4), Point3D.O0, axeVerticalVideo);
         c.calculerMatrice(axeVerticalVideo);
         z().scene().cameraActive(c);
         scene().cameraActive(c);
@@ -117,9 +117,9 @@ public class TestPlanetEtLune extends TestObjetSub {
 
     public Point3D positions() {
         Point3D p = new Point3D();
-        p.set(0, 1.0*(frame() / (FPS * SECONDS * TURNS)));
-        p.set(1, 1.0*(frame() % (FPS * SECONDS * TURNS)));
-        p.set(2, 1.0* FPS * SECONDS * TURNS);
+        p.set(0, 1.0 * (frame() / (FPS * SECONDS * TURNS)));
+        p.set(1, 1.0 * (frame() % (FPS * SECONDS * TURNS)));
+        p.set(2, 1.0 * FPS * SECONDS * TURNS);
 
         return p;
     }
@@ -135,7 +135,7 @@ public class TestPlanetEtLune extends TestObjetSub {
     @Override
     public void finit() throws Exception {
 
-        for(Sphere sphere :new Sphere[] {moon, sun, earth}) {
+        for (Sphere sphere : new Sphere[]{moon, sun, earth}) {
             sphere.setIncrU(.003);
             sphere.setIncrV(.003);
             scene().clear();
@@ -146,20 +146,20 @@ public class TestPlanetEtLune extends TestObjetSub {
 
         Circle circle = earth.getCircle();
         circle.setVectZ(axeVerticalVideo);
-        double lat = 51./90;
+        double lat = 51. / 90;
         circle.getAxis().getElem().getP1().setElem(axeVerticalVideo.mult(1.0));
         circle.getAxis().getElem().getP2().setElem(axeVerticalVideo.mult(-1.0));
         circle.setVectX(axesSphereHorizontaux[0].mult(Math.cos(2 * Math.PI * v)
-                        * Math.cos(Math.PI/2*lat))
+                        * Math.cos(Math.PI / 2 * lat))
                 .plus(axesSphereHorizontaux[1].mult(-Math.sin(2 * Math.PI * v)
-                        * Math.cos(Math.PI/2*lat))).norme1());
+                        * Math.cos(Math.PI / 2 * lat))).norme1());
         circle.setVectY(axesSphereHorizontaux[0].mult(Math.sin(2 * Math.PI * v)
-                        * Math.cos(Math.PI/2*lat))
+                        * Math.cos(Math.PI / 2 * lat))
                 .plus(axesSphereHorizontaux[1].mult(Math.cos(2 * Math.PI * v)
-                        * Math.cos(Math.PI/2*lat))).norme1());
+                        * Math.cos(Math.PI / 2 * lat))).norme1());
         circle.setCalculerRepere1(true);
         earth.setCircle(circle);
-        System.out.println("Camera t : " + v);
+        Logger.getAnonymousLogger().log(Level.INFO, "Camera t : " + v);
 
     }
 

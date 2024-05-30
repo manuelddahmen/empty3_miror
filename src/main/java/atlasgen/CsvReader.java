@@ -29,6 +29,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 public class CsvReader {
     private final int countLineModulo = 10000;
@@ -100,9 +103,9 @@ public class CsvReader {
                 }
 
             }
-        } catch(IOException ex) {
-        ex.printStackTrace();
-            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
 
 
     }

@@ -30,6 +30,7 @@ import one.empty3.testscopy.tests.test4.surfacest.SphereDiform;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class TestDeformee extends TestObjetSub {
@@ -193,16 +194,16 @@ public class TestDeformee extends TestObjetSub {
         earth.setVectZ(colVectors[2]);
         int i = 0;
         for(Point3D v : colVectors) {
-            System.out.println("P3 ["+i+"] = " + v);
+            Logger.getAnonymousLogger().log(Level.INFO, "P3 ["+i+"] = " + v);
             i++;
         }
-        System.out.println(matrixB);
+        Logger.getAnonymousLogger().log(Level.INFO, matrixB);
 */
 
         earth.setCircle(circle);
         circle.setCalculerRepere1(true);
         earth.setQuad_not_computed(0);
         scene().add(circle);
-        System.out.println("Camera u : " + u);
+        Logger.getAnonymousLogger().log(Level.INFO, "Camera u : " + u);
     }
 }

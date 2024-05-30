@@ -23,6 +23,9 @@
 package atlasgen;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 /*__
  * Created by manue on 19-06-18.

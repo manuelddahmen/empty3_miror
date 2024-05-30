@@ -41,6 +41,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
@@ -126,7 +129,7 @@ public class ResolutionCharacter7 implements Runnable {
             writer.writeLine(new String[]{"filename", "x", "y", "w", "h", "chars"});
 
             for (File file : Objects.requireNonNull(dir.listFiles())) {
-                if (!file.isDirectory() && file.isFile() ) {
+                if (!file.isDirectory() && file.isFile()) {
                     String extension = file.getName().toLowerCase(Locale.ROOT);
                     if (!Arrays.stream(javax.imageio.ImageIO.getReaderFileSuffixes()).noneMatch(s -> s.equals(extension)))
                         continue;
@@ -268,7 +271,7 @@ public class ResolutionCharacter7 implements Runnable {
 
         try {
             pwTxt = new PrintWriter(dirOut.getAbsolutePath() + File.separator +
-                    name +  "output.txt");
+                    name + "output.txt");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -371,27 +374,27 @@ public class ResolutionCharacter7 implements Runnable {
                     matchingRects.get(iSlides).add(rectangle2);
                     dimensionTotal.setSize(dimensionTotal.getWidth() + rectangle2.getW(), dimensionTotal.getHeight() > rectangle2.getH() ?
                             dimensionTotal.getHeight() : rectangle2.getH());
-                     maxheight = Math.max((int)dimensionTotal.getHeight(), maxheight);
+                    maxheight = Math.max((int) dimensionTotal.getHeight(), maxheight);
                 }
             }
             maxLine = Math.max(maxLine, matchingRects.get(iSlides).size());
 
         }
-        PixM pSlide = new PixM((int) dimensionTotal.getWidth(), (int) maxheight*mean);
+        PixM pSlide = new PixM((int) dimensionTotal.getWidth(), (int) maxheight * mean);
         AtomicInteger iSlides = new AtomicInteger();
         int finalMaxheight = maxheight;
         iSlides.set(0);
-        matchingRects.forEach((idx, listOfRects)  -> {
+        matchingRects.forEach((idx, listOfRects) -> {
             listOfRects.forEach((rectangle2 -> {
-                int x = (iSlides.get() % mean)* finalMaxheight;
-                int y = (iSlides.get() / mean)* finalMaxheight;
+                int x = (iSlides.get() % mean) * finalMaxheight;
+                int y = (iSlides.get() / mean) * finalMaxheight;
                 pSlide.pasteSubImage(input.copySubImage(rectangle2.getX(), rectangle2.getY(), rectangle2.getW(), rectangle2.getH()),
                         x, y, rectangle2.getW(), rectangle2.getH());
                 iSlides.getAndIncrement();
 
             }));
         });
-        height+=maxheight;
+        height += maxheight;
         try {
             ImageIO.write(pSlide.getImage(), "jpg", new File(dirOutDist + "_matchingRects_" + pSlide + ".jpg"));
         } catch (IOException e) {
@@ -554,7 +557,7 @@ public class ResolutionCharacter7 implements Runnable {
                             System.err.println();
                             Logger.getAnonymousLogger().info("Characters {" + s[0] + "} (" + i + ", " + j + ")");
                         }
-                        if(s[0].length()>0)
+                        if (s[0].length() > 0)
                             pwTxt.println(s[0]);
                         Color random = Colors.random();
                         output.plotCurve(rectangle, new TextureCol(random));
@@ -836,7 +839,7 @@ public class ResolutionCharacter7 implements Runnable {
                         && current == BLANK) {
                     ref.countOnColumnI++;
                     current = CHARS;
-                } else if(current==CHARS && mat.luminance(i, j)>=MAX_BLACK_VALUE){
+                } else if (current == CHARS && mat.luminance(i, j) >= MAX_BLACK_VALUE) {
                     current = BLANK;
                 }
             }
@@ -912,7 +915,7 @@ public class ResolutionCharacter7 implements Runnable {
                     ref.countOnColumnI++;
                     current = CHARS;
 
-                } else if(current==CHARS && mat.luminance(i, j)>=MAX_BLACK_VALUE){
+                } else if (current == CHARS && mat.luminance(i, j) >= MAX_BLACK_VALUE) {
                     current = BLANK;
                 }
             }
@@ -958,39 +961,38 @@ public class ResolutionCharacter7 implements Runnable {
     private Integer[] trimArrayZeroes(Integer[] lines) {
         Integer[] cut = new Integer[lines.length];
         boolean firstZeros = true;
-        boolean lastZeros = true
-                ;
+        boolean lastZeros = true;
         int j = 0;
         int size = 0;
         for (int i = 0; i < lines.length && (firstZeros); i++) {
             if (lines[i] == null || lines[i] == 0) {
                 size++;
-            }else {
+            } else {
                 firstZeros = false;
             }
 
         }
 
-        if(size==lines.length)
-            return new Integer[] {0};
+        if (size == lines.length)
+            return new Integer[]{0};
 
         cut = Arrays.copyOfRange(lines, size, lines.length);
 
         size = cut.length;
 
-        for (int i = cut.length - 1; i >=0  && (lastZeros); i--) {
+        for (int i = cut.length - 1; i >= 0 && (lastZeros); i--) {
             if (cut[i] == null || cut[i] == 0) {
                 size--;
-            }else {
+            } else {
                 lastZeros = false;
             }
 
         }
 
-        if(size>0)
+        if (size > 0)
             return Arrays.copyOfRange(cut, 0, size);
         else
-            return new Integer[] {0};
+            return new Integer[]{0};
     }
 
 
@@ -1089,10 +1091,10 @@ public class ResolutionCharacter7 implements Runnable {
     public PixM derivative(PixM input) {
         PixM output = new PixM(input.getColumns(), input.getLines());
 
-        for(int i=0; i<input.getColumns(); i++) {
+        for (int i = 0; i < input.getColumns(); i++) {
             for (int j = 0; j < input.getLines(); j++) {
-                output.setP(i, j, output.getP(i-1, j)
-                        .plus(output.getP(i, j-1))
+                output.setP(i, j, output.getP(i - 1, j)
+                        .plus(output.getP(i, j - 1))
                         .plus(input.getP(i, j)));
             }
         }

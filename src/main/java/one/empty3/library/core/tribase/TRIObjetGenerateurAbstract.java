@@ -31,6 +31,9 @@ import one.empty3.library.*;
 import java.awt.*;
 import java.awt.Point;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 /*__
  * @author MANUEL DAHMEN
@@ -51,8 +54,8 @@ public class TRIObjetGenerateurAbstract extends Representable implements TRIObje
     protected StructureMatrix<Integer> maxY = new StructureMatrix<>(0, Integer.class);
     protected StructureMatrix<Boolean> cx = new StructureMatrix<>(0, Boolean.class);
     protected StructureMatrix<Boolean> cy = new StructureMatrix<>(0, Boolean.class);
-    public TRIObjetGenerateurAbstract()
-    {
+
+    public TRIObjetGenerateurAbstract() {
         maxX.setElem(30);
         maxY.setElem(30);
         cx.setElem(false);
@@ -69,6 +72,7 @@ public class TRIObjetGenerateurAbstract extends Representable implements TRIObje
         getDeclaredDataStructure().put("cy/ Circulaire X last iterations for drawing - disable", cy);
     */
     }
+
     @Override
     public int getMaxX() {
         return maxX.data0d;
@@ -76,7 +80,7 @@ public class TRIObjetGenerateurAbstract extends Representable implements TRIObje
 
     @Override
     public void setMaxX(int maxX) {
-        this.maxX.setElem( maxX);
+        this.maxX.setElem(maxX);
     }
 
     @Override
@@ -86,7 +90,7 @@ public class TRIObjetGenerateurAbstract extends Representable implements TRIObje
 
     @Override
     public void setMaxY(int maxY) {
-        this.maxY.setElem( maxY);
+        this.maxY.setElem(maxY);
     }
 
     @Override
@@ -96,7 +100,7 @@ public class TRIObjetGenerateurAbstract extends Representable implements TRIObje
 
     @Override
     public void setCirculaireX(boolean cx) {
-        this.cx.setElem( cx);
+        this.cx.setElem(cx);
     }
 
     @Override
@@ -110,8 +114,7 @@ public class TRIObjetGenerateurAbstract extends Representable implements TRIObje
     }
 
     @Override
-    public Point3D coordPoint3D(int x, int y)
-    {
+    public Point3D coordPoint3D(int x, int y) {
         return null;
     }
 
@@ -153,7 +156,7 @@ public class TRIObjetGenerateurAbstract extends Representable implements TRIObje
 
             Point3D normale = tris[t].getSommet().getElem(1).moins(
                     tris[t].getSommet().getElem(0).prodVect(
-                    (tris[t].getSommet().getElem(2).moins(tris[t].getSommet().getElem(0)))));
+                            (tris[t].getSommet().getElem(2).moins(tris[t].getSommet().getElem(0)))));
             for (int i = 0; i < 3; i++) {
                 tris[t].getSommet().getElem(i).setNormale(normale);
             }
@@ -182,7 +185,7 @@ public class TRIObjetGenerateurAbstract extends Representable implements TRIObje
                     sommet.get(2).moins(sommet.get(1)).mult(ratioY));
             if (texture() == null) texture = new TextureCol(new Color(255, 128, 0));
             ret.texture(new TextureCol(texture.getColorAt(
-                    (numX+(numX + ratioX) / maxX.data0d), (numY+(numY + ratioY) / maxY.data0d))));
+                    (numX + (numX + ratioX) / maxX.data0d), (numY + (numY + ratioY) / maxY.data0d))));
 
             ret.setNormale((tris[0].getSommet().getElem(1).moins(tris[0].getSommet().getElem(0))).prodVect((tris[0]
                     .getSommet().getElem(2).moins(tris[0].getSommet().getElem(0)))));
@@ -195,7 +198,7 @@ public class TRIObjetGenerateurAbstract extends Representable implements TRIObje
                     sommet.get(0).moins(sommet.get(1)).mult(ratioY)).plus(
                     sommet.get(2).moins(sommet.get(0)).mult(ratioX));
             ret.texture(new TextureCol(texture.getColorAt(
-                    (numX+(numX + ratioX) / maxX.data0d), (numY+(numY + ratioY) / maxY.data0d))));
+                    (numX + (numX + ratioX) / maxX.data0d), (numY + (numY + ratioY) / maxY.data0d))));
 
             ret.setNormale((tris[1].getSommet().getElem(1).moins(tris[1].getSommet().getElem(0)).prodVect((tris[1]
                     .getSommet().getElem(2).moins(tris[1].getSommet().getElem(0))))));
@@ -239,9 +242,9 @@ public class TRIObjetGenerateurAbstract extends Representable implements TRIObje
                 for (int t = 0; t < 2; t++) {
                     for (int c = 0; c < 3; c++) {
                         Point p1 = z.camera().coordonneesPoint2D(tris[t]
-                                .getSommet().getElem(c), (ZBufferImpl)z);
+                                .getSommet().getElem(c), (ZBufferImpl) z);
                         Point p2 = z.camera().coordonneesPoint2D(tris[t]
-                                .getSommet().getElem((c + 1) % 3), (ZBufferImpl)z);
+                                .getSommet().getElem((c + 1) % 3), (ZBufferImpl) z);
                         if (p1 != null & p2 != null) {
                             double incr = 1.0 / (Math
                                     .abs(p1.getX() - p2.getX()) + Math.abs(p1

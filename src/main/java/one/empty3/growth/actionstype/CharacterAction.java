@@ -28,6 +28,8 @@ import one.empty3.growth.SymbolSequence;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 public class CharacterAction extends Action {
@@ -39,8 +41,8 @@ public class CharacterAction extends Action {
     }
 
     public CharacterAction(String cs) {
-        for(Byte c : cs.getBytes()) {
-            replaceman.add(new Symbol((char)c.shortValue()));
+        for (Byte c : cs.getBytes()) {
+            replaceman.add(new Symbol((char) c.shortValue()));
         }
     }
 
@@ -57,19 +59,19 @@ public class CharacterAction extends Action {
         }
         int id = 0;
         for (int i = 0; i < stringOfSymbols.size(); i++) {
-            for(int j=0 ; j<tokenParts.size(); j++) {
-                if(i+j>=stringOfSymbols.size())
+            for (int j = 0; j < tokenParts.size(); j++) {
+                if (i + j >= stringOfSymbols.size())
 
                     break;
 
-                if(stringOfSymbols.get(i+j).equals(tokenParts.get(j)))
+                if (stringOfSymbols.get(i + j).equals(tokenParts.get(j)))
 
                     id++;
 
 
             }
 
-            if(id==tokenParts.size()) {
+            if (id == tokenParts.size()) {
 
             }
         }

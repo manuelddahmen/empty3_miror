@@ -26,25 +26,28 @@
 
 package one.empty3.apps.vecmesh;
 
+import javaAnd.awt.image.imageio.ImageIO;
+import net.miginfocom.swing.MigLayout;
+import one.empty3.library.*;
+import one.empty3.library.core.export.ObjExport;
+import one.empty3.library.core.export.STLExport;
+import one.empty3.library.core.tribase.Plan3D;
+import one.empty3.library.core.tribase.Tubulaire3;
+
+import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
-import java.util.*;
-import javax.swing.*;
-import javax.swing.filechooser.FileFilter;
-
-import javaAnd.awt.image.imageio.ImageIO;
-import net.miginfocom.swing.*;
-import one.empty3.library.*;
-import one.empty3.library.core.export.ObjExport;
-import one.empty3.library.core.export.STLExport;
-import one.empty3.library.core.nurbs.F;
-import one.empty3.library.core.tribase.Plan3D;
-import one.empty3.library.core.tribase.Tubulaire3;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author Manuel Dahmen
@@ -80,7 +83,7 @@ public class VecMeshEditorGui extends JFrame {
         Output.setGetText(buttonOutput);
 
         instanceCount++;
-        System.out.println("Instance==1 : " + (instanceCount == 1));
+        Logger.getAnonymousLogger().log(Level.INFO, "Instance==1 : " + (instanceCount == 1));
     }
 
     private void menuItemSave(ActionEvent e) {
@@ -346,7 +349,7 @@ public class VecMeshEditorGui extends JFrame {
                                 if (file.exists() && file.isFile()) {
                                     texture = ImageIO.read(file);
                                     fileTexture = file;
-                                    System.out.println("texture: " + file.getAbsolutePath());
+                                    Logger.getAnonymousLogger().log(Level.INFO, "texture: " + file.getAbsolutePath());
                                 } else
                                     System.err.println("File" + file + " doesn't exist");
                             }

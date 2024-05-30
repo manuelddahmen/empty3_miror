@@ -21,6 +21,7 @@
  */
 
 package one.empty3.feature20220726;
+
 import java.util.PrimitiveIterator;
 import java.util.Random;
 
@@ -186,7 +187,7 @@ public class MBufferedImage /*implements InterfaceMatrix*/ {
                 }
             }
         }
-        //System.out.println("Columns=" + columns + "\n Lines = " + lines+ " \n Total size ="+x.length);
+        //Logger.getAnonymousLogger().log(Level.INFO, "Columns=" + columns + "\n Lines = " + lines+ " \n Total size ="+x.length);
     }
 
 

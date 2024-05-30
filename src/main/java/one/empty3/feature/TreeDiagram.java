@@ -24,9 +24,12 @@ package one.empty3.feature;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import java.util.TreeMap;
 
-public class TreeDiagram implements TreeNodeListener{
+public class TreeDiagram implements TreeNodeListener {
     protected TreeNodeDiagram head = null;
     private TreeNodeListener treeNodeListener;
 
@@ -110,9 +113,11 @@ public class TreeDiagram implements TreeNodeListener{
         // Movie
 
     }
+
     public void addListener(TreeNodeListener treeNodeListener) {
         this.treeNodeListener = treeNodeListener;
     }
+
     @Override
     public void listen(TreeDiagram treeDiagram, TreeNodeDiagram treeNodeDiagram, int code) {
 

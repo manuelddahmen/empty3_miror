@@ -25,6 +25,9 @@ package one.empty3.feature20220726.jviolajones;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 public class Stage {
     List<Tree> trees;
@@ -44,11 +47,11 @@ public class Stage {
         float sum = 0;
         for (Tree t : trees) {
 
-            //System.out.println("Returned value :"+t.getVal(grayImage, squares,i, j, scale));
+            //Logger.getAnonymousLogger().log(Level.INFO, "Returned value :"+t.getVal(grayImage, squares,i, j, scale));
 
             sum += t.getVal(grayImage, squares, i, j, scale);
         }
-        //System.out.println(sum+" "+threshold);
+        //Logger.getAnonymousLogger().log(Level.INFO, sum+" "+threshold);
         return sum > threshold;
     }
 

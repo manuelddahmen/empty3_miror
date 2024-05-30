@@ -26,11 +26,15 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 public class MoveCollection {
     private HashMap<String, Move> moves;
-    private HashMap<String,Double> tStart = new HashMap<>();
-    private HashMap<String,Double> tEnd = new HashMap<>();
+    private HashMap<String, Double> tStart = new HashMap<>();
+    private HashMap<String, Double> tEnd = new HashMap<>();
+
     public MoveCollection(double tStart, double tEnd) {
         this.moves = new HashMap<>();
     }

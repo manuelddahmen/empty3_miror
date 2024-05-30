@@ -30,6 +30,8 @@ import one.empty3.library.Point3D;
 import one.empty3.library.core.nurbs.ParametricCurve;
 
 import java.awt.image.BufferedImage;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class PixM extends MBufferedImage {
     public static final int COMP_RED = 0;
@@ -110,7 +112,7 @@ public class PixM extends MBufferedImage {
         }
         double columns2 = 1.0 * image.getWidth() * f;
         double lines2 = 1.0 * image.getHeight() * f;
-        System.out.println("pixm resampling init  --> (" + maxRes + ", " + maxRes + ")  (" + columns2 + ", " + lines2 + ")");
+        Logger.getAnonymousLogger().log(Level.INFO, "pixm resampling init  --> (" + maxRes + ", " + maxRes + ")  (" + columns2 + ", " + lines2 + ")");
         PixM pixM = new PixM((int) (columns2), ((int) lines2));
 
 

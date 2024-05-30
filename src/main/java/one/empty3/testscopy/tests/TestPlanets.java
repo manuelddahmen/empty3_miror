@@ -29,6 +29,7 @@ import one.empty3.library.core.testing.TestObjetSub;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class TestPlanets extends TestObjetSub {
@@ -82,14 +83,14 @@ public class TestPlanets extends TestObjetSub {
         camera(c);
         i = -1;
 
-       // frame = 3990;
+        // frame = 3990;
 
         incr();
 
     }
 
     public void incr() {
-        int i1 = (frame() / (FPS * SECONDS)) ;
+        int i1 = (frame() / (FPS * SECONDS));
         if (i1 != i) {
             i = i1;
             if (i1 < planetsImagesFiles.length) {
@@ -99,7 +100,7 @@ public class TestPlanets extends TestObjetSub {
                 i1 = 0;
             }
 
-            System.out.println("Planets:" + i1 + "/" + planetsImagesFiles.length);
+            Logger.getAnonymousLogger().log(Level.INFO, "Planets:" + i1 + "/" + planetsImagesFiles.length);
         }
     }
 
@@ -140,7 +141,7 @@ public class TestPlanets extends TestObjetSub {
                 .plus(axesSphereHorizontaux[1].mult(Math.cos(2 * Math.PI * v))));
         circle.setCalculerRepere1(true);
         sphere.setCircle(circle);
-        System.out.println("Camera t : " + v);
+        Logger.getAnonymousLogger().log(Level.INFO, "Camera t : " + v);
     }
 
     @Override

@@ -31,15 +31,17 @@ class ParseCodeTest {
     public void testMain() {
         ParseCode.main(null);
     }
+
     @Test
     public void testComment() {
         ParseCode parseCode = new ParseCode();
         parseCode.setBrut("/* */ \n//\n /* */");
         parseCode.parseTokensToTree();
-        System.out.println(parseCode.tree);
+        Logger.getAnonymousLogger().log(Level.INFO, parseCode.tree);
 
         assertEquals(parseCode.uncommented, (""));
     }
+
     @Test
     public void testCompilerSimple1() {
         ParseCode parseCode = new ParseCode();

@@ -87,7 +87,7 @@ public class FTPProcessFiles {
                             settingsDir + File.separator + "settings.properties"));
         } catch (Exception ex) {
             ex.printStackTrace();
-            System.err.println("Configuration file = " + settingsDir+" doessn't content Settings.properties");
+            System.err.println("Configuration file = " + settingsDir + " doessn't content Settings.properties");
             System.exit(1);
         }
         return settings;
@@ -112,7 +112,7 @@ public class FTPProcessFiles {
         appSettings = settings();
 
         if (appSettings.getProperty("sets").equals("*")) {
-            System.out.println("All default tests");
+            Logger.getAnonymousLogger().log(Level.INFO, "All default tests");
             settingsPropertiesPath = appSettings.getProperty("working") + File.separator + "sets";
         } else {
             settingsPropertiesPath = "./sets";
@@ -120,16 +120,16 @@ public class FTPProcessFiles {
         String[] sets = new File(settingsPropertiesPath)
                 .list();
         while (j < Objects.requireNonNull(sets).length) {
-            String settingsPropertiesPath1 = settingsPropertiesPath +File.separator+ sets[j];
+            String settingsPropertiesPath1 = settingsPropertiesPath + File.separator + sets[j];
 
 
             try {
-                System.out.println("Settings of effects path " + settingsPropertiesPath);
-                System.out.println("Settings of output" + settingsPropertiesPath);
+                Logger.getAnonymousLogger().log(Level.INFO, "Settings of effects path " + settingsPropertiesPath);
+                Logger.getAnonymousLogger().log(Level.INFO, "Settings of output" + settingsPropertiesPath);
                 defaultProcess(new File(settingsPropertiesPath1));
-                System.out.println("Process %s ran without error");
+                Logger.getAnonymousLogger().log(Level.INFO, "Process %s ran without error");
             } catch (Exception ex) {
-                System.out.println("Process %s ran with exception");
+                Logger.getAnonymousLogger().log(Level.INFO, "Process %s ran with exception");
                 ex.printStackTrace();
             }
             j++;
@@ -188,13 +188,13 @@ public class FTPProcessFiles {
                 port = 0;
                 username = "";
                 password = "";
-            break;
+                break;
             default:
                 server = (String) settings.getProperty("host");
                 port = Integer.parseInt(settings.getProperty("port"));
                 username = (String) settings.getProperty("username");
                 password = (String) settings.getProperty("password");
-            break;
+                break;
         }
 
         String maxFilesInDir0 = settings.getProperty("maxFilesInDir");
@@ -334,7 +334,7 @@ public class FTPProcessFiles {
                     } else {
                         // local path
                         initialDirectories = currentDirin;
-                        System.out.println("Settings of images" );
+                        Logger.getAnonymousLogger().log(Level.INFO, "Settings of images");
                         Arrays.stream(initialDirectories).forEach(System.out::println);
                         for (int d = 0; d < initialDirectories.length; d++) {
                             File directory = new File(initialDirectories[d]);

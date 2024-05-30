@@ -22,8 +22,8 @@
 package one.empty3.tests.humanheadtexturing;
 
 import one.empty3.feature.PixM;
-import one.empty3.library.*;
 import one.empty3.library.Polygon;
+import one.empty3.library.*;
 import one.empty3.library.core.testing.TestObjetStub;
 import one.empty3.library.objloader.E3Model;
 
@@ -33,7 +33,8 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Consumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class TestHumanHeadTexturing extends TestObjetStub {
     private MouseAdapter mouseAdapter;
@@ -113,8 +114,8 @@ public class TestHumanHeadTexturing extends TestObjetStub {
                 if (elementRepresentable instanceof Representable representable) {
                     ColorTexture colorTexture = new ColorTexture(Color.RED);
                     elementRepresentable.texture(colorTexture);
-                    System.out.println("Nombre d'éléments dans la scène : " + scene().getObjets().data1d.size());
-                    System.out.println("Nombre d'éléments dans la scène (1er objet): " + ((RepresentableConteneur) scene().getObjets().getElem(0)).getListRepresentable().size());
+                    Logger.getAnonymousLogger().log(Level.INFO, "Nombre d'éléments dans la scène : " + scene().getObjets().data1d.size());
+                    Logger.getAnonymousLogger().log(Level.INFO, "Nombre d'éléments dans la scène (1er objet): " + ((RepresentableConteneur) scene().getObjets().getElem(0)).getListRepresentable().size());
                     AtomicInteger tri = new AtomicInteger();
                     AtomicInteger quad = new AtomicInteger();
                     AtomicInteger polygon = new AtomicInteger();
@@ -136,9 +137,9 @@ public class TestHumanHeadTexturing extends TestObjetStub {
                             }
                         }
                     });
-                    System.out.println("Nombre de TRI     dans la scène (1er objet): " + tri);
-                    System.out.println("Nombre de Polygon dans la scène (1er objet): " + polygon);
-                    System.out.println("Nombre de Quad    dans la scène (1er objet): " + quad);
+                    Logger.getAnonymousLogger().log(Level.INFO, "Nombre de TRI     dans la scène (1er objet): " + tri);
+                    Logger.getAnonymousLogger().log(Level.INFO, "Nombre de Polygon dans la scène (1er objet): " + polygon);
+                    Logger.getAnonymousLogger().log(Level.INFO, "Nombre de Quad    dans la scène (1er objet): " + quad);
                 }
                 System.err.println("" + elementRepresentable + " or" + (elementRepresentable != null ? elementRepresentable.getClass().getName() : "null"));
             }
@@ -146,7 +147,7 @@ public class TestHumanHeadTexturing extends TestObjetStub {
         if (!isset && getPanelDraw() != null && img() != null) {
             getPanelDraw().addMouseListener(mouseAdapter);
             isset = true;
-            System.out.println("mouse adapter added");
+            Logger.getAnonymousLogger().log(Level.INFO, "mouse adapter added");
         }
 
 
@@ -200,7 +201,7 @@ public class TestHumanHeadTexturing extends TestObjetStub {
                 }
             }
         }
-        System.out.println("Jpg Obj Mapping...");
+        Logger.getAnonymousLogger().log(Level.INFO, "Jpg Obj Mapping...");
 
         TestHumanHeadTexturing testHumanHeadTexturing = new TestHumanHeadTexturing();
         testHumanHeadTexturing.setJpg(jpgFile);

@@ -24,15 +24,13 @@ package one.empty3.tests;
 
 import one.empty3.feature.app.replace.javax.imageio.ImageIO;
 import one.empty3.library.*;
-import one.empty3.library.core.extra.BalleClous;
-import one.empty3.library.core.lighting.Colors;
 import one.empty3.library.core.testing.TestObjetSub;
-import one.empty3.testscopy.tests.TestPlanets;
 import one.empty3.testscopy.tests.tests2.balleclou.BalleClous2;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class TestPlanetDeformee extends TestObjetSub {
@@ -85,7 +83,7 @@ public class TestPlanetDeformee extends TestObjetSub {
         logger = Logger.getLogger(this.getClass().getCanonicalName());
         planetsImagesFiles = planets.listFiles();
 
-        setMaxFrames(planetsImagesFiles.length * FPS * SECONDS );
+        setMaxFrames(planetsImagesFiles.length * FPS * SECONDS);
 
         z().ratioVerticalAngle();
 
@@ -96,7 +94,7 @@ public class TestPlanetDeformee extends TestObjetSub {
         scene().texture(new ColorTexture(Color.BLACK));
 
 
-        Camera c = new Camera(axeViseeVideo[1].mult((double)  0.333), Point3D.O0, axeVerticalVideo);
+        Camera c = new Camera(axeViseeVideo[1].mult((double) 0.333), Point3D.O0, axeVerticalVideo);
         c.calculerMatrice(axeVerticalVideo);
         z().scene().cameraActive(c);
         scene().cameraActive(c);
@@ -112,7 +110,7 @@ public class TestPlanetDeformee extends TestObjetSub {
     }
 
     public void incr() {
-        int i1 = (frame() / (FPS * SECONDS * TURNS)) ;
+        int i1 = (frame() / (FPS * SECONDS * TURNS));
         if (i1 != i) {
             i = i1;
             if (i1 < planetsImagesFiles.length)
@@ -121,15 +119,15 @@ public class TestPlanetDeformee extends TestObjetSub {
                 i1 = 0;
             }
 
-            System.out.println("Planets:" + i1 + "/" + planetsImagesFiles.length);
+            Logger.getAnonymousLogger().log(Level.INFO, "Planets:" + i1 + "/" + planetsImagesFiles.length);
         }
     }
 
     public Point3D positions() {
         Point3D p = new Point3D();
-        p.set(0, 1.0*(frame() / (FPS * SECONDS * TURNS)));
-        p.set(1, 1.0*(frame() % (FPS * SECONDS * TURNS)));
-        p.set(2, 1.0* FPS * SECONDS * TURNS);
+        p.set(0, 1.0 * (frame() / (FPS * SECONDS * TURNS)));
+        p.set(1, 1.0 * (frame() % (FPS * SECONDS * TURNS)));
+        p.set(2, 1.0 * FPS * SECONDS * TURNS);
 
         return p;
     }
@@ -145,7 +143,6 @@ public class TestPlanetDeformee extends TestObjetSub {
     @Override
     public void finit() throws Exception {
         incr();
-
 
 
         for (int i = 0; i < balles.length; i++
@@ -184,7 +181,7 @@ public class TestPlanetDeformee extends TestObjetSub {
                 .plus(axesSphereHorizontaux[1].mult(Math.cos(2 * Math.PI * v))).norme1());
         circle.setCalculerRepere1(true);
         sphere.setCircle(circle);
-        System.out.println("Camera t : " + v);
+        Logger.getAnonymousLogger().log(Level.INFO, "Camera t : " + v);
 
 
         deforme();
@@ -226,6 +223,7 @@ public class TestPlanetDeformee extends TestObjetSub {
 
         }
     }
+
     @Override
     public void afterRender() {
 

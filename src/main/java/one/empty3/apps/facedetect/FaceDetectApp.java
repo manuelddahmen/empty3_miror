@@ -59,8 +59,13 @@ import java.util.*;
 
 import java.awt.image.BufferedImage;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 
 public class FaceDetectApp {
@@ -223,8 +228,8 @@ public class FaceDetectApp {
             @Override
             public void accept(Landmark landmark) {
                 System.out.printf("Landmark #%d\n", landmarkIndex);
-                System.out.println("TYPE " + landmark.getType());
-                System.out.println("POSITION " + landmark.getPosition());
+                Logger.getAnonymousLogger().log(Level.INFO, "TYPE " + landmark.getType());
+                Logger.getAnonymousLogger().log(Level.INFO, "POSITION " + landmark.getPosition());
                 Iterator<Map.Entry<String, Object>> iterator = landmark.entrySet().iterator();
                 iterator.forEachRemaining(new Consumer<Map.Entry<String, Object>>() {
                     @Override
@@ -382,6 +387,6 @@ public class FaceDetectApp {
 
         // upload the file and print the status
         storage.createFrom(blobInfo, Paths.get(filename.getAbsolutePath()));
-        System.out.println("File " + filename.getAbsolutePath() + " uploaded to bucket " + OUTPUT_BUCKET_NAME + " as " + filename);
+        Logger.getAnonymousLogger().log(Level.INFO, "File " + filename.getAbsolutePath() + " uploaded to bucket " + OUTPUT_BUCKET_NAME + " as " + filename);
     }
 }

@@ -32,6 +32,9 @@ import one.empty3.library.core.math.Matrix;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 public class Grid extends Board {
 
@@ -47,9 +50,10 @@ public class Grid extends Board {
 
         Matrix matrix = new Matrix(dimX, dimY, heightView);
     }
+
     @Override
     public Camera camera() {
-        if(camera==null) {
+        if (camera == null) {
             camera = new Camera(Point3D.Y.mult(-medianDistView), Point3D.O0, Point3D.Z);
         }
         return camera;
@@ -57,13 +61,14 @@ public class Grid extends Board {
 
     @Override
     public Point2D getSize2D() {
-        return new one.empty3.library.Point2D((double)dimX, (double)dimY);
+        return new one.empty3.library.Point2D((double) dimX, (double) dimY);
     }
 
     @Override
     public Point3D getSize3D() {
-        return new Point3D((double)dimX, (double)dimY, (double)heightView);
+        return new Point3D((double) dimX, (double) dimY, (double) heightView);
     }
+
     @Override
     protected List<Character> getCharacters() {
         return new ArrayList<>();

@@ -28,6 +28,9 @@ import one.empty3.library.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 public class VoronoiImageTexture extends ProcessInMemory {
 
@@ -62,7 +65,7 @@ public class VoronoiImageTexture extends ProcessInMemory {
             PixM pixM = in;
             for (int i = 0; i < pixM.getColumns(); i++) {
                 for (int j = 0; j < pixM.getLines(); j++) {
-                    if (pixM.luminance(i, j) > 0.4 && Math.random()<(1.+N)/out.getColumns()/out.getLines()) {
+                    if (pixM.luminance(i, j) > 0.4 && Math.random() < (1. + N) / out.getColumns() / out.getLines()) {
                         points.add(new Point3D((double) i, (double) j, pixM.luminance(i, j)));
                     }
                 }
@@ -80,8 +83,6 @@ public class VoronoiImageTexture extends ProcessInMemory {
                     }
                 }
             }
-
-
 
 
             return out;

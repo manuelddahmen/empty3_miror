@@ -26,6 +26,9 @@ import one.empty3.library.*;
 import one.empty3.library.core.nurbs.ParametricSurface;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 public class ShapeMorph extends ParametricSurface {
     double t;
@@ -102,7 +105,7 @@ public class ShapeMorph extends ParametricSurface {
         this.t = t;
     }
 
-    private Point3D calculerColorUVGridXY(Point3D [] grid, double u, double v) {
+    private Point3D calculerColorUVGridXY(Point3D[] grid, double u, double v) {
 
         double Mu0 = (grid[1].getY() - grid[0].getY()) / (grid[1].getX() - grid[0].getX());
         double Mu1 = (grid[2].getY() - grid[3].getY()) / (grid[2].getX() - grid[3].getX());
@@ -144,14 +147,15 @@ public class ShapeMorph extends ParametricSurface {
         double[] doubles2 = Lumiere.getDoubles(color2);
         double[] d3 = new double[3];
         for (int i = 0; i < d3.length; i++) {
-            d3[i] = doubles1[i] * (1-t) + doubles2[i] * t;
-            if(d3[i]>=1)
+            d3[i] = doubles1[i] * (1 - t) + doubles2[i] * t;
+            if (d3[i] >= 1)
                 d3[i] = 1;
-            else if(d3[i]<0)
+            else if (d3[i] < 0)
                 d3[i] = 0;
         }
         return Lumiere.getInt(d3);
     }
+
     /**
      * @param u ordonnée du point intersection texturé
      * @param v coordonnée du point intersection texturé
@@ -163,13 +167,13 @@ public class ShapeMorph extends ParametricSurface {
 
             int sizeGridX = grid1.getData2d().size();
             int sizeGridY = grid1.getData2d().get(0).size();
-            int xGrid1 = (int) ((sizeGridX-1) * u);
-            int yGrid1 = (int) ((sizeGridY-1) * v);
-            int xGrid2 = (int) ((sizeGridX-1) * (u))+1;
-            int yGrid2 = (int) ((sizeGridY-1) * (v))+1;
+            int xGrid1 = (int) ((sizeGridX - 1) * u);
+            int yGrid1 = (int) ((sizeGridY - 1) * v);
+            int xGrid2 = (int) ((sizeGridX - 1) * (u)) + 1;
+            int yGrid2 = (int) ((sizeGridY - 1) * (v)) + 1;
 
-            double du = (u*(grid1.getData2d().size()-1)-xGrid1)/(grid1.getData2d().size()-1);
-            double dv = (v*(grid1.getData2d().get(0).size()-1)-yGrid1)/(grid1.getData2d().size()-1);
+            double du = (u * (grid1.getData2d().size() - 1) - xGrid1) / (grid1.getData2d().size() - 1);
+            double dv = (v * (grid1.getData2d().get(0).size() - 1) - yGrid1) / (grid1.getData2d().size() - 1);
 
 
             if (xGrid1 >= grid1.getData2d().size() || xGrid2 >= grid2.getData2d().size() ||
@@ -202,10 +206,10 @@ public class ShapeMorph extends ParametricSurface {
                 Point3D param1 = calculerColorUVGridXY(gridP1, u, v);
                 Point3D param2 = calculerColorUVGridXY(gridP2, u, v);
 
-                Integer c = colorMean(text1.getColorAt(param1.getX()/grid1.getData2d().size(),
-                                param1.getY()/grid1.getData2d().get(0).size()),
-                        text2.getColorAt(param2.getX()/grid2.getData2d().size(),
-                                param2.getY()/grid2.getData2d().get(0).size()));
+                Integer c = colorMean(text1.getColorAt(param1.getX() / grid1.getData2d().size(),
+                                param1.getY() / grid1.getData2d().get(0).size()),
+                        text2.getColorAt(param2.getX() / grid2.getData2d().size(),
+                                param2.getY() / grid2.getData2d().get(0).size()));
                 paramT.texture(new ITexture() {
                     @Override
                     public int getColorAt(double x, double y) {
@@ -228,23 +232,23 @@ public class ShapeMorph extends ParametricSurface {
 
     @Override
     public ITexture texture() {
-        if(texture==null)
-        texture = new ITexture() {
-            @Override
-            public int getColorAt(double x, double y) {
-                Point3D point3D = calculerPoint3D(x, y);
-                return point3D.texture().getColorAt(x, y);
-            }
-
-            @Override
-            public MatrixPropertiesObject copy() throws CopyRepresentableError, IllegalAccessException, InstantiationException {
-                try {
-                    return (ITexture)(this.clone());
-                } catch (CloneNotSupportedException e) {
-                    throw new RuntimeException(e);
+        if (texture == null)
+            texture = new ITexture() {
+                @Override
+                public int getColorAt(double x, double y) {
+                    Point3D point3D = calculerPoint3D(x, y);
+                    return point3D.texture().getColorAt(x, y);
                 }
-            }
-        };
+
+                @Override
+                public MatrixPropertiesObject copy() throws CopyRepresentableError, IllegalAccessException, InstantiationException {
+                    try {
+                        return (ITexture) (this.clone());
+                    } catch (CloneNotSupportedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            };
         return texture;
     }
 }

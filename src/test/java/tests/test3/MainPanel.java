@@ -36,6 +36,9 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Path2D;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import java.util.Objects;
 import java.util.Optional;
 
@@ -148,7 +151,8 @@ public final class MainPanel extends JPanel {
     public static void createAndShowGui() {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException |
+                 UnsupportedLookAndFeelException ex) {
             ex.printStackTrace();
         }
         JFrame frame = new JFrame("BreadcrumbList");

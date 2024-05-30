@@ -15,6 +15,10 @@
 //import java.io.File;
 //import java.io.IOException;
 //import java.util.List;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 //import java.util.*;
 //
 //public class ResolutionCharacter2 implements Runnable {
@@ -89,7 +93,7 @@
 //
 //
 //
-//                    System.out.println("ResolutionCharacter2 : " + name);
+//                    Logger.getAnonymousLogger().log(Level.INFO, "ResolutionCharacter2 : " + name);
 //
 //                    ResolutionCharacter2 resolutionCharacter2 = new ResolutionCharacter2(read, name, dirOut);
 //                    dirOutChars =dirOut.getAbsolutePath()+File.separator+name+File.separator+"char";
@@ -196,7 +200,7 @@
 //        input = new PixM(read);
 //        output = input.copy();
 //
-//        System.out.println("Image size: " + output.getColumns() + ", " + output.getLines());
+//        Logger.getAnonymousLogger().log(Level.INFO, "Image size: " + output.getColumns() + ", " + output.getLines());
 //
 //        final ITexture texture = new TextureCol(Color.BLACK);
 //
@@ -309,7 +313,7 @@
 //                if (candidates.size() > 0) {
 //                    System.out.printf("In %s, Rectangle = (%d,%d,%d,%d) \t\tCandidates: ", name, i, j, w, h);
 //                    candidates.forEach(System.out::print);
-//                    System.out.println();
+//                    Logger.getAnonymousLogger().log(Level.INFO, );
 //                    final String[] s = {""};
 //                    candidates.forEach(character -> s[0] += character);
 //                    writer.writeLine(new String[]{name, "" + i, "" + j, "" + w, "" + h, s[0]});
@@ -418,7 +422,7 @@
 //                if (candidates.size() > 0) {
 //                    ///System.out.printf("In %s, Rectangle = (%d,%d,%d,%d) \t\tCandidates: ", name, i, j, w, h);
 //                    //candidates.forEach(System.out::print);
-//                    //System.out.println();
+//                    //Logger.getAnonymousLogger().log(Level.INFO, );
 //                    final String[] s = {""};
 //                    candidates.forEach(character -> s[0] += character);
 //                    //writer.writeLine(new String[]{name, "" + i, "" + j, "" + w, "" + h, s[0]});

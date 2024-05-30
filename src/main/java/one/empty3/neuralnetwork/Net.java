@@ -30,6 +30,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import java.util.function.Consumer;
 
 public class Net<T extends Neuron> {
@@ -39,8 +42,9 @@ public class Net<T extends Neuron> {
     private List<Layer<T>> hiddenLayerList;
     private List<Layer<OutputNeuron>> outputLayerList;
     private PredictedResult<T> predictedResult;
+
     public Net() {
-    //    inputLayer = new Layer<T>();
+        //    inputLayer = new Layer<T>();
         outputLayerList = new ArrayList<>();
         hiddenLayerList = new ArrayList<>();
         trainSet = new ArrayList<>();
@@ -103,46 +107,46 @@ public class Net<T extends Neuron> {
     public void train() throws IOException {
         int maxIterations = 1000;
         int t = 0;
-            double errorGlobal = 0.0;
+        double errorGlobal = 0.0;
 
-            while (t < maxIterations) {
-                for (int n = 0; n < trainSet.size(); n++) {
-                    PixM pixM = PixM.getPixM(ImageIO.read(trainSet.get(n)), RESOLUTION);
-                    inputLayer.getNeurons().data2d.forEach(new Consumer<List<T>>() {
-                        @Override
-                        public void accept(List<T> ts) {
-                            ts.forEach(new Consumer<T>() {
-                                @Override
-                                public void accept(T t) {
-                                    t.setInputImage(pixM);
-                                }
-                            });
-                        }
-                    });
-                    final double[] error = {0};
+        while (t < maxIterations) {
+            for (int n = 0; n < trainSet.size(); n++) {
+                PixM pixM = PixM.getPixM(ImageIO.read(trainSet.get(n)), RESOLUTION);
+                inputLayer.getNeurons().data2d.forEach(new Consumer<List<T>>() {
+                    @Override
+                    public void accept(List<T> ts) {
+                        ts.forEach(new Consumer<T>() {
+                            @Override
+                            public void accept(T t) {
+                                t.setInputImage(pixM);
+                            }
+                        });
+                    }
+                });
+                final double[] error = {0};
 
-                    final double[] function = {0};
-                    inputLayer.getNeurons().data2d.forEach(new Consumer<List<T>>() {
-                        @Override
-                        public void accept(List<T> ts) {
-                            ts.forEach(new Consumer<T>() {
-                                @Override
-                                public void accept(T t) {
-                                    function[0] += t.function();
-                                    error[0] += t.error();
-                                    t.updateW();
-                                }
-                            });
-                        }
-                    });
-                    // Compute Xs through network
-
-                }
-                t++;
-
+                final double[] function = {0};
+                inputLayer.getNeurons().data2d.forEach(new Consumer<List<T>>() {
+                    @Override
+                    public void accept(List<T> ts) {
+                        ts.forEach(new Consumer<T>() {
+                            @Override
+                            public void accept(T t) {
+                                function[0] += t.function();
+                                error[0] += t.error();
+                                t.updateW();
+                            }
+                        });
+                    }
+                });
+                // Compute Xs through network
 
             }
-     }
+            t++;
+
+
+        }
+    }
 
     public double computeAll() {
         StructureMatrix<Double> structureMatrix = new StructureMatrix<Double>(inputLayer.getNeurons().getDim(), Double.class);
@@ -163,7 +167,8 @@ public class Net<T extends Neuron> {
                 break;
             case 2:
                 inputLayer.getNeurons().getData2d().forEach(new Consumer<List<T>>() {
-                    int i=0;
+                    int i = 0;
+
                     @Override
                     public void accept(List<T> ts) {
                         final int[] j = {0};

@@ -70,7 +70,7 @@ public class TestNeunet {
         n.setW(new double[]{-7, 1, 3});
         double[] doubles = n.softMax(n.getInput(), n.getW());
         for (int i = 0; i < doubles.length; i++) {
-            System.out.println(doubles[i]);
+            Logger.getAnonymousLogger().log(Level.INFO, doubles[i]);
         }
     }
 

@@ -10,6 +10,10 @@
 //import java.io.FileInputStream;
 //import java.io.InputStream;
 //import java.util.List;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 //import java.util.*;
 //
 //
@@ -55,7 +59,7 @@
 //        while (it.hasNext()) {
 //            Element stage = (Element) it.next();
 //            float thres = Float.parseFloat(stage.getChild("stage_threshold").getText());
-//            //System.out.println(thres);
+//            //Logger.getAnonymousLogger().log(Level.INFO, thres);
 //            Iterator it2 = stage.getChild("trees").getChildren("_").iterator();
 //            Stage st = new Stage(thres);
 //            while (it2.hasNext()) {
@@ -91,7 +95,7 @@
 //                    Iterator it3 = feature.getChild("feature").getChild("rects").getChildren("_").iterator();
 //                    while (it3.hasNext()) {
 //                        String s = ((Element) it3.next()).getText().trim();
-//                        //System.out.println(s);
+//                        //Logger.getAnonymousLogger().log(Level.INFO, s);
 //                        Rect r = Rect.fromString(s);
 //                        f.add(r);
 //                    }
@@ -99,12 +103,12 @@
 //                    t.addFeature(f);
 //                }
 //                st.addTree(t);
-//                //System.out.println("Number of nodes in tree "+t.features.size());
+//                //Logger.getAnonymousLogger().log(Level.INFO, "Number of nodes in tree "+t.features.size());
 //            }
-//            //System.out.println("Number of trees : "+ st.trees.size());
+//            //Logger.getAnonymousLogger().log(Level.INFO, "Number of trees : "+ st.trees.size());
 //            stages.add(st);
 //        }
-//        //System.out.println(stages.size());
+//        //Logger.getAnonymousLogger().log(Level.INFO, stages.size());
 //    }
 //
 //    public List<java.awt.Rectangle> getFaces(String filename, float baseScale, float scale_inc, float increment, int min_neighbors, boolean doCannyPruning) throws java.io.FileNotFoundException, java.io.IOException {
@@ -171,7 +175,7 @@
 //
 //                        if (!s.pass(grayImage, squares, i, j, scale)) {
 //                            pass = false;
-//                            //System.out.println("Failed at Stage "+k);
+//                            //Logger.getAnonymousLogger().log(Level.INFO, "Failed at Stage "+k);
 //                            break;
 //                        }
 //                        k++;
@@ -215,7 +219,7 @@
 //                sum += 2 * grayImage[i + 2][j + 2];
 //
 //                canny[i][j] = sum / 159;
-//                //System.out.println(canny[i][j]);
+//                //Logger.getAnonymousLogger().log(Level.INFO, canny[i][j]);
 //            }
 //        int[][] grad = new int[grayImage.length][grayImage[0].length];
 //        for (int i = 1; i < canny.length - 1; i++)
@@ -223,7 +227,7 @@
 //                int grad_x = -canny[i - 1][j - 1] + canny[i + 1][j - 1] - 2 * canny[i - 1][j] + 2 * canny[i + 1][j] - canny[i - 1][j + 1] + canny[i + 1][j + 1];
 //                int grad_y = canny[i - 1][j - 1] + 2 * canny[i][j - 1] + canny[i + 1][j - 1] - canny[i - 1][j + 1] - 2 * canny[i][j + 1] - canny[i + 1][j + 1];
 //                grad[i][j] = Math.abs(grad_x) + Math.abs(grad_y);
-//                //System.out.println(grad[i][j]);
+//                //Logger.getAnonymousLogger().log(Level.INFO, grad[i][j]);
 //            }
 //        //JFrame f = new JFrame();
 //        //f.setContentPane(new DessinChiffre(grad));
@@ -256,7 +260,7 @@
 //                nb_classes++;
 //            }
 //        }
-//        //System.out.println(Arrays.toString(ret));
+//        //Logger.getAnonymousLogger().log(Level.INFO, Arrays.toString(ret));
 //        int[] neighbors = new int[nb_classes];
 //        Rectangle[] rect = new Rectangle[nb_classes];
 //        for (int i = 0; i < nb_classes; i++) {

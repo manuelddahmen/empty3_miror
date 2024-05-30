@@ -27,16 +27,18 @@ import one.empty3.library.Point2D;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 public class Detector implements IMyDetector {
-     List<Face> faces = new ArrayList<>();
+    List<Face> faces = new ArrayList<>();
     private PixM pixels;
-
 
 
     @Override
     public void execute() {
-        if(pixels!=null && pixels.getLines()>0&& pixels.getColumns()>0) {
+        if (pixels != null && pixels.getLines() > 0 && pixels.getColumns() > 0) {
             faces = new ArrayList<>();
 
         }
@@ -53,18 +55,18 @@ public class Detector implements IMyDetector {
         double incrYleft = 1;
         double incrXdown = 1;
         double incrYright = 1;
-        int [][] noses = new int[][] {{0, 0, 0}, {0,1,0}};
-        int [][] eyes = new int[][] {{0, 0, 0}, {0,1,0}};
-        int [][] face =
-           {{2,2, 2, 2,2},
-            {2,0, 0, 0,2},
-            {2,1, 0, 1, 2},
-            {2,0, 1, 0, 2},
-            {0,0, 0, 0, 0},
-            {0,0, 8, 0, 0},
-            {0,0, 0, 0, 0}};
-        for(double i=x; i<wx; i++) {
-            for(double j=x; j<hy; j++) {
+        int[][] noses = new int[][]{{0, 0, 0}, {0, 1, 0}};
+        int[][] eyes = new int[][]{{0, 0, 0}, {0, 1, 0}};
+        int[][] face =
+                {{2, 2, 2, 2, 2},
+                        {2, 0, 0, 0, 2},
+                        {2, 1, 0, 1, 2},
+                        {2, 0, 1, 0, 2},
+                        {0, 0, 0, 0, 0},
+                        {0, 0, 8, 0, 0},
+                        {0, 0, 0, 0, 0}};
+        for (double i = x; i < wx; i++) {
+            for (double j = x; j < hy; j++) {
 
             }
         }

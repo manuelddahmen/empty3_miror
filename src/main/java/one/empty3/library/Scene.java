@@ -29,6 +29,9 @@ import java.awt.*;
 import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import one.empty3.tests.Animation;
 
 public class Scene extends Representable implements Serializable {
@@ -98,7 +101,7 @@ public class Scene extends Representable implements Serializable {
 
     public void cameraActive(Camera c) {
         this.cameraActive.setElem(c);
-        cameras.setElem( c, 0);
+        cameras.setElem(c, 0);
     }
 
     public List<Camera> cameras() {
@@ -240,7 +243,7 @@ public class Scene extends Representable implements Serializable {
             }
         }
         str += "cameras (\n\t";
-        if (cameras.getData1d().isEmpty() && cameraActive()!=null) {
+        if (cameras.getData1d().isEmpty() && cameraActive() != null) {
             str += "\n\t" + cameraActive().toString() + "\n";
         }
         Iterator<Camera> itC = cameras.getData1d().iterator();
@@ -248,7 +251,7 @@ public class Scene extends Representable implements Serializable {
             str += "\n\t" + itC.next().toString() + "\n";
         }
         str += "\n)";
-        str+= cameraActive!=null?cameraActive.toString():"";
+        str += cameraActive != null ? cameraActive.toString() : "";
         str += "\n\n)\n";
         return str;
     }

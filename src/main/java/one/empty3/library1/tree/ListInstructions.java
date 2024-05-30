@@ -27,6 +27,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import java.util.Locale;
 
 import one.empty3.library.StructureMatrix;
@@ -189,7 +192,7 @@ public class ListInstructions {
                     resultVec = tree.eval();
 
                     if (resultVec != null) {
-                        //System.out.println("key: " + key + " value: " + value + " computed: " + resultVec);
+                        //Logger.getAnonymousLogger().log(Level.INFO, "key: " + key + " value: " + value + " computed: " + resultVec);
                         if (resultVec.getDim() == 1) {
                             currentParamsValuesVecComputed.put(key, resultVec);
                             currentParamsValuesVec.put(key, value);

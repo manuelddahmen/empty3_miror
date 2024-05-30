@@ -373,15 +373,15 @@ public class MorphUI extends JFrame {
     }
 
     private void panelResultMouseClicked(MouseEvent e) {
-        //System.out.println("Click on image mouseClick");
+        //Logger.getAnonymousLogger().log(Level.INFO, "Click on image mouseClick");
     }
 
     private void panelResultMouseDragged(MouseEvent e) {
-        //System.out.println("Click on image= mouseDragged");
+        //Logger.getAnonymousLogger().log(Level.INFO, "Click on image= mouseDragged");
     }
 
     private void panelResultMouseMoved(MouseEvent e) {
-        //System.out.println("Click on image= mouseMoved");
+        //Logger.getAnonymousLogger().log(Level.INFO, "Click on image= mouseMoved");
     }
 
     private void slider1StateChanged(ChangeEvent e) {

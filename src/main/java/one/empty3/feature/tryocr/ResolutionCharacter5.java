@@ -39,6 +39,9 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import java.util.*;
 import java.util.logging.Logger;
 import java.util.logging.Level;
@@ -812,7 +815,7 @@ public class ResolutionCharacter5 implements Runnable {
         for (int i = 0; i < finalColumns.length; i++) {
             System.out.print(finalColumns[i] + ":");
         }
-        
+
 
     }
 

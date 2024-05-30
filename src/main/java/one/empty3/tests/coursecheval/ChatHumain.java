@@ -28,7 +28,8 @@ import one.empty3.library.core.nurbs.ParametricSurface;
 import one.empty3.library.core.tribase.TubulaireN2;
 
 import java.io.File;
-import java.util.function.Consumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ChatHumain extends RepresentableConteneur {
     private final StructureMatrix<ParametricSurface> psGround = new StructureMatrix<ParametricSurface>(0, ParametricSurface.class);
@@ -180,7 +181,7 @@ public class ChatHumain extends RepresentableConteneur {
                     cos = sin;
                     sin = a;
                 }
-                System.out.println("sin : " + sin);
+                Logger.getAnonymousLogger().log(Level.INFO, "sin : " + sin);
                 ((CourbeParametriquePolynomiale) cheval1[i].pattes.getElem(0)
                         .getSoulCurve().getElem()).getCoefficients().getElem(1).setX(50 + sin * distance / 2);
                 ((CourbeParametriquePolynomiale) cheval1[i].pattes.getElem(1)

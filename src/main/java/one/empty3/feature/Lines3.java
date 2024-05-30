@@ -37,13 +37,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import java.util.Random;
 import java.util.function.Consumer;
 
 public class Lines3 extends ProcessFile {
 
 
-    public static final double LEVELS = 1/0.4;
+    public static final double LEVELS = 1 / 0.4;
     ArrayList<Point3D> listTmpCurve = new ArrayList<>();
     ArrayList<Double> listTmpX = new ArrayList<>();
     ArrayList<Double> listTmpY = new ArrayList<>();
@@ -102,7 +105,7 @@ public class Lines3 extends ProcessFile {
             PixM o = new PixM(pixM.getColumns(), pixM.getLines());
             int[][] p = new int[pixM.getColumns()][pixM.getLines()];
 
-            for (double levels : Arrays.asList( 0.4/*, 0.6, 0.8*/ )) {
+            for (double levels : Arrays.asList(0.4/*, 0.6, 0.8*/)) {
 
                 pz = 0.0;
                 py = 0.0;
@@ -146,7 +149,7 @@ public class Lines3 extends ProcessFile {
 
                             neighborhood((int) (double) x, (int) (double) y, valueAvg, valueDiff, levels);
 //
-                            while(listTmpX.size() > 0) {
+                            while (listTmpX.size() > 0) {
                                 getTmp(0);
                                 x = (int) px;
                                 y = (int) py;
@@ -188,7 +191,6 @@ public class Lines3 extends ProcessFile {
             }
 
 
-
             List<List<Point3D>> lists2 = new ArrayList<>();
             int index3 = 0;
             while (index3 < lists.size() && lists.get(index3).size() == 0)
@@ -204,7 +206,7 @@ public class Lines3 extends ProcessFile {
                     }
                     while (index3 < lists.size() && lists.get(index3).size() == 0)
                         index3++;
-                    if (index3 < lists.size() && lists.get(index3).size()>0 && lists.get(index3).size()>index) {
+                    if (index3 < lists.size() && lists.get(index3).size() > 0 && lists.get(index3).size() > index) {
                         point3DS = relierPoints(lists, lists.get(index3).get(index));
                     }
                 } while (index3 < lists.size() && point3DS != null && point3DS.size() > 0 && index < lists.get(0).size() - 1);
@@ -319,7 +321,7 @@ public class Lines3 extends ProcessFile {
                 List<Point3D> pointsCurrent = new ArrayList<>();
                 points.add(pointsCurrent);
 
-                for(int k = 0; k<p3s.size()-1; k++) {
+                for (int k = 0; k < p3s.size() - 1; k++) {
                     Point3D p1 = p3s.get(k);
                     if (p3s.size() > k + 1) {
                         Point3D p2 = p3s.get(k + 1);
@@ -404,7 +406,7 @@ public class Lines3 extends ProcessFile {
             });
 
             ImageIO.write(img3.normalize(0.0, 1.0).getImage(), "jpg",
-                  new File(out.getAbsolutePath()));
+                    new File(out.getAbsolutePath()));
             return true;
         } catch (
                 IOException e) {

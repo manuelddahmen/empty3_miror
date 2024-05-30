@@ -22,22 +22,21 @@
 
 package one.empty3.tests.coursecheval;
 
-import one.empty3.feature.app.replace.javax.imageio.ImageIO;
 import one.empty3.library.*;
 import one.empty3.library.core.nurbs.ParametricSurface;
-import one.empty3.library.core.nurbs.PcOnPs;
 import one.empty3.library.core.testing.TestObjetSub;
 import one.empty3.library.core.tribase.Plan3D;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class TestCourseChatPS extends TestObjetSub {
     private Chat cheval;
     int moveIndex = 0;
-    Chat [] trotte = null;
+    Chat[] trotte = null;
     private ParametricSurface parametricSurface;
 
     static class TextureInvertU extends ImageTexture {
@@ -47,9 +46,10 @@ public class TestCourseChatPS extends TestObjetSub {
 
         @Override
         public Point2D getCoord(double x, double y) {
-            return super.getCoord(1.0-x, y);
+            return super.getCoord(1.0 - x, y);
         }
     }
+
     public static final int SECONDS = 15;
     public static final int FPS = 50;
     private static final int TURNS = 1;
@@ -62,7 +62,7 @@ public class TestCourseChatPS extends TestObjetSub {
     private final Point3D[] axesSphereHorizontaux = new Point3D[]{Point3D.Z, Point3D.X};
 
     private static double getaDouble() {
-        return  FPS * SECONDS * REAL_DAYS;
+        return FPS * SECONDS * REAL_DAYS;
     }
 
     public static void main(String[] args) {
@@ -76,7 +76,7 @@ public class TestCourseChatPS extends TestObjetSub {
     @Override
     public void ginit() {
         logger = Logger.getLogger(this.getClass().getCanonicalName());
-        setMaxFrames( FPS * SECONDS * REAL_DAYS);
+        setMaxFrames(FPS * SECONDS * REAL_DAYS);
 
         z().ratioVerticalAngle();
 
@@ -108,9 +108,9 @@ public class TestCourseChatPS extends TestObjetSub {
 
     public Point3D positions() {
         Point3D p = new Point3D();
-        p.set(0, 1.0*(frame() / (FPS * SECONDS * TURNS)));
-        p.set(1, 1.0*(frame() % (FPS * SECONDS * TURNS)));
-        p.set(2, 1.0* FPS * SECONDS * TURNS);
+        p.set(0, 1.0 * (frame() / (FPS * SECONDS * TURNS)));
+        p.set(1, 1.0 * (frame() % (FPS * SECONDS * TURNS)));
+        p.set(2, 1.0 * FPS * SECONDS * TURNS);
 
         return p;
     }
@@ -129,27 +129,26 @@ public class TestCourseChatPS extends TestObjetSub {
 
         double angleOnSurface = 2.0 * Math.PI * frame() / getMaxFrames();
 
-        double angleCamera  = 0.0;
+        double angleCamera = 0.0;
         c = new Camera(axeViseeVideo[0].mult(Math.cos(angleCamera))
                 .plus(axeViseeVideo[0].mult(Math.sin(angleCamera))).mult(400)
                 /*.plus(Point3D.Y.mult(20.0))*/, Point3D.O0);
         c.calculerMatrice(axeVerticalVideo);
-        c.setAngleX(Math.PI/3*z().la()/z().ha());
-        c.setAngleY(Math.PI/3);
+        c.setAngleX(Math.PI / 3 * z().la() / z().ha());
+        c.setAngleY(Math.PI / 3);
         z().scene().cameraActive(c);
         scene().cameraActive(c);
         z().camera(c);
         camera(c);
 
 
-
-        if(trotte!=null && trotte.length>moveIndex && trotte[moveIndex]!=null) {
+        if (trotte != null && trotte.length > moveIndex && trotte[moveIndex] != null) {
             scene().clear();
             cheval = trotte[moveIndex];
             moveIndex++;
         }
-        if(trotte==null || moveIndex>=trotte.length) {
-            switch ((int)( Math.random() * 2)) {
+        if (trotte == null || moveIndex >= trotte.length) {
+            switch ((int) (Math.random() * 2)) {
                 case 0:
                     moveIndex = 0;
                     trotte = cheval.getMoves().trotte(2.0, 25, true, 0.0, 25);
@@ -174,7 +173,7 @@ public class TestCourseChatPS extends TestObjetSub {
         cheval.setAngleXyZ(angleOnSurface, 0.0);
 
         final int i1 = FPS * SECONDS * REAL_DAYS;
-        double u =   ((double) getMaxFrames() - frame()) / getMaxFrames();
+        double u = ((double) getMaxFrames() - frame()) / getMaxFrames();
 
         Plan3D plane = new Plan3D(new Point3D(50.0, 0.0, 50.0), new Point3D(0.0, 0.0, -50.0), new Point3D(-50.0, 0.0, 0.0));
         plane.texture(new ImageTexture(new File("resources/sol_sableux.jpg")));
@@ -190,6 +189,6 @@ public class TestCourseChatPS extends TestObjetSub {
         scene().clear();
         scene().add(copy);
         scene().add(plane);
-        System.out.println("Camera u : " + u);
+        Logger.getAnonymousLogger().log(Level.INFO, "Camera u : " + u);
     }
 }

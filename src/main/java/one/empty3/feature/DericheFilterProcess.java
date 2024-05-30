@@ -28,6 +28,9 @@ import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 public class DericheFilterProcess extends ProcessFile {
 
@@ -36,7 +39,7 @@ public class DericheFilterProcess extends ProcessFile {
     public boolean process(File in, File out) {
         PixM pixM = null;
         try {
-            pixM = PixM.getPixM( ImageIO.read(in), maxRes);
+            pixM = PixM.getPixM(ImageIO.read(in), maxRes);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

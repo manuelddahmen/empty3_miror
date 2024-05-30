@@ -122,7 +122,7 @@ public class GFG extends ProcessFile {
                     // realOut and imaginary outputn The
                     // ppoutput of imaginary output will end
                     // with value 'i'.
-                    //System.out.println(realOut[y][x] + " +" + imagOut[y][x] + "i");
+                    //Logger.getAnonymousLogger().log(Level.INFO, realOut[y][x] + " +" + imagOut[y][x] + "i");
                 }
             }
         }
@@ -135,7 +135,7 @@ public class GFG extends ProcessFile {
      * @param N
      * @return
      */
-    public double[][] fourierSeries(double [] Ft, double[] period, int N) {
+    public double[][] fourierSeries(double[] Ft, double[] period, int N) {
         double[][] result = new double[N][2];
         int T = period.length;
         double[] t = new double[T];
@@ -223,10 +223,10 @@ public class GFG extends ProcessFile {
         }
 
         ITexture blue = new ColorTexture(Color.BLUE);
-        for (int i = 0; i < sizeT-1; i++) {
-            pixOut.plotCurve(new LineSegment(new Point3D((double)i,
-                    (double)(int) (F2[i]), 0d),
-                    new Point3D((double)i, (double)(int) (F2[i+1]), 0d)), blue);
+        for (int i = 0; i < sizeT - 1; i++) {
+            pixOut.plotCurve(new LineSegment(new Point3D((double) i,
+                    (double) (int) (F2[i]), 0d),
+                    new Point3D((double) i, (double) (int) (F2[i + 1]), 0d)), blue);
         }
 
         try {

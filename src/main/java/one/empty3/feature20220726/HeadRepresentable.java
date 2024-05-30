@@ -23,18 +23,16 @@
 package one.empty3.feature20220726;
 
 import one.empty3.library.Representable;
-import one.empty3.library.RepresentableConteneur;
 import one.empty3.library.Scene;
 import one.empty3.library.core.export.STLExport;
 import one.empty3.library.core.script.ExtensionFichierIncorrecteException;
 import one.empty3.library.core.script.Loader;
-import one.empty3.library.core.script.SceneLoader;
 import one.empty3.library.core.script.VersionNonSupporteeException;
 
 import java.io.*;
 import java.util.Properties;
-import java.util.ResourceBundle;
-import java.util.function.Consumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class HeadRepresentable extends Representable {
     public HeadRepresentable() {
@@ -50,7 +48,7 @@ public class HeadRepresentable extends Representable {
 
             headRb.keySet().forEach(o -> {
                         sb.append(headRb.getProperty((String) o));
-                        System.out.println(o + " = " + headRb.getProperty((String) o));
+                        Logger.getAnonymousLogger().log(Level.INFO, o + " = " + headRb.getProperty((String) o));
                     }
 
             );
@@ -76,9 +74,9 @@ public class HeadRepresentable extends Representable {
                 STLExport.save(sceneStl, load, true);
                 new PrintWriter(sceneStl).println(sb.toString());
 
-                System.out.println(load);
+                Logger.getAnonymousLogger().log(Level.INFO, load.toString());
             } else
-                System.out.println("Model moo not loaded");
+                Logger.getAnonymousLogger().log(Level.INFO, "Model moo not loaded");
 
         } catch (IOException | ExtensionFichierIncorrecteException | VersionNonSupporteeException e) {
             e.printStackTrace();

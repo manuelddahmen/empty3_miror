@@ -27,13 +27,13 @@
 package one.empty3.apps.facedetect;
 
 import java.awt.*;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.function.BiConsumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.lang.model.type.ArrayType;
 import javax.swing.*;
 
 import javaAnd.awt.image.imageio.ImageIO;
@@ -41,7 +41,6 @@ import net.miginfocom.swing.*;
 import one.empty3.apps.morph.*;
 import one.empty3.library.ECBufferedImage;
 import one.empty3.library.Point3D;
-import one.empty3.library.core.testing.Test;
 import one.empty3.library.objloader.E3Model;
 
 /**
@@ -52,9 +51,11 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
     private BufferedImage image;
     private E3Model model;
     private TestHumanHeadTexturing testHumanHeadTexturing;
+    private HashMap<String, Point3D> points;
 
     public EditPolygonsMappings(Window owner) {
         initComponents();
+
     }
 
     public EditPolygonsMappings() {
@@ -63,6 +64,10 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
 
     public JPanel getContentPanel() {
         return contentPanel;
+    }
+
+    private void panelModelViewMouseDragged(MouseEvent e) {
+        //e.getSource()
     }
 
     private void initComponents() {
@@ -135,6 +140,12 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
                             {
                                 panelModelView.setMinimumSize(new Dimension(400, 300));
                                 panelModelView.setPreferredSize(new Dimension(0, 0));
+                                panelModelView.addMouseMotionListener(new MouseMotionAdapter() {
+                                    @Override
+                                    public void mouseDragged(MouseEvent e) {
+                                        panelModelViewMouseDragged(e);
+                                    }
+                                });
                                 panelModelView.setLayout(new MigLayout(
                                     "fill,hidemode 3",
                                     // columns
@@ -196,6 +207,15 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
                     // Display image
                     Graphics graphics = panelPicture.getGraphics();
                     graphics.drawImage(image, 0, 0, panelPicture.getWidth(), panelPicture.getHeight(), null);
+                    graphics.setColor(Color.BLACK);
+                    points.forEach(new BiConsumer<String, Point3D>() {
+                        @Override
+                        public void accept(String s, Point3D point3D) {
+                            graphics.drawOval((int) (double) point3D.getX() - 1,
+                                    (int) (double) point3D.getY() - 1, 3, 3);
+                        }
+
+                    });
                     // Display 3D scene
                 }
             } catch (InterruptedException ex) {
@@ -234,7 +254,7 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
     }
 
     public void loadTxt(File selectedFile) {
-        HashMap<String, Point3D> points = new HashMap<>();
+        points = new HashMap<String, Point3D>();
         try {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(selectedFile));
             String line = "";

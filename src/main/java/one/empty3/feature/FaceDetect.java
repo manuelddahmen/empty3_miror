@@ -28,6 +28,9 @@ import one.empty3.io.ProcessFile;
 import java.awt.*;
 import java.io.*;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 public class FaceDetect extends ProcessFile {
     public boolean process(File in, File out) {
@@ -56,7 +59,8 @@ public class FaceDetect extends ProcessFile {
             addSource(file);
 
             return res.size() > 0;
-        } catch (Exception ex) {}
+        } catch (Exception ex) {
+        }
 
         return false;
     }

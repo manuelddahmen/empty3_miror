@@ -24,6 +24,9 @@ package one.empty3.feature20220726;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 public class TimerKillThread extends Thread {
     public static List<TimerKillThread> instances

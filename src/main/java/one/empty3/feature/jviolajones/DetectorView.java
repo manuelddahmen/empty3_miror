@@ -34,16 +34,19 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 public class DetectorView extends JFrame {
 
     public static void main(String[] args) throws IOException {
         File imageFile = null;
         String xmlFileString = null;
-        if(args.length==0) {
+        if (args.length == 0) {
             imageFile = new File("samples/img/manu.jpg");
             xmlFileString = "resources/xmlopencv/haarcascade_frontalface_alt2.xml";
-        } else if(args.length==2) {
+        } else if (args.length == 2) {
             imageFile = new File(args[0]);
             xmlFileString = args[1];
         }

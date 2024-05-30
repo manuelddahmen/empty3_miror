@@ -1051,7 +1051,7 @@ public abstract class TestObjet implements Test, Runnable {
                 if (runtime != null) {
                     runtime.exec("start \"" + cmd + "\"");
                     OutputStream outputStream = runtime.exec(cmd).getOutputStream();
-                    System.out.print(outputStream);
+                    Logger.getAnonymousLogger().log(Level.INFO, outputStream.toString());
                 }
             } catch (IOException ex) {
                 reportException(ex);

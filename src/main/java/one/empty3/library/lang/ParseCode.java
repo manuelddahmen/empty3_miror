@@ -23,7 +23,14 @@
 package one.empty3.library.lang;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ParseCode {
     int i = 0;
@@ -153,7 +160,7 @@ public class ParseCode {
                             parseName() ||
                             parseLiteral();
 
-                }catch (Exception ex) {
+                } catch (Exception ex) {
                     ex.printStackTrace();
                 }
 
@@ -189,7 +196,7 @@ public class ParseCode {
 
     public boolean parseSpecialChar() {
         boolean b = false;
-        while (i< uncommented.length() &&isSpecialChar(uncommented, i)) {
+        while (i < uncommented.length() && isSpecialChar(uncommented, i)) {
             char special = uncommented.charAt(i);
             i++;
             b = true;
@@ -301,6 +308,7 @@ public class ParseCode {
         // k));
         return false;
     }
+
     public void parseTokensToTree() {
         List<Token> tokens = this.tokens;
 
@@ -328,7 +336,7 @@ public class ParseCode {
         ParseCode parseCode = new ParseCode();
         parseCode.setBrut("/* */ ");
         parseCode.removeComments();
-        System.out.println(parseCode.code);
+        Logger.getAnonymousLogger().log(Level.INFO, parseCode.code);
         parseCode.parseTokensToTree();
     }
 

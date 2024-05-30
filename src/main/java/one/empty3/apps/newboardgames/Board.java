@@ -25,6 +25,9 @@ package one.empty3.apps.newboardgames;
 import one.empty3.library.*;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 public abstract class Board extends Representable {
 
@@ -38,8 +41,11 @@ public abstract class Board extends Representable {
     public Camera camera() {
         return camera;
     }
+
     public abstract Point2D getSize2D();
+
     public abstract Point3D getSize3D();
+
     protected abstract List<Character> getCharacters();
 
     public Representable cellAt(int i, int j) {

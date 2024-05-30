@@ -47,6 +47,9 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.logging.Level;
@@ -1120,7 +1123,7 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
         try {
             trees();
 
-            //System.out.println(treeDiagram);
+            //Logger.getAnonymousLogger().log(Level.INFO, treeDiagram);
         } catch (Throwable throwable) {
             throwable.printStackTrace(System.out);
             //throw throwable;

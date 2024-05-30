@@ -34,6 +34,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import java.util.Objects;
 
 public class DBScan extends ProcessFile implements Algorithm {
@@ -141,9 +144,10 @@ public class DBScan extends ProcessFile implements Algorithm {
                 }
             }
             ImageIO.write(p.getImage(), "jpg", out);
-        } catch (Exception ex) {}
+        } catch (Exception ex) {
+        }
 
-        
+
         return true;
     }
 

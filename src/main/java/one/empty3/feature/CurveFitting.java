@@ -43,6 +43,9 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public class CurveFitting extends ProcessFile {
     CourbeN11 curvePoints;
     /*
@@ -341,7 +344,7 @@ public class CurveFitting extends ProcessFile {
             System.out.printf("Energy       %f\n", e);
 
 
-            Logger.getAnonymousLogger().log(Level.INFO,""+ curvePoints);
+            Logger.getAnonymousLogger().log(Level.INFO, "" + curvePoints);
 
             BufferedImage image = normalize.getImage();
 
@@ -361,7 +364,8 @@ public class CurveFitting extends ProcessFile {
                     absolutePath + "-inPixels.jpg"));
 
             return true;
-        } catch (Exception ex) {}
+        } catch (Exception ex) {
+        }
 
 
         return false;

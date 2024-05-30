@@ -30,6 +30,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 public class ProcessBean extends Thread {
     final FTPFile ftpFile;
@@ -46,8 +49,8 @@ public class ProcessBean extends Thread {
     }
 
     public void addProcess(Object o) {
-        if(o instanceof ProcessFile) {
-            processInstances.add((ProcessFile)o);
+        if (o instanceof ProcessFile) {
+            processInstances.add((ProcessFile) o);
         }
     }
 
@@ -56,10 +59,12 @@ public class ProcessBean extends Thread {
         this.ftpFile = file;
 
     }
+
     @Override
     public void run() {
 
     }
+
     public static List<ProcessBean> processBeanList(FTPFile[] files1) {
         List<ProcessBean> beans = new ArrayList<>();
         for (int i = 0; i < files1.length; i++) {
@@ -72,11 +77,11 @@ public class ProcessBean extends Thread {
     public static List<ProcessBean> processBeanList(File[] list) {
         List<ProcessBean> beans = new ArrayList<>();
         for (int i = 0; i < list.length; i++) {
-            if(list[i].exists()&&list[i].isDirectory()) {
-                for(int j=0; j<list[i].length(); j++) {
+            if (list[i].exists() && list[i].isDirectory()) {
+                for (int j = 0; j < list[i].length(); j++) {
                     String[] list1 = list[i].list();
                     File[] list2 = new File[list1.length];
-                    for(int k=0; k<list1.length; k++) {
+                    for (int k = 0; k < list1.length; k++) {
                         File file = new File(list[j].getAbsolutePath() +
                                 File.separator + list1[k]);
                         list2[k] = file;
@@ -99,9 +104,11 @@ public class ProcessBean extends Thread {
     public void setImage(File fo) {
         try {
             listImage.add(new PixM(ImageIO.read(fo)));
-        } catch (Exception ex) {}
+        } catch (Exception ex) {
+        }
 
     }
+
     List<PixM> listImage = new ArrayList<>();
 
 

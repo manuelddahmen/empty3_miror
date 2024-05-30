@@ -24,6 +24,9 @@ package one.empty3.feature;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 public class TimerKillThread extends Thread {
     public static List<TimerKillThread> instances
@@ -38,7 +41,7 @@ public class TimerKillThread extends Thread {
 
         this.time = System.currentTimeMillis();
 
-        while(instances.size()>=MAX_THREADS) {
+        while (instances.size() >= MAX_THREADS) {
             try {
                 Thread.sleep(200);
             } catch (InterruptedException e) {
@@ -47,12 +50,13 @@ public class TimerKillThread extends Thread {
         }
         thread.start();
     }
+
     @Override
     public void run() {
         instances.add(this);
 
-        while((System.currentTimeMillis()-time)< 4000L
-                || instances.size()<MAX_THREADS) {
+        while ((System.currentTimeMillis() - time) < 4000L
+                || instances.size() < MAX_THREADS) {
             try {
                 Thread.sleep(200);
             } catch (InterruptedException e) {

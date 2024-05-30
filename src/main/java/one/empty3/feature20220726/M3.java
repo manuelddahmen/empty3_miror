@@ -22,13 +22,13 @@
 
 package one.empty3.feature20220726;
 
-import javaAnd.awt.*;
-
 import javaAnd.awt.image.BufferedImage;
 import one.empty3.library.Lumiere;
 
 import java.util.PrimitiveIterator;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class M3 {
     public static PrimitiveIterator.OfDouble r = new Random().doubles().iterator();
@@ -180,7 +180,7 @@ public class M3 {
             x[index(column, line, columnIn, lineIn)] = d;
         } else {
             incrGetOut++;
-            //System.out.println("Outs : " + incrGetOut);
+            //Logger.getAnonymousLogger().log(Level.INFO, "Outs : " + incrGetOut);
         }
     }
 
@@ -290,7 +290,7 @@ public class M3 {
                         }
                     }
                     meanRgbai[comp][ii][ij] /= (lines * columns);
-                    System.out.println("min/max/avg (ii, ij) (" + ii + ", " + ij + ")" + " " +
+                    Logger.getAnonymousLogger().log(Level.INFO, "min/max/avg (ii, ij) (" + ii + ", " + ij + ")" + " " +
                             "min: " + minRgbai[comp][ii][ij] +
                             "max: " + maxRgbai[comp][ii][ij] +
                             "avg: " + meanRgbai[comp][ii][ij]);
@@ -323,8 +323,8 @@ public class M3 {
 
             }
         }
-        //System.out.println("Outs : " + incrGetOut);
-        //System.out.println("Points ok " + incrOK);
+        //Logger.getAnonymousLogger().log(Level.INFO, "Outs : " + incrGetOut);
+        //Logger.getAnonymousLogger().log(Level.INFO, "Points ok " + incrOK);
         return res;
     }
 

@@ -32,6 +32,9 @@ import one.empty3.library.core.testing.TestObjet;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 public class TestAnneau extends TestObjet {
 

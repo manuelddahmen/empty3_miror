@@ -35,10 +35,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import java.util.Map;
 import java.util.Objects;
 
 import java.awt.Color;
+
 import javaAnd.awt.image.imageio.ImageIO;
 import one.empty3.feature20220726.PixM;
 import one.empty3.library.core.lighting.Colors;
@@ -123,7 +127,7 @@ public class K_Clusterer /*extends ReadDataset*/ {
 
 
             //ReadDataset r1 = new ReadDataset();
-            //System.out.println("Enter the filename with path");
+            //Logger.getAnonymousLogger().log(Level.INFO, "Enter the filename with path");
             //r1.read(inCsv); //load data
             int ex = 1;
             clusters = new HashMap<>();

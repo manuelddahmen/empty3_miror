@@ -41,6 +41,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
@@ -159,7 +162,7 @@ public class ResolutionCharacter8 implements Runnable {
                                 + "gradient.jpg");
                         dirOutChars = dirOut.getAbsolutePath() + File.separator + name + File.separator + "char";
                         dirOutChars2 = dirOut.getAbsolutePath() + File.separator + name + File.separator + "char2";
-                        dirOutMethod3 = dirOut.getAbsolutePath() + File.separator + name+File.separator+"dirOut2";
+                        dirOutMethod3 = dirOut.getAbsolutePath() + File.separator + name + File.separator + "dirOut2";
                         System.out.printf("%s", resolutionCharacter8.getClass().getSimpleName());
 
 
@@ -690,7 +693,7 @@ public class ResolutionCharacter8 implements Runnable {
                     && i + w < input.getColumns() && j + h < input.getLines() && h > 0 && w > 0 && w < stepMax && h < stepMax
                     && Arrays.equals(TRUE_BOOLEANS,
                     testedRectangleBorder = testRectIs(input, i, j, w, h, testedRectangleBorder, WHITE_DOUBLES)))) {
-                if(System.currentTimeMillis()-timeStart>20) {
+                if (System.currentTimeMillis() - timeStart > 20) {
                     //Logger.getAnonymousLogger().info("recognize("+i+", "+j+") FAILED. Next!");
                     return;
                 }
@@ -707,11 +710,11 @@ public class ResolutionCharacter8 implements Runnable {
 
                 testRectIs(input, i, j, w, h, testedRectangleBorder, WHITE_DOUBLES);
                 if (!testedRectangleBorder[X_PLUS] || !testedRectangleBorder[Y_MINUS]) {
-                    if (!testedRectangleBorder[X_PLUS] && heightBlackHistory>0) {
+                    if (!testedRectangleBorder[X_PLUS] && heightBlackHistory > 0) {
                         if (w > 0) w--;
                         else break;
                         continue;
-                    } else if (!testedRectangleBorder[Y_MINUS] && widthBlackHistory>0) {
+                    } else if (!testedRectangleBorder[Y_MINUS] && widthBlackHistory > 0) {
                         if (h > 0) h--;
                         else break;
                         continue;

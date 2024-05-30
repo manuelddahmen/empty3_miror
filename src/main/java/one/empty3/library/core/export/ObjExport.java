@@ -33,6 +33,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 public class ObjExport extends Exporter {
 
@@ -62,7 +65,7 @@ public class ObjExport extends Exporter {
             file.createNewFile();
             PrintWriter pw = new PrintWriter(new FileOutputStream(file));
 
-            pw.println("o scene_" + scene.getDescription()+"");
+            pw.println("o scene_" + scene.getDescription() + "");
 
             Iterator<Representable> it = scene.iterator();
 
@@ -102,10 +105,10 @@ public class ObjExport extends Exporter {
         print("", pw);
 
         if (r instanceof RepresentableConteneur) {
-            for(Representable representable : ((RepresentableConteneur) r).getListRepresentable())
+            for (Representable representable : ((RepresentableConteneur) r).getListRepresentable())
                 traite(representable, pw);
         }
-        if(r instanceof Polygon) {
+        if (r instanceof Polygon) {
             traite((Polygon) r, pw);
         }
         if (r instanceof ParametricSurface) {
@@ -131,7 +134,7 @@ public class ObjExport extends Exporter {
 
     private static void traite(ParametricSurface r, PrintWriter pw) {
         print("", pw);
-        int countU = (int) ((r.getEndU()- r.getStartU() ) / r.getIncrU());
+        int countU = (int) ((r.getEndU() - r.getStartU()) / r.getIncrU());
         int countV = (int) ((r.getEndV() - r.getStartV()) / r.getIncrV());
         for (int i = 0; i < countU; i++) {
             for (int j = 0; j < countV; j++) {

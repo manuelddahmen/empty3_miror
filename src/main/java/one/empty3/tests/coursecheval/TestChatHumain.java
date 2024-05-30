@@ -30,6 +30,7 @@ import one.empty3.library.core.tribase.Plan3D;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class TestChatHumain extends TestObjetSub {
@@ -172,7 +173,7 @@ public class TestChatHumain extends TestObjetSub {
         scene().clear();
         scene().add(copy);
         scene().add(plane);
-        System.out.println("Camera u : " + u);
+        Logger.getAnonymousLogger().log(Level.INFO, "Camera u : " + u);
     }
 }
 

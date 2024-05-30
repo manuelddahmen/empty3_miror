@@ -39,6 +39,9 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import java.util.*;
 import java.util.logging.Logger;
 import java.util.logging.Level;
@@ -357,7 +360,7 @@ public class ResolutionCharacter1 implements Runnable {
             boolean firstPass = true;
             while (firstPass ||
                     !(heightBlackHistory >= 2 && widthBlackHistory >= 2 && Arrays.equals(TRUE_BOOLEANS,
-            testRectIs(input, i, j, w, h, testedRectangleBorder, WHITE_DOUBLES)))
+                            testRectIs(input, i, j, w, h, testedRectangleBorder, WHITE_DOUBLES)))
                             && i + w < input.getColumns() && j + h < input.getLines() && h >= 0 && w >= 0 && w < stepMax && h < stepMax) {
                 firstPass = false;
                 int w0 = w;
@@ -400,7 +403,7 @@ public class ResolutionCharacter1 implements Runnable {
                 }
 
 
-                if ((h>stepMax || w > stepMax) || ((h0 == h) && (w0 == w))) {
+                if ((h > stepMax || w > stepMax) || ((h0 == h) && (w0 == w))) {
                     break;
                 }
             }

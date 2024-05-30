@@ -9,6 +9,10 @@
 //import java.io.FileNotFoundException;
 //import java.io.IOException;
 //import java.util.List;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 //
 //
 //public class DetectorView extends JFrame {
@@ -29,14 +33,14 @@
 //        Detector detector = new Detector(XMLFile);
 //        List<Rectangle> res = detector.getFaces(img.getAbsolutePath(), 1, 1.25f, 0.1f, 1, true);
 //
-//        System.out.println(res.size() + " faces found!");
+//        Logger.getAnonymousLogger().log(Level.INFO, res.size() + " faces found!");
 //
 //        for (Rectangle rect : res) {
-//            System.out.println("----");
-//            System.out.println("width " + rect.getWidth());
-//            System.out.println("height " + rect.getHeight());
-//            System.out.println("x " + rect.getX());
-//            System.out.println("y " + rect.getY());
+//            Logger.getAnonymousLogger().log(Level.INFO, "----");
+//            Logger.getAnonymousLogger().log(Level.INFO, "width " + rect.getWidth());
+//            Logger.getAnonymousLogger().log(Level.INFO, "height " + rect.getHeight());
+//            Logger.getAnonymousLogger().log(Level.INFO, "x " + rect.getX());
+//            Logger.getAnonymousLogger().log(Level.INFO, "y " + rect.getY());
 //        }
 //
 //        d.setRects(res);
@@ -71,7 +75,7 @@
 //        if (img == null)
 //            return;
 //        Dimension dim = getSize();
-//        //System.out.println("véridique");
+//        //Logger.getAnonymousLogger().log(Level.INFO, "véridique");
 //        g1.clearRect(0, 0, dim.width, dim.height);
 //        double scale_x = dim.width * 1.f / img_width;
 //        double scale_y = dim.height * 1.f / img_height;

@@ -24,9 +24,12 @@ package one.empty3.library.lang;
 
 import java.io.File;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 public class Runner {
-    public static void main(String [] args) {
+    public static void main(String[] args) {
         Classes classes = new Classes();
         File zip = new File(args[0]);
         ParseCode parseCode = new ParseCode();
@@ -37,7 +40,7 @@ public class Runner {
 
     private static void run(Classes classes) {
         Node node = searchForMainMethod(classes);
-        if(node.canExec()) {
+        if (node.canExec()) {
             node.run();
         }
     }

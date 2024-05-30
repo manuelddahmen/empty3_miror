@@ -39,6 +39,9 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -383,9 +386,9 @@ public class ResolutionCharacter4 implements Runnable {
             w = charMinWidth;
             h = charMinWidth;
             while (!(heightBlackHistory == 2 && widthBlackHistory == 2
-                            && i + w < input.getColumns() && j + h < input.getLines() && h > 0 && w > 0 && w < stepMax && h < stepMax
-                            && Arrays.equals(TRUE_BOOLEANS,
-                                testedRectangleBorder = testRectIs(input, i, j, w, h, testedRectangleBorder, WHITE_DOUBLES)))) {
+                    && i + w < input.getColumns() && j + h < input.getLines() && h > 0 && w > 0 && w < stepMax && h < stepMax
+                    && Arrays.equals(TRUE_BOOLEANS,
+                    testedRectangleBorder = testRectIs(input, i, j, w, h, testedRectangleBorder, WHITE_DOUBLES)))) {
                 int w0 = w;
                 int h0 = h;
                 testedRectangleBorder = testRectIs(input, i, j, w, h, testedRectangleBorder, WHITE_DOUBLES);
@@ -419,7 +422,7 @@ public class ResolutionCharacter4 implements Runnable {
                         w++;
                         continue;
                     }
-                    if (heightBlackHistory == 1&& !testedRectangleBorder[XINVE]) {
+                    if (heightBlackHistory == 1 && !testedRectangleBorder[XINVE]) {
                         h++;
                         heightBlackHistory = 2;
                         continue;
@@ -798,7 +801,7 @@ public class ResolutionCharacter4 implements Runnable {
         for (int i = 0; i < finalColumns.length; i++) {
             System.out.print(finalColumns[i] + ":");
         }
-        
+
 
     }
 

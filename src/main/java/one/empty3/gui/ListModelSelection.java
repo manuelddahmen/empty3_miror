@@ -29,6 +29,9 @@ import javax.swing.event.ListDataListener;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 /**
  * Created by manue on 19-11-19.
@@ -37,7 +40,9 @@ public class ListModelSelection extends DefaultListModel<Representable> {
     public ListModelSelection(ArrayList<Representable> selectionIn) {
         this.representables = selectionIn;
     }
+
     List<Representable> representables = new ArrayList<>();
+
     @Override
     public int getSize() {
         return representables.size();
@@ -58,17 +63,16 @@ public class ListModelSelection extends DefaultListModel<Representable> {
         super.removeListDataListener(l);
 
     }
-    public void add(Representable representable)
-    {
+
+    public void add(Representable representable) {
         representables.add(representable);
     }
 
     /**
-     * 
+     *
      */
     @Override
-    public void addElement(Representable o)
-    {
+    public void addElement(Representable o) {
         super.addElement(o);
         add(o);
 

@@ -26,6 +26,9 @@ import one.empty3.library.Representable;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 public class Character {
     HashMap<Integer, List<Representable>> character = new HashMap<Integer, List<Representable>>();

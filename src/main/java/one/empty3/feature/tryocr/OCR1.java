@@ -41,6 +41,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
@@ -197,14 +200,14 @@ public class OCR1 implements Runnable {
 
         try {
             String extension;
-            if(name.endsWith("jpg") || name.endsWith("png"))
+            if (name.endsWith("jpg") || name.endsWith("png"))
                 extension = name.substring(-3);
             else return;
             ImageIO.write(input.getImage(), extension,
                     new File(dirOut + File.separator + name.replace(' ', '_')
-                            .replace("."+extension, "INPUT."+extension)));
+                            .replace("." + extension, "INPUT." + extension)));
             ImageIO.write(output.getImage(), "jpg",
-                    new File(dirOut + File.separator + name.replace(' ', '_').replace("."+extension, "OUTPUT."+extension)));
+                    new File(dirOut + File.separator + name.replace(' ', '_').replace("." + extension, "OUTPUT." + extension)));
 
             ImageIO.write(outRecompose.getImage(), "jpg", new File(
                     dirOut + File.separator + name.replace(' ', '_').replace(".jpg", "RECOMPOSE.jpg")));
@@ -277,8 +280,6 @@ public class OCR1 implements Runnable {
 
         if (!dirOut.exists() || !dirOut.isDirectory())
             dirOut.mkdirs();
-
-
 
 
         input = new PixM(read);
@@ -413,14 +414,14 @@ public class OCR1 implements Runnable {
         });
         height += maxheight;
         try {
-            if(pSlide.getColumns()>0&&pSlide.getLines()>0)
+            if (pSlide.getColumns() > 0 && pSlide.getLines() > 0)
                 ImageIO.write(pSlide.getImage(), "jpg", new File(dirOutDist + "_matchingRects_" + pSlide + ".jpg"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
         try {
-            if(distances.getColumns()>0&&distances.getLines()>0)
+            if (distances.getColumns() > 0 && distances.getLines() > 0)
                 ImageIO.write(distances.normalize(0, 1).getImage(), "jpg", dirOutDist);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -486,7 +487,7 @@ public class OCR1 implements Runnable {
      @param j line
      */
     private void exec2(int i, int j) {
-        steps=0;
+        steps = 0;
         if (arrayDiff(input.getValues(i, j), WHITE_DOUBLES) < MIN_DIFF) {
             int w = 0;
             int h = 0;
@@ -499,7 +500,7 @@ public class OCR1 implements Runnable {
                     && (i + w < input.getColumns() && j + h < input.getLines() && h > 0 && w > 0 && w < stepMax && h < stepMax))
                     || (w <= charMinWidth && h <= charMinWidth)) {
                 addStep();
-                if(steps==10000)
+                if (steps == 10000)
                     break;
                 int w0;
                 int h0;
@@ -518,7 +519,8 @@ public class OCR1 implements Runnable {
                         w++;
                         h++;
                         continue;
-                    } else*/ if (widthBlackHistory == 0) {
+                    } else*/
+                    if (widthBlackHistory == 0) {
                         w++;
                         continue;
                     } else if (heightBlackHistory == 0) {
@@ -632,8 +634,8 @@ public class OCR1 implements Runnable {
 
     private void addStep() {
         steps++;
-        if(steps==10000)
-            System.out.println("Step =" + 10000+" TOO LONG");
+        if (steps == 10000)
+            Logger.getAnonymousLogger().log(Level.INFO, "Step =" + 10000 + " TOO LONG");
     }
 
     private void export(boolean identified, int i, int j, int w, int h, String s, Rectangle2 rectangle2) {
@@ -643,7 +645,7 @@ public class OCR1 implements Runnable {
         if (!file.getParentFile().exists() || file.getParentFile().isDirectory()) {
             file.getParentFile().mkdirs();
             try {
-                if(outChar.getColumns()>0 && outChar.getLines()>0)
+                if (outChar.getColumns() > 0 && outChar.getLines() > 0)
                     ImageIO.write(outChar.getImage(), "png", file);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -656,15 +658,15 @@ public class OCR1 implements Runnable {
         boolean[] add = new boolean[]{true};
         final boolean[] newTest = {true};
         while (newTest[0]) {
-            for ( int i=0; i< rectangles.size(); ) {
+            for (int i = 0; i < rectangles.size(); ) {
                 Rectangle2 rectangle = rectangles.get(i);
-                    if (candidate.includes(rectangle)) {
-                        add[0] = false;
-                        return false;
-                    } else if (rectangle.includes(candidate)) {
-                        rectangles.remove(rectangle);
-                        add[0] = true;
-                    } else i++;
+                if (candidate.includes(rectangle)) {
+                    add[0] = false;
+                    return false;
+                } else if (rectangle.includes(candidate)) {
+                    rectangles.remove(rectangle);
+                    add[0] = true;
+                } else i++;
             }
             newTest[0] = !newTest[0];
             if (onePass) newTest[0] = false;

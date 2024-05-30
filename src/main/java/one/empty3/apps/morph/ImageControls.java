@@ -82,17 +82,17 @@ public class ImageControls implements Runnable {
 
             @Override
             public void mouseClicked(MouseEvent e) {
-                System.out.println("Clicked = " + (clicked = true));
+                Logger.getAnonymousLogger().log(Level.INFO, "Clicked = " + (clicked = true));
                 clicked();
             }
 
             @Override
             public void mousePressed(MouseEvent e) {
                 if (grid.getData2d().size() > xGrid && grid.getData2d().get(xGrid).size() > yGrid) {
-                    System.out.println("Pressed : " + (isPressed = true));
+                    Logger.getAnonymousLogger().log(Level.INFO, "Pressed : " + (isPressed = true));
                     isSelected = selectPoint(e.getX(), e.getY());
                     if (grid.getData2d().size() > xGrid && grid.getData2d().get(xGrid).size() > yGrid) {
-                        System.out.println("Selected point: " + grid.getElem(xGrid, yGrid));
+                        Logger.getAnonymousLogger().log(Level.INFO, "Selected point: " + grid.getElem(xGrid, yGrid));
                         moving = true;
                         drags();
                     } else {
@@ -105,7 +105,7 @@ public class ImageControls implements Runnable {
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                System.out.println("Pressed : " + (isPressed = false));
+                Logger.getAnonymousLogger().log(Level.INFO, "Pressed : " + (isPressed = false));
                 moving = false;
                 dropped = true;
                 dragged(e.getX(), e.getY());
@@ -151,7 +151,7 @@ public class ImageControls implements Runnable {
 
     private void clicked() {
         //select();
-//        System.out.println("::select a point");
+//        Logger.getAnonymousLogger().log(Level.INFO, "::select a point");
 //        isSelected = true;
     }
 
@@ -159,15 +159,15 @@ public class ImageControls implements Runnable {
         //move if selected
         moving = true;
         if (isPressed) {
-            //System.out.println("::move a point");
+            //Logger.getAnonymousLogger().log(Level.INFO, "::move a point");
         }
     }
 
     private void dragged(int x, int y) {
         // drops if moved
         if (!moving && !isPressed && isSelected) {
-            System.out.println("::update a point position");
-            System.out.println(selectedPoint);
+            Logger.getAnonymousLogger().log(Level.INFO, "::update a point position");
+            Logger.getAnonymousLogger().log(Level.INFO, selectedPoint.toString());
             Point point = camera.coordonneesPoint2D(
                     new Point3D(1.0 * x, 1.0 * y, 0d), zBuffer);
             grid.setElem(new Point3D(getResX() - 1.0 * point.x, 1.0 * point.y, 0d),
@@ -267,6 +267,7 @@ public class ImageControls implements Runnable {
         return new Point3D(x, y, 0d);
 
     }
+
     public ParametricSurface computeShapeT() {
         if (getPointView().getCheckBoxNoDeformation().isSelected()) {
             Plan3D polygons = new Plan3D();
@@ -297,6 +298,7 @@ public class ImageControls implements Runnable {
         }
 
     }
+
     private void display() {
         while (isDisplaying()) {
 
@@ -377,31 +379,31 @@ public class ImageControls implements Runnable {
     }
 
     public void addToScene(Scene scene) {
-        if(displayGrids) {
-        rc = new RepresentableConteneur();
-        for (int i = 0; i < grid.getData2d().size(); i++) {
-            for (int j = 0; j < grid.getData2d().get(i).size(); j++) {
-                Point3D point3D = grid.getData2d().get(i).get(j);
-                Sphere sphere = new Sphere(new Axe(point3D.plus(Point3D.Y.mult(RADIUS / 2.)),
-                        point3D.moins(Point3D.Y.mult(RADIUS / 2.))),
-                        RADIUS);
-                if (point3D.equals(selectedPoint)) {
-                    sphere.texture(new ColorTexture(Color.RED));
-                } else {
-                    sphere.texture(new ColorTexture(Color.BLUE));
+        if (displayGrids) {
+            rc = new RepresentableConteneur();
+            for (int i = 0; i < grid.getData2d().size(); i++) {
+                for (int j = 0; j < grid.getData2d().get(i).size(); j++) {
+                    Point3D point3D = grid.getData2d().get(i).get(j);
+                    Sphere sphere = new Sphere(new Axe(point3D.plus(Point3D.Y.mult(RADIUS / 2.)),
+                            point3D.moins(Point3D.Y.mult(RADIUS / 2.))),
+                            RADIUS);
+                    if (point3D.equals(selectedPoint)) {
+                        sphere.texture(new ColorTexture(Color.RED));
+                    } else {
+                        sphere.texture(new ColorTexture(Color.BLUE));
+                    }
+                    if (grid.inBounds(i + 1, j)) {
+                        rc.add(new LineSegment(point3D, grid.getElem(i + 1, j), new ColorTexture(Color.GREEN)));
+                    }
+                    if (grid.inBounds(i, j + 1)) {
+                        rc.add(new LineSegment(point3D, grid.getElem(i, j + 1), new ColorTexture(Color.GREEN)));
+                    }
+                    sphere.setIncrU(0.4);
+                    sphere.setIncrV(0.4);
+                    rc.add(sphere);
                 }
-                if (grid.inBounds(i+1, j)) {
-                    rc.add(new LineSegment(point3D, grid.getElem(i + 1, j), new ColorTexture(Color.GREEN)));
-                }
-                if(grid.inBounds(i, j+1)) {
-                    rc.add(new LineSegment(point3D, grid.getElem(i, j + 1), new ColorTexture(Color.GREEN)));
-                }
-                sphere.setIncrU(0.4);
-                sphere.setIncrV(0.4);
-                rc.add(sphere);
             }
-        }
-        scene.add(rc);
+            scene.add(rc);
         }
     }
 
@@ -458,8 +460,9 @@ public class ImageControls implements Runnable {
         try {
             finalResX = morphUI.getFinalResX();
 
-        } catch (RuntimeException ex) {}
-        if(morphUI.getCheckBoxHd().isSelected())
+        } catch (RuntimeException ex) {
+        }
+        if (morphUI.getCheckBoxHd().isSelected())
             finalResX = 1920;
         return finalResX;
     }
@@ -473,8 +476,9 @@ public class ImageControls implements Runnable {
         try {
             finalResY = morphUI.getFinalResY();
 
-        } catch (RuntimeException ex) {}
-        if(morphUI.getCheckBoxHd().isSelected())
+        } catch (RuntimeException ex) {
+        }
+        if (morphUI.getCheckBoxHd().isSelected())
             finalResY = 1920;
         return finalResY;
     }
@@ -506,6 +510,7 @@ public class ImageControls implements Runnable {
     public void setModelIndex(int selectedIndex) {
         this.index = selectedIndex;
     }
+
     public int getModelIndex() {
         return index;
     }
