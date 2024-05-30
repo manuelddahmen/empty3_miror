@@ -37,6 +37,7 @@ import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageOptions;
 import one.empty3.library.Point3D;
+import one.empty3.library.core.tribase.Config;
 import one.empty3.modelling.Face;
 //import com.google.cloud.vision.v1.AnnotateImageRequest;
 //import com.google.cloud.vision.v1.AnnotateImageResponse;
@@ -70,7 +71,8 @@ public class FaceDetectApp {
     private static final int MAX_RESULTS = 10;
     private static String projectId;
     private final Vision vision;
-    private HashMap<String, Polygon> polys = new HashMap<>();
+    private HashMap<String, one.empty3.library.Polygon> polys = new HashMap<>();
+    private HashMap<String, Polygon> polysDraw = new HashMap<>();
     private String[][][] landmarks0 = {{{"LEFT_EYE", "RIGHT_EYE", "FOREHEAD_GLABELLA"}}};
     private String[][][] landmarks = {{{"LEFT_EYE", "RIGHT_EYE", "FOREHEAD_GLABELLA"}}};
     private PrintWriter dataWriter;
@@ -194,20 +196,23 @@ public class FaceDetectApp {
      */
     private void annotateWithFaces2(BufferedImage img, FaceAnnotation face) {
         Graphics2D gfx = img.createGraphics();
-        Polygon poly = new Polygon();
+        one.empty3.library.Polygon poly1 = new one.empty3.library.Polygon();
+        Polygon polygonDraw = new Polygon();
         BoundingPoly boundingPoly = face.getBoundingPoly();
         for (int i = 0; i < boundingPoly.getVertices().size(); i++) {
             Vertex current = boundingPoly.getVertices().get(i);
             if (current.getX() != null && current.getY() != null) {
-                poly.addPoint(current.getX(), current.getY());
+                poly1.getPoints().setElem(new Point3D((double) current.getX(), (double) current.getY(), 0.0), i);
+                polygonDraw.addPoint(current.getX(), current.getY());
             }
         }
         //poly.addPoint(boundingPoly.getVertices().get(0).getX(),
         //        boundingPoly.getVertices().get(0).getY());
-        polys.put("FACE", poly);
+        polys.put("FACE", poly1);
+        polysDraw.put("FACE", polygonDraw);
         gfx.setStroke(new BasicStroke(2));
         gfx.setColor(new Color(0x00ff00));
-        gfx.draw(poly);
+        gfx.draw(polygonDraw);
     }
 
     int landmarkIndex = 0;
@@ -245,24 +250,27 @@ public class FaceDetectApp {
     }
 
     private void writePolygonsDataPoly(BufferedImage img, FaceAnnotation face) {
-        initStructurePolygons();
         Graphics2D gfx = img.createGraphics();
         for (int i = 0; i < landmarks.length; i++) {
             for (int j = 0; j < landmarks[i].length; j++) {
-                Polygon poly = new Polygon();
+                Polygon polyDraw1 = new Polygon();
+                one.empty3.library.Polygon poly = new one.empty3.library.Polygon();
                 for (int i1 = 0; i1 < landmarks[i][j].length; i1++) {
                     String landMarkType = landmarks[i][j][i1];
+                    int finalI = i1;
                     face.getLandmarks().forEach(landmark -> {
                         if (landmark.getType().equals(landMarkType) &&
                                 landmark.getPosition().getX() != null && landmark.getPosition().getY() != null) {
-                            poly.addPoint((int) (double) landmark.getPosition().getX(),
+                            polyDraw1.addPoint((int) (double) landmark.getPosition().getX(),
                                     (int) (double) landmark.getPosition().getY());
+                            poly.getPoints().setElem(new Point3D((double) landmark.getPosition().getX(), (double) landmark.getPosition().getY(), 0.0), finalI);
                         }
                     });
                 }
                 gfx.setStroke(new BasicStroke(2));
                 gfx.setColor(new Color(0x0000ff));
-                gfx.fillPolygon(poly);
+                gfx.fillPolygon(polyDraw1);
+                polysDraw.put(landmarks[i][j][0], polyDraw1);
                 polys.put(landmarks[i][j][0], poly);
 
             }
@@ -280,7 +288,7 @@ public class FaceDetectApp {
                 poly.addPoint(vertex.getX(), vertex.getY());
             }
         }
-        polys.put("FACE_RECT", poly);
+        polysDraw.put("FACE_RECT", poly);
         gfx.setStroke(new BasicStroke(5));
         gfx.setColor(new Color(0x00ff00));
         //gfx.fill(poly);
@@ -302,7 +310,7 @@ public class FaceDetectApp {
             System.err.println("outputImagePath must have the file extension 'jpg' or 'png'.");
             System.exit(1);
         }
-        File annotationData = new File(outputPath.toFile().getName() + "-" + UUID.randomUUID() + ".txt");
+        final File annotationData = new File(outputPath.toFile().getName() + "-" + UUID.randomUUID() + ".txt");
 
         FaceDetectApp app = new FaceDetectApp(getVisionService());
         List<FaceAnnotation> faces = app.detectFaces(inputPath, MAX_RESULTS);
@@ -310,7 +318,7 @@ public class FaceDetectApp {
         System.out.printf("Writing to file %s\n", outputPath);
         BufferedImage img = ImageIO.read(inputPath.toFile());
 
-        File output_filename = new File(outputPath.toFile().getName() + "-" + UUID.randomUUID() + ".jpg");
+        final File output_filename = new File(outputPath.toFile().getName() + "-" + UUID.randomUUID() + ".jpg");
 
         try {
             app.dataWriter = new PrintWriter(new FileOutputStream(annotationData));
@@ -318,23 +326,22 @@ public class FaceDetectApp {
             throw new RuntimeException(e);
         }
 
-        faces.forEach(new Consumer<FaceAnnotation>() {
-            @Override
-            public void accept(FaceAnnotation faceAnnotation) {
-                app.frontal(img, faceAnnotation);
-                app.annotateWithFaces(img, faceAnnotation);
-                app.annotateWithFaces2(img, faceAnnotation);
-                app.writePolygonsDataPoly(img, faceAnnotation);
-                app.writePolygonsData(img, faceAnnotation);
-                app.writeFaceData(faceAnnotation);
-            }
+        faces.forEach(faceAnnotation -> {
+            app.initStructurePolygons();
+            app.frontal(img, faceAnnotation);
+            app.annotateWithFaces(img, faceAnnotation);
+            app.annotateWithFaces2(img, faceAnnotation);
+            app.writePolygonsDataPoly(img, faceAnnotation);
+            app.writePolygonsData(img, faceAnnotation);
+            app.writeFaceData(faceAnnotation);
         });
 
         ImageIO.write(img, "jpg", output_filename);
 
-        app.dataWriter.flush();
         app.dataWriter.close();
+
         uploadFile(annotationData);
+
         uploadFile(output_filename);
     }
 
@@ -343,17 +350,18 @@ public class FaceDetectApp {
         for (int i = 0; i < landmarks.length; i++) {
             for (int j = 0; j < landmarks[i].length; j++) {
                 for (int k = 0; k < landmarks[i][j].length; k++) {
-                    dataWriter.println(landmarks[i][j][k]);
                     int finalI = i;
                     int finalJ = j;
                     int finalK = k;
-                    faceAnnotation.getLandmarks().forEach(landmark -> {
-                        if (landmark.getType().equals(landmarks[finalI][finalJ][finalK])) {
-                            dataWriter.println(landmark.getPosition().getX());
-                            dataWriter.println(landmark.getPosition().getY());
-                        }
-                    });
-                    dataWriter.println();
+                    Optional<Landmark> landmark1 = faceAnnotation.getLandmarks().stream().filter(landmark ->
+                            landmark.getType() != null && landmark.getType().equals(landmarks[finalI][finalJ][finalK])).findFirst();
+                    if (!landmark1.isEmpty()) {
+                        Landmark landmark2 = landmark1.get();
+                        dataWriter.println(landmark2.getType());
+                        dataWriter.println(landmark2.getPosition().getX());
+                        dataWriter.println(landmark2.getPosition().getY());
+                        dataWriter.println();
+                    }
                 }
             }
         }
