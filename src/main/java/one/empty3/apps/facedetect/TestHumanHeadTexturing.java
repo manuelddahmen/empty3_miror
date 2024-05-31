@@ -44,6 +44,7 @@ public class TestHumanHeadTexturing extends TestObjetStub {
     private BufferedImage trueFace;
     private BufferedImage jpgFile;
     private E3Model objFile;
+    private EditPolygonsMappings editPolygonsMappings;
 
     public TestHumanHeadTexturing() {
     }
@@ -178,10 +179,11 @@ public class TestHumanHeadTexturing extends TestObjetStub {
     }
 
 
-    public static TestHumanHeadTexturing startAll(BufferedImage jpg, E3Model obj) {
+    public static TestHumanHeadTexturing startAll(EditPolygonsMappings editPolygonsMappings, BufferedImage jpg, E3Model obj) {
         Logger.getAnonymousLogger().log(Level.INFO, "Jpg Obj Mapping...");
 
         TestHumanHeadTexturing testHumanHeadTexturing = new TestHumanHeadTexturing();
+        testHumanHeadTexturing.editPolygonsMappings = editPolygonsMappings;
         testHumanHeadTexturing.setJpg(jpg);
         testHumanHeadTexturing.setObj(obj);
         testHumanHeadTexturing.loop(true);

@@ -72,7 +72,8 @@ public abstract class TestObjet implements Test, Runnable {
     public static final int GENERATE_OPENGL = 4;
     public static final int GENERATE_MOVIE = 8;
     public static final int GENERATE_OBJ = 16;
-    public static final int GENERATE_NO_IMAGE_FILE_WRITING = 16;
+    public static final int GENERATE_NO_IMAGE_FILE_WRITING = 32;
+    private static final int GENERATE_SAVE_IMAGE = 32;
     public static final ArrayList<TestInstance.Parameter> initParams = new ArrayList<TestInstance.Parameter>();
     public static final int ON_TEXTURE_ENDS_STOP = 0;
     public static final int ON_TEXTURE_ENDS_LOOP_TEXTURE = 1;
@@ -104,7 +105,7 @@ public abstract class TestObjet implements Test, Runnable {
     private boolean unterminable = false;
     private long timeStart;
     private long lastInfoEllapsedMillis;
-    private int generate = 1 | 8;
+    private int generate = GENERATE_IMAGE | GENERATE_SAVE_IMAGE | GENERATE_MOVIE;
     private int version = 1;
     private String template = "";
     private String type = "JPEG";
@@ -307,24 +308,25 @@ public abstract class TestObjet implements Test, Runnable {
         g.setColor(Color.black);
         g.drawString(description, 0, 1100);
 
-        try {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ImageIO.write(ri, type, baos);
+        if ((getGenerate() | GENERATE_SAVE_IMAGE) > 0) {
+            try {
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                ImageIO.write(ri, type, baos);
 
-            baos.flush(); // Is this necessary??
-            byte[] resultImageAsRawBytes = baos.toByteArray();
-            baos.close(); // Not sure how important this is...
+                baos.flush(); // Is this necessary??
+                byte[] resultImageAsRawBytes = baos.toByteArray();
+                baos.close(); // Not sure how important this is...
 
-            OutputStream out = new FileOutputStream(fichier);
-            out.write(resultImageAsRawBytes);
-            out.close();
+                OutputStream out = new FileOutputStream(fichier);
+                out.write(resultImageAsRawBytes);
+                out.close();
 
-            zip.addFile(fichier.getName(), resultImageAsRawBytes);
+                zip.addFile(fichier.getName(), resultImageAsRawBytes);
 
-            o.println(fichier.getAbsolutePath());
-        } catch (Exception ex) {
+                o.println(fichier.getAbsolutePath());
+            } catch (Exception ex) {
+            }
         }
-
     }
 
     public void exportFrame(String format, String filename) throws IOException {
@@ -1303,5 +1305,9 @@ public abstract class TestObjet implements Test, Runnable {
 
     public JPanel getPanelDraw() {
         return str != null ? str.getJPanel1() : null;
+    }
+
+    public BufferedImage getPicture() {
+        return ri;
     }
 }

@@ -302,14 +302,11 @@ public class Camera extends CameraBox {
     }
 
     public double distanceCamera(Point3D x3d) {
-        switch (type_perspective) {
-            case PERSPECTIVE_ISOM:
-                return x3d.getZ() - eye.getElem().getZ();
-            case PERSPECTIVE_OEIL:
-                return x3d.moins(eye.getElem()).getZ();
-            default:
-                throw new UnsupportedOperationException("Type de perspective non reconnu");
-        }
+        return switch (type_perspective) {
+            case PERSPECTIVE_ISOM -> x3d.getZ() - eye.getElem().getZ();
+            case PERSPECTIVE_OEIL -> x3d.moins(eye.getElem()).getZ();
+            default -> throw new UnsupportedOperationException("Type de perspective non reconnu");
+        };
 
     }
 

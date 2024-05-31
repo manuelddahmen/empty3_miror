@@ -32,7 +32,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
-import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -638,10 +637,8 @@ public class E3Model extends RepresentableConteneur {
     public Point3D findUvFace(double u, double v) {
         final Point3D[] p = {null};
         for (int i = 0; i < faces.size(); i++) {
-            getListRepresentable().forEach(new Consumer<Representable>() {
-                @Override
-                public void accept(Representable representable) {
-                    FaceWithUv faceWithUv = (FaceWithUv) representable;
+            getListRepresentable().forEach(representable -> {
+                if (representable instanceof FaceWithUv faceWithUv) {
                     if (faceWithUv.textUv != null) {
                         if (faceWithUv.u1 <= u && u <= faceWithUv.u2 && faceWithUv.v1 <= v && v <= faceWithUv.v2) {
                             Point3D point3D = faceWithUv.calculerPoint3D((u - faceWithUv.u1) / (faceWithUv.u2 - faceWithUv.u1), (v - faceWithUv.v1) / (faceWithUv.v2 - faceWithUv.v1));

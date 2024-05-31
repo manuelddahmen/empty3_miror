@@ -55,7 +55,14 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
     private BufferedImage image;
     private E3Model model;
     protected TestHumanHeadTexturing testHumanHeadTexturing;
+    /***
+     * Contains named landkmarks points from @image
+     */
     private HashMap<String, Point3D> pointsInImage = new HashMap<>();
+    /***
+     * contains (u,v) coordinates from project of @pointsInImage
+     * projection is made with @E3Model.findUvFace(u, v)
+     */
     private HashMap<String, Point3D> pointsInModel = new HashMap<>();
     protected boolean isRunning = true;
     private Point3D pFound = null;
@@ -209,20 +216,30 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
     }
 
     public void run() {
-        testHumanHeadTexturing = TestHumanHeadTexturing.startAll(image, model);
+        testHumanHeadTexturing = TestHumanHeadTexturing.startAll(this, image, model);
         while (isVisible() && isRunning) {
             try {
                 // Display 3D scene
-                ECBufferedImage image1 = testHumanHeadTexturing.getZ().image();
+                BufferedImage image1 = testHumanHeadTexturing.getPicture();
                 if (image1 != null) {
                     Graphics graphics = panelModelView.getGraphics();
-                    if (graphics != null)
+                    if (graphics != null) {
                         graphics.drawImage(image1, 0, 0, panelModelView.getWidth(), panelModelView.getHeight(), null);
-                    displayPointsIn(pointsInImage);
-                    displayPointsOut(pointsInModel);
+                        displayPointsOut(pointsInModel);
+                    }
                 }
+                if (image != null) {
+                    Graphics graphics = panelPicture.getGraphics();
+                    if (graphics != null) {
+                        graphics.drawImage(image, 0, 0, panelPicture.getWidth(), panelPicture.getHeight(), null);
+                        displayPointsIn(pointsInImage);
+                    }
+                }
+                Thread.sleep(100);
             } catch (RuntimeException ex) {
                 ex.printStackTrace();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
             }
 
             if (model != null) {
@@ -244,7 +261,6 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
                 if (graphics != null) {
                     // Display image
                     graphics.setColor(Color.BLACK);
-                    graphics.drawImage(image, 0, 0, panelDraw.getWidth(), panelDraw.getHeight(), null);
                     points.forEach(new BiConsumer<String, Point3D>() {
                         @Override
                         public void accept(String s, Point3D point3D) {
@@ -265,30 +281,22 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
 
     private void displayPointsOut(HashMap<String, Point3D> points) {
         JPanel panelDraw = panelModelView;
-        try {
-            Thread.sleep(200);
-            if (image != null && panelDraw != null) {
-                Graphics graphics = panelDraw.getGraphics();
-                if (graphics != null) {
-                    // Display image
+        if (image != null && panelDraw != null) {
+            // Display image
+            points.forEach(new BiConsumer<String, Point3D>() {
+                @Override
+                public void accept(String s, Point3D uvModel) {
+                    Point3D uvFace = model.findUvFace(uvModel.getX(), uvModel.getY());
+                    Point point = testHumanHeadTexturing.getZ().camera().coordonneesPoint2D(uvFace, testHumanHeadTexturing.getZ());
+                    // +++ Model 3DObj : calculerPoint3D(u,v) +++
+                    Graphics graphics = panelDraw.getGraphics();
                     graphics.setColor(Color.BLACK);
-                    points.forEach(new BiConsumer<String, Point3D>() {
-                        @Override
-                        public void accept(String s, Point3D point3D) {
-                            Graphics graphics = panelDraw.getGraphics();
-                            Point point = testHumanHeadTexturing.getZ().camera().coordonneesPoint2D(point3D, testHumanHeadTexturing.getZ());
-                            // +++ Model 3DObj : calculerPoint3D(u,v) +++
-                            graphics.drawOval((int) (double) (point.getX() / testHumanHeadTexturing.getZ().la() * panelModelView.getWidth()) - 1,
-                                    (int) (double) (point.getY() / testHumanHeadTexturing.getZ().ha() * panelModelView.getHeight()) - 1,
-                                    3, 3);
-                        }
-
-                    });
-                    // Display 3D scene
+                    graphics.drawOval((int) (double) (point.getX() / testHumanHeadTexturing.getZ().la() * panelModelView.getWidth()) - 1,
+                            (int) (double) (point.getY() / testHumanHeadTexturing.getZ().ha() * panelModelView.getHeight()) - 1,
+                            3, 3);
                 }
-            }
-        } catch (InterruptedException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+
+            });
         }
 
     }
@@ -335,16 +343,8 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
             pointsInImage.forEach(new BiConsumer<String, Point3D>() {
                 @Override
                 public void accept(String s, Point3D point3D) {
-                    try {
-                        Point3D copy = (Point3D) point3D.copy();
-                        pointsInModel.put(s, model.findUvFace(copy.get(0), copy.get(1)));
-                    } catch (CopyRepresentableError e) {
-                        throw new RuntimeException(e);
-                    } catch (IllegalAccessException e) {
-                        throw new RuntimeException(e);
-                    } catch (InstantiationException e) {
-                        throw new RuntimeException(e);
-                    }
+                    Point3D copy = new Point3D(point3D);
+                    pointsInModel.put(s, new Point3D(copy.get(0) / image.getWidth(), copy.get(1) / image.getHeight(), 0.0));
                 }
             });
             Logger.getAnonymousLogger().log(Level.INFO, "Loaded {0} points in image", pointsInImage.size());
