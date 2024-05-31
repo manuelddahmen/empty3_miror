@@ -24,7 +24,10 @@ package one.empty3.library.lang;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ParseCodeTest {
     @Test
@@ -37,7 +40,7 @@ class ParseCodeTest {
         ParseCode parseCode = new ParseCode();
         parseCode.setBrut("/* */ \n//\n /* */");
         parseCode.parseTokensToTree();
-        Logger.getAnonymousLogger().log(Level.INFO, parseCode.tree);
+        Logger.getAnonymousLogger().log(Level.INFO, parseCode.tree.toString());
 
         assertEquals(parseCode.uncommented, (""));
     }

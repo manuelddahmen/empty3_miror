@@ -45,7 +45,6 @@ import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.io.*;
@@ -730,7 +729,8 @@ public abstract class TestObjet implements Test, Runnable {
             ex1.printStackTrace();
         }
 
-        str.setMessage("ERROR EXCEPTION");
+        if (str != null)
+            str.setMessage("ERROR EXCEPTION");
     }
 
     public void reportPause(boolean phase) {
@@ -1049,13 +1049,13 @@ public abstract class TestObjet implements Test, Runnable {
                 cmd = avif.getCanonicalPath();
                 Runtime runtime = Runtime.getRuntime();
                 if (runtime != null) {
-                    runtime.exec("start \"" + cmd + "\"");
+                    runtime.exec("explorer \"" + cmd + "\"");
                     OutputStream outputStream = runtime.exec(cmd).getOutputStream();
                     Logger.getAnonymousLogger().log(Level.INFO, outputStream.toString());
                 }
             } catch (IOException ex) {
-                reportException(ex);
-                o.println(ex.getLocalizedMessage());
+                //reportException(ex);
+                //o.println(ex.getLocalizedMessage());
             }
         } else if (file.exists()) {
             try {

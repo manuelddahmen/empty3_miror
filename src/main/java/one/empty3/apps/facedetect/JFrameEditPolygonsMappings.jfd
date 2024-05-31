@@ -18,6 +18,8 @@ new FormModel {
 			"title": new FormMessage( null, "JFrameEditPolygonsMappings.this.title" )
 			"autoRequestFocus": false
 			"maximizedBounds": sfield com.jformdesigner.model.FormObject NULL_VALUE
+			"$sizePolicy": 1
+			"iconImage": new com.jformdesigner.model.SwingIcon( 1, "C:\\Users\\manue\\OneDrive\\Documents\\Downloads\\4out.jpg" )
 			auxiliary() {
 				"JavaCodeGenerator.variableGetter": true
 			}
@@ -62,6 +64,11 @@ new FormModel {
 						name: "menuItem5"
 						"text": new FormMessage( null, "JFrameEditPolygonsMappings.menuItem5.text" )
 					} )
+				} )
+				add( new FormComponent( "javax.swing.JMenuItem" ) {
+					name: "menuItem6"
+					"text": new FormMessage( null, "JFrameEditPolygonsMappings.menuItem6.text" )
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItemEditPointPosition", true ) )
 				} )
 			}
 		}, new FormLayoutConstraints( null ) {

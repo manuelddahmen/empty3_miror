@@ -26,44 +26,81 @@
 
 package one.empty3.apps.facedetect;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
-import javax.swing.*;
+import net.miginfocom.swing.MigLayout;
+import one.empty3.library.Config;
 
-import net.miginfocom.swing.*;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.io.File;
+import java.util.ResourceBundle;
 
 /**
  * @author manue
  */
 public class JFrameEditPolygonsMappings extends JFrame {
+
+    private static final int EDIT_POINT_POSITION = 1;
+    File lastDirectory;
+    private Config config;
+    Thread threadDisplay;
+    private int mode = 0;
+
     public JFrameEditPolygonsMappings() {
+        config = new Config();
+        File fileDirectoryDefault = config.getDefaultFileOutput();
+        if (fileDirectoryDefault == null)
+            config.setDefaultFileOutput(new File("."));
+        String lastDirectoryTmpStr = config.getMap().get("D3ModelFaceTexturing");
+        if (lastDirectoryTmpStr == null) {
+            lastDirectoryTmpStr = ".";
+            config.getMap().put("D3ModelFaceTexturing", lastDirectoryTmpStr);
+        }
+        config.save();
+        lastDirectory = new File(lastDirectoryTmpStr);
+        if (!lastDirectory.exists())
+            config.save();
         initComponents();
         editPolygonsMappings2 = new EditPolygonsMappings(this);
+        //editPolygonsMappings2.testHumanHeadTexturing.setGenerate(editPolygonsMappings2.testHumanHeadTexturing);
         setContentPane(editPolygonsMappings2);
         pack();
         setVisible(true);
-
-        new Thread(editPolygonsMappings2).start();
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        threadDisplay = new Thread(editPolygonsMappings2);
+        threadDisplay.start();
     }
 
     private void menuItemLoadImage(ActionEvent e) {
         JFileChooser loadImage = new JFileChooser();
+        if (lastDirectory != null)
+            loadImage.setCurrentDirectory(lastDirectory);
         if (loadImage.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             editPolygonsMappings2.loadImage(loadImage.getSelectedFile());
         }
+        lastDirectory = loadImage.getCurrentDirectory();
     }
 
     private void menuItemAdd3DModel(ActionEvent e) {
         JFileChooser add3DModel = new JFileChooser();
+        if (lastDirectory != null)
+            add3DModel.setCurrentDirectory(lastDirectory);
         if (add3DModel.showOpenDialog(this) == JFileChooser.APPROVE_OPTION)
             editPolygonsMappings2.add3DModel(add3DModel.getSelectedFile());
+        lastDirectory = add3DModel.getCurrentDirectory();
     }
 
     private void menuItemLoadTxt(ActionEvent e) {
-        JFileChooser loadImage = new JFileChooser();
-        if (loadImage.showOpenDialog(this) == JFileChooser.APPROVE_OPTION)
-            editPolygonsMappings2.loadTxt(loadImage.getSelectedFile());
+        JFileChooser loadImagePoints = new JFileChooser();
+        if (lastDirectory != null)
+            loadImagePoints.setCurrentDirectory(lastDirectory);
+        if (loadImagePoints.showOpenDialog(this) == JFileChooser.APPROVE_OPTION)
+            editPolygonsMappings2.loadTxt(loadImagePoints.getSelectedFile());
+        lastDirectory = loadImagePoints.getCurrentDirectory();
+    }
+
+    private void menuItemEditPointPosition(ActionEvent e) {
+        editPolygonsMappings2.editPointPosition();
     }
 
     private void initComponents() {
@@ -76,6 +113,7 @@ public class JFrameEditPolygonsMappings extends JFrame {
         menuItem2 = new JMenuItem();
         menuItem4 = new JMenuItem();
         menuItem5 = new JMenuItem();
+        menuItem6 = new JMenuItem();
         editPolygonsMappings2 = new EditPolygonsMappings();
         menu3 = new JMenu();
 
@@ -85,6 +123,7 @@ public class JFrameEditPolygonsMappings extends JFrame {
         setTitle(bundle.getString("JFrameEditPolygonsMappings.this.title"));
         setAutoRequestFocus(false);
         setMaximizedBounds(null);
+        setIconImage(new ImageIcon("C:\\Users\\manue\\OneDrive\\Documents\\Downloads\\4out.jpg").getImage());
         var contentPane = getContentPane();
         contentPane.setLayout(new MigLayout(
             "fill,novisualpadding,hidemode 3",
@@ -124,6 +163,11 @@ public class JFrameEditPolygonsMappings extends JFrame {
                 menu2.add(menuItem5);
             }
             menuBar1.add(menu2);
+
+            //---- menuItem6 ----
+            menuItem6.setText(bundle.getString("JFrameEditPolygonsMappings.menuItem6.text"));
+            menuItem6.addActionListener(e -> menuItemEditPointPosition(e));
+            menuBar1.add(menuItem6);
         }
         setJMenuBar(menuBar1);
 
@@ -137,7 +181,7 @@ public class JFrameEditPolygonsMappings extends JFrame {
             menu3.setVisible(false);
         }
         contentPane.add(menu3, "cell 0 0");
-        pack();
+        setSize(1375, 660);
         setLocationRelativeTo(getOwner());
         // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
     }
@@ -150,6 +194,7 @@ public class JFrameEditPolygonsMappings extends JFrame {
     private JMenuItem menuItem2;
     private JMenuItem menuItem4;
     private JMenuItem menuItem5;
+    private JMenuItem menuItem6;
     private EditPolygonsMappings editPolygonsMappings2;
     private JMenu menu3;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
@@ -158,4 +203,16 @@ public class JFrameEditPolygonsMappings extends JFrame {
         JFrameEditPolygonsMappings jFrameEditPolygonsMappings = new JFrameEditPolygonsMappings();
     }
 
+    @Override
+    public void dispose() {
+        super.dispose();
+        config.getMap().put("D3ModelFaceTexturing", lastDirectory.getAbsolutePath());
+        config.save();
+        try {
+            editPolygonsMappings2.testHumanHeadTexturing.setMaxFrames(0);
+            Thread.sleep(1000);
+            editPolygonsMappings2.isRunning = false;
+        } catch (InterruptedException | RuntimeException e) {
+        }
+    }
 }

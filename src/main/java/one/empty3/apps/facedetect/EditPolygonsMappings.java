@@ -26,32 +26,42 @@
 
 package one.empty3.apps.facedetect;
 
+import com.google.common.util.concurrent.AtomicDouble;
+import javaAnd.awt.image.imageio.ImageIO;
+import net.miginfocom.swing.MigLayout;
+import one.empty3.apps.morph.Main;
+import one.empty3.library.*;
+import one.empty3.library.objloader.E3Model;
+
+import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionAdapter;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.HashMap;
+import java.util.Scanner;
 import java.util.function.BiConsumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.*;
-
-import javaAnd.awt.image.imageio.ImageIO;
-import net.miginfocom.swing.*;
-import one.empty3.apps.morph.*;
-import one.empty3.library.ECBufferedImage;
-import one.empty3.library.Point3D;
-import one.empty3.library.objloader.E3Model;
 
 /**
  * @author manue
  */
 public class EditPolygonsMappings extends JPanel implements Runnable {
-
+    private static final int EDIT_POINT_POSITION = 1;
+    private int mode;
     private BufferedImage image;
     private E3Model model;
-    private TestHumanHeadTexturing testHumanHeadTexturing;
-    private HashMap<String, Point3D> points;
+    protected TestHumanHeadTexturing testHumanHeadTexturing;
+    private HashMap<String, Point3D> pointsInImage = new HashMap<>();
+    private HashMap<String, Point3D> pointsInModel = new HashMap<>();
+    protected boolean isRunning = true;
+    private Point3D pFound = null;
+    private String landmarkType;
+    private double u;
+    private double v;
 
     public EditPolygonsMappings(Window owner) {
         initComponents();
@@ -200,33 +210,16 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
 
     public void run() {
         testHumanHeadTexturing = TestHumanHeadTexturing.startAll(image, model);
-        while (true) {
-            try {
-                Thread.sleep(200);
-                if (image != null && panelPicture != null) {
-                    // Display image
-                    Graphics graphics = panelPicture.getGraphics();
-                    graphics.drawImage(image, 0, 0, panelPicture.getWidth(), panelPicture.getHeight(), null);
-                    graphics.setColor(Color.BLACK);
-                    points.forEach(new BiConsumer<String, Point3D>() {
-                        @Override
-                        public void accept(String s, Point3D point3D) {
-                            graphics.drawOval((int) (double) point3D.getX() - 1,
-                                    (int) (double) point3D.getY() - 1, 3, 3);
-                        }
-
-                    });
-                    // Display 3D scene
-                }
-            } catch (InterruptedException ex) {
-                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-            }
+        while (isVisible() && isRunning) {
             try {
                 // Display 3D scene
                 ECBufferedImage image1 = testHumanHeadTexturing.getZ().image();
                 if (image1 != null) {
                     Graphics graphics = panelModelView.getGraphics();
-                    graphics.drawImage(image1, 0, 0, panelModelView.getWidth(), panelModelView.getHeight(), null);
+                    if (graphics != null)
+                        graphics.drawImage(image1, 0, 0, panelModelView.getWidth(), panelModelView.getHeight(), null);
+                    displayPointsIn(pointsInImage);
+                    displayPointsOut(pointsInModel);
                 }
             } catch (RuntimeException ex) {
                 ex.printStackTrace();
@@ -238,6 +231,64 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
             if (image != null) {
                 testHumanHeadTexturing.setJpg(image);
             }
+        }
+
+    }
+
+    private void displayPointsIn(HashMap<String, Point3D> points) {
+        JPanel panelDraw = panelPicture;
+        try {
+            Thread.sleep(200);
+            if (image != null && panelDraw != null) {
+                Graphics graphics = panelDraw.getGraphics();
+                if (graphics != null) {
+                    // Display image
+                    graphics.setColor(Color.BLACK);
+                    graphics.drawImage(image, 0, 0, panelDraw.getWidth(), panelDraw.getHeight(), null);
+                    points.forEach(new BiConsumer<String, Point3D>() {
+                        @Override
+                        public void accept(String s, Point3D point3D) {
+                            Graphics graphics = panelDraw.getGraphics();
+                            graphics.drawOval((int) (double) (point3D.getX() / image.getWidth() * panelDraw.getWidth()) - 1,
+                                    (int) (double) (point3D.getY() / image.getHeight() * panelDraw.getHeight()) - 1, 3, 3);
+                        }
+
+                    });
+                    // Display 3D scene
+                }
+            }
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
+    private void displayPointsOut(HashMap<String, Point3D> points) {
+        JPanel panelDraw = panelModelView;
+        try {
+            Thread.sleep(200);
+            if (image != null && panelDraw != null) {
+                Graphics graphics = panelDraw.getGraphics();
+                if (graphics != null) {
+                    // Display image
+                    graphics.setColor(Color.BLACK);
+                    points.forEach(new BiConsumer<String, Point3D>() {
+                        @Override
+                        public void accept(String s, Point3D point3D) {
+                            Graphics graphics = panelDraw.getGraphics();
+                            Point point = testHumanHeadTexturing.getZ().camera().coordonneesPoint2D(point3D, testHumanHeadTexturing.getZ());
+                            // +++ Model 3DObj : calculerPoint3D(u,v) +++
+                            graphics.drawOval((int) (double) (point.getX() / testHumanHeadTexturing.getZ().la() * panelModelView.getWidth()) - 1,
+                                    (int) (double) (point.getY() / testHumanHeadTexturing.getZ().ha() * panelModelView.getHeight()) - 1,
+                                    3, 3);
+                        }
+
+                    });
+                    // Display 3D scene
+                }
+            }
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }
@@ -254,11 +305,12 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
     }
 
     public void loadTxt(File selectedFile) {
-        points = new HashMap<String, Point3D>();
+        pointsInImage = new HashMap<String, Point3D>();
         try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(selectedFile));
+            Scanner bufferedReader = new Scanner(new FileReader(selectedFile));
             String line = "";
-            while ((line = bufferedReader.readLine()) != null) {
+            while (bufferedReader.hasNextLine()) {
+                line = bufferedReader.nextLine();
                 Point3D point = new Point3D();
                 String landmarkType;
                 double x;
@@ -266,19 +318,131 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
                 if (!line.isEmpty()) {
                     if (Character.isLetter(line.charAt(0))) {
                         landmarkType = line;
-                        line = bufferedReader.readLine();
+                        // X
+                        line = bufferedReader.nextLine();
                         x = Double.parseDouble(line);
-                        line = bufferedReader.readLine();
+                        // Y
+                        line = bufferedReader.nextLine();
                         y = Double.parseDouble(line);
+                        // Blank line
+                        line = bufferedReader.nextLine();
 
-                        points.put(landmarkType, new Point3D(x, y, 0.0));
+                        pointsInImage.put(landmarkType, new Point3D(x, y, 0.0));
                     }
                 }
             }
+            pointsInModel = new HashMap<>();
+            pointsInImage.forEach(new BiConsumer<String, Point3D>() {
+                @Override
+                public void accept(String s, Point3D point3D) {
+                    try {
+                        Point3D copy = (Point3D) point3D.copy();
+                        pointsInModel.put(s, model.findUvFace(copy.get(0), copy.get(1)));
+                    } catch (CopyRepresentableError e) {
+                        throw new RuntimeException(e);
+                    } catch (IllegalAccessException e) {
+                        throw new RuntimeException(e);
+                    } catch (InstantiationException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            });
+            Logger.getAnonymousLogger().log(Level.INFO, "Loaded {0} points in image", pointsInImage.size());
             bufferedReader.close();
         } catch (IOException | RuntimeException ex) {
             throw new RuntimeException(ex);
         }
 
+    }
+
+    public void editPointPosition() {
+        mode = EDIT_POINT_POSITION;
+        panelPicture.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                Point point = e.getPoint();
+                if (image == null || model != null) {
+                    Point3D[] pNear = new Point3D[]{new Point3D(1.0 * point.getX() * image.getWidth() / panelPicture.getWidth(),
+                            1.0 * point.getY() * image.getHeight() / panelPicture.getHeight(), 0.)};
+                    AtomicDouble distanceMin = new AtomicDouble(Double.MAX_VALUE);
+                    pointsInImage.forEach(new BiConsumer<String, Point3D>() {
+                        @Override
+                        public void accept(String s, Point3D point3D) {
+                            if (Point3D.distance(pNear[0], point3D) < distanceMin.get()) {
+                                distanceMin.set(Point3D.distance(pNear[0], point3D));
+                                pFound = point3D;
+                                landmarkType = s;
+                            }
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+
+            }
+        });
+        panelModelView.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                Point point = e.getPoint();
+                if (image == null || model != null) {
+                    int x = point.x;
+                    int y = point.y;
+                    ZBufferImpl.ImageMapElement ime = ((ZBufferImpl) testHumanHeadTexturing.getZ()).ime;
+                    Point3D pointIme = null;
+                    if (ime.checkCoordinates(x, y)) {
+                        u = ime.getuMap()[x][y];
+                        v = ime.getvMap()[x][y];
+                        pointIme = ime.getElementPoint(x, y);
+                    }
+                    Point3D finalPointIme = pointIme;
+                    pointsInModel.forEach(new BiConsumer<String, Point3D>() {
+                        @Override
+                        public void accept(String s, Point3D point3D) {
+                            if (s.equals(landmarkType) && finalPointIme != null) {
+                                pointsInModel.put(s, finalPointIme);
+                            }
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+
+            }
+        });
     }
 }

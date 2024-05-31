@@ -313,7 +313,7 @@ public class VecMeshEditorGui extends JFrame {
     }
 
     private void menuAddImages(ActionEvent e) {
-        File direFile = currentFile == null ? new Config().getFileDirectoryDefault() : currentFile;
+        File direFile = currentFile == null ? new Config().getDefaultFileOutput() : currentFile;
         JFileChooser jFileChooser = new JFileChooser(direFile);
         jFileChooser.setDialogType(JFileChooser.OPEN_DIALOG);
         jFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);

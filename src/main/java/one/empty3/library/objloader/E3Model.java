@@ -102,6 +102,7 @@ public class E3Model extends RepresentableConteneur {
   */
         }
 
+
         @Override
         public Point3D calculerPoint3D(double u, double v) {
             Point3D resA1 = getPolygon().getPoints().getElem(0).plus(getPolygon().getPoints().getElem(2).moins(getPolygon().getPoints().getElem(1)).mult(u));
@@ -632,5 +633,24 @@ public class E3Model extends RepresentableConteneur {
     public void texture(ITexture tc) {
         texture = tc;
         getListRepresentable().forEach(representable -> representable.texture(tc));
+    }
+
+    public Point3D findUvFace(double u, double v) {
+        final Point3D[] p = {null};
+        for (int i = 0; i < faces.size(); i++) {
+            getListRepresentable().forEach(new Consumer<Representable>() {
+                @Override
+                public void accept(Representable representable) {
+                    FaceWithUv faceWithUv = (FaceWithUv) representable;
+                    if (faceWithUv.textUv != null) {
+                        if (faceWithUv.u1 <= u && u <= faceWithUv.u2 && faceWithUv.v1 <= v && v <= faceWithUv.v2) {
+                            Point3D point3D = faceWithUv.calculerPoint3D((u - faceWithUv.u1) / (faceWithUv.u2 - faceWithUv.u1), (v - faceWithUv.v1) / (faceWithUv.v2 - faceWithUv.v1));
+                            p[0] = point3D;
+                        }
+                    }
+                }
+            });
+        }
+        return p[0];
     }
 }

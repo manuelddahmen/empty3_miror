@@ -35,8 +35,12 @@ public class Config {
     public static final int DIR_TEST_OUTPUT = 1;
     public static final int DIR_MODELS = 2;
     public static final int DIR_TEXTURES = 3;
-    private File fileDirectoryDefault;
-    private File file1;
+    private File defaultFileOutput;
+    private File configFile;
+    private File tmpDir;
+    private File testOutputDir;
+    private File modelsDir;
+    private File texturesDir;
     protected Map<String, String> map = new HashMap<String, String>();
 
     public Config() {
@@ -46,14 +50,13 @@ public class Config {
     public boolean initIfEmpty() {
         Properties p = new Properties();
         Reader reader = null;
-        file1 = new File(System.getProperty("user.home") + File.separator + "empty3.config");
-        if (!file1.exists()) {
-            if (!file1.exists()) {
-                createConfig();
-            }
+        configFile = new File(System.getProperty("user.home") + File.separator + "empty3.config");
+        Logger.getAnonymousLogger().log(Level.INFO, "Config file: " + configFile.getAbsolutePath());
+        if (!configFile.exists()) {
+            createConfig();
         }
         try {
-            reader = new FileReader(file1);
+            reader = new FileReader(configFile);
             p.load(reader);
 
             for (Object key : p.keySet()) {
@@ -63,8 +66,8 @@ public class Config {
 
                 // if is file reference..
                 if (key.equals("path")) {
-                    fileDirectoryDefault = new File(value);
-                    File path = fileDirectoryDefault.getParentFile();
+                    defaultFileOutput = new File(value);
+                    File path = defaultFileOutput.getParentFile();
                     //if (path.exists() || path.mkdir()) {
                     //} else {
                     //    System.err.println("Failed to make/find directory for " + path);
@@ -80,10 +83,10 @@ public class Config {
     }
 
     public boolean createConfig() {
-        if (!file1.exists()) {
+        if (!configFile.exists()) {
             try {
-                file1.createNewFile();
-                PrintWriter pw = new PrintWriter(file1);
+                configFile.createNewFile();
+                PrintWriter pw = new PrintWriter(configFile);
                 pw.println("folderoutput=c\\" + System.getProperty("user.home") + "\\EmptyCanvasTest");
                 pw.println("path=" + System.getProperty("user.home") + "\\EmptyCanvasTest");
                 pw.close();
@@ -105,17 +108,17 @@ public class Config {
         return new File[0];
     }
 
-    public File getFileDirectoryDefault() {
-        return fileDirectoryDefault;
+    public File getDefaultFileOutput() {
+        return defaultFileOutput;
     }
 
-    public void setFileDirectoryDefault(File fileDirectoryDefault) {
-        this.fileDirectoryDefault = fileDirectoryDefault;
+    public void setDefaultFileOutput(File defaultFileOutput) {
+        this.defaultFileOutput = defaultFileOutput;
     }
 
     public String getDefaultCodeVecMesh() {
 
-        String s = getFileDirectoryDefault() + File.separator + "defaultCode.calcmath";
+        String s = getDefaultFileOutput() + File.separator + "defaultCode.calcmath";
         Logger.getAnonymousLogger().log(Level.INFO, s);
         return s;
     }
@@ -123,4 +126,28 @@ public class Config {
     public Map<String, String> getMap() {
         return map;
     }
+
+    public boolean save() {
+        if (!configFile.exists()) {
+            try {
+                configFile.createNewFile();
+            } catch (IOException e) {
+                Logger.getAnonymousLogger().log(Level.SEVERE, "Config.save() error", e);
+                return false;
+            }
+        }
+        try {
+            PrintWriter pw = new PrintWriter(configFile);
+
+            for (Map.Entry<String, String> entry : map.entrySet()) {
+                pw.println(entry.getKey() + "=" + entry.getValue().replace("\\", "\\\\"));
+            }
+            pw.close();
+            return true;
+        } catch (IOException ex) {
+            Logger.getAnonymousLogger().log(Level.SEVERE, "Error saving config file");
+            return false;
+        }
+    }
 }
+

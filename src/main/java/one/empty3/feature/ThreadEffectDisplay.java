@@ -89,7 +89,7 @@ public class ThreadEffectDisplay extends Thread {
 
 
         do {
-            File fileOrigin = new File(new Config().getFileDirectoryDefault() + File.separator + "FeaturesVideo" + File.separator + "webcam.jpg");
+            File fileOrigin = new File(new Config().getDefaultFileOutput() + File.separator + "FeaturesVideo" + File.separator + "webcam.jpg");
             fileOrigin.mkdirs();
 
 
