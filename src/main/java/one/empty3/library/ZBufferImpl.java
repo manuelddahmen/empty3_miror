@@ -31,6 +31,7 @@ import javaAnd.awt.image.BufferedImage;
 import one.empty3.library.core.nurbs.*;
 import one.empty3.library.core.tribase.Precomputable;
 import one.empty3.library.objloader.E3Model;
+import one.empty3.library1.shader.Vec;
 import one.empty3.pointset.PCont;
 
 import java.awt.*;
@@ -39,12 +40,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -1016,7 +1011,7 @@ public class ZBufferImpl extends Representable implements ZBuffer {
 
     public void tracerQuadRefined(E3Model.FaceWithUv face) {
         Polygon polygon = face.getPolygon();
-        tracerQuad(polygon.getPoints().getElem(0), polygon.getPoints().getElem(1),
+        tracerQuad8uv(polygon.getPoints().getElem(0), polygon.getPoints().getElem(1),
                 polygon.getPoints().getElem(2), polygon.getPoints().getElem(3), face.texture(),
                 face.getTextUv(), null);
     }
@@ -1065,6 +1060,109 @@ public class ZBufferImpl extends Representable implements ZBuffer {
                 double v = (v00 + v01) / 2;
                 pFinal.setNormale(normale);
                 pFinal.texture(texture);
+                if (n != null) {
+                    pFinal.setNormale(n.calculerNormale3D(u, v));
+                    if (displayType == DISPLAY_ALL) {
+                        pFinal = n.calculerPoint3D(u, v);
+                        pFinal.texture(new ColorTexture(texture.getColorAt(u, v)));
+                    } else {
+                        pFinal.setNormale(normale);
+                        pFinal.texture(new ColorTexture(texture.getColorAt(u, v)));
+                    }
+                }
+                if (displayType <= SURFACE_DISPLAY_TEXT_QUADS) {
+                    if (n != null) {
+                        if (testDeep(pFinal, n.texture(), u, v, n)) {
+                            Point ce = camera().coordonneesPoint2D(pFinal, that);
+                            ime.uMap[(int) ce.getX()][(int) ce.getY()] = u;
+                            ime.vMap[(int) ce.getX()][(int) ce.getY()] = v;
+
+                        }
+                    } else if (texture != null) {
+                        if (testDeep(pFinal, texture, u, v, n)) {
+                            Point ce = camera().coordonneesPoint2D(pFinal, that);
+                            ime.uMap[(int) ce.getX()][(int) ce.getY()] = u;
+                            ime.vMap[(int) ce.getX()][(int) ce.getY()] = v;
+
+                        }
+                    } else {
+                        if (testDeep(pFinal, Color.PINK.getRGB())) {
+                            Point ce = camera().coordonneesPoint2D(pFinal, that);
+                            ime.uMap[(int) ce.getX()][(int) ce.getY()] = u;
+                            ime.vMap[(int) ce.getX()][(int) ce.getY()] = v;
+
+                        }
+                    }
+                } else {
+                    TextureCol col = new TextureCol(Color.RED);
+                    if (testDeep(pFinal, col, u, v, n)) {
+                        Point ce = camera().coordonneesPoint2D(pFinal, that);
+                        ime.uMap[(int) ce.getX()][(int) ce.getY()] = u;
+                        ime.vMap[(int) ce.getX()][(int) ce.getY()] = v;
+
+                    }
+                }
+            }
+        }
+
+        //}
+    }
+
+    private void tracerQuad8uv(Point3D pp1, Point3D pp2, Point3D pp3, Point3D pp4, ITexture texture, double[] textUv, ParametricSurface n) {
+
+
+        Point p1, p2, p3, p4;
+        p1 = camera().coordonneesPoint2D(pp1, this);
+        p2 = camera().coordonneesPoint2D(pp2, this);
+        p3 = camera().coordonneesPoint2D(pp3, this);
+        p4 = camera().coordonneesPoint2D(pp4, this);
+
+        Vec v1 = new Vec(5);
+        Vec v2 = new Vec(5);
+        Vec v3 = new Vec(5);
+        Vec v4 = new Vec(5);
+
+        v1.setValues(pp1.getX(), pp1.getY(), pp1.getZ(), textUv[0], textUv[1]);
+        v2.setValues(pp2.getX(), pp2.getY(), pp2.getZ(), textUv[2], textUv[3]);
+        v3.setValues(pp3.getX(), pp3.getY(), pp3.getZ(), textUv[4], textUv[5]);
+        v4.setValues(pp4.getX(), pp4.getY(), pp4.getZ(), textUv[6], textUv[7]);
+
+        int checkedFalse = 0;
+        if (!checkScreen(p1) || isOccupied(pp1))
+            checkedFalse++;
+        if (!checkScreen(p2) || isOccupied(pp2))
+            checkedFalse++;
+        if (!checkScreen(p3) || isOccupied(pp3))
+            checkedFalse++;
+        if (!checkScreen(p4) || isOccupied(pp4))
+            checkedFalse++;
+
+
+        if (p1 == null || p2 == null || p3 == null || p4 == null || checkedFalse >= CHECKED_POINT_SIZE_QUADS)
+            return;
+
+
+        TRI triBas = new TRI(pp1, pp2, pp3, texture);
+        Point3D normale = triBas.normale();
+        double inter = Math.max(1 / (maxDistance(p1, p2, p3, p4) + 1) / 3, MIN_INCR);
+        //if (inter > MIN_INCR) {
+        for (double a = 0; a < 1.0; a += inter) {
+            Vec pElevation1 = v1.add(v1.multiply(-1d).add(v2).multiply(a));
+            Vec pElevation2 = v4.add(v4.multiply(-1d).add(v3).multiply(a));
+            double u00 = textUv[0] + (textUv[2] - textUv[0]) * a;
+            double u01 = textUv[4] + (textUv[2] - textUv[4]) * a;
+            double inter2 = Math.max(1. / (maxDistance(camera().coordonneesPoint2D(new Point3D(pElevation1.get(0), pElevation1.get(1), pElevation1.get(2)), this),
+                    camera().coordonneesPoint2D(new Point3D(pElevation2.get(0), pElevation2.get(1), pElevation2.get(2)), this)) + 1.) / 3., MIN_INCR);
+            //if (inter2 > MIN_INCR)
+            for (double b = 0; b < 1.0; b += inter2) {
+                Vec pFinal0 = (pElevation1.add(pElevation1.multiply(-1d).add(pElevation2).multiply(b)));
+                double u = pFinal0.get(3);
+                double v = pFinal0.get(4);
+
+                Point3D pFinal = new Point3D(pFinal0.get(0), pFinal0.get(1), pFinal0.get(2));
+                pFinal.setNormale(normale);
+                pFinal.texture(texture);
+
                 if (n != null) {
                     pFinal.setNormale(n.calculerNormale3D(u, v));
                     if (displayType == DISPLAY_ALL) {

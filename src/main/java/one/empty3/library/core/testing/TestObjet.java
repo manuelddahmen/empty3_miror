@@ -73,7 +73,11 @@ public abstract class TestObjet implements Test, Runnable {
     public static final int GENERATE_MOVIE = 8;
     public static final int GENERATE_OBJ = 16;
     public static final int GENERATE_NO_IMAGE_FILE_WRITING = 32;
-    private static final int GENERATE_SAVE_IMAGE = 32;
+    public static final int GENERATE_SAVE_IMAGE = 32;
+    public static final int GENERATE_SAVE_XML = 64;
+    public static final int GENERATE_SAVE_OBJ = 128;
+    public static final int GENERATE_SAVE_STL = 256;
+    public static final int GENERATE_SAVE_ZIP = 64;
     public static final ArrayList<TestInstance.Parameter> initParams = new ArrayList<TestInstance.Parameter>();
     public static final int ON_TEXTURE_ENDS_STOP = 0;
     public static final int ON_TEXTURE_ENDS_LOOP_TEXTURE = 1;
@@ -86,9 +90,9 @@ public abstract class TestObjet implements Test, Runnable {
     public static Resolution HD1080 = new Resolution(1920, 1080);
     public static Resolution UHD = new Resolution(1920 * 2, 1080 * 2);
     public static Resolution VGA = new Resolution(640, 480);
-    public static Resolution VGAZIZI = new Resolution(320, 200);
+    public static Resolution VGA200 = new Resolution(320, 200);
     protected Scene scene = new Scene();
-    protected String description = "@ Manuel Dahmen \u2610";
+    protected String description = "@ Manuel Dahmen";
     protected Camera c;
     protected int frame = 0;
     protected ArrayList<TestInstance.Parameter> dynParams;
@@ -105,7 +109,7 @@ public abstract class TestObjet implements Test, Runnable {
     private boolean unterminable = false;
     private long timeStart;
     private long lastInfoEllapsedMillis;
-    private int generate = GENERATE_IMAGE | GENERATE_SAVE_IMAGE | GENERATE_MOVIE;
+    private int generate = GENERATE_IMAGE | GENERATE_MOVIE;
     private int version = 1;
     private String template = "";
     private String type = "JPEG";
@@ -963,30 +967,35 @@ public abstract class TestObjet implements Test, Runnable {
                                 "No file open for avi writing");
 
                     }
-                    ecrireImage(ri, type, file);
+                    if (ri != null && (getGenerate() & GENERATE_SAVE_IMAGE) > 0) {
+                        ecrireImage(ri, type, file);
 
-                    biic.setImage(ri != null ? ri : (frame % 2 == 0 ? riG : riD));
-                    biic.setStr("" + frame);
+                        biic.setImage(ri != null ? ri : (frame % 2 == 0 ? riG : riD));
+                        biic.setStr("" + frame);
+                    }
                 }
             }
             lastInfoEllapsedMillis = System.currentTimeMillis() - timeStart;
             o.println("Time for frame°" + frame() + " (scene rendering: " + lastInfoEllapsedMillis / 1000f);
-            try {
-                File fout = new File(this.dir.getAbsolutePath()
-                        + File.separator + filename + ".bmo");
-                new Loader().saveTxt(fout, scene);
-                dataWriter.writeFrameData(frame(), "Save text file: " + fout.getAbsolutePath());
-                fout = new File(this.dir.getAbsolutePath()
-                        + File.separator + filename + "-description.xml");
-                DataModel dataModel = new DataModel();
-                dataModel.setScene(scene());
-                dataModel.save(fout.getAbsolutePath());
-                dataWriter.writeFrameData(frame(), "Save bin: " + fout.getAbsolutePath());
-            } catch (IOException e) {
-                reportException(e);
-                throw new RuntimeException(e);
+            if ((getGenerate() & GENERATE_SAVE_XML) > 0) {
+                try {
+                    File fout = new File(this.dir.getAbsolutePath()
+                            + File.separator + filename + ".bmo");
+                    new Loader().saveTxt(fout, scene);
+                    dataWriter.writeFrameData(frame(), "Save text file: " + fout.getAbsolutePath());
+                    fout = new File(this.dir.getAbsolutePath()
+                            + File.separator + filename + "-description.xml");
+                    DataModel dataModel = new DataModel();
+                    dataModel.setScene(scene());
+                    synchronized (dataModel) {
+                        dataModel.save(fout.getAbsolutePath());
+                    }
+                    dataWriter.writeFrameData(frame(), "Save bin: " + fout.getAbsolutePath());
+                } catch (IOException e) {
+                    reportException(e);
+                    throw new RuntimeException(e);
+                }
             }
-
 
             if ((generate & GENERATE_MODEL) > 0) {
                 try {
