@@ -23,8 +23,8 @@
 package one.empty3.apps.facedetect;
 
 import one.empty3.feature.PixM;
-import one.empty3.library.*;
 import one.empty3.library.Polygon;
+import one.empty3.library.*;
 import one.empty3.library.core.testing.TestObjetStub;
 import one.empty3.library.objloader.E3Model;
 
@@ -32,7 +32,9 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -184,6 +186,7 @@ public class TestHumanHeadTexturing extends TestObjetStub {
 
         TestHumanHeadTexturing testHumanHeadTexturing = new TestHumanHeadTexturing();
         testHumanHeadTexturing.editPolygonsMappings = editPolygonsMappings;
+        testHumanHeadTexturing.setGenerate(testHumanHeadTexturing.getGenerate() & (0xFFFFFFFF - testHumanHeadTexturing.GENERATE_SAVE_IMAGE));
         testHumanHeadTexturing.setJpg(jpg);
         testHumanHeadTexturing.setObj(obj);
         testHumanHeadTexturing.loop(true);

@@ -54,7 +54,7 @@ sourceSets {
 Properties properties = new Properties()
 try {
     // Other configuration here
-    File propertiesFile = new File('../private.properties/gradle.properties')
+    File propertiesFile = new File('c:/users/manue/private.properties/gradle.properties')
     propertiesFile.withInputStream {
         properties.load(it)
     }

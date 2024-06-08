@@ -49,6 +49,7 @@ new FormModel {
 									name: "panelPicture"
 									"minimumSize": new java.awt.Dimension( 400, 300 )
 									"preferredSize": new java.awt.Dimension( 0, 0 )
+									addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "panelPictureMouseClicked", true ) )
 								}, new FormLayoutConstraints( class java.lang.String ) {
 									"value": "left"
 								} )

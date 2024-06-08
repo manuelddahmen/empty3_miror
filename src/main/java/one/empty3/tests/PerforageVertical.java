@@ -24,7 +24,6 @@ package one.empty3.tests;
 
 import one.empty3.library.*;
 import one.empty3.library.core.testing.*;
-import one.empty3.library.core.testing.Resolution;
 import one.empty3.library.core.tribase.Tubulaire3;
 
 public class PerforageVertical extends TestObjetSub {
@@ -63,9 +62,9 @@ public class PerforageVertical extends TestObjetSub {
     public static void main(String[] args) {
         PerforageVertical perforageVertical = new PerforageVertical();
         perforageVertical.setMaxFrames(100);
-        perforageVertical.setDimension(TestObjet.VGAZIZI);
+        perforageVertical.setDimension(TestObjet.VGA200);
         perforageVertical.setPublish(true);
-        perforageVertical.setGenerate(GENERATE_MODEL|GENERATE_IMAGE|GENERATE_MOVIE);
+        perforageVertical.setGenerate(GENERATE_MODEL | GENERATE_IMAGE | GENERATE_MOVIE);
         Thread thread = new Thread(perforageVertical);
         thread.start();
 
