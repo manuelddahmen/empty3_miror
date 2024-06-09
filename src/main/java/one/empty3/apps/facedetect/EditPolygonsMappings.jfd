@@ -62,6 +62,7 @@ new FormModel {
 									"minimumSize": new java.awt.Dimension( 400, 300 )
 									"preferredSize": new java.awt.Dimension( 0, 0 )
 									addEvent( new FormEvent( "java.awt.event.MouseMotionListener", "mouseDragged", "panelModelViewMouseDragged", true ) )
+									addEvent( new FormEvent( "java.awt.event.ComponentListener", "componentResized", "panelModelViewComponentResized", true ) )
 								}, new FormLayoutConstraints( class java.lang.String ) {
 									"value": "right"
 								} )
@@ -75,6 +76,8 @@ new FormModel {
 									name: "textAreaTextOutput"
 									"minimumSize": new java.awt.Dimension( 800, 300 )
 									"preferredSize": new java.awt.Dimension( 0, 0 )
+									"rows": 3
+									"columns": 150
 								} )
 							}, new FormLayoutConstraints( class java.lang.String ) {
 								"value": "right"

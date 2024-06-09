@@ -71,6 +71,35 @@ public class E3Model extends RepresentableConteneur {
     private double[] knotU;
     private final RepresentableConteneur objects = new RepresentableConteneur();
 
+    /***
+     * a = (x1, y1, z1, u1, v1)+u*((x2, y2, z2, u2, v2)- (x1, y1, z1, u1, v1))
+     * b = (x4, y4, z4, u4, v4)+u*((x3, y3, z3, u3, v3)- (x4, y4, z4, u4, v4))
+     * (x, y, z, u, v) = a+v*(b- a)
+     * x=(x1+u*(x2-x1))+v*(u*(x3-x1)-u*(x2-x1))
+     * y=(y1+u*(y2-y1))+v*(u*(y3-y1)-u*(y2-y1))
+     * z=(z1+u*(z2-z1))+v*(u*(z3-z1)-u*(z2-z1))
+     * u=(u1+u*(u2-u1))+v*(u*(u3-u1)-u*(u2-u1))
+     * v=(v1+u*(v2-v1))+v*(u*(v3-v1)-u*(v2-v1))
+     * Développer x, y, z, u, v
+     *
+     * x = x1+u*(x2-x1+v*x3-v*x1-v*x2+v*x1)
+     * y = y1+u*(y2-y1+v*y3-v*y1-v*y2+v*y1)
+     * z = z1+u*(z2-z1+v*z3-v*z1-v*z2+v*z1)
+     * u = u1+u*(u2-u1+v*u3-v*u1-v*u2+v*u1)
+     * v = v1+u*(v2-v1+v*v3-v*v1-v*v2+v*v1)
+     *
+     * (4) (u-u1)/u = (u2-u1+v*u3-v*u1-v*u2+v*u1)
+     * (5) (v-v1)/u = (v2-v1+v*v3-v*v1-v*v2+v*v1)
+     * (5) (u-u1)/(v-v1) = v*(u2-u1+u3-u1-u2+u1)/(v2-v1+v3-v1-v*v2+v1)
+     *
+     *  (4) (u-u1) = u*(u2-u1+v*u3-v*u1-v*u2+v*u1)
+     *  (5) (u-u1)/(v-v1) = v*(u2-u1+u3-u1-u2+u1)/(v2-v1+v3-v1-v*v2+v1)
+     *
+     *  u*(u2-u1+v*u3-v*u1-v*u2+v*u1)/(v-v1) = v*(u2-u1+u3-u1-u2+u1)/(v2-v1+v3-v1-v*v2+v1)
+     *  (6) u = (u2-u1+u3-u1-u2+u1)/(v2-v1+v3-v1-v*v2+v1)/(u2-u1+v*u3-v*u1-v*u2+v*u1)*(v-v1)*v
+     *
+     *
+     */
     public class FaceWithUv extends ParametricSurface {
         Polygon polygon;
         double[] textUv;
@@ -641,7 +670,7 @@ public class E3Model extends RepresentableConteneur {
                 if (representable instanceof FaceWithUv faceWithUv) {
                     if (faceWithUv.textUv != null) {
                         if (faceWithUv.u1 <= u && u <= faceWithUv.u2 && faceWithUv.v1 <= v && v <= faceWithUv.v2) {
-                            return faceWithUv.calculerPoint3D((u - faceWithUv.u1) / (faceWithUv.u2 - faceWithUv.u1), (v - faceWithUv.v1) / (faceWithUv.v2 - faceWithUv.v1));
+                            return faceWithUv.calculerPoint3D((u - faceWithUv.u1) / (faceWithUv.u2 - faceWithUv.u1), 1 - (v - faceWithUv.v1) / (faceWithUv.v2 - faceWithUv.v1));
                         }
                     }
                 }

@@ -186,7 +186,8 @@ public class TestHumanHeadTexturing extends TestObjetStub {
 
         TestHumanHeadTexturing testHumanHeadTexturing = new TestHumanHeadTexturing();
         testHumanHeadTexturing.editPolygonsMappings = editPolygonsMappings;
-        testHumanHeadTexturing.setGenerate(testHumanHeadTexturing.getGenerate() & (0xFFFFFFFF - testHumanHeadTexturing.GENERATE_SAVE_IMAGE));
+        testHumanHeadTexturing.setGenerate(testHumanHeadTexturing.getGenerate() & (0xFFFFFFFF -
+                (GENERATE_SAVE_IMAGE | TestObjetStub.GENERATE_MOVIE | TestObjetStub.GENERATE_MODEL)));
         testHumanHeadTexturing.setJpg(jpg);
         testHumanHeadTexturing.setObj(obj);
         testHumanHeadTexturing.loop(true);

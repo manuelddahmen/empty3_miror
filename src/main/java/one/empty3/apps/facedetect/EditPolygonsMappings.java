@@ -36,9 +36,7 @@ import one.empty3.library.objloader.E3Model;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.HashMap;
@@ -87,7 +85,7 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
 
     private void panelModelViewMouseDragged(MouseEvent e) {
         Point point = e.getPoint();
-        if (image == null || model != null) {
+        if (image != null && model != null && selectedPointNo > -1) {
             int x = point.x;
             int y = point.y;
             ZBufferImpl.ImageMapElement ime = ((ZBufferImpl) testHumanHeadTexturing.getZ()).ime;
@@ -100,7 +98,7 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
             Point3D finalPointIme = pointIme;
             pointsInModel.forEach((s, point3D) -> {
                 if (s.equals(landmarkType) && finalPointIme != null) {
-                    //pointsInModel.put(s, finalPointIme);
+                    pointsInModel.put(s, finalPointIme);
                 }
             });
 
@@ -109,9 +107,9 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
 
     private void panelPictureMouseClicked(MouseEvent e) {
         Point point = e.getPoint();
-        if (image == null || model != null) {
-            Point3D[] pNear = new Point3D[]{new Point3D(point.getX() /** image.getWidth()*/ / panelPicture.getWidth(),
-                    point.getY() /** image.getHeight() */ / panelPicture.getHeight(), 0.)};
+        if (image != null && model != null) {
+            Point3D[] pNear = new Point3D[]{new Point3D(point.getX() / panelPicture.getWidth(),
+                    point.getY() / panelPicture.getHeight(), 0.)};
             AtomicDouble distanceMin = new AtomicDouble(Double.MAX_VALUE);
             int[] i = new int[]{0};
             pointsInImage.forEach((s, point3D) -> {
@@ -120,11 +118,16 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
                     pFound = point3D;
                     landmarkType = s;
                     selectedPointNo = i[0];
-                    i[0]++;
                 }
+                i[0]++;
 
             });
         }
+    }
+
+    private void panelModelViewComponentResized(ComponentEvent e) {
+        ((ZBufferImpl) testHumanHeadTexturing.getZ()).resize(panelModelView.getWidth(), panelModelView.getHeight());
+        //testHumanHeadTexturing.setZ(new ZBufferImpl(panelModelView.getWidth(), panelModelView.getHeight()));//
     }
 
     private void initComponents() {
@@ -209,6 +212,12 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
                                         panelModelViewMouseDragged(e);
                                     }
                                 });
+                                panelModelView.addComponentListener(new ComponentAdapter() {
+                                    @Override
+                                    public void componentResized(ComponentEvent e) {
+                                        panelModelViewComponentResized(e);
+                                    }
+                                });
                                 panelModelView.setLayout(new MigLayout(
                                     "fill,hidemode 3",
                                     // columns
@@ -230,6 +239,8 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
                             //---- textAreaTextOutput ----
                             textAreaTextOutput.setMinimumSize(new Dimension(800, 300));
                             textAreaTextOutput.setPreferredSize(new Dimension(0, 0));
+                            textAreaTextOutput.setRows(3);
+                            textAreaTextOutput.setColumns(150);
                             scrollPane1.setViewportView(textAreaTextOutput);
                         }
                         splitPane1.setBottomComponent(scrollPane1);
@@ -309,11 +320,11 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
                     points.forEach((s, point3D) -> {
                         Graphics graphics1 = panelDraw.getGraphics();
                         if (selectedPointNo == i[0])
-                            graphics1.setColor(Color.RED);
+                            graphics1.setColor(Color.ORANGE);
                         else
                             graphics1.setColor(Color.GREEN);
-                        graphics1.drawOval((int) (double) (point3D.getX() / image.getWidth() * panelDraw.getWidth()) - 1,
-                                (int) (double) (point3D.getY() / image.getHeight() * panelDraw.getHeight()) - 1, 3, 3);
+                        graphics1.fillOval((int) (double) (point3D.getX() * panelDraw.getWidth()) - 3,
+                                (int) (double) (point3D.getY() * panelDraw.getHeight()) - 3, 7, 7);
                         i[0]++;
                     });
                     // Display 3D scene
@@ -333,23 +344,31 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
             if (points != null) {
                 points.forEach(new BiConsumer<String, Point3D>() {
                     @Override
-                    public void accept(String s, Point3D uvModel) {
-                        if (testHumanHeadTexturing.camera() != null && uvModel != null) {
-                            Point point = testHumanHeadTexturing.scene().cameraActive().coordonneesPoint2D(uvModel, testHumanHeadTexturing.getZ());
+                    public void accept(String s, Point3D uvCoordinates) {
+                        if (testHumanHeadTexturing.camera() != null && uvCoordinates != null) {
                             // +++ Model 3DObj : calculerPoint3D(u,v) +++
-                            if (testHumanHeadTexturing.getZ().checkScreen(point)) {
-                                Graphics graphics = panelDraw.getGraphics();
-                                if (selectedPointNo == i[0])
-                                    graphics.setColor(Color.RED);
-                                else
+                            Point3D uvFace = model.findUvFace(uvCoordinates.getX(), uvCoordinates.getY());
+                            if (uvFace != null) {
+                                Point point = testHumanHeadTexturing.scene().cameraActive().coordonneesPoint2D(uvFace, testHumanHeadTexturing.getZ());
+                                if (testHumanHeadTexturing.getZ().checkScreen(point)) {
+                                    Graphics graphics = panelDraw.getGraphics();
+                                    if (selectedPointNo == i[0])
+                                        graphics.setColor(Color.ORANGE);
+                                    else
+                                        graphics.setColor(Color.GREEN);
+                                    graphics.fillOval((int) point.getX() - 3,
+                                            (int) point.getY() - 3,
+                                            7, 7);
+                                } else {
+                                    Graphics graphics = panelDraw.getGraphics();
                                     graphics.setColor(Color.GREEN);
-                                graphics.drawOval((int) (double) (point.getX() * panelModelView.getWidth()) - 1,
-                                        (int) (double) (point.getY() * panelModelView.getHeight()) - 1,
-                                        3, 3);
+                                    graphics.fillRect(0, 0, 10, 10);
+
+                                }
                             } else {
                                 Graphics graphics = panelDraw.getGraphics();
-                                graphics.setColor(Color.RED);
-                                graphics.drawRect(0, 0, 10, 10);
+                                graphics.setColor(Color.GREEN);
+                                graphics.fillRect(0, 0, 10, 10);
 
                             }
                         }
@@ -367,6 +386,7 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
             model = new E3Model(bufferedReader, true, selectedFile.getAbsolutePath());
             if (testHumanHeadTexturing != null)
                 testHumanHeadTexturing.setObj(model);
+
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
@@ -396,27 +416,32 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
                             // Blank line
                             line = bufferedReader.nextLine();
 
-                            pointsInImage.put(landmarkType, new Point3D(x, y, 0.0));
+                            pointsInImage.put(landmarkType, new Point3D(x / image.getWidth(), y / image.getHeight(), 0.0));
                         }
                     }
                 }
+                Logger.getAnonymousLogger().log(Level.INFO, "Loaded {0} points in image", pointsInImage.size());
+                bufferedReader.close();
+
+
                 pointsInModel = new HashMap<>();
                 if (testHumanHeadTexturing.scene().getObjets().getElem(0) instanceof E3Model e3Model) {
                     pointsInImage.forEach((s, point3D) -> {
                         Point3D copy = new Point3D(point3D);
-                        Point3D uvFace = e3Model.findUvFace(copy.getX(), copy.getY());
-                        if (uvFace != null)
-                            pointsInModel.put(s, uvFace);
+                        if (copy != null)
+                            pointsInModel.put(s, copy);
                     });
                 }
-                Logger.getAnonymousLogger().log(Level.INFO, "Loaded {0} points in image", pointsInImage.size());
-                bufferedReader.close();
+
+
             } catch (IOException | RuntimeException ex) {
                 throw new RuntimeException(ex);
             }
         } else {
             Logger.getAnonymousLogger().log(Level.INFO, "Loaded image first before points", pointsInImage.size());
         }
+
+
     }
 
     public void editPointPosition() {

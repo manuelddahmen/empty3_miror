@@ -221,7 +221,7 @@ public class Camera extends CameraBox {
 
     }
 
-    private Point coordonneesPointEcranPerspective(Point3D x3d, int la, int ha) {
+    public Point coordonneesPointEcranPerspective(Point3D x3d, int la, int ha) {
         boolean conditionInBounds =
                 (x3d.getZ() > 0 && -getAngleX() < Math.atan(x3d.getX() / x3d.getZ())
                         && Math.atan(x3d.getX() / x3d.getZ()) < getAngleX() && -getAngleY() < Math.atan(x3d.getY() / x3d.getZ())

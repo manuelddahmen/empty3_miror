@@ -113,6 +113,16 @@ public class ZBufferImpl extends Representable implements ZBuffer {
     }
 
 
+    public void resize(int l, int h) {
+        la = l;
+        ha = h;
+        dimx = la;
+        dimy = ha;
+        //Logger.getAnonymousLogger().log(Level.INFO, "width,height(" + la + ", " + ha + ")");
+        this.ime = new ImageMap(la, ha).getIme();
+    }
+
+
     public ZBufferImpl(Resolution resolution) {
 
 
