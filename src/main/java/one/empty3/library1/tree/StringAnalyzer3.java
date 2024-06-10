@@ -396,7 +396,8 @@ public class StringAnalyzer3 {
             if (position >= input.length() || input.substring(position).trim().isEmpty()) {
                 mPosition = position;
                 setSuccessful(false);
-                throw new RuntimeException(getClass() + " : position>=input.length()");
+                return position;
+                //throw new RuntimeException(getClass() + " : position>=input.length()");
             }
             position = super.skipBlanks(input, position);
             int position1 = position;
@@ -957,7 +958,7 @@ public class StringAnalyzer3 {
             if (position >= input.length() || input.substring(position).trim().isEmpty()) {
                 mPosition = position;
                 setSuccessful(true);
-                throw new RuntimeException(getClass() + " : position>=input.length()");
+                return position;
             }
             position = super.skipBlanks(input, position);
             int position1 = position;

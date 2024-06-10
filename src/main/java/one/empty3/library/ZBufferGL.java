@@ -232,6 +232,11 @@ public class ZBufferGL implements ZBuffer {
         return resY();
     }
 
+    @Override
+    public ZBufferImpl.Box2D getCube() {
+        return null;
+    }
+
 
     public void idzpp() {
         idImg++;

@@ -33,9 +33,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -604,6 +601,11 @@ public class ZBufferImplRasterVersion extends Representable implements ZBuffer {
     @Override
     public int ha() {
         return ha;
+    }
+
+    @Override
+    public ZBufferImpl.Box2D getCube() {
+        return null;
     }
 
 

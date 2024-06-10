@@ -22,17 +22,13 @@
 
 package one.empty3.library1.tree;
 
+import one.empty3.library.StructureMatrix;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import java.util.Locale;
-
-import one.empty3.library.StructureMatrix;
 
 public class ListInstructions {
     private HashMap<String, Double> currentParamsValues = new HashMap<>();
@@ -47,11 +43,12 @@ public class ListInstructions {
         private int id;
         private String leftHand;
         private String expression;
+        StringAnalyzerJava1.TokenExpression2 tokenExpression2;
 
         public Instruction(int id, String leftHand, String expression) {
             this.id = id;
             this.leftHand = leftHand;
-            this.expression = expression;
+            setExpression(expression);
         }
 
         public int getId() {
@@ -71,11 +68,24 @@ public class ListInstructions {
         }
 
         public String getExpression() {
-            return expression;
+            return tokenExpression2.toString();
         }
 
         public void setExpression(String expression) {
+
             this.expression = expression;
+            StringAnalyzerJava1 stringAnalyzerJava1 = new StringAnalyzerJava1();
+            tokenExpression2 = stringAnalyzerJava1.new TokenExpression2();
+            tokenExpression2.parse(expression, 0);
+
+        }
+
+        public StringAnalyzerJava1.TokenExpression2 getExpressionTokenString() {
+            return tokenExpression2;
+        }
+
+        public void setTokenExpression2(StringAnalyzerJava1.TokenExpression2 expression) {
+            this.tokenExpression2 = expression;
         }
     }
 
