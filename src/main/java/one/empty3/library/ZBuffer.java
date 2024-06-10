@@ -218,7 +218,10 @@ public interface ZBuffer {
 
     boolean testDeep(Point3D pFinal, ITexture texture, double u, double v, ParametricSurface n);
 
-    int la();
+    public int la();
 
-    int ha();
+    public int ha();
+
+    public ZBufferImpl.Box2D getCube();
+
 }

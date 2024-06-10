@@ -205,14 +205,17 @@ public class JFrameEditPolygonsMappings extends JFrame {
 
     @Override
     public void dispose() {
-        super.dispose();
         config.getMap().put("D3ModelFaceTexturing", lastDirectory.getAbsolutePath());
         config.save();
         try {
             editPolygonsMappings2.testHumanHeadTexturing.setMaxFrames(0);
-            Thread.sleep(1000);
             editPolygonsMappings2.isRunning = false;
+            editPolygonsMappings2.testHumanHeadTexturing.stop();
+            Thread.sleep(1000);
         } catch (InterruptedException | RuntimeException e) {
+            e.printStackTrace();
         }
+        super.dispose();
+        System.exit(0);
     }
 }

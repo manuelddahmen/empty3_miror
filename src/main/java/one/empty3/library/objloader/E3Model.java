@@ -669,8 +669,12 @@ public class E3Model extends RepresentableConteneur {
             for (Representable representable : getListRepresentable()) {
                 if (representable instanceof FaceWithUv faceWithUv) {
                     if (faceWithUv.textUv != null) {
-                        if (faceWithUv.u1 <= u && u <= faceWithUv.u2 && faceWithUv.v1 <= v && v <= faceWithUv.v2) {
-                            return faceWithUv.calculerPoint3D((u - faceWithUv.u1) / (faceWithUv.u2 - faceWithUv.u1), 1 - (v - faceWithUv.v1) / (faceWithUv.v2 - faceWithUv.v1));
+                        double minU = Math.min(Math.min(faceWithUv.textUv[0], faceWithUv.textUv[2]), Math.min(faceWithUv.textUv[4], faceWithUv.textUv[6]));
+                        double maxU = Math.max(Math.max(faceWithUv.textUv[0], faceWithUv.textUv[2]), Math.max(faceWithUv.textUv[4], faceWithUv.textUv[6]));
+                        double minV = Math.min(Math.min(faceWithUv.textUv[1], faceWithUv.textUv[3]), Math.min(faceWithUv.textUv[5], faceWithUv.textUv[7]));
+                        double maxV = Math.max(Math.max(faceWithUv.textUv[1], faceWithUv.textUv[3]), Math.max(faceWithUv.textUv[5], faceWithUv.textUv[7]));
+                        if (minU <= u && u <= maxU && minV <= v && v <= maxV) {
+                            return faceWithUv.calculerPoint3D((u - minU) / (maxU - minU), 1 - (v - minV) / (maxV - minV));
                         }
                     }
                 }

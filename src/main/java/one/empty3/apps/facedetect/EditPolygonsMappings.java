@@ -41,7 +41,6 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.HashMap;
 import java.util.Scanner;
-import java.util.function.BiConsumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -126,8 +125,14 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
     }
 
     private void panelModelViewComponentResized(ComponentEvent e) {
-        ((ZBufferImpl) testHumanHeadTexturing.getZ()).resize(panelModelView.getWidth(), panelModelView.getHeight());
-        //testHumanHeadTexturing.setZ(new ZBufferImpl(panelModelView.getWidth(), panelModelView.getHeight()));//
+        if (testHumanHeadTexturing != null) {
+            testHumanHeadTexturing.loop(false);
+            testHumanHeadTexturing.setMaxFrames(0);
+            testHumanHeadTexturing.stop();
+            testHumanHeadTexturing = TestHumanHeadTexturing.restartAll(testHumanHeadTexturing);
+        } else {
+            testHumanHeadTexturing = TestHumanHeadTexturing.startAll(this, image, model);
+        }
     }
 
     private void initComponents() {
@@ -342,39 +347,40 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
             // Display image
             int[] i = new int[]{0};
             if (points != null) {
-                points.forEach(new BiConsumer<String, Point3D>() {
-                    @Override
-                    public void accept(String s, Point3D uvCoordinates) {
-                        if (testHumanHeadTexturing.camera() != null && uvCoordinates != null) {
-                            // +++ Model 3DObj : calculerPoint3D(u,v) +++
-                            Point3D uvFace = model.findUvFace(uvCoordinates.getX(), uvCoordinates.getY());
-                            if (uvFace != null) {
-                                Point point = testHumanHeadTexturing.scene().cameraActive().coordonneesPoint2D(uvFace, testHumanHeadTexturing.getZ());
-                                if (testHumanHeadTexturing.getZ().checkScreen(point)) {
-                                    Graphics graphics = panelDraw.getGraphics();
-                                    if (selectedPointNo == i[0])
-                                        graphics.setColor(Color.ORANGE);
-                                    else
-                                        graphics.setColor(Color.GREEN);
-                                    graphics.fillOval((int) point.getX() - 3,
-                                            (int) point.getY() - 3,
-                                            7, 7);
-                                } else {
-                                    Graphics graphics = panelDraw.getGraphics();
-                                    graphics.setColor(Color.GREEN);
-                                    graphics.fillRect(0, 0, 10, 10);
+                points.forEach((s, uvCoordinates) -> {
+                    if (testHumanHeadTexturing.camera() != null && uvCoordinates != null) {
+                        // +++ Model 3DObj : calculerPoint3D(u,v) +++
+                        Point3D uvFace = model.findUvFace(uvCoordinates.getX(), uvCoordinates.getY());
+                        if (uvFace != null) {
+                            Point point = testHumanHeadTexturing.scene().cameraActive().coordonneesPoint2D(uvFace, testHumanHeadTexturing.getZ());
+                            Graphics graphics = panelDraw.getGraphics();
+                            if (selectedPointNo == i[0])
+                                graphics.setColor(Color.ORANGE);
+                            else
+                                graphics.setColor(Color.GREEN);
 
-                                }
+                            // point.setLocation(point.getX(), point.getY());
+
+                            if (testHumanHeadTexturing.getZ().checkScreen(point)) {
+                                graphics.fillOval((int) (point.getX() - 3),
+                                        (int) ((point.getY()) - 3),
+                                        7, 7);
                             } else {
-                                Graphics graphics = panelDraw.getGraphics();
+                                graphics = panelDraw.getGraphics();
                                 graphics.setColor(Color.GREEN);
                                 graphics.fillRect(0, 0, 10, 10);
 
                             }
+                        } else {
+                            Graphics graphics = panelDraw.getGraphics();
+                            graphics.setColor(Color.GREEN);
+                            graphics.fillRect(0, 0, 10, 10);
+
                         }
 
-                        i[0]++;
                     }
+
+                    i[0]++;
                 });
             }
         }
@@ -393,7 +399,7 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
     }
 
     public void loadTxt(File selectedFile) {
-        if (image != null) {
+        if (image != null && model != null) {
             pointsInImage = new HashMap<String, Point3D>();
             try {
                 Scanner bufferedReader = new Scanner(new FileReader(selectedFile));

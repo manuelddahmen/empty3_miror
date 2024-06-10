@@ -63,7 +63,7 @@ public class TestCameraEnMouvementRandomTriangles extends TestObjet {
     public void finit() throws EOFVideoException {
         cam.setT(frame / 25.0 / 8);
         if (!textureMov.nextFrame()) {
-            this.STOP();
+            this.stop();
         }
     }
 

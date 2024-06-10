@@ -293,12 +293,16 @@ public class Camera extends CameraBox {
     public Point coordonneesPoint2D(Point3D p, ZBuffer impl) {
         switch (type_perspective) {
             case PERSPECTIVE_ISOM:
-                //return coordonneesPointEcranIsometrique(coordonneesPoint3D(p), impl.box, impl.la, impl.ha);
+                return coordonneesPointEcranIsometrique(calculerPointDansRepereIsometrique(p), impl.getCube(), impl.la(), impl.ha());
             case PERSPECTIVE_OEIL:
                 return coordonneesPointEcranPerspective(calculerPointDansRepere(p), impl.la(), impl.ha());
             default:
                 throw new UnsupportedOperationException("Type de perspective non reconnu");
         }
+    }
+
+    private Point3D calculerPointDansRepereIsometrique(Point3D p) {
+        return null;
     }
 
     public double distanceCamera(Point3D x3d) {

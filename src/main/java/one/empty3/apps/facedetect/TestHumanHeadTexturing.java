@@ -51,6 +51,14 @@ public class TestHumanHeadTexturing extends TestObjetStub {
     public TestHumanHeadTexturing() {
     }
 
+    public static TestHumanHeadTexturing restartAll(TestHumanHeadTexturing testHumanHeadTexturing) {
+        if (testHumanHeadTexturing != null) {
+            testHumanHeadTexturing.stop();
+            return startAll(testHumanHeadTexturing.editPolygonsMappings, testHumanHeadTexturing.jpgFile, testHumanHeadTexturing.objFile);
+        }
+        return null;
+    }
+
     public void setImageIn(PixM face) {
         this.trueFace = face.getImage();
     }
@@ -152,6 +160,7 @@ public class TestHumanHeadTexturing extends TestObjetStub {
     @Override
     public void afterRender() {
         if (jpgFile != null && objFile != null) {
+
             rectangleFace = new Rectangle(img().getWidth(), img().getHeight(), 0, 0);
             // Step 2 cadrer les polygones
             ((RepresentableConteneur) scene().getObjets().getElem(0)).getListRepresentable().forEach(representable -> {

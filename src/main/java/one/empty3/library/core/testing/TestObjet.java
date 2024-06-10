@@ -304,7 +304,7 @@ public abstract class TestObjet implements Test, Runnable {
 
     protected void ecrireImage(RenderedImage ri, String type, File fichier) {
         if (fichier == null) {
-            o.println("Erreur OBJET FICHIER (java.io.File) est NULL");
+            Logger.getAnonymousLogger().log(Level.INFO, "Erreur OBJET FICHIER (java.io.File) est NULL");
             System.exit(1);
         }
 
@@ -327,7 +327,7 @@ public abstract class TestObjet implements Test, Runnable {
 
                 zip.addFile(fichier.getName(), resultImageAsRawBytes);
 
-                o.println(fichier.getAbsolutePath());
+                Logger.getAnonymousLogger().log(Level.INFO, fichier.getAbsolutePath());
             } catch (Exception ex) {
             }
         }
@@ -468,7 +468,7 @@ public abstract class TestObjet implements Test, Runnable {
                     + File.separator + "EmptyCanvas");
         }
         // } catch (IOException ex) {
-        //   o.println(ex.getLocalizedMessage());
+        //   Logger.getAnonymousLogger().log(Level.INFO,ex.getLocalizedMessage());
         //  }
         dir1.mkdirs();
 
@@ -477,7 +477,7 @@ public abstract class TestObjet implements Test, Runnable {
         if (!this.dir.exists()) {
             this.dir.mkdirs();
         } else {
-            o.println("Repertoire cree avec SUCCES");
+            Logger.getAnonymousLogger().log(Level.INFO, "Repertoire cree avec SUCCES");
             // System.exit(1);
         }
         serid = new File(this.dir.getAbsolutePath() + File.separator
@@ -600,9 +600,9 @@ public abstract class TestObjet implements Test, Runnable {
         /*
          * ObjectOutputStream oos = null; try { oos = new ObjectOutputStream(new
          * FileOutputStream(serid)); oos.writeInt(serie); } catch (IOException
-         * ex) { o.println(
+         * ex) { Logger.getAnonymousLogger().log(Level.INFO,
          * null, ex); } finally { try { oos.close(); } catch (IOException ex) {
-         * o.println( null,
+         * Logger.getAnonymousLogger().log(Level.INFO, null,
          * ex); } }
          */
 
@@ -658,9 +658,9 @@ public abstract class TestObjet implements Test, Runnable {
         /*
          * ObjectOutputStream oos = null; try { oos = new ObjectOutputStream(new
          * FileOutputStream(serid)); oos.writeInt(serie); } catch (IOException
-         * ex) { o.println(
+         * ex) { Logger.getAnonymousLogger().log(Level.INFO,
          * null, ex); } finally { try { oos.close(); } catch (IOException ex) {
-         * o.println( null,
+         * Logger.getAnonymousLogger().log(Level.INFO, null,
          * ex); } }
          */
 
@@ -722,7 +722,7 @@ public abstract class TestObjet implements Test, Runnable {
                     "/FAILED.png");
 
             if (is == null) {
-                o.println("Erreur d'initialisation: pas correct!");
+                Logger.getAnonymousLogger().log(Level.INFO, "Erreur d'initialisation: pas correct!");
                 System.exit(-1);
             }
 
@@ -751,7 +751,7 @@ public abstract class TestObjet implements Test, Runnable {
                     "/RENDEREDOK.png");
 
             if (is == null) {
-                o.println("Erreur d'initialisation: pas correct!");
+                Logger.getAnonymousLogger().log(Level.INFO, "Erreur d'initialisation: pas correct!");
                 System.exit(-1);
             }
 
@@ -846,11 +846,11 @@ public abstract class TestObjet implements Test, Runnable {
         }
 
 
-        o.println("");
-        o.println(directory().getAbsolutePath());
-        o.println("Generate (0 NOTHING  1 IMAGE  2 MODEL  4 OPENGL) {0}" + getGenerate());
+        Logger.getAnonymousLogger().log(Level.INFO, "");
+        Logger.getAnonymousLogger().log(Level.INFO, directory().getAbsolutePath());
+        Logger.getAnonymousLogger().log(Level.INFO, "Generate (0 NOTHING  1 IMAGE  2 MODEL  4 OPENGL) {0}" + getGenerate());
 
-        o.println("Starting movie  {0}" + runtimeInfoSucc());
+        Logger.getAnonymousLogger().log(Level.INFO, "Starting movie  {0}" + runtimeInfoSucc());
 
         ginit();
 
@@ -905,7 +905,7 @@ public abstract class TestObjet implements Test, Runnable {
                 reportException(ex);
             }
             if ((generate & GENERATE_OPENGL) > 0) {
-                o.println("No OpenGL");
+                Logger.getAnonymousLogger().log(Level.INFO, "No OpenGL");
 
                 str.getTestObjetJoglDrawer().setScene(scene());
             } else {
@@ -918,7 +918,7 @@ public abstract class TestObjet implements Test, Runnable {
                     return;
                 }
             }
-            o.println("Time for frame°" + frame() + " (scene configuration: " + lastInfoEllapsedMillis / 1000f);
+            Logger.getAnonymousLogger().log(Level.INFO, "Time for frame°" + frame() + " (scene configuration: " + lastInfoEllapsedMillis / 1000f);
 
             //Logger.getAnonymousLogger().log(Level.INFO, z.scene());
 
@@ -945,10 +945,13 @@ public abstract class TestObjet implements Test, Runnable {
                 }
 
                 if (getGenerate(TestObjet.GENERATE_IMAGE) && !(((generate & GENERATE_OPENGL) > 0))) {
-                    ri = z.image2();
-
-                    afterRenderFrame();
-
+                    try {
+                        ri = z.image2();
+                        afterRenderFrame();
+                    } catch (NullPointerException ex) {
+                        ex.printStackTrace();
+                        continue;
+                    }
                     // ri.getGraphics().drawString(description, 0, 0);
 
                     if ((generate & GENERATE_MOVIE) > 0 && encoder != null && !(((generate & GENERATE_OPENGL) > 0))) {
@@ -963,7 +966,7 @@ public abstract class TestObjet implements Test, Runnable {
 
                         }
                     } else {
-                        o.println(
+                        Logger.getAnonymousLogger().log(Level.INFO,
                                 "No file open for avi writing");
 
                     }
@@ -976,7 +979,7 @@ public abstract class TestObjet implements Test, Runnable {
                 }
             }
             lastInfoEllapsedMillis = System.currentTimeMillis() - timeStart;
-            o.println("Time for frame°" + frame() + " (scene rendering: " + lastInfoEllapsedMillis / 1000f);
+            Logger.getAnonymousLogger().log(Level.INFO, "Time for frame°" + frame() + " (scene rendering: " + lastInfoEllapsedMillis / 1000f);
             if ((getGenerate() & GENERATE_SAVE_XML) > 0) {
                 try {
                     File fout = new File(this.dir.getAbsolutePath()
@@ -999,17 +1002,17 @@ public abstract class TestObjet implements Test, Runnable {
 
             if ((generate & GENERATE_MODEL) > 0) {
                 try {
-                    o.println("Start generating model");
+                    Logger.getAnonymousLogger().log(Level.INFO, "Start generating model");
                     String filename = "export-" + frame;
                     exportFrame("export", filename);
                     dataWriter.writeFrameData(frame(), "Export model: " + filename);
-                    o.println("End generating model");
+                    Logger.getAnonymousLogger().log(Level.INFO, "End generating model");
                 } catch (IOException ex) {
                     reportException(ex);
-                    o.println(ex.getLocalizedMessage());
+                    Logger.getAnonymousLogger().log(Level.INFO, ex.getLocalizedMessage());
                 } catch (Exception ex) {
                     reportException(ex);
-                    o.println("Other exception in generating model" + ex);
+                    Logger.getAnonymousLogger().log(Level.INFO, "Other exception in generating model" + ex);
                     ex.printStackTrace();
                 }
 
@@ -1029,12 +1032,14 @@ public abstract class TestObjet implements Test, Runnable {
             z.idzpp();
 
         }
+        if (img() == null) {
+            ri = new ECBufferedImage(getResx(), getResy(), BufferedImage.TYPE_INT_ARGB);
+        } else {
+            afterRender();
+        }
+        Logger.getAnonymousLogger().log(Level.INFO, "" + frame() + "\n" + runtimeInfoSucc());
 
-        afterRender();
-
-        o.println("" + frame() + "\n" + runtimeInfoSucc());
-
-        o.println("Fin de la création des image et/u des modèles" + "\n" + runtimeInfoSucc());
+        Logger.getAnonymousLogger().log(Level.INFO, "Fin de la création des image et/u des modèles" + "\n" + runtimeInfoSucc());
         if (zip != null) {
             try {
                 zip.end();
@@ -1066,7 +1071,7 @@ public abstract class TestObjet implements Test, Runnable {
                 }
             } catch (IOException ex) {
                 //reportException(ex);
-                //o.println(ex.getLocalizedMessage());
+                //Logger.getAnonymousLogger().log(Level.INFO,ex.getLocalizedMessage());
             }
         } else if (file.exists()) {
             try {
@@ -1077,15 +1082,15 @@ public abstract class TestObjet implements Test, Runnable {
                 System.out.print(outputStream);
             } catch (IOException ex) {
                 reportException(ex);
-                o.println(ex.getLocalizedMessage());
+                Logger.getAnonymousLogger().log(Level.INFO, ex.getLocalizedMessage());
             }
         }
 
         dataWriter.end();
 
 
-        o.println("End movie       " + runtimeInfoSucc());
-        o.println("Quit run method " + runtimeInfoSucc());
+        Logger.getAnonymousLogger().log(Level.INFO, "End movie       " + runtimeInfoSucc());
+        Logger.getAnonymousLogger().log(Level.INFO, "Quit run method " + runtimeInfoSucc());
 
     }
 
@@ -1118,7 +1123,7 @@ public abstract class TestObjet implements Test, Runnable {
                 str.stopThreads();
                 str = null;
             } catch (NullPointerException ex) {
-                o.println("Can't stop thread");
+                Logger.getAnonymousLogger().log(Level.INFO, "Can't stop thread");
 
             }
         }
@@ -1166,7 +1171,7 @@ public abstract class TestObjet implements Test, Runnable {
         this.fileExtension = ext;
     }
 
-    public void STOP() {
+    public void stop() {
         stop = true;
         setGenerate(GENERATE_NOTHING);
         try {
@@ -1181,7 +1186,7 @@ public abstract class TestObjet implements Test, Runnable {
             //   aw = null;
             aviOpen = false;
             //   } catch (IOException e) {
-            //   o.println("Can't close or flush movie" + runtimeInfoSucc());
+            //   Logger.getAnonymousLogger().log(Level.INFO,"Can't close or flush movie" + runtimeInfoSucc());
             //  }
         }
 
@@ -1214,10 +1219,10 @@ public abstract class TestObjet implements Test, Runnable {
                 new Loader().load(f, scene);
 
             } catch (VersionNonSupporteeException | ExtensionFichierIncorrecteException ex) {
-                o.println(ex.getLocalizedMessage());
+                Logger.getAnonymousLogger().log(Level.INFO, ex.getLocalizedMessage());
             }
         } else {
-            o.println("Erreur: extension incorrecte");
+            Logger.getAnonymousLogger().log(Level.INFO, "Erreur: extension incorrecte");
             System.exit(1);
 
         }

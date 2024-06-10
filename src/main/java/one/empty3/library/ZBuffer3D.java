@@ -33,4 +33,5 @@ public interface ZBuffer3D extends ZBuffer {
     int LR();
 
     void LR(int lr);
+
 }

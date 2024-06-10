@@ -725,6 +725,11 @@ public class ZBufferImpl extends Representable implements ZBuffer {
         return ha;
     }
 
+    @Override
+    public Box2D getCube() {
+        return box;
+    }
+
 
     public void itereMaxDist(List<Double> points, ParametricCurve pc, double pStart, double pEnd, ParametricVolume v) {
         Point3D p2start = v.calculerPoint3D(pc.calculerPoint3D(pStart));
@@ -1581,6 +1586,7 @@ public class ZBufferImpl extends Representable implements ZBuffer {
 
     public class Box2D {
 
+        private final Matrix33 matrix33;
         protected double minx = 1000000;
         protected double miny = 1000000;
         protected double minz = 1000000;
@@ -1589,7 +1595,15 @@ public class ZBufferImpl extends Representable implements ZBuffer {
         protected double maxz = -1000000;
         protected boolean notests = false;
 
-        public Box2D() {
+        public Box2D(Matrix33 matrix33, double minx, double miny, double minz, double maxx, double maxy, double maxz) {
+            this.matrix33 = matrix33;
+            this.minx = minx;
+            this.miny = miny;
+            this.minz = minz;
+            this.maxx = maxx;
+            this.maxy = maxy;
+            this.maxz = maxz;
+
             SceneCadre cadre = currentScene.getCadre();
             if (cadre.isCadre()) {
                 for (int i = 0; i < 4; i++) {

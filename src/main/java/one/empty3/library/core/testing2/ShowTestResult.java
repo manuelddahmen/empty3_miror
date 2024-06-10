@@ -25,7 +25,6 @@
  */
 package one.empty3.library.core.testing2;
 
-import com.formdev.flatlaf.*;
 import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatLightLaf;
 import net.miginfocom.swing.MigLayout;
@@ -35,7 +34,6 @@ import org.jcodec.api.awt.AWTSequenceEncoder;
 import org.jcodec.common.io.FileChannelWrapper;
 import org.jcodec.common.io.NIOUtils;
 import org.jcodec.common.model.Rational;
-import org.junit.experimental.theories.Theories;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -158,7 +156,7 @@ public final class ShowTestResult extends JFrame implements Runnable {
                 }
                 if (e.getKeyChar() == 'S' || e.getKeyChar() == 's') {
                     if (testRef != null && testRef instanceof Runnable) {
-                        testRef.STOP();
+                        testRef.stop();
                         stop = true;
                         dispose();
                     }
@@ -644,7 +642,7 @@ public final class ShowTestResult extends JFrame implements Runnable {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        testRef.STOP();
+        testRef.stop();
         stop = true;
         dispose();
     }//GEN-LAST:event_jButton3ActionPerformed
@@ -718,7 +716,7 @@ public final class ShowTestResult extends JFrame implements Runnable {
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        testRef.STOP();
+        testRef.stop();
     }//GEN-LAST:event_formWindowClosing
 
     public double valuePC(int v) {
