@@ -1388,6 +1388,35 @@ class TestStringAnalyzer7 {
         readDir(directory_path)
     }
 
+
+    @Test
+    fun testDeclarationSimple() {
+        isDebug = true
+        val strings2 = ArrayList<String>()
+
+        strings2.add("Double ar;")
+        strings2.add("Double[] b;")
+
+
+        for (s in strings2) {
+            val stringAnalyzer3: StringAnalyzerJava1 = StringAnalyzerJava1()
+            stringAnalyzer3.isDebug = true
+            val tokenType2 = stringAnalyzer3.TokenType2()
+            val tokenName2 = stringAnalyzer3.TokenName2()
+            val tokenSemiColon2 = stringAnalyzer3.TokenSemiColon()
+            tokenType2.addToken(tokenName2)
+            tokenName2.addToken(tokenSemiColon2)
+            var input = tokenType2.parse(s, 0)
+            println("----------------" + s + "-------------------")
+            println("---------------------------------------")
+            println(tokenType2.toString())
+            println("---------------------------------------")
+            println(tokenName2.toString())
+            println("---------------------------------------")
+        }
+
+    }
+
     @Test
     fun testExpression2() {
 
@@ -1403,35 +1432,16 @@ class TestStringAnalyzer7 {
 
         for (s in strings) {
             val stringAnalyzer3: StringAnalyzerJava1 = StringAnalyzerJava1()
+            stringAnalyzer3.isDebug = true
             val tokenExpression2 = stringAnalyzer3.TokenExpression2()
             var input = tokenExpression2.parse(s, 0)
             println("----------------" + s + "-------------------")
             println("---------------------------------------")
-            println(expression2toString(tokenExpression2))
+            println(tokenExpression2.toString())
             println("---------------------------------------")
-            println(tokenExpression2)
-            println("---------------------------------------")
-        }
-
-
-        val strings2 = ArrayList<String>()
-
-        strings2.add("Double double")
-
-
-        for (s in strings2) {
-            val stringAnalyzer3: StringAnalyzerJava1 = StringAnalyzerJava1()
-            val tokenType2 = stringAnalyzer3.TokenType2()
-            val tokenName2 = stringAnalyzer3.TokenName2()
-            tokenType2.addToken(tokenName2)
-            var input = tokenType2.parse(s, 0)
-            println("----------------" + s + "-------------------")
-            println("---------------------------------------")
-            println(tokenType2.toString())
-            println("---------------------------------------")
-            println(tokenName2.toString())
             println("---------------------------------------")
         }
+
 
     }
 }

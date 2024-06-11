@@ -3,6 +3,7 @@ plugins {
     id("java")
     id 'java-library'
     id 'maven-publish'
+    id 'org.jreleaser' version '1.12.0'
     id 'signing'
     id 'org.jetbrains.kotlin.jvm' version '1.9.24'
 }
@@ -373,7 +374,7 @@ publishing {
         maven(MavenPublication) {
             groupId = 'one.empty3'
             artifactId = 'empty3-library-3d'
-            version = "2024.5.10"
+            version = "2024.6.28"
             from components.java
 
             project.tasks.withType(Sign) {
@@ -452,3 +453,22 @@ publishing {
         }*/
     }
 }
+
+jreleaser {
+    signing {
+        active = 'ALWAYS'
+        armored = true
+    }
+    deploy {
+        maven {
+            mavenCentral {
+                sonatype {
+                    active = 'ALWAYS'
+                    url = 'https://central.sonatype.com/api/v1/publisher'
+                    stagingRepository('target/staging-deploy')
+                }
+            }
+        }
+    }
+}
+

@@ -24,8 +24,6 @@ package one.empty3.library1.tree;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 
 public class StringAnalyzerJava1 extends StringAnalyzer3 {
@@ -33,6 +31,11 @@ public class StringAnalyzerJava1 extends StringAnalyzer3 {
 
     public class TokenType2 extends TokenExpression2 {
     }
+
+    public class TokenName2 extends TokenExpression2 {
+
+    }
+
 
     public class TokenTypeArrayOrNot extends Token {
         public TokenTypeArrayOrNot() {
@@ -252,9 +255,6 @@ public class StringAnalyzerJava1 extends StringAnalyzer3 {
         }
     }
 
-    public class TokenName2 extends TokenExpression2 {
-
-    }
 
     private boolean nextTokenCharsListConditionTrue(String input, int i) {
         return i < input.length() && (input.charAt(i) == '}'
@@ -288,7 +288,7 @@ public class StringAnalyzerJava1 extends StringAnalyzer3 {
         public TokenExpression2() {
 
             super();
-            Logger.getLogger("parser").setFilter(record -> record.getLevel().intValue() < Level.SEVERE.intValue());
+            //Logger.getLogger("parser").setFilter(record -> record.getLevel().intValue() < Level.SEVERE.intValue());
         }
 
         void reinit() {
@@ -324,11 +324,12 @@ public class StringAnalyzerJava1 extends StringAnalyzer3 {
                 System.err.println("Char not allowed");
                 setSuccessful(true);
                 recursions--;
-                return i - 1;
+                return i;
             }
             boolean newOperator = false;
             int i0 = i;
             String charsAlgebraic = "" + '+' + '-' + '*' + '/' + '=' + '^';
+            int hasNextMandatory = 0;
             while (i < input.length() && (Character.isLetterOrDigit(input.charAt(i)) || !nextTokenCharsListConditionTrue(input, i)
                     || Character.isAlphabetic(input.charAt(i)) || charsAlgebraic.contains("" + input.charAt(i))
                     || input.charAt(i) == '_' || Character.isWhitespace(input.charAt(i))) && input.charAt(i) != '.') {
@@ -370,59 +371,80 @@ public class StringAnalyzerJava1 extends StringAnalyzer3 {
                         lastToken = true;
 
                     }
+
                     i = skipBlanks(input, i);
                     if (i >= input.length()) {
                         break;
                     }
-                    if (input.charAt(i) == '[' && !bStart) {
+
+                    if ((input.charAt(i) == '(' || input.charAt(i) == ')') && !isNotName2OrType2())
+                        break;
+                    if ((input.charAt(i) == '[' || input.charAt(i) == ']') && !isNotName2())
+                        break;
+                    if (input.charAt(i) == ';') {
+                        break;
+                    }
+
+                    if (input.charAt(i) == '[' && !bStart && isNotName2()) {
                         if (!firstAdded)
                             firstAdded = expressions.add(new DataExpression(variable, name));
                         bCount++;
                         bStart = true;
                         bStartI = i;
-                    } else if (input.charAt(i) == ']' && bStart) {
+                    } else if (input.charAt(i) == ']' && bStart && isNotName2()) {
                         bEndI = i;
                         bCount--;
-                    } else if (input.charAt(i) == '(' && !pStart) {
+                    } else if (input.charAt(i) == '(' && !pStart && isNotName2OrType2()) {
                         pCount++;
                         pStart = true;
                         pStartI = i;
                         if (!firstAdded)
                             firstAdded = expressions.add(new DataExpression(methodName, name));
-                        Logger.getLogger("parser").log(Level.INFO, "End of call fct arg : " + input.substring(i));
-                    } else if (input.charAt(i) == ')' && pStart) {
+                        //Logger.getLogger("parser").log(Level.INFO, "End of call fct arg : " + input.substring(i));
+                    } else if (input.charAt(i) == ')' && pStart && isNotName2OrType2()) {
                         pCount--;
                         pEndI = i;
                     }
-                    if (input.charAt(i) == ')' && pStart && pCount == 0) {
+                    if (input.charAt(i) == ')' && pStart && pCount == 0 && isNotName2OrType2()) {
                         String substring = input.substring(pStartI + 1, pEndI);
                         int parse = parse(substring, 0);
                         recursions--;
-                        Logger.getLogger("parser").log(Level.INFO, "fct arg : " + substring);
+                        hasNextMandatory = 0;
+                        //Logger.getLogger("parser").log(Level.INFO, "fct arg : " + substring);
                         current = methodCallArgument;
                         expressions.add(new DataExpression(methodCallArgument, substring.substring(0, parse)));
                         i = parse + pStartI + 1;
-                        Logger.getLogger("parser").log(Level.INFO, "After add function argument : " + input.substring(i));
+                        //Logger.getLogger("parser").log(Level.INFO, "After add function argument : " + input.substring(i));
                         //return i;
-                    } else if (input.charAt(i) == ']' && bStart && bCount == 0) {
+                    } else if (input.charAt(i) == ']' && bStart && bCount == 0 && isNotName2()) {
                         String substring = input.substring(bStartI + 1, bEndI);
                         current = classArrayAccess;
+                        hasNextMandatory = 0;
                         int parse = parse(substring, 0);
                         recursions--;
                         expressions.add(new DataExpression(classArrayAccess, substring.substring(0, parse)));
                         i = bStartI + parse + 1;
-                        Logger.getLogger("parser").log(Level.INFO, "Next tokens remainder (1): " + input.substring(i));
+                        //Logger.getLogger("parser").log(Level.INFO, "Next tokens remainder (1): " + input.substring(i));
                         bStart = false;
-                    } else if ((lastToken || input.charAt(i) == '.') && pCount == 0 && bCount == 0) {
+                    } else if ((lastToken || input.charAt(i) == '.') && pCount == 0 && bCount == 0 && isNotName2()) {
                         if (!firstAdded)
                             firstAdded = expressions.add(new DataExpression(variable, name));
                         i = parse(input, i + 1);
+                        hasNextMandatory = 1;
                         recursions--;
                         setSuccessful(true);
                         recursions--;
-                        Logger.getLogger("parser").log(Level.INFO, "Next tokens remainder (2): " + input.substring(i));
+                        //Logger.getLogger("parser").log(Level.INFO, "Next tokens remainder (2): " + input.substring(i));
                         return skipBlanks(input, i);
                     }
+                    if (Character.isWhitespace(input.charAt(i)) && hasNextMandatory == 1) {
+                        hasNextMandatory = 0;
+                    }
+                    if (Character.isLetterOrDigit(input.charAt(i)) && hasNextMandatory == 0) {
+                        break;
+                    }
+
+
                     i++;
 
 
@@ -499,6 +521,14 @@ public class StringAnalyzerJava1 extends StringAnalyzer3 {
 
         }
 
+        public boolean isNotName2OrType2() {
+            return !(this instanceof TokenType2) && !(this instanceof TokenName2);
+        }
+
+        public boolean isNotName2() {
+            return !(this instanceof TokenName2);
+        }
+
 
         @Override
         public Token copy(Token token) {
@@ -515,22 +545,22 @@ public class StringAnalyzerJava1 extends StringAnalyzer3 {
 
         public void next(StringBuilder sb, DataExpression it, StringAnalyzerJava1.TokenExpression2 current) {
             if (it.type() == StringAnalyzerJava1.TokenExpression2.methodName)
-                sb.append("." + it.expression());
+                sb.append(getConstruct().debugString(isDebug, ".") + getConstruct().debugString(isDebug, it.expression()));
             else if (it.type() == StringAnalyzerJava1.TokenExpression2.methodCallArgument) {
-                sb.append("(");
-                sb.append(it.expression());
-                sb.append(")");
+                sb.append(getConstruct().debugString(isDebug, "("));
+                sb.append(getConstruct().debugString(isDebug, it.expression()));
+                sb.append(getConstruct().debugString(isDebug, ")"));
             } else if (it.type() == StringAnalyzerJava1.TokenExpression2.classArrayAccess) {
-                sb.append("[" + it.expression() + "]");
+                sb.append(getConstruct().debugString(isDebug, "[") + getConstruct().debugString(isDebug, it.expression()) + getConstruct().debugString(isDebug, "]"));
                 if (current.passBrackets > 0) {
                     for (int n = 0; n < current.passBrackets; n += 2) {
-                        sb.append("[");
-                        sb.append(it.expression());
-                        sb.append("]");
+                        sb.append(getConstruct().debugString(isDebug, "["));
+                        sb.append(getConstruct().debugString(isDebug, it.expression()));
+                        sb.append(getConstruct().debugString(isDebug, "]"));
                     }
                 }
             } else if (it.type() == StringAnalyzerJava1.TokenExpression2.variable) {
-                sb.append("." + it.expression());
+                sb.append(getConstruct().debugString(isDebug, ".") + getConstruct().debugString(isDebug, it.expression()));
             } else if (it.type() == StringAnalyzerJava1.TokenExpression2.dotCall) {
                 //sb.append("." + it.expression())
             }
@@ -540,6 +570,7 @@ public class StringAnalyzerJava1 extends StringAnalyzer3 {
         public String toString() {
             TokenExpression2 te = this;
             StringBuilder sb = new StringBuilder();
+            sb.append(isDebug ? "{" : "");
             boolean hasNext = true;
             te.expressions.forEach(it -> {
                 //println("Type      :" + it.type() + "\nExpression:" + it.expression())
@@ -547,79 +578,79 @@ public class StringAnalyzerJava1 extends StringAnalyzer3 {
             te.expressions.forEach(it -> {
                 next(sb, it, te);
             });
+            sb.append(isDebug ? "}" : "");
             return sb.toString();
         }
+    }
 
+    public class TokenNameDeclaration2 extends TokenName {
+        private String[] brackets = new String[7];
 
-        public class TokenNameDeclaration2 extends TokenName {
-            private String[] brackets = new String[7];
+        public TokenNameDeclaration2() {
+            super();
+        }
 
-            public TokenNameDeclaration2() {
-                super();
-            }
+        /*
 
-            /*
-
-                    @Override
-                    public int parse(String input, int position) {
-                        if (position >= input.length() || input.substring(position).trim().isEmpty()) {
-                            mPosition = position;
-                            setSuccessful(false);
-                            throw new RuntimeException(getClass() + " : position>=input.length()");
+                @Override
+                public int parse(String input, int position) {
+                    if (position >= input.length() || input.substring(position).trim().isEmpty()) {
+                        mPosition = position;
+                        setSuccessful(false);
+                        throw new RuntimeException(getClass() + " : position>=input.length()");
+                    }
+                    position = skipBlanks(input, position);
+                    int position1 = position;
+                    int i = position1;
+                    int[] i1 = new int[14];
+                    boolean passed = false;
+                    int iWord = i;
+                    int passBrackets = 0;
+                    while (i < input.length() && (((Character.isLetterOrDigit(input.charAt(i))
+                            || Character.isAlphabetic(input.charAt(i))
+                            || input.charAt(i) == '_' || input.charAt(i) == '.' //|| Character.isWhitespace(input.charAt(i)
+                            || input.charAt(i) == '[')))) {
+                        passed = true;
+                        i++;
+                    }
+                    if (i > position1 && Character.isLetter(input.charAt(position1)))
+                        iWord = i;
+                    boolean bStart = false;
+                    while (i < input.length() && (((Character.isWhitespace(input.charAt(i))) || (input.charAt(i) == '[') || (input.charAt(i) == ']')))) {
+                        if (input.charAt(i) == '[' && !bStart) {
+                            bStart = true;
+                            i1[passBrackets] = i;
                         }
-                        position = skipBlanks(input, position);
-                        int position1 = position;
-                        int i = position1;
-                        int[] i1 = new int[14];
-                        boolean passed = false;
-                        int iWord = i;
-                        int passBrackets = 0;
-                        while (i < input.length() && (((Character.isLetterOrDigit(input.charAt(i))
-                                || Character.isAlphabetic(input.charAt(i))
-                                || input.charAt(i) == '_' || input.charAt(i) == '.' //|| Character.isWhitespace(input.charAt(i)
-                                || input.charAt(i) == '[')))) {
-                            passed = true;
-                            i++;
+                        if (input.charAt(i) == ']' && bStart) {
+                            bStart = false;
+                            i1[passBrackets + 1] = i;
+                            passBrackets += 2;
                         }
-                        if (i > position1 && Character.isLetter(input.charAt(position1)))
-                            iWord = i;
-                        boolean bStart = false;
-                        while (i < input.length() && (((Character.isWhitespace(input.charAt(i))) || (input.charAt(i) == '[') || (input.charAt(i) == ']')))) {
-                            if (input.charAt(i) == '[' && !bStart) {
-                                bStart = true;
-                                i1[passBrackets] = i;
-                            }
-                            if (input.charAt(i) == ']' && bStart) {
-                                bStart = false;
-                                i1[passBrackets + 1] = i;
-                                passBrackets += 2;
-                            }
-                            i++;
-                        }
+                        i++;
+                    }
 
-                        if (passed && containsNoKeyword(input.substring(position1, iWord))) {
-                            if (!input.substring(position1, iWord).isEmpty()) {
-                                setName(input.substring(position1, iWord));
+                    if (passed && containsNoKeyword(input.substring(position1, iWord))) {
+                        if (!input.substring(position1, iWord).isEmpty()) {
+                            setName(input.substring(position1, iWord));
 
-                            }
-                        }
-                        for (int j = 0; j < passBrackets; j += 2) {
-                            brackets[j / 2] = input.substring(i1[j], i1[j + 1]);
-                        }
-                        if (i == position1 || name == null || name.isEmpty()) {
-                            setSuccessful(false);
-                            return position1;
-                        } else {
-                            setSuccessful(true);
-                            return processNext(input, i);
                         }
                     }
-            */
-            @Override
-            public Token copy(Token token) {
-                return new TokenQualifiedName();
-            }
-
+                    for (int j = 0; j < passBrackets; j += 2) {
+                        brackets[j / 2] = input.substring(i1[j], i1[j + 1]);
+                    }
+                    if (i == position1 || name == null || name.isEmpty()) {
+                        setSuccessful(false);
+                        return position1;
+                    } else {
+                        setSuccessful(true);
+                        return processNext(input, i);
+                    }
+                }
+        */
+        @Override
+        public Token copy(Token token) {
+            return new TokenQualifiedName();
         }
+
     }
 }

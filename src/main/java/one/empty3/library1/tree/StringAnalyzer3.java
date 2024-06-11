@@ -46,6 +46,8 @@ public class StringAnalyzer3 {
         return constructs;
     }
 
+    protected boolean isDebug = false;
+
     /**
      * Retrieves the Construct object from the current instance.
      *
@@ -1576,7 +1578,7 @@ public class StringAnalyzer3 {
             return string[0];
         }
 
-        private String debugString(boolean isDebug, String tokenLangString) {
+        protected String debugString(boolean isDebug, String tokenLangString) {
             return isDebug ? "{" + tokenLangString + "}" : tokenLangString;
         }
 
