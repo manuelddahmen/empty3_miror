@@ -55,7 +55,7 @@ sourceSets {
 Properties properties = new Properties()
 try {
     // Other configuration here
-    File propertiesFile = new File('c:/users/manue/private.properties/gradle.properties')
+    File propertiesFile = new File('../private.properties/gradle.properties')
     propertiesFile.withInputStream {
         properties.load(it)
     }
@@ -456,8 +456,15 @@ publishing {
 
 jreleaser {
     signing {
+        project.java.artifactId = "empty3-library-3d"
+        project.java.groupId = "one.empty3"
+        version = "2024.6.28"
         active = 'ALWAYS'
         armored = true
+        publicKey = load.get("signing.keyId")
+        passphrase = load.get("signing.passphrase")
+        secretKey = load.get("signing.secretKey")
+        release.github.token = load.get("release.github.token")
     }
     deploy {
         maven {
@@ -466,9 +473,9 @@ jreleaser {
                     active = 'ALWAYS'
                     url = 'https://central.sonatype.com/api/v1/publisher'
                     stagingRepository('target/staging-deploy')
+                    gitRootSearch = false
                 }
             }
         }
     }
 }
-
