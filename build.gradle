@@ -369,14 +369,14 @@ tasks.register("publishAll") {
     dependsOn(getTasksByName("publishMavenPublicationToMavenLocal", true))
 }
 
+version = '2024.6.28-3'
 publishing {
     publications {
         maven(MavenPublication) {
             groupId = 'one.empty3'
             artifactId = 'empty3-library-3d'
-            version = "2024.6.28"
+            version = "2024.6.28-3"
             from components.java
-
             project.tasks.withType(Sign) {
                 signatures.all {
 
@@ -392,6 +392,7 @@ publishing {
                 packaging 'jar'
                 url = "https://github.com/manuelddahmen/empty3_miror"
 
+                inceptionYear = '2008'
                 licenses {
                     license {
                         name = "Apache version 2"
@@ -402,14 +403,14 @@ publishing {
 
                 scm {
 
-                    url = "https://github.com/manuelddahmen/empty3_miror"
-                    connection = "scm:git:https://github.com/manuelddahmen/empty3_miror.git"
-                    developerConnection = "scm:git:https://github.com/manuelddahmen/empty3_miror.git"
+                    url = "https://github.com/manuelddahmen/empty3-library-3d"
+                    connection = "scm:git:https://github.com/manuelddahmen/empty3-library-3d.git"
+                    developerConnection = "scm:git:https://github.com/manuelddahmen/empty3-library-3d.git"
 
                 }
                 developers {
                     developer {
-                        email = "dathewolf@gmail.com"
+                        email = "manuel.dahmen@gmx.com"
                         name = "Manuel Daniel Dahmen"
 
                         url = "https://empty3.one"
@@ -460,10 +461,10 @@ publishing {
 jreleaser {
     project {
         name = 'empty3-library-3d'
-        version = '1.0.0'
-        java.artifactId = "empty3-library-3d"
-        java.groupId = "one.empty3"
-        version = "2024.6.28"
+        java.artifactId = 'empty3-library-3d'
+        java.groupId = 'one.empty3'
+        java.version = '2024.6.28-3'
+        version = "2024.6.28-3"
         license = 'Apache-2.0'
         authors = ['Manuel D DAHMEN']
         description = '3D rendering engine. Plus modelling. Expected glsl textures 3d and 2d rendering' +
@@ -492,10 +493,10 @@ jreleaser {
         active = 'ALWAYS'
         armored = true
         mode = 'FILE'
-        publicKey = load.get("signing.publicKeyPath")
-        passphrase = load.get("signing.passphrase")
-        secretKey = load.get("signing.secretKey")
-        release.github.token = load.get("release.github.token")
+        publicKey = load.get('signing.publicKeyPath')
+        passphrase = load.get('signing.passphrase')
+        secretKey = load.get('signing.secretKey')
+        release.github.token = load.get('release.github.token')
 
     }
     deploy {
@@ -505,7 +506,7 @@ jreleaser {
                     active = 'ALWAYS'
                     url = 'https://central.sonatype.com/api/v1/publisher'
                     gitRootSearch = false
-                    stagingRepository('build/staging-deploy')
+                    stagingRepository('target/staging-deploy')
 
                 }
             }
