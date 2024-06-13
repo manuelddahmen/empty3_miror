@@ -369,13 +369,13 @@ tasks.register("publishAll") {
     dependsOn(getTasksByName("publishMavenPublicationToMavenLocal", true))
 }
 
-version = '2024.6.28-5'
+version = '2024.6.28-9'
 publishing {
     publications {
         maven(MavenPublication) {
             groupId = 'one.empty3'
             artifactId = 'empty3-library-3d'
-            version = "2024.6.28-5"
+            version = "2024.6.28-9"
             from components.java
             project.tasks.withType(Sign) {
                 signatures.all {
@@ -463,8 +463,8 @@ jreleaser {
         name = 'empty3-library-3d'
         java.artifactId = 'empty3-library-3d'
         java.groupId = 'one.empty3'
-        java.version = '2024.6.28-5'
-        version = "2024.6.28-5"
+        java.version = '2024.6.28-9'
+        version = "2024.6.28-9"
         license = 'Apache-2.0'
         authors = ['Manuel D DAHMEN']
         description = '3D rendering engine. Plus modelling. Expected glsl textures 3d and 2d rendering' +
@@ -506,7 +506,7 @@ jreleaser {
                     active = 'ALWAYS'
                     url = 'https://central.sonatype.com/api/v1/publisher'
                     gitRootSearch = false
-                    stagingRepository('target/staging-deploy')
+                    stagingRepository('build/staging-deploy')
 
                 }
             }
