@@ -1307,7 +1307,7 @@ public class StringAnalyzer3 {
                         this.algebraicTree = algebraicTree;
                         algebraicTree.construct();
                     } catch (AlgebraicFormulaSyntaxException e) {
-                        System.err.println("Error constructing : " + expression);
+                        //System.err.println("Error constructing : " + expression);
                     }
                     setSuccessful(true);
                     //      Logger.getAnonymousLogger().log(Level.INFO, "(TokenExpression1)current expression: " + expression + "\n(TokenExpression1)Char at next position:" + "***" + input.substring(i, i + 10) + "***");

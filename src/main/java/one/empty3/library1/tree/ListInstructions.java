@@ -72,12 +72,12 @@ public class ListInstructions {
         }
 
         public void setExpression(String expression) {
-
-            this.expression = expression;
-            StringAnalyzerJava1 stringAnalyzerJava1 = new StringAnalyzerJava1();
-            tokenExpression2 = stringAnalyzerJava1.new TokenExpression2();
-            tokenExpression2.parse(expression, 0);
-
+            if (expression != null) {
+                this.expression = expression;
+                StringAnalyzerJava1 stringAnalyzerJava1 = new StringAnalyzerJava1();
+                tokenExpression2 = stringAnalyzerJava1.new TokenExpression2();
+                tokenExpression2.parse(expression, 0);
+            }
         }
 
         public StringAnalyzerJava1.TokenExpression2 getExpressionTokenString() {
@@ -86,6 +86,15 @@ public class ListInstructions {
 
         public void setTokenExpression2(StringAnalyzerJava1.TokenExpression2 expression) {
             this.tokenExpression2 = expression;
+        }
+
+        @Override
+        public String toString() {
+            if (tokenExpression2 != null && tokenExpression2.isSuccessful()) {
+                return tokenExpression2.toString();
+            } else {
+                return expression;
+            }
         }
     }
 

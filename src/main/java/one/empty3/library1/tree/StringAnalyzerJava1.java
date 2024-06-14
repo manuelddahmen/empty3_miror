@@ -257,8 +257,8 @@ public class StringAnalyzerJava1 extends StringAnalyzer3 {
 
 
     private boolean nextTokenCharsListConditionTrue(String input, int i) {
-        return i < input.length() && (input.charAt(i) == '}'
-                || input.charAt(i) == ';' || input.charAt(i) == ',');
+        return i >= input.length() || ((input.charAt(i) == '}'
+                || input.charAt(i) == ';' || input.charAt(i) == ','));
     }
 
     public class TokenExpression2 extends TokenName {
@@ -322,7 +322,7 @@ public class StringAnalyzerJava1 extends StringAnalyzer3 {
 
             if (nextTokenCharsListConditionTrue(input, i)) {
                 System.err.println("Char not allowed");
-                setSuccessful(true);
+                setSuccessful(false);
                 recursions--;
                 return i;
             }

@@ -1428,6 +1428,7 @@ class TestStringAnalyzer7 {
         strings.add("func2(i1).func3().func4()")
         strings.add("func2(i1);\nb = func3().a")
         strings.add("pixels[x][y].red")
+        strings.add("double [] a = func2(i1);\nb = func3().a")
 
 
         for (s in strings) {

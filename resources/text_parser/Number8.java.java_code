@@ -23,23 +23,24 @@
 package one.empty3;
 
 class Number8 {
-    double func6(double a, Double b, Double c) {
+    double[] func6(double a, Double b, Double c) {
         Double[] d = new Double[c];
         for (int i = 0; i < c; i = i + 1) {
             d[c] = a + c;
         }
         for (double d1 : d) {
-            Logger.getAnonymousLogger().log(Level.INFO, d1);
         }
         return d;
     }
 
-    double instanciation(int numb) {
+    String instanciation(int numb) {
         String[] d = new Double[numb];
 
         for (int i = 0; i < numb; i++) {
             d[i] = new String("" + i);
         }
+
+        return d[0];
     }
 
 }

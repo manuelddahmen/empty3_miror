@@ -257,7 +257,7 @@ public class StringAnalyzerJava1 extends StringAnalyzer3 {
     }
 
     private boolean nextTokenCharsListConditionTrue(String input, int i) {
-        return i < input.length() && (/*input.charAt(i) == ']' || input.charAt(i) == ')' ||*/ input.charAt(i) == '}'
+        return i >= input.length() || (/*input.charAt(i) == ']' || input.charAt(i) == ')' ||*/ input.charAt(i) == '}'
                 || input.charAt(i) == ';' || input.charAt(i) == ',');
     }
 
@@ -319,10 +319,9 @@ public class StringAnalyzerJava1 extends StringAnalyzer3 {
             recursions++;
 
             if (nextTokenCharsListConditionTrue(input, i)) {
-                System.err.println("Char not allowed");
                 setSuccessful(true);
                 recursions--;
-                return i - 1;
+                return i;
             }
             boolean newOperator = false;
             int i0 = i;
