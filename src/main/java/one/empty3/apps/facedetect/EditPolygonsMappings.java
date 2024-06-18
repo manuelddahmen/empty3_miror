@@ -350,9 +350,13 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
                 points.forEach((s, uvCoordinates) -> {
                     if (testHumanHeadTexturing.camera() != null && uvCoordinates != null) {
                         // +++ Model 3DObj : calculerPoint3D(u,v) +++
-                        Point3D uvFace = model.findUvFace(uvCoordinates.getX(), uvCoordinates.getY());
+                        Point3D uvFace = model.findUvFace(
+                                uvCoordinates.getX(),
+                                uvCoordinates.getY());
                         if (uvFace != null) {
                             Point point = testHumanHeadTexturing.scene().cameraActive().coordonneesPoint2D(uvFace, testHumanHeadTexturing.getZ());
+                            point.setLocation(point.getX() / testHumanHeadTexturing.getZ().la() * panelDraw.getWidth(),
+                                    point.getY() / testHumanHeadTexturing.getZ().ha() * panelDraw.getHeight());
                             Graphics graphics = panelDraw.getGraphics();
                             if (selectedPointNo == i[0])
                                 graphics.setColor(Color.ORANGE);

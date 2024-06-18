@@ -831,9 +831,7 @@ public class StringAnalyzer3 {
 
         @Override
         public String toString() {
-            return getClass().getName() + "<=TokenString{" +
-                    "name='" + name + '\'' + ", sucessful=" + isSuccessful() +
-                    "}\n";
+            return name;
         }
 
         @Override
@@ -1146,6 +1144,7 @@ public class StringAnalyzer3 {
         public TokenMethodMemberDefinition() {
             super();
         }
+
     }
 
     class TokenVariableMemberDefinition extends TokenName {
@@ -1203,12 +1202,6 @@ public class StringAnalyzer3 {
             return name;
         }
 
-        @Override
-        public String toString() {
-            return getClass().getName() + "{" +
-                    "name='" + name + '\'' +
-                    "}\n";
-        }
 
         @Override
         public Token copy(Token token) {
@@ -1216,6 +1209,10 @@ public class StringAnalyzer3 {
             TokenName tokenName = new TokenName();
             tokenName.name = name;
             return tokenName;
+        }
+
+        public String toString() {
+            return name;
         }
     }
 

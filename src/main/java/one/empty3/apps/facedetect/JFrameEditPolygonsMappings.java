@@ -32,6 +32,8 @@ import one.empty3.library.Config;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.ResourceBundle;
 
@@ -103,6 +105,21 @@ public class JFrameEditPolygonsMappings extends JFrame {
         editPolygonsMappings2.editPointPosition();
     }
 
+    private void thisWindowClosing(WindowEvent e) {
+        config.getMap().put("D3ModelFaceTexturing", lastDirectory.getAbsolutePath());
+        config.save();
+        try {
+            editPolygonsMappings2.testHumanHeadTexturing.setMaxFrames(0);
+            editPolygonsMappings2.isRunning = false;
+            editPolygonsMappings2.testHumanHeadTexturing.stop();
+            Thread.sleep(1000);
+        } catch (InterruptedException | RuntimeException ex) {
+            ex.printStackTrace();
+        }
+        super.dispose();
+        System.exit(0);
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
         ResourceBundle bundle = ResourceBundle.getBundle("one.empty3.library.core.testing.Bundle");
@@ -112,8 +129,12 @@ public class JFrameEditPolygonsMappings extends JFrame {
         menuItem3 = new JMenuItem();
         menuItem2 = new JMenuItem();
         menuItem4 = new JMenuItem();
-        menuItem5 = new JMenuItem();
-        menuItem6 = new JMenuItem();
+        menu1 = new JMenu();
+        menuItemMoveLinesUp = new JMenuItem();
+        menuItemMoveLinesDown = new JMenuItem();
+        menuItemMoveLinesLeft = new JMenuItem();
+        menuItemMoveColumnsRight = new JMenuItem();
+        menuItemMoveRectangle = new JMenuItem();
         editPolygonsMappings2 = new EditPolygonsMappings();
         menu3 = new JMenu();
 
@@ -124,6 +145,12 @@ public class JFrameEditPolygonsMappings extends JFrame {
         setAutoRequestFocus(false);
         setMaximizedBounds(null);
         setIconImage(new ImageIcon("C:\\Users\\manue\\OneDrive\\Documents\\Downloads\\4out.jpg").getImage());
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                thisWindowClosing(e);
+            }
+        });
         var contentPane = getContentPane();
         contentPane.setLayout(new MigLayout(
             "fill,novisualpadding,hidemode 3",
@@ -157,17 +184,34 @@ public class JFrameEditPolygonsMappings extends JFrame {
                 menuItem4.setText(bundle.getString("JFrameEditPolygonsMappings.menuItem4.text"));
                 menuItem4.addActionListener(e -> menuItemAdd3DModel(e));
                 menu2.add(menuItem4);
-
-                //---- menuItem5 ----
-                menuItem5.setText(bundle.getString("JFrameEditPolygonsMappings.menuItem5.text"));
-                menu2.add(menuItem5);
             }
             menuBar1.add(menu2);
 
-            //---- menuItem6 ----
-            menuItem6.setText(bundle.getString("JFrameEditPolygonsMappings.menuItem6.text"));
-            menuItem6.addActionListener(e -> menuItemEditPointPosition(e));
-            menuBar1.add(menuItem6);
+            //======== menu1 ========
+            {
+                menu1.setText(bundle.getString("JFrameEditPolygonsMappings.menu1.text"));
+
+                //---- menuItemMoveLinesUp ----
+                menuItemMoveLinesUp.setText(bundle.getString("JFrameEditPolygonsMappings.menuItemMoveLinesUp.text"));
+                menu1.add(menuItemMoveLinesUp);
+
+                //---- menuItemMoveLinesDown ----
+                menuItemMoveLinesDown.setText(bundle.getString("JFrameEditPolygonsMappings.menuItemMoveLinesDown.text"));
+                menu1.add(menuItemMoveLinesDown);
+
+                //---- menuItemMoveLinesLeft ----
+                menuItemMoveLinesLeft.setText(bundle.getString("JFrameEditPolygonsMappings.menuItemMoveLinesLeft.text"));
+                menu1.add(menuItemMoveLinesLeft);
+
+                //---- menuItemMoveColumnsRight ----
+                menuItemMoveColumnsRight.setText(bundle.getString("JFrameEditPolygonsMappings.menuItemMoveColumnsRight.text"));
+                menu1.add(menuItemMoveColumnsRight);
+
+                //---- menuItemMoveRectangle ----
+                menuItemMoveRectangle.setText(bundle.getString("JFrameEditPolygonsMappings.menuItemMoveRectangle.text"));
+                menu1.add(menuItemMoveRectangle);
+            }
+            menuBar1.add(menu1);
         }
         setJMenuBar(menuBar1);
 
@@ -181,7 +225,6 @@ public class JFrameEditPolygonsMappings extends JFrame {
             menu3.setVisible(false);
         }
         contentPane.add(menu3, "cell 0 0");
-        setSize(1375, 660);
         setLocationRelativeTo(getOwner());
         // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
     }
@@ -193,8 +236,12 @@ public class JFrameEditPolygonsMappings extends JFrame {
     private JMenuItem menuItem3;
     private JMenuItem menuItem2;
     private JMenuItem menuItem4;
-    private JMenuItem menuItem5;
-    private JMenuItem menuItem6;
+    private JMenu menu1;
+    private JMenuItem menuItemMoveLinesUp;
+    private JMenuItem menuItemMoveLinesDown;
+    private JMenuItem menuItemMoveLinesLeft;
+    private JMenuItem menuItemMoveColumnsRight;
+    private JMenuItem menuItemMoveRectangle;
     private EditPolygonsMappings editPolygonsMappings2;
     private JMenu menu3;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
@@ -205,16 +252,6 @@ public class JFrameEditPolygonsMappings extends JFrame {
 
     @Override
     public void dispose() {
-        config.getMap().put("D3ModelFaceTexturing", lastDirectory.getAbsolutePath());
-        config.save();
-        try {
-            editPolygonsMappings2.testHumanHeadTexturing.setMaxFrames(0);
-            editPolygonsMappings2.isRunning = false;
-            editPolygonsMappings2.testHumanHeadTexturing.stop();
-            Thread.sleep(1000);
-        } catch (InterruptedException | RuntimeException e) {
-            e.printStackTrace();
-        }
         super.dispose();
         System.exit(0);
     }

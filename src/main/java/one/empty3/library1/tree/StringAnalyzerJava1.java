@@ -302,7 +302,6 @@ public class StringAnalyzerJava1 extends StringAnalyzer3 {
 
         @Override
         public int parse(String input, int position) {
-            //reinit();
             int recursions = 0;
             if (position >= input.length() || input.substring(position).trim().isEmpty()) {
                 mPosition = position;
@@ -328,11 +327,13 @@ public class StringAnalyzerJava1 extends StringAnalyzer3 {
             }
             boolean newOperator = false;
             int i0 = i;
-            String charsAlgebraic = "" + '+' + '-' + '*' + '/' + '=' + '^';
-            int hasNextMandatory = 0;
+            /*+ '='*/
+            String charsAlgebraic = "+-*/<>";
+            int hasNextPossible = 0;
+            boolean lastToken = true;
             while (i < input.length() && (Character.isLetterOrDigit(input.charAt(i)) || !nextTokenCharsListConditionTrue(input, i)
                     || Character.isAlphabetic(input.charAt(i)) || charsAlgebraic.contains("" + input.charAt(i))
-                    || input.charAt(i) == '_' || Character.isWhitespace(input.charAt(i))) && input.charAt(i) != '.') {
+                    || input.charAt(i) == '_') && input.charAt(i) != '.' && !Character.isWhitespace(input.charAt(i))) {
                 if (i < input.length() - 4 && input.substring(i, i + 3).equals("new") && Character.isWhitespace(input.charAt(i + 4))) {
                     i += 4;
                     newOperator = true;
@@ -342,13 +343,13 @@ public class StringAnalyzerJava1 extends StringAnalyzer3 {
                 i++;
                 iWord = i;
             }
+
             boolean bStart = false;
             boolean pStart = false;
             int bCount = 0;
             int pCount = 0;
             int iStart = 0;
             int iEnd = 0;
-            boolean lastToken = false;
             if (i >= input.length()) {
                 setName(input.substring(i0, iWord));
                 lastToken = true;
@@ -364,24 +365,30 @@ public class StringAnalyzerJava1 extends StringAnalyzer3 {
                 int pEndI = 0;
                 int bStartI = 0;
                 int bEndI = 0;
-                i = skipBlanks(input, i);
+
+
+                //i = skipBlanks(input, i);
+
+
                 boolean firstAdded = false;
+
+                hasNextPossible = 1;
+                /*if (i >= input.length() || Character.isWhitespace(input.charAt(i))) {
+                    hasNextPossible = 0;
+                }
+*/
                 while (i < input.length()) {
                     if (i == input.length() - 1) {
                         lastToken = true;
 
                     }
 
-                    i = skipBlanks(input, i);
-                    if (i >= input.length()) {
-                        break;
-                    }
-
-                    if ((input.charAt(i) == '(' || input.charAt(i) == ')') && !isNotName2OrType2())
+                    if ((input.charAt(i) == '(' || input.charAt(i) == ')') && (!isNotName2() || !isNotType2()))
                         break;
                     if ((input.charAt(i) == '[' || input.charAt(i) == ']') && !isNotName2())
                         break;
                     if (input.charAt(i) == ';') {
+                        lastToken = true;
                         break;
                     }
 
@@ -391,9 +398,11 @@ public class StringAnalyzerJava1 extends StringAnalyzer3 {
                         bCount++;
                         bStart = true;
                         bStartI = i;
+                        hasNextPossible = 2;
                     } else if (input.charAt(i) == ']' && bStart && isNotName2()) {
                         bEndI = i;
                         bCount--;
+                        hasNextPossible = 1;
                     } else if (input.charAt(i) == '(' && !pStart && isNotName2OrType2()) {
                         pCount++;
                         pStart = true;
@@ -401,15 +410,28 @@ public class StringAnalyzerJava1 extends StringAnalyzer3 {
                         if (!firstAdded)
                             firstAdded = expressions.add(new DataExpression(methodName, name));
                         //Logger.getLogger("parser").log(Level.INFO, "End of call fct arg : " + input.substring(i));
+                        hasNextPossible = 2;
                     } else if (input.charAt(i) == ')' && pStart && isNotName2OrType2()) {
                         pCount--;
                         pEndI = i;
+                        hasNextPossible = 1;
+                    } else if (Character.isWhitespace(input.charAt(i)) && hasNextPossible < 2) {
+                        hasNextPossible = 0;
+                    } else if ((Character.isAlphabetic(input.charAt(i)) || Character.isLetterOrDigit(input.charAt(i)))
+                            && !Character.isWhitespace(input.charAt(i))
+                            && hasNextPossible == 0) {
+                        lastToken = false;
+                        setSuccessful(true);
+                        return processNext(input, i);
+                    } else if (charsAlgebraic.contains("" + input.charAt(i))) {
+                        hasNextPossible = 2;
                     }
+
+
                     if (input.charAt(i) == ')' && pStart && pCount == 0 && isNotName2OrType2()) {
                         String substring = input.substring(pStartI + 1, pEndI);
                         int parse = parse(substring, 0);
                         recursions--;
-                        hasNextMandatory = 0;
                         //Logger.getLogger("parser").log(Level.INFO, "fct arg : " + substring);
                         current = methodCallArgument;
                         expressions.add(new DataExpression(methodCallArgument, substring.substring(0, parse)));
@@ -419,31 +441,25 @@ public class StringAnalyzerJava1 extends StringAnalyzer3 {
                     } else if (input.charAt(i) == ']' && bStart && bCount == 0 && isNotName2()) {
                         String substring = input.substring(bStartI + 1, bEndI);
                         current = classArrayAccess;
-                        hasNextMandatory = 0;
                         int parse = parse(substring, 0);
                         recursions--;
                         expressions.add(new DataExpression(classArrayAccess, substring.substring(0, parse)));
                         i = bStartI + parse + 1;
                         //Logger.getLogger("parser").log(Level.INFO, "Next tokens remainder (1): " + input.substring(i));
                         bStart = false;
-                    } else if ((lastToken || input.charAt(i) == '.') && pCount == 0 && bCount == 0 && isNotName2()) {
+                    } else if (input.charAt(i) == '.' && pCount == 0 && bCount == 0 && isNotName2()) {
                         if (!firstAdded)
                             firstAdded = expressions.add(new DataExpression(variable, name));
                         i = parse(input, i + 1);
-                        hasNextMandatory = 1;
-                        recursions--;
                         setSuccessful(true);
-                        recursions--;
-                        //Logger.getLogger("parser").log(Level.INFO, "Next tokens remainder (2): " + input.substring(i));
-                        return skipBlanks(input, i);
+                        return processNext(input, i);
+                    } else if (lastToken && pCount == 0 && bCount == 0 && isNotName2()) {
+                        if (!firstAdded)
+                            firstAdded = expressions.add(new DataExpression(variable, name));
+                        //i = parse(input, i + 1);
+                        setSuccessful(true);
+                        return processNext(input, i);
                     }
-                    if (Character.isWhitespace(input.charAt(i)) && hasNextMandatory == 1) {
-                        hasNextMandatory = 0;
-                    }
-                    if (Character.isLetterOrDigit(input.charAt(i)) && hasNextMandatory == 0) {
-                        break;
-                    }
-
 
                     i++;
 
@@ -454,70 +470,9 @@ public class StringAnalyzerJava1 extends StringAnalyzer3 {
             if (lastToken) {
                 expressions.add(new DataExpression(variable, name));
             }
-/*
-            if (i >= input.length() - 1 && recursions == 1) {
-                i = input.length() - 1;
-                if (Character.isLetterOrDigit(i))
-                    expressions.add(new DataExpression(variable, name));
-                if (input.charAt(i) == ')')
-                    expressions.add(new DataExpression(methodCallArgument, name));
-                if (input.charAt(i) == ']')
-                    expressions.add(new DataExpression(classArrayAccess, name));
-                i = skipBlanks(input, i);
-            }
- */           //while (i < input.length() && (((Character.isWhitespace(input.charAt(i))) || (input.charAt(i) == '[') || (input.charAt(i) == ']')))) {
-            //if (i < input.length() - 4 && input.substring(i, i + 3).equals("new") && Character.isWhitespace(input.charAt(i + 4))) {
-            //    i += 4;
-            //    //constructor = 3;
-            //}
-            /*
-            while (i < input.length() && (((Character.isWhitespace(input.charAt(i))) || (input.charAt(i) == '[') || (input.charAt(i) == ']')))) {
-                if (input.charAt(i) == '[' && bStart) {
-                    bCount++;
-                    bStart = true;
-                    iStart = i + 1;
-                } else if (input.charAt(i) == ']' && bStart) {
-                    iEnd = i;
-                    bCount--;
-                }
-                if (input.charAt(i) == '[' && !bStart && !pStart && bCount == 0) {
-                    iStart = i + 1;
-                    bStart = true;
-                    i1[passBrackets] = i;
-                } else if (input.charAt(i) == ']' && bStart && bCount == 0) {
-                    iEnd = i;
-                    bStart = false;
-                    i1[passBrackets + 1] = i;
-                    passBrackets += 2;
-                } else if (input.charAt(i) == '(' && pStart) {
-                    pCount++;
-                } else if (input.charAt(i) == ')' && pStart) {
-                    pCount--;
-                }
-                if (input.charAt(i) == '.' && bCount == 0 && pCount == 0 && bStart) {
-                    TokenExpression2 tokenExpression2 = new TokenExpression2();
-                    String substring = input.substring(iStart, iEnd);
-                    int parse = tokenExpression2.parse(substring, 0);
-                    expressions.add(new DataExpression(classArrayAccess, tokenExpression2, tokenExpression2.name));
-                    bStart = false;
-                }
-                i++;
-            }*/
-
-/*
-            for (int j = 0; j < passBrackets; j += 2) {
-                brackets[j / 2] = input.substring(i1[j], i1[j + 1]);
-                TokenExpression2 tokenExpression = new TokenExpression2();
-                int parse = tokenExpression.parse(brackets[j / 2], i1[j]);
-                if (parse < i1[j + 1]) {
-                    bracketsExpressions.add(new DataExpression(0,
-                            tokenExpression, brackets[j + 2]));
-                }
-            }
-  */
             setSuccessful(true);
             recursions--;
-            return i;
+            return processNext(input, i);
 
         }
 
@@ -527,6 +482,10 @@ public class StringAnalyzerJava1 extends StringAnalyzer3 {
 
         public boolean isNotName2() {
             return !(this instanceof TokenName2);
+        }
+
+        public boolean isNotType2() {
+            return !(this instanceof TokenType2);
         }
 
 
@@ -545,13 +504,13 @@ public class StringAnalyzerJava1 extends StringAnalyzer3 {
 
         public void next(StringBuilder sb, DataExpression it, StringAnalyzerJava1.TokenExpression2 current) {
             if (it.type() == StringAnalyzerJava1.TokenExpression2.methodName)
-                sb.append(getConstruct().debugString(isDebug, ".") + getConstruct().debugString(isDebug, it.expression()));
+                sb.append(getConstruct().debugString(isDebug, ".")).append(getConstruct().debugString(isDebug, it.expression()));
             else if (it.type() == StringAnalyzerJava1.TokenExpression2.methodCallArgument) {
                 sb.append(getConstruct().debugString(isDebug, "("));
                 sb.append(getConstruct().debugString(isDebug, it.expression()));
                 sb.append(getConstruct().debugString(isDebug, ")"));
             } else if (it.type() == StringAnalyzerJava1.TokenExpression2.classArrayAccess) {
-                sb.append(getConstruct().debugString(isDebug, "[") + getConstruct().debugString(isDebug, it.expression()) + getConstruct().debugString(isDebug, "]"));
+                sb.append(getConstruct().debugString(isDebug, "[")).append(getConstruct().debugString(isDebug, it.expression())).append(getConstruct().debugString(isDebug, "]"));
                 if (current.passBrackets > 0) {
                     for (int n = 0; n < current.passBrackets; n += 2) {
                         sb.append(getConstruct().debugString(isDebug, "["));
@@ -560,7 +519,7 @@ public class StringAnalyzerJava1 extends StringAnalyzer3 {
                     }
                 }
             } else if (it.type() == StringAnalyzerJava1.TokenExpression2.variable) {
-                sb.append(getConstruct().debugString(isDebug, ".") + getConstruct().debugString(isDebug, it.expression()));
+                sb.append(getConstruct().debugString(isDebug, ".")).append(getConstruct().debugString(isDebug, it.expression()));
             } else if (it.type() == StringAnalyzerJava1.TokenExpression2.dotCall) {
                 //sb.append("." + it.expression())
             }
@@ -579,6 +538,11 @@ public class StringAnalyzerJava1 extends StringAnalyzer3 {
                 next(sb, it, te);
             });
             sb.append(isDebug ? "}" : "");
+
+            if (getNextToken().getElem(0) != null) {
+                sb.append(getConstruct().debugString(isDebug, " "))
+                        .append(getNextToken().getElem(0).toString());
+            }
             return sb.toString();
         }
     }

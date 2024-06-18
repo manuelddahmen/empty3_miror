@@ -18,11 +18,12 @@ new FormModel {
 			"title": new FormMessage( null, "JFrameEditPolygonsMappings.this.title" )
 			"autoRequestFocus": false
 			"maximizedBounds": sfield com.jformdesigner.model.FormObject NULL_VALUE
-			"$sizePolicy": 1
+			"$sizePolicy": 2
 			"iconImage": new com.jformdesigner.model.SwingIcon( 1, "C:\\Users\\manue\\OneDrive\\Documents\\Downloads\\4out.jpg" )
 			auxiliary() {
 				"JavaCodeGenerator.variableGetter": true
 			}
+			addEvent( new FormEvent( "java.awt.event.WindowListener", "windowClosing", "thisWindowClosing", true ) )
 			add( new FormComponent( "one.empty3.apps.facedetect.EditPolygonsMappings" ) {
 				name: "editPolygonsMappings2"
 				"minimumSize": new java.awt.Dimension( 800, 600 )
@@ -60,15 +61,30 @@ new FormModel {
 						"text": new FormMessage( null, "JFrameEditPolygonsMappings.menuItem4.text" )
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItemAdd3DModel", true ) )
 					} )
-					add( new FormComponent( "javax.swing.JMenuItem" ) {
-						name: "menuItem5"
-						"text": new FormMessage( null, "JFrameEditPolygonsMappings.menuItem5.text" )
-					} )
 				} )
-				add( new FormComponent( "javax.swing.JMenuItem" ) {
-					name: "menuItem6"
-					"text": new FormMessage( null, "JFrameEditPolygonsMappings.menuItem6.text" )
-					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItemEditPointPosition", true ) )
+				add( new FormContainer( "javax.swing.JMenu", new FormLayoutManager( class javax.swing.JMenu ) ) {
+					name: "menu1"
+					"text": new FormMessage( null, "JFrameEditPolygonsMappings.menu1.text" )
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "menuItemMoveLinesUp"
+						"text": new FormMessage( null, "JFrameEditPolygonsMappings.menuItemMoveLinesUp.text" )
+					} )
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "menuItemMoveLinesDown"
+						"text": new FormMessage( null, "JFrameEditPolygonsMappings.menuItemMoveLinesDown.text" )
+					} )
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "menuItemMoveLinesLeft"
+						"text": new FormMessage( null, "JFrameEditPolygonsMappings.menuItemMoveLinesLeft.text" )
+					} )
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "menuItemMoveColumnsRight"
+						"text": new FormMessage( null, "JFrameEditPolygonsMappings.menuItemMoveColumnsRight.text" )
+					} )
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "menuItemMoveRectangle"
+						"text": new FormMessage( null, "JFrameEditPolygonsMappings.menuItemMoveRectangle.text" )
+					} )
 				} )
 			}
 		}, new FormLayoutConstraints( null ) {

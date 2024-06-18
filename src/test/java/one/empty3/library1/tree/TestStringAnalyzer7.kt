@@ -815,16 +815,16 @@ class TestStringAnalyzer7 {
                             }
                         }
                         if (token == tokenMethodSemiColonVar2) {
-                            if (expression2toString(tokenMemberMethodExpression2) != null) {
-                                var name = expression2toString(tokenMemberMethodExpression2)
+                            if (tokenMemberMethodExpression2.toString() != null) {
+                                var name = tokenMemberMethodExpression2.toString()
                                 val get = instructions.get(instructions.size - 1)
                                 (get as Instruction).getExpression().expression = name
                                 //tokenMemberMethodExpression2.expression = null
                             }
                         }
                         if (token == tokenMethodSemiColonVar3) {
-                            if (expression2toString(tokenMemberMethodExpression3) != null) {
-                                var name = expression2toString(tokenMemberMethodExpression3)
+                            if (tokenMemberMethodExpression3.toString() != null) {
+                                var name = tokenMemberMethodExpression3.toString()
                                 instructions.add(Instruction())
                                 val get = instructions.get(instructions.size - 1)
                                 (get as Instruction).getExpression().expression = name
@@ -832,8 +832,8 @@ class TestStringAnalyzer7 {
                             }
                         }
                         if (token == tokenMethodSemiColonVar4) {
-                            if (expression2toString(tokenMemberMethodExpression4) != null) {
-                                val name = expression2toString(tokenMemberMethodExpression4)
+                            if (tokenMemberMethodExpression4.toString() != null) {
+                                val name = tokenMemberMethodExpression4.toString()
                                 val get = instructions.get(instructions.size - 1)
                                 (get as Instruction).getExpression().expression = name
                                 //tokenMemberMethodExpression4.expression = null
@@ -891,22 +891,22 @@ class TestStringAnalyzer7 {
                         }
                     }
                     if (token == tokenMemberMethodExpression2wo) {
-                        if (expression2toString(tokenMemberMethodExpression2wo) != null) {
-                            val name = expression2toString(tokenMemberMethodExpression2wo)
+                        if (tokenMemberMethodExpression2wo.toString() != null) {
+                            val name = tokenMemberMethodExpression2wo.toString()
                             (get as Instruction).getExpression().expression = name
                             //tokenMemberMethodExpression2wo.expression = null
                         }
                     }
                     if (token == tokenMemberMethodExpression3wo) {
-                        if (expression2toString(tokenMemberMethodExpression3wo) != null) {
-                            val name = expression2toString(tokenMemberMethodExpression3wo)
+                        if (tokenMemberMethodExpression3wo.toString() != null) {
+                            val name = tokenMemberMethodExpression3wo.toString()
                             (get as Instruction).getExpression().expression = name
                             //tokenMemberMethodExpression3wo.expression = null
                         }
                     }
                     if (token == tokenMemberMethodExpression4wo) {
-                        if (expression2toString(tokenMemberMethodExpression4wo) != null) {
-                            val name = expression2toString(tokenMemberMethodExpression4wo)
+                        if (tokenMemberMethodExpression4wo.toString() != null) {
+                            val name = tokenMemberMethodExpression4wo.toString()
                             (get as Instruction).getExpression().expression = name
                             //tokenMemberMethodExpression4wo.expression = null
                         }
@@ -1343,44 +1343,6 @@ class TestStringAnalyzer7 {
     }
 
 
-    fun next(sb: StringBuilder, it: DataExpression, current: StringAnalyzerJava1.TokenExpression2) {
-        if (it.type == StringAnalyzerJava1.TokenExpression2.methodName)
-            sb.append("." + it.expression())
-        else if (it.type == StringAnalyzerJava1.TokenExpression2.methodCallArgument) {
-            sb.append("(")
-            sb.append(it.expression())
-            sb.append(")")
-        } else if (it.type == StringAnalyzerJava1.TokenExpression2.classArrayAccess) {
-            sb.append("[" + it.expression() + "]")
-            if (current.passBrackets > 0) {
-                for (n in 0 until current.passBrackets step 2) {
-                    sb.append("[")
-                    //sb.append(current.bracketsExpressions.get(n / 2).expression())
-                    sb.append(it.expression())
-                    sb.append("]")
-                }
-            }
-        } else if (it.type == StringAnalyzerJava1.TokenExpression2.variable) {
-            sb.append("." + it.expression())
-        } else if (it.type == StringAnalyzerJava1.TokenExpression2.dotCall) {
-            //sb.append("." + it.expression())
-        }
-    }
-
-
-    fun expression2toString(tokenExpression2: StringAnalyzerJava1.TokenExpression2): String {
-        var te: StringAnalyzerJava1.TokenExpression2 = tokenExpression2
-        val sb: StringBuilder = StringBuilder()
-        var hasNext = true
-        te.expressions.forEach {
-            //println("Type      :" + it.type() + "\nExpression:" + it.expression())
-        }
-        te.expressions.forEach {
-            next(sb, it, te)
-        }
-        return sb.toString()
-    }
-
     @Test
     fun testReadMultiSources() {
         isDebug = true
@@ -1429,17 +1391,20 @@ class TestStringAnalyzer7 {
         strings.add("func2(i1);\nb = func3().a")
         strings.add("pixels[x][y].red")
         strings.add("double [] a = func2(i1);\nb = func3().a")
+        strings.add("double double double double double double double double double double")
+        strings.add("double double double double; double double double double; double double;")
 
 
         for (s in strings) {
             val stringAnalyzer3: StringAnalyzerJava1 = StringAnalyzerJava1()
             stringAnalyzer3.isDebug = true
             val tokenExpression2 = stringAnalyzer3.TokenExpression2()
-            var input = tokenExpression2.parse(s, 0)
+            val pos = tokenExpression2.parse(s, 0)
             println("----------------" + s + "-------------------")
             println("---------------------------------------")
             println(tokenExpression2.toString())
             println("---------------------------------------")
+            println("" + s.substring(pos) + "-----")
             println("---------------------------------------")
         }
 
