@@ -403,6 +403,8 @@ public class StringAnalyzerJava1 extends StringAnalyzer3 {
                         bEndI = i;
                         bCount--;
                         hasNextPossible = 1;
+                        if (bCount < 0)
+                            break;
                     } else if (input.charAt(i) == '(' && !pStart && isNotName2OrType2()) {
                         pCount++;
                         pStart = true;
@@ -415,6 +417,8 @@ public class StringAnalyzerJava1 extends StringAnalyzer3 {
                         pCount--;
                         pEndI = i;
                         hasNextPossible = 1;
+                        if (pCount < 0)
+                            break;
                     } else if (Character.isWhitespace(input.charAt(i)) && hasNextPossible < 2) {
                         hasNextPossible = 0;
                     } else if ((Character.isAlphabetic(input.charAt(i)) || Character.isLetterOrDigit(input.charAt(i)))
@@ -539,13 +543,14 @@ public class StringAnalyzerJava1 extends StringAnalyzer3 {
             });
             sb.append(isDebug ? "}" : "");
 
-            if (getNextToken().getElem(0) != null) {
+            if (hasNextToken()) {
                 sb.append(getConstruct().debugString(isDebug, " "))
                         .append(getNextToken().getElem(0).toString());
             }
             return sb.toString();
         }
     }
+
 
     public class TokenNameDeclaration2 extends TokenName {
         private String[] brackets = new String[7];

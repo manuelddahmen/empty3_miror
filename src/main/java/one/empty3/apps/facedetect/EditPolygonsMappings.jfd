@@ -63,6 +63,7 @@ new FormModel {
 									"preferredSize": new java.awt.Dimension( 0, 0 )
 									addEvent( new FormEvent( "java.awt.event.MouseMotionListener", "mouseDragged", "panelModelViewMouseDragged", true ) )
 									addEvent( new FormEvent( "java.awt.event.ComponentListener", "componentResized", "panelModelViewComponentResized", true ) )
+									addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "panelModelViewMouseClicked", true ) )
 								}, new FormLayoutConstraints( class java.lang.String ) {
 									"value": "right"
 								} )

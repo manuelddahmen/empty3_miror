@@ -1,7 +1,10 @@
 package one.empty3;
 
 class Number1 {
-    Double ar;
+    Double[] ar;
+
+    void empty() {
+    }
 
     double func1(Double a, Double b, Double c) {
         Double d = c + b / a;

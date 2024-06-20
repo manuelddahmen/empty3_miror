@@ -47,6 +47,7 @@ public class JFrameEditPolygonsMappings extends JFrame {
     private Config config;
     Thread threadDisplay;
     private int mode = 0;
+    private int SELECT_POINT;
 
     public JFrameEditPolygonsMappings() {
         config = new Config();
@@ -120,6 +121,14 @@ public class JFrameEditPolygonsMappings extends JFrame {
         System.exit(0);
     }
 
+    private void menuItemSelectPoint(ActionEvent e) {
+        mode = SELECT_POINT;
+        editPolygonsMappings2.selectPointPosition();
+    }
+
+    private void panelModelViewMouseClicked(ActionEvent e) {
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
         ResourceBundle bundle = ResourceBundle.getBundle("one.empty3.library.core.testing.Bundle");
@@ -135,16 +144,18 @@ public class JFrameEditPolygonsMappings extends JFrame {
         menuItemMoveLinesLeft = new JMenuItem();
         menuItemMoveColumnsRight = new JMenuItem();
         menuItemMoveRectangle = new JMenuItem();
+        menuItem5 = new JMenuItem();
+        menuItem6 = new JMenuItem();
+        menuItem7 = new JMenuItem();
         editPolygonsMappings2 = new EditPolygonsMappings();
         menu3 = new JMenu();
 
         //======== this ========
         setMinimumSize(new Dimension(830, 600));
-        setFocusableWindowState(false);
         setTitle(bundle.getString("JFrameEditPolygonsMappings.this.title"));
-        setAutoRequestFocus(false);
         setMaximizedBounds(null);
-        setIconImage(new ImageIcon("C:\\Users\\manue\\OneDrive\\Documents\\Downloads\\4out.jpg").getImage());
+        setIconImage(new ImageIcon("D:\\Current\\empty3-library-generic\\mite.png").getImage());
+        setFocusTraversalPolicyProvider(true);
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -210,6 +221,26 @@ public class JFrameEditPolygonsMappings extends JFrame {
                 //---- menuItemMoveRectangle ----
                 menuItemMoveRectangle.setText(bundle.getString("JFrameEditPolygonsMappings.menuItemMoveRectangle.text"));
                 menu1.add(menuItemMoveRectangle);
+
+                //---- menuItem5 ----
+                menuItem5.setText(bundle.getString("JFrameEditPolygonsMappings.menuItem5.text"));
+                menu1.add(menuItem5);
+
+                //---- menuItem6 ----
+                menuItem6.setText(bundle.getString("JFrameEditPolygonsMappings.menuItem6.text"));
+                menuItem6.setFocusable(true);
+                menuItem6.setFocusCycleRoot(true);
+                menuItem6.setFocusPainted(true);
+                menuItem6.setFocusTraversalPolicyProvider(true);
+                menuItem6.addActionListener(e -> {
+			menuItemSelectPoint(e);
+			panelModelViewMouseClicked(e);
+		});
+                menu1.add(menuItem6);
+
+                //---- menuItem7 ----
+                menuItem7.setText(bundle.getString("JFrameEditPolygonsMappings.menuItem7.text"));
+                menu1.add(menuItem7);
             }
             menuBar1.add(menu1);
         }
@@ -242,6 +273,9 @@ public class JFrameEditPolygonsMappings extends JFrame {
     private JMenuItem menuItemMoveLinesLeft;
     private JMenuItem menuItemMoveColumnsRight;
     private JMenuItem menuItemMoveRectangle;
+    private JMenuItem menuItem5;
+    private JMenuItem menuItem6;
+    private JMenuItem menuItem7;
     private EditPolygonsMappings editPolygonsMappings2;
     private JMenu menu3;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on

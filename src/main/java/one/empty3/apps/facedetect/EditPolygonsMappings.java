@@ -41,6 +41,7 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.HashMap;
 import java.util.Scanner;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -49,6 +50,8 @@ import java.util.logging.Logger;
  */
 public class EditPolygonsMappings extends JPanel implements Runnable {
     private static final int EDIT_POINT_POSITION = 1;
+    private static final int SELECT_POINT_POSITION = 2;
+    private static final int SELECT_POINT_VERTEX = 4;
     private int mode;
     private BufferedImage image;
     int selectedPointNo = -1;
@@ -68,6 +71,10 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
     private String landmarkType;
     private double u;
     private double v;
+    private int selectedPointNoOut = -1;
+    private Point3D selectedPointOutUv = null;
+    private Point3D selectedPointVertexOut;
+    ;
 
     public EditPolygonsMappings(Window owner) {
         initComponents();
@@ -122,6 +129,47 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
 
             });
         }
+    }
+
+    private void panelModelViewMouseClicked(MouseEvent e) {
+        Point point = e.getPoint();
+        if (image != null && model != null && mode == SELECT_POINT_VERTEX) {
+            int x = point.x;
+            int y = point.y;
+            ZBufferImpl.ImageMapElement ime = ((ZBufferImpl) testHumanHeadTexturing.getZ()).ime;
+            Point3D pointIme = null;
+            if (ime.checkCoordinates(x, y)) {
+                u = ime.getuMap()[x][y];
+                v = ime.getvMap()[x][y];
+                pointIme = ime.getElementPoint(x, y);
+            }
+            Point3D finalPointIme = pointIme;
+            int[] i = new int[]{0};
+            selectedPointNoOut = -1;
+            AtomicReference<Double> dist = new AtomicReference<>(Double.MAX_VALUE);
+            pointsInModel.forEach((s, point3D) -> {
+                if (Point3D.distance(finalPointIme, point3D) < dist.get()) {
+                    dist.set(Point3D.distance(finalPointIme, point3D));
+                    pointsInModel.put(s, finalPointIme);
+                    selectedPointNoOut = i[0];
+                    selectedPointVertexOut = point3D;
+                    i[0]++;
+                }
+            });
+
+        } else if (image != null && model != null && mode == SELECT_POINT_POSITION) {
+            int x = point.x;
+            int y = point.y;
+            ZBufferImpl.ImageMapElement ime = ((ZBufferImpl) testHumanHeadTexturing.getZ()).ime;
+            Point3D pointIme = null;
+            if (ime.checkCoordinates(x, y)) {
+                u = ime.getuMap()[x][y];
+                v = ime.getvMap()[x][y];
+                pointIme = ime.getElementPoint(x, y);
+            }
+            selectedPointOutUv = new Point3D(u, v);
+        }
+
     }
 
     private void panelModelViewComponentResized(ComponentEvent e) {
@@ -221,6 +269,12 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
                                     @Override
                                     public void componentResized(ComponentEvent e) {
                                         panelModelViewComponentResized(e);
+                                    }
+                                });
+                                panelModelView.addMouseListener(new MouseAdapter() {
+                                    @Override
+                                    public void mouseClicked(MouseEvent e) {
+                                        panelModelViewMouseClicked(e);
                                     }
                                 });
                                 panelModelView.setLayout(new MigLayout(
@@ -387,6 +441,29 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
                     i[0]++;
                 });
             }
+
+            if (mode == SELECT_POINT_POSITION && selectedPointOutUv != null) {
+                Point3D uvFace = model.findUvFace(selectedPointOutUv.getX(), selectedPointOutUv.getY());
+                Point point = testHumanHeadTexturing.scene().cameraActive().coordonneesPoint2D(uvFace, testHumanHeadTexturing.getZ());
+                point.setLocation(point.getX() / testHumanHeadTexturing.getZ().la() * panelDraw.getWidth(),
+                        point.getY() / testHumanHeadTexturing.getZ().ha() * panelDraw.getHeight());
+                Graphics graphics = panelDraw.getGraphics();
+                graphics.setColor(Color.YELLOW);
+                graphics.fillOval((int) (point.getX() - 3),
+                        (int) ((point.getY()) - 3),
+                        7, 7);
+
+            } else if (mode == SELECT_POINT_POSITION && selectedPointVertexOut != null && selectedPointNoOut >= 0) {
+                Point point = testHumanHeadTexturing.scene().cameraActive().coordonneesPoint2D(selectedPointVertexOut, testHumanHeadTexturing.getZ());
+                point.setLocation(point.getX() / testHumanHeadTexturing.getZ().la() * panelDraw.getWidth(),
+                        point.getY() / testHumanHeadTexturing.getZ().ha() * panelDraw.getHeight());
+                Graphics graphics = panelDraw.getGraphics();
+                graphics.setColor(Color.YELLOW);
+                graphics.fillOval((int) (point.getX() - 3),
+                        (int) ((point.getY()) - 3),
+                        7, 7);
+
+            }
         }
     }
 
@@ -458,4 +535,7 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
         mode = EDIT_POINT_POSITION;
     }
 
+    public void selectPointPosition() {
+        mode = SELECT_POINT_POSITION;
+    }
 }

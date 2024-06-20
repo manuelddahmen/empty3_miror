@@ -46,7 +46,7 @@ public class StringAnalyzer3 {
         return constructs;
     }
 
-    protected boolean isDebug = false;
+    public final boolean isDebug = false;
 
     /**
      * Retrieves the Construct object from the current instance.
@@ -216,6 +216,10 @@ public class StringAnalyzer3 {
 
         public StructureMatrix<Token> getNextToken() {
             return nextTokens;
+        }
+
+        protected boolean hasNextToken() {
+            return (getNextToken() != null && (!getNextToken().data1d.isEmpty()) && getNextToken().getElem(0) != null);
         }
 
         /**
