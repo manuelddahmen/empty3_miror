@@ -214,7 +214,9 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
         }
         distanceAB = new DistanceAB((List<Point3D>) pointsInImage.values().stream().toList(), (List<Point3D>) pointsInModel.values().stream().toList(),
                 new Dimension(panelPicture.getWidth(), panelPicture.getHeight()), new Dimension(panelModelView.getWidth(), panelModelView.getHeight()));
-        model.texture(iTexture);
+        if (model != null) {
+            model.texture(iTexture);
+        }
     }
 
     private void initComponents() {
@@ -354,7 +356,7 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
     private JSplitPane splitPane1;
     private JSplitPane splitPane2;
     private JPanel panelPicture;
-    private JPanel panelModelView;
+    JPanel panelModelView;
     private JScrollPane scrollPane1;
     private JTextArea textAreaTextOutput;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
@@ -371,7 +373,7 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
             try {
                 // Display 3D scene
                 BufferedImage image1 = testHumanHeadTexturing.getPicture();
-                if (image1 != null) {
+                if (image1 != null && image1.getWidth() == panelModelView.getWidth() && image1.getHeight() == panelModelView.getHeight()) {
                     Graphics graphics = panelModelView.getGraphics();
                     if (graphics != null) {
                         graphics.drawImage(image1, 0, 0, panelModelView.getWidth(), panelModelView.getHeight(), null);

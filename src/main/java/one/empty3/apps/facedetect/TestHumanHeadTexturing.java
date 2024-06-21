@@ -25,6 +25,7 @@ package one.empty3.apps.facedetect;
 import one.empty3.feature.PixM;
 import one.empty3.library.Polygon;
 import one.empty3.library.*;
+import one.empty3.library.core.testing.Resolution;
 import one.empty3.library.core.testing.TestObjetStub;
 import one.empty3.library.objloader.E3Model;
 
@@ -202,6 +203,7 @@ public class TestHumanHeadTexturing extends TestObjetStub {
         testHumanHeadTexturing.loop(true);
         testHumanHeadTexturing.setMaxFrames(Integer.MAX_VALUE);
         testHumanHeadTexturing.setPublish(false);
+        testHumanHeadTexturing.setDimension(new Resolution(editPolygonsMappings.panelModelView.getWidth(), editPolygonsMappings.panelModelView.getHeight()));
         new Thread(testHumanHeadTexturing).start();
 
         return testHumanHeadTexturing;
