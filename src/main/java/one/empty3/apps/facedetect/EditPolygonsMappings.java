@@ -31,7 +31,9 @@ import javaAnd.awt.image.imageio.ImageIO;
 import net.miginfocom.swing.MigLayout;
 import one.empty3.apps.morph.Main;
 import one.empty3.library.Point3D;
+import one.empty3.library.Representable;
 import one.empty3.library.ZBufferImpl;
+import one.empty3.library.core.nurbs.SurfaceParametricPolygonalBezier;
 import one.empty3.library.objloader.E3Model;
 
 import javax.swing.*;
@@ -74,11 +76,14 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
     private int selectedPointNoOut = -1;
     private Point3D selectedPointOutUv = null;
     private Point3D selectedPointVertexOut;
-    ;
+
+    private SurfaceParametricPolygonalBezier surfaceParametricPolygonalBezier = new SurfaceParametricPolygonalBezier(new Point3D[][]
+            {{new Point3D(0.0, 0.0, 0.0), new Point3D(0.0, 0.0, 0.0)},
+                    {new Point3D(0.0, 0.0, 0.0), new Point3D(0.0, 0.0, 0.0)}});
+
 
     public EditPolygonsMappings(Window owner) {
         initComponents();
-
     }
 
     public EditPolygonsMappings() {
@@ -97,17 +102,27 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
             ZBufferImpl.ImageMapElement ime = ((ZBufferImpl) testHumanHeadTexturing.getZ()).ime;
             Point3D pointIme = null;
             if (ime.checkCoordinates(x, y)) {
-                u = ime.getuMap()[x][y];
-                v = ime.getvMap()[x][y];
-                pointIme = ime.getElementPoint(x, y);
-            }
-            Point3D finalPointIme = pointIme;
-            pointsInModel.forEach((s, point3D) -> {
-                if (s.equals(landmarkType) && finalPointIme != null) {
-                    pointsInModel.put(s, finalPointIme);
-                }
-            });
+                Representable elementRepresentable = ime.getrMap()[x][y];
+                if (elementRepresentable != null && elementRepresentable instanceof E3Model.FaceWithUv
+                        && ((E3Model.FaceWithUv) elementRepresentable).model.equals(model)) {
+                    u = ime.getuMap()[x][y];
+                    v = ime.getvMap()[x][y];
+                    pointIme = new Point3D(u, v, 0.0);//ime.getElementPoint(x, y);
 
+
+                    final Point3D finalPointIme = pointIme;
+                    System.out.println("Point final ime : " + finalPointIme);
+                    pointsInModel.forEach((landmarkTypeItem, point3D) -> {
+                        if (landmarkTypeItem.equals(landmarkType)) {
+                            pointsInModel.put(landmarkTypeItem, finalPointIme);
+                        }
+                    });
+                } else {
+                    System.err.println("Representable null : " + elementRepresentable);
+                }
+            } else {
+                System.err.println("Point out of bounds : " + pointIme);
+            }
         }
     }
 
@@ -510,6 +525,7 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
                 Logger.getAnonymousLogger().log(Level.INFO, "Loaded {0} points in image", pointsInImage.size());
                 bufferedReader.close();
 
+                // Initialize surface bezier
 
                 pointsInModel = new HashMap<>();
                 if (testHumanHeadTexturing.scene().getObjets().getElem(0) instanceof E3Model e3Model) {

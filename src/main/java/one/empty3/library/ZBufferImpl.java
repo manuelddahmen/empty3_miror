@@ -1028,7 +1028,7 @@ public class ZBufferImpl extends Representable implements ZBuffer {
         Polygon polygon = face.getPolygon();
         tracerQuad8uv(polygon.getPoints().getElem(0), polygon.getPoints().getElem(1),
                 polygon.getPoints().getElem(2), polygon.getPoints().getElem(3), face.texture(),
-                face.getTextUv(), null);
+                face.getTextUv(), face);
     }
 
     private void tracerQuad(Point3D pp1, Point3D pp2, Point3D pp3, Point3D pp4, ITexture texture, double[] textUv, ParametricSurface n) {
@@ -1177,7 +1177,7 @@ public class ZBufferImpl extends Representable implements ZBuffer {
                 Point3D pFinal = new Point3D(pFinal0.get(0), pFinal0.get(1), pFinal0.get(2));
                 pFinal.setNormale(normale);
                 pFinal.texture(texture);
-
+/*
                 if (n != null) {
                     pFinal.setNormale(n.calculerNormale3D(u, v));
                     if (displayType == DISPLAY_ALL) {
@@ -1188,19 +1188,23 @@ public class ZBufferImpl extends Representable implements ZBuffer {
                         pFinal.texture(new ColorTexture(texture.getColorAt(u, v)));
                     }
                 }
+*/
                 if (displayType <= SURFACE_DISPLAY_TEXT_QUADS) {
-                    if (n != null) {
+                    /*if (n != null) {
                         if (testDeep(pFinal, n.texture(), u, v, n)) {
                             Point ce = camera().coordonneesPoint2D(pFinal, that);
                             ime.uMap[(int) ce.getX()][(int) ce.getY()] = u;
                             ime.vMap[(int) ce.getX()][(int) ce.getY()] = v;
+                            ime.rMap[(int) ce.getX()][(int) ce.getY()] = n;
 
                         }
-                    } else if (texture != null) {
+                    } else*/
+                    if (texture != null) {
                         if (testDeep(pFinal, texture, u, v, n)) {
                             Point ce = camera().coordonneesPoint2D(pFinal, that);
                             ime.uMap[(int) ce.getX()][(int) ce.getY()] = u;
                             ime.vMap[(int) ce.getX()][(int) ce.getY()] = v;
+                            ime.rMap[(int) ce.getX()][(int) ce.getY()] = n;
 
                         }
                     } else {
@@ -1208,6 +1212,7 @@ public class ZBufferImpl extends Representable implements ZBuffer {
                             Point ce = camera().coordonneesPoint2D(pFinal, that);
                             ime.uMap[(int) ce.getX()][(int) ce.getY()] = u;
                             ime.vMap[(int) ce.getX()][(int) ce.getY()] = v;
+                            ime.rMap[(int) ce.getX()][(int) ce.getY()] = n;
 
                         }
                     }

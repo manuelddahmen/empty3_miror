@@ -66,6 +66,7 @@ import java.util.logging.Logger;
  * Updated: 04-02-2024
  */
 public abstract class TestObjet implements Test, Runnable {
+    private static Logger logger = Logger.getLogger(TestObjet.class.getName());
     public static final int GENERATE_NOTHING = 0;
     public static final int GENERATE_IMAGE = 1;
     public static final int GENERATE_MODEL = 2;
@@ -167,6 +168,7 @@ public abstract class TestObjet implements Test, Runnable {
     private File file0;
     private Thread threadGLafter;
     private boolean threadGLafterHasRun = false;
+    private boolean LOG = false;
 
 
     /**
@@ -845,13 +847,13 @@ public abstract class TestObjet implements Test, Runnable {
             return;
         }
 
+        if (LOG) {
+            Logger.getAnonymousLogger().log(Level.INFO, "");
+            Logger.getAnonymousLogger().log(Level.INFO, directory().getAbsolutePath());
+            Logger.getAnonymousLogger().log(Level.INFO, "Generate (0 NOTHING  1 IMAGE  2 MODEL  4 OPENGL) {0}" + getGenerate());
 
-        Logger.getAnonymousLogger().log(Level.INFO, "");
-        Logger.getAnonymousLogger().log(Level.INFO, directory().getAbsolutePath());
-        Logger.getAnonymousLogger().log(Level.INFO, "Generate (0 NOTHING  1 IMAGE  2 MODEL  4 OPENGL) {0}" + getGenerate());
-
-        Logger.getAnonymousLogger().log(Level.INFO, "Starting movie  {0}" + runtimeInfoSucc());
-
+            Logger.getAnonymousLogger().log(Level.INFO, "Starting movie  {0}" + runtimeInfoSucc());
+        }
         ginit();
 
 
@@ -905,8 +907,9 @@ public abstract class TestObjet implements Test, Runnable {
                 reportException(ex);
             }
             if ((generate & GENERATE_OPENGL) > 0) {
-                Logger.getAnonymousLogger().log(Level.INFO, "No OpenGL");
-
+                if (LOG) {
+                    Logger.getAnonymousLogger().log(Level.INFO, "No OpenGL");
+                }
                 str.getTestObjetJoglDrawer().setScene(scene());
             } else {
                 try {
@@ -918,8 +921,9 @@ public abstract class TestObjet implements Test, Runnable {
                     return;
                 }
             }
-            Logger.getAnonymousLogger().log(Level.INFO, "Time for frame°" + frame() + " (scene configuration: " + lastInfoEllapsedMillis / 1000f);
-
+            if (LOG) {
+                Logger.getAnonymousLogger().log(Level.INFO, "Time for frame°" + frame() + " (scene configuration: " + lastInfoEllapsedMillis / 1000f);
+            }
             //Logger.getAnonymousLogger().log(Level.INFO, z.scene());
 
             if ((generate & GENERATE_IMAGE) > 0 && !(((generate & GENERATE_OPENGL) > 0))) {
@@ -966,9 +970,10 @@ public abstract class TestObjet implements Test, Runnable {
 
                         }
                     } else {
-                        Logger.getAnonymousLogger().log(Level.INFO,
-                                "No file open for avi writing");
-
+                        if (LOG) {
+                            Logger.getAnonymousLogger().log(Level.INFO,
+                                    "No file open for avi writing");
+                        }
                     }
                     if (ri != null && (getGenerate() & GENERATE_SAVE_IMAGE) > 0) {
                         ecrireImage(ri, type, file);
@@ -979,7 +984,9 @@ public abstract class TestObjet implements Test, Runnable {
                 }
             }
             lastInfoEllapsedMillis = System.currentTimeMillis() - timeStart;
-            Logger.getAnonymousLogger().log(Level.INFO, "Time for frame°" + frame() + " (scene rendering: " + lastInfoEllapsedMillis / 1000f);
+            if (LOG) {
+                Logger.getAnonymousLogger().log(Level.INFO, "Time for frame°" + frame() + " (scene rendering: " + lastInfoEllapsedMillis / 1000f);
+            }
             if ((getGenerate() & GENERATE_SAVE_XML) > 0) {
                 try {
                     File fout = new File(this.dir.getAbsolutePath()
@@ -1002,17 +1009,23 @@ public abstract class TestObjet implements Test, Runnable {
 
             if ((generate & GENERATE_MODEL) > 0) {
                 try {
-                    Logger.getAnonymousLogger().log(Level.INFO, "Start generating model");
+                    if (LOG) {
+                        Logger.getAnonymousLogger().log(Level.INFO, "Start generating model");
+                    }
                     String filename = "export-" + frame;
                     exportFrame("export", filename);
                     dataWriter.writeFrameData(frame(), "Export model: " + filename);
-                    Logger.getAnonymousLogger().log(Level.INFO, "End generating model");
+                    if (LOG) {
+                        Logger.getAnonymousLogger().log(Level.INFO, "End generating model");
+                    }
                 } catch (IOException ex) {
                     reportException(ex);
                     Logger.getAnonymousLogger().log(Level.INFO, ex.getLocalizedMessage());
                 } catch (Exception ex) {
                     reportException(ex);
-                    Logger.getAnonymousLogger().log(Level.INFO, "Other exception in generating model" + ex);
+                    if (LOG) {
+                        Logger.getAnonymousLogger().log(Level.INFO, "Other exception in generating model" + ex);
+                    }
                     ex.printStackTrace();
                 }
 
@@ -1037,9 +1050,11 @@ public abstract class TestObjet implements Test, Runnable {
         } else {
             afterRender();
         }
-        Logger.getAnonymousLogger().log(Level.INFO, "" + frame() + "\n" + runtimeInfoSucc());
+        if (LOG) {
+            Logger.getAnonymousLogger().log(Level.INFO, "" + frame() + "\n" + runtimeInfoSucc());
 
-        Logger.getAnonymousLogger().log(Level.INFO, "Fin de la création des image et/u des modèles" + "\n" + runtimeInfoSucc());
+            Logger.getAnonymousLogger().log(Level.INFO, "Fin de la création des image et/u des modèles" + "\n" + runtimeInfoSucc());
+        }
         if (zip != null) {
             try {
                 zip.end();

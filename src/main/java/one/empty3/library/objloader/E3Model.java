@@ -101,12 +101,14 @@ public class E3Model extends RepresentableConteneur {
      *
      */
     public class FaceWithUv extends ParametricSurface {
+        public E3Model model;
         Polygon polygon;
         double[] textUv;
         double u1, u2, v1, v2;
 
         public FaceWithUv(Polygon orig, double[] textureIndices) {
             this.polygon = orig;
+            model = E3Model.this;
             u1 = textureIndices[0];
             u2 = textureIndices[6];
             v1 = textureIndices[1];
