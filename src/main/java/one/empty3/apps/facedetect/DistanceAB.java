@@ -29,12 +29,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DistanceAB {
-    private Dimension2D bDim;
-    private Dimension2D aDim;
-    private List<Point3D> A;
-    private List<Point3D> B;
-    private double pixMa[][][];
-    private double pixMb[][][];
+    private final Dimension2D aDim;
+    private final Dimension2D bDim;
+    private final List<Point3D> A;
+    private final List<Point3D> B;
+    private final double[][][] pixMa;
+    private final double[][][] pixMb;
 
     public DistanceAB(List<Point3D> A, List<Point3D> B, Dimension2D Adim, Dimension2D Bdim) {
         this.A = A;

@@ -30,9 +30,7 @@ import com.google.common.util.concurrent.AtomicDouble;
 import javaAnd.awt.image.imageio.ImageIO;
 import net.miginfocom.swing.MigLayout;
 import one.empty3.apps.morph.Main;
-import one.empty3.library.Point3D;
-import one.empty3.library.Representable;
-import one.empty3.library.ZBufferImpl;
+import one.empty3.library.*;
 import one.empty3.library.core.nurbs.SurfaceParametricPolygonalBezier;
 import one.empty3.library.objloader.E3Model;
 
@@ -42,6 +40,7 @@ import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
@@ -76,10 +75,27 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
     private int selectedPointNoOut = -1;
     private Point3D selectedPointOutUv = null;
     private Point3D selectedPointVertexOut;
+    ITexture iTexture = new ITexture() {
+        @Override
+        public MatrixPropertiesObject copy() throws CopyRepresentableError, IllegalAccessException, InstantiationException {
+            return null;
+        }
 
+        @Override
+        public int getColorAt(double x, double y) {
+            Point3D axPointInB = distanceAB.findAxPointInB((int) x, (int) y);
+            Point3D uvFace = model.findUvFace(
+                    axPointInB.getX() / panelModelView.getWidth()
+                    , axPointInB.getY() / panelModelView.getHeight());
+            return image.getRGB(
+                    (int) (axPointInB.getX() / panelModelView.getWidth() * image.getWidth()),
+                    (int) (axPointInB.getY() / panelModelView.getHeight() * image.getHeight()));
+        }
+    };
     private SurfaceParametricPolygonalBezier surfaceParametricPolygonalBezier = new SurfaceParametricPolygonalBezier(new Point3D[][]
             {{new Point3D(0.0, 0.0, 0.0), new Point3D(0.0, 0.0, 0.0)},
                     {new Point3D(0.0, 0.0, 0.0), new Point3D(0.0, 0.0, 0.0)}});
+    private DistanceAB distanceAB;
 
 
     public EditPolygonsMappings(Window owner) {
@@ -196,6 +212,9 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
         } else {
             testHumanHeadTexturing = TestHumanHeadTexturing.startAll(this, image, model);
         }
+        distanceAB = new DistanceAB((List<Point3D>) pointsInImage.values().stream().toList(), (List<Point3D>) pointsInModel.values().stream().toList(),
+                new Dimension(panelPicture.getWidth(), panelPicture.getHeight()), new Dimension(panelModelView.getWidth(), panelModelView.getHeight()));
+        model.texture(iTexture);
     }
 
     private void initComponents() {
@@ -537,6 +556,7 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
                 }
 
 
+                model.texture(iTexture);
             } catch (IOException | RuntimeException ex) {
                 throw new RuntimeException(ex);
             }
