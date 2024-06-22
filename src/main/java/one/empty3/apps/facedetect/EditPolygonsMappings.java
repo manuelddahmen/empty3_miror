@@ -212,11 +212,6 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
         } else {
             testHumanHeadTexturing = TestHumanHeadTexturing.startAll(this, image, model);
         }
-        distanceAB = new DistanceAB((List<Point3D>) pointsInImage.values().stream().toList(), (List<Point3D>) pointsInModel.values().stream().toList(),
-                new Dimension(panelPicture.getWidth(), panelPicture.getHeight()), new Dimension(panelModelView.getWidth(), panelModelView.getHeight()));
-        if (model != null) {
-            model.texture(iTexture);
-        }
     }
 
     private void initComponents() {
@@ -400,8 +395,13 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
             if (image != null) {
                 testHumanHeadTexturing.setJpg(image);
             }
-        }
+            distanceAB = new DistanceAB((java.util.List<Point3D>) pointsInImage.values().stream().toList(), (List<Point3D>) pointsInModel.values().stream().toList(),
+                    new Dimension(panelPicture.getWidth(), panelPicture.getHeight()), new Dimension(panelModelView.getWidth(), panelModelView.getHeight()));
+            if (model != null) {
+                model.texture(iTexture);
+            }
 
+        }
     }
 
     private void displayPointsIn(HashMap<String, Point3D> points) {
