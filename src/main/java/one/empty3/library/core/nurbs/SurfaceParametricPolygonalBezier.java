@@ -39,6 +39,7 @@ import one.empty3.library.StructureMatrix;
  * Meta Description missing
  * @author Manuel Dahmen dathewolf@gmail.com
  */
+@Deprecated
 public class SurfaceParametricPolygonalBezier extends ParametricSurface implements SurfaceElem {
 
     protected final StructureMatrix<Point3D> coefficients;

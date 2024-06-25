@@ -26,6 +26,7 @@
 
 package one.empty3.apps.facedetect;
 
+import com.google.api.services.vision.v1.model.Landmark;
 import net.miginfocom.swing.MigLayout;
 import one.empty3.library.Config;
 
@@ -35,6 +36,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 /**
@@ -129,6 +131,26 @@ public class JFrameEditPolygonsMappings extends JFrame {
     private void panelModelViewMouseClicked(ActionEvent e) {
     }
 
+    private void menuItemSaveModifiedVertex(ActionEvent e) {
+        JFileChooser saveImageDeformed = new JFileChooser();
+        if (lastDirectory != null)
+            saveImageDeformed.setCurrentDirectory(lastDirectory);
+        if (saveImageDeformed.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+            editPolygonsMappings2.saveTxtOut(saveImageDeformed.getSelectedFile());
+        }
+        lastDirectory = saveImageDeformed.getCurrentDirectory();
+    }
+
+    private void menuItemLoadModifiedVertex(ActionEvent e) {
+        JFileChooser loadImageDeformed = new JFileChooser();
+        if (lastDirectory != null)
+            loadImageDeformed.setCurrentDirectory(lastDirectory);
+        if (loadImageDeformed.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+            editPolygonsMappings2.loadTxtOut(loadImageDeformed.getSelectedFile());
+        }
+        lastDirectory = loadImageDeformed.getCurrentDirectory();
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
         ResourceBundle bundle = ResourceBundle.getBundle("one.empty3.library.core.testing.Bundle");
@@ -136,6 +158,8 @@ public class JFrameEditPolygonsMappings extends JFrame {
         menu2 = new JMenu();
         menuItem1 = new JMenuItem();
         menuItem3 = new JMenuItem();
+        menuItem8 = new JMenuItem();
+        menuItem9 = new JMenuItem();
         menuItem2 = new JMenuItem();
         menuItem4 = new JMenuItem();
         menu1 = new JMenu();
@@ -186,6 +210,19 @@ public class JFrameEditPolygonsMappings extends JFrame {
                 menuItem3.setText(bundle.getString("JFrameEditPolygonsMappings.menuItem3.text"));
                 menuItem3.addActionListener(e -> menuItemLoadTxt(e));
                 menu2.add(menuItem3);
+
+                //---- menuItem8 ----
+                menuItem8.setText(bundle.getString("JFrameEditPolygonsMappings.menuItem8.text"));
+                menuItem8.addActionListener(e -> {
+			menuItemSaveModifiedVertex(e);
+			menuItemSaveVertexModel(e);
+		});
+                menu2.add(menuItem8);
+
+                //---- menuItem9 ----
+                menuItem9.setText(bundle.getString("JFrameEditPolygonsMappings.menuItem9.text"));
+                menuItem9.addActionListener(e -> menuItemLoadModifiedVertex(e));
+                menu2.add(menuItem9);
 
                 //---- menuItem2 ----
                 menuItem2.setText(bundle.getString("JFrameEditPolygonsMappings.menuItem2.text"));
@@ -265,6 +302,8 @@ public class JFrameEditPolygonsMappings extends JFrame {
     private JMenu menu2;
     private JMenuItem menuItem1;
     private JMenuItem menuItem3;
+    private JMenuItem menuItem8;
+    private JMenuItem menuItem9;
     private JMenuItem menuItem2;
     private JMenuItem menuItem4;
     private JMenu menu1;

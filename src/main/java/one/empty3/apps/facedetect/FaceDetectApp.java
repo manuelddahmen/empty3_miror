@@ -27,46 +27,31 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.vision.v1.Vision;
 import com.google.api.services.vision.v1.VisionScopes;
-import com.google.api.services.vision.v1.model.*;
 import com.google.api.services.vision.v1.model.Image;
+import com.google.api.services.vision.v1.model.*;
 import com.google.auth.http.HttpCredentialsAdapter;
 import com.google.auth.oauth2.GoogleCredentials;
-import com.google.common.collect.ImmutableList;
 import com.google.cloud.storage.BlobId;
 import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageOptions;
+import com.google.common.collect.ImmutableList;
 import one.empty3.library.Point3D;
-import one.empty3.library.core.tribase.Config;
-import one.empty3.modelling.Face;
-//import com.google.cloud.vision.v1.AnnotateImageRequest;
-//import com.google.cloud.vision.v1.AnnotateImageResponse;
-//import com.google.cloud.vision.v1.BatchAnnotateImagesResponse;
-//import com.google.cloud.vision.v1.Feature;
-//import com.google.cloud.vision.v1.Feature.Type;
-//import com.google.cloud.vision.v1.Image;
-//import com.google.cloud.vision.v1.ImageAnnotatorClient;
-//import com.google.cloud.vision.v1.ImageSource;
 
-import java.awt.*;
+import javax.imageio.ImageIO;
 import java.awt.Color;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.GeneralSecurityException;
-import java.util.*;
-
-import java.awt.image.BufferedImage;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
+import java.util.*;
 import java.util.function.Consumer;
-import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.imageio.ImageIO;
 
 public class FaceDetectApp {
     private static final String OUTPUT_BUCKET_NAME = "output-pictures";
@@ -333,11 +318,11 @@ public class FaceDetectApp {
 
         faces.forEach(faceAnnotation -> {
             app.initStructurePolygons();
-            app.frontal(img, faceAnnotation);
-            app.annotateWithFaces(img, faceAnnotation);
-            app.annotateWithFaces2(img, faceAnnotation);
-            app.writePolygonsDataPoly(img, faceAnnotation);
-            app.writePolygonsData(img, faceAnnotation);
+            //app.frontal(img, faceAnnotation);
+            //app.annotateWithFaces(img, faceAnnotation);
+            //app.annotateWithFaces2(img, faceAnnotation);
+            //app.writePolygonsDataPoly(img, faceAnnotation);
+            //app.writePolygonsData(img, faceAnnotation);
             app.writeFaceData(faceAnnotation);
         });
 

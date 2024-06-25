@@ -1222,6 +1222,7 @@ public class ZBufferImpl extends Representable implements ZBuffer {
                         Point ce = camera().coordonneesPoint2D(pFinal, that);
                         ime.uMap[(int) ce.getX()][(int) ce.getY()] = u;
                         ime.vMap[(int) ce.getX()][(int) ce.getY()] = v;
+                        ime.rMap[(int) ce.getX()][(int) ce.getY()] = n;
 
                     }
                 }

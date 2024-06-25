@@ -31,7 +31,6 @@ import javaAnd.awt.image.imageio.ImageIO;
 import net.miginfocom.swing.MigLayout;
 import one.empty3.apps.morph.Main;
 import one.empty3.library.*;
-import one.empty3.library.core.nurbs.SurfaceParametricPolygonalBezier;
 import one.empty3.library.objloader.E3Model;
 
 import javax.swing.*;
@@ -40,7 +39,6 @@ import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
@@ -54,10 +52,11 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
     private static final int SELECT_POINT_POSITION = 2;
     private static final int SELECT_POINT_VERTEX = 4;
     private int mode;
-    private BufferedImage image;
+    BufferedImage image;
     int selectedPointNo = -1;
-    private E3Model model;
+    protected E3Model model;
     protected TestHumanHeadTexturing testHumanHeadTexturing;
+    boolean threadDistanceIsNotRunning = true;
     /***
      * Contains named landkmarks points from @image
      */
@@ -82,20 +81,29 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
         }
 
         @Override
-        public int getColorAt(double x, double y) {
-            Point3D axPointInB = distanceAB.findAxPointInB((int) x, (int) y);
-            Point3D uvFace = model.findUvFace(
-                    axPointInB.getX() / panelModelView.getWidth()
-                    , axPointInB.getY() / panelModelView.getHeight());
+        public int getColorAt(double u, double v) {
+            Point3D axPointInB = distanceAB.findAxPointInB(u, v);
             return image.getRGB(
-                    (int) (axPointInB.getX() / panelModelView.getWidth() * image.getWidth()),
-                    (int) (axPointInB.getY() / panelModelView.getHeight() * image.getHeight()));
+                    (int) (Math.min(axPointInB.getX() * image.getWidth(), image.getWidth() - 1)),
+                    (int) (Math.min(axPointInB.getY() * image.getHeight(), image.getHeight() - 1)));
         }
     };
-    private SurfaceParametricPolygonalBezier surfaceParametricPolygonalBezier = new SurfaceParametricPolygonalBezier(new Point3D[][]
-            {{new Point3D(0.0, 0.0, 0.0), new Point3D(0.0, 0.0, 0.0)},
-                    {new Point3D(0.0, 0.0, 0.0), new Point3D(0.0, 0.0, 0.0)}});
-    private DistanceAB distanceAB;
+    ITexture iTextureMorphImage = new ITexture() {
+        @Override
+        public MatrixPropertiesObject copy() throws CopyRepresentableError, IllegalAccessException, InstantiationException {
+            return null;
+        }
+
+        @Override
+        public int getColorAt(double u, double v) {
+            Point3D axPointInB = distanceAB.findAxPointInB((int) (u), (int) (v));
+            return image.getRGB(
+                    (int) (axPointInB.getX() * image.getWidth()),
+                    (int) (axPointInB.getY() * image.getHeight()));
+        }
+    };
+    DistanceBezier distanceAB;
+    private boolean hasChangedAorB = true;
 
 
     public EditPolygonsMappings(Window owner) {
@@ -119,7 +127,7 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
             Point3D pointIme = null;
             if (ime.checkCoordinates(x, y)) {
                 Representable elementRepresentable = ime.getrMap()[x][y];
-                if (elementRepresentable != null && elementRepresentable instanceof E3Model.FaceWithUv
+                if (elementRepresentable instanceof E3Model.FaceWithUv
                         && ((E3Model.FaceWithUv) elementRepresentable).model.equals(model)) {
                     u = ime.getuMap()[x][y];
                     v = ime.getvMap()[x][y];
@@ -131,6 +139,7 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
                     pointsInModel.forEach((landmarkTypeItem, point3D) -> {
                         if (landmarkTypeItem.equals(landmarkType)) {
                             pointsInModel.put(landmarkTypeItem, finalPointIme);
+                            hasChangedAorB = true;
                         }
                     });
                 } else {
@@ -364,6 +373,7 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
 
     public void run() {
         testHumanHeadTexturing = TestHumanHeadTexturing.startAll(this, image, model);
+        hasChangedAorB = true;
         while (isVisible() && isRunning) {
             try {
                 // Display 3D scene
@@ -382,11 +392,11 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
                         displayPointsIn(pointsInImage);
                     }
                 }
-                Thread.sleep(100);
+                Thread.sleep(20);
             } catch (RuntimeException ex) {
                 ex.printStackTrace();
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+            } catch (InterruptedException ex) {
+                ex.printStackTrace();
             }
 
             if (model != null) {
@@ -395,13 +405,34 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
             if (image != null) {
                 testHumanHeadTexturing.setJpg(image);
             }
-            distanceAB = new DistanceAB((java.util.List<Point3D>) pointsInImage.values().stream().toList(), (List<Point3D>) pointsInModel.values().stream().toList(),
-                    new Dimension(panelPicture.getWidth(), panelPicture.getHeight()), new Dimension(panelModelView.getWidth(), panelModelView.getHeight()));
-            if (model != null) {
-                model.texture(iTexture);
-            }
 
+            if (pointsInImage != null && panelModelView != null && !pointsInImage.isEmpty()
+                    && !pointsInModel.isEmpty() && model != null && image != null) {
+
+                if (model != null && hasChangedAorB() && threadDistanceIsNotRunning) {
+                    Thread thread = new Thread(() -> {
+                        threadDistanceIsNotRunning = false;
+                        if (hasChangedAorB()) {
+                            distanceAB = new DistanceBezier(pointsInImage.values().stream().toList(),
+                                    pointsInModel.values().stream().toList(), new Dimension(panelPicture.getWidth(), panelPicture.getHeight()),
+                                    new Dimension(panelModelView.getWidth(),
+                                            panelModelView.getHeight()));
+                        }
+                        // Display 3D scene
+                        model.texture(iTextureMorphImage);
+                        //hasChangedAorB = false;
+                        threadDistanceIsNotRunning = true;
+                    });
+                    thread.start();
+                }
+
+
+            }
         }
+    }
+
+    private boolean hasChangedAorB() {
+        return hasChangedAorB;
     }
 
     private void displayPointsIn(HashMap<String, Point3D> points) {
@@ -549,16 +580,17 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
                 // Initialize surface bezier
 
                 pointsInModel = new HashMap<>();
-                if (testHumanHeadTexturing.scene().getObjets().getElem(0) instanceof E3Model e3Model) {
+                if (!testHumanHeadTexturing.scene().getObjets().getData1d().isEmpty() && testHumanHeadTexturing.scene().getObjets().getElem(0) instanceof E3Model e3Model) {
                     pointsInImage.forEach((s, point3D) -> {
                         Point3D copy = new Point3D(point3D);
-                        if (copy != null)
-                            pointsInModel.put(s, copy);
+                        pointsInModel.put(s, copy);
                     });
                 }
 
 
-                model.texture(iTexture);
+                hasChangedAorB = true;
+
+                model.texture(iTextureMorphImage);
             } catch (IOException | RuntimeException ex) {
                 throw new RuntimeException(ex);
             }
@@ -575,5 +607,67 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
 
     public void selectPointPosition() {
         mode = SELECT_POINT_POSITION;
+    }
+
+    public void loadTxtOut(File selectedFile) {
+        if (image != null && model != null) {
+            pointsInImage = new HashMap<String, Point3D>();
+
+            pointsInModel = new HashMap<>();
+            try {
+                Scanner bufferedReader = new Scanner(new FileReader(selectedFile));
+                String line = "";
+                while (bufferedReader.hasNextLine()) {
+                    line = bufferedReader.nextLine();
+                    Point3D point = new Point3D();
+                    String landmarkType;
+                    double x;
+                    double y;
+                    if (!line.isEmpty()) {
+                        if (Character.isLetter(line.charAt(0))) {
+                            landmarkType = line;
+                            // X
+                            line = bufferedReader.nextLine();
+                            x = Double.parseDouble(line);
+                            // Y
+                            line = bufferedReader.nextLine();
+                            y = Double.parseDouble(line);
+                            // Blank line
+                            line = bufferedReader.nextLine();
+
+                            pointsInModel.put(landmarkType, new Point3D(x / image.getWidth(), y / image.getHeight(), 0.0));
+                        }
+                    }
+                }
+                Logger.getAnonymousLogger().log(Level.INFO, "Loaded {0} points in image", pointsInImage.size());
+                bufferedReader.close();
+
+                hasChangedAorB = true;
+
+                model.texture(iTextureMorphImage);
+            } catch (IOException | RuntimeException ex) {
+                throw new RuntimeException(ex);
+            }
+        } else {
+            Logger.getAnonymousLogger().log(Level.INFO, "Loaded image first before points", pointsInImage.size());
+        }
+
+    }
+
+    public void saveTxtOut(File selectedFile) {
+        PrintWriter dataWriter = null;
+        try {
+            dataWriter = new PrintWriter(selectedFile);
+            PrintWriter finalDataWriter = dataWriter;
+            pointsInModel.forEach((s, point3D) -> {
+                finalDataWriter.println(s);
+                finalDataWriter.println(point3D.getX());
+                finalDataWriter.println(point3D.getY());
+                finalDataWriter.println();
+            });
+            dataWriter.close();
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

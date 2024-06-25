@@ -30,19 +30,14 @@ import one.empty3.library.core.testing.TestObjetStub;
 import one.empty3.library.objloader.E3Model;
 
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class TestHumanHeadTexturing extends TestObjetStub {
-    private MouseAdapter mouseAdapter;
-    private boolean isset = false;
     private Rectangle rectangleFace;
     private BufferedImage trueFace;
     private BufferedImage jpgFile;
@@ -77,7 +72,14 @@ public class TestHumanHeadTexturing extends TestObjetStub {
         }
         if (jpgFile != null && objFile != null) {
             E3Model e3Model = objFile;
-            e3Model.texture(new ImageTexture(new ECBufferedImage(jpgFile)));
+            if (editPolygonsMappings != null && editPolygonsMappings.iTexture != null
+                    && editPolygonsMappings.distanceAB != null)
+                e3Model.texture(editPolygonsMappings.iTexture);
+            else
+                e3Model.texture(new ImageTexture(new ECBufferedImage(jpgFile)));
+            if (scene().getObjets().data1d.size() >= 2) {
+                scene().getObjets().delete(0);
+            }
             scene().add(e3Model);
             printWriter.println("# Face elements without eyes month and nose");
         /*AtomicInteger i = new AtomicInteger(0);
@@ -106,7 +108,7 @@ public class TestHumanHeadTexturing extends TestObjetStub {
             camera(c);
             scene().cameraActive(c);
             c.setAngleYr(60, 1.0 * z().la() / z().ha());
-            mouseAdapter = new MouseAdapter() {
+         /*   mouseAdapter = new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     super.mouseClicked(e);
@@ -154,7 +156,7 @@ public class TestHumanHeadTexturing extends TestObjetStub {
                 isset = true;
                 Logger.getAnonymousLogger().log(Level.INFO, "mouse adapter added");
             }
-
+            */
         }
     }
 
@@ -198,13 +200,21 @@ public class TestHumanHeadTexturing extends TestObjetStub {
         testHumanHeadTexturing.editPolygonsMappings = editPolygonsMappings;
         testHumanHeadTexturing.setGenerate(testHumanHeadTexturing.getGenerate() & (0xFFFFFFFF -
                 (GENERATE_SAVE_IMAGE | TestObjetStub.GENERATE_MOVIE | TestObjetStub.GENERATE_MODEL)));
-        testHumanHeadTexturing.setJpg(jpg);
-        testHumanHeadTexturing.setObj(obj);
+        testHumanHeadTexturing.setJpg(editPolygonsMappings.image);
+        testHumanHeadTexturing.setObj(editPolygonsMappings.model);
         testHumanHeadTexturing.loop(true);
         testHumanHeadTexturing.setMaxFrames(Integer.MAX_VALUE);
         testHumanHeadTexturing.setPublish(false);
         testHumanHeadTexturing.setDimension(new Resolution(editPolygonsMappings.panelModelView.getWidth(), editPolygonsMappings.panelModelView.getHeight()));
+
         new Thread(testHumanHeadTexturing).start();
+
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
 
         return testHumanHeadTexturing;
     }
