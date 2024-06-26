@@ -26,7 +26,6 @@
 
 package one.empty3.apps.facedetect;
 
-import com.google.api.services.vision.v1.model.Landmark;
 import net.miginfocom.swing.MigLayout;
 import one.empty3.library.Config;
 
@@ -36,7 +35,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
-import java.util.Optional;
 import java.util.ResourceBundle;
 
 /**
@@ -213,10 +211,7 @@ public class JFrameEditPolygonsMappings extends JFrame {
 
                 //---- menuItem8 ----
                 menuItem8.setText(bundle.getString("JFrameEditPolygonsMappings.menuItem8.text"));
-                menuItem8.addActionListener(e -> {
-			menuItemSaveModifiedVertex(e);
-			menuItemSaveVertexModel(e);
-		});
+                menuItem8.addActionListener(e -> menuItemSaveModifiedVertex(e));
                 menu2.add(menuItem8);
 
                 //---- menuItem9 ----

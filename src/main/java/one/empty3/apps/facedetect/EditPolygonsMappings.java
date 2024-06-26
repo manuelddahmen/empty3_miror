@@ -74,20 +74,7 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
     private int selectedPointNoOut = -1;
     private Point3D selectedPointOutUv = null;
     private Point3D selectedPointVertexOut;
-    ITexture iTexture = new ITexture() {
-        @Override
-        public MatrixPropertiesObject copy() throws CopyRepresentableError, IllegalAccessException, InstantiationException {
-            return null;
-        }
 
-        @Override
-        public int getColorAt(double u, double v) {
-            Point3D axPointInB = distanceAB.findAxPointInB(u, v);
-            return image.getRGB(
-                    (int) (Math.min(axPointInB.getX() * image.getWidth(), image.getWidth() - 1)),
-                    (int) (Math.min(axPointInB.getY() * image.getHeight(), image.getHeight() - 1)));
-        }
-    };
     ITexture iTextureMorphImage = new ITexture() {
         @Override
         public MatrixPropertiesObject copy() throws CopyRepresentableError, IllegalAccessException, InstantiationException {
@@ -96,10 +83,14 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
 
         @Override
         public int getColorAt(double u, double v) {
-            Point3D axPointInB = distanceAB.findAxPointInB((int) (u), (int) (v));
-            return image.getRGB(
-                    (int) (axPointInB.getX() * image.getWidth()),
-                    (int) (axPointInB.getY() * image.getHeight()));
+            if (distanceAB != null) {
+                Point3D axPointInB = distanceAB.findAxPointInB(u, v);
+                return image.getRGB(
+                        (int) (axPointInB.getX() * image.getWidth()),
+                        (int) (axPointInB.getY() * image.getHeight()));
+            } else {
+                return 0;
+            }
         }
     };
     DistanceBezier distanceAB;
@@ -220,6 +211,9 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
             testHumanHeadTexturing = TestHumanHeadTexturing.restartAll(testHumanHeadTexturing);
         } else {
             testHumanHeadTexturing = TestHumanHeadTexturing.startAll(this, image, model);
+        }
+        if (model != null && image != null) {
+            model.texture(iTextureMorphImage);
         }
     }
 
@@ -407,29 +401,26 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
             }
 
             if (pointsInImage != null && panelModelView != null && !pointsInImage.isEmpty()
-                    && !pointsInModel.isEmpty() && model != null && image != null) {
-
-                if (model != null && hasChangedAorB() && threadDistanceIsNotRunning) {
-                    Thread thread = new Thread(() -> {
-                        threadDistanceIsNotRunning = false;
-                        if (hasChangedAorB()) {
-                            distanceAB = new DistanceBezier(pointsInImage.values().stream().toList(),
-                                    pointsInModel.values().stream().toList(), new Dimension(panelPicture.getWidth(), panelPicture.getHeight()),
-                                    new Dimension(panelModelView.getWidth(),
-                                            panelModelView.getHeight()));
-                        }
-                        // Display 3D scene
-                        model.texture(iTextureMorphImage);
-                        //hasChangedAorB = false;
-                        threadDistanceIsNotRunning = true;
-                    });
-                    thread.start();
-                }
-
-
+                    && !pointsInModel.isEmpty() && model != null && image != null &&
+                    hasChangedAorB() && threadDistanceIsNotRunning) {
+                Thread thread = new Thread(() -> {
+                    threadDistanceIsNotRunning = false;
+                    if (hasChangedAorB()) {
+                        distanceAB = new DistanceBezier(pointsInImage.values().stream().toList(),
+                                pointsInModel.values().stream().toList(), new Dimension(panelPicture.getWidth(), panelPicture.getHeight()),
+                                new Dimension(panelModelView.getWidth(),
+                                        panelModelView.getHeight()));
+                    }
+                    // Display 3D scene
+                    model.texture(iTextureMorphImage);
+                    //hasChangedAorB = false;
+                    threadDistanceIsNotRunning = true;
+                });
+                thread.start();
             }
         }
     }
+
 
     private boolean hasChangedAorB() {
         return hasChangedAorB;
@@ -590,7 +581,6 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
 
                 hasChangedAorB = true;
 
-                model.texture(iTextureMorphImage);
             } catch (IOException | RuntimeException ex) {
                 throw new RuntimeException(ex);
             }
@@ -611,15 +601,12 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
 
     public void loadTxtOut(File selectedFile) {
         if (image != null && model != null) {
-            pointsInImage = new HashMap<String, Point3D>();
-
             pointsInModel = new HashMap<>();
             try {
                 Scanner bufferedReader = new Scanner(new FileReader(selectedFile));
                 String line = "";
                 while (bufferedReader.hasNextLine()) {
                     line = bufferedReader.nextLine();
-                    Point3D point = new Point3D();
                     String landmarkType;
                     double x;
                     double y;
@@ -635,21 +622,20 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
                             // Blank line
                             line = bufferedReader.nextLine();
 
-                            pointsInModel.put(landmarkType, new Point3D(x / image.getWidth(), y / image.getHeight(), 0.0));
+                            pointsInModel.put(landmarkType, new Point3D(x, y, 0.0));
                         }
                     }
                 }
-                Logger.getAnonymousLogger().log(Level.INFO, "Loaded {0} points in image", pointsInImage.size());
+                Logger.getAnonymousLogger().log(Level.INFO, "Loaded {0} points in image", pointsInModel.size());
                 bufferedReader.close();
 
                 hasChangedAorB = true;
 
-                model.texture(iTextureMorphImage);
             } catch (IOException | RuntimeException ex) {
                 throw new RuntimeException(ex);
             }
         } else {
-            Logger.getAnonymousLogger().log(Level.INFO, "Loaded image first before points", pointsInImage.size());
+            Logger.getAnonymousLogger().log(Level.INFO, "Load image first before points", pointsInModel.size());
         }
 
     }

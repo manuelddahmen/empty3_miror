@@ -25,24 +25,28 @@ package one.empty3.apps.facedetect;
 import one.empty3.library.Point3D;
 import one.empty3.library.core.nurbs.SurfaceParametriquePolynomialeBezier;
 
+import java.awt.*;
 import java.awt.geom.Dimension2D;
 import java.util.ArrayList;
 import java.util.List;
 
 public class DistanceBezier {
-    private final Dimension2D aDim;
-    private final Dimension2D bDim;
+    private final Dimension2D aDimReal;
+    private final Dimension2D bDimReal;
     private final List<Point3D> A;
     private final List<Point3D> B;
     private final SurfaceParametriquePolynomialeBezier surfaceA;
     private final SurfaceParametriquePolynomialeBezier surfaceB;
-    private Point3D[][] sBij;
+    private final Point3D[][] sAij;
+    private final Point3D[][] sBij;
+    private final Dimension2D aDimReduced = new Dimension(80, 80);
+    private final Dimension2D bDimReduced = new Dimension(80, 80);
 
-    public DistanceBezier(List<Point3D> A, List<Point3D> B, Dimension2D Adim, Dimension2D Bdim) {
+    public DistanceBezier(List<Point3D> A, List<Point3D> B, Dimension2D aDimReal, Dimension2D bDimReal) {
         this.A = A;
         this.B = B;
-        this.aDim = Adim;
-        this.bDim = Bdim;
+        this.aDimReal = aDimReal;
+        this.bDimReal = bDimReal;
 
         List<Double> listAX = new ArrayList<>();
         List<Double> listAY = new ArrayList<>();
@@ -74,9 +78,11 @@ public class DistanceBezier {
                 surfaceB.getCoefficients().setElem(new Point3D(listBX.get(i), listBY.get(j), 0.0), i, j);
             }
         }
-        sBij = new Point3D[(int) bDim.getWidth()][(int) bDim.getHeight()];
+        sAij = new Point3D[(int) this.aDimReduced.getWidth()][(int) this.aDimReduced.getHeight()];
+        sBij = new Point3D[(int) this.bDimReduced.getWidth()][(int) this.bDimReduced.getHeight()];
 
-        precompute();
+        precomputeA();
+        precomputeB();
 
     }
 
@@ -84,24 +90,41 @@ public class DistanceBezier {
         Point3D searched = new Point3D(u, v, 0.0);
         double distance = Double.MAX_VALUE;
         Point3D found = searched;
-/*        for (int i = 0; i < bDim.getWidth(); i++)
-            for (int j = 0; j < bDim.getHeight(); j++) {
+
+        searched = sAij[(int) Math.min((u * aDimReduced.getWidth())
+                , aDimReduced.getWidth() - 1)][(int) Math.min((v * aDimReduced.getHeight())
+                , aDimReduced.getHeight() - 1)];
+        for (int i = 0; i < bDimReduced.getWidth(); i++)
+            for (int j = 0; j < bDimReduced.getHeight(); j++) {
                 Double dist = Point3D.distance(sBij[i][j], searched);
                 if (dist < distance) {
                     distance = dist;
-                    found = new Point3D(i / bDim.getWidth(), j / bDim.getHeight(), 0.0);
+                    found = new Point3D(i / bDimReduced.getWidth(), j / bDimReduced.getHeight(), 0.0);
                 }
             }
-*/
-        return sBij[(int) Math.min((u * bDim.getWidth())
-                , bDim.getWidth() - 1)][(int) Math.min((v * bDim.getHeight())
-                , bDim.getHeight() - 1)];
+
+
+        //return sAij[(int) (found.getX() * aDim.getWidth())]
+        //        [(int) (found.getX() * aDim.getHeight())];
+        return sAij[(int) Math.min((found.getX() * aDimReduced.getWidth())
+                , aDimReduced.getWidth() - 1)][(int) Math.min((found.getY()
+                        * aDimReduced.getHeight())
+                , aDimReduced.getHeight() - 1)];
     }
 
-    public void precompute() {
-        for (int i = 0; i < bDim.getWidth(); i++)
-            for (int j = 0; j < bDim.getHeight(); j++) {
-                Point3D tried = new Point3D((double) 1.0 * i / bDim.getWidth(), (double) 1.0 * j / bDim.getHeight(), 0.0);
+    public void precomputeA() {
+        for (int i = 0; i < aDimReduced.getWidth(); i++)
+            for (int j = 0; j < aDimReduced.getHeight(); j++) {
+                Point3D tried = new Point3D(1.0 * i / aDimReduced.getWidth(), 1.0 * j / aDimReduced.getHeight(), 0.0);
+                sAij[i][j] = surfaceA.calculerPoint3D(tried.getX(), tried.getY());
+
+            }
+    }
+
+    public void precomputeB() {
+        for (int i = 0; i < bDimReduced.getWidth(); i++)
+            for (int j = 0; j < bDimReduced.getHeight(); j++) {
+                Point3D tried = new Point3D(1.0 * i / bDimReduced.getWidth(), 1.0 * j / bDimReduced.getHeight(), 0.0);
                 sBij[i][j] = surfaceB.calculerPoint3D(tried.getX(), tried.getY());
 
             }

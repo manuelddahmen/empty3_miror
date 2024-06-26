@@ -55,7 +55,6 @@ new FormModel {
 						name: "menuItem8"
 						"text": new FormMessage( null, "JFrameEditPolygonsMappings.menuItem8.text" )
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItemSaveModifiedVertex", true ) )
-						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItemSaveVertexModel", true ) )
 					} )
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
 						name: "menuItem9"

@@ -50,10 +50,7 @@ import java.awt.image.RenderedImage;
 import java.io.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.Properties;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -74,11 +71,11 @@ public abstract class TestObjet implements Test, Runnable {
     public static final int GENERATE_MOVIE = 8;
     public static final int GENERATE_OBJ = 16;
     public static final int GENERATE_NO_IMAGE_FILE_WRITING = 32;
-    public static final int GENERATE_SAVE_IMAGE = 32;
-    public static final int GENERATE_SAVE_XML = 64;
-    public static final int GENERATE_SAVE_OBJ = 128;
-    public static final int GENERATE_SAVE_STL = 256;
-    public static final int GENERATE_SAVE_ZIP = 64;
+    public static final int GENERATE_SAVE_IMAGE = 64;
+    public static final int GENERATE_SAVE_XML = 128;
+    public static final int GENERATE_SAVE_OBJ = 256;
+    public static final int GENERATE_SAVE_STL = 512;
+    public static final int GENERATE_SAVE_ZIP = 1024;
     public static final ArrayList<TestInstance.Parameter> initParams = new ArrayList<TestInstance.Parameter>();
     public static final int ON_TEXTURE_ENDS_STOP = 0;
     public static final int ON_TEXTURE_ENDS_LOOP_TEXTURE = 1;
@@ -110,7 +107,9 @@ public abstract class TestObjet implements Test, Runnable {
     private boolean unterminable = false;
     private long timeStart;
     private long lastInfoEllapsedMillis;
-    private int generate = GENERATE_IMAGE | GENERATE_MOVIE;
+    private int generate = GENERATE_IMAGE | GENERATE_MOVIE |
+            GENERATE_SAVE_IMAGE | GENERATE_SAVE_OBJ |
+            GENERATE_SAVE_STL | GENERATE_SAVE_ZIP;
     private int version = 1;
     private String template = "";
     private String type = "JPEG";
@@ -995,9 +994,10 @@ public abstract class TestObjet implements Test, Runnable {
                     dataWriter.writeFrameData(frame(), "Save text file: " + fout.getAbsolutePath());
                     fout = new File(this.dir.getAbsolutePath()
                             + File.separator + filename + "-description.xml");
-                    DataModel dataModel = new DataModel();
-                    dataModel.setScene(scene());
-                    synchronized (dataModel) {
+                    final Scene scene2 = scene;
+                    synchronized (scene2) {
+                        DataModel dataModel = new DataModel();
+                        dataModel.setScene(scene2);
                         dataModel.save(fout.getAbsolutePath());
                     }
                     dataWriter.writeFrameData(frame(), "Save bin: " + fout.getAbsolutePath());
