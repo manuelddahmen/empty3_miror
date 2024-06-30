@@ -38,6 +38,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicReference;
@@ -86,8 +87,8 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
             if (distanceAB != null) {
                 Point3D axPointInB = distanceAB.findAxPointInB(u, v);
                 return image.getRGB(
-                        (int) (axPointInB.getX() * image.getWidth()),
-                        (int) (axPointInB.getY() * image.getHeight()));
+                        (int) (Math.max(0, Math.min((axPointInB.getX() * (image.getWidth())), image.getWidth() - 1))),
+                        (int) (Math.max(0, Math.min((axPointInB.getY() * image.getHeight()), image.getHeight() - 1))));
             } else {
                 return 0;
             }
@@ -459,45 +460,49 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
             // Display image
             int[] i = new int[]{0};
             if (points != null) {
-                points.forEach((s, uvCoordinates) -> {
-                    if (testHumanHeadTexturing.camera() != null && uvCoordinates != null) {
-                        // +++ Model 3DObj : calculerPoint3D(u,v) +++
-                        Point3D uvFace = model.findUvFace(
-                                uvCoordinates.getX(),
-                                uvCoordinates.getY());
-                        if (uvFace != null) {
-                            Point point = testHumanHeadTexturing.scene().cameraActive().coordonneesPoint2D(uvFace, testHumanHeadTexturing.getZ());
-                            point.setLocation(point.getX() / testHumanHeadTexturing.getZ().la() * panelDraw.getWidth(),
-                                    point.getY() / testHumanHeadTexturing.getZ().ha() * panelDraw.getHeight());
-                            Graphics graphics = panelDraw.getGraphics();
-                            if (selectedPointNo == i[0])
-                                graphics.setColor(Color.ORANGE);
-                            else
-                                graphics.setColor(Color.GREEN);
+                try {
+                    points.forEach((s, uvCoordinates) -> {
+                        if (testHumanHeadTexturing.camera() != null && uvCoordinates != null) {
+                            // +++ Model 3DObj : calculerPoint3D(u,v) +++
+                            Point3D uvFace = model.findUvFace(
+                                    uvCoordinates.getX(),
+                                    uvCoordinates.getY());
+                            if (uvFace != null) {
+                                Point point = testHumanHeadTexturing.scene().cameraActive().coordonneesPoint2D(uvFace, testHumanHeadTexturing.getZ());
+                                point.setLocation(point.getX() / testHumanHeadTexturing.getZ().la() * panelDraw.getWidth(),
+                                        point.getY() / testHumanHeadTexturing.getZ().ha() * panelDraw.getHeight());
+                                Graphics graphics = panelDraw.getGraphics();
+                                if (selectedPointNo == i[0])
+                                    graphics.setColor(Color.ORANGE);
+                                else
+                                    graphics.setColor(Color.GREEN);
 
-                            // point.setLocation(point.getX(), point.getY());
+                                // point.setLocation(point.getX(), point.getY());
 
-                            if (testHumanHeadTexturing.getZ().checkScreen(point)) {
-                                graphics.fillOval((int) (point.getX() - 3),
-                                        (int) ((point.getY()) - 3),
-                                        7, 7);
+                                if (testHumanHeadTexturing.getZ().checkScreen(point)) {
+                                    graphics.fillOval((int) (point.getX() - 3),
+                                            (int) ((point.getY()) - 3),
+                                            7, 7);
+                                } else {
+                                    graphics = panelDraw.getGraphics();
+                                    graphics.setColor(Color.GREEN);
+                                    graphics.fillRect(0, 0, 10, 10);
+
+                                }
                             } else {
-                                graphics = panelDraw.getGraphics();
+                                Graphics graphics = panelDraw.getGraphics();
                                 graphics.setColor(Color.GREEN);
                                 graphics.fillRect(0, 0, 10, 10);
 
                             }
-                        } else {
-                            Graphics graphics = panelDraw.getGraphics();
-                            graphics.setColor(Color.GREEN);
-                            graphics.fillRect(0, 0, 10, 10);
 
                         }
 
-                    }
-
-                    i[0]++;
-                });
+                        i[0]++;
+                    });
+                } catch (ConcurrentModificationException ex) {
+                    Logger.getAnonymousLogger().log(Level.SEVERE, "Concurrent exception while drawing");
+                }
             }
 
             if (mode == SELECT_POINT_POSITION && selectedPointOutUv != null) {

@@ -27,12 +27,8 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import java.util.function.Consumer;
 
 /*__
@@ -310,14 +306,12 @@ public class StructureMatrix<T> implements Serializable, Serialisable {
 
     @Override
     public String toString() {
-        StringBuilder s = new StringBuilder("");
+        StringBuilder s = new StringBuilder();
         s.append("num(dim:").append(dim).append(")");
         switch (dim) {
             case 0:
                 if (data0d != null)
                     s.append(" data : ").append(data0d.toString());
-                else
-                    s.append("");
                 break;
             case 1:
                 s.append(" data : ( ");

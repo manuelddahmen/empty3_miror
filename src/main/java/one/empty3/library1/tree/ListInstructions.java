@@ -68,7 +68,13 @@ public class ListInstructions {
         }
 
         public String getExpression() {
+
             return tokenExpression2.toString();
+        }
+
+        public String getExpressionAlgebraicTree() {
+
+            return expression;
         }
 
         public void setExpression(String expression) {
@@ -95,6 +101,10 @@ public class ListInstructions {
             } else {
                 return expression;
             }
+        }
+
+        public String toStringAlgebraicTree() {
+            return expression;
         }
     }
 
@@ -184,7 +194,7 @@ public class ListInstructions {
         int countInstructions = 0;
         for (Instruction instruction : instructions) {
             String key = instruction.getLeftHand();
-            String value = instruction.getExpression();
+            String value = instruction.getExpressionAlgebraicTree();
 
             if (key != null)
                 key = key.trim();
@@ -229,17 +239,19 @@ public class ListInstructions {
                     //System.err.println("AlgebraicTree result : " + tree);
                 } catch (AlgebraicFormulaSyntaxException | TreeNodeEvalException |
                          NullPointerException e) {
-                    e.printStackTrace();
-                    i++;
-                    continue;
+                    //e.printStackTrace();
+                    //i++;
+                    //continue;
                 }
                 String errors1 = "";
-                if (value != null && resultVec != null && (!value.startsWith("#") && !(key == null || key.startsWith("#"))) && !value.isBlank() && !value.equals("null")) {
-                    errors1 += String.format(Locale.getDefault(), "\n#line : (%d)%s=%s ", countInstructions, value, resultVec.toStringLine());
-                }
-                if (value != null && (!value.startsWith("#") && !(key == null || key.startsWith("#")))) {
-                    errors1 += "\n" + (key == null || key.isBlank() ? "" : (key + "=")) + value;
+                boolean b = !value.startsWith("##") && !key.startsWith("##");
+                if (b) {
+                    errors1 += "\n" + (key.isBlank() ? "" : key + "=") + value;
                     countInstructions++;
+                }
+                if (resultVec != null && b && !value.isBlank() && !value.equals("null")) {
+                    errors1 += String.format(Locale.getDefault(),
+                            "\n#line : (%d)%s=%s ", countInstructions, value, resultVec.toStringLine());
                 }
                 if (!(errors1.isBlank() || errors1.equals("null"))) {
                     returnedCode.add(errors1);
