@@ -31,9 +31,7 @@ import one.empty3.library.Config;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 import java.io.File;
 import java.util.ResourceBundle;
 
@@ -149,6 +147,22 @@ public class JFrameEditPolygonsMappings extends JFrame {
         lastDirectory = loadImageDeformed.getCurrentDirectory();
     }
 
+    private void menuItemHD(ActionEvent e) {
+        // TODO add your code here
+    }
+
+    private void menuItem4K(ActionEvent e) {
+        // TODO add your code here
+    }
+
+    private void menuBar1FocusGained(FocusEvent e) {
+        editPolygonsMappings2.notMenuOpen = false;
+    }
+
+    private void menuBar1FocusLost(FocusEvent e) {
+        editPolygonsMappings2.notMenuOpen = true;
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
         ResourceBundle bundle = ResourceBundle.getBundle("one.empty3.library.core.testing.Bundle");
@@ -169,6 +183,9 @@ public class JFrameEditPolygonsMappings extends JFrame {
         menuItem5 = new JMenuItem();
         menuItem6 = new JMenuItem();
         menuItem7 = new JMenuItem();
+        menu4 = new JMenu();
+        menuItem10 = new JMenuItem();
+        menuItem11 = new JMenuItem();
         editPolygonsMappings2 = new EditPolygonsMappings();
         menu3 = new JMenu();
 
@@ -194,6 +211,16 @@ public class JFrameEditPolygonsMappings extends JFrame {
 
         //======== menuBar1 ========
         {
+            menuBar1.addFocusListener(new FocusAdapter() {
+                @Override
+                public void focusGained(FocusEvent e) {
+                    menuBar1FocusGained(e);
+                }
+                @Override
+                public void focusLost(FocusEvent e) {
+                    menuBar1FocusLost(e);
+                }
+            });
 
             //======== menu2 ========
             {
@@ -275,6 +302,22 @@ public class JFrameEditPolygonsMappings extends JFrame {
                 menu1.add(menuItem7);
             }
             menuBar1.add(menu1);
+
+            //======== menu4 ========
+            {
+                menu4.setText(bundle.getString("JFrameEditPolygonsMappings.menu4.text"));
+
+                //---- menuItem10 ----
+                menuItem10.setText(bundle.getString("JFrameEditPolygonsMappings.menuItem10.text"));
+                menuItem10.addActionListener(e -> menuItemHD(e));
+                menu4.add(menuItem10);
+
+                //---- menuItem11 ----
+                menuItem11.setText(bundle.getString("JFrameEditPolygonsMappings.menuItem11.text"));
+                menuItem11.addActionListener(e -> menuItem4K(e));
+                menu4.add(menuItem11);
+            }
+            menuBar1.add(menu4);
         }
         setJMenuBar(menuBar1);
 
@@ -310,6 +353,9 @@ public class JFrameEditPolygonsMappings extends JFrame {
     private JMenuItem menuItem5;
     private JMenuItem menuItem6;
     private JMenuItem menuItem7;
+    private JMenu menu4;
+    private JMenuItem menuItem10;
+    private JMenuItem menuItem11;
     private EditPolygonsMappings editPolygonsMappings2;
     private JMenu menu3;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on

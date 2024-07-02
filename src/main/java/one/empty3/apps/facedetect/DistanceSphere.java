@@ -30,9 +30,8 @@ import java.awt.geom.Dimension2D;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DistanceBezier extends DistanceAB {
+public class DistanceSphere extends DistanceAB {
     private boolean invalidArray;
-    private boolean opt1 = true;
 
     static class Rectangle2 {
         public double getX1() {
@@ -98,10 +97,8 @@ public class DistanceBezier extends DistanceAB {
     private final Point3D[][] sBij;
     private Dimension2D aDimReduced = new Dimension(80, 80);
     private Dimension2D bDimReduced = new Dimension(80, 80);
-    private Rectangle2 rectA = new Rectangle2(1000000, 1000000, 0, 0);
-    private Rectangle2 rectB = new Rectangle2(1000000, 1000000, 0, 0);
 
-    public DistanceBezier(List<Point3D> A, List<Point3D> B, Dimension2D aDimReal, Dimension2D bDimReal) {
+    public DistanceSphere(List<Point3D> A, List<Point3D> B, Dimension2D aDimReal, Dimension2D bDimReal) {
         this.A = A;
         this.B = B;
         this.aDimReal = aDimReal;
@@ -123,7 +120,7 @@ public class DistanceBezier extends DistanceAB {
             listBY.add(B.get(i).getY());
 
         }
-
+/*
         for (int i = 0; i < A.size(); i++) {
             if (rectA.getX1() > A.get(i).getX())
                 rectA.setX1(A.get(i).getX());
@@ -144,13 +141,13 @@ public class DistanceBezier extends DistanceAB {
         }
 
         for (int i = 0; i < A.size(); i++) {
-            listAX.set(i, (listAX.get(i) - rectA.getX1()) / rectA.getWidth());
-            listAY.set(i, (listAY.get(i) - rectA.getY1()) / rectA.getHeight());
-            listBX.set(i, (listBX.get(i) - rectB.getX1()) / rectB.getWidth());
-            listBY.set(i, (listBY.get(i) - rectB.getY1()) / rectB.getHeight());
+            listAX.set(i, listAX.get(i) - rectA.getX1());
+            listAY.set(i, listAY.get(i) - rectA.getY1());
+            listBX.set(i, listBX.get(i) - rectB.getX1());
+            listBY.set(i, listBY.get(i) - rectB.getY1());
 
         }
-
+*/
         listAX.sort(Double::compare);
         listAY.sort(Double::compare);
         listBX.sort(Double::compare);
@@ -201,12 +198,7 @@ public class DistanceBezier extends DistanceAB {
     }
 
     public Point3D findAxPointInB(double u, double v) {
-        Point3D searched = null;
-        if (opt1) {
-            searched = new Point3D(u, v, 0.0);
-        } else {
-            searched = new Point3D((u - rectB.getX1()) / rectB.getWidth(), (v - rectB.getY1()) / rectB.getHeight(), 0.0);
-        }
+        Point3D searched = new Point3D(u, v, 0.0);
         double distance = Double.MAX_VALUE;
         Point3D found = searched;
         if (isInvalidArray())
@@ -247,3 +239,4 @@ public class DistanceBezier extends DistanceAB {
     }
 
 }
+

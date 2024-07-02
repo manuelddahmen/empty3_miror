@@ -30,9 +30,22 @@ import java.awt.geom.Dimension2D;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DistanceBezier extends DistanceAB {
+public class DistanceBezier2 extends DistanceAB {
+    private final Rectangle2 rectA;
+    private final Rectangle2 rectB;
     private boolean invalidArray;
-    private boolean opt1 = true;
+    private final Dimension2D aDimReal;
+    private final Dimension2D bDimReal;
+    private final List<Point3D> A;
+    private final List<Point3D> B;
+    private final SurfaceParametriquePolynomialeBezier surfaceA;
+    private final SurfaceParametriquePolynomialeBezier surfaceB;
+    private final Point3D[][] sAij;
+    private final Point3D[][] sBij;
+    private Dimension2D aDimReduced = new Dimension(80, 80);
+    private Dimension2D bDimReduced = new Dimension(80, 80);
+    private double arrayHeight = 80;
+    private double arrayWidth = 80;
 
     static class Rectangle2 {
         public double getX1() {
@@ -88,27 +101,15 @@ public class DistanceBezier extends DistanceAB {
         }
     }
 
-    private final Dimension2D aDimReal;
-    private final Dimension2D bDimReal;
-    private final List<Point3D> A;
-    private final List<Point3D> B;
-    private final SurfaceParametriquePolynomialeBezier surfaceA;
-    private final SurfaceParametriquePolynomialeBezier surfaceB;
-    private final Point3D[][] sAij;
-    private final Point3D[][] sBij;
-    private Dimension2D aDimReduced = new Dimension(80, 80);
-    private Dimension2D bDimReduced = new Dimension(80, 80);
-    private Rectangle2 rectA = new Rectangle2(1000000, 1000000, 0, 0);
-    private Rectangle2 rectB = new Rectangle2(1000000, 1000000, 0, 0);
 
-    public DistanceBezier(List<Point3D> A, List<Point3D> B, Dimension2D aDimReal, Dimension2D bDimReal) {
+    public DistanceBezier2(List<Point3D> A, List<Point3D> B, Dimension2D aDimReal, Dimension2D bDimReal) {
         this.A = A;
         this.B = B;
         this.aDimReal = aDimReal;
         this.bDimReal = bDimReal;
 
-//        Rectangle2 rectA = new Rectangle2(1000000, 1000000, 0, 0);
-//        Rectangle2 rectB = new Rectangle2(1000000, 1000000, 0, 0);
+        rectA = new Rectangle2(1000000, 1000000, 0, 0);
+        rectB = new Rectangle2(1000000, 1000000, 0, 0);
 
 
         List<Double> listAX = new ArrayList<>();
@@ -144,10 +145,10 @@ public class DistanceBezier extends DistanceAB {
         }
 
         for (int i = 0; i < A.size(); i++) {
-            listAX.set(i, (listAX.get(i) - rectA.getX1()) / rectA.getWidth());
-            listAY.set(i, (listAY.get(i) - rectA.getY1()) / rectA.getHeight());
-            listBX.set(i, (listBX.get(i) - rectB.getX1()) / rectB.getWidth());
-            listBY.set(i, (listBY.get(i) - rectB.getY1()) / rectB.getHeight());
+            listAX.set(i, listAX.get(i) - rectA.getX1());
+            listAY.set(i, listAY.get(i) - rectA.getY1());
+            listBX.set(i, listBX.get(i) - rectB.getX1());
+            listBY.set(i, listBY.get(i) - rectB.getY1());
 
         }
 
@@ -155,12 +156,7 @@ public class DistanceBezier extends DistanceAB {
         listAY.sort(Double::compare);
         listBX.sort(Double::compare);
         listBY.sort(Double::compare);
-/*
-        aDimReduced.setSize(new Dimension((int) (double) (listAX.get(listAX.size() - 1) - listAX.get(0)),
-                (int) (double) (listAY.get(listAY.size() - 1) - listAY.get(0))));
-        bDimReduced.setSize(new Dimension((int) (double) (listBX.get(listBX.size() - 1) - listBX.get(0)),
-                (int) (double) (listBY.get(listBY.size() - 1) - listBY.get(0))));
-*/
+
 
         surfaceA = new SurfaceParametriquePolynomialeBezier();
         surfaceB = new SurfaceParametriquePolynomialeBezier();
@@ -175,10 +171,8 @@ public class DistanceBezier extends DistanceAB {
                 surfaceB.getCoefficients().setElem(new Point3D(listBX.get(i), listBY.get(j), 0.0), i, j);
             }
         }
-/*
-        this.aDimReduced = new Dimension((int) (rectA.getWidth() * aDimReduced.getWidth()), (int) (rectA.getHeight() * aDimReduced.getHeight()));
-        this.bDimReduced = new Dimension((int) (rectB.getWidth() * bDimReduced.getWidth()), (int) (rectB.getHeight() * bDimReduced.getHeight()));
-*/
+        this.aDimReduced = new Dimension((int) (rectA.getWidth() * arrayWidth), (int) (rectA.getHeight() * arrayHeight));
+        this.bDimReduced = new Dimension((int) (rectB.getWidth() * arrayWidth), (int) (rectB.getHeight() * arrayHeight));
 
         sAij = new Point3D[(int) this.aDimReduced.getWidth()][(int) this.aDimReduced.getHeight()];
         sBij = new Point3D[(int) this.bDimReduced.getWidth()][(int) this.bDimReduced.getHeight()];
@@ -201,12 +195,7 @@ public class DistanceBezier extends DistanceAB {
     }
 
     public Point3D findAxPointInB(double u, double v) {
-        Point3D searched = null;
-        if (opt1) {
-            searched = new Point3D(u, v, 0.0);
-        } else {
-            searched = new Point3D((u - rectB.getX1()) / rectB.getWidth(), (v - rectB.getY1()) / rectB.getHeight(), 0.0);
-        }
+        Point3D searched = new Point3D((u * rectA.getWidth() + rectA.getX1()) / rectA.getWidth(), (v * rectA.getHeight() + rectA.getY1()) / rectA.getHeight(), 0.0);
         double distance = Double.MAX_VALUE;
         Point3D found = searched;
         if (isInvalidArray())
@@ -214,15 +203,14 @@ public class DistanceBezier extends DistanceAB {
         //searched = sAij[(int) Math.min((u * aDimReduced.getWidth())
         //        , aDimReduced.getWidth() - 1)][(int) Math.min((v * aDimReduced.getHeight())
         //        , aDimReduced.getHeight() - 1)];
-        for (int i = 0; i < bDimReduced.getWidth(); i++) {
+        for (int i = 0; i < bDimReduced.getWidth(); i++)
             for (int j = 0; j < bDimReduced.getHeight(); j++) {
-                Double dist = Point3D.distance(sBij[i][j], searched);
+                Double dist = Point3D.distance(sBij[i][j].plus(new Point3D(rectB.getX1(), rectB.getY1(), 0.0)), searched);
                 if (dist < distance) {
                     distance = dist;
                     found = new Point3D(i / bDimReduced.getWidth(), j / bDimReduced.getHeight(), 0.0);
                 }
             }
-        }
         return found;
 
         //return sAij[(int) (found.getX() * aDim.getWidth())]

@@ -85,7 +85,9 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
         @Override
         public int getColorAt(double u, double v) {
             if (distanceAB != null) {
-                Point3D axPointInB = distanceAB.findAxPointInB(u, v);
+                Point3D axPointInB;
+                //axPointInB = ((DistanceBezier) distanceAB).findAxPointInB2(u, v);
+                axPointInB = distanceAB.findAxPointInB(u, v);
                 return image.getRGB(
                         (int) (Math.max(0, Math.min((axPointInB.getX() * (image.getWidth())), image.getWidth() - 1))),
                         (int) (Math.max(0, Math.min((axPointInB.getY() * image.getHeight()), image.getHeight() - 1))));
@@ -94,8 +96,9 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
             }
         }
     };
-    DistanceBezier distanceAB;
+    DistanceAB distanceAB;
     private boolean hasChangedAorB = true;
+    boolean notMenuOpen = true;
 
 
     public EditPolygonsMappings(Window owner) {
@@ -215,7 +218,10 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
         }
         if (model != null && image != null) {
             model.texture(iTextureMorphImage);
+            testHumanHeadTexturing.setJpg(image);
+            testHumanHeadTexturing.setObj(model);
         }
+        hasChangedAorB = true;
     }
 
     private void initComponents() {
@@ -375,14 +381,14 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
                 BufferedImage image1 = testHumanHeadTexturing.getPicture();
                 if (image1 != null && image1.getWidth() == panelModelView.getWidth() && image1.getHeight() == panelModelView.getHeight()) {
                     Graphics graphics = panelModelView.getGraphics();
-                    if (graphics != null) {
+                    if (graphics != null && isNotMenuOpen()) {
                         graphics.drawImage(image1, 0, 0, panelModelView.getWidth(), panelModelView.getHeight(), null);
                         displayPointsOut(pointsInModel);
                     }
                 }
                 if (image != null) {
                     Graphics graphics = panelPicture.getGraphics();
-                    if (graphics != null) {
+                    if (graphics != null && isNotMenuOpen()) {
                         graphics.drawImage(image, 0, 0, panelPicture.getWidth(), panelPicture.getHeight(), null);
                         displayPointsIn(pointsInImage);
                     }
@@ -404,6 +410,8 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
             if (pointsInImage != null && panelModelView != null && !pointsInImage.isEmpty()
                     && !pointsInModel.isEmpty() && model != null && image != null &&
                     hasChangedAorB() && threadDistanceIsNotRunning) {
+                // Display 3D scene
+                model.texture(iTextureMorphImage);
                 Thread thread = new Thread(() -> {
                     threadDistanceIsNotRunning = false;
                     if (hasChangedAorB()) {
@@ -411,6 +419,13 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
                                 pointsInModel.values().stream().toList(), new Dimension(panelPicture.getWidth(), panelPicture.getHeight()),
                                 new Dimension(panelModelView.getWidth(),
                                         panelModelView.getHeight()));
+                        if (distanceAB.isInvalidArray()) {
+                            hasChangedAorB = true;
+                            Logger.getAnonymousLogger().log(Level.INFO, "Invalid array in DistanceAB");
+                        } else {
+                            hasChangedAorB = false;
+                            model.texture(iTextureMorphImage);
+                        }
                     }
                     // Display 3D scene
                     model.texture(iTextureMorphImage);
@@ -420,6 +435,10 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
                 thread.start();
             }
         }
+    }
+
+    private boolean isNotMenuOpen() {
+        return notMenuOpen;
     }
 
 
