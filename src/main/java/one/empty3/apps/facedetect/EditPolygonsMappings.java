@@ -84,6 +84,8 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
 
         @Override
         public int getColorAt(double u, double v) {
+            if (distanceAB != null && distanceAB.getModel() != model)
+                distanceAB.setModel(model);
             if (distanceAB != null) {
                 Point3D axPointInB;
                 //axPointInB = ((DistanceBezier) distanceAB).findAxPointInB2(u, v);
@@ -418,7 +420,7 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
                         distanceAB = new DistanceBezier(pointsInImage.values().stream().toList(),
                                 pointsInModel.values().stream().toList(), new Dimension(panelPicture.getWidth(), panelPicture.getHeight()),
                                 new Dimension(panelModelView.getWidth(),
-                                        panelModelView.getHeight()));
+                                        panelModelView.getHeight()), model);
                         if (distanceAB.isInvalidArray()) {
                             hasChangedAorB = true;
                             Logger.getAnonymousLogger().log(Level.INFO, "Invalid array in DistanceAB");

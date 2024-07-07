@@ -23,7 +23,6 @@
 package one.empty3.neuralnetwork;
 
 import one.empty3.library.core.math.Matrix;
-import one.empty3.library.shader.Mat;
 
 public class LossFunction {
     public static Matrix crossEntropy(Matrix expected, Matrix actual) {

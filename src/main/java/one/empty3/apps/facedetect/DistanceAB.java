@@ -23,12 +23,23 @@
 package one.empty3.apps.facedetect;
 
 import one.empty3.library.Point3D;
+import one.empty3.library.Representable;
 
 public abstract class DistanceAB {
+
+    private Representable model;
 
     public abstract Point3D findAxPointInB(double u, double v);
 
     public boolean isInvalidArray() {
         return false;
+    }
+
+    public Representable getModel() {
+        return model;
+    }
+
+    public void setModel(Representable model) {
+        this.model = model;
     }
 }

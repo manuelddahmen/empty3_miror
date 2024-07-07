@@ -29,14 +29,11 @@ package one.empty3.feature.pio;
 
 import one.empty3.feature.PixM;
 import one.empty3.io.ProcessFile;
-import one.empty3.library.*;
-import one.empty3.library.shader.Vec;
+import one.empty3.library.Point3D;
 
-import java.awt.Color;
-import java.io.File;
-import java.awt.Point;
-import java.util.*;
 import javax.imageio.ImageIO;
+import java.awt.*;
+import java.io.File;
 
 class Circle {
 
