@@ -84,11 +84,8 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
 
         @Override
         public int getColorAt(double u, double v) {
-            if (distanceAB != null && distanceAB.getModel() == model)
-                distanceAB.setModel(model);
-            if (distanceAB != null && model != null) {
-                Point3D axPointInB;
-                axPointInB = distanceAB.findAxPointInB(u, v);
+            if (distanceAB != null) {
+                Point3D axPointInB = distanceAB.findAxPointInB(u, v);
                 return image.getRGB(
                         (int) (Math.max(0, Math.min((axPointInB.getX() * (image.getWidth())), image.getWidth() - 1))),
                         (int) (Math.max(0, Math.min((axPointInB.getY() * image.getHeight()), image.getHeight() - 1))));
@@ -382,14 +379,14 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
                 BufferedImage image1 = testHumanHeadTexturing.getPicture();
                 if (image1 != null && image1.getWidth() == panelModelView.getWidth() && image1.getHeight() == panelModelView.getHeight()) {
                     Graphics graphics = panelModelView.getGraphics();
-                    if (graphics != null && isNotMenuOpen()) {
+                    if (graphics != null) {
                         graphics.drawImage(image1, 0, 0, panelModelView.getWidth(), panelModelView.getHeight(), null);
                         displayPointsOut(pointsInModel);
                     }
                 }
                 if (image != null) {
                     Graphics graphics = panelPicture.getGraphics();
-                    if (graphics != null && isNotMenuOpen()) {
+                    if (graphics != null) {
                         graphics.drawImage(image, 0, 0, panelPicture.getWidth(), panelPicture.getHeight(), null);
                         displayPointsIn(pointsInImage);
                     }
@@ -411,15 +408,13 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
             if (pointsInImage != null && panelModelView != null && !pointsInImage.isEmpty()
                     && !pointsInModel.isEmpty() && model != null && image != null &&
                     hasChangedAorB() && threadDistanceIsNotRunning) {
-                // Display 3D scene
-                model.texture(iTextureMorphImage);
                 Thread thread = new Thread(() -> {
                     threadDistanceIsNotRunning = false;
                     if (hasChangedAorB()) {
                         distanceAB = new DistanceBB(pointsInImage.values().stream().toList(),
                                 pointsInModel.values().stream().toList(), new Dimension(panelPicture.getWidth(), panelPicture.getHeight()),
                                 new Dimension(panelModelView.getWidth(),
-                                        panelModelView.getHeight()), model);
+                                        panelModelView.getHeight()));
                         if (distanceAB.isInvalidArray()) {
                             hasChangedAorB = true;
                             Logger.getAnonymousLogger().log(Level.INFO, "Invalid array in DistanceAB");
@@ -439,7 +434,7 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
     }
 
     private boolean isNotMenuOpen() {
-        return true;
+        return notMenuOpen;
     }
 
 
@@ -660,7 +655,7 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
                 throw new RuntimeException(ex);
             }
         } else {
-            Logger.getAnonymousLogger().log(Level.INFO, "Load image first before points", pointsInModel.size());
+            Logger.getAnonymousLogger().log(Level.INFO, "Load image and model first before points", pointsInModel.size());
         }
 
     }

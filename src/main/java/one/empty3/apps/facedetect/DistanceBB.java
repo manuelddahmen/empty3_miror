@@ -23,17 +23,16 @@
 package one.empty3.apps.facedetect;
 
 import one.empty3.library.Point3D;
-import one.empty3.library.objloader.E3Model;
 import one.empty3.library1.shader.Mat;
 
 import java.awt.geom.Dimension2D;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class DistanceBB extends DistanceBezier {
-    public DistanceBB(List<Point3D> A, List<Point3D> B, Dimension2D aDimReal, Dimension2D bDimReal, E3Model model) {
-        super(A, B, aDimReal, bDimReal, model);
-        this.setModel(model);
-
+    public DistanceBB(List<Point3D> A, List<Point3D> B, Dimension2D aDimReal, Dimension2D bDimReal) {
+        super(A, B, aDimReal, bDimReal);
     }
 
     public Point3D findAxPointInB1(double u, double v) {
@@ -70,8 +69,10 @@ public class DistanceBB extends DistanceBezier {
         searched = new Point3D(u, v, 0.0);
         double distance = Double.MAX_VALUE;
         Point3D found = searched;
-        if (isInvalidArray())
+        if (isInvalidArray()) {
+            Logger.getAnonymousLogger().log(Level.SEVERE, "DistanceAB, array is invalid");
             return found;
+        }
         for (int i = 0; i < bDimReduced.getWidth(); i++) {
             for (int j = 0; j < bDimReduced.getHeight(); j++) {
                 Double dist = Point3D.distance(sBij[i][j], searched);

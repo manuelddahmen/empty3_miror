@@ -29,6 +29,8 @@ import java.awt.*;
 import java.awt.geom.Dimension2D;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class DistanceBezier2 extends DistanceAB {
     private final Rectangle2 rectA;
@@ -186,6 +188,7 @@ public class DistanceBezier2 extends DistanceAB {
     }
 
     private void setInvalidArray() {
+        Logger.getAnonymousLogger().log(Level.SEVERE, "Invalid array in DistanceAB");
         this.invalidArray = true;
     }
 

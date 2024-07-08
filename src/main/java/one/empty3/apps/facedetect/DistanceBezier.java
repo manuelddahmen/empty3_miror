@@ -104,7 +104,7 @@ public class DistanceBezier extends DistanceAB {
     private Rectangle2 rectA = new Rectangle2(1000000, 1000000, 0, 0);
     private Rectangle2 rectB = new Rectangle2(1000000, 1000000, 0, 0);
 
-    public DistanceBezier(List<Point3D> A, List<Point3D> B, Dimension2D aDimReal, Dimension2D bDimReal, E3Model model) {
+    public DistanceBezier(List<Point3D> A, List<Point3D> B, Dimension2D aDimReal, Dimension2D bDimReal) {
         this.A = A;
         this.B = B;
         this.aDimReal = aDimReal;
@@ -189,6 +189,7 @@ public class DistanceBezier extends DistanceAB {
         }
 /*
         this.aDimReduced = new Dimension((int) (rectA.getWidth() * aDimReduced.getWidth()), (int) (rectA.getHeight() * aDimReduced.getHeight()));
+
         this.bDimReduced = new Dimension((int) (rectB.getWidth() * bDimReduced.getWidth()), (int) (rectB.getHeight() * bDimReduced.getHeight()));
 */
 
