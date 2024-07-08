@@ -86,9 +86,8 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
         public int getColorAt(double u, double v) {
             if (distanceAB != null && distanceAB.getModel() == model)
                 distanceAB.setModel(model);
-            if (distanceAB != null) {
+            if (distanceAB != null && model != null) {
                 Point3D axPointInB;
-                //axPointInB = ((DistanceBezier) distanceAB).findAxPointInB2(u, v);
                 axPointInB = distanceAB.findAxPointInB(u, v);
                 return image.getRGB(
                         (int) (Math.max(0, Math.min((axPointInB.getX() * (image.getWidth())), image.getWidth() - 1))),
@@ -440,7 +439,7 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
     }
 
     private boolean isNotMenuOpen() {
-        return notMenuOpen;
+        return true;
     }
 
 

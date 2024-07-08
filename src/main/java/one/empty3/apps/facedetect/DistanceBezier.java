@@ -177,13 +177,8 @@ public class DistanceBezier extends DistanceAB {
             //    surfaceA.getCoefficients().setElem(new Point3D(0.0, 1.0 * i / A.size(), 0.0), 0, i+1);
             //    surfaceB.getCoefficients().setElem(new Point3D(0.0, 1.0 * i / A.size(), 0.0), 0, i+1);
             for (int j = 0; j < B.size(); j++) {
-                if (i != j) {
-                    surfaceA.getCoefficients().setElem(new Point3D(listAX.get(i), listAY.get(j), 0.0), i, j);
-                    surfaceB.getCoefficients().setElem(new Point3D(listBX.get(i), listBY.get(j), 0.0), i, j);
-                } else {
-                    surfaceA.getCoefficients().setElem(new Point3D(listAX.get(i), listAY.get(j), 0.0), i, j);
-                    surfaceB.getCoefficients().setElem(new Point3D(listBX.get(i), listBY.get(j), 0.0), i, j);
-                }
+                surfaceA.getCoefficients().setElem(new Point3D(listAX.get(i), listAY.get(j), 0.0), i, j);
+                surfaceB.getCoefficients().setElem(new Point3D(listBX.get(i), listBY.get(j), 0.0), i, j);
             }
             //    surfaceA.getCoefficients().setElem(new Point3D(1.0, 1.0, 0.0), A.size(), i);
             //    surfaceB.getCoefficients().setElem(new Point3D(1.0, 1.0, 0.0), A.size(), i);
