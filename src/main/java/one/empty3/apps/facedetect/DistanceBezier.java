@@ -93,14 +93,14 @@ public class DistanceBezier extends DistanceAB {
 
     private final Dimension2D aDimReal;
     private final Dimension2D bDimReal;
-    private final List<Point3D> A;
-    private final List<Point3D> B;
+    final List<Point3D> A;
+    final List<Point3D> B;
     private final SurfaceParametriquePolynomialeBezier surfaceA;
     private final SurfaceParametriquePolynomialeBezier surfaceB;
     private final Point3D[][] sAij;
-    private final Point3D[][] sBij;
+    protected final Point3D[][] sBij;
     private Dimension2D aDimReduced = new Dimension(80, 80);
-    private Dimension2D bDimReduced = new Dimension(80, 80);
+    protected Dimension2D bDimReduced = new Dimension(80, 80);
     private Rectangle2 rectA = new Rectangle2(1000000, 1000000, 0, 0);
     private Rectangle2 rectB = new Rectangle2(1000000, 1000000, 0, 0);
 
@@ -218,7 +218,7 @@ public class DistanceBezier extends DistanceAB {
     }
 
     public Point3D findAxPointInB(double u, double v) {
-        return findAxPointInB31invOptimized1(u, v);
+        return findAxPointInB3(u, v);
     }
 
     public Point3D findAxPointInB5(double u, double v) {

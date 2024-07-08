@@ -84,7 +84,7 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
 
         @Override
         public int getColorAt(double u, double v) {
-            if (distanceAB != null && distanceAB.getModel() != model)
+            if (distanceAB != null && distanceAB.getModel() == model)
                 distanceAB.setModel(model);
             if (distanceAB != null) {
                 Point3D axPointInB;
@@ -417,7 +417,7 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
                 Thread thread = new Thread(() -> {
                     threadDistanceIsNotRunning = false;
                     if (hasChangedAorB()) {
-                        distanceAB = new DistanceBezier(pointsInImage.values().stream().toList(),
+                        distanceAB = new DistanceBB(pointsInImage.values().stream().toList(),
                                 pointsInModel.values().stream().toList(), new Dimension(panelPicture.getWidth(), panelPicture.getHeight()),
                                 new Dimension(panelModelView.getWidth(),
                                         panelModelView.getHeight()), model);
