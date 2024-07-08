@@ -72,17 +72,15 @@ public class TestHumanHeadTexturing extends TestObjetStub {
         }
         if (jpgFile != null && objFile != null) {
             E3Model e3Model = objFile;
-            /*f (editPolygonsMappings != null && editPolygonsMappings.iTexture != null
+            if (editPolygonsMappings != null && editPolygonsMappings.iTextureMorphImage != null
                     && editPolygonsMappings.distanceAB != null)
                 e3Model.texture(editPolygonsMappings.iTextureMorphImage);
             else
                 e3Model.texture(new ImageTexture(new ECBufferedImage(jpgFile)));
-            if (scene().getObjets().data1d.size() >= 2) {
-                scene().getObjets().delete(0);
-            }
-
-             */
             scene().add(e3Model);
+            if (scene().getObjets().data1d.size() >= 2) {
+                scene().getObjets().delete(1);
+            }
             printWriter.println("# Face elements without eyes month and nose");
         /*AtomicInteger i = new AtomicInteger(0);
         ((RepresentableConteneur) (scene().getObjets().getElem(0))).
