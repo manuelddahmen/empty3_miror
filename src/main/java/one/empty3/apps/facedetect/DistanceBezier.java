@@ -33,7 +33,6 @@ import java.util.List;
 
 public class DistanceBezier extends DistanceAB {
     private static final int MAX_OCCURENCES = 2000;
-    private boolean invalidArray;
     private boolean opt1 = false;
     private double distance0a = 10000;
 
@@ -197,16 +196,13 @@ public class DistanceBezier extends DistanceAB {
         sBij = new Point3D[(int) this.bDimReduced.getWidth()][(int) this.bDimReduced.getHeight()];
 
         if (sAij.length == 0 || sAij[0].length == 0 || sBij.length == 0 || sBij[0].length == 0)
-            setInvalidArray();
+            setInvalidArray(true);
 
         precomputeX(aDimReal, aDimReduced, sAij, surfaceA);
         precomputeX(bDimReal, bDimReduced, sBij, surfaceB);
 
     }
 
-    private void setInvalidArray() {
-        this.invalidArray = true;
-    }
 
     public Point3D findAxPointInB2(double u, double v) {
         Point3D point3D = surfaceB.calculerPoint3D(u, v);
@@ -405,11 +401,6 @@ public class DistanceBezier extends DistanceAB {
         index2 = Math.max(0, Math.min(array[index1].length - 1, index2));
         return array[index1][index2];
     }
-
-    public boolean isInvalidArray() {
-        return invalidArray;
-    }
-
 
     public void precomputeX(Dimension2D xDimReal, Dimension2D xDimReduced, Point3D[][] sXij, SurfaceParametriquePolynomialeBezier surfaceX) {
         for (int i = 0; i < xDimReal.getWidth(); i++)

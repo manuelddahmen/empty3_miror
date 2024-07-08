@@ -29,23 +29,20 @@ import java.awt.*;
 import java.awt.geom.Dimension2D;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class DistanceBezier2 extends DistanceAB {
     private final Rectangle2 rectA;
     private final Rectangle2 rectB;
-    private boolean invalidArray;
     private final Dimension2D aDimReal;
     private final Dimension2D bDimReal;
-    private final List<Point3D> A;
-    private final List<Point3D> B;
+    protected final List<Point3D> A;
+    protected final List<Point3D> B;
     private final SurfaceParametriquePolynomialeBezier surfaceA;
     private final SurfaceParametriquePolynomialeBezier surfaceB;
     private final Point3D[][] sAij;
-    private final Point3D[][] sBij;
+    protected final Point3D[][] sBij;
     private Dimension2D aDimReduced = new Dimension(80, 80);
-    private Dimension2D bDimReduced = new Dimension(80, 80);
+    protected Dimension2D bDimReduced = new Dimension(80, 80);
     private double arrayHeight = 80;
     private double arrayWidth = 80;
 
@@ -180,16 +177,11 @@ public class DistanceBezier2 extends DistanceAB {
         sBij = new Point3D[(int) this.bDimReduced.getWidth()][(int) this.bDimReduced.getHeight()];
 
         if (sAij.length == 0 || sAij[0].length == 0 || sBij.length == 0 || sBij[0].length == 0)
-            setInvalidArray();
+            setInvalidArray(true);
 
         precomputeX(aDimReal, aDimReduced, sAij, surfaceA);
         precomputeX(bDimReal, bDimReduced, sBij, surfaceB);
 
-    }
-
-    private void setInvalidArray() {
-        Logger.getAnonymousLogger().log(Level.SEVERE, "Invalid array in DistanceAB");
-        this.invalidArray = true;
     }
 
     public Point3D findAxPointInB2(double u, double v) {
@@ -219,10 +211,6 @@ public class DistanceBezier2 extends DistanceAB {
         //return sAij[(int) (found.getX() * aDim.getWidth())]
         //        [(int) (found.getX() * aDim.getHeight())];
         //return sAij[(int) Math.min((found.getX() * aDimReduced.getWidth()), aDimReduced.getWidth() - 1)][(int) Math.min((found.getY() * aDimReduced.getHeight()), aDimReduced.getHeight() - 1)];
-    }
-
-    public boolean isInvalidArray() {
-        return invalidArray;
     }
 
     public void precomputeX(Dimension2D xDimReal, Dimension2D xDimReduced, Point3D[][] sXij, SurfaceParametriquePolynomialeBezier surfaceX) {

@@ -23,23 +23,28 @@
 package one.empty3.apps.facedetect;
 
 import one.empty3.library.Point3D;
-import one.empty3.library.Representable;
+import one.empty3.library.objloader.E3Model;
 
 public abstract class DistanceAB {
 
-    private Representable model;
+    protected E3Model model;
+    protected boolean isInvalidArray = false;
 
     public abstract Point3D findAxPointInB(double u, double v);
 
     public boolean isInvalidArray() {
-        return false;
+        return isInvalidArray;
     }
 
-    public Representable getModel() {
+    public void setInvalidArray(boolean invalidArray) {
+        isInvalidArray = invalidArray;
+    }
+
+    public E3Model getModel() {
         return model;
     }
 
-    public void setModel(Representable model) {
+    public void setModel(E3Model model) {
         this.model = model;
     }
 }
