@@ -23,8 +23,9 @@
 package one.empty3.apps.facedetect;
 
 import one.empty3.feature.PixM;
-import one.empty3.library.Polygon;
-import one.empty3.library.*;
+import one.empty3.library.Camera;
+import one.empty3.library.Point3D;
+import one.empty3.library.ZBufferImpl;
 import one.empty3.library.core.testing.Resolution;
 import one.empty3.library.core.testing.TestObjetStub;
 import one.empty3.library.objloader.E3Model;
@@ -60,6 +61,17 @@ public class TestHumanHeadTexturing extends TestObjetStub {
     }
 
     @Override
+    public void ginit() {
+/*
+        super.ginit();
+        if (objFile != null) {
+            z().scene().getObjets().getData1d().clear();
+            z().scene().getObjets().setElem(objFile, 0);
+        }
+*/
+    }
+
+    @Override
     public void finit() {
         super.finit();
         z().setDisplayType(ZBufferImpl.DISPLAY_ALL);
@@ -70,17 +82,13 @@ public class TestHumanHeadTexturing extends TestObjetStub {
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
-        if (jpgFile != null && objFile != null) {
-            E3Model e3Model = objFile;
-            if (editPolygonsMappings != null && editPolygonsMappings.iTextureMorphImage != null
-                    && editPolygonsMappings.distanceAB != null)
-                e3Model.texture(editPolygonsMappings.iTextureMorphImage);
-            else
-                e3Model.texture(new ImageTexture(new ECBufferedImage(jpgFile)));
-            scene().add(e3Model);
-            if (scene().getObjets().data1d.size() >= 2) {
-                scene().getObjets().delete(1);
+        if (objFile != null) {
+            //z().scene().getObjets().getData1d().clear();
+            if (!z().scene().getObjets().getData1d().contains(objFile)) {
+                z().scene().getObjets().setElem(objFile, 0);
             }
+        }
+        if (jpgFile != null && objFile != null) {
             printWriter.println("# Face elements without eyes month and nose");
         /*AtomicInteger i = new AtomicInteger(0);
         ((RepresentableConteneur) (scene().getObjets().getElem(0))).
@@ -95,7 +103,7 @@ public class TestHumanHeadTexturing extends TestObjetStub {
                     } else {
                         def = Color.WHITE;
                     }
-                    representable.setTexture(new ColorTexture(def));
+                    representable.setTexture(new ColorTexzture(def));
                     i.getAndIncrement();
                 });*/
             printWriter.flush();
@@ -107,6 +115,7 @@ public class TestHumanHeadTexturing extends TestObjetStub {
             c.calculerMatrice(Point3D.Y.mult(-1));
             camera(c);
             scene().cameraActive(c);
+            z().camera(c);
             c.setAngleYr(60, 1.0 * z().la() / z().ha());
          /*   mouseAdapter = new MouseAdapter() {
                 @Override
@@ -160,7 +169,7 @@ public class TestHumanHeadTexturing extends TestObjetStub {
         }
     }
 
-    @Override
+/*    @Override
     public void afterRender() {
         if (jpgFile != null && objFile != null) {
 
@@ -191,7 +200,7 @@ public class TestHumanHeadTexturing extends TestObjetStub {
             });
         }
     }
-
+*/
 
     public static TestHumanHeadTexturing startAll(EditPolygonsMappings editPolygonsMappings, BufferedImage jpg, E3Model obj) {
         Logger.getAnonymousLogger().log(Level.INFO, "Jpg Obj Mapping...");

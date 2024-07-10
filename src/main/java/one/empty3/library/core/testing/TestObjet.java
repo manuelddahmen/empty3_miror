@@ -942,7 +942,7 @@ public abstract class TestObjet implements Test, Runnable {
 
                     Logger.getAnonymousLogger().log(Level.INFO, "Starts rendering");
                     z.draw(scene());
-                    Logger.getAnonymousLogger().log(Level.INFO, "Finishs rendering");
+                    Logger.getAnonymousLogger().log(Level.INFO, "Finishes rendering");
                 } catch (RuntimeException ex1) {
                     reportException(ex1);
                 } catch (Exception ex) {

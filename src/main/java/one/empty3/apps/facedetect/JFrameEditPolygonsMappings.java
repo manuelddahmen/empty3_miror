@@ -48,6 +48,10 @@ public class JFrameEditPolygonsMappings extends JFrame {
     private int SELECT_POINT;
 
     public JFrameEditPolygonsMappings() {
+        initComponents();
+
+        editPolygonsMappings2 = new EditPolygonsMappings(this);
+
         config = new Config();
         File fileDirectoryDefault = config.getDefaultFileOutput();
         if (fileDirectoryDefault == null)
@@ -61,8 +65,6 @@ public class JFrameEditPolygonsMappings extends JFrame {
         lastDirectory = new File(lastDirectoryTmpStr);
         if (!lastDirectory.exists())
             config.save();
-        initComponents();
-        editPolygonsMappings2 = new EditPolygonsMappings(this);
         //editPolygonsMappings2.testHumanHeadTexturing.setGenerate(editPolygonsMappings2.testHumanHeadTexturing);
         setContentPane(editPolygonsMappings2);
         pack();

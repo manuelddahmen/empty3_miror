@@ -84,7 +84,7 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
 
         @Override
         public int getColorAt(double u, double v) {
-            if (distanceAB != null && distanceAB.getModel() != null) {
+            if (distanceAB != null) {
                 Point3D axPointInB = distanceAB.findAxPointInB(u, v);
                 return image.getRGB(
                         (int) (Math.max(0, Math.min((axPointInB.getX() * (image.getWidth())), image.getWidth() - 1))),
@@ -211,7 +211,8 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
             testHumanHeadTexturing.setMaxFrames(0);
             testHumanHeadTexturing.stop();
             testHumanHeadTexturing = TestHumanHeadTexturing.restartAll(testHumanHeadTexturing);
-        } else {
+        }
+        if (testHumanHeadTexturing == null) {
             testHumanHeadTexturing = TestHumanHeadTexturing.startAll(this, image, model);
         }
         if (model != null && image != null) {
@@ -377,8 +378,6 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
         hasChangedAorB = true;
         while (isVisible() && isRunning) {
             try {
-
-
                 if (model != null) {
                     testHumanHeadTexturing.setObj(model);
                 }
@@ -403,25 +402,25 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
                     }
                 }
                 Thread.sleep(20);
-            } catch (RuntimeException ex) {
-                ex.printStackTrace();
-            } catch (InterruptedException ex) {
+            } catch (RuntimeException | InterruptedException ex) {
                 ex.printStackTrace();
             }
 
 
             if (pointsInImage != null && panelModelView != null && !pointsInImage.isEmpty()
                     && !pointsInModel.isEmpty() && model != null && image != null &&
-                    hasChangedAorB() && threadDistanceIsNotRunning) {
+                    /* hasChangedAorB() && */ threadDistanceIsNotRunning) {
                 Thread thread = new Thread(() -> {
+                    long l = System.nanoTime();
                     threadDistanceIsNotRunning = false;
                     if (hasChangedAorB()) {
                         Logger.getAnonymousLogger().log(Level.INFO, "All loaded resources finished. Starts distance calculation");
 
-                        distanceAB = new DistanceBezier(pointsInImage.values().stream().toList(),
+                        distanceAB = new DistanceBB(pointsInImage.values().stream().toList(),
                                 pointsInModel.values().stream().toList(), new Dimension(panelPicture.getWidth(), panelPicture.getHeight()),
                                 new Dimension(panelModelView.getWidth(),
                                         panelModelView.getHeight()));
+                        distanceAB.setModel(model);
                         // Display 3D scene
                         model.texture(iTextureMorphImage);
                         if (distanceAB.isInvalidArray()) {
@@ -434,10 +433,15 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
                     }
                     hasChangedAorB = false;
                     threadDistanceIsNotRunning = true;
-                    Logger.getAnonymousLogger().log(Level.INFO, "Distance calculation finished");
+                    l = System.nanoTime() - l;
+                    Logger.getAnonymousLogger().log(Level.INFO, "Distance calculation finished" + l / 1000000.0);
+
                 });
                 thread.start();
+                Logger.getAnonymousLogger().log(Level.INFO, "Thread texture creation started");
             }
+            if (!threadDistanceIsNotRunning)
+                Logger.getAnonymousLogger().log(Level.INFO, "Thread 'Texture creation' still in progress...");
         }
     }
 

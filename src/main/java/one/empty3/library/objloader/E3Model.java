@@ -37,6 +37,7 @@ import java.util.logging.Logger;
 
 /*__
  * Created by manue on 02-06-19.
+ * Updated 7/24
  */
 public class E3Model extends RepresentableConteneur {
     private ArrayList<Double[]> vertexsets;

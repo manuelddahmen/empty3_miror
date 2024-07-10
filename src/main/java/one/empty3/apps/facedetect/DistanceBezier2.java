@@ -31,8 +31,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DistanceBezier2 extends DistanceAB {
-    private final Rectangle2 rectA;
-    private final Rectangle2 rectB;
+    protected final Rectangle2 rectA;
+    protected final Rectangle2 rectB;
     private final Dimension2D aDimReal;
     private final Dimension2D bDimReal;
     protected final List<Point3D> A;
@@ -41,8 +41,8 @@ public class DistanceBezier2 extends DistanceAB {
     private final SurfaceParametriquePolynomialeBezier surfaceB;
     private final Point3D[][] sAij;
     protected final Point3D[][] sBij;
-    private Dimension2D aDimReduced = new Dimension(80, 80);
-    protected Dimension2D bDimReduced = new Dimension(80, 80);
+    private Dimension2D aDimReduced = new Dimension(20, 20);
+    protected Dimension2D bDimReduced = new Dimension(20, 20);
     private double arrayHeight = 80;
     private double arrayWidth = 80;
 
@@ -170,8 +170,6 @@ public class DistanceBezier2 extends DistanceAB {
                 surfaceB.getCoefficients().setElem(new Point3D(listBX.get(i), listBY.get(j), 0.0), i, j);
             }
         }
-        this.aDimReduced = new Dimension((int) (rectA.getWidth() * arrayWidth), (int) (rectA.getHeight() * arrayHeight));
-        this.bDimReduced = new Dimension((int) (rectB.getWidth() * arrayWidth), (int) (rectB.getHeight() * arrayHeight));
 
         sAij = new Point3D[(int) this.aDimReduced.getWidth()][(int) this.aDimReduced.getHeight()];
         sBij = new Point3D[(int) this.bDimReduced.getWidth()][(int) this.bDimReduced.getHeight()];
@@ -183,6 +181,7 @@ public class DistanceBezier2 extends DistanceAB {
         precomputeX(bDimReal, bDimReduced, sBij, surfaceB);
 
     }
+
 
     public Point3D findAxPointInB2(double u, double v) {
         Point3D point3D = surfaceB.calculerPoint3D(u, v);

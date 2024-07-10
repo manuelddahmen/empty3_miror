@@ -79,6 +79,7 @@ public class DistanceBB extends DistanceBezier2 {
                 if (dist < distance) {
                     distance = dist;
                     found = new Point3D(i / bDimReduced.getWidth(), j / bDimReduced.getHeight(), 0.0);
+                    found = new Point3D((double) i, (double) j, 0.0);
                 }
             }
         }
