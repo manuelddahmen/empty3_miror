@@ -43,7 +43,7 @@ class TestAlgebraicTreeVector() {
         expr: String,
         expectedResult: Double,
         map: Map<String, Double>,
-        echo: Boolean
+        echo: Boolean,
     ) {
         var algebraicTree: AlgebraicTree?
         try {
@@ -124,7 +124,7 @@ class TestAlgebraicTreeVector() {
     protected fun testConstructOrEvalFails(
         expr: String,
         expectedResult: Double,
-        echo: Boolean
+        echo: Boolean,
     ): Boolean {
         var algebraicTree: AlgebraicTree?
         try {
@@ -538,7 +538,7 @@ class TestAlgebraicTreeVector() {
         expr: String,
         expectedResult: Vec,
         map: HashMap<String, Double>,
-        echo: Boolean
+        echo: Boolean,
     ) {
         var algebraicTree: AlgebraicTree?
         try {

@@ -86,9 +86,7 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
         public int getColorAt(double u, double v) {
             if (distanceAB != null) {
                 Point3D axPointInB = distanceAB.findAxPointInB(u, v);
-                return image.getRGB(
-                        (int) (Math.max(0, Math.min((axPointInB.getX() * (image.getWidth())), image.getWidth() - 1))),
-                        (int) (Math.max(0, Math.min((axPointInB.getY() * image.getHeight()), image.getHeight() - 1))));
+                return image.getRGB((int) (Math.max(0, Math.min((axPointInB.getX() * (image.getWidth())), image.getWidth() - 1))), (int) (Math.max(0, Math.min((axPointInB.getY() * image.getHeight()), image.getHeight() - 1))));
             } else {
                 return 0;
             }
@@ -380,6 +378,7 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
             try {
                 if (model != null) {
                     testHumanHeadTexturing.setObj(model);
+                    model.texture(iTextureMorphImage);
                 }
                 if (image != null) {
                     testHumanHeadTexturing.setJpg(image);
