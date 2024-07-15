@@ -68,7 +68,7 @@ public class DistanceBB extends DistanceBezier2 {
         Point3D searched = null;
         searched = new Point3D(u, v, 0.0);
         double distance = Double.MAX_VALUE;
-        Point3D found = searched;
+        Point3D found = searched.multDot(new Point3D(bDimReduced.getWidth(), bDimReduced.getHeight(), 0.0));
         if (isInvalidArray()) {
             Logger.getAnonymousLogger().log(Level.SEVERE, "DistanceAB, array is invalid");
             return found;
@@ -79,7 +79,8 @@ public class DistanceBB extends DistanceBezier2 {
                 if (dist < distance) {
                     distance = dist;
                     found = new Point3D(i / bDimReduced.getWidth(), j / bDimReduced.getHeight(), 0.0);
-                    found = new Point3D((double) i, (double) j, 0.0);
+                    //found = new Point3D(((double) i), ((double) j), 0.0);
+                    //found = new Point3D((double) i, (double) j, 0.0);
                 }
             }
         }

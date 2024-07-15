@@ -41,6 +41,7 @@ public class DistanceBezier2 extends DistanceAB {
     private final SurfaceParametriquePolynomialeBezier surfaceB;
     private final Point3D[][] sAij;
     protected final Point3D[][] sBij;
+    private final boolean opt1 = false;
     private Dimension2D aDimReduced = new Dimension(20, 20);
     protected Dimension2D bDimReduced = new Dimension(20, 20);
     private double arrayHeight = 80;
@@ -143,14 +144,15 @@ public class DistanceBezier2 extends DistanceAB {
                 rectB.setY2(B.get(i).getY());
         }
 
-        for (int i = 0; i < A.size(); i++) {
-            listAX.set(i, listAX.get(i) - rectA.getX1());
-            listAY.set(i, listAY.get(i) - rectA.getY1());
-            listBX.set(i, listBX.get(i) - rectB.getX1());
-            listBY.set(i, listBY.get(i) - rectB.getY1());
+        if (opt1) {
+            for (int i = 0; i < A.size(); i++) {
+                listAX.set(i, listAX.get(i) - rectA.getX1());
+                listAY.set(i, listAY.get(i) - rectA.getY1());
+                listBX.set(i, listBX.get(i) - rectB.getX1());
+                listBY.set(i, listBY.get(i) - rectB.getY1());
 
+            }
         }
-
         listAX.sort(Double::compare);
         listAY.sort(Double::compare);
         listBX.sort(Double::compare);

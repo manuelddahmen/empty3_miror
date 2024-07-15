@@ -452,9 +452,8 @@ public abstract class TestObjet implements Test, Runnable {
                 config.store(new FileOutputStream(new File(System.getProperty("user.home")
                                 + File.separator + "empty3.config")),
                         "Config file for empty3.one library");
-            } catch (FileNotFoundException e) {
-                throw new RuntimeException(e);
             } catch (IOException e) {
+                e.printStackTrace();
                 throw new RuntimeException(e);
             }
         } catch (Exception ex) {
@@ -800,7 +799,7 @@ public abstract class TestObjet implements Test, Runnable {
      *
      * @throws RuntimeException if an I/O error occurs while saving files
      */
-    public void run() {
+    public void run() throws RuntimeException {
         if (!initialise)
             init();
 
@@ -847,7 +846,6 @@ public abstract class TestObjet implements Test, Runnable {
         }
 
         if (LOG) {
-            Logger.getAnonymousLogger().log(Level.INFO, "");
             Logger.getAnonymousLogger().log(Level.INFO, directory().getAbsolutePath());
             Logger.getAnonymousLogger().log(Level.INFO, "Generate (0 NOTHING  1 IMAGE  2 MODEL  4 OPENGL) {0}" + getGenerate());
 
@@ -892,8 +890,8 @@ public abstract class TestObjet implements Test, Runnable {
                 try {
                     Thread.sleep(500);
                 } catch (InterruptedException e) {
-                    reportException(e);
                     e.printStackTrace();
+                    reportException(e);
                 }
             }
             pauseActive = false;
@@ -943,11 +941,9 @@ public abstract class TestObjet implements Test, Runnable {
                     Logger.getAnonymousLogger().log(Level.INFO, "Starts rendering");
                     z.draw(scene());
                     Logger.getAnonymousLogger().log(Level.INFO, "Finishes rendering");
-                } catch (RuntimeException ex1) {
-                    reportException(ex1);
                 } catch (Exception ex) {
-                    reportException(ex);
                     ex.printStackTrace();
+                    reportException(ex);
                 }
 
                 if (getGenerate(TestObjet.GENERATE_IMAGE) && !(((generate & GENERATE_OPENGL) > 0))) {
@@ -965,9 +961,10 @@ public abstract class TestObjet implements Test, Runnable {
                         try {
                             encoder.encodeImage((BufferedImage) ri);
                         } catch (IOException e) {
-                            reportException(e);
                             e.printStackTrace();
+                            reportException(e);
                         } catch (RuntimeException e1) {
+                            e1.printStackTrace();
                             reportException(e1);
 
                         }
@@ -1005,6 +1002,7 @@ public abstract class TestObjet implements Test, Runnable {
                     }
                     dataWriter.writeFrameData(frame(), "Save bin: " + fout.getAbsolutePath());
                 } catch (IOException e) {
+                    e.printStackTrace();
                     reportException(e);
                     throw new RuntimeException(e);
                 }
@@ -1022,14 +1020,15 @@ public abstract class TestObjet implements Test, Runnable {
                         Logger.getAnonymousLogger().log(Level.INFO, "End generating model");
                     }
                 } catch (IOException ex) {
+                    ex.printStackTrace();
                     reportException(ex);
                     Logger.getAnonymousLogger().log(Level.INFO, ex.getLocalizedMessage());
                 } catch (Exception ex) {
+                    ex.printStackTrace();
                     reportException(ex);
                     if (LOG) {
                         Logger.getAnonymousLogger().log(Level.INFO, "Other exception in generating model" + ex);
                     }
-                    ex.printStackTrace();
                 }
 
             }
@@ -1052,6 +1051,7 @@ public abstract class TestObjet implements Test, Runnable {
             ri = new ECBufferedImage(getResx(), getResy(), BufferedImage.TYPE_INT_ARGB);
         } else {
             afterRender();
+
         }
         if (LOG) {
             Logger.getAnonymousLogger().log(Level.INFO, "" + frame() + "\n" + runtimeInfoSucc());
@@ -1088,8 +1088,9 @@ public abstract class TestObjet implements Test, Runnable {
                     Logger.getAnonymousLogger().log(Level.INFO, outputStream.toString());
                 }
             } catch (IOException ex) {
-                //reportException(ex);
-                //Logger.getAnonymousLogger().log(Level.INFO,ex.getLocalizedMessage());
+                ex.printStackTrace();
+                reportException(ex);
+                Logger.getAnonymousLogger().log(Level.INFO, ex.getLocalizedMessage());
             }
         } else if (file.exists()) {
             try {
@@ -1099,6 +1100,7 @@ public abstract class TestObjet implements Test, Runnable {
                 OutputStream outputStream = runtime.exec(cmd).getOutputStream();
                 System.out.print(outputStream);
             } catch (IOException ex) {
+                ex.printStackTrace();
                 reportException(ex);
                 Logger.getAnonymousLogger().log(Level.INFO, ex.getLocalizedMessage());
             }
@@ -1339,7 +1341,7 @@ public abstract class TestObjet implements Test, Runnable {
         return str != null ? str.getJPanel1() : null;
     }
 
-    public BufferedImage getPicture() {
+    public ECBufferedImage getPicture() {
         return ri;
     }
 }

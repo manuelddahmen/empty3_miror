@@ -52,6 +52,7 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
     private static final int EDIT_POINT_POSITION = 1;
     private static final int SELECT_POINT_POSITION = 2;
     private static final int SELECT_POINT_VERTEX = 4;
+    public BufferedImage zBufferImage;
     private int mode;
     BufferedImage image;
     int selectedPointNo = -1;
@@ -83,10 +84,11 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
         }
 
         @Override
-        public int getColorAt(double u, double v) {
+        public int getColorAt(double v, double u) {
             if (distanceAB != null) {
                 Point3D axPointInB = distanceAB.findAxPointInB(u, v);
-                return image.getRGB((int) (Math.max(0, Math.min((axPointInB.getX() * (image.getWidth())), image.getWidth() - 1))), (int) (Math.max(0, Math.min((axPointInB.getY() * image.getHeight()), image.getHeight() - 1))));
+                int rgb = image.getRGB((int) (Math.max(0, Math.min((axPointInB.getX() * (image.getWidth())), image.getWidth() - 1))), (int) (Math.max(0, Math.min((axPointInB.getY() * image.getHeight()), image.getHeight() - 1))));
+                return rgb;
             } else {
                 return 0;
             }
@@ -204,15 +206,14 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
     }
 
     private void panelModelViewComponentResized(ComponentEvent e) {
+        int w = e.getComponent().getWidth();
+        int h = e.getComponent().getHeight();
         if (testHumanHeadTexturing != null) {
             testHumanHeadTexturing.loop(false);
             testHumanHeadTexturing.setMaxFrames(0);
             testHumanHeadTexturing.stop();
-            testHumanHeadTexturing = TestHumanHeadTexturing.restartAll(testHumanHeadTexturing);
         }
-        if (testHumanHeadTexturing == null) {
-            testHumanHeadTexturing = TestHumanHeadTexturing.startAll(this, image, model);
-        }
+        testHumanHeadTexturing = TestHumanHeadTexturing.startAll(this, image, model);
         if (model != null && image != null) {
             model.texture(iTextureMorphImage);
             testHumanHeadTexturing.setJpg(image);
@@ -374,22 +375,14 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
     public void run() {
         testHumanHeadTexturing = TestHumanHeadTexturing.startAll(this, image, model);
         hasChangedAorB = true;
-        while (isVisible() && isRunning) {
+        while (isRunning) {
             try {
-                if (model != null) {
-                    testHumanHeadTexturing.setObj(model);
-                    model.texture(iTextureMorphImage);
-                }
-                if (image != null) {
-                    testHumanHeadTexturing.setJpg(image);
-                }
-
+                zBufferImage = testHumanHeadTexturing.getJpgFile();
                 // Display 3D scene
-                BufferedImage image1 = testHumanHeadTexturing.getPicture();
-                if (image1 != null && image1.getWidth() == panelModelView.getWidth() && image1.getHeight() == panelModelView.getHeight()) {
+                if (zBufferImage != null && zBufferImage.getWidth() == panelModelView.getWidth() && zBufferImage.getHeight() == panelModelView.getHeight()) {
                     Graphics graphics = panelModelView.getGraphics();
                     if (graphics != null) {
-                        graphics.drawImage(image1, 0, 0, panelModelView.getWidth(), panelModelView.getHeight(), null);
+                        graphics.drawImage(zBufferImage, 0, 0, panelModelView.getWidth(), panelModelView.getHeight(), null);
                         displayPointsOut(pointsInModel);
                     }
                 }
@@ -401,46 +394,49 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
                     }
                 }
                 Thread.sleep(20);
+
+
+                if (pointsInImage != null && panelModelView != null && !pointsInImage.isEmpty()
+                        && !pointsInModel.isEmpty() && model != null && image != null
+                        && threadDistanceIsNotRunning) {
+                    Thread thread = new Thread(() -> {
+                        long l = System.nanoTime();
+                        threadDistanceIsNotRunning = false;
+                        if (hasChangedAorB()) {
+                            Logger.getAnonymousLogger().log(Level.INFO, "All loaded resources finished. Starts distance calculation");
+
+                            distanceAB = new DistanceBB(pointsInImage.values().stream().toList(),
+                                    pointsInModel.values().stream().toList(), new Dimension(panelPicture.getWidth(), panelPicture.getHeight()),
+                                    new Dimension(panelModelView.getWidth(),
+                                            panelModelView.getHeight()));
+                            distanceAB.setModel(model);
+                            // Display 3D scene
+                            model.texture(iTextureMorphImage);
+                            if (distanceAB.isInvalidArray()) {
+                                hasChangedAorB = true;
+                                Logger.getAnonymousLogger().log(Level.INFO, "Invalid array in DistanceAB");
+                            } else {
+                                model.texture(iTextureMorphImage);
+                                hasChangedAorB = false;
+                            }
+                        }
+                        hasChangedAorB = false;
+                        threadDistanceIsNotRunning = true;
+                        l = System.nanoTime() - l;
+                        Logger.getAnonymousLogger().log(Level.INFO, "Distance calculation finished" + (l / 1000000.0));
+
+                    });
+                    thread.start();
+                    Logger.getAnonymousLogger().log(Level.INFO, "Thread texture creation started");
+                }
+                if (!threadDistanceIsNotRunning)
+                    Logger.getAnonymousLogger().log(Level.INFO, "Thread 'Texture creation' still in progress...");
+
             } catch (RuntimeException | InterruptedException ex) {
                 ex.printStackTrace();
             }
 
-
-            if (pointsInImage != null && panelModelView != null && !pointsInImage.isEmpty()
-                    && !pointsInModel.isEmpty() && model != null && image != null &&
-                    /* hasChangedAorB() && */ threadDistanceIsNotRunning) {
-                Thread thread = new Thread(() -> {
-                    long l = System.nanoTime();
-                    threadDistanceIsNotRunning = false;
-                    if (hasChangedAorB()) {
-                        Logger.getAnonymousLogger().log(Level.INFO, "All loaded resources finished. Starts distance calculation");
-
-                        distanceAB = new DistanceBB(pointsInImage.values().stream().toList(),
-                                pointsInModel.values().stream().toList(), new Dimension(panelPicture.getWidth(), panelPicture.getHeight()),
-                                new Dimension(panelModelView.getWidth(),
-                                        panelModelView.getHeight()));
-                        distanceAB.setModel(model);
-                        // Display 3D scene
-                        model.texture(iTextureMorphImage);
-                        if (distanceAB.isInvalidArray()) {
-                            hasChangedAorB = true;
-                            Logger.getAnonymousLogger().log(Level.INFO, "Invalid array in DistanceAB");
-                        } else {
-                            model.texture(iTextureMorphImage);
-                            hasChangedAorB = false;
-                        }
-                    }
-                    hasChangedAorB = false;
-                    threadDistanceIsNotRunning = true;
-                    l = System.nanoTime() - l;
-                    Logger.getAnonymousLogger().log(Level.INFO, "Distance calculation finished" + l / 1000000.0);
-
-                });
-                thread.start();
-                Logger.getAnonymousLogger().log(Level.INFO, "Thread texture creation started");
-            }
-            if (!threadDistanceIsNotRunning)
-                Logger.getAnonymousLogger().log(Level.INFO, "Thread 'Texture creation' still in progress...");
+            System.out.println("+");
         }
     }
 
