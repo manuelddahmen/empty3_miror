@@ -23,6 +23,9 @@
 package one.empty3.apps.facedetect;
 
 import one.empty3.library.Point3D;
+import one.empty3.library.Polygons;
+import one.empty3.library.core.nurbs.ParametricSurface;
+import one.empty3.library.core.nurbs.SurfaceParametriquePolynomiale;
 import one.empty3.library.core.nurbs.SurfaceParametriquePolynomialeBezier;
 
 import java.awt.*;
@@ -31,14 +34,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DistanceBezier2 extends DistanceAB {
+    protected static final int TYPE_SHAPE_BEZIER = 1;
+    protected static final int TYPE_SHAPE_QUADRS = 2;
+    public int typeShape = 1;
     protected final Rectangle2 rectA;
     protected final Rectangle2 rectB;
     private final Dimension2D aDimReal;
     private final Dimension2D bDimReal;
     protected final List<Point3D> A;
     protected final List<Point3D> B;
-    private final SurfaceParametriquePolynomialeBezier surfaceA;
-    private final SurfaceParametriquePolynomialeBezier surfaceB;
+    private SurfaceParametriquePolynomiale surfaceA;
+    private SurfaceParametriquePolynomiale surfaceB;
     private final Point3D[][] sAij;
     protected final Point3D[][] sBij;
     private final boolean opt1 = false;
@@ -159,17 +165,24 @@ public class DistanceBezier2 extends DistanceAB {
         listBY.sort(Double::compare);
 
 
-        surfaceA = new SurfaceParametriquePolynomialeBezier();
-        surfaceB = new SurfaceParametriquePolynomialeBezier();
-
+        switch (typeShape) {
+            case TYPE_SHAPE_BEZIER -> {
+                surfaceA = new SurfaceParametriquePolynomialeBezier();
+                surfaceB = new SurfaceParametriquePolynomialeBezier();
+            }
+            case TYPE_SHAPE_QUADRS -> {
+                surfaceA = new Polygons();
+                surfaceB = new Polygons();
+            }
+        }
         for (int i = 0; i < A.size(); i++) {
             for (int j = 0; j < B.size(); j++) {
 //                int i1 = (int) Math.min((double) (i % ((int) Math.sqrt(A.size() )+ 1)) * (Math.sqrt(A.size() )+ 1), A.size() - 1);
 //                int j1 = (int) Math.min((double) (j / ((int) Math.sqrt(B.size() )+ 1)) * (Math.sqrt(A.size() )+ 1), B.size() - 1);
 
 
-                surfaceA.getCoefficients().setElem(new Point3D(listAX.get(i), listAY.get(j), 0.0), i, j);
-                surfaceB.getCoefficients().setElem(new Point3D(listBX.get(i), listBY.get(j), 0.0), i, j);
+                ((SurfaceParametriquePolynomiale) surfaceA).getCoefficients().setElem(new Point3D(listAX.get(i), listAY.get(j), 0.0), i, j);
+                ((SurfaceParametriquePolynomiale) surfaceB).getCoefficients().setElem(new Point3D(listBX.get(i), listBY.get(j), 0.0), i, j);
             }
         }
 
@@ -214,7 +227,7 @@ public class DistanceBezier2 extends DistanceAB {
         //return sAij[(int) Math.min((found.getX() * aDimReduced.getWidth()), aDimReduced.getWidth() - 1)][(int) Math.min((found.getY() * aDimReduced.getHeight()), aDimReduced.getHeight() - 1)];
     }
 
-    public void precomputeX(Dimension2D xDimReal, Dimension2D xDimReduced, Point3D[][] sXij, SurfaceParametriquePolynomialeBezier surfaceX) {
+    public void precomputeX(Dimension2D xDimReal, Dimension2D xDimReduced, Point3D[][] sXij, ParametricSurface surfaceX) {
         for (int i = 0; i < xDimReal.getWidth(); i++)
             for (int j = 0; j < xDimReal.getHeight(); j++) {
                 Point3D tried = new Point3D(1.0 * i / xDimReal.getWidth(),

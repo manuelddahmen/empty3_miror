@@ -481,7 +481,7 @@ jreleaser {
                 '+ Game Jogl reworked, Calculator (numbers and vectors). Java code parser implementation starts (<=1.2)'
         copyright = "Author : Manuel D. Dahmen, License: Apache-2"
 
-        icon {
+        icon(({
             // Publicly available URL. PNG format is preferred.
             //
             url = 'https://empty3.one/favicon.ico'
@@ -495,7 +495,7 @@ jreleaser {
             // Image height in pixels.
             //
             height = 47
-        }
+        } as Closure<Void>))
     }
     signing {
 

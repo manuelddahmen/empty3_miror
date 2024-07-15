@@ -31,6 +31,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class DistanceBB extends DistanceBezier2 {
+    ;
+
     public DistanceBB(List<Point3D> A, List<Point3D> B, Dimension2D aDimReal, Dimension2D bDimReal) {
         super(A, B, aDimReal, bDimReal);
     }
