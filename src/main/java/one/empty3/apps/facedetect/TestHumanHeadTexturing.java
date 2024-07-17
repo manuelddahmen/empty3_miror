@@ -44,7 +44,7 @@ public class TestHumanHeadTexturing extends TestObjetStub {
     private BufferedImage jpgFile;
     private E3Model objFile;
     private EditPolygonsMappings editPolygonsMappings;
-    private BufferedImage zBufferImage;
+    protected BufferedImage zBufferImage;
 
     public TestHumanHeadTexturing() {
     }

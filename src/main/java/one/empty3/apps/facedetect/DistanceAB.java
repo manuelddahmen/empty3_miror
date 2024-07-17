@@ -23,9 +23,38 @@
 package one.empty3.apps.facedetect;
 
 import one.empty3.library.Point3D;
+import one.empty3.library.core.nurbs.SurfaceParametriquePolynomiale;
 import one.empty3.library.objloader.E3Model;
 
+import java.awt.*;
+import java.awt.geom.Dimension2D;
+import java.util.ArrayList;
+import java.util.List;
+
 public abstract class DistanceAB {
+    SurfaceParametriquePolynomiale surfaceA;
+    SurfaceParametriquePolynomiale surfaceB;
+    Dimension2D aDimReduced = new Dimension(25, 25);
+    Dimension2D bDimReduced = new Dimension(25, 25);
+    static final int TYPE_SHAPE_BEZIER = 1;
+    static final int TYPE_SHAPE_QUADR = 2;
+    int typeShape = 2;
+    boolean opt1 = false;
+    DistanceBezier2.Rectangle2 rectA;
+    DistanceBezier2.Rectangle2 rectB;
+    Dimension2D aDimReal;
+    Dimension2D bDimReal;
+    List<Point3D> A;
+    List<Point3D> B;
+    Point3D[][] sAij;
+    Point3D[][] sBij;
+    double arrayHeight = 80;
+    double arrayWidth = 80;
+
+    List<Double> listAX = new ArrayList<>();
+    List<Double> listAY = new ArrayList<>();
+    List<Double> listBX = new ArrayList<>();
+    List<Double> listBY = new ArrayList<>();
 
     protected E3Model model;
     protected boolean isInvalidArray = false;

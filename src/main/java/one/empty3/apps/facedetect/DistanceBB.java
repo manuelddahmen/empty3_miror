@@ -63,10 +63,10 @@ public class DistanceBB extends DistanceBezier2 {
 
     @Override
     public Point3D findAxPointInB(double u, double v) {
-        return findAxPointInB5(u, v);
+        return findAxPointInB5c(u, v);
     }
 
-    public Point3D findAxPointInB5(double u, double v) {
+    public Point3D findAxPointInB5a(double u, double v) {
         Point3D searched = null;
         searched = new Point3D(u, v, 0.0);
         double distance = Double.MAX_VALUE;
@@ -87,5 +87,92 @@ public class DistanceBB extends DistanceBezier2 {
             }
         }
         return found;
+    }
+
+    public Point3D findAxPointInB5b(double u, double v) {
+        Point3D searched = null;
+        searched = new Point3D(u, v, 0.0);
+        double distance = Double.MAX_VALUE;
+        Point3D found = searched;//.multDot(new Point3D(bDimReduced.getWidth(), bDimReduced.getHeight(), 0.0));
+        if (isInvalidArray()) {
+            Logger.getAnonymousLogger().log(Level.SEVERE, "DistanceAB, array is invalid");
+            return found;
+        }
+        for (int i = 0; i < bDimReduced.getWidth(); i++) {
+            for (int j = 0; j < bDimReduced.getHeight(); j++) {
+                Double dist = Point3D.distance(sBij[i][j], searched);
+                if (dist < distance) {
+                    distance = dist;
+                    found = new Point3D((double) i, (double) j, 0.0);
+                    //found = new Point3D(((double) i), ((double) j), 0.0);
+                    //found = new Point3D((double) i, (double) j, 0.0);
+                }
+            }
+        }
+        int iARef = 0;
+        int jARef = 0;
+        searched = found;
+        for (int i = 0; i < aDimReduced.getWidth(); i++) {
+            for (int j = 0; j < aDimReduced.getHeight(); j++) {
+                Double dist = Point3D.distance(sAij[i][j], searched);
+                if (dist < distance) {
+                    distance = dist;
+                    //found = new Point3D(i / aDimReduced.getWidth(), j / aDimReduced.getHeight(), 0.0);
+                    //iARef = i;
+                    //jARef = j;
+                    //found = new Point3D(((double) i), ((double) j), 0.0);
+                    found = new Point3D((double) i, (double) j, 0.0);
+                }
+            }
+        }
+
+        //return sAij[iARef][jARef];
+        return found;//.multDot(new Point3D(aDimReduced.getWidth(), aDimReduced.getHeight(), 0.0));
+    }
+
+
+    public Point3D findAxPointInB5c(double u, double v) {
+        Point3D searched = null;
+        searched = new Point3D(u, v, 0.0);
+        double distance = Double.MAX_VALUE;
+        Point3D found = searched;//.multDot(new Point3D(bDimReduced.getWidth(), bDimReduced.getHeight(), 0.0));
+        if (isInvalidArray()) {
+            Logger.getAnonymousLogger().log(Level.SEVERE, "DistanceAB, array is invalid");
+            return found;
+        }
+        for (int i = 0; i < bDimReduced.getWidth(); i++) {
+            for (int j = 0; j < bDimReduced.getHeight(); j++) {
+                Double dist = Point3D.distance(sBij[i][j], searched);
+                if (dist < distance) {
+                    distance = dist;
+                    found = new Point3D((double) (i / aDimReduced.getWidth()),
+                            (double) (j / bDimReduced.getHeight()), 0.0);
+                }
+            }
+        }
+        double remainderX = 0;
+        double remainderY = 0;
+        try {
+            int ib = 0, jb = 0;
+            for (int i = 0; i < listBX.size() - 1; i++) {
+                if (listBX.get(i) < found.getX()) {
+                    ib = i;
+                    remainderX = (listBX.get(i) - found.getX()) / (listBX.get(i + 1) - listBY.get(i + 1));
+                }
+            }
+            for (int i = 0; i < listBY.size() - 1; i++) {
+                if (listBY.get(i) < found.getY()) {
+                    jb = i;
+                    remainderY = (listBX.get(i) - found.getX()) / (listBX.get(i + 1) - listBY.get(i));
+                }
+            }
+
+            Point3D p2 = new Point3D(listAX.get(ib) + remainderX * (listAX.get(ib + 1) - listAX.get(ib)),
+                    listAY.get(ib) + remainderY * (listAY.get(ib + 1) - listAY.get(jb + 1)), 0.0);
+
+            return p2;
+        } catch (RuntimeException ex) {
+            return Point3D.O0;
+        }
     }
 }

@@ -28,30 +28,10 @@ import one.empty3.library.core.nurbs.ParametricSurface;
 import one.empty3.library.core.nurbs.SurfaceParametriquePolynomiale;
 import one.empty3.library.core.nurbs.SurfaceParametriquePolynomialeBezier;
 
-import java.awt.*;
 import java.awt.geom.Dimension2D;
-import java.util.ArrayList;
 import java.util.List;
 
 public class DistanceBezier2 extends DistanceAB {
-    protected static final int TYPE_SHAPE_BEZIER = 1;
-    protected static final int TYPE_SHAPE_QUADRS = 2;
-    public int typeShape = 1;
-    protected final Rectangle2 rectA;
-    protected final Rectangle2 rectB;
-    private final Dimension2D aDimReal;
-    private final Dimension2D bDimReal;
-    protected final List<Point3D> A;
-    protected final List<Point3D> B;
-    private SurfaceParametriquePolynomiale surfaceA;
-    private SurfaceParametriquePolynomiale surfaceB;
-    private final Point3D[][] sAij;
-    protected final Point3D[][] sBij;
-    private final boolean opt1 = false;
-    private Dimension2D aDimReduced = new Dimension(20, 20);
-    protected Dimension2D bDimReduced = new Dimension(20, 20);
-    private double arrayHeight = 80;
-    private double arrayWidth = 80;
 
     static class Rectangle2 {
         public double getX1() {
@@ -109,92 +89,90 @@ public class DistanceBezier2 extends DistanceAB {
 
 
     public DistanceBezier2(List<Point3D> A, List<Point3D> B, Dimension2D aDimReal, Dimension2D bDimReal) {
-        this.A = A;
-        this.B = B;
-        this.aDimReal = aDimReal;
-        this.bDimReal = bDimReal;
+        try {
+            this.A = A;
+            this.B = B;
+            this.aDimReal = aDimReal;
+            this.bDimReal = bDimReal;
 
-        rectA = new Rectangle2(1000000, 1000000, 0, 0);
-        rectB = new Rectangle2(1000000, 1000000, 0, 0);
+            rectA = new Rectangle2(1000000, 1000000, 0, 0);
+            rectB = new Rectangle2(1000000, 1000000, 0, 0);
 
 
-        List<Double> listAX = new ArrayList<>();
-        List<Double> listAY = new ArrayList<>();
-        List<Double> listBX = new ArrayList<>();
-        List<Double> listBY = new ArrayList<>();
-
-        for (int i = 0; i < A.size(); i++) {
-            listAX.add(A.get(i).getX());
-            listAY.add(A.get(i).getY());
-            listBX.add(B.get(i).getX());
-            listBY.add(B.get(i).getY());
-
-        }
-
-        for (int i = 0; i < A.size(); i++) {
-            if (rectA.getX1() > A.get(i).getX())
-                rectA.setX1(A.get(i).getX());
-            if (rectB.getX1() > B.get(i).getX())
-                rectB.setX1(B.get(i).getX());
-            if (rectA.getY1() > A.get(i).getY())
-                rectA.setY1(A.get(i).getY());
-            if (rectB.getY1() > B.get(i).getY())
-                rectB.setY1(B.get(i).getY());
-            if (rectA.getX2() < A.get(i).getX())
-                rectA.setX2(A.get(i).getX());
-            if (rectB.getX2() < B.get(i).getX())
-                rectB.setX2(B.get(i).getX());
-            if (rectA.getY2() < A.get(i).getY())
-                rectA.setY2(A.get(i).getY());
-            if (rectB.getY2() < B.get(i).getY())
-                rectB.setY2(B.get(i).getY());
-        }
-
-        if (opt1) {
             for (int i = 0; i < A.size(); i++) {
-                listAX.set(i, listAX.get(i) - rectA.getX1());
-                listAY.set(i, listAY.get(i) - rectA.getY1());
-                listBX.set(i, listBX.get(i) - rectB.getX1());
-                listBY.set(i, listBY.get(i) - rectB.getY1());
+                listAX.add(A.get(i).getX());
+                listAY.add(A.get(i).getY());
+                listBX.add(B.get(i).getX());
+                listBY.add(B.get(i).getY());
 
             }
-        }
-        listAX.sort(Double::compare);
-        listAY.sort(Double::compare);
-        listBX.sort(Double::compare);
-        listBY.sort(Double::compare);
+
+            for (int i = 0; i < A.size(); i++) {
+                if (rectA.getX1() > A.get(i).getX())
+                    rectA.setX1(A.get(i).getX());
+                if (rectB.getX1() > B.get(i).getX())
+                    rectB.setX1(B.get(i).getX());
+                if (rectA.getY1() > A.get(i).getY())
+                    rectA.setY1(A.get(i).getY());
+                if (rectB.getY1() > B.get(i).getY())
+                    rectB.setY1(B.get(i).getY());
+                if (rectA.getX2() < A.get(i).getX())
+                    rectA.setX2(A.get(i).getX());
+                if (rectB.getX2() < B.get(i).getX())
+                    rectB.setX2(B.get(i).getX());
+                if (rectA.getY2() < A.get(i).getY())
+                    rectA.setY2(A.get(i).getY());
+                if (rectB.getY2() < B.get(i).getY())
+                    rectB.setY2(B.get(i).getY());
+            }
+
+            if (opt1) {
+                for (int i = 0; i < A.size(); i++) {
+                    listAX.set(i, listAX.get(i) - rectA.getX1());
+                    listAY.set(i, listAY.get(i) - rectA.getY1());
+                    listBX.set(i, listBX.get(i) - rectB.getX1());
+                    listBY.set(i, listBY.get(i) - rectB.getY1());
+
+                }
+            }
+            listAX.sort(Double::compare);
+            listAY.sort(Double::compare);
+            listBX.sort(Double::compare);
+            listBY.sort(Double::compare);
 
 
-        switch (typeShape) {
-            case TYPE_SHAPE_BEZIER -> {
-                surfaceA = new SurfaceParametriquePolynomialeBezier();
-                surfaceB = new SurfaceParametriquePolynomialeBezier();
+            switch (typeShape) {
+                case TYPE_SHAPE_BEZIER -> {
+                    surfaceA = new SurfaceParametriquePolynomialeBezier();
+                    surfaceB = new SurfaceParametriquePolynomialeBezier();
+                }
+                case TYPE_SHAPE_QUADR -> {
+                    surfaceA = new Polygons();
+                    surfaceB = new Polygons();
+                }
             }
-            case TYPE_SHAPE_QUADRS -> {
-                surfaceA = new Polygons();
-                surfaceB = new Polygons();
-            }
-        }
-        for (int i = 0; i < A.size(); i++) {
-            for (int j = 0; j < B.size(); j++) {
+            for (int i = 0; i < A.size(); i++) {
+                for (int j = 0; j < B.size(); j++) {
 //                int i1 = (int) Math.min((double) (i % ((int) Math.sqrt(A.size() )+ 1)) * (Math.sqrt(A.size() )+ 1), A.size() - 1);
 //                int j1 = (int) Math.min((double) (j / ((int) Math.sqrt(B.size() )+ 1)) * (Math.sqrt(A.size() )+ 1), B.size() - 1);
 
 
-                ((SurfaceParametriquePolynomiale) surfaceA).getCoefficients().setElem(new Point3D(listAX.get(i), listAY.get(j), 0.0), i, j);
-                ((SurfaceParametriquePolynomiale) surfaceB).getCoefficients().setElem(new Point3D(listBX.get(i), listBY.get(j), 0.0), i, j);
+                    ((SurfaceParametriquePolynomiale) surfaceA).getCoefficients().setElem(new Point3D(listAX.get(i), listAY.get(j), 0.0), i, j);
+                    ((SurfaceParametriquePolynomiale) surfaceB).getCoefficients().setElem(new Point3D(listBX.get(i), listBY.get(j), 0.0), i, j);
+                }
             }
-        }
 
-        sAij = new Point3D[(int) this.aDimReduced.getWidth()][(int) this.aDimReduced.getHeight()];
-        sBij = new Point3D[(int) this.bDimReduced.getWidth()][(int) this.bDimReduced.getHeight()];
+            sAij = new Point3D[(int) this.aDimReduced.getWidth()][(int) this.aDimReduced.getHeight()];
+            sBij = new Point3D[(int) this.bDimReduced.getWidth()][(int) this.bDimReduced.getHeight()];
 
-        if (sAij.length == 0 || sAij[0].length == 0 || sBij.length == 0 || sBij[0].length == 0)
+            if (sAij.length == 0 || sAij[0].length == 0 || sBij.length == 0 || sBij[0].length == 0)
+                setInvalidArray(true);
+
+            precomputeX(aDimReal, aDimReduced, sAij, surfaceA);
+            precomputeX(bDimReal, bDimReduced, sBij, surfaceB);
+        } catch (RuntimeException ex) {
             setInvalidArray(true);
-
-        precomputeX(aDimReal, aDimReduced, sAij, surfaceA);
-        precomputeX(bDimReal, bDimReduced, sBij, surfaceB);
-
+        }
     }
 
 
@@ -228,13 +206,13 @@ public class DistanceBezier2 extends DistanceAB {
     }
 
     public void precomputeX(Dimension2D xDimReal, Dimension2D xDimReduced, Point3D[][] sXij, ParametricSurface surfaceX) {
-        for (int i = 0; i < xDimReal.getWidth(); i++)
-            for (int j = 0; j < xDimReal.getHeight(); j++) {
-                Point3D tried = new Point3D(1.0 * i / xDimReal.getWidth(),
-                        1.0 * j / xDimReal.getHeight(), 0.0);
-                int i1 = (int) (tried.getX() * xDimReduced.getWidth());
-                int j1 = (int) (tried.getY() * xDimReduced.getHeight());
-                sXij[i1][j1] = surfaceX.calculerPoint3D(tried.getX(), tried.getY());
+        for (int i = 0; i < xDimReduced.getWidth(); i++)
+            for (int j = 0; j < xDimReduced.getHeight(); j++) {
+                Point3D tried = new Point3D(1.0 * i / xDimReduced.getWidth() * xDimReal.getWidth(),
+                        1.0 * j / xDimReduced.getHeight() * xDimReal.getHeight(), 0.0);
+                int i1 = (int) (double) (tried.getX() / xDimReal.getWidth());
+                int j1 = (int) (double) (tried.getY() / xDimReal.getHeight());
+                sXij[i][j] = surfaceX.calculerPoint3D(tried.getX(), tried.getY());
 
             }
     }

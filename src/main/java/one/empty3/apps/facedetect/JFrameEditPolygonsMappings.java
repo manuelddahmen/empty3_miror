@@ -26,12 +26,16 @@
 
 package one.empty3.apps.facedetect;
 
+import javaAnd.awt.image.imageio.ImageIO;
 import net.miginfocom.swing.MigLayout;
 import one.empty3.library.Config;
+import one.empty3.library.Resolution;
+import one.empty3.library.ZBufferFactory;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ResourceBundle;
 
@@ -46,6 +50,7 @@ public class JFrameEditPolygonsMappings extends JFrame {
     Thread threadDisplay;
     private int mode = 0;
     private int SELECT_POINT;
+    private BufferedImage currentHD;
 
     public JFrameEditPolygonsMappings() {
         initComponents();
@@ -150,7 +155,34 @@ public class JFrameEditPolygonsMappings extends JFrame {
     }
 
     private void menuItemHD(ActionEvent e) {
-        // TODO add your code here
+        TestHumanHeadTexturing testHumanHeadTexturing = TestHumanHeadTexturing.startAll(editPolygonsMappings2, editPolygonsMappings2.image,
+                editPolygonsMappings2.model);
+        testHumanHeadTexturing.setZ(ZBufferFactory.instance(Resolution.HD1080RESOLUTION.x(),
+                Resolution.HD1080RESOLUTION.y()));
+        testHumanHeadTexturing.setMaxFrames(1);
+        Thread thread = new Thread(testHumanHeadTexturing);
+        thread.start();
+        while (thread.isAlive()) {
+            System.out.println("+HD+");
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException ex) {
+                ex.printStackTrace();
+                return;
+            }
+        }
+        currentHD = testHumanHeadTexturing.zBufferImage;
+        if (currentHD != null) {
+            JFileChooser jFileChooser = new JFileChooser(config.getDefaultFileOutput());
+            if (jFileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+                File selectedFile = jFileChooser.getSelectedFile();
+                if (selectedFile != null && !selectedFile.exists()) {
+                    String absolutePath = selectedFile.getAbsolutePath();
+                    String extension = absolutePath.substring(absolutePath.lastIndexOf("."), absolutePath.length());
+                    ImageIO.write(currentHD, extension, selectedFile);
+                }
+            }
+        }
     }
 
     private void menuItem4K(ActionEvent e) {
