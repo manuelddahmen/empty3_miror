@@ -55,13 +55,12 @@
 
 package one.empty3.library1.tree;
 
+import one.empty3.library.StructureMatrix;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-
-import one.empty3.library.StructureMatrix;
-
-import org.jetbrains.annotations.NotNull;
 
 
 /**
@@ -178,7 +177,7 @@ public class AlgebraicTree extends Tree {
 
         int i = 1;
         boolean added = false;
-        int last = 13;
+        int last = 14;
         subformula = addSkipComments(subformula);
         while (i <= last && !added) {
             boolean exception = false;
@@ -226,24 +225,28 @@ public class AlgebraicTree extends Tree {
                         if (added) caseChoice = 8;
                         break;
                     case 9:
-                        added = addFunction(src, subformula);
+                        added = addVectorFunction(src, subformula);
                         if (added) caseChoice = 9;
                         break;
                     case 10:
-                        added = addBracedExpression(src, subformula);
+                        added = addFunction(src, subformula);
                         if (added) caseChoice = 10;
                         break;
                     case 11:
-                        added = addVariable(src, subformula);
+                        added = addBracedExpression(src, subformula);
                         if (added) caseChoice = 11;
                         break;
-                    case 12: // Mettre - en 4??
-                        added = addSingleSign(src, subformula);
+                    case 12:
+                        added = addVariable(src, subformula);
                         if (added) caseChoice = 12;
                         break;
-                    case 13:
-                        added = addFunctionDefinition(src, subformula);
+                    case 13: // Mettre - en 4??
+                        added = addSingleSign(src, subformula);
                         if (added) caseChoice = 13;
+                        break;
+                    case 14:
+                        added = addFunctionDefinition(src, subformula);
+                        if (added) caseChoice = 14;
                         break;
                     default:
                         break;
@@ -266,6 +269,10 @@ public class AlgebraicTree extends Tree {
         if (formula == null || formula.isBlank())
             return true;
         throw new AlgebraicFormulaSyntaxException("Cannot add to treeNode or root." + formula, this);
+    }
+
+    private boolean addVectorFunction(TreeNode src, String subformula) {
+        return false;
     }
 
     private String addSkipComments(String formula) {

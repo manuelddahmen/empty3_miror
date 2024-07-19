@@ -24,7 +24,7 @@
  * Created by JFormDesigner on Sat May 18 10:59:33 CEST 2024
  */
 
-package one.empty3.apps.facedetect;
+package one.empty3.apps.facedetectV0.facedetect;
 
 import com.google.common.util.concurrent.AtomicDouble;
 import javaAnd.awt.image.imageio.ImageIO;
@@ -425,11 +425,6 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
                                 Logger.getAnonymousLogger().log(Level.INFO, "Invalid array in DistanceAB");
                             }
 
-                            try {
-                                Thread.sleep(100);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
 
                             l = System.nanoTime() - l;
                             Logger.getAnonymousLogger().log(Level.INFO, "Distance calculation finished" + (l / 1000000.0));
