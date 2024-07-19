@@ -31,6 +31,7 @@ import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
+import kotlin.Array
 import kotlin.math.pow
 
 /**
@@ -500,9 +501,6 @@ class TestAlgebraicTreeVector() {
         testResultVariable("sin(r*10)", Math.sin(r * 10), vars, true)
     }
 
-    companion object {
-        private val DELTA = Double.MIN_VALUE
-    }
 
     @Test
     fun testVectorSimple1() {
@@ -949,4 +947,13 @@ class TestAlgebraicTreeVector() {
         }
     }
 
+    companion object {
+        private val DELTA = Double.MIN_VALUE
+
+        @JvmStatic
+        fun main(args: Array<String>) {
+
+        }
+    }
 }
+

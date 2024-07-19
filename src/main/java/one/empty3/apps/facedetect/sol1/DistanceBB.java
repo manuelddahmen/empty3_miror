@@ -20,7 +20,7 @@
  *
  */
 
-package one.empty3.apps.facedetect;
+package one.empty3.apps.facedetect.sol1;
 
 import one.empty3.library.Point3D;
 import one.empty3.library1.shader.Mat;
@@ -63,7 +63,7 @@ public class DistanceBB extends DistanceBezier2 {
 
     @Override
     public Point3D findAxPointInB(double u, double v) {
-        return findAxPointInB5a(u, v);
+        return findAxPointInB5d(u, v);
     }
 
     public Point3D findAxPointInB5a(double u, double v) {

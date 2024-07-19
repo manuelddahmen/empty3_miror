@@ -85,14 +85,14 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
 
         @Override
         public int getColorAt(double u, double v) {
-            if (distanceAB != null && !distanceAB.isInvalidArray()) {
+            if (distanceAB != null && !distanceAB.isInvalidArray() && image != null) {
                 Point3D axPointInB = distanceAB.findAxPointInB(u, v);
                 Point3D point3D = new Point3D(axPointInB.getX() * image.getWidth(), axPointInB.getY() * image.getHeight(), 0.0);//                        .multDot(new Point3D(distanceAB.aDimReduced.getWidth(), distanceAB.aDimReduced.getHeight(), 0.0));
                 int rgb = image.getRGB((int) (Math.max(0, Math.min(point3D.getX(), (double) image.getWidth() - 1)))
-                        , (int) (Math.max(0, Math.min((point3D.getY() * image.getHeight()), (double) image.getHeight() - 1))));
+                        , (int) (Math.max(0, Math.min((point3D.getY()), (double) image.getHeight() - 1))));
                 return rgb;
             } else {
-                return 0;
+                return -1;
             }
         }
     };
@@ -130,7 +130,7 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
 
 
                     final Point3D finalPointIme = pointIme;
-                    System.out.println("Point final ime : " + finalPointIme);
+                    Logger.getAnonymousLogger().log(Level.INFO, "Point final ime : " + finalPointIme);
                     pointsInModel.forEach((landmarkTypeItem, point3D) -> {
                         if (landmarkTypeItem.equals(landmarkType)) {
                             pointsInModel.put(landmarkTypeItem, finalPointIme);
@@ -138,10 +138,10 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
                     });
                     hasChangedAorB = true;
                 } else {
-                    System.err.println("Representable null : " + elementRepresentable);
+                    Logger.getAnonymousLogger().log(Level.INFO, "Representable null : " + elementRepresentable);
                 }
             } else {
-                System.err.println("Point out of bounds : " + pointIme);
+                Logger.getAnonymousLogger().log(Level.INFO, "Point out of bounds : " + pointIme);
             }
         }
     }
@@ -407,7 +407,7 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
                         if (hasChangedAorB()) {
                             Logger.getAnonymousLogger().log(Level.INFO, "All loaded resources finished. Starts distance calculation");
 
-                            distanceAB = new DistanceBB(pointsInImage.values().stream().toList(),
+                            distanceAB = new DistanceBezier2(pointsInImage.values().stream().toList(),
                                     pointsInModel.values().stream().toList(), new Dimension(panelPicture.getWidth(), panelPicture.getHeight()),
                                     new Dimension(panelModelView.getWidth(),
                                             panelModelView.getHeight()));

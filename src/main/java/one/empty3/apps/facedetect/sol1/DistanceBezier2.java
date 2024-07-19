@@ -20,7 +20,7 @@
  *
  */
 
-package one.empty3.apps.facedetect;
+package one.empty3.apps.facedetect.sol1;
 
 import one.empty3.library.Point3D;
 import one.empty3.library.Polygons;
@@ -176,20 +176,12 @@ public class DistanceBezier2 extends DistanceAB {
     }
 
 
-    public Point3D findAxPointInB(double u, double v) {
-        return findAxPointInB2a(u, v);
-    }
-
-    public Point3D findAxPointInB2a(double u, double v) {
+    public Point3D findAxPointInB2(double u, double v) {
         Point3D point3D = surfaceB.calculerPoint3D(u, v);
         return surfaceA.calculerPoint3D(point3D.getX(), point3D.getY());
     }
 
-    public Point3D findAxPointInB2b(double u, double v) {
-        return surfaceB.calculerPoint3D(u, v);
-    }
-
-    public Point3D findAxPointInB1(double u, double v) {
+    public Point3D findAxPointInB(double u, double v) {
         Point3D searched = new Point3D(u, v, 0.0);
         double distance = Double.MAX_VALUE;
         Point3D found = searched;

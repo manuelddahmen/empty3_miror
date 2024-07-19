@@ -20,7 +20,7 @@
  *
  */
 
-package one.empty3.apps.facedetect;
+package one.empty3.apps.facedetect.sol1;
 
 import one.empty3.library.Point3D;
 import one.empty3.library.core.nurbs.SurfaceParametriquePolynomiale;

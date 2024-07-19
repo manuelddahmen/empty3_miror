@@ -34,6 +34,7 @@ sourceSets {
         }
         mainClasses {
             "one.empty3.library1.tree.TestStringAnalyzer5"
+            "one.empty3.library1.tree.TestStringAnalyzer7"
             "one.empty3.library1.tree.TestAlgebraicTreeVector"
         }
     }
@@ -42,6 +43,28 @@ sourceSets {
     test.kotlin.srcDirs += 'test/main/kotlin'
     test.kotlin.srcDirs += 'test/main/java'
 }
+
+/*
+ *
+ *  * Copyright (c) 2024. Manuel Daniel Dahmen
+ *  *
+ *  *
+ *  *    Copyright 2024 Manuel Daniel Dahmen
+ *  *
+ *  *    Licensed under the Apache License, Version 2.0 (the "License");
+ *  *    you may not use this file except in compliance with the License.
+ *  *    You may obtain a copy of the License at
+ *  *
+ *  *        http://www.apache.org/licenses/LICENSE-2.0
+ *  *
+ *  *    Unless required by applicable law or agreed to in writing, software
+ *  *    distributed under the License is distributed on an "AS IS" BASIS,
+ *  *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  *    See the License for the specific language governing permissions and
+ *  *    limitations under the License.
+ *
+ *
+ */
 
 //kotlin {
 //macosX64('native') { // on macOS
@@ -83,61 +106,61 @@ java {
 
 tasks.register('Hello', JavaExec) {
     classpath sourceSets.main.runtimeClasspath
-    mainClass = "one.empty3.HelloWorld"
+    mainClass = 'one.empty3.HelloWorld'
     args "arg1", "arg2"
     dependsOn(jar)
 }
 tasks.register('FeatureAppGui', JavaExec) {
     classpath sourceSets.main.runtimeClasspath
-    mainClass = "one.empty3.feature.ClassSchemaBuilder"
+    mainClass = 'one.empty3.feature.ClassSchemaBuilder'
     args "arg1", "arg2"
     dependsOn(jar)
 }
 tasks.register('MorphingAppGui', JavaExec) {
     classpath sourceSets.main.runtimeClasspath
-    mainClass = "one.empty3.apps.morph.Main"
+    mainClass = 'one.empty3.apps.morph.Main'
     args "arg1", "arg2"
     dependsOn(jar)
 }
 tasks.register('OpadGameGui', JavaExec) {
     classpath sourceSets.main.runtimeClasspath
-    mainClass = "one.empty3.apps.opad.PanelGraphics"
+    mainClass = 'one.empty3.apps.opad.PanelGraphics'
     dependsOn(jar)
 }
 tasks.register('BoardGameGui', JavaExec) {
     classpath sourceSets.main.runtimeClasspath
-    mainClass = "one.empty3.apps.newboardgames.WindowDrawing"
+    mainClass = 'one.empty3.apps.newboardgames.WindowDrawing'
     args "arg1", "arg2"
     dependsOn(jar)
 }
 tasks.register('ResolutionCharacter8', JavaExec) {
     classpath sourceSets.main.runtimeClasspath
-    mainClass = "one.empty3.feature.tryocr.ResolutionCharacter8"
+    mainClass = 'one.empty3.feature.tryocr.ResolutionCharacter8'
     args "arg1", "arg2"
     dependsOn(jar)
 }
 tasks.register('OCR', JavaExec) {
     classpath sourceSets.main.runtimeClasspath
-    mainClass = "one.empty3.feature.tryocr.OCR1"
+    mainClass = 'one.empty3.feature.tryocr.OCR1'
     args "arg1", "arg2"
     dependsOn(jar)
 }
 tasks.register('RunEffect from sets directory', JavaExec) {
     classpath sourceSets.main.runtimeClasspath
-    mainClass = "one.empty3.feature.Run"
+    mainClass = 'one.empty3.feature.Run'
     args "fourier_series"
     dependsOn(jar)
 }
 
 tasks.register('TestObjet__TestPlanets', JavaExec) {
     classpath sourceSets.main.runtimeClasspath
-    mainClass = "one.empty3.testscopy.tests.TestPlanets"
+    mainClass = 'one.empty3.testscopy.tests.TestPlanets'
     args "fourier_series"
     dependsOn(jar)
 }
 tasks.register('TestHumainMarche', JavaExec) {
     classpath sourceSets.main.runtimeClasspath
-    mainClass = "one.empty3.testscopy.tests.TestHumainMarche2"
+    mainClass = 'one.empty3.testscopy.tests.TestHumainMarche2'
     args "fourier_series"
     dependsOn(jar)
 }
@@ -145,22 +168,22 @@ tasks.register('TestHumainMarche', JavaExec) {
 
 tasks.register('Paysage', JavaExec) {
     classpath sourceSets.main.runtimeClasspath
-    mainClass = "one.empty3.testscopy.tests.test4.Paysage"
-    args "one.empty3.testscopy.tests.test4.Paysage"
+    mainClass = 'one.empty3.testscopy.tests.test4.Paysage'
+    args 'one.empty3.testscopy.tests.test4.Paysage'
     dependsOn(jar)
 }
 tasks.register('Balade', JavaExec) {
     classpath sourceSets.main.runtimeClasspath
-    mainClass = "one.empty3.testscopy.tests.test4.Balade"
-    args "one.empty3.testscopy.tests.test4.Balade"
+    mainClass = 'one.empty3.testscopy.tests.test4.Balade'
+    args 'one.empty3.testscopy.tests.test4.Balade'
     dependsOn(jar)
 }
 
 
 tasks.register('Balade1', JavaExec) {
     classpath sourceSets.main.runtimeClasspath
-    mainClass = "one.empty3.testscopy.tests.test4.Balade1"
-    args "one.empty3.testscopy.tests.test4.Balade1"
+    mainClass = 'one.empty3.testscopy.tests.test4.Balade1'
+    args 'one.empty3.testscopy.tests.test4.Balade1'
     dependsOn(jar)
 }
 /***
@@ -168,27 +191,27 @@ tasks.register('Balade1', JavaExec) {
  */
 tasks.register('tests.tests2.cadeau.SphereCube', JavaExec) {
     classpath sourceSets.test.runtimeClasspath
-    mainClass = "tests.tests2.cadeau.SphereCube"
+    mainClass = 'tests.tests2.cadeau.SphereCube'
     args ""
     dependsOn(jar)
 }
 tasks.register('tests.tests2.cubes.TestCubes', JavaExec) {
     classpath sourceSets.test.runtimeClasspath
-    mainClass = "tests.tests2.cubes.TestCubes"
+    mainClass = 'tests.tests2.cubes.TestCubes'
     args ""
     dependsOn(jar)
 }
 
 tasks.register('tests.tests2.rotation.TestRotationsObjets', JavaExec) {
     classpath sourceSets.test.runtimeClasspath
-    mainClass = "tests.tests2.rotation.TestRotationsObjets"
+    mainClass = 'tests.tests2.rotation.TestRotationsObjets'
     args ""
     dependsOn(jar)
 }
 
 tasks.register('one.empty3.lasttests.TestTubeVisit', JavaExec) {
     classpath sourceSets.main.runtimeClasspath
-    mainClass = "one.empty3.testtests.TestTubeVisit"
+    mainClass = 'one.empty3.test.tests.TestTubeVisit'
     args ""
     dependsOn(jar)
 }
@@ -196,34 +219,50 @@ tasks.register('one.empty3.lasttests.TestTubeVisit', JavaExec) {
 
 tasks.register('one.empty3.tests.TestPlanetEtLune1', JavaExec) {
     classpath sourceSets.test.runtimeClasspath
-    mainClass = "one.empty3.tests.coursecheval.TestCourseChevalPS"
+    mainClass = 'one.empty3.tests.coursecheval.TestCourseChevalPS'
     args ""
     dependsOn(jar)
 }
 
 tasks.register('one.empty3.tests.TestCourseChatPS', JavaExec) {
     classpath sourceSets.test.runtimeClasspath
-    mainClass = "one.empty3.tests.coursecheval.TestCourseChatPS"
+    mainClass = 'one.empty3.tests.coursecheval.TestCourseChatPS'
     args ""
     dependsOn(jar)
 }
 
 tasks.register('RunPerceptronAndCharacterClassifiers', JavaExec) {
     classpath sourceSets.test.runtimeClasspath
-    mainClass = "one.empty3.neuralnetwork.of.RunPerceptronAndCharacterClassifiers"
+    mainClass = 'one.empty3.neuralnetwork.of.RunPerceptronAndCharacterClassifiers'
     args ""
     dependsOn(jar)
 }
 tasks.register('TestHumanHeadTexturing', JavaExec) {
     classpath sourceSets.test.runtimeClasspath
-    mainClass = "one.empty3.tests.humanheadtexturing.TestHumanHeadTexturing"
+    mainClass = 'one.empty3.tests.humanheadtexturing.TestHumanHeadTexturing'
     args ""
     dependsOn(jar)
 }
 
 tasks.register('FaceDetectApp.gui', JavaExec) {
     classpath sourceSets.test.runtimeClasspath
-    mainClass = "one.empty3.apps.facedetect.JFrameEditPolygonsMappings"
+    mainClass = 'one.empty3.apps.facedetect.JFrameEditPolygonsMappings'
+    args ''
+    dependsOn(jar)
+}
+
+tasks.register('one.empty3.library1.tree.TestStringAnalyzer5', JavaExec) {
+    classpath sourceSets.test.runtimeClasspath
+    mainClass = 'one.empty3.library1.tree.TestStringAnalyzer5'
+    testing
+    args ''
+    dependsOn(jar)
+}
+
+tasks.register('one.empty3.library1.tree.TestStringAnalyzer7', JavaExec) {
+    classpath sourceSets.test.runtimeClasspath
+    mainClass = 'one.empty3.library1.tree.TestStringAnalyzer7'
+    testing
     args ''
     dependsOn(jar)
 }
@@ -333,7 +372,6 @@ dependencies {
     implementation 'com.google.cloud:google-cloud-storage'
 
 }
-
 
 tasks.register('javadocJar', Jar) {
     dependsOn javadoc

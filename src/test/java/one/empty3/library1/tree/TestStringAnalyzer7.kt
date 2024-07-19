@@ -52,6 +52,8 @@ import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.ArrayList
+import kotlin.Array
+import one.empty3.library1.tree.TestStringAnalyzer7 as TestStringAnalyzer71
 
 /**
  * Test class for AlgebraicTree.
@@ -64,15 +66,15 @@ class TestStringAnalyzer7 {
         File(directory_path).listFiles()?.forEach {
             val file = it
             if (file != null && file.name.endsWith(".java_code")) {
-                val stringAnalyzer1java: StringAnalyzerJava1 = StringAnalyzerJava1()
-                val javaToken7 = getJavaToken7(stringAnalyzer1java)
+                val StringAnalyzerJava1: StringAnalyzerJava1 = StringAnalyzerJava1()
+                val javaToken7 = getJavaToken7(StringAnalyzerJava1)
                 val readString = readString(file.absolutePath)
                 var parse = 0
                 try {
                     parse = javaToken7.parse(readString, parse)
                 } catch (ex: RuntimeException) {
                     ex.printStackTrace()
-                    if (stringAnalyzer1java.mPosition < readString.length - 1) {
+                    if (StringAnalyzerJava1.mPosition < readString.length - 1) {
                         println("Error: Parsing text not finished")
                     }
                 }
@@ -80,19 +82,19 @@ class TestStringAnalyzer7 {
                 println("------------------------------------------------------------------------")
                 println("- " + file.name)
                 println("------------------------------------------------------------------------")
-                println(stringAnalyzer1java.construct.toLangStringJava(isDebug))
+                println(StringAnalyzerJava1.construct.toLangStringJava(isDebug))
                 println("------------------------------------------------------------------------")
-                println("- " + "amount of code: " + (stringAnalyzer1java.mPosition + 1) + "/" + readString.length)
+                println("- " + "amount of code: " + (StringAnalyzerJava1.mPosition + 1) + "/" + readString.length)
                 println("------------------------------------------------------------------------")
                 println("- " + "errors (characters remainers): ")
                 println("------------------------------------------------------------------------")
-                System.err.println(readString.substring(stringAnalyzer1java.mPosition));
+                System.err.println(readString.substring(StringAnalyzerJava1.mPosition));
                 println("------------------------------------------------------------------------")
-                System.err.println(stringAnalyzer1java.construct.toLangStringJava(true));
+                System.err.println(StringAnalyzerJava1.construct.toLangStringJava(true));
                 println("------------------------------------------------------------------------")
 
 
-                succeed = succeed && (stringAnalyzer1java.mPosition + 2 >= readString.length)
+                succeed = succeed && (StringAnalyzerJava1.mPosition + 2 >= readString.length)
                 /*&&
                 compareStrings(
                     readString, stringAnalyzer3.construct.toLangStringJava(false),
@@ -1407,5 +1409,16 @@ class TestStringAnalyzer7 {
         }
 
 
+    }
+
+
+    companion object {
+        @JvmStatic
+        fun main(args: Array<String>) {
+            val analyzerTestStringAnalyzer7 = TestStringAnalyzer71()
+            analyzerTestStringAnalyzer7.testExpression2()
+            analyzerTestStringAnalyzer7.testDeclarationSimple()
+            analyzerTestStringAnalyzer7.testReadMultiSources()
+        }
     }
 }
