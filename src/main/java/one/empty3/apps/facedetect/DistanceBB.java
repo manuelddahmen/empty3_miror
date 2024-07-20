@@ -63,7 +63,7 @@ public class DistanceBB extends DistanceBezier2 {
 
     @Override
     public Point3D findAxPointInB(double u, double v) {
-        return findAxPointInB5a(u, v);
+        return findAxPointInB5a2(u, v);
     }
 
     public Point3D findAxPointInB5a(double u, double v) {
@@ -71,6 +71,29 @@ public class DistanceBB extends DistanceBezier2 {
         searched = new Point3D(u, v, 0.0);
         double distance = Double.MAX_VALUE;
         Point3D found = searched;//.multDot(new Point3D(bDimReduced.getWidth(), bDimReduced.getHeight(), 0.0));
+        if (isInvalidArray()) {
+            Logger.getAnonymousLogger().log(Level.SEVERE, "DistanceAB, array is invalid");
+            return found;
+        }
+        for (int i = 0; i < bDimReduced.getWidth(); i++) {
+            for (int j = 0; j < bDimReduced.getHeight(); j++) {
+                Double dist = Point3D.distance(sBij[i][j], searched);
+                if (dist < distance) {
+                    distance = dist;
+                    found = new Point3D(i / bDimReduced.getWidth(), j / bDimReduced.getHeight(), 0.0);
+                    //found = new Point3D(((double) i), ((double) j), 0.0);
+                    //found = new Point3D((double) i, (double) j, 0.0);
+                }
+            }
+        }
+        return found;
+    }
+
+    public Point3D findAxPointInB5a2(double u, double v) {
+        Point3D searched = null;
+        searched = new Point3D(u, v, 0.0).multDot(new Point3D(1. / bDimReduced.getWidth(), 1. / bDimReduced.getHeight(), 0.0));
+        double distance = Double.MAX_VALUE;
+        Point3D found = searched;//
         if (isInvalidArray()) {
             Logger.getAnonymousLogger().log(Level.SEVERE, "DistanceAB, array is invalid");
             return found;

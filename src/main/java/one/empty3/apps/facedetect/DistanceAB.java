@@ -34,11 +34,11 @@ import java.util.List;
 public abstract class DistanceAB {
     SurfaceParametriquePolynomiale surfaceA;
     SurfaceParametriquePolynomiale surfaceB;
-    Dimension2D aDimReduced = new Dimension(40, 40);
-    Dimension2D bDimReduced = new Dimension(40, 40);
+    Dimension2D aDimReduced = new Dimension(20, 20);
+    Dimension2D bDimReduced = new Dimension(20, 20);
     static final int TYPE_SHAPE_BEZIER = 1;
     static final int TYPE_SHAPE_QUADR = 2;
-    int typeShape = 1;
+    int typeShape = 2;
     boolean opt1 = false;
     DistanceBezier2.Rectangle2 rectA;
     DistanceBezier2.Rectangle2 rectB;

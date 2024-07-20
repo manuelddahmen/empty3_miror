@@ -258,7 +258,7 @@ public class StringAnalyzerJava2 extends StringAnalyzer3 {
 
     private boolean nextTokenCharsListConditionTrue(String input, int i) {
         return i >= input.length() || ((input.charAt(i) == '}'
-                || input.charAt(i) == ';' || input.charAt(i) == ','));
+                /*|| input.charAt(i) == ';'*/ || input.charAt(i) == ','));
     }
 
     public class TokenExpression2 extends TokenName {
@@ -328,8 +328,7 @@ public class StringAnalyzerJava2 extends StringAnalyzer3 {
             }
             boolean newOperator = false;
             int i0 = i;
-            /*+ '='*/
-            String charsAlgebraic = "+-*/<>";
+            String charsAlgebraic = "+-*/<>=";
             int hasNextPossible = 0;
             boolean lastToken = true;
             while (i < input.length() && (Character.isLetterOrDigit(input.charAt(i)) || !nextTokenCharsListConditionTrue(input, i)
@@ -387,14 +386,20 @@ public class StringAnalyzerJava2 extends StringAnalyzer3 {
 
                     }
 
-                    if ((input.charAt(i) == '(' || input.charAt(i) == ')') && (!isNotName2() || !isNotType2()))
+                    if ((input.charAt(i) == '(' || input.charAt(i) == ')') && (!isNotName2() || !isNotType2())) {
+                        i++;
                         break;
-                    if ((input.charAt(i) == '[' || input.charAt(i) == ']') && !isNotName2())
+                    }
+                    if ((input.charAt(i) == '[' || input.charAt(i) == ']') && !isNotName2()) {
+                        i++;
                         break;
+                    }
                     if (input.charAt(i) == ';') {
                         lastToken = true;
                         afterLastTokenwhile = new DataExpression(endOfInstructionSemiColon, ";");
-                        break;
+                        expressions.add(afterLastTokenwhile);
+                        i++;
+                        continue;
                     }
 
                     if (input.charAt(i) == '[' && !bStart && isNotName2()) {
@@ -478,8 +483,12 @@ public class StringAnalyzerJava2 extends StringAnalyzer3 {
             }
             if (lastToken && afterLastTokenwhile == null) {
                 expressions.add(new DataExpression(variable, name));
-            } else if (lastToken && afterLastTokenwhile != null) {
-                expressions.add(afterLastTokenwhile);
+            }
+            if (lastToken && afterLastTokenwhile != null) {
+                //expressions.add(afterLastTokenwhile);
+
+                setSuccessful(true);
+                return processNext(input, i);
             }
             setSuccessful(true);
             recursions--;
@@ -536,6 +545,8 @@ public class StringAnalyzerJava2 extends StringAnalyzer3 {
             } else if (it.type() == StringAnalyzerJava2
                     .TokenExpression2.variable) {
                 sb.append(getConstruct().debugString(isDebug, ".")).append(getConstruct().debugString(isDebug, it.expression()));
+            } else if (it.type() == TokenExpression2.endOfInstructionSemiColon) {
+                sb.append(getConstruct().debugString(isDebug, ";\n"));
             } else if (it.type() == StringAnalyzerJava2
                     .TokenExpression2.dotCall) {
                 //sb.append("." + it.expression())

@@ -259,9 +259,9 @@ tasks.register('one.empty3.library1.tree.TestStringAnalyzer5', JavaExec) {
     dependsOn(jar)
 }
 
-tasks.register('one.empty3.library1.tree.TestStringAnalyzer7', JavaExec) {
+tasks.register('one.empty3.library1.tree.TestStringAnalyzer8java', JavaExec) {
     classpath sourceSets.test.runtimeClasspath
-    mainClass = 'one.empty3.library1.tree.TestStringAnalyzer7'
+    mainClass = 'one.empty3.library1.tree.TestStringAnalyzer8java'
     testing
     args ''
     dependsOn(jar)

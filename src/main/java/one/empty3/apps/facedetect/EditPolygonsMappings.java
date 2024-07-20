@@ -76,7 +76,7 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
     private int selectedPointNoOut = -1;
     private Point3D selectedPointOutUv = null;
     private Point3D selectedPointVertexOut;
-
+    private int GRAY = Color.GRAY.getRGB();
     ITexture iTextureMorphImage = new ITexture() {
         @Override
         public MatrixPropertiesObject copy() throws CopyRepresentableError, IllegalAccessException, InstantiationException {
@@ -87,12 +87,12 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
         public int getColorAt(double u, double v) {
             if (distanceAB != null && !distanceAB.isInvalidArray() && image != null) {
                 Point3D axPointInB = distanceAB.findAxPointInB(u, v);
-                Point3D point3D = new Point3D(axPointInB.getX() * image.getWidth(), axPointInB.getY() * image.getHeight(), 0.0);//                        .multDot(new Point3D(distanceAB.aDimReduced.getWidth(), distanceAB.aDimReduced.getHeight(), 0.0));
+                Point3D point3D = new Point3D(axPointInB.getX() * image.getWidth(), axPointInB.getY() * image.getHeight(), 0.0);
                 int rgb = image.getRGB((int) (Math.max(0, Math.min(point3D.getX(), (double) image.getWidth() - 1)))
                         , (int) (Math.max(0, Math.min((point3D.getY()), (double) image.getHeight() - 1))));
                 return rgb;
             } else {
-                return -1;
+                return GRAY;
             }
         }
     };
@@ -395,46 +395,41 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
                         displayPointsIn(pointsInImage);
                     }
                 }
-                Thread.sleep(20);
 
 
-                if ((pointsInImage != null && panelModelView != null && !pointsInImage.isEmpty()
+                if (pointsInImage != null && panelModelView != null && !pointsInImage.isEmpty()
                         && !pointsInModel.isEmpty() && model != null && image != null
-                        && threadDistanceIsNotRunning) || hasChangedAorB) {
+                        && threadDistanceIsNotRunning && hasChangedAorB()) {
                     Thread thread = new Thread(() -> {
                         long l = System.nanoTime();
                         threadDistanceIsNotRunning = false;
-                        if (hasChangedAorB()) {
-                            Logger.getAnonymousLogger().log(Level.INFO, "All loaded resources finished. Starts distance calculation");
+                        Logger.getAnonymousLogger().log(Level.INFO, "All loaded resources finished. Starts distance calculation");
 
-                            distanceAB = new DistanceBezier2(pointsInImage.values().stream().toList(),
-                                    pointsInModel.values().stream().toList(), new Dimension(panelPicture.getWidth(), panelPicture.getHeight()),
-                                    new Dimension(panelModelView.getWidth(),
-                                            panelModelView.getHeight()));
-                            if (!distanceAB.isInvalidArray()) {
-                                distanceAB.setModel(model);
-                                // Display 3D scene
-                                if (model != null) {
-                                    model.texture(iTextureMorphImage);
-                                    hasChangedAorB = false;
-                                } else {
-                                    hasChangedAorB = true;
-                                }
-                            } else if (distanceAB.isInvalidArray()) {
-                                hasChangedAorB = true;
-                                Logger.getAnonymousLogger().log(Level.INFO, "Invalid array in DistanceAB");
+                        distanceAB = new DistanceApproxLinear(pointsInImage.values().stream().toList(),
+                                pointsInModel.values().stream().toList(), new Dimension(panelPicture.getWidth(), panelPicture.getHeight()),
+                                new Dimension(panelModelView.getWidth(),
+                                        panelModelView.getHeight()));
+                        if (!distanceAB.isInvalidArray()) {
+                            distanceAB.setModel(model);
+                            // Display 3D scene
+                            if (model != null) {
+                                model.texture(iTextureMorphImage);
                             }
-
-                            try {
-                                Thread.sleep(100);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-
-                            l = System.nanoTime() - l;
-                            Logger.getAnonymousLogger().log(Level.INFO, "Distance calculation finished" + (l / 1000000.0));
-                            threadDistanceIsNotRunning = true;
+                            hasChangedAorB = true;
+                        } else {
+                            hasChangedAorB = true;
+                            Logger.getAnonymousLogger().log(Level.INFO, "Invalid array in DistanceAB");
                         }
+
+                        try {
+                            Thread.sleep(100);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+
+                        l = System.nanoTime() - l;
+                        Logger.getAnonymousLogger().log(Level.INFO, "Distance calculation finished" + (l / 1000000.0));
+                        threadDistanceIsNotRunning = true;
                     });
                     thread.start();
                     Logger.getAnonymousLogger().log(Level.INFO, "Thread texture creation started");
@@ -442,6 +437,7 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
                 if (!threadDistanceIsNotRunning)
                     Logger.getAnonymousLogger().log(Level.INFO, "Thread 'Texture creation' still in progress...");
 
+                Thread.sleep(200);
             } catch (RuntimeException | InterruptedException ex) {
                 ex.printStackTrace();
             }
