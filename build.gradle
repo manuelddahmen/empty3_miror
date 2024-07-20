@@ -416,13 +416,13 @@ tasks.register("publishAll") {
     dependsOn(getTasksByName("publishMavenPublicationToMavenLocal", true))
 }
 
-version = '2024.6.28-10'
+def versionName = '2024.7.21'
 publishing {
     publications {
         maven(MavenPublication) {
             groupId = 'one.empty3'
             artifactId = 'empty3-library-3d'
-            version = "2024.6.28-10"
+            version = versionName
             from components.java
             project.tasks.withType(Sign) {
                 signatures.all {
@@ -510,8 +510,8 @@ jreleaser {
         name = 'empty3-library-3d'
         java.artifactId = 'empty3-library-3d'
         java.groupId = 'one.empty3'
-        java.version = '2024.6.28-10'
-        version = "2024.6.28-10"
+        java.version = versionName
+        version = versionName
         license = 'Apache-2.0'
         authors = ['Manuel D DAHMEN']
         description = '3D rendering engine. Plus modelling. Expected glsl textures 3d and 2d rendering' +
