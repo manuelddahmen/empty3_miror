@@ -23,6 +23,7 @@
 package one.empty3.apps.facedetect;
 
 import one.empty3.library.Point3D;
+import one.empty3.library.core.nurbs.SurfaceParametriquePolynomiale;
 
 import java.awt.geom.Dimension2D;
 import java.util.List;
@@ -47,7 +48,12 @@ public class DistanceApproxLinear extends DistanceBezier2 {
         return pa;
     }
 
-
+    /***
+     *
+     * @param u
+     * @param v
+     * @return
+     */
     private Point3D nearLandmark(double u, double v) {
         Point3D uv = new Point3D(u, v, 0.0);
         double distance = Double.MAX_VALUE;
@@ -64,4 +70,15 @@ public class DistanceApproxLinear extends DistanceBezier2 {
         return new Point3D((double) indexI, (double) indexJ, 0.0);
     }
 
+    /***
+     *
+     * @param textureCord2D
+     * @param listXX
+     * @param listXY
+     * @param surfaceX
+     * @return
+     */
+    Point3D percentList(Point3D textureCord2D, List<Point3D> listXX, List<Point3D> listXY, SurfaceParametriquePolynomiale surfaceX) {
+        return null;
+    }
 }
