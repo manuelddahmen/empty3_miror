@@ -31,7 +31,6 @@ import one.empty3.library.core.testing.TestObjetSub;
 
 import java.awt.*;
 import java.io.File;
-import java.io.IOException;
 
 public class TestPolygons extends TestObjetSub {
     private final Point3D[][] controls = new Point3D[][]{
@@ -63,15 +62,16 @@ public class TestPolygons extends TestObjetSub {
         s = new Polygons();
         s.setCoefficients(point3DStructureMatrix);
         s.texture(texture);
-        s.setIncrU(1./10);
-        s.setIncrV(1./10);
+        s.setIncrU(1. / 10);
+        s.setIncrV(1. / 10);
         scene().add(s);
-        scene().cameraActive(new Camera(Point3D.Z.mult(-10.0), Point3D.O0));
+        scene().cameraActive(new Camera(Point3D.Z.mult(-10.0), Point3D.O0, Point3D.Y));
         try {
             texture = new TextureImg(ECBufferedImage.getFromFile(
                     new File("resources/img/2020-10-19 13.24.58.jpg")));
             texture = new TextureMov("resources/mov/VID_20200416_201314.mp4");
-        } catch (Exception ex) {}
+        } catch (Exception ex) {
+        }
 
         s.texture(texture);
     }
@@ -83,7 +83,7 @@ public class TestPolygons extends TestObjetSub {
             for (int j = 0; j < s.getCoefficients().getData2d().get(i).size(); j++) {
                 Point3D point3D = Point3D.random2(0.1);
                 for (int k = 0; k < 3; k++)
-                    s.getCoefficients().getElem(i,j).set(k, s.getCoefficients().getElem(i,j).get(k)+point3D.get(k));
+                    s.getCoefficients().getElem(i, j).set(k, s.getCoefficients().getElem(i, j).get(k) + point3D.get(k));
             }
         //((TextureMov)texture).timeNext();
     }
@@ -98,7 +98,7 @@ public class TestPolygons extends TestObjetSub {
 
     public static void main(String[] args) {
         TestPolygons testPolygons = new TestPolygons();
-        testPolygons.setResolution(Resolution.HD1080RESOLUTION.x()*2, Resolution.HD1080RESOLUTION.y()*2);
+        testPolygons.setResolution(Resolution.HD1080RESOLUTION.x() * 2, Resolution.HD1080RESOLUTION.y() * 2);
         new Thread(testPolygons).start();
 
 

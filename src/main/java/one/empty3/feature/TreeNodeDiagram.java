@@ -29,10 +29,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import java.util.UUID;
 
 public class TreeNodeDiagram implements TreeNodeListener {
     protected ClassSchemaBuilder.DiagramElement element;
@@ -70,7 +66,7 @@ public class TreeNodeDiagram implements TreeNodeListener {
         if (current != null) {
             for (int i = 0; i < diagramElements1.size(); i++) {
                 ClassSchemaBuilder.ClassElement ce = (ClassSchemaBuilder.ClassElement) diagramElements1.get(i);
-                if (ce.partAfter.element != null || ce.partAfter.element.equals(current)) {
+                if (ce.partAfter.element != null) {
                     removed.add(ce);
                     TreeNodeDiagram treeNodeDiagram = new TreeNodeDiagram();
                     treeNodeDiagram.setElement(ce);

@@ -29,8 +29,9 @@ package one.empty3.apps.facedetect;
 import javaAnd.awt.image.imageio.ImageIO;
 import net.miginfocom.swing.MigLayout;
 import one.empty3.library.Config;
+import one.empty3.library.Point3D;
 import one.empty3.library.Resolution;
-import one.empty3.library.ZBufferFactory;
+import one.empty3.library.objloader.E3Model;
 
 import javax.swing.*;
 import java.awt.*;
@@ -38,19 +39,20 @@ import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ResourceBundle;
+import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author manue
  */
 public class JFrameEditPolygonsMappings extends JFrame {
 
-    private static final int EDIT_POINT_POSITION = 1;
     File lastDirectory;
-    private Config config;
+    private final Config config;
     Thread threadDisplay;
     private int mode = 0;
-    private int SELECT_POINT;
-    private BufferedImage currentHD;
+    private int SELECT_POINT = 1;
 
     public JFrameEditPolygonsMappings() {
         initComponents();
@@ -154,35 +156,49 @@ public class JFrameEditPolygonsMappings extends JFrame {
         lastDirectory = loadImageDeformed.getCurrentDirectory();
     }
 
-    private void menuItemHD(ActionEvent e) {
-        TestHumanHeadTexturing testHumanHeadTexturing = TestHumanHeadTexturing.startAll(editPolygonsMappings2, editPolygonsMappings2.image,
-                editPolygonsMappings2.model);
-        testHumanHeadTexturing.setZ(ZBufferFactory.instance(Resolution.HD1080RESOLUTION.x(),
-                Resolution.HD1080RESOLUTION.y()));
-        testHumanHeadTexturing.setMaxFrames(1);
-        Thread thread = new Thread(testHumanHeadTexturing);
-        thread.start();
-        while (thread.isAlive()) {
-            System.out.println("+HD+");
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException ex) {
-                ex.printStackTrace();
-                return;
-            }
+    public class SaveTexture {
+        private final one.empty3.library.core.testing.Resolution resolution;
+        private final E3Model model;
+        private final BufferedImage image;
+
+        public SaveTexture(one.empty3.library.core.testing.Resolution resolution, BufferedImage image) {
+            this.resolution = resolution;
+            this.model = editPolygonsMappings2.model;
+            this.image = image;
+
         }
-        currentHD = testHumanHeadTexturing.zBufferImage;
-        if (currentHD != null) {
-            JFileChooser jFileChooser = new JFileChooser(config.getDefaultFileOutput());
-            if (jFileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
-                File selectedFile = jFileChooser.getSelectedFile();
-                if (selectedFile != null && !selectedFile.exists()) {
-                    String absolutePath = selectedFile.getAbsolutePath();
-                    String extension = absolutePath.substring(absolutePath.lastIndexOf("."), absolutePath.length());
-                    ImageIO.write(currentHD, extension, selectedFile);
+
+        public BufferedImage computeTexture() {
+            EditPolygonsMappings.TextureMorph iTextureMorphImage = editPolygonsMappings2.new TextureMorph();
+            editPolygonsMappings2.distanceAB = new DistanceApproxLinear(editPolygonsMappings2.pointsInImage.values().stream().toList(),
+                    editPolygonsMappings2.pointsInModel.values().stream().toList(),
+                    new Dimension(editPolygonsMappings2.image.getWidth(), editPolygonsMappings2.image.getHeight()),
+                    new Dimension(resolution.x(), resolution.y())
+            );
+            BufferedImage imageOut = new BufferedImage(resolution.x(), resolution.y(), BufferedImage.TYPE_INT_ARGB);
+            for (int i = 0; i < resolution.x(); i++) {
+                for (int j = 0; j < resolution.y(); j++) {
+                    model.texture(iTextureMorphImage);
+                    Point3D uvFace = new Point3D((double) (i * image.getWidth() / resolution.x()), (double) (j * image.getHeight() / resolution.y()), 0.0);
+                    int colorAt = iTextureMorphImage.getColorAt(uvFace.getX() / image.getWidth(), uvFace.getY() / image.getHeight());
+                    imageOut.setRGB(i, j, colorAt);
                 }
+                Logger.getAnonymousLogger().log(Level.INFO, String.format("Image column #" + i + " : done"));
             }
+            return imageOut;
         }
+    }
+
+    private void menuItemHD(ActionEvent e) {
+        Runnable jpg = new Runnable() {
+            public void run() {
+                SaveTexture saveTexture = new SaveTexture(Resolution.HD1080RESOLUTION, editPolygonsMappings2.image);
+                BufferedImage bufferedImage = saveTexture.computeTexture();
+                ImageIO.write(bufferedImage, "jpg", new File("OutImageTextureMapping" + UUID.randomUUID() + ".jpg"));
+            }
+        };
+        Thread thread = new Thread(jpg);
+        thread.start();
     }
 
     private void menuItem4K(ActionEvent e) {

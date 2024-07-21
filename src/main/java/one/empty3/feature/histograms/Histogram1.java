@@ -185,7 +185,8 @@ public class Histogram1 extends ProcessFile {
         try {
             ImageIO.write(outP.normalize(0, 1).getImage(), "jpg", out);
             return true;
-        } catch (Exception ex) {}
+        } catch (Exception ignored) {
+        }
 
 
         return false;

@@ -124,7 +124,7 @@ public class DataModel {
                 zipOut.close();
                 fos.close();
             }
-        } catch (Exception ex) {
+        } catch (Exception ignored) {
         }
     }
 

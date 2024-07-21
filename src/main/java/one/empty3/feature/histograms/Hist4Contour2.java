@@ -34,6 +34,7 @@ import java.io.IOException;
 public class Hist4Contour2 extends ProcessFile {
     private int kMax = 3;
     private double fractMax = 0.05;
+
     public Hist4Contour2() {
         super();
         getProperties().addProperty("kMax", ObjectWithProperties.ClassTypes.AtomicInt,
@@ -146,7 +147,7 @@ public class Hist4Contour2 extends ProcessFile {
                     }
                 }
                 Point3D n = outP.getP(i, j);
-                if(!n.equals(Point3D.O0)) {
+                if (!n.equals(Point3D.O0)) {
                     for (int l = 0; l < 3; l++) {
                         if (maxP.get(l) < n.get(l)) {
                             maxP.set(l, n.get(l));
@@ -171,8 +172,8 @@ public class Hist4Contour2 extends ProcessFile {
             //ImageIO.write(outP0.normalize(0, 1).getImage(), "jpg", out);
             return true;
 
-        } catch (Exception ignored) {
-            ignored.printStackTrace();
+        } catch (Exception exception) {
+            exception.printStackTrace();
         }
 
         return false;

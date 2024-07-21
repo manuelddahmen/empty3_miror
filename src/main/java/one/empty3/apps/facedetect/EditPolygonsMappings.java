@@ -62,12 +62,12 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
     /***
      * Contains named landkmarks points from @image
      */
-    private HashMap<String, Point3D> pointsInImage = new HashMap<>();
+    HashMap<String, Point3D> pointsInImage = new HashMap<>();
     /***
      * contains (u,v) coordinates from project of @pointsInImage
      * projection is made with @E3Model.findUvFace(u, v)
      */
-    private HashMap<String, Point3D> pointsInModel = new HashMap<>();
+    HashMap<String, Point3D> pointsInModel = new HashMap<>();
     protected boolean isRunning = true;
     private Point3D pFound = null;
     private String landmarkType;
@@ -77,7 +77,8 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
     private Point3D selectedPointOutUv = null;
     private Point3D selectedPointVertexOut;
     private int GRAY = Color.GRAY.getRGB();
-    ITexture iTextureMorphImage = new ITexture() {
+
+    public class TextureMorph extends ITexture {
         @Override
         public MatrixPropertiesObject copy() throws CopyRepresentableError, IllegalAccessException, InstantiationException {
             return null;
@@ -95,7 +96,9 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
                 return GRAY;
             }
         }
-    };
+    }
+
+    ITexture iTextureMorphImage = new TextureMorph();
     DistanceAB distanceAB;
     private boolean hasChangedAorB = true;
     boolean notMenuOpen = true;

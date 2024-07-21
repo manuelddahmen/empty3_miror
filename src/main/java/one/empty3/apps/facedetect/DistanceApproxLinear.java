@@ -72,6 +72,30 @@ public class DistanceApproxLinear extends DistanceBezier2 {
 
     /***
      *
+     * @param u
+     * @param v
+     * @return
+     */
+    private Point3D nearLandmark1(double u, double v) {
+        Point3D uv = new Point3D(u, v, 0.0);
+        Point3D uvFace = model.findUvFace(u, v);
+        double distance = Double.MAX_VALUE;
+        int indexI = -1, indexJ = -1;
+        for (int i = 0; i < listBX.size(); i++) {
+            for (int j = 0; j < listBY.size(); j++) {
+                Point3D elem = surfaceB.getCoefficients().getElem(i, j);
+                if (Point3D.distance(model.findUvFace(elem.getX(), elem.getY()), uvFace) < distance) {
+                    indexI = i;
+                    indexJ = j;
+                    distance = Point3D.distance(surfaceB.getCoefficients().getElem(i, j), uv);
+                }
+            }
+        }
+        return new Point3D((double) indexI, (double) indexJ, 0.0);
+    }
+
+    /***
+     *
      * @param textureCord2D
      * @param listXX
      * @param listXY

@@ -26,8 +26,8 @@ package one.empty3.library.core.testing;
  * @author Se7en
  */
 public class Resolution {
-    private int x;
-    private int y;
+    protected int x;
+    protected int y;
 
     public Resolution(int xv, int yv) {
         this.x = xv;

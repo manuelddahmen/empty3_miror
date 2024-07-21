@@ -28,8 +28,6 @@ import one.empty3.library.Point3D;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 
 public class FeatureMatch extends ProcessFile {
@@ -103,9 +101,7 @@ public class FeatureMatch extends ProcessFile {
         for (int i = 0; i < img1copy.getColumns(); i++) {
             for (int j = 0; j < img1copy.getLines(); j++) {
                 for (int c = 0; c < img1copy.getCompCount(); c++) {
-                    if (img1copy.getValues(i, j).equals(point)) {
-                        points.add(new double[]{i, j});
-                    }
+                    img1copy.getValues(i, j);
                 }
             }
         }

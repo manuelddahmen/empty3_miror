@@ -44,9 +44,10 @@ import java.util.Iterator;
 
 public class BSpline extends ParametricCurve {
 
-    private StructureMatrix<Point3D> controls = new StructureMatrix<>(1, Point3D.class);
-    private StructureMatrix<Double> T = new StructureMatrix<>(1, Double.class);
-    private StructureMatrix<Integer> degree = new StructureMatrix<>(0, Integer.class);
+    private final StructureMatrix<Point3D> controls = new StructureMatrix<>(1, Point3D.class);
+    private final StructureMatrix<Double> T = new StructureMatrix<>(1, Double.class);
+    private final StructureMatrix<Integer> degree = new StructureMatrix<>(0, Integer.class);
+
     public BSpline() {
 
         degree.setElem(3);
@@ -59,22 +60,16 @@ public class BSpline extends ParametricCurve {
         add1();
     }
 
-    public void add1()
-
-    {
+    public void add1() {
         T.getData1d().clear();
         int endI = controls.getData1d().size() + 1 + 2 * degree.getElem();
         for (int i = 0; i < endI; i++)
-            if(i<degree.getElem())
-            {
+            if (i < degree.getElem()) {
                 T.add(1, 0.0);
-            } else if(i>=endI-degree.getElem())
-            {
+            } else if (i >= endI - degree.getElem()) {
                 T.add(1, 1.0);
-            }
-            else
-            {
-                T.add(1, 1.0*i/(controls.getData1d().size()));
+            } else {
+                T.add(1, 1.0 * i / (controls.getData1d().size()));
             }
 
 
@@ -82,7 +77,7 @@ public class BSpline extends ParametricCurve {
 
     public void add(Point3D point) {
         controls.add(1, point);
- }
+    }
 
     public double boor(double t, int i, int d) {
         if (d <= 0) {
@@ -91,9 +86,9 @@ public class BSpline extends ParametricCurve {
             else
                 return 0.0;
         }
-        return avoidNaN((t - get(i))*boor(t, i, d - 1), get(i + d) - t)
+        return avoidNaN((t - get(i)) * boor(t, i, d - 1), get(i + d) - t)
                 +
-                avoidNaN((get(i + d + 1) - t)* boor(t, i + 1, d - 1), get(i + d + 1) - get(i + 1));
+                avoidNaN((get(i + d + 1) - t) * boor(t, i + 1, d - 1), get(i + d + 1) - get(i + 1));
     }
 
     private double avoidNaN(double a, double b) {
@@ -105,7 +100,7 @@ public class BSpline extends ParametricCurve {
     public Point3D calculerPoint3D(double t) {
         Point3D p = Point3D.O0;
         double boor = 0d;
-        for (int i = 0; i < controls.getData1d().size()-degree.getElem(); i++) {
+        for (int i = 0; i < controls.getData1d().size() - degree.getElem(); i++) {
             boor += boor(t, i, degree.getElem());
             p = p.plus(controls.getElem(i).mult(boor));
         }
@@ -149,21 +144,21 @@ public class BSpline extends ParametricCurve {
     }
 
     public String toString() {
-        String s = "bspline \n(\n\n";
+        StringBuilder s = new StringBuilder("bspline \n(\n\n");
         Iterator<Point3D> ps = iterator();
-        s+="\n controls (";
+        s.append("\n controls (");
         while (ps.hasNext()) {
-            s += "\n" + ps.next().toString() + "\n";
+            s.append("\n").append(ps.next().toString()).append("\n");
         }
         Iterator<Double> iterator = T.getData1d().iterator();
 
-        s+="\n) knots (";
+        s.append("\n) knots (");
         while (iterator.hasNext()) {
-            s += "\n" + iterator.next().toString() + "\n";
+            s.append("\n").append(iterator.next().toString()).append("\n");
         }
-        s+="\n) \n)";
+        s.append("\n) \n)");
 
-        return s;
+        return s.toString();
     }
 
     public StructureMatrix<Point3D> getControls() {
@@ -171,7 +166,8 @@ public class BSpline extends ParametricCurve {
     }
 
     public void setControls(ArrayList<Point3D> controls) {
-        this.controls.setAll(controls);}
+        this.controls.setAll(controls);
+    }
 
     public StructureMatrix<Double> getT() {
         return T;

@@ -32,9 +32,8 @@ public class Multibox {
     private static HashMap<Character, Letter> letters = new HashMap<Character, Letter>();
 
 
-
     public Multibox() {
-        if(letters.size()==0)
+        if (letters.size() == 0)
             initLetters();
     }
 
@@ -50,7 +49,7 @@ public class Multibox {
                 new Trait(TraitsY.Up, TraitsX.Right, TraitsY.Down, TraitsX.Right,
                         TraitsShape.Round, TraitsShape.Round)));
         letters.put('c', new Letter(new Trait(TraitsY.Up, TraitsX.Right, TraitsY.Down, TraitsX.Right,
-                        TraitsShape.Round, TraitsShape.Round)));
+                TraitsShape.Round, TraitsShape.Round)));
         letters.put('d', new Letter(new Trait(TraitsY.UpUp, TraitsX.Right,
                 TraitsY.DownDown, TraitsX.Right, TraitsShape.Round, TraitsShape.Round),
                 new Trait(TraitsY.Up, TraitsX.Left, TraitsY.Down, TraitsX.Left,
@@ -71,29 +70,29 @@ public class Multibox {
 
     public int parseForCharacter(PixM input, Letter letter) {
         final boolean[] err = {false};
-        int [] okTraits = new int[] {-1};
+        int[] okTraits = new int[]{-1};
         letter.traits.forEach(trait -> {
             Point3D a = new Point3D(-1.0, -1.0, -1.0);
             Point3D b = new Point3D(-1.0, -1.0, -1.0);
-            if(trait.getValueFrom1().equals(TraitsY.UpUp)
+            if (trait.getValueFrom1().equals(TraitsY.UpUp)
                     && trait.getCurveFrom().equals(TraitsShape.Line))
                 a.setY(0.0);
-            if(trait.getValueTo1().equals(TraitsY.UpUp)
+            if (trait.getValueTo1().equals(TraitsY.UpUp)
                     && trait.getCurveFrom().equals(TraitsShape.Line))
                 a.setY(0.0);
-            if(trait.getValueFrom1().equals(TraitsY.DownDown)
+            if (trait.getValueFrom1().equals(TraitsY.DownDown)
                     && trait.getCurveFrom().equals(TraitsShape.Line))
-                a.setY((double) (input.getLines()-1));
-            if(trait.getValueTo1().equals(TraitsY.DownDown)
+                a.setY((double) (input.getLines() - 1));
+            if (trait.getValueTo1().equals(TraitsY.DownDown)
                     && trait.getCurveFrom().equals(TraitsShape.Line))
-                b.setY((double) (input.getLines()-1));
-            if(trait.getValueFrom1().equals(TraitsY.Center)
+                b.setY((double) (input.getLines() - 1));
+            if (trait.getValueFrom1().equals(TraitsY.Center)
                     && trait.getCurveFrom().equals(TraitsShape.Line))
-                a.setY((double) (input.getLines()-1));
-            if(trait.getValueTo1().equals(TraitsY.Center)
+                a.setY((double) (input.getLines() - 1));
+            if (trait.getValueTo1().equals(TraitsY.Center)
                     && trait.getCurveFrom().equals(TraitsShape.Line))
-                b.setY((double) (input.getLines()-1));
-            if(a.getY()==-1 || b.getY()==-1) {
+                b.setY((double) (input.getLines() - 1));
+            if (a.getY() == -1 || b.getY() == -1) {
 
             } else {
                 // set X
@@ -102,16 +101,16 @@ public class Multibox {
                         a.setX(0.0);
                         break;
                     case Right:
-                        a.setX(input.getColumns()-1.0);
+                        a.setX(input.getColumns() - 1.0);
                         break;
                     case Center:
-                        a.setX(input.getColumns()/2.0);
+                        a.setX(input.getColumns() / 2.0);
                         break;
                     case CenterLeft:
-                        a.setX(input.getColumns()*0.25);
+                        a.setX(input.getColumns() * 0.25);
                         break;
                     case CenterRight:
-                        a.setX(input.getColumns()*0.75);
+                        a.setX(input.getColumns() * 0.75);
                         break;
                 }
                 switch (trait.getValueTo2()) {
@@ -119,24 +118,24 @@ public class Multibox {
                         a.setX(0.0);
                         break;
                     case Right:
-                        a.setX(input.getColumns()-1.0);
+                        a.setX(input.getColumns() - 1.0);
                         break;
                     case Center:
-                        a.setX(input.getColumns()/2.0);
+                        a.setX(input.getColumns() / 2.0);
                         break;
                     case CenterLeft:
-                        a.setX(input.getColumns()*0.25);
+                        a.setX(input.getColumns() * 0.25);
                         break;
                     case CenterRight:
-                        a.setX(input.getColumns()*0.75);
+                        a.setX(input.getColumns() * 0.75);
                         break;
                 }
-                if(a.getY()!=-1 && a.getX()!=-1&&b.getY()!=-1&&b.getX()!=-1) {
+                if (a.getY() != -1 && a.getX() != -1 && b.getY() != -1 && b.getX() != -1) {
                     double l = Point3D.distance(a, b);
-                    for(int i=0; i<l; i++) {
-                        Point3D p = a.plus(b.moins(a).mult(1.0*i/l));
+                    for (int i = 0; i < l; i++) {
+                        Point3D p = a.plus(b.moins(a).mult(1.0 * i / l));
 
-                        if (input.getValues((int) (double) p.getX(), (int) (double) p.getY()).equals(Point3D.O0)) {
+                        if (input.getP((int) (double) p.getX(), (int) (double) p.getY()).equals(Point3D.O0)) {
                             err[0] = true;
                         }
 
@@ -145,8 +144,8 @@ public class Multibox {
 
                 }
 
-             }
-            if(err[0]) {
+            }
+            if (err[0]) {
                 okTraits[0]++;
             }
 

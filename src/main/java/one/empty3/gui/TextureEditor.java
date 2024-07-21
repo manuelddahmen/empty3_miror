@@ -97,7 +97,8 @@ public class TextureEditor extends JPanel {
 
                 String[] extensionsImg = new String[]{"jpg", "jpeg", "png", "gif", "tiff", "ppm"};//...
                 String[] extensionsMov = new String[]{"mpeg", "mpg", "avi", "qt", "mp4"};
-                if (Arrays.stream(extensionsImg).anyMatch(s -> s.equals(extensionsImg))) {
+                File finalF = f;
+                if (Arrays.stream(extensionsImg).anyMatch(s -> s.equals(finalF.getAbsolutePath().substring(finalF.getAbsolutePath().lastIndexOf(".")).toLowerCase()))) {
                     try {
                         tableModelTexture.getLines().add(new TableModelTexture.ModelLine(f, new TextureImg(
                                 new ECBufferedImage(ImageIO.read(f))), TextureImg.class));
@@ -107,7 +108,8 @@ public class TextureEditor extends JPanel {
                     }
 
                 }
-                if (Arrays.stream(extensionsMov).anyMatch(s -> s.equals(extensionsMov))) {
+                File finalF1 = f;
+                if (Arrays.stream(extensionsMov).anyMatch(s -> s.equals(finalF1.getAbsolutePath().substring(finalF1.getAbsolutePath().lastIndexOf(".")).toLowerCase()))) {
                     TextureMov textureMov = new TextureMov();
                     textureMov.setFile(f);
                     tableModelTexture.getLines().add(new TableModelTexture.ModelLine(f, textureMov,

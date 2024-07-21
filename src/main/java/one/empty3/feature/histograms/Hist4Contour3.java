@@ -22,13 +22,13 @@
 
 package one.empty3.feature.histograms;
 
-import java.io.File;
-
 import javaAnd.awt.image.imageio.ImageIO;
 import one.empty3.feature20220726.PixM;
 import one.empty3.io.ProcessFile;
 import one.empty3.library.Point3D;
 import org.jetbrains.annotations.NotNull;
+
+import java.io.File;
 
 public class Hist4Contour3 extends ProcessFile {
     private int kMax = 3;
@@ -41,7 +41,7 @@ public class Hist4Contour3 extends ProcessFile {
         public double i = 0.0;
         public Point3D maxColor = Point3D.O0;
         public double count = 0.0;
-        public Point3D mincolor = Point3D.n(1,1,1);
+        public Point3D mincolor = Point3D.n(1, 1, 1);
 
         public Circle(double x, double y, double r) {
             this.x = x;
@@ -141,7 +141,7 @@ public class Hist4Contour3 extends ProcessFile {
                     }
                 }
                 Point3D n = outP.getP(i, j);
-                if(!n.equals(Point3D.O0)) {
+                if (!n.equals(Point3D.O0)) {
                     for (int l = 0; l < 3; l++) {
                         if (maxP.get(l) < n.get(l)) {
                             maxP.set(l, n.get(l));
@@ -155,7 +155,7 @@ public class Hist4Contour3 extends ProcessFile {
                 for (int l = 0; l < 3; l++) {
                     inP.setCompNo(l);
                     outP.setCompNo(l);
-                    outP.set(i, j, outP.get(i, j) / maxP.get(l)*inP.get(i,j));
+                    outP.set(i, j, outP.get(i, j) / maxP.get(l) * inP.get(i, j));
                 }
             }
         }
@@ -163,12 +163,12 @@ public class Hist4Contour3 extends ProcessFile {
         //        Circle c2 = getLevel(cc, inP, cc.r/2);
         try {
             //ImageIO.write(outP.normalize(0, 1).getImage(), "jpg", out);
-            ImageIO.write(outP.normalize(0,1,0,1).getImage(), "jpg", out);
+            ImageIO.write(outP.normalize(0, 1, 0, 1).getImage(), "jpg", out);
             //ImageIO.write(outP0.normalize(0, 1).getImage(), "jpg", out);
             return true;
 
-        } catch (Exception ignored) {
-            ignored.printStackTrace();
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
 
         return false;

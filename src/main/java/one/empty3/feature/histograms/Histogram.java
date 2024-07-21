@@ -102,7 +102,7 @@ public class Histogram extends ProcessFile {
 
     @Override
     public boolean process(File in, File out) {
-        if(!isImage(in))
+        if (!isImage(in))
             return false;
         PixM inP;
         try {
@@ -112,7 +112,7 @@ public class Histogram extends ProcessFile {
             return false;
         }
         PixM outP = inP.copy();
-        double maxR = Math.min(inP.getLines(), inP.getColumns())/5.;
+        double maxR = Math.min(inP.getLines(), inP.getColumns()) / 5.;
         for (int i = 0; i < inP.getColumns(); i++) {
             for (int j = 0; j < inP.getLines(); j++) {
                 double maxIJ = 0.0;
@@ -135,7 +135,8 @@ public class Histogram extends ProcessFile {
             ImageIO.write(outP.normalize(0, 1).getImage(), "jpg", out);
             return true;
 
-        } catch (Exception ex) {}
+        } catch (Exception ignored) {
+        }
 
         return false;
 

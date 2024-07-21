@@ -25,17 +25,16 @@ package one.empty3.library;
 /*__
  * @author Se7en
  */
-public class Resolution {
+public class Resolution extends one.empty3.library.core.testing.Resolution {
     public static final Resolution K4RESOLUTION = new Resolution(1920 * 2, 1080 * 2).makeFinal();
     public static final Resolution HD720RESOLUTION = new Resolution(1600, 720).makeFinal();
     public static final Resolution HD1080RESOLUTION = new Resolution(1920, 1080).makeFinal();
     public static final Resolution XVGARESOLUTION = new Resolution(640, 480).makeFinal();
-    private int x;
-    private int y;
     private int nbits = 32;
     private boolean aFinal = false;
 
     public Resolution(int xv, int yv) {
+        super(xv, yv);
         this.x = xv;
         this.y = yv;
 
