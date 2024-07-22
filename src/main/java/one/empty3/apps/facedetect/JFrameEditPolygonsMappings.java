@@ -32,6 +32,7 @@ import one.empty3.library.Config;
 import one.empty3.library.Point3D;
 import one.empty3.library.Resolution;
 import one.empty3.library.objloader.E3Model;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -161,41 +162,59 @@ public class JFrameEditPolygonsMappings extends JFrame {
         private final E3Model model;
         private final BufferedImage image;
 
-        public SaveTexture(one.empty3.library.core.testing.Resolution resolution, BufferedImage image) {
+        public SaveTexture(@NotNull one.empty3.library.core.testing.Resolution resolution, @NotNull BufferedImage image, @NotNull E3Model model) {
             this.resolution = resolution;
-            this.model = editPolygonsMappings2.model;
+            this.model = model;
             this.image = image;
 
         }
 
         public BufferedImage computeTexture() {
-            EditPolygonsMappings.TextureMorph iTextureMorphImage = editPolygonsMappings2.new TextureMorph();
-            editPolygonsMappings2.distanceAB = new DistanceApproxLinear(editPolygonsMappings2.pointsInImage.values().stream().toList(),
-                    editPolygonsMappings2.pointsInModel.values().stream().toList(),
-                    new Dimension(editPolygonsMappings2.image.getWidth(), editPolygonsMappings2.image.getHeight()),
+            TextureMorphMove iTextureMorphMoveImage = new TextureMorphMove();
+            iTextureMorphMoveImage.image = image;
+            iTextureMorphMoveImage.distanceAB = new DistanceApproxLinear(iTextureMorphMoveImage.pointsInImage.values().stream().toList(),
+                    iTextureMorphMoveImage.pointsInModel.values().stream().toList(),
+                    new Dimension(iTextureMorphMoveImage.image.getWidth(), iTextureMorphMoveImage.image.getHeight()),
                     new Dimension(resolution.x(), resolution.y())
             );
             BufferedImage imageOut = new BufferedImage(resolution.x(), resolution.y(), BufferedImage.TYPE_INT_ARGB);
-            for (int i = 0; i < resolution.x(); i++) {
-                for (int j = 0; j < resolution.y(); j++) {
-                    model.texture(iTextureMorphImage);
-                    Point3D uvFace = new Point3D((double) (i * image.getWidth() / resolution.x()), (double) (j * image.getHeight() / resolution.y()), 0.0);
-                    int colorAt = iTextureMorphImage.getColorAt(uvFace.getX() / image.getWidth(), uvFace.getY() / image.getHeight());
-                    imageOut.setRGB(i, j, colorAt);
+            model.texture(iTextureMorphMoveImage);
+            for (double u = 0; u < 1.0; u += 1.0 / resolution.x()) {
+                for (double v = 0; v < resolution.y(); v += 1.0 / resolution.y()) {
+                    Point3D uvFace = new Point3D(u, v, 0.0);
+                    Point3D uvFace1 = model.findUvFace(u, v);
+                    Point3D axPointInB = iTextureMorphMoveImage.distanceAB.findAxPointInB(u, v);
+                    int colorAt = iTextureMorphMoveImage.getColorAt(uvFace.getX(), uvFace.getY());
+                    imageOut.setRGB((int) (u * iTextureMorphMoveImage.image.getWidth()), (int) (v * iTextureMorphMoveImage.image.getHeight()), colorAt);
                 }
-                Logger.getAnonymousLogger().log(Level.INFO, String.format("Image column #" + i + " : done"));
+                Logger.getAnonymousLogger().log(Level.INFO, String.format("Image column #" + ((int) (u * 100)) + "% : done"));
             }
             return imageOut;
         }
     }
 
     private void menuItemHD(ActionEvent e) {
-        Runnable jpg = new Runnable() {
-            public void run() {
-                SaveTexture saveTexture = new SaveTexture(Resolution.HD1080RESOLUTION, editPolygonsMappings2.image);
-                BufferedImage bufferedImage = saveTexture.computeTexture();
-                ImageIO.write(bufferedImage, "jpg", new File("OutImageTextureMapping" + UUID.randomUUID() + ".jpg"));
+        Runnable jpg = () -> {
+            while (editPolygonsMappings2.iTextureMorphMoveImage.image == null || editPolygonsMappings2.iTextureMorphMoveImage.pointsInImage == null || editPolygonsMappings2.iTextureMorphMoveImage.pointsInModel == null
+                    || editPolygonsMappings2.model == null) {
+                try {
+                    Thread.sleep(200);
+                } catch (InterruptedException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
+            TextureMorphMove textureMorphMoveImage = new TextureMorphMove();
+            textureMorphMoveImage.distanceAB = new DistanceApproxLinear(editPolygonsMappings2.iTextureMorphMoveImage.pointsInImage.values().stream().toList(),
+                    editPolygonsMappings2.iTextureMorphMoveImage.pointsInModel.values().stream().toList(),
+                    new Dimension(editPolygonsMappings2.iTextureMorphMoveImage.image.getWidth(),
+                            editPolygonsMappings2.iTextureMorphMoveImage.image.getHeight()), new Dimension(Resolution.HD1080RESOLUTION.x(), Resolution.HD1080RESOLUTION.y())
+            );
+            E3Model model = editPolygonsMappings2.model;
+            File defaultFileOutput = config.getDefaultFileOutput();
+            SaveTexture saveTexture = new SaveTexture(Resolution.HD1080RESOLUTION, editPolygonsMappings2.iTextureMorphMoveImage.image, model);
+            BufferedImage bufferedImage = saveTexture.computeTexture();
+            ImageIO.write(bufferedImage, "jpg", new File(config.getMap().get("D3ModelFaceTexturing") + UUID.randomUUID() + ".jpg"));
+            Logger.getAnonymousLogger().log(Level.INFO, "Smart generated HD image");
         };
         Thread thread = new Thread(jpg);
         thread.start();

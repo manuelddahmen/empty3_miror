@@ -71,8 +71,8 @@ public class TestHumanHeadTexturing extends TestObjetStub {
         if (editPolygonsMappings.model != null) {
             setObj(editPolygonsMappings.model);
         }
-        if (editPolygonsMappings.image != null) {
-            setJpg(editPolygonsMappings.image);
+        if (editPolygonsMappings.iTextureMorphMoveImage.image != null) {
+            setJpg(editPolygonsMappings.iTextureMorphMoveImage.image);
         }
 
         z().setDisplayType(ZBufferImpl.DISPLAY_ALL);
@@ -130,40 +130,6 @@ public class TestHumanHeadTexturing extends TestObjetStub {
         this.zBufferImage = editPolygonsMappings.zBufferImage;
     }
 
-    /*
-
-@Override
-    public void afterRender() {
-        if (jpgFile != null && objFile != null) {
-
-            rectangleFace = new Rectangle(img().getWidth(), img().getHeight(), 0, 0);
-            // Step 2 cadrer les polygones
-            ((RepresentableConteneur) scene().getObjets().getElem(0)).getListRepresentable().forEach(representable -> {
-                if (representable instanceof Polygon p && representable.texture().getColorAt(0.5, 0.5) == Color.BLACK.getRGB()) {
-                    p.getPoints().getData1d().forEach(point3D -> {
-                        Point point = camera().coordonneesPoint2D(point3D, z());
-                        Rectangle r2 = new Rectangle(rectangleFace.x, rectangleFace.y,
-                                rectangleFace.width, rectangleFace.height);
-                        if (point.getX() < rectangleFace.x) {
-                            r2.x = point.x;
-                        }
-                        if (point.getY() < rectangleFace.y) {
-                            r2.y = point.y;
-                        }
-                        if (point.getX() - rectangleFace.x > rectangleFace.width) {
-                            r2.width = (int) (point.getX() - rectangleFace.x);
-                        }
-                        if (point.getY() - rectangleFace.y > rectangleFace.height) {
-                            r2.height = (int) (point.getY() - rectangleFace.y);
-                        }
-
-                        rectangleFace = r2;
-                    });
-                }
-            });
-        }
-    }
-*/
 
     public static TestHumanHeadTexturing startAll(EditPolygonsMappings editPolygonsMappings, BufferedImage jpg, E3Model obj) {
         Logger.getAnonymousLogger().log(Level.INFO, "Jpg Obj Mapping...");
