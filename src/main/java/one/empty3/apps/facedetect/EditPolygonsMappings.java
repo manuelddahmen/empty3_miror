@@ -68,13 +68,16 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
     private Point3D selectedPointVertexOut;
 
 
-    TextureMorphMove iTextureMorphMoveImage = new TextureMorphMove();
+    TextureMorphMove iTextureMorphMoveImage;
     private boolean hasChangedAorB = true;
     boolean notMenuOpen = true;
 
 
     public EditPolygonsMappings(Window owner) {
         initComponents();
+        iTextureMorphMoveImage = new TextureMorphMove();
+        iTextureMorphMoveImage.setDistanceABclass(DistanceApproxLinear.class);
+        iTextureMorphMoveImage.setEditOPanel(this);
     }
 
     public EditPolygonsMappings() {
@@ -332,7 +335,7 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
     private JPanel contentPanel;
     private JSplitPane splitPane1;
     private JSplitPane splitPane2;
-    private JPanel panelPicture;
+    JPanel panelPicture;
     JPanel panelModelView;
     private JScrollPane scrollPane1;
     private JTextArea textAreaTextOutput;
@@ -377,10 +380,9 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
                         threadDistanceIsNotRunning = false;
                         Logger.getAnonymousLogger().log(Level.INFO, "All loaded resources finished. Starts distance calculation");
 
-                        iTextureMorphMoveImage.distanceAB = new DistanceApproxLinear(iTextureMorphMoveImage.pointsInImage.values().stream().toList(),
-                                iTextureMorphMoveImage.pointsInModel.values().stream().toList(), new Dimension(panelPicture.getWidth(), panelPicture.getHeight()),
-                                new Dimension(panelModelView.getWidth(),
-                                        panelModelView.getHeight()));
+                        iTextureMorphMoveImage.setDistanceABclass((iTextureMorphMoveImage.distanceAB == null) ? DistanceApproxLinear.class
+                                : (Class<? extends DistanceBezier2>) iTextureMorphMoveImage.distanceAB.getClass());
+                        iTextureMorphMoveImage.setEditOPanel(this);
                         if (!iTextureMorphMoveImage.distanceAB.isInvalidArray()) {
                             iTextureMorphMoveImage.distanceAB.setModel(model);
                             // Display 3D scene

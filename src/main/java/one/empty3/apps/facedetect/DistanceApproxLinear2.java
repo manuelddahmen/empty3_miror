@@ -28,17 +28,17 @@ import one.empty3.library.core.nurbs.SurfaceParametriquePolynomiale;
 import java.awt.geom.Dimension2D;
 import java.util.List;
 
-public class DistanceApproxLinear extends DistanceBezier2 {
+public class DistanceApproxLinear2 extends DistanceBezier2 {
     private static final int MAX_SUB_ITERE_X = 10;
 
-    public DistanceApproxLinear(List<Point3D> A, List<Point3D> B, Dimension2D aDimReal, Dimension2D bDimReal) {
+    public DistanceApproxLinear2(List<Point3D> A, List<Point3D> B, Dimension2D aDimReal, Dimension2D bDimReal) {
         super(A, B, aDimReal, bDimReal);
     }
 
 
     @Override
     public Point3D findAxPointInB(double u, double v) {
-        return findAxPointInBal1(u, v);
+        return findAxPointInBal3(u, v);
     }
 
     private Point3D findAxPointInBal1(double u, double v) {
@@ -82,7 +82,7 @@ public class DistanceApproxLinear extends DistanceBezier2 {
             }
         }
         Point3D point3Dij = new Point3D((double) indexI, (double) indexJ, 0.0);
-        return point3Dij;//precision(point3Dij, u, v);//point3Dij
+        return precision(point3Dij, u, v);//point3Dij
     }
 
     /***

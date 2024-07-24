@@ -136,6 +136,7 @@ public class TestHumanHeadTexturing extends TestObjetStub {
 
         TestHumanHeadTexturing testHumanHeadTexturing = new TestHumanHeadTexturing();
         testHumanHeadTexturing.editPolygonsMappings = editPolygonsMappings;
+        editPolygonsMappings.iTextureMorphMoveImage.setDistanceABclass((Class<DistanceBezier2>) editPolygonsMappings.iTextureMorphMoveImage.distanceAB.getClass());
         testHumanHeadTexturing.setGenerate(GENERATE_IMAGE);
         testHumanHeadTexturing.setJpg(jpg);
         testHumanHeadTexturing.setObj(obj);

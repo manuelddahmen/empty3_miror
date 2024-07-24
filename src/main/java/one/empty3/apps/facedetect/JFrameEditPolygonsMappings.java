@@ -171,6 +171,7 @@ public class JFrameEditPolygonsMappings extends JFrame {
 
         public BufferedImage computeTexture() {
             TextureMorphMove iTextureMorphMoveImage = new TextureMorphMove();
+            iTextureMorphMoveImage.setEditOPanel(editPolygonsMappings2);
             iTextureMorphMoveImage.image = image;
             iTextureMorphMoveImage.distanceAB = new DistanceApproxLinear(iTextureMorphMoveImage.pointsInImage.values().stream().toList(),
                     iTextureMorphMoveImage.pointsInModel.values().stream().toList(),
@@ -204,6 +205,7 @@ public class JFrameEditPolygonsMappings extends JFrame {
                 }
             }
             TextureMorphMove textureMorphMoveImage = new TextureMorphMove();
+            textureMorphMoveImage.setEditOPanel(editPolygonsMappings2);
             textureMorphMoveImage.distanceAB = new DistanceApproxLinear(editPolygonsMappings2.iTextureMorphMoveImage.pointsInImage.values().stream().toList(),
                     editPolygonsMappings2.iTextureMorphMoveImage.pointsInModel.values().stream().toList(),
                     new Dimension(editPolygonsMappings2.iTextureMorphMoveImage.image.getWidth(),
@@ -232,6 +234,39 @@ public class JFrameEditPolygonsMappings extends JFrame {
         editPolygonsMappings2.notMenuOpen = true;
     }
 
+    private void checkBoxMenuItem2(ActionEvent e) {
+        if (e.getSource() instanceof JCheckBoxMenuItem r) {
+            if (r.isSelected()) {
+                editPolygonsMappings2.iTextureMorphMoveImage.distanceAB.typeShape = 0;
+            } else {
+                editPolygonsMappings2.iTextureMorphMoveImage.distanceAB.typeShape = 1;
+            }
+        }
+    }
+
+    private void checkBoxMenuItem1(ActionEvent e) {
+        if (e.getSource() instanceof JCheckBoxMenuItem r) {
+            if (r.isSelected()) {
+                editPolygonsMappings2.iTextureMorphMoveImage.distanceAB.opt1 = true;
+            } else {
+                editPolygonsMappings2.iTextureMorphMoveImage.distanceAB.opt1 = true;
+            }
+        }
+    }
+
+    private void menuItem14(ActionEvent e) {
+        editPolygonsMappings2.iTextureMorphMoveImage.setDistanceABclass(DistanceBezier2.class);
+    }
+
+    private void menuItem15(ActionEvent e) {
+        editPolygonsMappings2.iTextureMorphMoveImage.setDistanceABclass(DistanceApproxLinear.class);
+    }
+
+    private void menuItem16(ActionEvent e) {
+        editPolygonsMappings2.iTextureMorphMoveImage.setDistanceABclass(DistanceApproxLinear2.class);
+    }
+
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
         ResourceBundle bundle = ResourceBundle.getBundle("one.empty3.library.core.testing.Bundle");
@@ -255,6 +290,13 @@ public class JFrameEditPolygonsMappings extends JFrame {
         menu4 = new JMenu();
         menuItem10 = new JMenuItem();
         menuItem11 = new JMenuItem();
+        menu5 = new JMenu();
+        checkBoxMenuItem2 = new JCheckBoxMenuItem();
+        menuItem13 = new JCheckBoxMenuItem();
+        checkBoxMenuItem1 = new JCheckBoxMenuItem();
+        menuItem14 = new JRadioButtonMenuItem();
+        menuItem15 = new JRadioButtonMenuItem();
+        menuItem16 = new JRadioButtonMenuItem();
         editPolygonsMappings2 = new EditPolygonsMappings();
         menu3 = new JMenu();
 
@@ -387,6 +429,46 @@ public class JFrameEditPolygonsMappings extends JFrame {
                 menu4.add(menuItem11);
             }
             menuBar1.add(menu4);
+
+            //======== menu5 ========
+            {
+                menu5.setText(bundle.getString("JFrameEditPolygonsMappings.menu5.text"));
+
+                //---- checkBoxMenuItem2 ----
+                checkBoxMenuItem2.setText(bundle.getString("JFrameEditPolygonsMappings.checkBoxMenuItem2.text"));
+                checkBoxMenuItem2.setSelected(true);
+                checkBoxMenuItem2.addActionListener(e -> checkBoxMenuItem2(e));
+                menu5.add(checkBoxMenuItem2);
+
+                //---- menuItem13 ----
+                menuItem13.setText(bundle.getString("JFrameEditPolygonsMappings.menuItem13.text"));
+                menuItem13.setSelected(true);
+                menu5.add(menuItem13);
+
+                //---- checkBoxMenuItem1 ----
+                checkBoxMenuItem1.setText(bundle.getString("JFrameEditPolygonsMappings.checkBoxMenuItem1.text"));
+                checkBoxMenuItem1.addActionListener(e -> checkBoxMenuItem1(e));
+                menu5.add(checkBoxMenuItem1);
+
+                //---- menuItem14 ----
+                menuItem14.setText(bundle.getString("JFrameEditPolygonsMappings.menuItem14.text"));
+                menuItem14.addActionListener(e -> {
+			menuItem16(e);
+			menuItem14(e);
+		});
+                menu5.add(menuItem14);
+
+                //---- menuItem15 ----
+                menuItem15.setText(bundle.getString("JFrameEditPolygonsMappings.menuItem15.text"));
+                menuItem15.addActionListener(e -> menuItem15(e));
+                menu5.add(menuItem15);
+
+                //---- menuItem16 ----
+                menuItem16.setText(bundle.getString("JFrameEditPolygonsMappings.menuItem16.text"));
+                menuItem16.addActionListener(e -> menuItem16(e));
+                menu5.add(menuItem16);
+            }
+            menuBar1.add(menu5);
         }
         setJMenuBar(menuBar1);
 
@@ -401,6 +483,16 @@ public class JFrameEditPolygonsMappings extends JFrame {
         }
         contentPane.add(menu3, "cell 0 0");
         setLocationRelativeTo(getOwner());
+
+        //---- buttonGroup1 ----
+        var buttonGroup1 = new ButtonGroup();
+        buttonGroup1.add(checkBoxMenuItem2);
+        buttonGroup1.add(menuItem13);
+
+        //---- buttonGroup2 ----
+        var buttonGroup2 = new ButtonGroup();
+        buttonGroup2.add(menuItem14);
+        buttonGroup2.add(menuItem16);
         // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
     }
 
@@ -425,6 +517,13 @@ public class JFrameEditPolygonsMappings extends JFrame {
     private JMenu menu4;
     private JMenuItem menuItem10;
     private JMenuItem menuItem11;
+    private JMenu menu5;
+    private JCheckBoxMenuItem checkBoxMenuItem2;
+    private JCheckBoxMenuItem menuItem13;
+    private JCheckBoxMenuItem checkBoxMenuItem1;
+    private JRadioButtonMenuItem menuItem14;
+    private JRadioButtonMenuItem menuItem15;
+    private JRadioButtonMenuItem menuItem16;
     private EditPolygonsMappings editPolygonsMappings2;
     private JMenu menu3;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
