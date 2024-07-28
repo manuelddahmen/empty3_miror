@@ -47,7 +47,7 @@ import java.util.logging.Logger;
  * @author Manuel Dahmen
  */
 public class Point3D extends Representable {
-    private static Double DISTANCE_MIN = 0.0001;
+    static Double DISTANCE_MIN = 0.0001;
     private Double tempz;
     private Double tempy;
     private Double tempx;

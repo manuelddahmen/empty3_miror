@@ -51,8 +51,8 @@ public class TextureMorphMoveImageAimagesB extends ITexture {
                                          List<Point3D> pointsInImageA, List<Point3D> pointsInImageB) {
         this.imageA = imageA;
         this.imageB = imageB;
-        this.distanceABclass = distanceAB;
-        setDistanceABclass(distanceAB);
+        if (distanceAB != null)
+            setDistanceABclass(distanceAB);
     }
 
     @Override
@@ -65,10 +65,12 @@ public class TextureMorphMoveImageAimagesB extends ITexture {
                         , (int) (Math.max(0, Math.min((point3D.getY()), (double) imageA.getHeight() - 1))));
                 return rgb;
             } catch (RuntimeException e) {
-                return WHITE;
+                return imageB.getRGB((int) (u * Math.max(0, Math.min(imageA.getWidth() - 1, imageB.getWidth()))),
+                        (int) (v * Math.max(0, Math.min(imageA.getHeight() - 1, imageB.getHeight()))));
             }
         } else {
-            return GRAY;
+            return imageB.getRGB((int) (u * Math.max(0, Math.min(imageA.getWidth() - 1, imageB.getWidth()))),
+                    (int) (v * Math.max(0, Math.min(imageA.getHeight() - 1, imageB.getHeight()))));
         }
     }
 

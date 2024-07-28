@@ -50,31 +50,39 @@ public class FrameEncoding {
     }
 
     public BufferedImage execute() {
-        TextureMorphMoveImageAimagesB textureMorphMoveImageAimagesB = new TextureMorphMoveImageAimagesB(frame1, frame2,
-                DistanceApproxLinear.class, new Resolution(frame2.getWidth(), frame2.getHeight()), importA.values().stream().toList(), importB.values().stream().toList());
+        //TextureMorphMoveImageAimagesB textureMorphMoveImageAimagesB = new TextureMorphMoveImageAimagesB(frame1, frame2,
+        //        DistanceApproxLinear.class, new Resolution(frame2.getWidth(), frame2.getHeight()), importA.values().stream().toList(), importB.values().stream().toList());
         BufferedImage bufferedImage = new BufferedImage(frame2.getWidth(), frame2.getHeight(), BufferedImage.TYPE_BYTE_GRAY);
         ZBufferImpl instance = ZBufferFactory.instance(frame2.getWidth(), frame2.getHeight());
         instance.setDisplayType(ZBufferImpl.DISPLAY_ALL);
         Plane plane = new Plane();
         plane.setOrig(Point3D.O0);
         StructureMatrix<Point3D> point3DStructureMatrix = new StructureMatrix<>(0, Point3D.class);
-        point3DStructureMatrix.setElem(Point3D.X.mult(frame2.getWidth()), 0);
+        point3DStructureMatrix.setElem(Point3D.X.mult(frame2.getWidth()));
         plane.setvX(point3DStructureMatrix);
 
         point3DStructureMatrix = new StructureMatrix<>(0, Point3D.class);
-        point3DStructureMatrix.setElem(Point3D.Y.mult(frame2.getHeight()), 0);
+        point3DStructureMatrix.setElem(Point3D.Y.mult(frame2.getHeight()));
         plane.setvY(point3DStructureMatrix);
 
+        Point3D center = plane.getOrig().plus(plane.getvX().getElem().mult(0.5)).plus(plane.getvY().getElem()).mult(0.5);
         Camera camera = new Camera(
-                plane.getOrig().plus(plane.getvX().getElem().plus(plane.getvY().getElem())).plus(Point3D.Z.mult(Math.max(frame2.getHeight(), frame2.getWidth()))),
-                plane.getOrig().plus(plane.getvX().getElem().plus(plane.getvY().getElem())).plus(Point3D.Z.mult(Math.max(frame2.getHeight(), frame2.getWidth()))), Point3D.Z);
+                center.plus(Point3D.Z.mult(Math.max(frame2.getHeight(), frame2.getWidth()))).mult(-1.0),
+                center);
 
-        instance.draw(plane);
+        plane.texture(texture);
 
-        plane.texture(textureMorphMoveImageAimagesB);
+        Scene scene = new Scene();
 
-        instance.draw(plane);
+        scene.add(plane);
+        scene.cameraActive(camera);
+        instance.scene(scene);
+        scene.cameraActive(camera);
+
+        instance.draw();
 
         return instance.image2();
     }
+
+
 }

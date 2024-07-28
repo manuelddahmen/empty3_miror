@@ -29,6 +29,7 @@ import one.empty3.library.Point3D;
 import one.empty3.library.Resolution;
 import org.jetbrains.annotations.NotNull;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -68,9 +69,9 @@ public class EncodeVideo {
             fileIn2.mkdirs();
             fileOut.mkdirs();
         }
-        System.out.println("Files out  : " + fileOut.getAbsolutePath());
-        System.out.println("Files in movie 1  : " + fileIn1.getAbsolutePath());
-        System.out.println("Files in movie 2  : " + fileIn2.getAbsolutePath());
+        System.out.println("dir out  : " + fileOut.getAbsolutePath());
+        System.out.println("dir in movie 1  : " + fileIn1.getAbsolutePath());
+        System.out.println("dir in movie 2  : " + fileIn2.getAbsolutePath());
 
         if (fileIn1.exists() && fileIn2.isDirectory() && fileOut.isDirectory()) {
             File[] files1 = fileIn1.listFiles();
@@ -133,7 +134,7 @@ public class EncodeVideo {
 
                 File file1 = (cont && files2.length < i1) ? files2[i1] : files2[files2.length - 1];
                 if (files2[i1].isFile()) {
-                    File fOut = new File(fileOut.getAbsolutePath() + File.separator + files2[i1].getName());
+                    File fOut = new File(fileOut.getAbsolutePath() + File.separator + fImage2.getName());
                     try {
                         bufferedImage1 = javax.imageio.ImageIO.read(fImage1);
                     } catch (IOException e) {
@@ -152,6 +153,14 @@ public class EncodeVideo {
                     System.out.println("Image movie            :" + fImage2.getAbsolutePath() + " exists ?" + fImage2.exists());
                     System.out.println("Image text 1           :" + txtIn1.getAbsolutePath() + " exists ?" + txtIn1.exists());
                     System.out.println("Image text 2           :" + txtIn2.getAbsolutePath() + " exists ?" + txtIn2.exists());
+                    System.out.println("Image out              :" + fOut.getAbsolutePath() + " exists ?" + fOut.exists());
+
+                    // réduction de la taille pour vitesse
+                    //try {
+                    //    bufferedImage2 = resizeImage(bufferedImage2, 256, 256);
+                    //} catch (IOException e) {
+                    //    throw new RuntimeException(e);
+                    //}
 
 
                     a = initX(txtIn1, a, bufferedImage1);
@@ -223,5 +232,13 @@ public class EncodeVideo {
             fileMp4originalName = args[0];
         }
         EncodeVideo encodeVideo = new EncodeVideo(fileMp4originalName, suffix);
+    }
+
+    BufferedImage resizeImage(BufferedImage originalImage, int targetWidth, int targetHeight) throws IOException {
+        BufferedImage resizedImage = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_RGB);
+        Graphics2D graphics2D = resizedImage.createGraphics();
+        graphics2D.drawImage(originalImage, 0, 0, targetWidth, targetHeight, null);
+        graphics2D.dispose();
+        return resizedImage;
     }
 }
