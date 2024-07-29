@@ -41,6 +41,7 @@ public class SelectPointColorMassAglo extends FilterPixM {
         }
         return tmpColor;
     }
+
     public double[] getMean(int x, int y, int width, int height) {
         //double [] cs = new double[3];
         double[] mean = new double[]{0, 0, 0};
@@ -67,8 +68,8 @@ public class SelectPointColorMassAglo extends FilterPixM {
                 int col = 0;
                 for (int c = 0; c < 3; c++) {
                     if (tmpColor[c] >= rgb[c] - threshold
-                            && tmpColor[c] <= rgb[c]+threshold
-                            && tmpColor[c]>0.2) {
+                            && tmpColor[c] <= rgb[c] + threshold
+                            && tmpColor[c] > 0.2) {
                         col++;
                     }
                     if (col == 3) {

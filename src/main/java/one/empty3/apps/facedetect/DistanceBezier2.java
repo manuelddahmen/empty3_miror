@@ -29,6 +29,7 @@ import one.empty3.library.core.nurbs.SurfaceParametriquePolynomiale;
 import one.empty3.library.core.nurbs.SurfaceParametriquePolynomialeBezier;
 
 import java.awt.geom.Dimension2D;
+import java.util.ArrayList;
 import java.util.List;
 
 public class DistanceBezier2 extends DistanceAB {
@@ -151,6 +152,33 @@ public class DistanceBezier2 extends DistanceAB {
                     surfaceB = new Polygons();
                 }
             }
+
+            if (optimmizeGrid) {
+                double listAXmin = listAX.get(0);
+                double listAXmax = listAX.get(listAX.size() - 1);
+                double listAYmin = listAY.get(0);
+                double listAYmax = listAY.get(listAY.size() - 1);
+                double listBXmin = listBX.get(0);
+                double listBXmax = listBX.get(listBX.size() - 1);
+                double listBYmin = listBY.get(0);
+                double listBYmax = listBY.get(listBY.size() - 1);
+                List<Double> listAXopt = new ArrayList<>();
+                List<Double> listAYopt = new ArrayList<>();
+                List<Double> listBXopt = new ArrayList<>();
+                List<Double> listBYopt = new ArrayList<>();
+                for (int i = 0; i < 5; i++) {
+                    listAXopt.add(listAXmin + i * (listAXmax - listAXmin) / 5);
+                    listAYopt.add(listAYmin + i * (listAYmax - listAYmin) / 5);
+                    listBXopt.add(listBXmin + i * (listBXmax - listBXmin) / 5);
+                    listBYopt.add(listBYmin + i * (listBYmax - listBYmin) / 5);
+                }
+
+                listAX = listAXopt;
+                listAY = listAYopt;
+                listBX = listBXopt;
+                listBY = listBYopt;
+            }
+
             for (int i = 0; i < A.size(); i++) {
                 for (int j = 0; j < B.size(); j++) {
 //                int i1 = (int) Math.min((double) (i % ((int) Math.sqrt(A.size() )+ 1)) * (Math.sqrt(A.size() )+ 1), A.size() - 1);

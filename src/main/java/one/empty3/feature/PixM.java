@@ -31,8 +31,6 @@ import one.empty3.library.core.nurbs.ParametricCurve;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Arrays;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class PixM extends M {
     public static final int COMP_RED = 0;
@@ -83,7 +81,7 @@ public class PixM extends M {
         double f = 1.0;
         if (maxRes < image.getWidth() && maxRes < image.getHeight())
             f = 1.0 / Math.max(image.getWidth(), image.getHeight()) * maxRes;
-        if(maxRes==0) {
+        if (maxRes == 0) {
             f = 1.0;
         }
         double columns2 = 1.0 * image.getWidth() * f;
@@ -98,19 +96,9 @@ public class PixM extends M {
 
                 int rgb = image.getRGB(
                         (int) (1.0 * i / columns2 * image.getWidth())
-
-
                         , (int) (1.0 * j / lines2 * image.getHeight()));
-                float[] colorComponents = new float[pixM.getCompCount()];
-                colorComponents = new Color(rgb).getColorComponents(colorComponents);
-                for (int com = 0; com < pixM.getCompCount(); com++) {
-                    pixM.setCompNo(com);
-                    pixM.set(i, j, colorComponents[com]);
+                pixM.set(pixM.index(i, j), rgb);
 
-                    //double m = mean((int) (i * div), (int) (j * div), (int) (cli2 * div),
-                    //        (int) (cli2 * div));
-                    //pixM.set(i, j, );
-                }
             }
 
         }
@@ -135,7 +123,7 @@ public class PixM extends M {
                     sum = 0.0;
                     for (int u = -filter.columns / 2; u <= filter.lines / 2; u++) {
                         for (int v = -filter.lines / 2; v <= filter.lines / 2; v++) {
-     
+
 
                             double filterUVvalue = filter.get(u + filter.columns / 2,
                                     v + filter.lines / 2);
@@ -191,8 +179,8 @@ public class PixM extends M {
 
                     rgba[comp] = value;
                 }
-                image.setRGB(i, j, new Color(rgba[0], getCompCount()>=2?rgba[1]:0f,
-                        getCompCount()>=3?rgba[2]:0f).getRGB());
+                image.setRGB(i, j, new Color(rgba[0], getCompCount() >= 2 ? rgba[1] : 0f,
+                        getCompCount() >= 3 ? rgba[2] : 0f).getRGB());
             }
         }
         return image;
@@ -205,7 +193,7 @@ public class PixM extends M {
 
         float[] rgba = new float[getCompCount()];
         for (double t = 0; t < 1.0; t += INCR_T) {
-            rgba = new Color((texture!=null?texture:curve.texture()).getColorAt(t, 0.5)).getColorComponents(rgba);
+            rgba = new Color((texture != null ? texture : curve.texture()).getColorAt(t, 0.5)).getColorComponents(rgba);
             Point3D p = curve.calculerPoint3D(t);
             for (int c = 0; c < 3; c++) {
                 setCompNo(c);
@@ -228,8 +216,8 @@ public class PixM extends M {
                 setCompNo(c);
                 set((int) (double) p.getX(), (int) (double) p.getY(), rgba[c]);
             }
-            }
         }
+    }
 
 /*
 
@@ -465,14 +453,15 @@ public class PixM extends M {
         for (int c = 0; c < getCompCount(); c++) {
             setCompNo(c);
             pixM.setCompNo(c);
-            for (int i = 0; i < (int) columns; i++)
-                for (int j = 0; j < (int) lines; j++) {
-                    //double m = mean((int) (i * div), (int) (j * div), (int) (cli2 * div),
-                    //        (int) (cli2 * div));
-                    pixM.set(i, j, get(i, j));
-                }
+            for (int i = 0; i < columns * lines; i++)
+                pixM.set(i, get(i));
         }
         return pixM;
+    }
+
+    private int get(int i) {
+        int j = i % columns;
+        return index(i, j);
     }
 
     public double distance(ParametricCurve curve, Point3D p) {
@@ -557,6 +546,7 @@ public class PixM extends M {
                 }
         return p2;
     }
+
     public PixM copySubImage(int x, int y, int w, int h) {
         PixM p2 = new PixM(w, h);
         for (int i = x; i <= x + w; i++)
@@ -650,13 +640,13 @@ public class PixM extends M {
         for (int i = 0; i < getColumns(); i++)
             for (int j = 0; j < getLines(); j++) {
                 double[] values = getValues(i, j);
-                int k=0;
-                for(int c=0; c<3; c++) {
+                int k = 0;
+                for (int c = 0; c < 3; c++) {
                     if (doubles[c] - delta < values[c] && doubles[c] + delta > values[c])
                         k++;
                 }
 
-                if(k==3)
+                if (k == 3)
                     setValues(i, j, doubles1);
 
             }
@@ -666,11 +656,11 @@ public class PixM extends M {
     }
 
     public void pasteSubImage(PixM copySubImage, int i, int j, int w, int h) {
-        for(int x=i; x<i+w; x++) {
-            for(int y=j; y<j+h; y++) {
-                for(int c=0; c<3; c++) {
-                    int x0 =(int)( 1.0*(x-i)/w*copySubImage.getColumns());
-                    int y0 =(int)( 1.0*(y-j)/h*copySubImage.getLines());
+        for (int x = i; x < i + w; x++) {
+            for (int y = j; y < j + h; y++) {
+                for (int c = 0; c < 3; c++) {
+                    int x0 = (int) (1.0 * (x - i) / w * copySubImage.getColumns());
+                    int y0 = (int) (1.0 * (y - j) / h * copySubImage.getLines());
                     setCompNo(c);
                     copySubImage.setCompNo(c);
                     set(x, y, copySubImage.get(x0, y0));
@@ -681,23 +671,23 @@ public class PixM extends M {
     }
 
     public double difference(PixM other, double precision) {
-        if(precision==0.0) {
+        if (precision == 0.0) {
             precision = Math.max(Math.max(this.columns, other.columns),
                     Math.max(this.lines, other.lines));
         }
         double diff = 0.0;
-        for(double x=0; x<precision; x+= 1.) {
-            for(double y=0; y<precision; y+= 1.) {
+        for (double x = 0; x < precision; x += 1.) {
+            for (double y = 0; y < precision; y += 1.) {
                 for (int c = 0; c < 3; c++) {
-                    int i1 =(int) (1./precision*this.columns);
-                    int j1 =(int) (1./precision*this.lines);
-                    int i2 =(int) (1./precision*other.columns);
-                    int j2 =(int) (1./precision*other.lines);
+                    int i1 = (int) (1. / precision * this.columns);
+                    int j1 = (int) (1. / precision * this.lines);
+                    int i2 = (int) (1. / precision * other.columns);
+                    int j2 = (int) (1. / precision * other.lines);
                     other.setCompNo(c);
-                    diff += Math.abs(get(i1, j1)-other.get(i2, j2));
+                    diff += Math.abs(get(i1, j1) - other.get(i2, j2));
                 }
             }
         }
-        return diff/(this.columns*this.lines*other.columns*other.lines);
+        return diff / (this.columns * this.lines * other.columns * other.lines);
     }
 }

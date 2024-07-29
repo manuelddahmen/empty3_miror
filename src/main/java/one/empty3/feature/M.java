@@ -33,16 +33,16 @@ public class M implements InterfaceMatrix {
 
     protected int columns;
     protected int lines;
-    protected double[] x;
-    protected int compNo;
-    public int compCount = 3;
+    protected int[] x;
+    protected int compNo = 3;
+    public final int compCount = 3;
 
     public M(int c, int l) {
         this.lines = l;
         this.columns = c;
-        x = new double[l * c * compCount];
-        for(int i=0; i<x.length; i++)
-            x[i] = 0.0;
+        x = new int[l * c];
+        for (int i = 0; i < x.length; i++)
+            x[i] = -1;
         //Logger.getAnonymousLogger().log(Level.INFO, "Columns=" + columns + "\n Lines = " + lines+ " \n Total size ="+x.length);
     }
 
@@ -84,12 +84,8 @@ public class M implements InterfaceMatrix {
 
     public double[] getValues(int i, int j) {
 
-        double[] v = new double[getCompCount()];
-
-        for (int d = 0; d < getCompCount(); d++) {
-            setCompNo(d);
-            v[d] = get(i, j);
-        }
+        double[] v;
+        v = readComps(i, j);
         return v;
     }
 
@@ -131,8 +127,7 @@ public class M implements InterfaceMatrix {
 
 
         for (int d = 0; d < v.length; d++) {
-            setCompNo(d);
-            set(i, j, v[d]);
+            writeComp(i, j, v[d], compNo);
         }
         return;
     }
@@ -140,7 +135,7 @@ public class M implements InterfaceMatrix {
     public M(PixM pix) {
         this.lines = pix.getLines();
         this.columns = pix.getColumns();
-        x = new double[lines * columns * 3];
+        x = new int[lines * columns];
         for (int c = 0; c < 3; c++) {
             setCompNo(c);
 
@@ -150,14 +145,13 @@ public class M implements InterfaceMatrix {
                 }
             }
         }
-        //Logger.getAnonymousLogger().log(Level.INFO, "Columns=" + columns + "\n Lines = " + lines+ " \n Total size ="+x.length);
     }
 
 
     public void init(int l, int c) {
         this.lines = l;
         this.columns = c;
-        x = new double[l * c * compCount];
+        x = new int[l * c];
     }
 
     public M(int cl) {
@@ -166,7 +160,7 @@ public class M implements InterfaceMatrix {
 
     public double get(int column, int line) {
         if (column >= 0 && column < columns && line >= 0 && line < lines && compNo >= 0 && compNo < compCount) {
-            return x[index(column, line)];
+            return readComps(column, line)[compNo];
         } else
             return noValue; // OutOfBound?
     }
@@ -198,16 +192,121 @@ public class M implements InterfaceMatrix {
         this.compNo = compNo;
     }
 
+
     public int index(int column, int line) {
-        return getCompNo() + getCompCount() * ((line * columns + column));
+        return ((line * columns + column));
+    }
+
+    /***
+     * Artistic drawing
+     * @param i column
+     * @param j line
+     * @param d value 0..1
+     * @param compNoP r,g,b,a
+     */
+    public void writeCompA(int i, int j, double d, int compNoP) {
+        int index = index(i, j);
+        setCompNo(compNoP);
+        double[] v = readComps(i, j);
+        int t = (int) (d * 256);
+        int dI = t;
+        if (t > 255)
+            t = 255;
+        else if (t < 0)
+            t = 0;
+
+        int a = t;
+        t = ((compNoP == 2) ? t + (t & 0xFF00FFFF) | ((0x00FF0000) & (dI << 16)) : t);
+        t = ((compNoP == 1) ? t + (t & 0xFFFF00FF) | ((0x0000FF00) & (dI << 8)) : t);
+        t = ((compNoP == 0) ? t + (t & 0xFFFFFF00) | ((0x000000FF) & (dI << 0)) : t);
+        t = ((compNoP == 3) ? t + (t & 0x00FFFFFF) | ((0xFF000000) & (dI << 24)) : t);
+        t = t & 0xFFFFFFFF;
+        x[index] = t;
+    }
+
+    /***
+     * Must be correct drawing
+     * @param i column
+     * @param j line
+     * @param d value 0..1
+     * @param compNoP r,g,b,a
+     */
+    public void writeComp(int i, int j, double d, int compNoP) {
+        int index = index(i, j);
+        setCompNo(compNoP);
+        double[] v = readComps(i, j);
+
+        int c = (int) (d * 255.99);
+
+        int t = 0;
+        for (int k = 0; k < v.length; k++) {
+            if (k != compNoP) {
+                t += ((int) (v[k] * 255.9999) & 0xFF) << (int) (3 * k);
+
+            } else {
+                t += ((c) & 0xFF) << (int) (3 * k);
+            }
+        }
+        writeComps(i, j, t);
+    }
+
+    public void writeComps(int i, int j, int color) {
+        int index = index(i, j);
+        double[] v = readComps(i, j);
+        x[index] = color;
+
+    }
+
+    public double[] readCompsA(int i, int j) {
+        int d = x[index(i, j)];
+        int a = ((d & 0xFF000000) >> 24);
+        int r = ((d & 0x00FF0000) >> 16);
+        int g = ((d & 0x0000FF00) >> 8);
+        int b = ((d & 0x000000FF));
+        return new double[]{r / 255.99, g / 255.99, b / 255.99, a / 255.99};
+    }
+
+    public double[] readComps(int x, int y) {
+        int[] c = new int[4];
+        int res = 0x00000000;
+        int value = this.x[index(x, y)];
+        for (int i = 0; i < 4; i++) {
+            c[i] = (((int) (float) (value)) >> ((3 - i) * 8)) & 0xFF;
+            if (c[i] < 0)
+                c[i] = 0;
+            if (c[i] > 255)
+                c[i] = 255;
+            res += c[i];
+        }
+        return new double[]{c[0] / 255.9999, c[1] / 255.9999, c[2] / 255.9999/*, c[3] / 255.9999*/};
+    }
+
+    public int[] readCompsInts(int x, int y) {
+        int[] c = new int[4];
+        int res = 0x00000000;
+        int value = this.x[index(x, y)];
+        for (int i = 0; i < 4; i++) {
+            c[i] = (((int) (float) (value)) >> ((3 - i) * 8)) & 0xFF;
+            if (c[i] < 0)
+                c[i] = 0;
+            if (c[i] > 255)
+                c[i] = 255;
+            res += c[i];
+        }
+        return new int[]{c[0], c[1], c[2]/*, c[3] / 255.9999*/};
     }
 
     public void set(int column, int line, double d) {
         if (column >= 0 && column < columns && line >= 0 && line < lines) {
-            x[index(column, line)] = d;
+            writeComp(column, line, d, compNo);
         }
 
     }
+
+    public void set(int index, int value) {
+        x[index] = value;
+    }
+
 
     @Override
     public void set(int column, int line, double... values) {

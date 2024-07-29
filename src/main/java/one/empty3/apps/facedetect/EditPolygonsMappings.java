@@ -76,7 +76,7 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
     public EditPolygonsMappings(Window owner) {
         initComponents();
         iTextureMorphMoveImage = new TextureMorphMove();
-        iTextureMorphMoveImage.setDistanceABclass(DistanceApproxLinear.class);
+        iTextureMorphMoveImage.setDistanceABclass(DistanceApproxLinearA.class);
         iTextureMorphMoveImage.setEditOPanel(this);
     }
 
@@ -380,8 +380,8 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
                         threadDistanceIsNotRunning = false;
                         Logger.getAnonymousLogger().log(Level.INFO, "All loaded resources finished. Starts distance calculation");
 
-                        iTextureMorphMoveImage.setDistanceABclass((iTextureMorphMoveImage.distanceAB == null) ? DistanceApproxLinear.class
-                                : (Class<? extends DistanceBezier2>) iTextureMorphMoveImage.distanceAB.getClass());
+                        if (iTextureMorphMoveImage.distanceAB == null)
+                            iTextureMorphMoveImage.setDistanceABclass((Class<? extends DistanceBezier2>) iTextureMorphMoveImage.distanceAB.getClass());
                         iTextureMorphMoveImage.setEditOPanel(this);
                         if (!iTextureMorphMoveImage.distanceAB.isInvalidArray()) {
                             iTextureMorphMoveImage.distanceAB.setModel(model);
@@ -389,7 +389,7 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
                             if (model != null) {
                                 model.texture(iTextureMorphMoveImage);
                             }
-                            hasChangedAorB = true;
+                            hasChangedAorB = false;
                         } else {
                             hasChangedAorB = true;
                             Logger.getAnonymousLogger().log(Level.INFO, "Invalid array in DistanceAB");

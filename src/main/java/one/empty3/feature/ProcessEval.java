@@ -22,12 +22,7 @@
 
 package one.empty3.feature;
 
-import one.empty3.feature.app.replace.javax.imageio.ImageIO;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Objects;
-
+/*
 public abstract class ProcessEval {
     private int width = 24;
     private int height = 24;
@@ -48,18 +43,7 @@ public abstract class ProcessEval {
     }
     // y values  -1 à 1
     // xi = pixels
-
-    /***
-     * f(x) = w . x  + b // Hyperplane separating POS and NEG
-     * w'= SOMME ( d'i yi xi)
-     *f(x) = SOMME (d'yi * (xi . x ) + b
-     * w' = SOMME (d'i yi xi)
-     *
-     * f(x) = SOMME (d'i yi (phi(xi) . phi(x)) + B
-     *
-     *
-     */
-    public void addFile(File file) {
+  public void addFile(File file) {
         files.add(file);
     }
 
@@ -106,3 +90,4 @@ public abstract class ProcessEval {
         return sumFeaturing - sumWithoutFeaturing;
     }
 }
+*/

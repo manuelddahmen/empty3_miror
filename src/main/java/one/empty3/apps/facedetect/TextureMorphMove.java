@@ -78,8 +78,8 @@ public class TextureMorphMove extends ITexture {
             boolean isNotOk = true;
             while (isNotOk) {
                 try {
-                    if (distanceApproxLinearClass.isAssignableFrom(DistanceApproxLinear.class)) {
-                        distanceAB = new DistanceApproxLinear(pointsInImage.values().stream().toList(),
+                    if (distanceApproxLinearClass.isAssignableFrom(DistanceApproxLinearA.class)) {
+                        distanceAB = new DistanceApproxLinearA(pointsInImage.values().stream().toList(),
                                 pointsInModel.values().stream().toList(), new Dimension(editPanel.panelPicture.getWidth(), editPanel.panelPicture.getHeight()),
                                 new Dimension(editPanel.panelModelView.getWidth(),
                                         editPanel.panelModelView.getHeight()));

@@ -168,6 +168,11 @@ new FormModel {
 						"$buttonGroup": new FormReference( "buttonGroup2" )
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItem16", true ) )
 					} )
+					add( new FormComponent( "javax.swing.JRadioButtonMenuItem" ) {
+						name: "radioButtonMenuItem1"
+						"text": new FormMessage( null, "JFrameEditPolygonsMappings.radioButtonMenuItem1.text" )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItem17", true ) )
+					} )
 				} )
 			}
 		}, new FormLayoutConstraints( null ) {

@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class DistanceAB {
+    protected boolean optimmizeGrid = true;
     SurfaceParametriquePolynomiale surfaceA;
     SurfaceParametriquePolynomiale surfaceB;
     Dimension2D aDimReduced = new Dimension(20, 20);

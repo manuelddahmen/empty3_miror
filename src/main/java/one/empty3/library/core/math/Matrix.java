@@ -26,6 +26,9 @@ import one.empty3.feature.PixM;
 
 import java.util.Arrays;
 
+/***
+ * Issue : int instead of double
+ */
 public class Matrix extends PixM {
     public static final double DOUBLE_MIN = 0.0001;
     public static final String NUMBER_FORMAT = "%+12.5f";
@@ -33,35 +36,32 @@ public class Matrix extends PixM {
 
     public Matrix(int lines, int columns, int countComp) {
         super(lines, columns);
-        this.lines = lines;
-        this.columns = columns;
-        this.compCount = countComp;
-        x = new double[lines * columns * compCount];
+
         compNo = 0;
     }
 
     public Matrix(int lines, int columns) {
         super(lines, columns);
-        this.lines = lines;
-        this.columns = columns;
-        this.compCount = 1;
-        x = new double[lines * columns * compCount];
     }
 
     public Matrix(int lines, int columns, Producer producer) {
         this(lines, columns, 1);
+        compNo = 0;
         for (int i = 0; i < x.length; i++) {
-            x[i] = producer.produce(i);
+            set(i, (int) producer.produce(i));
 
         }
     }
 
-    public Matrix(double[] w, int resX, int resY) {
-        this(resX, resY);
-        for (int j = 0; j < resY; j++) {
-            for (int i = 0; i < resX; i++) {
-                x[j * resX + i] = w[j * resX + i];
-            }
+    public Matrix(double[] x, int sqrt, int sqrt1) {
+        this(sqrt, sqrt1, x);
+    }
+
+    public Matrix(int c, int l, double[] x) {
+        super(c, l);
+        this.x = new int[c * l];
+        for (int i = 0; i < x.length; i++) {
+            this.x[i] = (int) x[i];
         }
     }
 
@@ -69,7 +69,7 @@ public class Matrix extends PixM {
         Matrix result = new Matrix(lines, columns, 1);
 
         for (int i = 0; i < x.length; i++) {
-            result.x[i] = producer.produce(i, x[i]);
+            result.set(i, producer.produce(i, x[i]));
         }
 
         return result;
@@ -148,12 +148,12 @@ public class Matrix extends PixM {
     public void set(int row, int col, double value) {
 
         compNo = 0;
-        x[index(row, col)] = value;
+        x[index(row, col)] = (int) value;
     }
 
     public void set(int row, double value) {
         compNo = 0;
-        x[row] = value;
+        x[row] = (int) value;
     }
 
     public double get(int index) {
@@ -201,7 +201,7 @@ public class Matrix extends PixM {
         int index = 0;
         for (int row = 0; row < lines; row++) {
             for (int col = 0; col < columns; col++) {
-                x[index] = producer.produce(row, col, x[index]);
+                x[index] = (int) producer.produce(row, col, x[index]);
                 index++;
             }
         }
@@ -211,7 +211,7 @@ public class Matrix extends PixM {
 
     public Matrix modify(ValueProducer producer) {
         for (int i = 0; i < x.length; i++) {
-            x[i] = producer.produce(i, x[i]);
+            x[i] = (int) producer.produce(i, x[i]);
         }
         return this;
     }
