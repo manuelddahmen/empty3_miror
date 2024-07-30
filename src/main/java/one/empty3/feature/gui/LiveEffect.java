@@ -30,15 +30,14 @@ import com.github.sarxos.webcam.Webcam;
 import net.miginfocom.swing.MigLayout;
 import one.empty3.feature.ClassSchemaBuilder;
 import one.empty3.feature.ThreadEffectDisplay;
+import one.empty3.feature.app.replace.javax.imageio.ImageIO;
 import one.empty3.feature.motion.DiffMotion;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -50,7 +49,6 @@ public class LiveEffect extends JFrame {
     public Dimension[] viewSizes;
     private ClassSchemaBuilder main;
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
-    // Generated using JFormDesigner non-commercial license
     private JComboBox comboBoxDimenisions;
     private JScrollPane scrollPane2;
     private JComboBox<String> comboBoxMotion;
@@ -58,73 +56,7 @@ public class LiveEffect extends JFrame {
     private JScrollPane scrollPane1;
     private JPanel panel1;
 
-    public LiveEffect() {
-        initComponents();
-        init();
-    }
-
-    public void init() {
-        threadEffectDisplay
-                = new ThreadEffectDisplay();
-        threadEffectDisplay.setJpanel(panel1);
-        threadEffectDisplay.motion = new LastFrameMotion();
-        threadEffectDisplay.start();
-
-        viewSizes = Webcam.getDefault().getViewSizes();
-
-        threadEffectDisplay.motion = new DiffMotion();
-        threadEffectDisplay.setMotionActive(true);
-        threadEffectDisplay.setEffectActive(true);
-
-        this.comboBoxDimenisions.setModel(new DefaultComboBoxModel(Webcam.getDefault().getViewSizes()));
-        this.comboBoxDimenisions.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    threadEffectDisplay.webcam
-                            .setViewSize((Dimension) comboBoxDimenisions
-                                    .getItemAt(comboBoxDimenisions.getSelectedIndex()));
-                } catch (RuntimeException ignored) {
-
-                }
-            }
-        });
-
-    }
-
-    private void panel1ComponentResized(ComponentEvent e) {
-        main.setMaxRes(Math.max(getWidth(), getHeight()));
-    }
-
-    private void comboBoxMotionItemStateChanged(ItemEvent e) {
-        switch (comboBoxMotion.getSelectedIndex()) {
-            case 0:
-                //Aucun mouvement, effet
-                threadEffectDisplay.motion = new LastFrameMotion();
-                threadEffectDisplay.setMotionActive(false);
-                threadEffectDisplay.setEffectActive(true);
-                break;
-            case 1:
-                //Aucun mouvement, aucun effet
-                threadEffectDisplay.motion = new LastFrameMotion();
-                threadEffectDisplay.setMotionActive(false);
-                threadEffectDisplay.setEffectActive(false);
-                break;
-            case 2:
-                //Mouvement, effet
-                threadEffectDisplay.motion = new DiffMotion();
-                threadEffectDisplay.setMotionActive(true);
-                threadEffectDisplay.setEffectActive(true);
-                break;
-            case 3:
-                //Mouvement, aucun effet
-                threadEffectDisplay.motion = new DiffMotion();
-                threadEffectDisplay.setMotionActive(true);
-                threadEffectDisplay.setEffectActive(false);
-                break;
-        }
-    }
-
+    // JFormDesigner - End of variables declaration  //GEN-END:variables
     private void comboBoxDimenisionsActionPerformed(ActionEvent e) {
         Dimension selectedItem = threadEffectDisplay.webcam.getViewSizes()[comboBoxDimenisions.getSelectedIndex()];
         comboBoxDimenisions.actionPerformed(e);
@@ -137,7 +69,6 @@ public class LiveEffect extends JFrame {
 
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
-        // Generated using JFormDesigner non-commercial license
         comboBoxDimenisions = new JComboBox();
         scrollPane2 = new JScrollPane();
         comboBoxMotion = new JComboBox<>();
@@ -200,6 +131,7 @@ public class LiveEffect extends JFrame {
 
             //======== panel1 ========
             {
+                panel1.setForeground(new Color(0xffff66));
                 panel1.addComponentListener(new ComponentAdapter() {
                     @Override
                     public void componentResized(ComponentEvent e) {
@@ -222,8 +154,6 @@ public class LiveEffect extends JFrame {
         pack();
         setLocationRelativeTo(getOwner());
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
-    }
-    // JFormDesigner - End of variables declaration  //GEN-END:variables
 
     public void setFileIn(File fileOut) {
         BufferedImage read = null;
@@ -238,11 +168,78 @@ public class LiveEffect extends JFrame {
             } else {
                 Logger.getAnonymousLogger().log(Level.INFO, "No image in set after processing files fileOut==null");
             }
-        } catch (RuntimeException | IOException ex) {
+        } catch (RuntimeException ex) {
             Logger.getAnonymousLogger().log(Level.WARNING, "Fichier non trouvé");
         }
 
     }
+
+    public LiveEffect() {
+            initComponents();
+            init();
+        }
+
+        public void init () {
+            threadEffectDisplay
+                    = new ThreadEffectDisplay();
+            threadEffectDisplay.setJpanel(panel1);
+            threadEffectDisplay.motion = new LastFrameMotion();
+            threadEffectDisplay.start();
+
+            viewSizes = Webcam.getDefault().getViewSizes();
+
+            threadEffectDisplay.motion = new DiffMotion();
+            threadEffectDisplay.setMotionActive(true);
+            threadEffectDisplay.setEffectActive(true);
+
+            this.comboBoxDimenisions.setModel(new DefaultComboBoxModel(Webcam.getDefault().getViewSizes()));
+            this.comboBoxDimenisions.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    try {
+                        threadEffectDisplay.webcam
+                                .setViewSize((Dimension) comboBoxDimenisions
+                                        .getItemAt(comboBoxDimenisions.getSelectedIndex()));
+                    } catch (RuntimeException ignored) {
+
+                    }
+                }
+            });
+
+        }
+
+        private void panel1ComponentResized (ComponentEvent e){
+            main.setMaxRes(Math.max(getWidth(), getHeight()));
+        }
+
+        private void comboBoxMotionItemStateChanged (ItemEvent e){
+            switch (comboBoxMotion.getSelectedIndex()) {
+                case 0:
+                    //Aucun mouvement, effet
+                    threadEffectDisplay.motion = new LastFrameMotion();
+                    threadEffectDisplay.setMotionActive(false);
+                    threadEffectDisplay.setEffectActive(true);
+                    break;
+                case 1:
+                    //Aucun mouvement, aucun effet
+                    threadEffectDisplay.motion = new LastFrameMotion();
+                    threadEffectDisplay.setMotionActive(false);
+                    threadEffectDisplay.setEffectActive(false);
+                    break;
+                case 2:
+                    //Mouvement, effet
+                    threadEffectDisplay.motion = new DiffMotion();
+                    threadEffectDisplay.setMotionActive(true);
+                    threadEffectDisplay.setEffectActive(true);
+                    break;
+                case 3:
+                    //Mouvement, aucun effet
+                    threadEffectDisplay.motion = new DiffMotion();
+                    threadEffectDisplay.setMotionActive(true);
+                    threadEffectDisplay.setEffectActive(false);
+                    break;
+            }
+        }
 
     public ClassSchemaBuilder getMainWindow() {
         return main;
