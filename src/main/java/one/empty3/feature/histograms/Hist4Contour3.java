@@ -23,7 +23,7 @@
 package one.empty3.feature.histograms;
 
 import javaAnd.awt.image.imageio.ImageIO;
-import one.empty3.feature20220726.PixM;
+import one.empty3.feature.PixM;
 import one.empty3.io.ProcessFile;
 import one.empty3.library.Point3D;
 import org.jetbrains.annotations.NotNull;

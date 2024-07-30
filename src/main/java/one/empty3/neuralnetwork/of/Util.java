@@ -18,7 +18,8 @@
  *  *    limitations under the License.
  *
  *
- */
+ *//*
+
 
 package one.empty3.neuralnetwork.of;
 
@@ -35,3 +36,4 @@ public class Util {
         return expectedMatrix;
     }
 }
+*/

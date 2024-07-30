@@ -1,4 +1,4 @@
-JFDML JFormDesigner: "7.0.7.0.1134" Java: "17.0.3" encoding: "UTF-8"
+JFDML JFormDesigner: "9.0.0.0.352" Java: "21.0.3" encoding: "UTF-8"
 
 new FormModel {
 	contentType: "form/swing"
@@ -53,6 +53,7 @@ new FormModel {
 					"$rowConstraints": "[][][]"
 				} ) {
 					name: "panel1"
+					"foreground": new java.awt.Color( 255, 255, 102, 255 )
 					addEvent( new FormEvent( "java.awt.event.ComponentListener", "componentResized", "panel1ComponentResized", true ) )
 				} )
 			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {

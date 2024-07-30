@@ -33,7 +33,7 @@ public class M implements InterfaceMatrix {
 
     protected int columns;
     protected int lines;
-    protected int[] x;
+    private int[] x;
     protected int compNo = 3;
     public final int compCount = 3;
 
@@ -241,7 +241,7 @@ public class M implements InterfaceMatrix {
         int t = 0;
         for (int k = 0; k < v.length; k++) {
             if (k != compNoP) {
-                t += ((int) (v[k] * 255.9999) & 0xFF) << (int) (3 * k);
+                t += ((int) (v[k] * 255.9999) & 0xFF) << (int) (8 * k);
 
             } else {
                 t += ((c) & 0xFF) << (int) (3 * k);
@@ -279,6 +279,10 @@ public class M implements InterfaceMatrix {
             res += c[i];
         }
         return new double[]{c[0] / 255.9999, c[1] / 255.9999, c[2] / 255.9999/*, c[3] / 255.9999*/};
+    }
+
+    public int getInt(int i, int j) {
+        return x[index(i, j)];
     }
 
     public int[] readCompsInts(int x, int y) {

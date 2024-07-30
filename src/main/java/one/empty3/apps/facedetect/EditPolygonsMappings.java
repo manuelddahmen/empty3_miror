@@ -76,7 +76,7 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
     public EditPolygonsMappings(Window owner) {
         initComponents();
         iTextureMorphMoveImage = new TextureMorphMove();
-        iTextureMorphMoveImage.setDistanceABclass(DistanceApproxLinearA.class);
+        iTextureMorphMoveImage.setDistanceABclass(DistanceProxLinear1.class);
         iTextureMorphMoveImage.setEditOPanel(this);
     }
 

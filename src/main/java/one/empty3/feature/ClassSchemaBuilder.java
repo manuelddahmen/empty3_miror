@@ -25,8 +25,8 @@ package one.empty3.feature;
 import net.miginfocom.swing.MigLayout;
 import one.empty3.feature.facemorph.RunFeatures;
 import one.empty3.feature.gui.LiveEffect;
-import one.empty3.feature.histograms.*;
 import one.empty3.feature.histograms.Histogram;
+import one.empty3.feature.histograms.*;
 import one.empty3.feature.selection.HighlightFeatures;
 import one.empty3.feature.tryocr.ReadLines;
 import one.empty3.feature.tryocr.SelectColor;
@@ -47,9 +47,6 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.logging.Level;
@@ -604,7 +601,11 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
                     File fileIn = null;
 
                     if (ce.process(f, fileOut)) {
-                        liveEffect.setFileIn(fileOut);
+                        if (fileOut.exists()) {
+                            liveEffect.setFileIn(fileOut);
+                        } else {
+                            Logger.getAnonymousLogger().log(Level.SEVERE, "fileOut doesn't exist. Can't read");
+                        }
                         Logger.getAnonymousLogger().log(Level.INFO, "Fichier IN mis à jour");
                         fileIn = fileOut;
                         for (int i = 1; i < processes.size(); i++) {
@@ -624,11 +625,14 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
                             ce.addSource(fileIn);//???
                             try {
                                 if (!fileOut.exists()) {
-                                    //fileOut.mkdirs();
+                                    fileOut.mkdirs();
                                 }
                                 System.out.printf("Run process 1 . %d/%d on file %s\n", i + 1, processes.size(), f.getAbsolutePath());
                                 ce.process(fileIn, fileOut);
-                                liveEffect.setFileIn(fileOut);
+                                if (fileOut.exists()) {
+                                    liveEffect.setFileIn(fileOut);
+                                } else
+                                    Logger.getAnonymousLogger().log(Level.SEVERE, "fileOut doesn't exist. Can't read");
 
                                 fileIn = fileOut;
 
@@ -1011,7 +1015,7 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
             listProcessClasses.add(Histogram.class.newInstance());
             listProcessClasses.add(Histogram1.class.newInstance());
             listProcessClasses.add(Hist4Contour.class.newInstance());
-            listProcessClasses.add(one.empty3.feature20220726.histograms.Hist4Contour2.class.newInstance());
+            listProcessClasses.add(one.empty3.feature.histograms.Hist4Contour2.class.newInstance());
             listProcessClasses.add(Hist1Votes.class.newInstance());
             listProcessClasses.add(Hist4Contour3.class.newInstance());
             listProcessClasses.add(Histogram0.class.newInstance());
@@ -1040,7 +1044,7 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
             listProcessClasses.add(Voronoi.class.newInstance());
             listProcessClasses.add(HighlightFeatures.class.newInstance());
             listProcessClasses.add(RunFeatures.class.newInstance());
-            listProcessClasses.add(GFG.class.newInstance());
+            //listProcessClasses.add(GFG.class.newInstance());
             listProcessClasses.add(Hist4Contour2.class.newInstance());
             listProcessClasses.add(CustomProcessFileRGB.class.newInstance());
             listProcessClasses.add(KMeansBinaryDistances.class.newInstance());

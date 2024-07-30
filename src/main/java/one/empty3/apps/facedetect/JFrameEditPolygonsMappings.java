@@ -173,7 +173,7 @@ public class JFrameEditPolygonsMappings extends JFrame {
             TextureMorphMove iTextureMorphMoveImage = new TextureMorphMove();
             iTextureMorphMoveImage.setEditOPanel(editPolygonsMappings2);
             iTextureMorphMoveImage.image = image;
-            iTextureMorphMoveImage.distanceAB = new DistanceApproxLinearA(iTextureMorphMoveImage.pointsInImage.values().stream().toList(),
+            iTextureMorphMoveImage.distanceAB = new DistanceProxLinear1(iTextureMorphMoveImage.pointsInImage.values().stream().toList(),
                     iTextureMorphMoveImage.pointsInModel.values().stream().toList(),
                     new Dimension(iTextureMorphMoveImage.image.getWidth(), iTextureMorphMoveImage.image.getHeight()),
                     new Dimension(resolution.x(), resolution.y())
@@ -206,7 +206,7 @@ public class JFrameEditPolygonsMappings extends JFrame {
             }
             TextureMorphMove textureMorphMoveImage = new TextureMorphMove();
             textureMorphMoveImage.setEditOPanel(editPolygonsMappings2);
-            textureMorphMoveImage.distanceAB = new DistanceApproxLinearA(editPolygonsMappings2.iTextureMorphMoveImage.pointsInImage.values().stream().toList(),
+            textureMorphMoveImage.distanceAB = new DistanceProxLinear1(editPolygonsMappings2.iTextureMorphMoveImage.pointsInImage.values().stream().toList(),
                     editPolygonsMappings2.iTextureMorphMoveImage.pointsInModel.values().stream().toList(),
                     new Dimension(editPolygonsMappings2.iTextureMorphMoveImage.image.getWidth(),
                             editPolygonsMappings2.iTextureMorphMoveImage.image.getHeight()), new Dimension(Resolution.HD1080RESOLUTION.x(), Resolution.HD1080RESOLUTION.y())
@@ -259,15 +259,15 @@ public class JFrameEditPolygonsMappings extends JFrame {
     }
 
     private void menuItem15(ActionEvent e) {
-        editPolygonsMappings2.iTextureMorphMoveImage.setDistanceABclass(DistanceApproxLinearA.class);
+        editPolygonsMappings2.iTextureMorphMoveImage.setDistanceABclass(DistanceProxLinear1.class);
     }
 
     private void menuItem16(ActionEvent e) {
-        editPolygonsMappings2.iTextureMorphMoveImage.setDistanceABclass(DistanceApproxLinear2.class);
+        editPolygonsMappings2.iTextureMorphMoveImage.setDistanceABclass(DistanceProxLinear2.class);
     }
 
     private void menuItem17(ActionEvent e) {
-        editPolygonsMappings2.iTextureMorphMoveImage.setDistanceABclass(DistanceApproxLinearC.class);
+        editPolygonsMappings2.iTextureMorphMoveImage.setDistanceABclass(DistanceProxLinear3.class);
     }
 
 
@@ -502,7 +502,9 @@ public class JFrameEditPolygonsMappings extends JFrame {
         //---- buttonGroup2 ----
         var buttonGroup2 = new ButtonGroup();
         buttonGroup2.add(menuItem14);
+        buttonGroup2.add(menuItem15);
         buttonGroup2.add(menuItem16);
+        buttonGroup2.add(radioButtonMenuItem1);
         // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
     }
 

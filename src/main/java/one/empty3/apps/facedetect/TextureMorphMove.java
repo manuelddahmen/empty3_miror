@@ -73,24 +73,30 @@ public class TextureMorphMove extends ITexture {
         this.editPanel = editPolygonsMappings;
     }
 
-    public void setDistanceABclass(Class<? extends DistanceBezier2> distanceApproxLinearClass) {
+    public void setDistanceABclass(Class<? extends DistanceBezier2> distanceMap) {
         Thread thread = new Thread(() -> {
             boolean isNotOk = true;
             while (isNotOk) {
                 try {
-                    if (distanceApproxLinearClass.isAssignableFrom(DistanceApproxLinearA.class)) {
-                        distanceAB = new DistanceApproxLinearA(pointsInImage.values().stream().toList(),
+                    if (distanceMap.isAssignableFrom(DistanceProxLinear1.class)) {
+                        distanceAB = new DistanceProxLinear1(pointsInImage.values().stream().toList(),
                                 pointsInModel.values().stream().toList(), new Dimension(editPanel.panelPicture.getWidth(), editPanel.panelPicture.getHeight()),
                                 new Dimension(editPanel.panelModelView.getWidth(),
                                         editPanel.panelModelView.getHeight()));
                         isNotOk = false;
-                    } else if (distanceApproxLinearClass.isAssignableFrom(DistanceApproxLinear2.class)) {
-                        distanceAB = new DistanceApproxLinear2(pointsInImage.values().stream().toList(),
+                    } else if (distanceMap.isAssignableFrom(DistanceProxLinear2.class)) {
+                        distanceAB = new DistanceProxLinear2(pointsInImage.values().stream().toList(),
                                 pointsInModel.values().stream().toList(), new Dimension(editPanel.panelPicture.getWidth(), editPanel.panelPicture.getHeight()),
                                 new Dimension(editPanel.panelModelView.getWidth(),
                                         editPanel.panelModelView.getHeight()));
                         isNotOk = false;
-                    } else if (distanceApproxLinearClass.isAssignableFrom(DistanceBezier2.class)) {
+                    } else if (distanceMap.isAssignableFrom(DistanceProxLinear3.class)) {
+                        distanceAB = new DistanceProxLinear3(pointsInImage.values().stream().toList(),
+                                pointsInModel.values().stream().toList(), new Dimension(editPanel.panelPicture.getWidth(), editPanel.panelPicture.getHeight()),
+                                new Dimension(editPanel.panelModelView.getWidth(),
+                                        editPanel.panelModelView.getHeight()));
+                        isNotOk = false;
+                    } else if (distanceMap.isAssignableFrom(DistanceBezier2.class)) {
                         distanceAB = new DistanceBezier2(pointsInImage.values().stream().toList(),
                                 pointsInModel.values().stream().toList(), new Dimension(editPanel.panelPicture.getWidth(), editPanel.panelPicture.getHeight()),
                                 new Dimension(editPanel.panelModelView.getWidth(),
@@ -102,7 +108,10 @@ public class TextureMorphMove extends ITexture {
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
-                    this.distanceABclass = (Class<? extends DistanceBezier2>) distanceApproxLinearClass;
+                    if (distanceMap != null) {
+                        this.distanceABclass = (Class<? extends DistanceBezier2>) distanceMap;
+                    } else
+                        throw new NullPointerException("distanceMap is null in TextureMorphMove");
                 } catch (RuntimeException ex) {
                     ex.printStackTrace();
                     try {

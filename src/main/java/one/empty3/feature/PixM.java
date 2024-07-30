@@ -30,7 +30,7 @@ import one.empty3.library.core.nurbs.ParametricCurve;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.Arrays;
+import java.awt.image.RenderedImage;
 
 public class PixM extends M {
     public static final int COMP_RED = 0;
@@ -46,15 +46,10 @@ public class PixM extends M {
 
     public PixM(BufferedImage image) {
         super(image.getWidth(), image.getHeight());
-        float[] colorComponents = new float[getCompCount()];
         for (int i = 0; i < image.getWidth(); i++) {
             for (int j = 0; j < image.getHeight(); j++) {
                 int rgb = image.getRGB(i, j);
-                colorComponents = new Color(rgb).getColorComponents(colorComponents);
-                for (int com = 0; com < getCompCount(); com++) {
-                    setCompNo(com);
-                    set(i, j, colorComponents[com]);
-                }
+                set(i, j, rgb);
             }
         }
     }
@@ -158,33 +153,6 @@ public class PixM extends M {
         }
 
         return originValue;
-    }
-
-    public BufferedImage getImage() {
-
-        float[] f = new float[getCompCount()];
-
-        BufferedImage image = new BufferedImage(columns,
-                lines, BufferedImage.TYPE_INT_RGB);
-
-
-        float[] rgba = new float[getCompCount()];
-        for (int i = 0; i < image.getWidth(); i++) {
-            for (int j = 0; j < image.getHeight(); j++) {
-                for (int comp = 0; comp < getCompCount(); comp++) {
-                    setCompNo(comp);
-                    float value = (float) (get(i, j));
-                    value = Math.max(value, 0f);
-                    value = Math.min(value, 1f);
-
-                    rgba[comp] = value;
-                }
-                image.setRGB(i, j, new Color(rgba[0], getCompCount() >= 2 ? rgba[1] : 0f,
-                        getCompCount() >= 3 ? rgba[2] : 0f).getRGB());
-            }
-        }
-        return image;
-
     }
 
 
@@ -341,7 +309,7 @@ public class PixM extends M {
             minA = min;
             maxA = max;
         }
-        for (int i = 0; i < getCompCount(); i++) {
+        for (int i = 0; i < 3; i++) {
             maxRgbai[i] = maxA;
             minRgbai[i] = minA;
             meanRgbai[i] = 0.0;
@@ -583,14 +551,6 @@ public class PixM extends M {
                 }
     }
 
-    public boolean equals(Object compare) {
-        if (compare instanceof PixM)
-            if (Arrays.equals(((PixM) compare).x, x))
-                return true;
-        return false;
-
-    }
-
     public double luminance(int x, int y) {
         double l = 0.0;
         setCompNo(0);
@@ -689,5 +649,28 @@ public class PixM extends M {
             }
         }
         return diff / (this.columns * this.lines * other.columns * other.lines);
+    }
+
+    public RenderedImage getBitmap() {
+        BufferedImage b = new BufferedImage(columns, lines, BufferedImage.TYPE_INT_ARGB);
+        for (int i = 0; i < columns; i++) {
+            for (int j = 0; j < lines; j++) {
+                b.setRGB(i, j, getInt(i, j));
+            }
+        }
+        return b;
+    }
+
+    public BufferedImage getImage() {
+        BufferedImage image = new BufferedImage(columns,
+                lines, BufferedImage.TYPE_INT_ARGB);
+        for (int i = 0; i < image.getWidth(); i++) {
+            for (int j = 0; j < image.getHeight(); j++) {
+                //double[] values = getValues(i, j);
+                image.setRGB(i, j, getInt(i, j));//Lumiere.getInt(values));
+            }
+        }
+        return image;
+
     }
 }

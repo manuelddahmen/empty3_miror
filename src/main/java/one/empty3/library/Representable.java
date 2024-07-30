@@ -27,8 +27,6 @@ package one.empty3.library;
 
 import one.empty3.library.core.TemporalComputedObject3D;
 import one.empty3.library.core.lighting.Colors;
-import one.empty3.library.core.raytracer.RtIntersectInfo;
-import one.empty3.library.core.raytracer.RtRay;
 import one.empty3.tests.Path;
 
 import java.io.*;
@@ -292,11 +290,6 @@ public class Representable implements Serializable, Comparable, XmlRepresentable
         if (getPainter() != null) {
             getPainter().getPaintingAct().paint();
         }
-    }
-
-    public Intersects.Intersection intersects(RtRay ray, RtIntersectInfo cii) {
-        // TODO Implements
-        return null;
     }
 
     public Representable intersects(Representable r2) {

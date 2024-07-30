@@ -30,14 +30,25 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ImageIO {
     public static java.awt.image.BufferedImage read(File file) {
         try {
-            FileInputStream fileInputStream = new FileInputStream(file);
-            java.awt.image.BufferedImage bufferedImage2 = javax.imageio.ImageIO.read(fileInputStream);
-            fileInputStream.close();
-            return bufferedImage2;
+            if (file.exists()) {
+                if (file.canRead()) {
+                    FileInputStream fileInputStream = new FileInputStream(file);
+                    java.awt.image.BufferedImage bufferedImage2 = javax.imageio.ImageIO.read(fileInputStream);
+                    fileInputStream.close();
+                    return bufferedImage2;
+                } else {
+                    Logger.getAnonymousLogger().log(Level.SEVERE, "File can't read (ImageIO.read) File can't exist");
+                }
+            } else
+                Logger.getAnonymousLogger().log(Level.SEVERE, "File can't read (ImageIO.read : file doesn't exist");
+
+            return null;
         } catch (Exception ex) {
             ex.printStackTrace();
             return null;
@@ -49,10 +60,21 @@ public class ImageIO {
             jpg = "png";
         if (out.getAbsolutePath().endsWith("jpg"))
             jpg = "jpg";
-        FileOutputStream fileOutputStream = new FileOutputStream(out);
-        // ???
-        javax.imageio.ImageIO.write(imageOut, jpg, out);
-        fileOutputStream.close();
+        if (!out.getParentFile().exists()) {
+            out.getParentFile().mkdirs();
+        }
+
+        if (!out.exists()) {
+            out.createNewFile();
+        }
+        if (out.canWrite()) {
+            FileOutputStream fileOutputStream = new FileOutputStream(out);
+            // ???
+            javax.imageio.ImageIO.write(imageOut, jpg, fileOutputStream);
+            fileOutputStream.close();
+        } else {
+            Logger.getAnonymousLogger().log(Level.SEVERE, "ImageIO can't write file");
+        }
         return false;
     }
     /*

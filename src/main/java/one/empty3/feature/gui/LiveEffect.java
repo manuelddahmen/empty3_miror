@@ -154,6 +154,7 @@ public class LiveEffect extends JFrame {
         pack();
         setLocationRelativeTo(getOwner());
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
+    }
 
     public void setFileIn(File fileOut) {
         BufferedImage read = null;
@@ -175,71 +176,71 @@ public class LiveEffect extends JFrame {
     }
 
     public LiveEffect() {
-            initComponents();
-            init();
-        }
+        initComponents();
+        init();
+    }
 
-        public void init () {
-            threadEffectDisplay
-                    = new ThreadEffectDisplay();
-            threadEffectDisplay.setJpanel(panel1);
-            threadEffectDisplay.motion = new LastFrameMotion();
-            threadEffectDisplay.start();
+    public void init() {
+        threadEffectDisplay
+                = new ThreadEffectDisplay();
+        threadEffectDisplay.setJpanel(panel1);
+        threadEffectDisplay.motion = new LastFrameMotion();
+        threadEffectDisplay.start();
 
-            viewSizes = Webcam.getDefault().getViewSizes();
+        viewSizes = Webcam.getDefault().getViewSizes();
 
-            threadEffectDisplay.motion = new DiffMotion();
-            threadEffectDisplay.setMotionActive(true);
-            threadEffectDisplay.setEffectActive(true);
+        threadEffectDisplay.motion = new DiffMotion();
+        threadEffectDisplay.setMotionActive(true);
+        threadEffectDisplay.setEffectActive(true);
 
-            this.comboBoxDimenisions.setModel(new DefaultComboBoxModel(Webcam.getDefault().getViewSizes()));
-            this.comboBoxDimenisions.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    try {
-                        threadEffectDisplay.webcam
-                                .setViewSize((Dimension) comboBoxDimenisions
-                                        .getItemAt(comboBoxDimenisions.getSelectedIndex()));
-                    } catch (RuntimeException ignored) {
+        this.comboBoxDimenisions.setModel(new DefaultComboBoxModel(Webcam.getDefault().getViewSizes()));
+        this.comboBoxDimenisions.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    threadEffectDisplay.webcam
+                            .setViewSize((Dimension) comboBoxDimenisions
+                                    .getItemAt(comboBoxDimenisions.getSelectedIndex()));
+                } catch (RuntimeException ignored) {
 
-                    }
                 }
-            });
-
-        }
-
-        private void panel1ComponentResized (ComponentEvent e){
-            main.setMaxRes(Math.max(getWidth(), getHeight()));
-        }
-
-        private void comboBoxMotionItemStateChanged (ItemEvent e){
-            switch (comboBoxMotion.getSelectedIndex()) {
-                case 0:
-                    //Aucun mouvement, effet
-                    threadEffectDisplay.motion = new LastFrameMotion();
-                    threadEffectDisplay.setMotionActive(false);
-                    threadEffectDisplay.setEffectActive(true);
-                    break;
-                case 1:
-                    //Aucun mouvement, aucun effet
-                    threadEffectDisplay.motion = new LastFrameMotion();
-                    threadEffectDisplay.setMotionActive(false);
-                    threadEffectDisplay.setEffectActive(false);
-                    break;
-                case 2:
-                    //Mouvement, effet
-                    threadEffectDisplay.motion = new DiffMotion();
-                    threadEffectDisplay.setMotionActive(true);
-                    threadEffectDisplay.setEffectActive(true);
-                    break;
-                case 3:
-                    //Mouvement, aucun effet
-                    threadEffectDisplay.motion = new DiffMotion();
-                    threadEffectDisplay.setMotionActive(true);
-                    threadEffectDisplay.setEffectActive(false);
-                    break;
             }
+        });
+
+    }
+
+    private void panel1ComponentResized(ComponentEvent e) {
+        main.setMaxRes(Math.max(getWidth(), getHeight()));
+    }
+
+    private void comboBoxMotionItemStateChanged(ItemEvent e) {
+        switch (comboBoxMotion.getSelectedIndex()) {
+            case 0:
+                //Aucun mouvement, effet
+                threadEffectDisplay.motion = new LastFrameMotion();
+                threadEffectDisplay.setMotionActive(false);
+                threadEffectDisplay.setEffectActive(true);
+                break;
+            case 1:
+                //Aucun mouvement, aucun effet
+                threadEffectDisplay.motion = new LastFrameMotion();
+                threadEffectDisplay.setMotionActive(false);
+                threadEffectDisplay.setEffectActive(false);
+                break;
+            case 2:
+                //Mouvement, effet
+                threadEffectDisplay.motion = new DiffMotion();
+                threadEffectDisplay.setMotionActive(true);
+                threadEffectDisplay.setEffectActive(true);
+                break;
+            case 3:
+                //Mouvement, aucun effet
+                threadEffectDisplay.motion = new DiffMotion();
+                threadEffectDisplay.setMotionActive(true);
+                threadEffectDisplay.setEffectActive(false);
+                break;
         }
+    }
 
     public ClassSchemaBuilder getMainWindow() {
         return main;

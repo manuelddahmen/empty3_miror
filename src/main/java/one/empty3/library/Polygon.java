@@ -26,7 +26,7 @@
 package one.empty3.library;
 
 import javaAnd.awt.image.BufferedImage;
-import one.empty3.feature20220726.PixM;
+import one.empty3.feature.PixM;
 import one.empty3.library.core.nurbs.ParametricCurve;
 import one.empty3.library.core.nurbs.ParametricSurface;
 import one.empty3.library.core.nurbs.SurfaceElem;

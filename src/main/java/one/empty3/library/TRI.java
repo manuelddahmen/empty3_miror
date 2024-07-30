@@ -27,19 +27,17 @@
  */
 package one.empty3.library;
 
-import one.empty3.library.core.raytracer.RtIntersectInfo;
-import one.empty3.library.core.raytracer.RtRay;
 
 import java.awt.*;
 
 public class TRI extends Representable {
 
-    private StructureMatrix<Point3D> sommet= new StructureMatrix<>(1, Point3D.class);
+    private StructureMatrix<Point3D> sommet = new StructureMatrix<>(1, Point3D.class);
 
     public TRI() {
         super();
-        sommet.setElem(Point3D.X,  0);
-        sommet.setElem(Point3D.Y,  1);
+        sommet.setElem(Point3D.X, 0);
+        sommet.setElem(Point3D.Y, 1);
         sommet.setElem(Point3D.O0, 2);
     }
 
@@ -49,7 +47,7 @@ public class TRI extends Representable {
 
     public TRI(Point3D point3d, Point3D point3d2, Point3D point3d3,
                Color red) {
-        sommet.setElem(point3d,  0);
+        sommet.setElem(point3d, 0);
         sommet.setElem(point3d2, 1);
         sommet.setElem(point3d3, 2);
         this.texture(new TextureCol(red));
@@ -57,7 +55,7 @@ public class TRI extends Representable {
 
     public TRI(Point3D point3d, Point3D point3d2, Point3D point3d3,
                ITexture red) {
-        sommet.setElem(point3d,  0);
+        sommet.setElem(point3d, 0);
         sommet.setElem(point3d2, 1);
         sommet.setElem(point3d3, 2);
         this.texture = red;
@@ -100,12 +98,6 @@ public class TRI extends Representable {
         return t + "\n\t\t(" + texture.toString() + ")\n\t)\n";
     }
 
-    @Override
-    public Intersects.Intersection intersects(RtRay ray, RtIntersectInfo cii) {
-        // TODO Implements
-        return null;
-    }
-
     public Point3D getCentre() {
         return getSommet().getElem(0).plus(getSommet().getElem(1)).plus(getSommet().getElem(2).mult(1 / 3d));
     }
@@ -120,7 +112,7 @@ public class TRI extends Representable {
     @Override
     public void declareProperties() {
         super.declareProperties();
-        getDeclaredDataStructure().put("sommet/points sommets du triangle",sommet);
+        getDeclaredDataStructure().put("sommet/points sommets du triangle", sommet);
 
     }
 }

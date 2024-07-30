@@ -22,18 +22,15 @@
 
 package one.empty3.feature.histograms;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.util.Objects;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import javaAnd.awt.image.imageio.ImageIO;
-import one.empty3.feature20220726.PixM;
+import one.empty3.feature.PixM;
 import one.empty3.io.ProcessFile;
 import one.empty3.library.Point3D;
 import org.jetbrains.annotations.NotNull;
+
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 public class Hist1Votes extends ProcessFile {
     @NotNull
@@ -46,7 +43,7 @@ public class Hist1Votes extends ProcessFile {
         public double x = 0.0, y = 0.0, r = 0.0;
         public double i = 0.0;
         public Point3D maxColor = Point3D.O0;
-        public Point3D mincolor = Point3D.n(1,1,1);
+        public Point3D mincolor = Point3D.n(1, 1, 1);
         public double count = 0.0;
 
         public Circle(double x, double y, double r) {
@@ -84,7 +81,7 @@ public class Hist1Votes extends ProcessFile {
         double sum = 0;
         int count = 0;
         c.maxColor = Point3D.O0;
-        c.mincolor = Point3D.n(1,1,1);
+        c.mincolor = Point3D.n(1, 1, 1);
         double intensity = 0.0;
         for (double i = c.x - c.r; i <= c.x + c.r; i++) {
             for (double j = c.y - c.r; j <= c.y + c.r; j++) {
@@ -120,7 +117,7 @@ public class Hist1Votes extends ProcessFile {
 
     @Override
     public boolean process(File in, File out) {
-        if(!isImage(in))
+        if (!isImage(in))
             return false;
         BufferedImage bufferedImage = null;
         try {
@@ -128,9 +125,9 @@ public class Hist1Votes extends ProcessFile {
         } catch (RuntimeException | IOException ex) {
             return false;
         }
-        if(bufferedImage==null) return false;
+        if (bufferedImage == null) return false;
         PixM inP = new PixM(bufferedImage);
-        PixM outP= new PixM(inP.getColumns(), inP.getLines());
+        PixM outP = new PixM(inP.getColumns(), inP.getLines());
 
         int[] ints = new int[inP.getLines() * inP.getColumns() * 3];
         double maxR = Math.min(inP.getLines(), inP.getColumns()) * fractMax;
@@ -145,9 +142,10 @@ public class Hist1Votes extends ProcessFile {
                             Circle c1 = getLevel(new Circle(i, j, maxR), inP);
                             if (c1.i > 0.0) {
                                 //Point3D n = new Point3D(c.i, c.r, c.count);
-                                Point3D n = new Point3D(0.0,0.0,0.0);
-                                n.set(c, c1.maxColor.mult(c1.i).moins(c1.mincolor.mult(c1.r)).get(c));;
-                                outP.set(i, j, n.get(c)+outP.get(i,j));
+                                Point3D n = new Point3D(0.0, 0.0, 0.0);
+                                n.set(c, c1.maxColor.mult(c1.i).moins(c1.mincolor.mult(c1.r)).get(c));
+                                ;
+                                outP.set(i, j, n.get(c) + outP.get(i, j));
                             }
                         }
                     }
@@ -156,7 +154,7 @@ public class Hist1Votes extends ProcessFile {
         }
         try {
             //ImageIO.write(outP.normalize(0, 1).getImage(), "jpg", out);
-            ImageIO.write(outP.normalize(0,1).getImage(), "jpg", out);
+            ImageIO.write(outP.normalize(0, 1).getImage(), "jpg", out);
             //ImageIO.write(outP0.normalize(0, 1).getImage(), "jpg", out);
             return true;
 

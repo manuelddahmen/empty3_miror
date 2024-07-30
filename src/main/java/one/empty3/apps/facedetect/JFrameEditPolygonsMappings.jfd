@@ -160,6 +160,7 @@ new FormModel {
 					add( new FormComponent( "javax.swing.JRadioButtonMenuItem" ) {
 						name: "menuItem15"
 						"text": new FormMessage( null, "JFrameEditPolygonsMappings.menuItem15.text" )
+						"$buttonGroup": new FormReference( "buttonGroup2" )
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItem15", true ) )
 					} )
 					add( new FormComponent( "javax.swing.JRadioButtonMenuItem" ) {
@@ -171,6 +172,7 @@ new FormModel {
 					add( new FormComponent( "javax.swing.JRadioButtonMenuItem" ) {
 						name: "radioButtonMenuItem1"
 						"text": new FormMessage( null, "JFrameEditPolygonsMappings.radioButtonMenuItem1.text" )
+						"$buttonGroup": new FormReference( "buttonGroup2" )
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItem17", true ) )
 					} )
 				} )
