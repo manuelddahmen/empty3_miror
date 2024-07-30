@@ -583,67 +583,84 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
                     //f = getWebcamFile();
                 }
                 if (!processes.isEmpty() && f != null) {
+                    int nunEffect = 0;
                     ProcessFile ce = processes.get(0);
                     int processNameOrder = listProcessClasses.indexOf(ce.getClass());
                     StringBuilder s = new StringBuilder();
                     s.append("-").append(listProcessClasses.indexOf(ce)).append(getUuid());
                     String s0 = "";
                     fileOut = new File(tempDir + File.separator + f.getName() + s.toString() + ".jpg");
-                    if (!fileOut.getParentFile().exists()) {
-                        fileOut.getParentFile().mkdirs();
+                    if (!fileOut.exists()) {
+                        getParentFile(fileOut).mkdirs();
                     }
 
                     System.out.printf("Process %s \nfrom:  %s\n", processes.get(0).getClass().toString(), f.getAbsolutePath());
                     System.out.printf("Process %s \nto  :  %s\n", processes.get(0).getClass().toString(), fileOut.getAbsolutePath());
 
-                    System.out.printf("Run process 0 . %d / %d on file %s\n", 0 + 1, processes.size(), f.getAbsolutePath());
+                    System.out.printf("Run process 0 . %d / %d on file %s\n", nunEffect, processes.size(), f.getAbsolutePath());
 
                     File fileIn = null;
 
                     if (ce.process(f, fileOut)) {
-                        if (fileOut.exists()) {
+                        nunEffect++;
+                        if (fileOut.exists() && nunEffect == processes.size()) {
                             liveEffect.setFileIn(fileOut);
+                            Logger.getAnonymousLogger().log(Level.SEVERE, "All processes run on Image");
                         } else {
-                            Logger.getAnonymousLogger().log(Level.SEVERE, "fileOut doesn't exist. Can't read");
+                            Logger.getAnonymousLogger().log(Level.SEVERE, "FfileOut doesn't exist. Can't read");
                         }
                         Logger.getAnonymousLogger().log(Level.INFO, "Fichier IN mis à jour");
                         fileIn = fileOut;
+
                         for (int i = 1; i < processes.size(); i++) {
                             ce = processes.get(i);
                             s0 = s.toString();
                             s.append("-").append(listProcessClasses.indexOf(ce)).append(getUuid());
                             System.out.printf("Process %s \nfrom:  %s\n", ce.getClass().toString(), f.getName());
 
-                            if (i == processes.size() - 1 && f.getName().contains("webcam")) {
-                                setWebcamFile();
-                                fileOut = getWebcamFile();
-                            } else {
-                                fileOut = new File(tempDir + File.separator + f.getName()
-                                        + s + ".jpg");
-                            }
+
                             ce.addSource(f);//???
                             ce.addSource(fileIn);//???
                             try {
-                                if (!fileOut.exists()) {
+                              /*  if (!fileOut.exists()) {
                                     fileOut.mkdirs();
+                                }*/
+                                getParentFile(fileOut).mkdirs();
+                                if (ce.process(fileIn, fileOut)) {
+                                    if (fileOut.exists() && nunEffect == processes.size()) {
+                                        if (fileOut.exists() && nunEffect == processes.size()) {
+                                            liveEffect.setFileIn(fileOut);
+                                        } else {
+                                            Logger.getAnonymousLogger().log(Level.SEVERE, "fileOut doesn't exist. Can't read");
+                                        }
+                                        System.out.printf("Run procsqess 1 . %d/%d on file %s\n", nunEffect, processes.size(), f.getAbsolutePath());
+                                        liveEffect.setFileIn(fileOut);
+                                    } else {
+                                        Logger.getAnonymousLogger().log(Level.SEVERE, "fileOut doesn't exist. Can't read");
+                                    }
+                                    System.out.printf("Run process 1 . %d/%d on file %s\n", nunEffect, processes.size(), f.getAbsolutePath());
+
+                                    fileIn = fileOut;
+
+                                    Logger.getAnonymousLogger().log(Level.INFO, "Fichier IN mis à jour");
                                 }
-                                System.out.printf("Run process 1 . %d/%d on file %s\n", i + 1, processes.size(), f.getAbsolutePath());
-                                ce.process(fileIn, fileOut);
-                                if (fileOut.exists()) {
-                                    liveEffect.setFileIn(fileOut);
-                                } else
-                                    Logger.getAnonymousLogger().log(Level.SEVERE, "fileOut doesn't exist. Can't read");
-
-                                fileIn = fileOut;
-
-                                Logger.getAnonymousLogger().log(Level.INFO, "Fichier IN mis à jour");
                             } catch (NullPointerException ex) {
                                 ex.printStackTrace();
                             }
 
+                            if (!getParentFile(fileOut).exists()) {
+                                getParentFile(fileOut).mkdirs();
+                            }
                         }
+
+                    } else {
+                        Logger.getAnonymousLogger().log(Level.SEVERE, "Error in process : " + processes.get(nunEffect).getClass().getCanonicalName());
                     }
                 }
+                if (fileOut.exists()) {
+                    liveEffect.setFileIn(fileOut);
+                } else
+                    Logger.getAnonymousLogger().log(Level.SEVERE, "fileOut doesn't exist. Can't read");
             }
         }
 /*        if(fileOut!=null) {
@@ -658,6 +675,10 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
         } else {
             System.err.println("Le fichier fileOut est null");
         }*/
+    }
+
+    public static File getParentFile(File file) {
+        return new File(file.getAbsolutePath().substring(0, file.getAbsolutePath().lastIndexOf("/") + 1));
     }
 
     private void buttonDeleteClassActionPerformed(ActionEvent e) {

@@ -22,10 +22,11 @@
 
 package one.empty3.feature;
 
+import one.empty3.feature.app.replace.javax.imageio.ImageIO;
 import one.empty3.io.ObjectWithProperties;
 import one.empty3.io.ProcessFile;
 
-import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
@@ -47,24 +48,25 @@ public class IdentNullProcess extends ProcessFile {
             pixM = PixM.getPixM(ImageIO.read(in), maxRes);
 
 
-            double l = (double)getProperties().getProperty("luminanceFactor");
-            double r = (double)getProperties().getProperty("redFactor");
-            double g = (double)getProperties().getProperty("blueFactor");
-            double b = (double)getProperties().getProperty("greenFactor");
+            double l = (double) getProperties().getProperty("luminanceFactor");
+            double r = (double) getProperties().getProperty("redFactor");
+            double g = (double) getProperties().getProperty("blueFactor");
+            double b = (double) getProperties().getProperty("greenFactor");
 
 
             for (int i = 0; i < pixM.columns; i++) {
                 for (int j = 0; j < pixM.getLines(); j++) {
                     pixM.setCompNo(0);
-                    pixM.set(i,j, pixM.get(i, j)*l*r);
+                    pixM.set(i, j, pixM.get(i, j) * l * r);
                     pixM.setCompNo(1);
-                    pixM.set(i,j, pixM.get(i, j)*l*g);
+                    pixM.set(i, j, pixM.get(i, j) * l * g);
                     pixM.setCompNo(2);
-                    pixM.set(i,j, pixM.get(i, j)*l*b);
+                    pixM.set(i, j, pixM.get(i, j) * l * b);
                 }
             }
 
-            ImageIO.write(pixM.getImage(), "jpg", out);
+            BufferedImage image = pixM.getImage();
+            ImageIO.write(image, "jpg", out);
             addSource(out);
             return true;
         } catch (

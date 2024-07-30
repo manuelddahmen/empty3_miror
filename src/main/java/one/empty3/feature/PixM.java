@@ -30,7 +30,6 @@ import one.empty3.library.core.nurbs.ParametricCurve;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.awt.image.RenderedImage;
 
 public class PixM extends M {
     public static final int COMP_RED = 0;
@@ -651,7 +650,7 @@ public class PixM extends M {
         return diff / (this.columns * this.lines * other.columns * other.lines);
     }
 
-    public RenderedImage getBitmap() {
+    public BufferedImage getBitmap() {
         BufferedImage b = new BufferedImage(columns, lines, BufferedImage.TYPE_INT_ARGB);
         for (int i = 0; i < columns; i++) {
             for (int j = 0; j < lines; j++) {

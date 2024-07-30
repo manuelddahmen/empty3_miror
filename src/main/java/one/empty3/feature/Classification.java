@@ -30,7 +30,6 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 import java.util.Random;
 
 public class Classification extends ProcessFile {
@@ -50,13 +49,15 @@ public class Classification extends ProcessFile {
         try {
             read = ImageIO.read(in);
             selectPointColorMassAglo = PixM.getPixM(read, maxRes);
-        } catch (Exception ex) {}
+        } catch (Exception ex) {
+        }
 
         try {
             imageOut = ImageIO.read(in);
-        } catch (Exception ex) {}
+        } catch (Exception ex) {
+        }
 
-            assert selectPointColorMassAglo != null;
+        assert selectPointColorMassAglo != null;
         SelectPointColorMassAglo selectPointColorMassAglo1 = new SelectPointColorMassAglo(read);
         int color = Color.WHITE.getRGB();
         for (int i = 0; i < selectPointColorMassAglo1.getColumns(); i += 1)
@@ -76,9 +77,11 @@ public class Classification extends ProcessFile {
 
         try {
             ImageIO.write(imageOut, "jpg", out);
-        } catch (Exception ex) {}
+        } catch (Exception ex) {
+            return false;
+        }
 
-            return true;
+        return true;
     }
 
     public double getThreshold() {

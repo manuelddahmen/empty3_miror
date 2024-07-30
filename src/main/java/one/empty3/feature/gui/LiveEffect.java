@@ -32,6 +32,7 @@ import one.empty3.feature.ClassSchemaBuilder;
 import one.empty3.feature.ThreadEffectDisplay;
 import one.empty3.feature.app.replace.javax.imageio.ImageIO;
 import one.empty3.feature.motion.DiffMotion;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -156,18 +157,15 @@ public class LiveEffect extends JFrame {
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
     }
 
-    public void setFileIn(File fileOut) {
+    public void setFileIn(@NotNull File fileOut) {
         BufferedImage read = null;
         try {
-            if (fileOut != null) {
-                read = ImageIO.read(fileOut);
-                if (read != null) {
-                    threadEffectDisplay.setImageIn(read);
-                } else {
-                    Logger.getAnonymousLogger().log(Level.INFO, "No image in set after ImageIO.read(fileOut)");
-                }
+            read = ImageIO.read(fileOut);
+            if (read != null) {
+                threadEffectDisplay.setImageIn(read);
             } else {
-                Logger.getAnonymousLogger().log(Level.INFO, "No image in set after processing files fileOut==null");
+                Logger.getAnonymousLogger().log(Level.INFO, "No image in set after ImageIO.read(fileOut) " +
+                        fileOut.getAbsolutePath() + " exists? " + fileOut.exists());
             }
         } catch (RuntimeException ex) {
             Logger.getAnonymousLogger().log(Level.WARNING, "Fichier non trouvé");

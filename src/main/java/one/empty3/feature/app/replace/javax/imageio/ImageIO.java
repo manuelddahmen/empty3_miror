@@ -25,6 +25,8 @@ package one.empty3.feature.app.replace.javax.imageio;
 //import android.graphics.BufferedImage;
 //import android.graphics.BufferedImageFactory;
 
+import one.empty3.feature.ClassSchemaBuilder;
+
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
@@ -36,8 +38,8 @@ import java.util.logging.Logger;
 public class ImageIO {
     public static java.awt.image.BufferedImage read(File file) {
         try {
-            if (file.exists()) {
-                if (file.canRead()) {
+            if (!file.isDirectory()) {
+                if (file.exists()) {
                     FileInputStream fileInputStream = new FileInputStream(file);
                     java.awt.image.BufferedImage bufferedImage2 = javax.imageio.ImageIO.read(fileInputStream);
                     fileInputStream.close();
@@ -45,9 +47,7 @@ public class ImageIO {
                 } else {
                     Logger.getAnonymousLogger().log(Level.SEVERE, "File can't read (ImageIO.read) File can't exist");
                 }
-            } else
-                Logger.getAnonymousLogger().log(Level.SEVERE, "File can't read (ImageIO.read : file doesn't exist");
-
+            }
             return null;
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -56,26 +56,22 @@ public class ImageIO {
     }
 
     public static boolean write(BufferedImage imageOut, String jpg, File out) throws IOException {
-        if (out.getAbsolutePath().endsWith("png"))
-            jpg = "png";
-        if (out.getAbsolutePath().endsWith("jpg"))
-            jpg = "jpg";
-        if (!out.getParentFile().exists()) {
-            out.getParentFile().mkdirs();
+
+        if (!ClassSchemaBuilder.getParentFile(out).exists()) {
+            ClassSchemaBuilder.getParentFile(out).mkdirs();
         }
 
         if (!out.exists()) {
-            out.createNewFile();
+            //out.createNewFile();
         }
-        if (out.canWrite()) {
-            FileOutputStream fileOutputStream = new FileOutputStream(out);
-            // ???
-            javax.imageio.ImageIO.write(imageOut, jpg, fileOutputStream);
-            fileOutputStream.close();
-        } else {
-            Logger.getAnonymousLogger().log(Level.SEVERE, "ImageIO can't write file");
-        }
-        return false;
+
+        FileOutputStream fileOutputStream = new FileOutputStream(out);
+        // ???
+        javax.imageio.ImageIO.write(imageOut, "jpg", fileOutputStream);
+        fileOutputStream.flush();
+        fileOutputStream.close();
+
+        return true;
     }
     /*
     public static BufferedImage read(File file) {
