@@ -37,11 +37,7 @@ import one.empty3.library.core.nurbs.CourbeParametriquePolynomialeBezier;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -156,17 +152,13 @@ public class ResolutionCharacter3 implements Runnable {
     public void exec(ITexture texture, PixM output, PixM input, File dirOut, String name) {
         output.plotCurve(new Rectangle(10, 10, output.getColumns() - 20, output.getLines() - 20), texture);
 
-        try {
-            ImageIO.write(input.getImage(), "jpg",
-                    new File(dirOut + File.separator + name.replace(' ', '_').replace(".jpg", "INPUT.jpg")));
-            ImageIO.write(output.getImage(), "jpg",
-                    new File(dirOut + File.separator + name.replace(' ', '_').replace(".jpg", "OUTPUT.jpg")));
+        ImageIO.write(input.getImage(), "jpg",
+                new File(dirOut + File.separator + name.replace(' ', '_').replace(".jpg", "INPUT.jpg")));
+        ImageIO.write(output.getImage(), "jpg",
+                new File(dirOut + File.separator + name.replace(' ', '_').replace(".jpg", "OUTPUT.jpg")));
 
-            ImageIO.write(outRecompose.getImage(), "jpg", new File(
-                    dirOut + File.separator + name.replace(' ', '_').replace(".jpg", "RECOMPOSE.jpg")));
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        }
+        ImageIO.write(outRecompose.getImage(), "jpg", new File(
+                dirOut + File.separator + name.replace(' ', '_').replace(".jpg", "RECOMPOSE.jpg")));
 
     }
 
@@ -497,11 +489,7 @@ public class ResolutionCharacter3 implements Runnable {
                                     rectangle2.getY(), rectangle2.getW(), rectangle2.getH());
                             if (!file.getParentFile().exists() || file.getParentFile().isDirectory()) {
                                 file.getParentFile().mkdirs();
-                                try {
-                                    ImageIO.write(outChar.getImage(), "jpg", file);
-                                } catch (IOException e) {
-                                    throw new RuntimeException(e);
-                                }
+                                ImageIO.write(outChar.getImage(), "jpg", file);
                             }
                             outRecompose.pasteSubImage(outChar,
                                     rectangle2.getX(), rectangle2.getY(), rectangle2.getW(), rectangle2.getH());

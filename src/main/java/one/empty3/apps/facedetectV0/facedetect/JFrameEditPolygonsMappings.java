@@ -26,8 +26,8 @@
 
 package one.empty3.apps.facedetectV0.facedetect;
 
-import javaAnd.awt.image.imageio.ImageIO;
 import net.miginfocom.swing.MigLayout;
+import one.empty3.feature.app.replace.javax.imageio.ImageIO;
 import one.empty3.library.Config;
 import one.empty3.library.Resolution;
 import one.empty3.library.ZBufferFactory;
@@ -180,6 +180,7 @@ public class JFrameEditPolygonsMappings extends JFrame {
                     String absolutePath = selectedFile.getAbsolutePath();
                     String extension = absolutePath.substring(absolutePath.lastIndexOf("."), absolutePath.length());
                     ImageIO.write(currentHD, extension, selectedFile);
+
                 }
             }
         }

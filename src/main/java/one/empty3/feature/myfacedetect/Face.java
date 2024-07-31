@@ -35,8 +35,9 @@ public class Face extends ProcessFile {
     private Rectangle rectangleEyeLeft;
     private Rectangle rectangleEyeRight;
     private Rectangle rectangleMouth;
+
     @Override
-    public boolean process(File in, File out)  {
+    public boolean process(File in, File out) {
         PixM inPixM = PixM.getPixM(Objects.requireNonNull(ImageIO.read(in)), 300);
 
         inPixM.applyFilter(new WeightingFunction(100, 100));

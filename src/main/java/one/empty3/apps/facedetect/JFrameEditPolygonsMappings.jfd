@@ -149,31 +149,42 @@ new FormModel {
 						name: "checkBoxMenuItem1"
 						"text": new FormMessage( null, "JFrameEditPolygonsMappings.checkBoxMenuItem1.text" )
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "checkBoxMenuItem1", true ) )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "checkBoxMenuItem1", true ) )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "checkBoxMenuItem1", true ) )
+					} )
+					add( new FormComponent( "javax.swing.JCheckBoxMenuItem" ) {
+						name: "checkBoxMenuItemOptimizeGrid"
+						"text": new FormMessage( null, "JFrameEditPolygonsMappings.checkBoxMenuItemOptimizeGrid.text" )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "optimizeGrid", true ) )
+					} )
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "menuItemDistanceBB"
+						"text": new FormMessage( null, "JFrameEditPolygonsMappings.menuItemDistanceBB.text" )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItem1DistanceBB", true ) )
 					} )
 					add( new FormComponent( "javax.swing.JRadioButtonMenuItem" ) {
-						name: "menuItem14"
-						"text": new FormMessage( null, "JFrameEditPolygonsMappings.menuItem14.text" )
+						name: "menuItemClassBezier2"
+						"text": new FormMessage( null, "JFrameEditPolygonsMappings.menuItemClassBezier2.text" )
 						"$buttonGroup": new FormReference( "buttonGroup2" )
-						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItem16", true ) )
-						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItem14", true ) )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItemClassBezier2", true ) )
 					} )
 					add( new FormComponent( "javax.swing.JRadioButtonMenuItem" ) {
-						name: "menuItem15"
-						"text": new FormMessage( null, "JFrameEditPolygonsMappings.menuItem15.text" )
+						name: "menuItemLinearProx1"
+						"text": new FormMessage( null, "JFrameEditPolygonsMappings.menuItemLinearProx1.text" )
 						"$buttonGroup": new FormReference( "buttonGroup2" )
-						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItem15", true ) )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItemLinearProx1", true ) )
 					} )
 					add( new FormComponent( "javax.swing.JRadioButtonMenuItem" ) {
-						name: "menuItem16"
-						"text": new FormMessage( null, "JFrameEditPolygonsMappings.menuItem16.text" )
+						name: "menuItemLinearProx2"
+						"text": new FormMessage( null, "JFrameEditPolygonsMappings.menuItemLinearProx2.text" )
 						"$buttonGroup": new FormReference( "buttonGroup2" )
-						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItem16", true ) )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItemLinearProx2", true ) )
 					} )
 					add( new FormComponent( "javax.swing.JRadioButtonMenuItem" ) {
-						name: "radioButtonMenuItem1"
-						"text": new FormMessage( null, "JFrameEditPolygonsMappings.radioButtonMenuItem1.text" )
+						name: "menuItemLinearProx3"
+						"text": new FormMessage( null, "JFrameEditPolygonsMappings.menuItemLinearProx3.text" )
 						"$buttonGroup": new FormReference( "buttonGroup2" )
-						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItem17", true ) )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItemLinearProx3", true ) )
 					} )
 				} )
 			}

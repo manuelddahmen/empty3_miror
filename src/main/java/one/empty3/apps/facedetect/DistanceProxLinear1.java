@@ -38,13 +38,15 @@ public class DistanceProxLinear1 extends DistanceBezier2 {
 
     @Override
     public Point3D findAxPointInB(double u, double v) {
-        //return findAxPointInBal1(u, v);
-        return findAxPointInBal4(u, v);
+        return findAxPointInBal5(u, v);
+        //return findAxPointInBal4(u, v);
     }
+
 
     private Point3D findAxPointInBal1(double u, double v) {
         Point3D pb = nearLandmark(u, v);
-        pb = new Point3D(Math.max(0, Math.min(pb.get(0), listBX.size() - 1)), Math.max(0, Math.min(pb.get(1), listBY.size() - 1)), 0.0);
+        pb = new Point3D(maxBox(pb.get(0), listBX.get(0), listBX.get(listBX.size() - 1)),
+                maxBox(pb.get(1), 0.0, listBY.get(listBY.size() - 1)));
         Point3D pa = surfaceA.getCoefficients().getElem((int) (double) pb.getX(), (int) (double) pb.get(1));
         return pa;
     }
@@ -71,6 +73,15 @@ public class DistanceProxLinear1 extends DistanceBezier2 {
         return pa;
     }
 
+
+    private Point3D findAxPointInBal5(double u, double v) {
+        Point3D pb = nearLandmark(u, v);
+        pb = new Point3D(maxBox(pb.get(0), listBX.get(0), listBX.get(listBX.size() - 1)),
+                maxBox(pb.get(1), 0.0, listBY.get(listBY.size() - 1)));
+        Point3D pa = surfaceA.getCoefficients().getElem((int) (double) pb.getX(), (int) (double) pb.get(1));
+        return pa;
+    }
+
     /***
      *
      * @param u
@@ -83,14 +94,15 @@ public class DistanceProxLinear1 extends DistanceBezier2 {
         int indexI = -1, indexJ = -1;
         for (int i = 0; i < listBX.size(); i++) {
             for (int j = 0; j < listBY.size(); j++) {
-                if (Point3D.distance(surfaceB.getCoefficients().getElem(i, j), uv) < distance) {
+                Double distanced = Point3D.distance(surfaceB.getCoefficients().getElem(i, j), uv);
+                if (distanced < distance) {
                     indexI = i;
                     indexJ = j;
-                    distance = Point3D.distance(surfaceB.getCoefficients().getElem(i, j), uv);
+                    distance = distanced;
                 }
             }
         }
-        Point3D point3Dij = new Point3D((double) indexI, (double) indexJ, 0.0);
+        Point3D point3Dij = new Point3D((double) indexI / bDimReduced.getWidth(), (double) indexJ / bDimReduced.getHeight(), 0.0);
         return point3Dij;//precision(point3Dij, u, v);//point3Dij
     }
 

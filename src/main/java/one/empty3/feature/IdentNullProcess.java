@@ -22,7 +22,6 @@
 
 package one.empty3.feature;
 
-import one.empty3.feature.app.replace.javax.imageio.ImageIO;
 import one.empty3.io.ObjectWithProperties;
 import one.empty3.io.ProcessFile;
 
@@ -45,7 +44,7 @@ public class IdentNullProcess extends ProcessFile {
     public boolean process(File in, File out) {
         try {
             PixM pixM = null;
-            pixM = PixM.getPixM(ImageIO.read(in), maxRes);
+            pixM = PixM.getPixM(javax.imageio.ImageIO.read(in), maxRes);
 
 
             double l = (double) getProperties().getProperty("luminanceFactor");
@@ -66,7 +65,7 @@ public class IdentNullProcess extends ProcessFile {
             }
 
             BufferedImage image = pixM.getImage();
-            ImageIO.write(image, "jpg", out);
+            one.empty3.feature.app.replace.javax.imageio.ImageIO.write(image, "jpg", out);
             addSource(out);
             return true;
         } catch (

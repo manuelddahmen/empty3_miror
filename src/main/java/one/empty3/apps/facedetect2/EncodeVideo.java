@@ -22,7 +22,7 @@
 
 package one.empty3.apps.facedetect2;
 
-import javaAnd.awt.image.imageio.ImageIO;
+import one.empty3.feature.app.replace.javax.imageio.ImageIO;
 import one.empty3.library.Config;
 import one.empty3.library.ITexture;
 import one.empty3.library.Point3D;

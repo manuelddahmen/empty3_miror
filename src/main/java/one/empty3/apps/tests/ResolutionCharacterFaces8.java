@@ -40,12 +40,8 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
@@ -203,34 +199,27 @@ public class ResolutionCharacterFaces8 implements Runnable {
     public void exec2(ITexture texture, PixM output, PixM input, File dirOut, String name) {
         output.plotCurve(new Rectangle(10, 10, output.getColumns() - 20, output.getLines() - 20), texture);
 
-        try {
-            ImageIO.write(input.getImage(), "jpg",
-                    new File(dirOut + File.separator + name.replace(' ', '_').replace(".jpg", "INPUT.jpg")));
-            ImageIO.write(output.getImage(), "jpg",
-                    new File(dirOut + File.separator + name.replace(' ', '_').replace(".jpg", "OUTPUT.jpg")));
+        ImageIO.write(input.getImage(), "jpg",
+                new File(dirOut + File.separator + name.replace(' ', '_').replace(".jpg", "INPUT.jpg")));
+        ImageIO.write(output.getImage(), "jpg",
+                new File(dirOut + File.separator + name.replace(' ', '_').replace(".jpg", "OUTPUT.jpg")));
 
-            ImageIO.write(outRecompose.getImage(), "jpg", new File(
-                    dirOut + File.separator + name.replace(' ', '_').replace(".jpg", "RECOMPOSE.jpg")));
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        }
+        ImageIO.write(outRecompose.getImage(), "jpg", new File(
+                dirOut + File.separator + name.replace(' ', '_').replace(".jpg", "RECOMPOSE.jpg")));
+
 
     }
 
     public void exec3(ITexture texture, PixM output, PixM input, String dirOut, String name) {
         output.plotCurve(new Rectangle(10, 10, output.getColumns() - 20, output.getLines() - 20), texture);
 
-        try {
             /*ImageIO.write(input.getImage(), "jpg",
                     new File(dirOut + File.separator + name.replace(' ', '_').replace(".jpg", "INPUT.jpg")));
             ImageIO.write(output.getImage(), "jpg",
                     new File(dirOut + File.separator + name.replace(' ', '_').replace(".jpg", "OUTPUT.jpg")));
 */
-            ImageIO.write(outRecompose.getImage(), "jpg", new File(
-                    dirOut + File.separator + name.replace(' ', '_').replace(".jpg", "RECOMPOSE.jpg")));
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        }
+        ImageIO.write(outRecompose.getImage(), "jpg", new File(
+                dirOut + File.separator + name.replace(' ', '_').replace(".jpg", "RECOMPOSE.jpg")));
 
         CharacterIsolationMatching characterIsolationMatching2 = new CharacterIsolationMatching(
                 new File(dirOut + File.separator + name),
@@ -354,11 +343,7 @@ public class ResolutionCharacterFaces8 implements Runnable {
 
             outRecompose = new PixM(input.getColumns(), input.getLines());
             outRecompose2 = new PixM(input.getColumns(), input.getLines());
-            try {
-                ImageIO.write(derivative(input).getImage(), "jpg", dirOutGradient2);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            ImageIO.write(derivative(input).getImage(), "jpg", dirOutGradient2);
 
             Logger.getAnonymousLogger().log(Level.WARNING, "Image size: " + output.getColumns() + ", " + output.getLines());
             Logger.getAnonymousLogger().log(Level.WARNING, "Image file: " + file.getAbsolutePath());
@@ -492,11 +477,7 @@ public class ResolutionCharacterFaces8 implements Runnable {
             throw new RuntimeException(e);
         }*/
 
-            try {
-                ImageIO.write(distances.normalize(0, 1).getImage(), "jpg", dirOutDist);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            ImageIO.write(distances.normalize(0, 1).getImage(), "jpg", dirOutDist);
         }
     }
 
@@ -685,11 +666,7 @@ public class ResolutionCharacterFaces8 implements Runnable {
                             File file = new File(dirOutChars + "-" + j + "-" + i + "-" + w + "-" + h + "-" + s[0] + ".jpg");
                             if (!file.getParentFile().exists() || file.getParentFile().isDirectory()) {
                                 file.getParentFile().mkdirs();
-                                try {
-                                    ImageIO.write(outChar.getImage(), "jpg", file);
-                                } catch (IOException e) {
-                                    throw new RuntimeException(e);
-                                }
+                                ImageIO.write(outChar.getImage(), "jpg", file);
                             }
                         }
                     }
@@ -852,11 +829,8 @@ public class ResolutionCharacterFaces8 implements Runnable {
                             File file = new File(dirOutChars + "-" + j + "-" + i + "-" + w + "-" + h + "-" + s[0] + ".jpg");
                             if (!file.getParentFile().exists() || file.getParentFile().isDirectory()) {
                                 file.getParentFile().mkdirs();
-                                try {
-                                    ImageIO.write(outChar.getImage(), "jpg", file);
-                                } catch (IOException e) {
-                                    throw new RuntimeException(e);
-                                }
+                                ImageIO.write(outChar.getImage(), "jpg", file);
+
                             }
                         }
                     }

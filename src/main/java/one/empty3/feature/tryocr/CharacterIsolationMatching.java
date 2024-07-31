@@ -27,7 +27,6 @@ import one.empty3.feature.PixM;
 import one.empty3.feature.app.replace.javax.imageio.ImageIO;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.logging.Level;
@@ -95,11 +94,7 @@ public class CharacterIsolationMatching extends Thread {
                 sumLines[0] += sumLinesI;
             });
 
-            try {
-                ImageIO.write(result.normalize(0, 1).getImage(), "jpg", this.fileOut);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            ImageIO.write(result.normalize(0, 1).getImage(), "jpg", this.fileOut);
         }
     }
 }

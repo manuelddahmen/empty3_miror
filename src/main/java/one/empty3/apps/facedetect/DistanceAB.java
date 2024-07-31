@@ -32,14 +32,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class DistanceAB {
-    protected boolean optimmizeGrid = false;
+    public boolean optimizeGrid = false;
+    protected int OPTIMIZED_GRID_SIZE = 5;
     SurfaceParametriquePolynomiale surfaceA;
     SurfaceParametriquePolynomiale surfaceB;
     Dimension2D aDimReduced = new Dimension(20, 20);
     Dimension2D bDimReduced = new Dimension(20, 20);
     static final int TYPE_SHAPE_BEZIER = 1;
     static final int TYPE_SHAPE_QUADR = 2;
-    int typeShape = 2;
+    int typeShape = TYPE_SHAPE_QUADR;
     boolean opt1 = false;
     DistanceBezier2.Rectangle2 rectA;
     DistanceBezier2.Rectangle2 rectB;

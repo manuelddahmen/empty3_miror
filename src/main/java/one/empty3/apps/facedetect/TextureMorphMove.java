@@ -73,7 +73,7 @@ public class TextureMorphMove extends ITexture {
         this.editPanel = editPolygonsMappings;
     }
 
-    public void setDistanceABclass(Class<? extends DistanceBezier2> distanceMap) {
+    public void setDistanceABclass(Class<? extends DistanceAB> distanceMap) {
         Thread thread = new Thread(() -> {
             boolean isNotOk = true;
             while (isNotOk) {
@@ -102,23 +102,22 @@ public class TextureMorphMove extends ITexture {
                                 new Dimension(editPanel.panelModelView.getWidth(),
                                         editPanel.panelModelView.getHeight()));
                         isNotOk = false;
-                    }
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
+                    } else {
+                        distanceAB = new DistanceProxLinear1(pointsInImage.values().stream().toList(),
+                                pointsInModel.values().stream().toList(), new Dimension(editPanel.panelPicture.getWidth(), editPanel.panelPicture.getHeight()),
+                                new Dimension(editPanel.panelModelView.getWidth(),
+                                        editPanel.panelModelView.getHeight()));
+                        isNotOk = false;
                     }
                     if (distanceMap != null) {
                         this.distanceABclass = (Class<? extends DistanceBezier2>) distanceMap;
+                        editPanel.iTextureMorphMoveImage = this;
+                        editPanel.iTextureMorphMoveImage.distanceAB = distanceAB;
+                        editPanel.hasChangedAorB = true;
                     } else
                         throw new NullPointerException("distanceMap is null in TextureMorphMove");
                 } catch (RuntimeException ex) {
                     ex.printStackTrace();
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
                 }
             }
         });

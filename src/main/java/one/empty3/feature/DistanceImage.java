@@ -24,10 +24,8 @@ package one.empty3.feature;
 
 import one.empty3.feature.app.replace.javax.imageio.ImageIO;
 import one.empty3.io.ProcessFile;
-import one.empty3.library.Point3D;
 
 import java.io.File;
-import java.io.IOException;
 
 public class DistanceImage extends ProcessFile {
     private PixM p1, p2;
@@ -50,11 +48,7 @@ public class DistanceImage extends ProcessFile {
                 }
             }
         }
-        try {
-            ImageIO.write(outP.normalize(0, 1).getImage(), "jpg", out);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        ImageIO.write(outP.normalize(0, 1).getImage(), "jpg", out);
         return true;
     }
 
@@ -72,13 +66,13 @@ public class DistanceImage extends ProcessFile {
         double weightTop = 1.0;
         for (int i1 = 0; i1 < iMax2; i1++) {
             for (int j1 = 0; j1 < jMax2; j1++) {
-                double weight = p1.get(i1, j1)*(searchOn.get(i, j)/Math.min(1, Math.sqrt(i-i1)*(i-i1)+(j-j1)*(j-j1)));
-                if(weight>0.1 && weight>weightTop)  {
-                    double countUsage = (1/(1+count(i,j)));
+                double weight = p1.get(i1, j1) * (searchOn.get(i, j) / Math.min(1, Math.sqrt(i - i1) * (i - i1) + (j - j1) * (j - j1)));
+                if (weight > 0.1 && weight > weightTop) {
+                    double countUsage = (1 / (1 + count(i, j)));
                     outP.set(i1, j1, weight);
-                }else if(weight<0.1 && weight<weightTop) {
-                    double countUsage = (1/(1+count(i,j)));
-                    outP.set(i1, j1, weight*countUsage1(i, j));
+                } else if (weight < 0.1 && weight < weightTop) {
+                    double countUsage = (1 / (1 + count(i, j)));
+                    outP.set(i1, j1, weight * countUsage1(i, j));
 
                 }
             }
@@ -86,11 +80,11 @@ public class DistanceImage extends ProcessFile {
     }
 
     private double countUsage1(int i, int j) {
-        countImage.set(i, j, countImage.get(i,j));
-        return countImage.get(i,j);
+        countImage.set(i, j, countImage.get(i, j));
+        return countImage.get(i, j);
     }
 
     private double count(int i, int j) {
-          return countImage.get(i, j);
+        return countImage.get(i, j);
     }
 }

@@ -34,6 +34,7 @@ import java.util.List;
 
 public class DistanceBezier2 extends DistanceAB {
 
+
     static class Rectangle2 {
         public double getX1() {
             return x1;
@@ -90,6 +91,7 @@ public class DistanceBezier2 extends DistanceAB {
 
 
     public DistanceBezier2(List<Point3D> A, List<Point3D> B, Dimension2D aDimReal, Dimension2D bDimReal) {
+        System.out.println("\nStart properties\n\tOpt1 : " + opt1 + "\n\tOptimizeGrid: " + optimizeGrid + "\n\tTypeShape : " + typeShape + "\n");
         try {
             this.A = A;
             this.B = B;
@@ -153,7 +155,7 @@ public class DistanceBezier2 extends DistanceAB {
                 }
             }
 
-            if (optimmizeGrid) {
+            if (optimizeGrid) {
                 double listAXmin = listAX.get(0);
                 double listAXmax = listAX.get(listAX.size() - 1);
                 double listAYmin = listAY.get(0);
@@ -166,11 +168,11 @@ public class DistanceBezier2 extends DistanceAB {
                 List<Double> listAYopt = new ArrayList<>();
                 List<Double> listBXopt = new ArrayList<>();
                 List<Double> listBYopt = new ArrayList<>();
-                for (int i = 0; i < 5; i++) {
-                    listAXopt.add(listAXmin + i * (listAXmax - listAXmin) / 5);
-                    listAYopt.add(listAYmin + i * (listAYmax - listAYmin) / 5);
-                    listBXopt.add(listBXmin + i * (listBXmax - listBXmin) / 5);
-                    listBYopt.add(listBYmin + i * (listBYmax - listBYmin) / 5);
+                for (int i = 0; i < OPTIMIZED_GRID_SIZE; i++) {
+                    listAXopt.add(listAXmin + i * (listAXmax - listAXmin) / OPTIMIZED_GRID_SIZE);
+                    listAYopt.add(listAYmin + i * (listAYmax - listAYmin) / OPTIMIZED_GRID_SIZE);
+                    listBXopt.add(listBXmin + i * (listBXmax - listBXmin) / OPTIMIZED_GRID_SIZE);
+                    listBYopt.add(listBYmin + i * (listBYmax - listBYmin) / OPTIMIZED_GRID_SIZE);
                 }
 
                 listAX = listAXopt;
@@ -179,14 +181,22 @@ public class DistanceBezier2 extends DistanceAB {
                 listBY = listBYopt;
             }
 
-            for (int i = 0; i < A.size(); i++) {
-                for (int j = 0; j < B.size(); j++) {
+            if (!optimizeGrid) {
+                for (int i = 0; i < A.size(); i++) {
+                    for (int j = 0; j < B.size(); j++) {
 //                int i1 = (int) Math.min((double) (i % ((int) Math.sqrt(A.size() )+ 1)) * (Math.sqrt(A.size() )+ 1), A.size() - 1);
 //                int j1 = (int) Math.min((double) (j / ((int) Math.sqrt(B.size() )+ 1)) * (Math.sqrt(A.size() )+ 1), B.size() - 1);
 
-
-                    ((SurfaceParametriquePolynomiale) surfaceA).getCoefficients().setElem(new Point3D(listAX.get(i), listAY.get(j), 0.0), i, j);
-                    ((SurfaceParametriquePolynomiale) surfaceB).getCoefficients().setElem(new Point3D(listBX.get(i), listBY.get(j), 0.0), i, j);
+                        ((SurfaceParametriquePolynomiale) surfaceA).getCoefficients().setElem(new Point3D(listAX.get(i), listAY.get(j), 0.0), i, j);
+                        ((SurfaceParametriquePolynomiale) surfaceB).getCoefficients().setElem(new Point3D(listBX.get(i), listBY.get(j), 0.0), i, j);
+                    }
+                }
+            } else {
+                for (int i = 0; i < OPTIMIZED_GRID_SIZE; i++) {
+                    for (int j = 0; j < OPTIMIZED_GRID_SIZE; j++) {
+                        ((SurfaceParametriquePolynomiale) surfaceA).getCoefficients().setElem(new Point3D(listAX.get(i), listAY.get(j), 0.0), i, j);
+                        ((SurfaceParametriquePolynomiale) surfaceB).getCoefficients().setElem(new Point3D(listBX.get(i), listBY.get(j), 0.0), i, j);
+                    }
                 }
             }
 
@@ -200,7 +210,12 @@ public class DistanceBezier2 extends DistanceAB {
             precomputeX2(bDimReal, bDimReduced, sBij, surfaceB);
         } catch (RuntimeException ex) {
             setInvalidArray(true);
+
         }
+    }
+
+    public double maxBox(double v, double min, double max) {
+        return Math.max(min, Math.min(v, max));
     }
 
 

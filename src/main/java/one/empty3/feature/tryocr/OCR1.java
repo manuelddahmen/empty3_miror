@@ -38,12 +38,8 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
@@ -198,22 +194,18 @@ public class OCR1 implements Runnable {
     public void exec(ITexture texture, PixM output, PixM input, File dirOut, String name) {
         output.plotCurve(new Rectangle(10, 10, output.getColumns() - 20, output.getLines() - 20), texture);
 
-        try {
-            String extension;
-            if (name.endsWith("jpg") || name.endsWith("png"))
-                extension = name.substring(-3);
-            else return;
-            ImageIO.write(input.getImage(), extension,
-                    new File(dirOut + File.separator + name.replace(' ', '_')
-                            .replace("." + extension, "INPUT." + extension)));
-            ImageIO.write(output.getImage(), "jpg",
-                    new File(dirOut + File.separator + name.replace(' ', '_').replace("." + extension, "OUTPUT." + extension)));
+        String extension;
+        if (name.endsWith("jpg") || name.endsWith("png"))
+            extension = name.substring(-3);
+        else return;
+        ImageIO.write(input.getImage(), extension,
+                new File(dirOut + File.separator + name.replace(' ', '_')
+                        .replace("." + extension, "INPUT." + extension)));
+        ImageIO.write(output.getImage(), "jpg",
+                new File(dirOut + File.separator + name.replace(' ', '_').replace("." + extension, "OUTPUT." + extension)));
 
-            ImageIO.write(outRecompose.getImage(), "jpg", new File(
-                    dirOut + File.separator + name.replace(' ', '_').replace(".jpg", "RECOMPOSE.jpg")));
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        }
+        ImageIO.write(outRecompose.getImage(), "jpg", new File(
+                dirOut + File.separator + name.replace(' ', '_').replace(".jpg", "RECOMPOSE.jpg")));
 
     }
 
@@ -296,11 +288,7 @@ public class OCR1 implements Runnable {
         output = input.copy();
 
         outRecompose = new PixM(input.getColumns(), input.getLines());
-        try {
-            ImageIO.write(derivative(input).getImage(), "jpg", dirOutGradient2);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        ImageIO.write(derivative(input).getImage(), "jpg", dirOutGradient2);
 
         Logger.getAnonymousLogger().log(Level.INFO, "Image size: " + output.getColumns() + ", " + output.getLines());
 
@@ -413,19 +401,11 @@ public class OCR1 implements Runnable {
             }));
         });
         height += maxheight;
-        try {
-            if (pSlide.getColumns() > 0 && pSlide.getLines() > 0)
-                ImageIO.write(pSlide.getImage(), "jpg", new File(dirOutDist + "_matchingRects_" + pSlide + ".jpg"));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        if (pSlide.getColumns() > 0 && pSlide.getLines() > 0)
+            ImageIO.write(pSlide.getImage(), "jpg", new File(dirOutDist + "_matchingRects_" + pSlide + ".jpg"));
 
-        try {
-            if (distances.getColumns() > 0 && distances.getLines() > 0)
-                ImageIO.write(distances.normalize(0, 1).getImage(), "jpg", dirOutDist);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        if (distances.getColumns() > 0 && distances.getLines() > 0)
+            ImageIO.write(distances.normalize(0, 1).getImage(), "jpg", dirOutDist);
     }
 
     /***
@@ -644,12 +624,8 @@ public class OCR1 implements Runnable {
                 rectangle2.getY(), rectangle2.getW(), rectangle2.getH());
         if (!file.getParentFile().exists() || file.getParentFile().isDirectory()) {
             file.getParentFile().mkdirs();
-            try {
-                if (outChar.getColumns() > 0 && outChar.getLines() > 0)
-                    ImageIO.write(outChar.getImage(), "png", file);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            if (outChar.getColumns() > 0 && outChar.getLines() > 0)
+                ImageIO.write(outChar.getImage(), "png", file);
         }
 
     }

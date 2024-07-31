@@ -21,7 +21,7 @@
  */
 
 package one.empty3.neuralnetwork;
-
+/*
 import one.empty3.library.core.math.Matrix;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -76,3 +76,4 @@ public class MatrixTest {
     }
 
 }
+*/

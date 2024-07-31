@@ -27,7 +27,7 @@
 package one.empty3.apps.facedetectV0.facedetect;
 
 import com.google.common.util.concurrent.AtomicDouble;
-import javaAnd.awt.image.imageio.ImageIO;
+import one.empty3.feature.app.replace.javax.imageio.ImageIO;
 import net.miginfocom.swing.MigLayout;
 import one.empty3.apps.morph.Main;
 import one.empty3.library.*;

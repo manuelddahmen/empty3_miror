@@ -26,12 +26,10 @@ import one.empty3.feature.app.replace.javax.imageio.ImageIO;
 import one.empty3.io.ProcessFile;
 import one.empty3.library.StructureMatrix;
 import one.empty3.library1.shader.Vec;
-import one.empty3.library1.tree.AlgebraicFormulaSyntaxException;
 import one.empty3.library1.tree.ListInstructions;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 
 /**
@@ -93,7 +91,7 @@ public class CustomProcessFileRGB extends ProcessFile {
                     currentVars.put("y", (double) j);
                     currentVecs.put("rgb", (String.format("(%f,%f,%f)", r, g, b)));
 
-                    
+
                     listInstructions.runInstructions();
 
                     r = currentVars.getOrDefault("r", r);// (new StructureMatrix<Double>(0, Double.class).setElem(r))).getElem();
@@ -107,7 +105,7 @@ public class CustomProcessFileRGB extends ProcessFile {
 
             return true;
 
-        } catch (RuntimeException | IOException e) {
+        } catch (RuntimeException e) {
             e.printStackTrace();
         }
         return false;

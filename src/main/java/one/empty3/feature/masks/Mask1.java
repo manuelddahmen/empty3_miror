@@ -22,7 +22,7 @@
 
 package one.empty3.feature.masks;
 
-import javaAnd.awt.image.imageio.ImageIO;
+import one.empty3.feature.app.replace.javax.imageio.ImageIO;
 import one.empty3.feature.MultiLinkList;
 import one.empty3.io.ProcessFile;
 import one.empty3.tests.humanheadtexturing.TestHumanHeadTexturing;

@@ -26,7 +26,7 @@
 
 package one.empty3.apps.vecmesh;
 
-import javaAnd.awt.image.imageio.ImageIO;
+import one.empty3.feature.app.replace.javax.imageio.ImageIO;
 import net.miginfocom.swing.MigLayout;
 import one.empty3.library.*;
 import one.empty3.library.core.export.ObjExport;

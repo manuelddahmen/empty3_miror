@@ -48,7 +48,7 @@ public class Sunset extends TestObjetSub {
     public static void main(String[] args) {
         Paysage paysage = new Paysage();
         paysage.loop(true);
-        paysage.setMaxFrames(VUE_1*FPS);
+        paysage.setMaxFrames(VUE_1 * FPS);
         paysage.setDimension(new Resolution(1920, 1080));
         new Thread(paysage).start();
     }
@@ -98,7 +98,7 @@ public class Sunset extends TestObjetSub {
 */
             Point3D[] vects = new Point3D[]{mat.getElem(0, 0), mat.getElem(0, 1), mat.getElem(1, 0)};
 
-            StructureMatrix<Point3D>[] v = new StructureMatrix[] {
+            StructureMatrix<Point3D>[] v = new StructureMatrix[]{
                     new StructureMatrix<Point3D>(0, Point3D.class),
                     new StructureMatrix<Point3D>(0, Point3D.class),
                     new StructureMatrix<Point3D>(0, Point3D.class)};
@@ -114,7 +114,7 @@ public class Sunset extends TestObjetSub {
 
             polygon.texture(new ColorTexture(new Color(0f, 0.2f, 1.0f)));
 
-            StructureMatrix<Point3D>[] v1 = new StructureMatrix[] {
+            StructureMatrix<Point3D>[] v1 = new StructureMatrix[]{
                     new StructureMatrix<Point3D>(0, Point3D.class),
                     new StructureMatrix<Point3D>(0, Point3D.class),
                     new StructureMatrix<Point3D>(0, Point3D.class)};
@@ -123,7 +123,6 @@ public class Sunset extends TestObjetSub {
             v1[0].setElem(vects[0].plus(Point3D.Y));
             v1[1].setElem(vects[1].plus(Point3D.Y));
             v1[2].setElem(vects[2].plus(Point3D.Y));
-
 
 
             polygon1.setP0(v1[0]);
@@ -136,10 +135,10 @@ public class Sunset extends TestObjetSub {
             polygon1.setIncrU(0.01);
             polygon1.setIncrV(0.01);
 
-            for(int i=0; i<10; i++)
-                for(int j=0; j<10; j++) {
-                    Point3D p1 = polygon.calculerPoint3D(1.0*i/10, 1.0*j/10);
-                    Point3D p2 = polygon1.calculerPoint3D(1.0*i/10, 1.0*j/10);
+            for (int i = 0; i < 10; i++)
+                for (int j = 0; j < 10; j++) {
+                    Point3D p1 = polygon.calculerPoint3D(1.0 * i / 10, 1.0 * j / 10);
+                    Point3D p2 = polygon1.calculerPoint3D(1.0 * i / 10, 1.0 * j / 10);
 
                     Tubulaire3 t3 = new Tubulaire3();
                     FctXY fctXY = new FctXY();
@@ -166,7 +165,7 @@ public class Sunset extends TestObjetSub {
             scene().add(polygon1);
             Point3D eye = new Point3D(-5.0, 0.2, 5.0);
             Point3D lookAt = new Point3D(0.0, 0.0, 5.0);
-            Point3D pos = eye.plus(lookAt.moins(eye).mult(1.0*frame() / (FPS * VUE_1)));
+            Point3D pos = eye.plus(lookAt.moins(eye).mult(1.0 * frame() / (FPS * VUE_1)));
             Camera camera = new Camera(pos, lookAt, Point3D.Y);
             //camera.calculerMatrice(Point3D.Y);
             scene().cameraActive(camera);

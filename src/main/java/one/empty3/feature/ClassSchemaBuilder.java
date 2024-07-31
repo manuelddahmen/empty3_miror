@@ -589,7 +589,7 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
                     StringBuilder s = new StringBuilder();
                     s.append("-").append(listProcessClasses.indexOf(ce)).append(getUuid());
                     String s0 = "";
-                    fileOut = new File(tempDir + File.separator + f.getName() + s.toString() + ".jpg");
+                    fileOut = new File((tempDir + File.separator + f.getName() + s.toString()).replace('.', '-') + ".jpg");
                     if (!fileOut.exists()) {
                         getParentFile(fileOut).mkdirs();
                     }
@@ -601,6 +601,11 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
 
                     File fileIn = null;
 
+                    try {
+                        Thread.sleep(10);
+                    } catch (InterruptedException ex) {
+                        throw new RuntimeException(ex);
+                    }
                     if (ce.process(f, fileOut)) {
                         nunEffect++;
                         if (fileOut.exists() && nunEffect == processes.size()) {
@@ -611,6 +616,9 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
                         }
                         Logger.getAnonymousLogger().log(Level.INFO, "Fichier IN mis à jour");
                         fileIn = fileOut;
+                        if (processes.size() > 1) {
+                            fileOut = new File((tempDir + File.separator + f.getName() + s.toString()).replace('.', '-') + ".jpg");
+                        }
 
                         for (int i = 1; i < processes.size(); i++) {
                             ce = processes.get(i);
@@ -627,6 +635,7 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
                                 }*/
                                 getParentFile(fileOut).mkdirs();
                                 if (ce.process(fileIn, fileOut)) {
+                                    nunEffect++;
                                     if (fileOut.exists() && nunEffect == processes.size()) {
                                         if (fileOut.exists() && nunEffect == processes.size()) {
                                             liveEffect.setFileIn(fileOut);
@@ -641,7 +650,9 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
                                     System.out.printf("Run process 1 . %d/%d on file %s\n", nunEffect, processes.size(), f.getAbsolutePath());
 
                                     fileIn = fileOut;
-
+                                    if (processes.size() > nunEffect) {
+                                        fileOut = new File((tempDir + File.separator + f.getName() + s.toString()).replace('.', '-') + ".jpg");
+                                    }
                                     Logger.getAnonymousLogger().log(Level.INFO, "Fichier IN mis à jour");
                                 }
                             } catch (NullPointerException ex) {
@@ -651,6 +662,11 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
                             if (!getParentFile(fileOut).exists()) {
                                 getParentFile(fileOut).mkdirs();
                             }
+                        }
+                        try {
+                            Thread.sleep(20);
+                        } catch (InterruptedException ex) {
+                            throw new RuntimeException(ex);
                         }
 
                     } else {

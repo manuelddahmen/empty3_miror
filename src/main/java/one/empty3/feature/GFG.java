@@ -25,7 +25,7 @@
 //
 //// Declare the needed libraries
 //
-//import one.empty3.feature.app.replace.javax.imageio.ImageIO;
+//import  one.empty3.feature.app.replace.javax.imageio.ImageIO;
 //import one.empty3.io.ProcessFile;
 //import one.empty3.library.*;
 //import one.empty3.library.core.math.Matrix;

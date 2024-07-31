@@ -27,7 +27,7 @@
 package one.empty3.apps.facedetect;
 
 import com.google.common.util.concurrent.AtomicDouble;
-import javaAnd.awt.image.imageio.ImageIO;
+import one.empty3.feature.app.replace.javax.imageio.ImageIO;
 import net.miginfocom.swing.MigLayout;
 import one.empty3.apps.morph.Main;
 import one.empty3.library.*;
@@ -53,6 +53,7 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
     private static final int SELECT_POINT_POSITION = 2;
     private static final int SELECT_POINT_VERTEX = 4;
     public BufferedImage zBufferImage;
+    public int typeShape = DistanceAB.TYPE_SHAPE_QUADR;
     private int mode;
     int selectedPointNo = -1;
     protected E3Model model;
@@ -66,11 +67,13 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
     private int selectedPointNoOut = -1;
     private Point3D selectedPointOutUv = null;
     private Point3D selectedPointVertexOut;
-
-
     TextureMorphMove iTextureMorphMoveImage;
-    private boolean hasChangedAorB = true;
+    boolean hasChangedAorB = true;
     boolean notMenuOpen = true;
+
+    public Class<? extends DistanceAB> distanceABClass = DistanceProxLinear1.class;
+    public boolean opt1 = false;
+    public boolean optimizeGrid = false;
 
 
     public EditPolygonsMappings(Window owner) {
@@ -143,7 +146,7 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
 
     private void panelModelViewMouseClicked(MouseEvent e) {
         Point point = e.getPoint();
-        if (iTextureMorphMoveImage.image != null && model != null && mode == SELECT_POINT_VERTEX) {
+        if (model != null && mode == SELECT_POINT_VERTEX) {
             int x = point.x;
             int y = point.y;
             ZBufferImpl.ImageMapElement ime = ((ZBufferImpl) testHumanHeadTexturing.getZ()).ime;
@@ -167,7 +170,7 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
                 }
             });
 
-        } else if (iTextureMorphMoveImage.image != null && model != null && mode == SELECT_POINT_POSITION) {
+        } else if (model != null && mode == SELECT_POINT_POSITION) {
             int x = point.x;
             int y = point.y;
             ZBufferImpl.ImageMapElement ime = ((ZBufferImpl) testHumanHeadTexturing.getZ()).ime;

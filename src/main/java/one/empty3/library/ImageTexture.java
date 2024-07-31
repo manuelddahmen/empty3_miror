@@ -29,7 +29,7 @@ package one.empty3.library;
 
 //import org.monte.media.avi.AVIReader;
 
-import javaAnd.awt.image.imageio.ImageIO;
+import one.empty3.feature.app.replace.javax.imageio.ImageIO;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -41,18 +41,19 @@ import java.util.Objects;
  * @author manu
  */
 public class ImageTexture extends ITexture {
-    private StructureMatrix<ECBufferedImage>  image = new StructureMatrix<>(0, ECBufferedImage.class);
+    private StructureMatrix<ECBufferedImage> image = new StructureMatrix<>(0, ECBufferedImage.class);
     private String nom = "texture";
     private int transparent = 0xFFFFFF00;
 
     public ImageTexture(ECBufferedImage bi) {
         image.setElem(bi);
     }
+
     public ImageTexture(File bif) {
         try {
             image.setElem(new ECBufferedImage(Objects.requireNonNull(ImageIO.read(bif))));
         } catch (RuntimeException ex) {
-            System.err.println("Error constructor"+this.getClass()+"\n"+ex.getMessage());
+            System.err.println("Error constructor" + this.getClass() + "\n" + ex.getMessage());
         }
     }
 
@@ -63,7 +64,7 @@ public class ImageTexture extends ITexture {
 
     @Override
     public Point2D getCoord(double x, double y) {
-        if(repeatX<=1 && repeatY<=1) {
+        if (repeatX <= 1 && repeatY <= 1) {
             return super.getCoord(x, y);
         } else {
             Point2D coords = getRepeatCords(x, y);
@@ -76,11 +77,12 @@ public class ImageTexture extends ITexture {
         Point2D trans = getCoord(x, y);
         return couleur(trans.x, trans.y);
     }
+
     public Point2D getRepeatCords(double xr, double yr) {
 
         return new Point2D(
-                Math.IEEEremainder(xr, 1.0/repeatX)*repeatX,
-                Math.IEEEremainder(yr, 1.0/repeatY)*repeatY);
+                Math.IEEEremainder(xr, 1.0 / repeatX) * repeatX,
+                Math.IEEEremainder(yr, 1.0 / repeatY) * repeatY);
     }
 
     protected int couleur(double rx, double ry) {

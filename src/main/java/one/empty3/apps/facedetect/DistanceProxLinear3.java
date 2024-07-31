@@ -33,7 +33,7 @@ public class DistanceProxLinear3 extends DistanceBezier2 {
 
     public DistanceProxLinear3(List<Point3D> A, List<Point3D> B, Dimension2D aDimReal, Dimension2D bDimReal) {
         super(A, B, aDimReal, bDimReal);
-        optimmizeGrid = true;
+        optimizeGrid = true;
     }
 
 

@@ -27,7 +27,6 @@ import one.empty3.feature.app.replace.javax.imageio.ImageIO;
 import one.empty3.io.ProcessFile;
 
 import java.io.File;
-import java.io.IOException;
 
 public class ReadLines extends ProcessFile {
 
@@ -88,15 +87,9 @@ public class ReadLines extends ProcessFile {
                         sum = (countNotEmpty[s][i][j] / maxSize);
                 pixOut1.setValues(i, j, sum, sum, sum);
             }
-        try {
-            ImageIO.write(pixOut1.getImage(), "jpg", out2);
-            ImageIO.write(pixM2.getImage(), "jpg", out);
-            return true;
-        } catch (
-                IOException e) {
-            e.printStackTrace();
-        }
-        return false;
+        ImageIO.write(pixOut1.getImage(), "jpg", out2);
+        ImageIO.write(pixM2.getImage(), "jpg", out);
+        return true;
     }
 
 }
