@@ -73,13 +73,25 @@ public class JFrameEditPolygonsMappings extends JFrame {
         lastDirectory = new File(lastDirectoryTmpStr);
         if (!lastDirectory.exists())
             config.save();
-        //editPolygonsMappings2.testHumanHeadTexturing.setGenerate(editPolygonsMappings2.testHumanHeadTexturing);
         setContentPane(editPolygonsMappings2);
         pack();
         setVisible(true);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        initParameters();
         threadDisplay = new Thread(editPolygonsMappings2);
         threadDisplay.start();
+    }
+
+    public void initParameters() {
+        if (editPolygonsMappings2 != null) {
+            editPolygonsMappings2.opt1 = false;
+            editPolygonsMappings2.hasChangedAorB = true;
+            editPolygonsMappings2.distanceABClass = DistanceProxLinear1.class;
+            //editPolygonsMappings2.iTextureMorphMoveImage = new TextureMorphMove();
+            editPolygonsMappings2.optimizeGrid = false;
+            editPolygonsMappings2.typeShape = DistanceAB.TYPE_SHAPE_QUADR;
+        }
+
     }
 
     private void menuItemLoadImage(ActionEvent e) {
@@ -170,13 +182,12 @@ public class JFrameEditPolygonsMappings extends JFrame {
         }
 
         public BufferedImage computeTexture() {
-            TextureMorphMove iTextureMorphMoveImage = new TextureMorphMove();
-            iTextureMorphMoveImage.setEditOPanel(editPolygonsMappings2);
-            iTextureMorphMoveImage.image = image;
-            iTextureMorphMoveImage.distanceAB = new DistanceProxLinear1(iTextureMorphMoveImage.pointsInImage.values().stream().toList(),
-                    iTextureMorphMoveImage.pointsInModel.values().stream().toList(),
-                    new Dimension(iTextureMorphMoveImage.image.getWidth(), iTextureMorphMoveImage.image.getHeight()),
-                    new Dimension(resolution.x(), resolution.y())
+            TextureMorphMove iTextureMorphMoveImage = new TextureMorphMove(editPolygonsMappings2, (Class<? extends DistanceAB>) editPolygonsMappings2.distanceABClass);
+            editPolygonsMappings2.image = image;
+            iTextureMorphMoveImage.distanceAB = new DistanceProxLinear1(editPolygonsMappings2.pointsInImage.values().stream().toList(),
+                    editPolygonsMappings2.pointsInModel.values().stream().toList(),
+                    new Dimension(editPolygonsMappings2.image.getWidth(), editPolygonsMappings2.image.getHeight()),
+                    new Dimension(editPolygonsMappings2.panelModelView.getWidth(), editPolygonsMappings2.panelModelView.getHeight())
             );
             BufferedImage imageOut = new BufferedImage(resolution.x(), resolution.y(), BufferedImage.TYPE_INT_ARGB);
             model.texture(iTextureMorphMoveImage);
@@ -186,7 +197,7 @@ public class JFrameEditPolygonsMappings extends JFrame {
                     Point3D uvFace1 = model.findUvFace(u, v);
                     Point3D axPointInB = iTextureMorphMoveImage.distanceAB.findAxPointInB(u, v);
                     int colorAt = iTextureMorphMoveImage.getColorAt(uvFace.getX(), uvFace.getY());
-                    imageOut.setRGB((int) (u * iTextureMorphMoveImage.image.getWidth()), (int) (v * iTextureMorphMoveImage.image.getHeight()), colorAt);
+                    imageOut.setRGB((int) (u * editPolygonsMappings2.image.getWidth()), (int) (v * editPolygonsMappings2.image.getHeight()), colorAt);
                 }
                 Logger.getAnonymousLogger().log(Level.INFO, String.format("Image column #" + ((int) (u * 100)) + "% : done"));
             }
@@ -196,7 +207,7 @@ public class JFrameEditPolygonsMappings extends JFrame {
 
     private void menuItemHD(ActionEvent e) {
         Runnable jpg = () -> {
-            while (editPolygonsMappings2.iTextureMorphMoveImage.image == null || editPolygonsMappings2.iTextureMorphMoveImage.pointsInImage == null || editPolygonsMappings2.iTextureMorphMoveImage.pointsInModel == null
+            while (editPolygonsMappings2.image == null || editPolygonsMappings2.pointsInImage == null || editPolygonsMappings2.pointsInModel == null
                     || editPolygonsMappings2.model == null) {
                 try {
                     Thread.sleep(200);
@@ -204,16 +215,15 @@ public class JFrameEditPolygonsMappings extends JFrame {
                     throw new RuntimeException(ex);
                 }
             }
-            TextureMorphMove textureMorphMoveImage = new TextureMorphMove();
-            textureMorphMoveImage.setEditOPanel(editPolygonsMappings2);
-            textureMorphMoveImage.distanceAB = new DistanceProxLinear1(editPolygonsMappings2.iTextureMorphMoveImage.pointsInImage.values().stream().toList(),
-                    editPolygonsMappings2.iTextureMorphMoveImage.pointsInModel.values().stream().toList(),
-                    new Dimension(editPolygonsMappings2.iTextureMorphMoveImage.image.getWidth(),
-                            editPolygonsMappings2.iTextureMorphMoveImage.image.getHeight()), new Dimension(Resolution.HD1080RESOLUTION.x(), Resolution.HD1080RESOLUTION.y())
+            TextureMorphMove textureMorphMoveImage = new TextureMorphMove(editPolygonsMappings2, DistanceProxLinear1.class);
+            textureMorphMoveImage.distanceAB = new DistanceProxLinear1(editPolygonsMappings2.pointsInImage.values().stream().toList(),
+                    editPolygonsMappings2.pointsInModel.values().stream().toList(),
+                    new Dimension(editPolygonsMappings2.image.getWidth(),
+                            editPolygonsMappings2.image.getHeight()), new Dimension(Resolution.HD1080RESOLUTION.x(), Resolution.HD1080RESOLUTION.y())
             );
             E3Model model = editPolygonsMappings2.model;
             File defaultFileOutput = config.getDefaultFileOutput();
-            SaveTexture saveTexture = new SaveTexture(Resolution.HD1080RESOLUTION, editPolygonsMappings2.iTextureMorphMoveImage.image, model);
+            SaveTexture saveTexture = new SaveTexture(Resolution.HD1080RESOLUTION, editPolygonsMappings2.image, model);
             BufferedImage bufferedImage = saveTexture.computeTexture();
             ImageIO.write(bufferedImage, "jpg", new File(config.getMap().get("D3ModelFaceTexturing") + UUID.randomUUID() + ".jpg"));
             Logger.getAnonymousLogger().log(Level.INFO, "Smart generated HD image");
@@ -226,9 +236,6 @@ public class JFrameEditPolygonsMappings extends JFrame {
         // TODO add your code here
     }
 
-    private void menuBar1FocusGained(FocusEvent e) {
-        editPolygonsMappings2.notMenuOpen = false;
-    }
 
     private void menuBar1FocusLost(FocusEvent e) {
         editPolygonsMappings2.notMenuOpen = true;
@@ -237,10 +244,10 @@ public class JFrameEditPolygonsMappings extends JFrame {
     private void checkBoxMenuItem2(ActionEvent e) {
         if (e.getSource() instanceof JCheckBoxMenuItem r) {
             if (r.isSelected()) {
-                editPolygonsMappings2.iTextureMorphMoveImage.distanceAB.typeShape = 0;
+                editPolygonsMappings2.iTextureMorphMove.distanceAB.typeShape = 0;
                 editPolygonsMappings2.typeShape = 0;
             } else {
-                editPolygonsMappings2.iTextureMorphMoveImage.distanceAB.typeShape = 1;
+                editPolygonsMappings2.iTextureMorphMove.distanceAB.typeShape = 1;
                 editPolygonsMappings2.typeShape = 0;
             }
         }
@@ -250,10 +257,10 @@ public class JFrameEditPolygonsMappings extends JFrame {
     private void checkBoxMenuItem1(ActionEvent e) {
         if (e.getSource() instanceof JCheckBoxMenuItem r) {
             if (r.isSelected()) {
-                editPolygonsMappings2.iTextureMorphMoveImage.distanceAB.opt1 = true;
+                editPolygonsMappings2.iTextureMorphMove.distanceAB.opt1 = true;
                 editPolygonsMappings2.opt1 = true;
             } else {
-                editPolygonsMappings2.iTextureMorphMoveImage.distanceAB.opt1 = true;
+                editPolygonsMappings2.iTextureMorphMove.distanceAB.opt1 = true;
                 editPolygonsMappings2.opt1 = true;
             }
         }
@@ -261,39 +268,48 @@ public class JFrameEditPolygonsMappings extends JFrame {
     }
 
     private void menuItemClassBezier2(ActionEvent e) {
-        editPolygonsMappings2.iTextureMorphMoveImage.setDistanceABclass(DistanceBezier2.class);
+        editPolygonsMappings2.iTextureMorphMove.setDistanceABclass(DistanceBezier2.class);
         editPolygonsMappings2.distanceABClass = DistanceBezier2.class;
         editPolygonsMappings2.hasChangedAorB = true;
     }
 
     private void menuItem1DistanceBB(ActionEvent e) {
-        editPolygonsMappings2.iTextureMorphMoveImage.setDistanceABclass(DistanceBB.class);
+        editPolygonsMappings2.iTextureMorphMove.setDistanceABclass(DistanceBB.class);
         editPolygonsMappings2.distanceABClass = DistanceBB.class;
         editPolygonsMappings2.hasChangedAorB = true;
     }
 
     private void menuItemLinearProx1(ActionEvent e) {
-        editPolygonsMappings2.iTextureMorphMoveImage.setDistanceABclass(DistanceProxLinear1.class);
+        editPolygonsMappings2.iTextureMorphMove.setDistanceABclass(DistanceProxLinear1.class);
         editPolygonsMappings2.distanceABClass = DistanceProxLinear1.class;
         editPolygonsMappings2.hasChangedAorB = true;
     }
 
     private void menuItemLinearProx2(ActionEvent e) {
-        editPolygonsMappings2.iTextureMorphMoveImage.setDistanceABclass(DistanceProxLinear2.class);
+        editPolygonsMappings2.iTextureMorphMove.setDistanceABclass(DistanceProxLinear2.class);
         editPolygonsMappings2.distanceABClass = DistanceProxLinear2.class;
         editPolygonsMappings2.hasChangedAorB = true;
     }
 
     private void menuItemLinearProx3(ActionEvent e) {
-        editPolygonsMappings2.iTextureMorphMoveImage.setDistanceABclass(DistanceProxLinear3.class);
+        editPolygonsMappings2.iTextureMorphMove.setDistanceABclass(DistanceProxLinear3.class);
         editPolygonsMappings2.distanceABClass = DistanceProxLinear3.class;
         editPolygonsMappings2.hasChangedAorB = true;
     }
 
     private void optimizeGrid(ActionEvent e) {
-        editPolygonsMappings2.iTextureMorphMoveImage.distanceAB.optimizeGrid = ((JCheckBoxMenuItem) (e.getSource())).getSelectedObjects() != null;
+        editPolygonsMappings2.iTextureMorphMove.distanceAB.optimizeGrid = ((JCheckBoxMenuItem) (e.getSource())).getSelectedObjects() != null;
         editPolygonsMappings2.optimizeGrid = ((JCheckBoxMenuItem) (e.getSource())).getSelectedObjects() != null;
         editPolygonsMappings2.hasChangedAorB = true;
+    }
+
+    private void menuBar1MouseEnteredMenu(MouseEvent e) {
+        editPolygonsMappings2.notMenuOpen = false;
+    }
+
+    private void menuBar1MouseExited(MouseEvent e) {
+        editPolygonsMappings2.notMenuOpen = true;
+
     }
 
 
@@ -355,14 +371,14 @@ public class JFrameEditPolygonsMappings extends JFrame {
 
         //======== menuBar1 ========
         {
-            menuBar1.addFocusListener(new FocusAdapter() {
+            menuBar1.addMouseListener(new MouseAdapter() {
                 @Override
-                public void focusGained(FocusEvent e) {
-                    menuBar1FocusGained(e);
+                public void mouseEntered(MouseEvent e) {
+                    menuBar1MouseEnteredMenu(e);
                 }
                 @Override
-                public void focusLost(FocusEvent e) {
-                    menuBar1FocusLost(e);
+                public void mouseExited(MouseEvent e) {
+                    menuBar1MouseExited(e);
                 }
             });
 

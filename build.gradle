@@ -23,6 +23,7 @@ sourceSets {
     main {
         java {
             srcDirs 'src/main/java'
+            srcDirs 'src/test/java'
         }
         resources {
             srcDirs "src/main/resources", "src/main/configs", "src/main/java"
@@ -31,6 +32,7 @@ sourceSets {
     test {
         java {
             srcDirs 'src/test/java'
+            srcDirs 'src/main/java'
         }
         mainClasses {
             "one.empty3.library1.tree.TestStringAnalyzer5"
@@ -42,6 +44,8 @@ sourceSets {
     main.kotlin.srcDirs += 'src/main/java'
     test.kotlin.srcDirs += 'test/main/kotlin'
     test.kotlin.srcDirs += 'test/main/java'
+    test.java.srcDirs += 'src/test/java'
+    test.java.srcDirs += 'src/main/java'
 }
 
 /*
@@ -189,6 +193,12 @@ tasks.register('Balade', JavaExec) {
     classpath sourceSets.main.runtimeClasspath
     mainClass = 'one.empty3.testscopy.tests.test4.Balade'
     args 'one.empty3.testscopy.tests.test4.Balade'
+    dependsOn(jar)
+}
+tasks.register('runtest', JavaExec) {
+    classpath sourceSets.main.runtimeClasspath, sourceSets.test.runtimeClasspath
+    mainClass = 'one.empty3.TestRun'
+    args "className"
     dependsOn(jar)
 }
 
@@ -482,7 +492,7 @@ publishing {
         }
     }
 
-    repositories {/*
+    repositories {
         maven {
             name = "JetBrainsSpaceEmpty3"
             url = "https://maven.pkg.jetbrains.space/empty3/p/empty3/maven/maven"
@@ -493,7 +503,7 @@ publishing {
                 password = load.get("spacePassword")
             }
 
-        }*/
+        }
         /*maven {
             name = "OSSRH"
             url = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
@@ -503,7 +513,7 @@ publishing {
             }
 
         }*/
-        /*
+
         maven {
             name = "GitHubPackages"
             url = uri("https://maven.pkg.github.com/manuelddahmen/empty3_miror")
@@ -511,7 +521,7 @@ publishing {
                 username = load.get("GITHUB_ACTOR")
                 password = load.get("GITHUB_TOKEN")
             }
-        }*/
+        }
         maven {
             url = layout.buildDirectory.dir('staging-deploy')
         }

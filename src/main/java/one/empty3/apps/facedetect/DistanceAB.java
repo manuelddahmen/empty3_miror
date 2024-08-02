@@ -41,6 +41,8 @@ public abstract class DistanceAB {
     static final int TYPE_SHAPE_BEZIER = 1;
     static final int TYPE_SHAPE_QUADR = 2;
     int typeShape = TYPE_SHAPE_QUADR;
+    static final boolean BAL_GET_CCNTROLS_A = true;
+    static final boolean BAL_GET_MULTPLY_BDIM_A = true;
     boolean opt1 = false;
     DistanceBezier2.Rectangle2 rectA;
     DistanceBezier2.Rectangle2 rectB;
@@ -77,5 +79,12 @@ public abstract class DistanceAB {
 
     public void setModel(E3Model model) {
         this.model = model;
+    }
+
+    public void PuvFromPoly4(Point3D P, Point3D P1, Point3D P2, Point3D P3, Point3D P4) {
+        double u, v;
+
+        //Point3D P1+(u*(P2-P1)+v*(P3+(1-u)*(P4-P3)-P1+u*(P2-P1))-(P2+v*(P3-P2)+u*(P4+(1-v)(P1-P4)-P2+v*(P3-P2))))
+
     }
 }

@@ -38,7 +38,7 @@ public class DistanceProxLinear2 extends DistanceBezier2 {
 
     @Override
     public Point3D findAxPointInB(double u, double v) {
-        return findAxPointInBal3(u, v);
+        return findAxPointInBal1(u, v);
     }
 
     private Point3D findAxPointInBal1(double u, double v) {

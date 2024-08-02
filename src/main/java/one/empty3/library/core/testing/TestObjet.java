@@ -168,7 +168,8 @@ public abstract class TestObjet implements Test, Runnable {
     private Thread threadGLafter;
     private boolean threadGLafterHasRun = false;
     private boolean LOG = false;
-
+    private boolean running = false;
+    static int numInstancesRunning = 0;
 
     /**
      * The TestObjet class represents an object used for testing purposes.
@@ -854,7 +855,8 @@ public abstract class TestObjet implements Test, Runnable {
         ginit();
 
 
-        while ((nextFrame() || unterminable()) && !stop) {
+        setRunning(true);
+        while ((nextFrame() || unterminable()) && !stop && isRunning()) {
 
 
             byte[] audioBuffer = null;
@@ -1047,6 +1049,9 @@ public abstract class TestObjet implements Test, Runnable {
             z.idzpp();
 
         }
+
+        setRunning(false);
+
         if (img() == null) {
             ri = new ECBufferedImage(getResx(), getResy(), BufferedImage.TYPE_INT_ARGB);
         } else {
@@ -1112,6 +1117,11 @@ public abstract class TestObjet implements Test, Runnable {
         Logger.getAnonymousLogger().log(Level.INFO, "End movie       " + runtimeInfoSucc());
         Logger.getAnonymousLogger().log(Level.INFO, "Quit run method " + runtimeInfoSucc());
 
+    }
+
+    private void setRunning(boolean running) {
+        this.running = true;
+        numInstancesRunning += running ? 1 : 0;
     }
 
     private boolean threadGLafterHasRun() {
@@ -1344,4 +1354,9 @@ public abstract class TestObjet implements Test, Runnable {
     public ECBufferedImage getPicture() {
         return ri;
     }
+
+    public boolean isRunning() {
+        return running;
+    }
+
 }

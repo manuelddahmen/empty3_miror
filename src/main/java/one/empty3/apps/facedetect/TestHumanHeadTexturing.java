@@ -71,8 +71,8 @@ public class TestHumanHeadTexturing extends TestObjetStub {
         if (editPolygonsMappings.model != null) {
             setObj(editPolygonsMappings.model);
         }
-        if (editPolygonsMappings.iTextureMorphMoveImage.image != null) {
-            setJpg(editPolygonsMappings.iTextureMorphMoveImage.image);
+        if (editPolygonsMappings.image != null) {
+            setJpg(editPolygonsMappings.image);
         }
 
         z().setDisplayType(ZBufferImpl.DISPLAY_ALL);
@@ -117,8 +117,9 @@ public class TestHumanHeadTexturing extends TestObjetStub {
         if (editPolygonsMappings.model != null
                 && !scene().getObjets().getData1d().contains(editPolygonsMappings.model)) {
             scene().add(editPolygonsMappings.model);
-        } else if (editPolygonsMappings.model != null) {
-            //scene().getObjets().setElem(editPolygonsMappings.model, 0);
+        }
+        if (editPolygonsMappings.model != null) {
+            editPolygonsMappings.model.texture(editPolygonsMappings.iTextureMorphMove);
         }
         z().scene(scene);
         z().camera(c);
@@ -136,10 +137,10 @@ public class TestHumanHeadTexturing extends TestObjetStub {
 
         TestHumanHeadTexturing testHumanHeadTexturing = new TestHumanHeadTexturing();
         testHumanHeadTexturing.editPolygonsMappings = editPolygonsMappings;
-        editPolygonsMappings.iTextureMorphMoveImage.setDistanceABclass(editPolygonsMappings.distanceABClass);
-        editPolygonsMappings.iTextureMorphMoveImage.distanceAB.opt1 = editPolygonsMappings.opt1;
-        editPolygonsMappings.iTextureMorphMoveImage.distanceAB.optimizeGrid = editPolygonsMappings.optimizeGrid;
-        editPolygonsMappings.iTextureMorphMoveImage.distanceAB.typeShape = editPolygonsMappings.typeShape;
+        editPolygonsMappings.iTextureMorphMove.setDistanceABclass(editPolygonsMappings.distanceABClass);
+        editPolygonsMappings.iTextureMorphMove.distanceAB.opt1 = editPolygonsMappings.opt1;
+        editPolygonsMappings.iTextureMorphMove.distanceAB.optimizeGrid = editPolygonsMappings.optimizeGrid;
+        editPolygonsMappings.iTextureMorphMove.distanceAB.typeShape = editPolygonsMappings.typeShape;
         testHumanHeadTexturing.setGenerate(GENERATE_IMAGE);
         testHumanHeadTexturing.setJpg(jpg);
         testHumanHeadTexturing.setObj(obj);

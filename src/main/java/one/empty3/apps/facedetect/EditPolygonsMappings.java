@@ -54,7 +54,7 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
     private static final int SELECT_POINT_VERTEX = 4;
     public BufferedImage zBufferImage;
     public int typeShape = DistanceAB.TYPE_SHAPE_QUADR;
-    private int mode;
+    private int mode = EDIT_POINT_POSITION;
     int selectedPointNo = -1;
     protected E3Model model;
     protected TestHumanHeadTexturing testHumanHeadTexturing;
@@ -67,9 +67,12 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
     private int selectedPointNoOut = -1;
     private Point3D selectedPointOutUv = null;
     private Point3D selectedPointVertexOut;
-    TextureMorphMove iTextureMorphMoveImage;
+    TextureMorphMove iTextureMorphMove;
     boolean hasChangedAorB = true;
     boolean notMenuOpen = true;
+    public HashMap<String, Point3D> pointsInModel = new HashMap<>();
+    public HashMap<String, Point3D> pointsInImage = new HashMap<>();
+    BufferedImage image;
 
     public Class<? extends DistanceAB> distanceABClass = DistanceProxLinear1.class;
     public boolean opt1 = false;
@@ -77,13 +80,12 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
 
 
     public EditPolygonsMappings(Window owner) {
-        initComponents();
-        iTextureMorphMoveImage = new TextureMorphMove();
-        iTextureMorphMoveImage.setDistanceABclass(DistanceProxLinear1.class);
-        iTextureMorphMoveImage.setEditOPanel(this);
+        this();
     }
 
-    public EditPolygonsMappings() {
+    EditPolygonsMappings() {
+        initComponents();
+        iTextureMorphMove = new TextureMorphMove(this, distanceABClass != null ? distanceABClass : DistanceProxLinear1.class);
 
     }
 
@@ -93,7 +95,7 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
 
     private void panelModelViewMouseDragged(MouseEvent e) {
         Point point = e.getPoint();
-        if (iTextureMorphMoveImage.image != null && model != null && iTextureMorphMoveImage.selectedPointNo > -1) {
+        if (image != null && model != null && selectedPointNo > -1) {
             int x = point.x;
             int y = point.y;
             ZBufferImpl.ImageMapElement ime = ((ZBufferImpl) testHumanHeadTexturing.getZ()).ime;
@@ -109,9 +111,9 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
 
                     final Point3D finalPointIme = pointIme;
                     Logger.getAnonymousLogger().log(Level.INFO, "Point final ime : " + finalPointIme);
-                    iTextureMorphMoveImage.pointsInModel.forEach((landmarkTypeItem, point3D) -> {
+                    pointsInModel.forEach((landmarkTypeItem, point3D) -> {
                         if (landmarkTypeItem.equals(landmarkType)) {
-                            iTextureMorphMoveImage.pointsInModel.put(landmarkTypeItem, finalPointIme);
+                            pointsInModel.put(landmarkTypeItem, finalPointIme);
                         }
                     });
                     hasChangedAorB = true;
@@ -126,12 +128,12 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
 
     private void panelPictureMouseClicked(MouseEvent e) {
         Point point = e.getPoint();
-        if (iTextureMorphMoveImage.image != null && model != null) {
+        if (image != null && model != null) {
             Point3D[] pNear = new Point3D[]{new Point3D(point.getX() / panelPicture.getWidth(),
                     point.getY() / panelPicture.getHeight(), 0.)};
             AtomicDouble distanceMin = new AtomicDouble(Double.MAX_VALUE);
             int[] i = new int[]{0};
-            iTextureMorphMoveImage.pointsInImage.forEach((s, point3D) -> {
+            pointsInImage.forEach((s, point3D) -> {
                 if (Point3D.distance(pNear[0], point3D) < distanceMin.get()) {
                     distanceMin.set(Point3D.distance(pNear[0], point3D));
                     pFound = point3D;
@@ -160,10 +162,10 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
             int[] i = new int[]{0};
             selectedPointNoOut = -1;
             AtomicReference<Double> dist = new AtomicReference<>(Double.MAX_VALUE);
-            iTextureMorphMoveImage.pointsInModel.forEach((s, point3D) -> {
+            pointsInModel.forEach((s, point3D) -> {
                 if (Point3D.distance(finalPointIme, point3D) < dist.get()) {
                     dist.set(Point3D.distance(finalPointIme, point3D));
-                    iTextureMorphMoveImage.pointsInModel.put(s, finalPointIme);
+                    pointsInModel.put(s, finalPointIme);
                     selectedPointNoOut = i[0];
                     selectedPointVertexOut = point3D;
                     i[0]++;
@@ -193,10 +195,10 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
             testHumanHeadTexturing.setMaxFrames(0);
             testHumanHeadTexturing.stop();
         }
-        testHumanHeadTexturing = TestHumanHeadTexturing.startAll(this, iTextureMorphMoveImage.image, model);
-        if (model != null && iTextureMorphMoveImage.image != null) {
-            model.texture(iTextureMorphMoveImage);
-            testHumanHeadTexturing.setJpg(iTextureMorphMoveImage.image);
+        testHumanHeadTexturing = TestHumanHeadTexturing.startAll(this, image, model);
+        if (model != null && image != null) {
+            model.texture(iTextureMorphMove);
+            testHumanHeadTexturing.setJpg(image);
             testHumanHeadTexturing.setObj(model);
         }
         hasChangedAorB = true;
@@ -345,78 +347,84 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 
     public void loadImage(File selectedFile) {
-        iTextureMorphMoveImage.image = ImageIO.read(selectedFile);
-        if (iTextureMorphMoveImage.image != null && testHumanHeadTexturing != null)
-            testHumanHeadTexturing.setJpg(iTextureMorphMoveImage.image);
-        Logger.getAnonymousLogger().log(Level.INFO, "Loaded image", iTextureMorphMoveImage.pointsInImage.size());
+        image = ImageIO.read(selectedFile);
+        if (image != null && testHumanHeadTexturing != null)
+            testHumanHeadTexturing.setJpg(image);
+
+        Logger.getAnonymousLogger().log(Level.INFO, "Loaded image");
 
     }
 
     public void run() {
-        testHumanHeadTexturing = TestHumanHeadTexturing.startAll(this, iTextureMorphMoveImage.image, model);
+        testHumanHeadTexturing = TestHumanHeadTexturing.startAll(this, image, model);
         hasChangedAorB = true;
         while (isRunning) {
             try {
-                zBufferImage = testHumanHeadTexturing.getJpgFile();
-                // Display 3D scene
-                if (zBufferImage != null && zBufferImage.getWidth() == panelModelView.getWidth() && zBufferImage.getHeight() == panelModelView.getHeight()) {
-                    Graphics graphics = panelModelView.getGraphics();
-                    if (graphics != null) {
-                        graphics.drawImage(zBufferImage, 0, 0, panelModelView.getWidth(), panelModelView.getHeight(), null);
-                        displayPointsOut(iTextureMorphMoveImage.pointsInModel);
+                if (isNotMenuOpen()) {
+                    zBufferImage = testHumanHeadTexturing.getJpgFile();
+                    // Display 3D scene
+                    if (zBufferImage != null && zBufferImage.getWidth() == panelModelView.getWidth() && zBufferImage.getHeight() == panelModelView.getHeight()) {
+                        Graphics graphics = panelModelView.getGraphics();
+                        if (graphics != null) {
+                            graphics.drawImage(zBufferImage, 0, 0, panelModelView.getWidth(), panelModelView.getHeight(), null);
+                            displayPointsOut(pointsInModel);
+                        }
                     }
-                }
-                if (iTextureMorphMoveImage.image != null) {
-                    Graphics graphics = panelPicture.getGraphics();
-                    if (graphics != null) {
-                        graphics.drawImage(iTextureMorphMoveImage.image, 0, 0, panelPicture.getWidth(), panelPicture.getHeight(), null);
-                        displayPointsIn(iTextureMorphMoveImage.pointsInImage);
+                    if (image != null) {
+                        Graphics graphics = panelPicture.getGraphics();
+                        if (graphics != null) {
+                            graphics.drawImage(image, 0, 0, panelPicture.getWidth(), panelPicture.getHeight(), null);
+                            displayPointsIn(pointsInImage);
+                        }
                     }
-                }
 
 
-                if (iTextureMorphMoveImage.pointsInImage != null && panelModelView != null && !iTextureMorphMoveImage.pointsInImage.isEmpty()
-                        && !iTextureMorphMoveImage.pointsInModel.isEmpty() && model != null && iTextureMorphMoveImage.image != null
-                        && threadDistanceIsNotRunning && hasChangedAorB()) {
-                    Thread thread = new Thread(() -> {
-                        long l = System.nanoTime();
-                        threadDistanceIsNotRunning = false;
-                        Logger.getAnonymousLogger().log(Level.INFO, "All loaded resources finished. Starts distance calculation");
+                    if (pointsInImage != null && panelModelView != null && !pointsInImage.isEmpty()
+                            && !pointsInModel.isEmpty() && model != null && image != null
+                            && threadDistanceIsNotRunning && iTextureMorphMove != null && hasChangedAorB()) {
+                        Thread thread = new Thread(() -> {
+                            long l = System.nanoTime();
+                            threadDistanceIsNotRunning = false;
+                            Logger.getAnonymousLogger().log(Level.INFO, "All loaded resources finished. Starts distance calculation");
 
-                        if (iTextureMorphMoveImage.distanceAB == null)
-                            iTextureMorphMoveImage.setDistanceABclass((Class<? extends DistanceBezier2>) iTextureMorphMoveImage.distanceAB.getClass());
-                        iTextureMorphMoveImage.setEditOPanel(this);
-                        if (!iTextureMorphMoveImage.distanceAB.isInvalidArray()) {
-                            iTextureMorphMoveImage.distanceAB.setModel(model);
-                            // Display 3D scene
-                            if (model != null) {
-                                model.texture(iTextureMorphMoveImage);
+                            if (iTextureMorphMove.distanceAB == null)
+                                iTextureMorphMove.setDistanceABclass((Class<? extends DistanceAB>) DistanceProxLinear1.class);
+
+                            if (!iTextureMorphMove.distanceAB.isInvalidArray()) {
+                                iTextureMorphMove.distanceAB.setModel(model);
+                                // Display 3D scene
+                                if (model != null) {
+                                    model.texture(iTextureMorphMove);
+                                }
+                                hasChangedAorB = false;
+                            } else {
+                                hasChangedAorB = true;
+                                Logger.getAnonymousLogger().log(Level.INFO, "Invalid array in DistanceAB");
                             }
-                            hasChangedAorB = false;
-                        } else {
-                            hasChangedAorB = true;
-                            Logger.getAnonymousLogger().log(Level.INFO, "Invalid array in DistanceAB");
-                        }
 
-                        try {
-                            Thread.sleep(100);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
+                            try {
+                                Thread.sleep(100);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
 
-                        l = System.nanoTime() - l;
-                        Logger.getAnonymousLogger().log(Level.INFO, "Distance calculation finished" + (l / 1000000.0));
-                        threadDistanceIsNotRunning = true;
-                    });
-                    thread.start();
-                    Logger.getAnonymousLogger().log(Level.INFO, "Thread texture creation started");
+                            l = System.nanoTime() - l;
+                            Logger.getAnonymousLogger().log(Level.INFO, "Distance calculation finished" + (l / 1000000.0));
+                            threadDistanceIsNotRunning = true;
+                        });
+                        thread.start();
+                        Logger.getAnonymousLogger().log(Level.INFO, "Thread texture creation started");
+                    }
+                    if (!threadDistanceIsNotRunning)
+                        Logger.getAnonymousLogger().log(Level.INFO, "Thread 'Texture creation' still in progress...");
                 }
-                if (!threadDistanceIsNotRunning)
-                    Logger.getAnonymousLogger().log(Level.INFO, "Thread 'Texture creation' still in progress...");
-
                 Thread.sleep(200);
             } catch (RuntimeException | InterruptedException ex) {
                 ex.printStackTrace();
+            }
+            if (testHumanHeadTexturing == null || !testHumanHeadTexturing.isRunning()) {
+                Logger.getAnonymousLogger().log(Level.INFO, "Le thead :TestObjet est arrêté ou non attribute");
+                Logger.getAnonymousLogger().log(Level.INFO, String.format("Il y a (pas nécessairement exact) %d instances de classes dérivées de TsestObjet"));
             }
         }
     }
@@ -435,7 +443,7 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
         JPanel panelDraw = panelPicture;
         try {
             Thread.sleep(200);
-            if (iTextureMorphMoveImage.image != null && panelDraw != null) {
+            if (image != null && panelDraw != null) {
                 Graphics graphics = panelDraw.getGraphics();
                 if (graphics != null) {
                     int[] i = new int[]{0};
@@ -460,7 +468,7 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
 
     private void displayPointsOut(HashMap<String, Point3D> points) {
         JPanel panelDraw = panelModelView;
-        if (iTextureMorphMoveImage.image != null && panelDraw != null && testHumanHeadTexturing != null && testHumanHeadTexturing.getZ().la() == panelModelView.getWidth()
+        if (image != null && panelDraw != null && testHumanHeadTexturing != null && testHumanHeadTexturing.getZ().la() == panelModelView.getWidth()
                 && testHumanHeadTexturing.getZ().ha() == panelModelView.getHeight()) {
             // Display image
             int[] i = new int[]{0};
@@ -539,7 +547,7 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
         try {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(selectedFile));
             model = new E3Model(bufferedReader, true, selectedFile.getAbsolutePath());
-            model.texture(iTextureMorphMoveImage);
+            model.texture(iTextureMorphMove);
             testHumanHeadTexturing.setObj(model);
             Logger.getAnonymousLogger().log(Level.INFO, "Loaded model");
         } catch (FileNotFoundException e) {
@@ -548,8 +556,8 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
     }
 
     public void loadTxt(File selectedFile) {
-        if (iTextureMorphMoveImage.image != null && model != null) {
-            iTextureMorphMoveImage.pointsInImage = new HashMap<String, Point3D>();
+        if (image != null && model != null) {
+            pointsInImage = new HashMap<String, Point3D>();
             try {
                 Scanner bufferedReader = new Scanner(new FileReader(selectedFile));
                 String line = "";
@@ -571,32 +579,32 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
                             // Blank line
                             line = bufferedReader.nextLine();
 
-                            iTextureMorphMoveImage.pointsInImage.put(landmarkType, new Point3D(x / iTextureMorphMoveImage.image.getWidth(), y / iTextureMorphMoveImage.image.getHeight(), 0.0));
+                            pointsInImage.put(landmarkType, new Point3D(x / image.getWidth(), y / image.getHeight(), 0.0));
                         }
                     }
                 }
-                Logger.getAnonymousLogger().log(Level.INFO, "Loaded {0} points in image", iTextureMorphMoveImage.pointsInImage.size());
+                Logger.getAnonymousLogger().log(Level.INFO, "Loaded {0} points in image", pointsInImage.size());
                 bufferedReader.close();
 
                 // Initialize surface bezier
 
-                iTextureMorphMoveImage.pointsInModel = new HashMap<>();
+                pointsInModel = new HashMap<>();
                 if (!testHumanHeadTexturing.scene().getObjets().getData1d().isEmpty() && testHumanHeadTexturing.scene().getObjets().getElem(0) instanceof E3Model e3Model) {
-                    iTextureMorphMoveImage.pointsInImage.forEach((s, point3D) -> {
+                    pointsInImage.forEach((s, point3D) -> {
                         Point3D copy = new Point3D(point3D);
-                        iTextureMorphMoveImage.pointsInModel.put(s, copy);
+                        pointsInModel.put(s, copy);
                     });
                 }
 
 
                 hasChangedAorB = true;
 
-                Logger.getAnonymousLogger().log(Level.INFO, "Loaded {0} points in model view", iTextureMorphMoveImage.pointsInImage.size());
+                Logger.getAnonymousLogger().log(Level.INFO, "Loaded {0} points in model view", pointsInImage.size());
             } catch (IOException | RuntimeException ex) {
                 throw new RuntimeException(ex);
             }
         } else {
-            Logger.getAnonymousLogger().log(Level.INFO, "Loaded image first before points", iTextureMorphMoveImage.pointsInImage.size());
+            Logger.getAnonymousLogger().log(Level.INFO, "Loaded image first before points", pointsInImage.size());
         }
 
 
@@ -611,8 +619,8 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
     }
 
     public void loadTxtOut(File selectedFile) {
-        if (iTextureMorphMoveImage.image != null && model != null) {
-            iTextureMorphMoveImage.pointsInModel = new HashMap<>();
+        if (image != null && model != null) {
+            pointsInModel = new HashMap<>();
             try {
                 Scanner bufferedReader = new Scanner(new FileReader(selectedFile));
                 String line = "";
@@ -633,11 +641,11 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
                             // Blank line
                             line = bufferedReader.nextLine();
 
-                            iTextureMorphMoveImage.pointsInModel.put(landmarkType, new Point3D(x, y, 0.0));
+                            pointsInModel.put(landmarkType, new Point3D(x, y, 0.0));
                         }
                     }
                 }
-                Logger.getAnonymousLogger().log(Level.INFO, "Loaded {0} points in image", iTextureMorphMoveImage.pointsInModel.size());
+                Logger.getAnonymousLogger().log(Level.INFO, "Loaded {0} points in image", pointsInModel.size());
                 bufferedReader.close();
 
                 hasChangedAorB = true;
@@ -646,7 +654,7 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
                 throw new RuntimeException(ex);
             }
         } else {
-            Logger.getAnonymousLogger().log(Level.INFO, "Load image and model first before points", iTextureMorphMoveImage.pointsInModel.size());
+            Logger.getAnonymousLogger().log(Level.INFO, "Load image and model first before points", pointsInModel.size());
         }
 
     }
@@ -656,7 +664,7 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
         try {
             dataWriter = new PrintWriter(selectedFile);
             PrintWriter finalDataWriter = dataWriter;
-            iTextureMorphMoveImage.pointsInModel.forEach((s, point3D) -> {
+            pointsInModel.forEach((s, point3D) -> {
                 finalDataWriter.println(s);
                 finalDataWriter.println(point3D.getX());
                 finalDataWriter.println(point3D.getY());

@@ -28,6 +28,10 @@ import one.empty3.library.core.nurbs.SurfaceParametriquePolynomiale;
 import java.awt.geom.Dimension2D;
 import java.util.List;
 
+/**
+ * Ne pas toucher
+ * Don't touch
+ */
 public class DistanceProxLinear1 extends DistanceBezier2 {
     private static final int MAX_SUB_ITERE_X = 10;
 
@@ -38,7 +42,10 @@ public class DistanceProxLinear1 extends DistanceBezier2 {
 
     @Override
     public Point3D findAxPointInB(double u, double v) {
-        return findAxPointInBal5(u, v);
+        return findAxPointInBal4(u, v);
+
+
+        //return findAxPointInBal1(u, v);
         //return findAxPointInBal4(u, v);
     }
 
@@ -68,8 +75,8 @@ public class DistanceProxLinear1 extends DistanceBezier2 {
 
     private Point3D findAxPointInBal4(double u, double v) {
         Point3D pb = nearLandmark(u, v);
-        pb = new Point3D(Math.max(0, Math.min(pb.get(0), listBX.size() - 1)), Math.max(0, Math.min(pb.get(1), listBY.size() - 1)), 0.0);
-        Point3D pa = surfaceA.calculerPoint3D(pb.getX(), pb.getY());
+        Point3D pa = surfaceA.getCoefficients().getElem((int) ((double) pb.getX()),
+                (int) ((double) pb.getY()));
         return pa;
     }
 
@@ -78,7 +85,9 @@ public class DistanceProxLinear1 extends DistanceBezier2 {
         Point3D pb = nearLandmark(u, v);
         pb = new Point3D(maxBox(pb.get(0), listBX.get(0), listBX.get(listBX.size() - 1)),
                 maxBox(pb.get(1), 0.0, listBY.get(listBY.size() - 1)));
-        Point3D pa = surfaceA.getCoefficients().getElem((int) (double) pb.getX(), (int) (double) pb.get(1));
+        int i = (int) maxBox((int) (pb.getX() * bDimReduced.getWidth()), 0, listBX.size() - 1);
+        int j = (int) maxBox((int) (pb.getY() * bDimReduced.getHeight()), 0, listBX.size() - 1);
+        Point3D pa = surfaceA.getCoefficients().getElem(i, j);
         return pa;
     }
 
