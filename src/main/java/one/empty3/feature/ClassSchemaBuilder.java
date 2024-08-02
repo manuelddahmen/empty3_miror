@@ -576,8 +576,8 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
         }
 
 
-        for (File[] filess : this.files) {
-            for (File f : filess) {
+        for (File[] files : this.files) {
+            for (File f : files) {
                 System.out.printf("Run %d processes on file%s\n", processes.size(), f.getAbsolutePath());
                 if (f.getName().contains("webcam")) {
                     //f = getWebcamFile();
@@ -597,22 +597,21 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
                     System.out.printf("Process %s \nfrom:  %s\n", processes.get(0).getClass().toString(), f.getAbsolutePath());
                     System.out.printf("Process %s \nto  :  %s\n", processes.get(0).getClass().toString(), fileOut.getAbsolutePath());
 
-                    System.out.printf("Run process 0 . %d / %d on file %s\n", nunEffect, processes.size(), f.getAbsolutePath());
+                    System.out.printf("Run process %d / %d on file %s\n", nunEffect, processes.size(), f.getAbsolutePath());
 
                     File fileIn = null;
 
-                    try {
-                        Thread.sleep(10);
-                    } catch (InterruptedException ex) {
-                        throw new RuntimeException(ex);
-                    }
+
                     if (ce.process(f, fileOut)) {
                         nunEffect++;
-                        if (fileOut.exists() && nunEffect == processes.size()) {
+                        if (fileOut.exists() && nunEffect == 1) {
                             liveEffect.setFileIn(fileOut);
                             Logger.getAnonymousLogger().log(Level.SEVERE, "All processes run on Image");
+                        } else if (!fileOut.exists()) {
+                            Logger.getAnonymousLogger().log(Level.SEVERE, "FileOut doesn't exist. Can't read");
                         } else {
-                            Logger.getAnonymousLogger().log(Level.SEVERE, "FfileOut doesn't exist. Can't read");
+                            System.out.printf("process %d / %d HAS RUN\n", nunEffect - 1, processes.size(), f.getAbsolutePath());
+
                         }
                         Logger.getAnonymousLogger().log(Level.INFO, "Fichier IN mis à jour");
                         fileIn = fileOut;
@@ -633,9 +632,19 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
                               /*  if (!fileOut.exists()) {
                                     fileOut.mkdirs();
                                 }*/
+                                nunEffect++;
                                 getParentFile(fileOut).mkdirs();
                                 if (ce.process(fileIn, fileOut)) {
-                                    nunEffect++;
+                                    if (fileOut.exists() && nunEffect == processes.size()) {
+                                        liveEffect.setFileIn(fileOut);
+                                        Logger.getAnonymousLogger().log(Level.SEVERE, "All processes run on Image");
+                                    } else if (!fileOut.exists()) {
+                                        Logger.getAnonymousLogger().log(Level.SEVERE, "FileOut doesn't exist. Can't read");
+                                    } else {
+                                        System.out.printf("process %d / %d HAS RUN\n", nunEffect - 1, processes.size(), f.getAbsolutePath());
+
+                                    }
+                                    Logger.getAnonymousLogger().log(Level.INFO, "Fichier IN mis à jour");
                                     if (fileOut.exists() && nunEffect == processes.size()) {
                                         if (fileOut.exists() && nunEffect == processes.size()) {
                                             liveEffect.setFileIn(fileOut);
@@ -643,11 +652,9 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
                                             Logger.getAnonymousLogger().log(Level.SEVERE, "fileOut doesn't exist. Can't read");
                                         }
                                         System.out.printf("Run procsqess 1 . %d/%d on file %s\n", nunEffect, processes.size(), f.getAbsolutePath());
-                                        liveEffect.setFileIn(fileOut);
                                     } else {
                                         Logger.getAnonymousLogger().log(Level.SEVERE, "fileOut doesn't exist. Can't read");
                                     }
-                                    System.out.printf("Run process 1 . %d/%d on file %s\n", nunEffect, processes.size(), f.getAbsolutePath());
 
                                     fileIn = fileOut;
                                     if (processes.size() > nunEffect) {
@@ -655,7 +662,7 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
                                     }
                                     Logger.getAnonymousLogger().log(Level.INFO, "Fichier IN mis à jour");
                                 }
-                            } catch (NullPointerException ex) {
+                            } catch (RuntimeException ex) {
                                 ex.printStackTrace();
                             }
 
@@ -663,20 +670,20 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
                                 getParentFile(fileOut).mkdirs();
                             }
                         }
-                        try {
-                            Thread.sleep(20);
-                        } catch (InterruptedException ex) {
-                            throw new RuntimeException(ex);
-                        }
-
                     } else {
                         Logger.getAnonymousLogger().log(Level.SEVERE, "Error in process : " + processes.get(nunEffect).getClass().getCanonicalName());
                     }
                 }
-                if (fileOut.exists()) {
-                    liveEffect.setFileIn(fileOut);
-                } else
-                    Logger.getAnonymousLogger().log(Level.SEVERE, "fileOut doesn't exist. Can't read");
+                if (fileOut != null && fileOut.exists()) {
+                    //liveEffect.setFileIn(fileOut);
+                } else {
+                    //Logger.getAnonymousLogger().log(Level.SEVERE, "fileOut doesn't exist. Can't read or null");
+                }
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
         }
 /*        if(fileOut!=null) {
@@ -911,19 +918,19 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
         button2 = new JButton();
         comboBox2 = new JComboBox();
         button3 = new JButton();
-        button4 = new JButton();
+        buttonLoad = new JButton();
+        button1 = new JButton();
+        buttonPictureRecode = new JButton();
+        buttonCam = new JToggleButton();
+        buttonSave = new JButton();
+        panel1 = new JPanel();
+        labelStatus = new JLabel();
         buttonAddLink = new JToggleButton();
         buttonFiles = new JButton();
         buttonDeleteClass = new JToggleButton();
         buttonDeleteLink = new JToggleButton();
         buttonGO = new JButton();
-        buttonLoad = new JButton();
-        buttonSave = new JButton();
-        panel1 = new JPanel();
-        labelStatus = new JLabel();
-        button1 = new JButton();
-        buttonPictureRecode = new JButton();
-        buttonCam = new JToggleButton();
+        button4 = new JButton();
 
         //======== this ========
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -937,11 +944,20 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
                         "[fill]" +
                         "[fill]" +
                         "[fill]" +
+                        "[fill]" +
+                        "[fill]" +
+                        "[fill]" +
+                        "[fill]" +
+                        "[fill]" +
+                        "[fill]" +
                         "[fill]",
                 // rows
-                "[fill]" +
+                "[]" +
+                        "[fill]" +
+                        "[]" +
                         "[fill]" +
                         "[fill]" +
+                        "[]" +
                         "[]"));
 
         //---- comboBox1 ----
@@ -949,58 +965,53 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
         comboBox1.setAutoscrolls(true);
         comboBox1.setLightWeightPopupEnabled(false);
         comboBox1.setDoubleBuffered(true);
-        contentPane.add(comboBox1, "cell 0 0");
+        comboBox1.setForeground(new Color(0x6666ff));
+        contentPane.add(comboBox1, "cell 0 1");
 
         //---- button2 ----
         button2.setText("Add");
+        button2.setForeground(new Color(0x6666ff));
         button2.addActionListener(e -> buttonAddToActionPerformed(e));
-        contentPane.add(button2, "cell 0 0");
-        contentPane.add(comboBox2, "cell 0 0");
+        contentPane.add(button2, "cell 0 1");
+
+        //---- comboBox2 ----
+        comboBox2.setForeground(new Color(0x6666ff));
+        contentPane.add(comboBox2, "cell 0 1");
 
         //---- button3 ----
         button3.setText("Add + filter");
+        button3.setForeground(new Color(0x6666ff));
         button3.addActionListener(e -> buttonAdd2filters(e));
-        contentPane.add(button3, "cell 0 0");
-
-        //---- button4 ----
-        button4.setText("Properties");
-        button4.addActionListener(e -> buttonParameters(e));
-        contentPane.add(button4, "cell 3 0");
-
-        //---- buttonAddLink ----
-        buttonAddLink.setText("Add link");
-        buttonAddLink.addActionListener(e -> buttonAddLinkActionPerformed(e));
-        contentPane.add(buttonAddLink, "cell 4 0");
-
-        //---- buttonFiles ----
-        buttonFiles.setText("Add input files");
-        buttonFiles.addActionListener(e -> buttonFilesActionPerformed(e));
-        contentPane.add(buttonFiles, "cell 4 0");
-
-        //---- buttonDeleteClass ----
-        buttonDeleteClass.setText("Delete class");
-        buttonDeleteClass.addActionListener(e -> buttonDeleteClassActionPerformed(e));
-        contentPane.add(buttonDeleteClass, "cell 4 0");
-
-        //---- buttonDeleteLink ----
-        buttonDeleteLink.setText("Delete link");
-        buttonDeleteLink.addActionListener(e -> buttonDeleteLinkActionPerformed(e));
-        contentPane.add(buttonDeleteLink, "cell 4 0");
-
-        //---- buttonGO ----
-        buttonGO.setText("Process GO");
-        buttonGO.addActionListener(e -> buttonGOActionPerformed(e));
-        contentPane.add(buttonGO, "cell 4 0");
+        contentPane.add(button3, "cell 0 1");
 
         //---- buttonLoad ----
         buttonLoad.setText("Load");
+        buttonLoad.setBackground(Color.green);
         buttonLoad.addActionListener(e -> buttonLoadActionPerformed(e));
-        contentPane.add(buttonLoad, "cell 4 0");
+        contentPane.add(buttonLoad, "cell 1 1");
+
+        //---- button1 ----
+        button1.setText("Open movie/recode");
+        button1.setBackground(Color.green);
+        contentPane.add(button1, "cell 0 2");
+
+        //---- buttonPictureRecode ----
+        buttonPictureRecode.setText("Open picture/recode");
+        buttonPictureRecode.setBackground(Color.green);
+        buttonPictureRecode.addActionListener(e -> buttonPictureRecodeActionPerformed(e));
+        contentPane.add(buttonPictureRecode, "cell 0 2");
+
+        //---- buttonCam ----
+        buttonCam.setText("Open webcam");
+        buttonCam.setBackground(new Color(0x0066cc));
+        buttonCam.addActionListener(e -> buttonCamActionPerformed(e));
+        contentPane.add(buttonCam, "cell 0 2");
 
         //---- buttonSave ----
         buttonSave.setText("Save");
+        buttonSave.setBackground(Color.green);
         buttonSave.addActionListener(e -> buttonSaveActionPerformed(e));
-        contentPane.add(buttonSave, "cell 4 0");
+        contentPane.add(buttonSave, "cell 1 2");
 
         //======== panel1 ========
         {
@@ -1014,26 +1025,49 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
                             "[]" +
                             "[]"));
         }
-        contentPane.add(panel1, "cell 0 1 5 2,dock center");
+        contentPane.add(panel1, "cell 0 3 11 2,dock center");
 
         //---- labelStatus ----
-        labelStatus.setText("text");
-        contentPane.add(labelStatus, "cell 0 3 2 1");
+        labelStatus.setText("Label Status");
+        labelStatus.setForeground(new Color(0x6666ff));
+        contentPane.add(labelStatus, "cell 0 5");
 
-        //---- button1 ----
-        button1.setText("Open movie/recode");
-        contentPane.add(button1, "cell 4 3");
+        //---- buttonAddLink ----
+        buttonAddLink.setText("Add link");
+        buttonAddLink.setBackground(Color.green);
+        buttonAddLink.addActionListener(e -> buttonAddLinkActionPerformed(e));
+        contentPane.add(buttonAddLink, "cell 0 6");
 
-        //---- buttonPictureRecode ----
-        buttonPictureRecode.setText("Open picture/recode");
-        buttonPictureRecode.addActionListener(e -> buttonPictureRecodeActionPerformed(e));
-        contentPane.add(buttonPictureRecode, "cell 4 3");
+        //---- buttonFiles ----
+        buttonFiles.setText("Add input files");
+        buttonFiles.setBackground(Color.green);
+        buttonFiles.addActionListener(e -> buttonFilesActionPerformed(e));
+        contentPane.add(buttonFiles, "cell 0 6");
 
-        //---- buttonCam ----
-        buttonCam.setText("Open webcam");
-        buttonCam.addActionListener(e -> buttonCamActionPerformed(e));
-        contentPane.add(buttonCam, "cell 4 3");
-        setSize(1020, 540);
+        //---- buttonDeleteClass ----
+        buttonDeleteClass.setText("Delete class");
+        buttonDeleteClass.setBackground(Color.green);
+        buttonDeleteClass.addActionListener(e -> buttonDeleteClassActionPerformed(e));
+        contentPane.add(buttonDeleteClass, "cell 0 6");
+
+        //---- buttonDeleteLink ----
+        buttonDeleteLink.setText("Delete link");
+        buttonDeleteLink.setBackground(Color.green);
+        buttonDeleteLink.addActionListener(e -> buttonDeleteLinkActionPerformed(e));
+        contentPane.add(buttonDeleteLink, "cell 0 6");
+
+        //---- buttonGO ----
+        buttonGO.setText("Process GO");
+        buttonGO.setBackground(Color.green);
+        buttonGO.addActionListener(e -> buttonGOActionPerformed(e));
+        contentPane.add(buttonGO, "cell 1 6");
+
+        //---- button4 ----
+        button4.setText("Properties");
+        button4.setBackground(Color.green);
+        button4.addActionListener(e -> buttonParameters(e));
+        contentPane.add(button4, "cell 2 6");
+        setSize(1225, 540);
         setLocationRelativeTo(getOwner());
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
 
@@ -1259,19 +1293,19 @@ public class ClassSchemaBuilder extends JFrame implements Serializable {
     private JButton button2;
     private JComboBox comboBox2;
     private JButton button3;
-    private JButton button4;
+    private JButton buttonLoad;
+    private JButton button1;
+    private JButton buttonPictureRecode;
+    private JToggleButton buttonCam;
+    private JButton buttonSave;
+    private JPanel panel1;
+    private JLabel labelStatus;
     private JToggleButton buttonAddLink;
     private JButton buttonFiles;
     private JToggleButton buttonDeleteClass;
     private JToggleButton buttonDeleteLink;
     private JButton buttonGO;
-    private JButton buttonLoad;
-    private JButton buttonSave;
-    private JPanel panel1;
-    private JLabel labelStatus;
-    private JButton button1;
-    private JButton buttonPictureRecode;
-    private JToggleButton buttonCam;
+    private JButton button4;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 
 

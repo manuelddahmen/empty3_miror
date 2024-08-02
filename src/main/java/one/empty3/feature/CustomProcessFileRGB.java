@@ -22,15 +22,19 @@
 
 package one.empty3.feature;
 
-import one.empty3.feature.app.replace.javax.imageio.ImageIO;
 import one.empty3.io.ProcessFile;
+import one.empty3.library.Lumiere;
 import one.empty3.library.StructureMatrix;
 import one.empty3.library1.shader.Vec;
 import one.empty3.library1.tree.ListInstructions;
 
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * $
@@ -43,73 +47,80 @@ public class CustomProcessFileRGB extends ProcessFile {
     ListInstructions listInstructions;
 
     public CustomProcessFileRGB() {
+        super();
         textDialog = TextDialog.getInstance();
         textDialog.setVisible(true);
+
     }
 
     @Override
-    public boolean process(File in, File out) {
-        PixM pixIn = new PixM(maxRes == 0 ? 1280 : maxRes, maxRes == 0 ? (int) (1280. / 16 * 9) : maxRes);
-        BufferedImage readIn;
+    public boolean process(final File in, final File out) {
+        PixM pixIn;
         if (isImage(in)) {
-            readIn = ImageIO.read(in);
-            if (readIn == null) {
-                return false;
+            BufferedImage readIn = null;
+            try {
+                readIn = ImageIO.read(in);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
-        } else {
-            return false;
-        }
-        pixIn = PixM.getPixM(readIn, maxRes);
-        PixM pix = pixIn;
-        PixM pixOut = pixIn.copy();
-        try {
+            pixIn = PixM.getPixM(readIn, maxRes);
+            PixM pix = pixIn;
+            PixM pixOut = pixIn.copy();
             HashMap<String, String> currentVecs = new HashMap<>();
             HashMap<String, Double> currentVars = new HashMap<>();
             HashMap<String, StructureMatrix<Double>> currentVecsComputed = new HashMap<>();
 
             for (int i = 0; i < pix.getColumns(); i++) {
                 for (int j = 0; j < pix.getLines(); j++) {
-                    double r, g, b, a;
-                    double[] values = pix.getValues(i, j);
-                    r = values[0];
-                    g = values[1];
-                    b = values[2];
-                    double x = i;
-                    double y = j;
-                    Vec rgbValOrig = new Vec(r, g, b);
+                    try {
+                        double r, g, b;
+                        double[] values = pixOut.getValues(i, j);
+                        r = values[0];
+                        g = values[1];
+                        b = values[2];
+                        double x = i;
+                        double y = j;
+                        Vec rgbValOrig = new Vec(r, g, b);
 
-                    listInstructions = new ListInstructions();
+                        listInstructions = new ListInstructions();
 
-                    listInstructions.setCurrentParamsValues(currentVars);
-                    listInstructions.setCurrentParamsValuesVec(currentVecs);
-                    listInstructions.setCurrentParamsValuesVecComputed(currentVecsComputed);
-                    listInstructions.addInstructions(textDialog.getText());
-                    currentVars.put("r", r);
-                    currentVars.put("g", g);
-                    currentVars.put("b", b);
-                    currentVars.put("x", (double) i);
-                    currentVars.put("y", (double) j);
-                    currentVecs.put("rgb", (String.format("(%f,%f,%f)", r, g, b)));
+                        listInstructions.setCurrentParamsValues(currentVars);
+                        listInstructions.setCurrentParamsValuesVec(currentVecs);
+                        listInstructions.setCurrentParamsValuesVecComputed(currentVecsComputed);
+                        listInstructions.addInstructions(textDialog.getText());
+                        currentVars.put("r", r);
+                        currentVars.put("g", g);
+                        currentVars.put("b", b);
+                        currentVars.put("x", (double) i);
+                        currentVars.put("y", (double) j);
+                        currentVecs.put("rgb", (String.format("(%f,%f,%f)", r, g, b)));
 
 
-                    listInstructions.runInstructions();
+                        listInstructions.runInstructions();
 
-                    r = currentVars.getOrDefault("r", r);// (new StructureMatrix<Double>(0, Double.class).setElem(r))).getElem();
-                    g = currentVars.getOrDefault("g", r);// (new StructureMatrix<Double>(0, Double.class).setElem(g))).getElem();
-                    b = currentVars.getOrDefault("b", r);// (new StructureMatrix<Double>(0, Double.class).setElem(b))).getElem();
-                    pixOut.setValues(i, j, r, g, b);
+                        r = currentVars.getOrDefault("r", r);// (new StructureMatrix<Double>(0, Double.class).setElem(r))).getElem();
+                        g = currentVars.getOrDefault("g", r);// (new StructureMatrix<Double>(0, Double.class).setElem(g))).getElem();
+                        b = currentVars.getOrDefault("b", r);// (new StructureMatrix<Double>(0, Double.class).setElem(b))).getElem();
+                        x = currentVars.getOrDefault("x", (double) i);// (new StructureMatrix<Double>(0, Double.class).setElem(g))).getElem();
+                        y = currentVars.getOrDefault("y", (double) j);// (new StructureMatrix<Double>(0, Double.class).setElem(b))).getElem();
+                        pixOut.set(pixOut.index((int) x, (int) y), Lumiere.getInt(r, g, b));
+                    } catch (RuntimeException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             }
 
-            ImageIO.write(pixOut.normalize(0, 1).getImage(), "jpg", out);
-
+            try {
+                assert pixOut != null;
+                ImageIO.write(pixOut.getImage(), "jpg", out);
+                assert out.exists();
+                Logger.getAnonymousLogger().log(Level.INFO, "Image written" + out.getAbsolutePath());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             return true;
-
-        } catch (RuntimeException e) {
-            e.printStackTrace();
         }
         return false;
-
     }
 
     public ListInstructions getListInstructions() {

@@ -27,6 +27,7 @@ import one.empty3.library.LineSegment;
 import one.empty3.library.Lumiere;
 import one.empty3.library.Point3D;
 import one.empty3.library.core.nurbs.ParametricCurve;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -43,7 +44,7 @@ public class PixM extends M {
         super(l, c);
     }
 
-    public PixM(BufferedImage image) {
+    public PixM(@NotNull BufferedImage image) {
         super(image.getWidth(), image.getHeight());
         for (int i = 0; i < image.getWidth(); i++) {
             for (int j = 0; j < image.getHeight(); j++) {
@@ -354,9 +355,9 @@ public class PixM extends M {
 
     public PixM normalize(final double inMin, final double inMax, final double min, final double max) {
 
-        double[] maxRgbai = new double[compCount];
-        double[] meanRgbai = new double[compCount];
-        double[] minRgbai = new double[compCount];
+        double[] maxRgbai = new double[3];
+        double[] meanRgbai = new double[3];
+        double[] minRgbai = new double[3];
         double minA = 0.0;
         double maxA = 1.0;
         if (min != -1 || max != -1) {
@@ -364,9 +365,9 @@ public class PixM extends M {
             maxA = max;
         }
         for (int i = 0; i < getCompCount(); i++) {
-            maxRgbai[i] = inMax;
-            minRgbai[i] = inMin;
-            meanRgbai[i] = (inMax + inMin) / 2;
+            maxRgbai[i] = 255;
+            minRgbai[i] = 0;
+            //meanRgbai[i] = (inMax + inMin) / 2;
         }
         PixM image = new PixM(columns, lines);
         for (int i = 0; i < image.columns; i++) {
@@ -417,12 +418,15 @@ public class PixM extends M {
 
 
         PixM pixM = new PixM(columns, lines);
-        for (int c = 0; c < getCompCount(); c++) {
-            setCompNo(c);
-            pixM.setCompNo(c);
-            for (int i = 0; i < columns * lines; i++)
-                pixM.set(i, get(i));
+
+        for (int i = 0; i < columns; i++) {
+            for (int j = 0; j < lines; j++) {
+                pixM.set(index(i, j), getInt(i, j));
+
+            }
+
         }
+
         return pixM;
     }
 
@@ -651,7 +655,7 @@ public class PixM extends M {
     }
 
     public BufferedImage getBitmap() {
-        BufferedImage b = new BufferedImage(columns, lines, BufferedImage.TYPE_INT_ARGB);
+        BufferedImage b = new BufferedImage(columns, lines, BufferedImage.TYPE_INT_RGB);
         for (int i = 0; i < columns; i++) {
             for (int j = 0; j < lines; j++) {
                 b.setRGB(i, j, getInt(i, j));
@@ -662,7 +666,7 @@ public class PixM extends M {
 
     public BufferedImage getImage() {
         BufferedImage image = new BufferedImage(columns,
-                lines, BufferedImage.TYPE_INT_ARGB);
+                lines, BufferedImage.TYPE_INT_RGB);
         for (int i = 0; i < image.getWidth(); i++) {
             for (int j = 0; j < image.getHeight(); j++) {
                 //double[] values = getValues(i, j);

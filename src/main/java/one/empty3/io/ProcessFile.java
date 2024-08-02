@@ -31,8 +31,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 
 public abstract class ProcessFile extends ProcessNFiles {
@@ -49,7 +47,7 @@ public abstract class ProcessFile extends ProcessNFiles {
             BufferedImage read = ImageIO.read(in);
             if (read != null) return true;
         } catch (IOException e) {
-
+            e.printStackTrace();
         }
         return false;
     }
