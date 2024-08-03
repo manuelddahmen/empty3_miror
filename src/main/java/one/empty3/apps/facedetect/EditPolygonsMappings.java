@@ -74,7 +74,7 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
     public HashMap<String, Point3D> pointsInImage = new HashMap<>();
     BufferedImage image;
 
-    public Class<? extends DistanceAB> distanceABClass = DistanceProxLinear1.class;
+    public Class<? extends DistanceAB> distanceABClass = DistanceProxLinear2.class;
     public boolean opt1 = false;
     public boolean optimizeGrid = false;
 
@@ -125,6 +125,7 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
             }
         }
     }
+
 
     private void panelPictureMouseClicked(MouseEvent e) {
         Point point = e.getPoint();
@@ -204,6 +205,24 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
         hasChangedAorB = true;
     }
 
+    private void panelPictureMouseDragged(MouseEvent e) {
+        Point point = e.getPoint();
+        if (image != null && model != null && selectedPointNo > -1) {
+            int x = point.x;
+            int y = point.y;
+            //ime.getElementPoint(x, y);
+            final Point3D finalPointIme = new Point3D((double) (1.0 * x / panelPicture.getWidth()), (double) (1.0 * y / panelPicture.getHeight()), 0.0);
+            pointsInImage.forEach((landmarkTypeItem, point3D) -> {
+                if (landmarkTypeItem.equals(landmarkType)) {
+                    pointsInImage.put(landmarkTypeItem, finalPointIme);
+                }
+            });
+            hasChangedAorB = true;
+
+        }
+
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
         dialogPane = new JPanel();
@@ -264,6 +283,13 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
                                         panelPictureMouseClicked(e);
                                     }
                                 });
+                                panelPicture.addMouseMotionListener(new MouseMotionAdapter() {
+                                    @Override
+                                    public void mouseDragged(MouseEvent e) {
+                                        panelPictureMouseDragged(e);
+                                        panelPictureMouseDragged(e);
+                                    }
+                                });
                                 panelPicture.setLayout(new MigLayout(
                                     "fill,hidemode 3",
                                     // columns
@@ -283,6 +309,7 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
                                 panelModelView.addMouseMotionListener(new MouseMotionAdapter() {
                                     @Override
                                     public void mouseDragged(MouseEvent e) {
+                                        panelModelViewMouseDragged(e);
                                         panelModelViewMouseDragged(e);
                                     }
                                 });
@@ -659,12 +686,29 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
 
     }
 
-    public void saveTxtOut(File selectedFile) {
+    public void saveTxtOutRightMddel(File selectedFile) {
         PrintWriter dataWriter = null;
         try {
             dataWriter = new PrintWriter(selectedFile);
             PrintWriter finalDataWriter = dataWriter;
             pointsInModel.forEach((s, point3D) -> {
+                finalDataWriter.println(s);
+                finalDataWriter.println(point3D.getX());
+                finalDataWriter.println(point3D.getY());
+                finalDataWriter.println();
+            });
+            dataWriter.close();
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void saveTxtOutLeftPicture(File selectedFile) {
+        PrintWriter dataWriter = null;
+        try {
+            dataWriter = new PrintWriter(selectedFile);
+            PrintWriter finalDataWriter = dataWriter;
+            pointsInImage.forEach((s, point3D) -> {
                 finalDataWriter.println(s);
                 finalDataWriter.println(point3D.getX());
                 finalDataWriter.println(point3D.getY());

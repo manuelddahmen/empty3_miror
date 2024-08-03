@@ -26,6 +26,9 @@ new FormModel {
 			add( new FormComponent( "one.empty3.apps.facedetect.EditPolygonsMappings" ) {
 				name: "editPolygonsMappings2"
 				"minimumSize": new java.awt.Dimension( 800, 600 )
+				auxiliary() {
+					"JavaCodeGenerator.variableModifiers": 0
+				}
 			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 				"value": "cell 0 0"
 			} )
@@ -49,14 +52,14 @@ new FormModel {
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItemLoadImage", true ) )
 					} )
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "menuItem4"
+						"text": new FormMessage( null, "JFrameEditPolygonsMappings.menuItem4.text" )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItemAdd3DModel", true ) )
+					} )
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
 						name: "menuItem3"
 						"text": new FormMessage( null, "JFrameEditPolygonsMappings.menuItem3.text" )
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItemLoadTxt", true ) )
-					} )
-					add( new FormComponent( "javax.swing.JMenuItem" ) {
-						name: "menuItem8"
-						"text": new FormMessage( null, "JFrameEditPolygonsMappings.menuItem8.text" )
-						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItemSaveModifiedVertex", true ) )
 					} )
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
 						name: "menuItem9"
@@ -64,13 +67,18 @@ new FormModel {
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItemLoadModifiedVertex", true ) )
 					} )
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
-						name: "menuItem2"
-						"text": new FormMessage( null, "JFrameEditPolygonsMappings.menuItem2.text" )
+						name: "menuItem12"
+						"text": new FormMessage( null, "JFrameEditPolygonsMappings.menuItem12.text" )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItemLandmarksLeft", true ) )
 					} )
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
-						name: "menuItem4"
-						"text": new FormMessage( null, "JFrameEditPolygonsMappings.menuItem4.text" )
-						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItemAdd3DModel", true ) )
+						name: "menuItem8"
+						"text": new FormMessage( null, "JFrameEditPolygonsMappings.menuItem8.text" )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItemSaveModifiedVertex", true ) )
+					} )
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "menuItem2"
+						"text": new FormMessage( null, "JFrameEditPolygonsMappings.menuItem2.text" )
 					} )
 				} )
 				add( new FormContainer( "javax.swing.JMenu", new FormLayoutManager( class javax.swing.JMenu ) ) {
@@ -137,13 +145,14 @@ new FormModel {
 						"text": new FormMessage( null, "JFrameEditPolygonsMappings.checkBoxMenuItem2.text" )
 						"$buttonGroup": new FormReference( "buttonGroup1" )
 						"selected": true
-						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "checkBoxMenuItem2", true ) )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "checkBoxMenuItemPoly", true ) )
 					} )
 					add( new FormComponent( "javax.swing.JCheckBoxMenuItem" ) {
 						name: "menuItem13"
 						"text": new FormMessage( null, "JFrameEditPolygonsMappings.menuItem13.text" )
 						"$buttonGroup": new FormReference( "buttonGroup1" )
 						"selected": true
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "checkBoxMenuItemBezier", true ) )
 					} )
 					add( new FormComponent( "javax.swing.JCheckBoxMenuItem" ) {
 						name: "checkBoxMenuItem1"

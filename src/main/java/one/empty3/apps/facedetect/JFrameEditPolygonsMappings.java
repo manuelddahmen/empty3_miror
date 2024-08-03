@@ -154,7 +154,7 @@ public class JFrameEditPolygonsMappings extends JFrame {
         if (lastDirectory != null)
             saveImageDeformed.setCurrentDirectory(lastDirectory);
         if (saveImageDeformed.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
-            editPolygonsMappings2.saveTxtOut(saveImageDeformed.getSelectedFile());
+            editPolygonsMappings2.saveTxtOutRightMddel(saveImageDeformed.getSelectedFile());
         }
         lastDirectory = saveImageDeformed.getCurrentDirectory();
     }
@@ -241,14 +241,21 @@ public class JFrameEditPolygonsMappings extends JFrame {
         editPolygonsMappings2.notMenuOpen = true;
     }
 
-    private void checkBoxMenuItem2(ActionEvent e) {
+    private void checkBoxMenuItemPoly(ActionEvent e) {
         if (e.getSource() instanceof JCheckBoxMenuItem r) {
             if (r.isSelected()) {
-                editPolygonsMappings2.iTextureMorphMove.distanceAB.typeShape = 0;
-                editPolygonsMappings2.typeShape = 0;
-            } else {
-                editPolygonsMappings2.iTextureMorphMove.distanceAB.typeShape = 1;
-                editPolygonsMappings2.typeShape = 0;
+                editPolygonsMappings2.iTextureMorphMove.distanceAB.typeShape = DistanceAB.TYPE_SHAPE_QUADR;
+                editPolygonsMappings2.typeShape = DistanceAB.TYPE_SHAPE_QUADR;
+            }
+        }
+        editPolygonsMappings2.hasChangedAorB = true;
+    }
+
+    private void checkBoxMenuItemBezier(ActionEvent e) {
+        if (e.getSource() instanceof JCheckBoxMenuItem r) {
+            if (r.isSelected()) {
+                editPolygonsMappings2.iTextureMorphMove.distanceAB.typeShape = DistanceAB.TYPE_SHAPE_BEZIER;
+                editPolygonsMappings2.typeShape = DistanceAB.TYPE_SHAPE_BEZIER;
             }
         }
         editPolygonsMappings2.hasChangedAorB = true;
@@ -312,6 +319,38 @@ public class JFrameEditPolygonsMappings extends JFrame {
 
     }
 
+    private void menuItemSaveLandmarksRight(ActionEvent e) {
+        JFileChooser saveImageDeformed = new JFileChooser();
+        if (lastDirectory != null)
+            saveImageDeformed.setCurrentDirectory(lastDirectory);
+        if (saveImageDeformed.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+            editPolygonsMappings2.saveTxtOutRightMddel(saveImageDeformed.getSelectedFile());
+        }
+        lastDirectory = saveImageDeformed.getCurrentDirectory();
+    }
+
+    private void menuItemLandmarksLeft(ActionEvent e) {
+        JFileChooser saveImageDeformed = new JFileChooser();
+        if (lastDirectory != null)
+            saveImageDeformed.setCurrentDirectory(lastDirectory);
+        if (saveImageDeformed.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+            editPolygonsMappings2.saveTxtOutLeftPicture(saveImageDeformed.getSelectedFile());
+        }
+        lastDirectory = saveImageDeformed.getCurrentDirectory();
+    }
+
+    private void menuItem8(ActionEvent e) {
+        // TODO add your code here
+    }
+
+    private void menuItem13(ActionEvent e) {
+        // TODO add your code here
+    }
+
+    private void editPolygonsMappings2MouseDragged(MouseEvent e) {
+        // TODO add your code here
+    }
+
 
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
@@ -319,11 +358,12 @@ public class JFrameEditPolygonsMappings extends JFrame {
         menuBar1 = new JMenuBar();
         menu2 = new JMenu();
         menuItem1 = new JMenuItem();
-        menuItem3 = new JMenuItem();
-        menuItem8 = new JMenuItem();
-        menuItem9 = new JMenuItem();
-        menuItem2 = new JMenuItem();
         menuItem4 = new JMenuItem();
+        menuItem3 = new JMenuItem();
+        menuItem9 = new JMenuItem();
+        menuItem12 = new JMenuItem();
+        menuItem8 = new JMenuItem();
+        menuItem2 = new JMenuItem();
         menu1 = new JMenu();
         menuItemMoveLinesUp = new JMenuItem();
         menuItemMoveLinesDown = new JMenuItem();
@@ -391,29 +431,34 @@ public class JFrameEditPolygonsMappings extends JFrame {
                 menuItem1.addActionListener(e -> menuItemLoadImage(e));
                 menu2.add(menuItem1);
 
+                //---- menuItem4 ----
+                menuItem4.setText(bundle.getString("JFrameEditPolygonsMappings.menuItem4.text"));
+                menuItem4.addActionListener(e -> menuItemAdd3DModel(e));
+                menu2.add(menuItem4);
+
                 //---- menuItem3 ----
                 menuItem3.setText(bundle.getString("JFrameEditPolygonsMappings.menuItem3.text"));
                 menuItem3.addActionListener(e -> menuItemLoadTxt(e));
                 menu2.add(menuItem3);
-
-                //---- menuItem8 ----
-                menuItem8.setText(bundle.getString("JFrameEditPolygonsMappings.menuItem8.text"));
-                menuItem8.addActionListener(e -> menuItemSaveModifiedVertex(e));
-                menu2.add(menuItem8);
 
                 //---- menuItem9 ----
                 menuItem9.setText(bundle.getString("JFrameEditPolygonsMappings.menuItem9.text"));
                 menuItem9.addActionListener(e -> menuItemLoadModifiedVertex(e));
                 menu2.add(menuItem9);
 
+                //---- menuItem12 ----
+                menuItem12.setText(bundle.getString("JFrameEditPolygonsMappings.menuItem12.text"));
+                menuItem12.addActionListener(e -> menuItemLandmarksLeft(e));
+                menu2.add(menuItem12);
+
+                //---- menuItem8 ----
+                menuItem8.setText(bundle.getString("JFrameEditPolygonsMappings.menuItem8.text"));
+                menuItem8.addActionListener(e -> menuItemSaveModifiedVertex(e));
+                menu2.add(menuItem8);
+
                 //---- menuItem2 ----
                 menuItem2.setText(bundle.getString("JFrameEditPolygonsMappings.menuItem2.text"));
                 menu2.add(menuItem2);
-
-                //---- menuItem4 ----
-                menuItem4.setText(bundle.getString("JFrameEditPolygonsMappings.menuItem4.text"));
-                menuItem4.addActionListener(e -> menuItemAdd3DModel(e));
-                menu2.add(menuItem4);
             }
             menuBar1.add(menu2);
 
@@ -486,12 +531,13 @@ public class JFrameEditPolygonsMappings extends JFrame {
                 //---- checkBoxMenuItem2 ----
                 checkBoxMenuItem2.setText(bundle.getString("JFrameEditPolygonsMappings.checkBoxMenuItem2.text"));
                 checkBoxMenuItem2.setSelected(true);
-                checkBoxMenuItem2.addActionListener(e -> checkBoxMenuItem2(e));
+                checkBoxMenuItem2.addActionListener(e -> checkBoxMenuItemPoly(e));
                 menu5.add(checkBoxMenuItem2);
 
                 //---- menuItem13 ----
                 menuItem13.setText(bundle.getString("JFrameEditPolygonsMappings.menuItem13.text"));
                 menuItem13.setSelected(true);
+                menuItem13.addActionListener(e -> checkBoxMenuItemBezier(e));
                 menu5.add(menuItem13);
 
                 //---- checkBoxMenuItem1 ----
@@ -567,11 +613,12 @@ public class JFrameEditPolygonsMappings extends JFrame {
     private JMenuBar menuBar1;
     private JMenu menu2;
     private JMenuItem menuItem1;
-    private JMenuItem menuItem3;
-    private JMenuItem menuItem8;
-    private JMenuItem menuItem9;
-    private JMenuItem menuItem2;
     private JMenuItem menuItem4;
+    private JMenuItem menuItem3;
+    private JMenuItem menuItem9;
+    private JMenuItem menuItem12;
+    private JMenuItem menuItem8;
+    private JMenuItem menuItem2;
     private JMenu menu1;
     private JMenuItem menuItemMoveLinesUp;
     private JMenuItem menuItemMoveLinesDown;
@@ -594,7 +641,7 @@ public class JFrameEditPolygonsMappings extends JFrame {
     private JRadioButtonMenuItem menuItemLinearProx1;
     private JRadioButtonMenuItem menuItemLinearProx2;
     private JRadioButtonMenuItem menuItemLinearProx3;
-    private EditPolygonsMappings editPolygonsMappings2;
+    EditPolygonsMappings editPolygonsMappings2;
     private JMenu menu3;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 

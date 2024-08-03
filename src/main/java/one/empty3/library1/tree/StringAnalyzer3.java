@@ -1220,6 +1220,67 @@ public class StringAnalyzer3 {
         }
     }
 
+    /**
+     * Represents a token that identifies a name in a parsing process.
+     */
+    class TokenType extends Token {
+        protected String name;
+
+        public TokenType() {
+            super();
+        }
+
+        @Override
+        public int parse(String input, int position) {
+            if (position >= input.length() || input.substring(position).trim().isEmpty()) {
+                //mPosition = position;
+                setSuccessful(false);
+                return position;
+                //throw new RuntimeException(getClass() + " : position>=input.length()");
+            }
+            int position1 = super.skipBlanks(input, position);
+            int i = position1;
+            boolean passed = false;
+            while (i < input.length() && (Character.isLetterOrDigit(input.charAt(i)) || input.charAt(i) == '_' || input.charAt(i) == '.')
+            ) {
+                i++;
+                passed = true;
+            }
+            if (passed && i - position1 > 0 && containsNoKeyword(input.substring(position1, i))) {
+                this.setName(input.substring(position1, i));
+                return processNext(input, i);
+            } else if (i >= input.length()) {
+                setSuccessful(true);
+                return input.length();
+            } else {
+                setSuccessful(false);
+                return position1;
+            }
+
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+
+        @Override
+        public Token copy(Token token) {
+
+            TokenName tokenName = new TokenName();
+            tokenName.name = name;
+            return tokenName;
+        }
+
+        public String toString() {
+            return name;
+        }
+    }
+
 
     class TokenVariableMemberDefinitionClassName extends TokenName {
         public TokenVariableMemberDefinitionClassName() {

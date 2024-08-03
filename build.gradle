@@ -34,6 +34,9 @@ sourceSets {
             srcDirs 'src/test/java'
             srcDirs 'src/main/java'
         }
+        resources {
+            srcDirs "src/test/resources", "src/test/configs", "src/test/java"
+        }
         mainClasses {
             "one.empty3.library1.tree.TestStringAnalyzer5"
             "one.empty3.library1.tree.TestStringAnalyzer7"
@@ -121,12 +124,6 @@ java {
     withSourcesJar()
 }
 
-tasks.register('Hello', JavaExec) {
-    classpath sourceSets.main.runtimeClasspath
-    mainClass = 'one.empty3.HelloWorld'
-    args "arg1", "arg2"
-    dependsOn(jar)
-}
 tasks.register('FeatureAppGui', JavaExec) {
     classpath sourceSets.main.runtimeClasspath
     mainClass = 'one.empty3.feature.ClassSchemaBuilder'

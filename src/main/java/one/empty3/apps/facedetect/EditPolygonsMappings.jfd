@@ -1,4 +1,4 @@
-JFDML JFormDesigner: "9.0.0.0.352" Java: "17.0.11" encoding: "UTF-8"
+JFDML JFormDesigner: "9.0.0.0.352" Java: "21.0.3" encoding: "UTF-8"
 
 new FormModel {
 	"i18n.autoExternalize": true
@@ -49,7 +49,12 @@ new FormModel {
 									name: "panelPicture"
 									"minimumSize": new java.awt.Dimension( 400, 300 )
 									"preferredSize": new java.awt.Dimension( 0, 0 )
+									auxiliary() {
+										"JavaCodeGenerator.variableModifiers": 0
+									}
 									addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "panelPictureMouseClicked", true ) )
+									addEvent( new FormEvent( "java.awt.event.MouseMotionListener", "mouseDragged", "panelPictureMouseDragged", true ) )
+									addEvent( new FormEvent( "java.awt.event.MouseMotionListener", "mouseDragged", "panelPictureMouseDragged", true ) )
 								}, new FormLayoutConstraints( class java.lang.String ) {
 									"value": "left"
 								} )
@@ -61,9 +66,13 @@ new FormModel {
 									name: "panelModelView"
 									"minimumSize": new java.awt.Dimension( 400, 300 )
 									"preferredSize": new java.awt.Dimension( 0, 0 )
+									auxiliary() {
+										"JavaCodeGenerator.variableModifiers": 0
+									}
 									addEvent( new FormEvent( "java.awt.event.MouseMotionListener", "mouseDragged", "panelModelViewMouseDragged", true ) )
 									addEvent( new FormEvent( "java.awt.event.ComponentListener", "componentResized", "panelModelViewComponentResized", true ) )
 									addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "panelModelViewMouseClicked", true ) )
+									addEvent( new FormEvent( "java.awt.event.MouseMotionListener", "mouseDragged", "panelModelViewMouseDragged", true ) )
 								}, new FormLayoutConstraints( class java.lang.String ) {
 									"value": "right"
 								} )
