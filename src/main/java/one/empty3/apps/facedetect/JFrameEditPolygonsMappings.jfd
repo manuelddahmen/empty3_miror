@@ -141,15 +141,15 @@ new FormModel {
 					name: "menu5"
 					"text": new FormMessage( null, "JFrameEditPolygonsMappings.menu5.text" )
 					add( new FormComponent( "javax.swing.JCheckBoxMenuItem" ) {
-						name: "checkBoxMenuItem2"
-						"text": new FormMessage( null, "JFrameEditPolygonsMappings.checkBoxMenuItem2.text" )
+						name: "checkBoxMenuItemTypeShapePolyogns"
+						"text": new FormMessage( null, "JFrameEditPolygonsMappings.checkBoxMenuItemTypeShapePolyogns.text" )
 						"$buttonGroup": new FormReference( "buttonGroup1" )
 						"selected": true
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "checkBoxMenuItemPoly", true ) )
 					} )
 					add( new FormComponent( "javax.swing.JCheckBoxMenuItem" ) {
-						name: "menuItem13"
-						"text": new FormMessage( null, "JFrameEditPolygonsMappings.menuItem13.text" )
+						name: "checkBoxMenuItemTypeShapeBezier"
+						"text": new FormMessage( null, "JFrameEditPolygonsMappings.checkBoxMenuItemTypeShapeBezier.text" )
 						"$buttonGroup": new FormReference( "buttonGroup1" )
 						"selected": true
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "checkBoxMenuItemBezier", true ) )
@@ -172,26 +172,26 @@ new FormModel {
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItem1DistanceBB", true ) )
 					} )
 					add( new FormComponent( "javax.swing.JRadioButtonMenuItem" ) {
-						name: "menuItemClassBezier2"
-						"text": new FormMessage( null, "JFrameEditPolygonsMappings.menuItemClassBezier2.text" )
+						name: "menuItemDistBezier2"
+						"text": new FormMessage( null, "JFrameEditPolygonsMappings.menuItemDistBezier2.text" )
 						"$buttonGroup": new FormReference( "buttonGroup2" )
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItemClassBezier2", true ) )
 					} )
 					add( new FormComponent( "javax.swing.JRadioButtonMenuItem" ) {
-						name: "menuItemLinearProx1"
-						"text": new FormMessage( null, "JFrameEditPolygonsMappings.menuItemLinearProx1.text" )
+						name: "menuItemDistLinearProx1"
+						"text": new FormMessage( null, "JFrameEditPolygonsMappings.menuItemDistLinearProx1.text" )
 						"$buttonGroup": new FormReference( "buttonGroup2" )
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItemLinearProx1", true ) )
 					} )
 					add( new FormComponent( "javax.swing.JRadioButtonMenuItem" ) {
-						name: "menuItemLinearProx2"
-						"text": new FormMessage( null, "JFrameEditPolygonsMappings.menuItemLinearProx2.text" )
+						name: "menuItemDistLinearProx2"
+						"text": new FormMessage( null, "JFrameEditPolygonsMappings.menuItemDistLinearProx2.text" )
 						"$buttonGroup": new FormReference( "buttonGroup2" )
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItemLinearProx2", true ) )
 					} )
 					add( new FormComponent( "javax.swing.JRadioButtonMenuItem" ) {
-						name: "menuItemLinearProx3"
-						"text": new FormMessage( null, "JFrameEditPolygonsMappings.menuItemLinearProx3.text" )
+						name: "menuItemDistLinearProx3"
+						"text": new FormMessage( null, "JFrameEditPolygonsMappings.menuItemDistLinearProx3.text" )
 						"$buttonGroup": new FormReference( "buttonGroup2" )
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItemLinearProx3", true ) )
 					} )

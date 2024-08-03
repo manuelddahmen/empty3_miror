@@ -29,7 +29,6 @@ package one.empty3.apps.facedetect;
 import net.miginfocom.swing.MigLayout;
 import one.empty3.feature.app.replace.javax.imageio.ImageIO;
 import one.empty3.library.Config;
-import one.empty3.library.Point3D;
 import one.empty3.library.Resolution;
 import one.empty3.library.objloader.E3Model;
 import org.jetbrains.annotations.NotNull;
@@ -98,10 +97,13 @@ public class JFrameEditPolygonsMappings extends JFrame {
         JFileChooser loadImage = new JFileChooser();
         if (lastDirectory != null)
             loadImage.setCurrentDirectory(lastDirectory);
-        if (loadImage.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+        int ret = loadImage.showOpenDialog(this);
+        if (ret == JFileChooser.APPROVE_OPTION) {
             editPolygonsMappings2.loadImage(loadImage.getSelectedFile());
+            lastDirectory = loadImage.getCurrentDirectory();
+        } else if (ret == JFileChooser.ERROR_OPTION) {
+            System.exit(-1);
         }
-        lastDirectory = loadImage.getCurrentDirectory();
     }
 
     private void menuItemAdd3DModel(ActionEvent e) {
@@ -172,7 +174,7 @@ public class JFrameEditPolygonsMappings extends JFrame {
     public class SaveTexture {
         private final one.empty3.library.core.testing.Resolution resolution;
         private final E3Model model;
-        private final BufferedImage image;
+        private BufferedImage image;
 
         public SaveTexture(@NotNull one.empty3.library.core.testing.Resolution resolution, @NotNull BufferedImage image, @NotNull E3Model model) {
             this.resolution = resolution;
@@ -182,24 +184,17 @@ public class JFrameEditPolygonsMappings extends JFrame {
         }
 
         public BufferedImage computeTexture() {
+            image = editPolygonsMappings2.image;
             TextureMorphMove iTextureMorphMoveImage = new TextureMorphMove(editPolygonsMappings2, (Class<? extends DistanceAB>) editPolygonsMappings2.distanceABClass);
-            editPolygonsMappings2.image = image;
-            iTextureMorphMoveImage.distanceAB = new DistanceProxLinear1(editPolygonsMappings2.pointsInImage.values().stream().toList(),
-                    editPolygonsMappings2.pointsInModel.values().stream().toList(),
-                    new Dimension(editPolygonsMappings2.image.getWidth(), editPolygonsMappings2.image.getHeight()),
-                    new Dimension(editPolygonsMappings2.panelModelView.getWidth(), editPolygonsMappings2.panelModelView.getHeight())
-            );
-            BufferedImage imageOut = new BufferedImage(resolution.x(), resolution.y(), BufferedImage.TYPE_INT_ARGB);
+            BufferedImage imageOut = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_RGB);
             model.texture(iTextureMorphMoveImage);
-            for (double u = 0; u < 1.0; u += 1.0 / resolution.x()) {
-                for (double v = 0; v < resolution.y(); v += 1.0 / resolution.y()) {
-                    Point3D uvFace = new Point3D(u, v, 0.0);
-                    Point3D uvFace1 = model.findUvFace(u, v);
-                    Point3D axPointInB = iTextureMorphMoveImage.distanceAB.findAxPointInB(u, v);
-                    int colorAt = iTextureMorphMoveImage.getColorAt(uvFace.getX(), uvFace.getY());
-                    imageOut.setRGB((int) (u * editPolygonsMappings2.image.getWidth()), (int) (v * editPolygonsMappings2.image.getHeight()), colorAt);
+            for (double u = 0; u < 1.0; u += 1.0 / image.getWidth()) {
+                for (double v = 0; v < 1.0; v += 1.0 / image.getHeight()) {
+                    int colorAt1 = editPolygonsMappings2.iTextureMorphMove.getColorAt(u, v);
+                    imageOut.setRGB((int) Math.min(editPolygonsMappings2.image.getWidth() - 1, u * editPolygonsMappings2.image.getWidth()),
+                            (int) Math.min(editPolygonsMappings2.image.getHeight() - 1, v * editPolygonsMappings2.image.getHeight()), colorAt1);
                 }
-                Logger.getAnonymousLogger().log(Level.INFO, String.format("Image column #" + ((int) (u * 100)) + "% : done"));
+                Logger.getAnonymousLogger().log(Level.INFO, "Image column #" + ((int) (u * 100)) + "% : done");
             }
             return imageOut;
         }
@@ -241,7 +236,7 @@ public class JFrameEditPolygonsMappings extends JFrame {
         editPolygonsMappings2.notMenuOpen = true;
     }
 
-    private void checkBoxMenuItemPoly(ActionEvent e) {
+    private void checkBoxMenuItemShapeTypePolygons(ActionEvent e) {
         if (e.getSource() instanceof JCheckBoxMenuItem r) {
             if (r.isSelected()) {
                 editPolygonsMappings2.iTextureMorphMove.distanceAB.typeShape = DistanceAB.TYPE_SHAPE_QUADR;
@@ -251,7 +246,7 @@ public class JFrameEditPolygonsMappings extends JFrame {
         editPolygonsMappings2.hasChangedAorB = true;
     }
 
-    private void checkBoxMenuItemBezier(ActionEvent e) {
+    private void checkBoxMenuItemTypeShapeBezier(ActionEvent e) {
         if (e.getSource() instanceof JCheckBoxMenuItem r) {
             if (r.isSelected()) {
                 editPolygonsMappings2.iTextureMorphMove.distanceAB.typeShape = DistanceAB.TYPE_SHAPE_BEZIER;
@@ -377,15 +372,15 @@ public class JFrameEditPolygonsMappings extends JFrame {
         menuItem10 = new JMenuItem();
         menuItem11 = new JMenuItem();
         menu5 = new JMenu();
-        checkBoxMenuItem2 = new JCheckBoxMenuItem();
-        menuItem13 = new JCheckBoxMenuItem();
+        checkBoxMenuItemTypeShapePolyogns = new JCheckBoxMenuItem();
+        checkBoxMenuItemTypeShapeBezier = new JCheckBoxMenuItem();
         checkBoxMenuItem1 = new JCheckBoxMenuItem();
         checkBoxMenuItemOptimizeGrid = new JCheckBoxMenuItem();
         menuItemDistanceBB = new JMenuItem();
-        menuItemClassBezier2 = new JRadioButtonMenuItem();
-        menuItemLinearProx1 = new JRadioButtonMenuItem();
-        menuItemLinearProx2 = new JRadioButtonMenuItem();
-        menuItemLinearProx3 = new JRadioButtonMenuItem();
+        menuItemDistBezier2 = new JRadioButtonMenuItem();
+        menuItemDistLinearProx1 = new JRadioButtonMenuItem();
+        menuItemDistLinearProx2 = new JRadioButtonMenuItem();
+        menuItemDistLinearProx3 = new JRadioButtonMenuItem();
         editPolygonsMappings2 = new EditPolygonsMappings();
         menu3 = new JMenu();
 
@@ -528,17 +523,17 @@ public class JFrameEditPolygonsMappings extends JFrame {
             {
                 menu5.setText(bundle.getString("JFrameEditPolygonsMappings.menu5.text"));
 
-                //---- checkBoxMenuItem2 ----
-                checkBoxMenuItem2.setText(bundle.getString("JFrameEditPolygonsMappings.checkBoxMenuItem2.text"));
-                checkBoxMenuItem2.setSelected(true);
-                checkBoxMenuItem2.addActionListener(e -> checkBoxMenuItemPoly(e));
-                menu5.add(checkBoxMenuItem2);
+                //---- checkBoxMenuItemTypeShapePolyogns ----
+                checkBoxMenuItemTypeShapePolyogns.setText(bundle.getString("JFrameEditPolygonsMappings.checkBoxMenuItemTypeShapePolyogns.text"));
+                checkBoxMenuItemTypeShapePolyogns.setSelected(true);
+                checkBoxMenuItemTypeShapePolyogns.addActionListener(e -> checkBoxMenuItemShapeTypePolygons(e));
+                menu5.add(checkBoxMenuItemTypeShapePolyogns);
 
-                //---- menuItem13 ----
-                menuItem13.setText(bundle.getString("JFrameEditPolygonsMappings.menuItem13.text"));
-                menuItem13.setSelected(true);
-                menuItem13.addActionListener(e -> checkBoxMenuItemBezier(e));
-                menu5.add(menuItem13);
+                //---- checkBoxMenuItemTypeShapeBezier ----
+                checkBoxMenuItemTypeShapeBezier.setText(bundle.getString("JFrameEditPolygonsMappings.checkBoxMenuItemTypeShapeBezier.text"));
+                checkBoxMenuItemTypeShapeBezier.setSelected(true);
+                checkBoxMenuItemTypeShapeBezier.addActionListener(e -> checkBoxMenuItemTypeShapeBezier(e));
+                menu5.add(checkBoxMenuItemTypeShapeBezier);
 
                 //---- checkBoxMenuItem1 ----
                 checkBoxMenuItem1.setText(bundle.getString("JFrameEditPolygonsMappings.checkBoxMenuItem1.text"));
@@ -559,25 +554,25 @@ public class JFrameEditPolygonsMappings extends JFrame {
                 menuItemDistanceBB.addActionListener(e -> menuItem1DistanceBB(e));
                 menu5.add(menuItemDistanceBB);
 
-                //---- menuItemClassBezier2 ----
-                menuItemClassBezier2.setText(bundle.getString("JFrameEditPolygonsMappings.menuItemClassBezier2.text"));
-                menuItemClassBezier2.addActionListener(e -> menuItemClassBezier2(e));
-                menu5.add(menuItemClassBezier2);
+                //---- menuItemDistBezier2 ----
+                menuItemDistBezier2.setText(bundle.getString("JFrameEditPolygonsMappings.menuItemDistBezier2.text"));
+                menuItemDistBezier2.addActionListener(e -> menuItemClassBezier2(e));
+                menu5.add(menuItemDistBezier2);
 
-                //---- menuItemLinearProx1 ----
-                menuItemLinearProx1.setText(bundle.getString("JFrameEditPolygonsMappings.menuItemLinearProx1.text"));
-                menuItemLinearProx1.addActionListener(e -> menuItemLinearProx1(e));
-                menu5.add(menuItemLinearProx1);
+                //---- menuItemDistLinearProx1 ----
+                menuItemDistLinearProx1.setText(bundle.getString("JFrameEditPolygonsMappings.menuItemDistLinearProx1.text"));
+                menuItemDistLinearProx1.addActionListener(e -> menuItemLinearProx1(e));
+                menu5.add(menuItemDistLinearProx1);
 
-                //---- menuItemLinearProx2 ----
-                menuItemLinearProx2.setText(bundle.getString("JFrameEditPolygonsMappings.menuItemLinearProx2.text"));
-                menuItemLinearProx2.addActionListener(e -> menuItemLinearProx2(e));
-                menu5.add(menuItemLinearProx2);
+                //---- menuItemDistLinearProx2 ----
+                menuItemDistLinearProx2.setText(bundle.getString("JFrameEditPolygonsMappings.menuItemDistLinearProx2.text"));
+                menuItemDistLinearProx2.addActionListener(e -> menuItemLinearProx2(e));
+                menu5.add(menuItemDistLinearProx2);
 
-                //---- menuItemLinearProx3 ----
-                menuItemLinearProx3.setText(bundle.getString("JFrameEditPolygonsMappings.menuItemLinearProx3.text"));
-                menuItemLinearProx3.addActionListener(e -> menuItemLinearProx3(e));
-                menu5.add(menuItemLinearProx3);
+                //---- menuItemDistLinearProx3 ----
+                menuItemDistLinearProx3.setText(bundle.getString("JFrameEditPolygonsMappings.menuItemDistLinearProx3.text"));
+                menuItemDistLinearProx3.addActionListener(e -> menuItemLinearProx3(e));
+                menu5.add(menuItemDistLinearProx3);
             }
             menuBar1.add(menu5);
         }
@@ -597,15 +592,15 @@ public class JFrameEditPolygonsMappings extends JFrame {
 
         //---- buttonGroup1 ----
         var buttonGroup1 = new ButtonGroup();
-        buttonGroup1.add(checkBoxMenuItem2);
-        buttonGroup1.add(menuItem13);
+        buttonGroup1.add(checkBoxMenuItemTypeShapePolyogns);
+        buttonGroup1.add(checkBoxMenuItemTypeShapeBezier);
 
         //---- buttonGroup2 ----
         var buttonGroup2 = new ButtonGroup();
-        buttonGroup2.add(menuItemClassBezier2);
-        buttonGroup2.add(menuItemLinearProx1);
-        buttonGroup2.add(menuItemLinearProx2);
-        buttonGroup2.add(menuItemLinearProx3);
+        buttonGroup2.add(menuItemDistBezier2);
+        buttonGroup2.add(menuItemDistLinearProx1);
+        buttonGroup2.add(menuItemDistLinearProx2);
+        buttonGroup2.add(menuItemDistLinearProx3);
         // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
     }
 
@@ -632,15 +627,15 @@ public class JFrameEditPolygonsMappings extends JFrame {
     private JMenuItem menuItem10;
     private JMenuItem menuItem11;
     private JMenu menu5;
-    private JCheckBoxMenuItem checkBoxMenuItem2;
-    private JCheckBoxMenuItem menuItem13;
+    private JCheckBoxMenuItem checkBoxMenuItemTypeShapePolyogns;
+    private JCheckBoxMenuItem checkBoxMenuItemTypeShapeBezier;
     private JCheckBoxMenuItem checkBoxMenuItem1;
     private JCheckBoxMenuItem checkBoxMenuItemOptimizeGrid;
     private JMenuItem menuItemDistanceBB;
-    private JRadioButtonMenuItem menuItemClassBezier2;
-    private JRadioButtonMenuItem menuItemLinearProx1;
-    private JRadioButtonMenuItem menuItemLinearProx2;
-    private JRadioButtonMenuItem menuItemLinearProx3;
+    private JRadioButtonMenuItem menuItemDistBezier2;
+    private JRadioButtonMenuItem menuItemDistLinearProx1;
+    private JRadioButtonMenuItem menuItemDistLinearProx2;
+    private JRadioButtonMenuItem menuItemDistLinearProx3;
     EditPolygonsMappings editPolygonsMappings2;
     private JMenu menu3;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on

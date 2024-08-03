@@ -27,12 +27,12 @@
 package one.empty3.apps.facedetect;
 
 import com.google.common.util.concurrent.AtomicDouble;
-import one.empty3.feature.app.replace.javax.imageio.ImageIO;
 import net.miginfocom.swing.MigLayout;
 import one.empty3.apps.morph.Main;
 import one.empty3.library.*;
 import one.empty3.library.objloader.E3Model;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -374,7 +374,11 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 
     public void loadImage(File selectedFile) {
-        image = ImageIO.read(selectedFile);
+        try {
+            image = ImageIO.read(selectedFile);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         if (image != null && testHumanHeadTexturing != null)
             testHumanHeadTexturing.setJpg(image);
 
@@ -387,71 +391,70 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
         hasChangedAorB = true;
         while (isRunning) {
             try {
-                if (isNotMenuOpen()) {
-                    zBufferImage = testHumanHeadTexturing.getJpgFile();
-                    // Display 3D scene
-                    if (zBufferImage != null && zBufferImage.getWidth() == panelModelView.getWidth() && zBufferImage.getHeight() == panelModelView.getHeight()) {
-                        Graphics graphics = panelModelView.getGraphics();
-                        if (graphics != null) {
-                            graphics.drawImage(zBufferImage, 0, 0, panelModelView.getWidth(), panelModelView.getHeight(), null);
-                            displayPointsOut(pointsInModel);
-                        }
+                //if (isNotMenuOpen()) {
+                zBufferImage = testHumanHeadTexturing.getJpgFile();
+                // Display 3D scene
+                if (zBufferImage != null && zBufferImage.getWidth() == panelModelView.getWidth() && zBufferImage.getHeight() == panelModelView.getHeight()) {
+                    Graphics graphics = panelModelView.getGraphics();
+                    if (graphics != null) {
+                        graphics.drawImage(zBufferImage, 0, 0, panelModelView.getWidth(), panelModelView.getHeight(), null);
+                        displayPointsOut(pointsInModel);
                     }
-                    if (image != null) {
-                        Graphics graphics = panelPicture.getGraphics();
-                        if (graphics != null) {
-                            graphics.drawImage(image, 0, 0, panelPicture.getWidth(), panelPicture.getHeight(), null);
-                            displayPointsIn(pointsInImage);
-                        }
-                    }
-
-
-                    if (pointsInImage != null && panelModelView != null && !pointsInImage.isEmpty()
-                            && !pointsInModel.isEmpty() && model != null && image != null
-                            && threadDistanceIsNotRunning && iTextureMorphMove != null && hasChangedAorB()) {
-                        Thread thread = new Thread(() -> {
-                            long l = System.nanoTime();
-                            threadDistanceIsNotRunning = false;
-                            Logger.getAnonymousLogger().log(Level.INFO, "All loaded resources finished. Starts distance calculation");
-
-                            if (iTextureMorphMove.distanceAB == null)
-                                iTextureMorphMove.setDistanceABclass((Class<? extends DistanceAB>) DistanceProxLinear1.class);
-
-                            if (!iTextureMorphMove.distanceAB.isInvalidArray()) {
-                                iTextureMorphMove.distanceAB.setModel(model);
-                                // Display 3D scene
-                                if (model != null) {
-                                    model.texture(iTextureMorphMove);
-                                }
-                                hasChangedAorB = false;
-                            } else {
-                                hasChangedAorB = true;
-                                Logger.getAnonymousLogger().log(Level.INFO, "Invalid array in DistanceAB");
-                            }
-
-                            try {
-                                Thread.sleep(100);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-
-                            l = System.nanoTime() - l;
-                            Logger.getAnonymousLogger().log(Level.INFO, "Distance calculation finished" + (l / 1000000.0));
-                            threadDistanceIsNotRunning = true;
-                        });
-                        thread.start();
-                        Logger.getAnonymousLogger().log(Level.INFO, "Thread texture creation started");
-                    }
-                    if (!threadDistanceIsNotRunning)
-                        Logger.getAnonymousLogger().log(Level.INFO, "Thread 'Texture creation' still in progress...");
                 }
-                Thread.sleep(200);
-            } catch (RuntimeException | InterruptedException ex) {
+                if (image != null) {
+                    Graphics graphics = panelPicture.getGraphics();
+                    if (graphics != null) {
+                        graphics.drawImage(image, 0, 0, panelPicture.getWidth(), panelPicture.getHeight(), null);
+                        displayPointsIn(pointsInImage);
+                    }
+                }
+
+
+                if (pointsInImage != null && panelModelView != null && !pointsInImage.isEmpty()
+                        && !pointsInModel.isEmpty() && model != null && image != null
+                        && threadDistanceIsNotRunning && iTextureMorphMove != null && hasChangedAorB()) {
+                    Thread thread = new Thread(() -> {
+                        long l = System.nanoTime();
+                        threadDistanceIsNotRunning = false;
+                        Logger.getAnonymousLogger().log(Level.INFO, "All loaded resources finished. Starts distance calculation");
+
+                        if (iTextureMorphMove.distanceAB == null)
+                            iTextureMorphMove.setDistanceABclass((Class<? extends DistanceAB>) DistanceProxLinear1.class);
+
+                        if (!iTextureMorphMove.distanceAB.isInvalidArray()) {
+                            iTextureMorphMove.distanceAB.setModel(model);
+                            // Display 3D scene
+                            if (model != null) {
+                                model.texture(iTextureMorphMove);
+                            }
+                            hasChangedAorB = false;
+                        } else {
+                            hasChangedAorB = true;
+                            Logger.getAnonymousLogger().log(Level.INFO, "Invalid array in DistanceAB");
+                        }
+
+                        try {
+                            Thread.sleep(100);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+
+                        l = System.nanoTime() - l;
+                        Logger.getAnonymousLogger().log(Level.INFO, "Distance calculation finished" + (l / 1000000.0));
+                        threadDistanceIsNotRunning = true;
+                    });
+                    thread.start();
+                    Logger.getAnonymousLogger().log(Level.INFO, "Thread texture creation started");
+                }
+                if (!threadDistanceIsNotRunning)
+                    Logger.getAnonymousLogger().log(Level.INFO, "Thread 'Texture creation' still in progress...");
+                //}
+            } catch (RuntimeException ex) {
                 ex.printStackTrace();
             }
             if (testHumanHeadTexturing == null || !testHumanHeadTexturing.isRunning()) {
                 Logger.getAnonymousLogger().log(Level.INFO, "Le thead :TestObjet est arrêté ou non attribute");
-                Logger.getAnonymousLogger().log(Level.INFO, String.format("Il y a (pas nécessairement exact) %d instances de classes dérivées de TsestObjet"));
+                Logger.getAnonymousLogger().log(Level.INFO, "Il y a (pas nécessairement exact) %d instances de classes dérivées de TsestObjet");
             }
         }
     }
