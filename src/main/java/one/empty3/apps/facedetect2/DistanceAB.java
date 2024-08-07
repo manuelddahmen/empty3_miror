@@ -32,8 +32,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class DistanceAB {
-    SurfaceParametriquePolynomiale surfaceA;
-    SurfaceParametriquePolynomiale surfaceB;
+    protected SurfaceParametriquePolynomiale surfaceA;
+    protected SurfaceParametriquePolynomiale surfaceB;
     Dimension2D aDimReduced = new Dimension(20, 20);
     Dimension2D bDimReduced = new Dimension(20, 20);
     static final int TYPE_SHAPE_BEZIER = 1;
@@ -51,10 +51,10 @@ public abstract class DistanceAB {
     double arrayHeight = 80;
     double arrayWidth = 80;
 
-    List<Double> listAX = new ArrayList<>();
-    List<Double> listAY = new ArrayList<>();
-    List<Double> listBX = new ArrayList<>();
-    List<Double> listBY = new ArrayList<>();
+    protected List<Double> listAX = new ArrayList<>();
+    protected List<Double> listAY = new ArrayList<>();
+    protected List<Double> listBX = new ArrayList<>();
+    protected List<Double> listBY = new ArrayList<>();
 
     protected E3Model model;
     protected boolean isInvalidArray = false;

@@ -82,28 +82,28 @@ public class TextureMorphMove extends ITexture {
                         distanceAB = new DistanceProxLinear1(editPanel.pointsInImage.values().stream().toList(),
                                 editPanel.pointsInModel.values().stream().toList(), new Dimension(editPanel.panelPicture.getWidth(), editPanel.panelPicture.getHeight()),
                                 new Dimension(editPanel.panelModelView.getWidth(),
-                                        editPanel.panelModelView.getHeight()));
+                                        editPanel.panelModelView.getHeight()), false, false);
                         isNotOk = false;
                     } else if (distanceMap.isAssignableFrom(DistanceProxLinear2.class)) {
                         distanceAB = new DistanceProxLinear2(editPanel.pointsInImage.values().stream().toList(),
                                 editPanel.pointsInModel.values().stream().toList(), new Dimension(editPanel.panelPicture.getWidth(), editPanel.panelPicture.getHeight()),
                                 new Dimension(editPanel.panelModelView.getWidth(),
-                                        editPanel.panelModelView.getHeight()));
+                                        editPanel.panelModelView.getHeight()), false, false);
                         isNotOk = false;
                     } else if (distanceMap.isAssignableFrom(DistanceProxLinear3.class)) {
                         distanceAB = new DistanceProxLinear3(editPanel.pointsInImage.values().stream().toList(),
                                 editPanel.pointsInModel.values().stream().toList(), new Dimension(editPanel.panelPicture.getWidth(), editPanel.panelPicture.getHeight()),
                                 new Dimension(editPanel.panelModelView.getWidth(),
-                                        editPanel.panelModelView.getHeight()));
+                                        editPanel.panelModelView.getHeight()), false, true);
                         isNotOk = false;
                     } else if (distanceMap.isAssignableFrom(DistanceBezier2.class)) {
                         distanceAB = new DistanceBezier2(editPanel.pointsInImage.values().stream().toList(),
                                 editPanel.pointsInModel.values().stream().toList(), new Dimension(editPanel.panelPicture.getWidth(), editPanel.panelPicture.getHeight()),
                                 new Dimension(editPanel.panelModelView.getWidth(),
-                                        editPanel.panelModelView.getHeight()));
+                                        editPanel.panelModelView.getHeight()), false, false);
                         isNotOk = false;
                     } else {
-                        distanceAB = new DistanceProxLinear1(editPanel.pointsInImage.values().stream().toList(),
+                        distanceAB = new DistanceBB(editPanel.pointsInImage.values().stream().toList(),
                                 editPanel.pointsInModel.values().stream().toList(), new Dimension(editPanel.panelPicture.getWidth(), editPanel.panelPicture.getHeight()),
                                 new Dimension(editPanel.panelModelView.getWidth(),
                                         editPanel.panelModelView.getHeight()));

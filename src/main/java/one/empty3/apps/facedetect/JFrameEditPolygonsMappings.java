@@ -210,17 +210,22 @@ public class JFrameEditPolygonsMappings extends JFrame {
                     throw new RuntimeException(ex);
                 }
             }
+            /*
             TextureMorphMove textureMorphMoveImage = new TextureMorphMove(editPolygonsMappings2, DistanceProxLinear1.class);
             textureMorphMoveImage.distanceAB = new DistanceProxLinear1(editPolygonsMappings2.pointsInImage.values().stream().toList(),
                     editPolygonsMappings2.pointsInModel.values().stream().toList(),
                     new Dimension(editPolygonsMappings2.image.getWidth(),
-                            editPolygonsMappings2.image.getHeight()), new Dimension(Resolution.HD1080RESOLUTION.x(), Resolution.HD1080RESOLUTION.y())
+                            editPolygonsMappings2.image.getHeight()), new Dimension(Resolution.HD1080RESOLUTION.x(), Resolution.HD1080RESOLUTION.y(), false, false)
             );
+
+             */
+            TextureMorphMove textureMorphMove = editPolygonsMappings2.iTextureMorphMove;
             E3Model model = editPolygonsMappings2.model;
             File defaultFileOutput = config.getDefaultFileOutput();
             SaveTexture saveTexture = new SaveTexture(Resolution.HD1080RESOLUTION, editPolygonsMappings2.image, model);
             BufferedImage bufferedImage = saveTexture.computeTexture();
-            ImageIO.write(bufferedImage, "jpg", new File(config.getMap().get("D3ModelFaceTexturing") + UUID.randomUUID() + ".jpg"));
+            ImageIO.write(bufferedImage, "jpg", new File(config.getDefaultFileOutput()
+                    + File.separator + "output-face-on-model-texture" + UUID.randomUUID() + ".jpg"));
             Logger.getAnonymousLogger().log(Level.INFO, "Smart generated HD image");
         };
         Thread thread = new Thread(jpg);
@@ -343,6 +348,14 @@ public class JFrameEditPolygonsMappings extends JFrame {
     }
 
     private void editPolygonsMappings2MouseDragged(MouseEvent e) {
+        // TODO add your code here
+    }
+
+    private void checkBoxMenuItemPoly(ActionEvent e) {
+        // TODO add your code here
+    }
+
+    private void checkBoxMenuItemBezier(ActionEvent e) {
         // TODO add your code here
     }
 
@@ -526,18 +539,19 @@ public class JFrameEditPolygonsMappings extends JFrame {
                 //---- checkBoxMenuItemTypeShapePolyogns ----
                 checkBoxMenuItemTypeShapePolyogns.setText(bundle.getString("JFrameEditPolygonsMappings.checkBoxMenuItemTypeShapePolyogns.text"));
                 checkBoxMenuItemTypeShapePolyogns.setSelected(true);
-                checkBoxMenuItemTypeShapePolyogns.addActionListener(e -> checkBoxMenuItemShapeTypePolygons(e));
+                checkBoxMenuItemTypeShapePolyogns.addActionListener(e -> checkBoxMenuItemPoly(e));
                 menu5.add(checkBoxMenuItemTypeShapePolyogns);
 
                 //---- checkBoxMenuItemTypeShapeBezier ----
                 checkBoxMenuItemTypeShapeBezier.setText(bundle.getString("JFrameEditPolygonsMappings.checkBoxMenuItemTypeShapeBezier.text"));
                 checkBoxMenuItemTypeShapeBezier.setSelected(true);
-                checkBoxMenuItemTypeShapeBezier.addActionListener(e -> checkBoxMenuItemTypeShapeBezier(e));
+                checkBoxMenuItemTypeShapeBezier.addActionListener(e -> checkBoxMenuItemBezier(e));
                 menu5.add(checkBoxMenuItemTypeShapeBezier);
 
                 //---- checkBoxMenuItem1 ----
                 checkBoxMenuItem1.setText(bundle.getString("JFrameEditPolygonsMappings.checkBoxMenuItem1.text"));
                 checkBoxMenuItem1.addActionListener(e -> {
+			checkBoxMenuItem1(e);
 			checkBoxMenuItem1(e);
 			checkBoxMenuItem1(e);
 			checkBoxMenuItem1(e);
