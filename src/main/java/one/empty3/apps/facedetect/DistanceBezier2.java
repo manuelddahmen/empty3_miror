@@ -96,6 +96,13 @@ public class DistanceBezier2 extends DistanceAB {
         this.optimizeGrid = optmizeGrid;
         System.out.println("\nStart properties\n\tOpt1 : " + opt1 + "\n\tOptimizeGrid: " + optimizeGrid + "\n\tTypeShape : " + typeShape + "\n");
 
+        if (A != null && B != null && A.size() > 0 && B.size() > 0) {
+
+        } else {
+            System.out.println("A and B are empty");
+            return;
+        }
+
 
         this.A = A;
         this.B = B;
@@ -220,8 +227,8 @@ public class DistanceBezier2 extends DistanceAB {
         if (sAij.length == 0 || sAij[0].length == 0 || sBij.length == 0 || sBij[0].length == 0)
             setInvalidArray(true);
 
-        precomputeX2(aDimReal, aDimReduced, sAij, surfaceA);
-        precomputeX2(bDimReal, bDimReduced, sBij, surfaceB);
+        precomputeX2(aDimReal, aDimReduced, sAij, surfaceA, rectA);
+        precomputeX2(bDimReal, bDimReduced, sBij, surfaceB, rectB);
     }
 
     public double maxBox(double v, double min, double max) {
@@ -304,14 +311,24 @@ public class DistanceBezier2 extends DistanceAB {
         }
     }
 
-    public void precomputeX2(Dimension2D xDimReal, Dimension2D xDimReduced, Point3D[][] sXij, ParametricSurface surfaceX) {
+    public void precomputeX2(Dimension2D xDimReal, Dimension2D xDimReduced, Point3D[][] sXij, ParametricSurface surfaceX, Rectangle2 rectX) {
         for (int i = 0; i < xDimReduced.getWidth(); i++) {
             for (int j = 0; j < xDimReduced.getHeight(); j++) {
-                Point3D tried = new Point3D(1.0 * i / xDimReduced.getWidth() * xDimReal.getWidth(),
+                Point3D tried;
+                tried = new Point3D(1.0 * i / xDimReduced.getWidth() * xDimReal.getWidth(),
                         1.0 * j / xDimReduced.getHeight() * xDimReal.getHeight(), 0.0);
-                sXij[i][j] = surfaceX.calculerPoint3D(tried.getX(), tried.getY())
-                        .multDot(new Point3D(1. / xDimReal.getWidth(), 1. / xDimReal.getHeight(), 0.0));
+                if (opt1) {
+                    tried = new Point3D(rectX.getX1(), rectX.getY1(), 0.0)
+                            .plus(new Point3D((rectX.x2 - tried.getX()) / rectX.getHeight(),
+                                    (rectX.y2 - tried.getY()) / rectX.getHeight(), 0.0));
 
+                }
+                try {
+                    sXij[i][j] = surfaceX.calculerPoint3D(tried.getX(), tried.getY())
+                            .multDot(new Point3D(1. / xDimReal.getWidth(), 1. / xDimReal.getHeight(), 0.0));
+                } catch (IndexOutOfBoundsException ex) {
+                    //x.printStackTrace();
+                }
             }
         }
     }

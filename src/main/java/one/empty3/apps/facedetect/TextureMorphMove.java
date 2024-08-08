@@ -57,16 +57,18 @@ public class TextureMorphMove extends ITexture {
         if (distanceAB != null && !distanceAB.isInvalidArray() && editPanel.image != null) {
             try {
                 Point3D axPointInB = distanceAB.findAxPointInB(u, v);
-                Point3D point3D = new Point3D(axPointInB.getX() * editPanel.image.getWidth(), axPointInB.getY() * editPanel.image.getHeight(), 0.0);
-                int rgb = editPanel.image.getRGB((int) (Math.max(0, Math.min(point3D.getX(), (double) editPanel.image.getWidth() - 1)))
-                        , (int) (Math.max(0, Math.min((point3D.getY()), (double) editPanel.image.getHeight() - 1))));
-                return rgb;
+                if (axPointInB != null) {
+
+                    Point3D point3D = new Point3D(axPointInB.getX() * editPanel.image.getWidth(), axPointInB.getY() * editPanel.image.getHeight(), 0.0);
+                    int rgb = editPanel.image.getRGB((int) (Math.max(0, Math.min(point3D.getX(), (double) editPanel.image.getWidth() - 1)))
+                            , (int) (Math.max(0, Math.min((point3D.getY()), (double) editPanel.image.getHeight() - 1))));
+                    return rgb;
+                }
             } catch (RuntimeException e) {
-                return WHITE;
+                //System.out.print("null/");
             }
-        } else {
-            return GRAY;
         }
+        return -1;
     }
 
     //public void setEditOPanel(EditPolygonsMappings editPolygonsMappings) {
