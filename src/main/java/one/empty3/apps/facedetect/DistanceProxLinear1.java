@@ -81,6 +81,12 @@ public class DistanceProxLinear1 extends DistanceBezier2 {
         return pa;
     }
 
+    private Point3D findAxPointInBal4a(double u, double v) {
+        Point3D pb = nearLandmark(u, v);
+        pb = new Point3D(Math.max(0, Math.min(pb.get(0), listBX.size() - 1)), Math.max(0, Math.min(pb.get(1), listBY.size() - 1)), 0.0);
+        Point3D pa = surfaceA.calculerPoint3D(pb.getX(), pb.getY());
+        return pa;
+    }
 
     private Point3D findAxPointInBal5(double u, double v) {
         Point3D pb = nearLandmark(u, v);

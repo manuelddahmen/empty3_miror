@@ -104,8 +104,7 @@ public class DistanceProxLinear3 extends DistanceBezier2 {
                 int v1 = (int) (j * bDimReduced.getHeight());
                 if (u1 < 0 || u1 >= bDimReduced.getWidth() | v < 0 || v >= bDimReduced.getHeight()) {
                     //return null;
-                }
-                if (Point3D.distance(sBij[u1][v1], uv) < distance) {
+                } else if (Point3D.distance(sBij[u1][v1], uv) < distance) {
                     indexI = i;
                     indexJ = j;
                     distance = Point3D.distance(sBij[u1][v1], uv);
@@ -116,7 +115,7 @@ public class DistanceProxLinear3 extends DistanceBezier2 {
                 indexJ < 0 || indexJ >= surfaceB.getCoefficients().getData2d().size())
             return null;
         //return surfaceB.calculerPoint3D(indexI, indexJ);//precision(point3Dij, u, v);//point3Dij
-        return new Point3D(indexI / bDimReduced.getWidth(), indexJ * bDimReduced.getHeight(), 0.0);
+        return new Point3D(indexI /*/ bDimReduced.getWidth()*/, indexJ /** bDimReduced.getHeight()*/, 0.0);
     }
 
     /***
