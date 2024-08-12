@@ -86,7 +86,7 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
     EditPolygonsMappings() {
         initComponents();
         iTextureMorphMove = new TextureMorphMove(this, distanceABClass != null ? distanceABClass : DistanceProxLinear1.class);
-
+        distanceABClass = DistanceProxLinear1.class;
     }
 
     public JPanel getContentPanel() {
@@ -389,27 +389,39 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
     public void run() {
         testHumanHeadTexturing = TestHumanHeadTexturing.startAll(this, image, model);
         hasChangedAorB = true;
+        boolean firstTime = true;
         while (isRunning) {
             try {
-                //if (isNotMenuOpen()) {
-                zBufferImage = testHumanHeadTexturing.getJpgFile();
-                // Display 3D scene
-                if (zBufferImage != null && zBufferImage.getWidth() == panelModelView.getWidth() && zBufferImage.getHeight() == panelModelView.getHeight()) {
-                    Graphics graphics = panelModelView.getGraphics();
-                    if (graphics != null) {
-                        graphics.drawImage(zBufferImage, 0, 0, panelModelView.getWidth(), panelModelView.getHeight(), null);
-                        displayPointsOut(pointsInModel);
+                Thread threadDisplay = new Thread(() -> {
+                    while (isRunning) {
+                        //if (isNotMenuOpen()) {
+                        zBufferImage = testHumanHeadTexturing.zBufferImage();
+                        // Display 3D scene
+                        if (zBufferImage != null && zBufferImage.getWidth() == panelModelView.getWidth() && zBufferImage.getHeight() == panelModelView.getHeight()) {
+                            Graphics graphics = panelModelView.getGraphics();
+                            if (graphics != null) {
+                                graphics.drawImage(zBufferImage, 0, 0, panelModelView.getWidth(), panelModelView.getHeight(), null);
+                                displayPointsOut(pointsInModel);
+                            }
+                        }
+                        if (image != null) {
+                            Graphics graphics = panelPicture.getGraphics();
+                            if (graphics != null) {
+                                graphics.drawImage(image, 0, 0, panelPicture.getWidth(), panelPicture.getHeight(), null);
+                                displayPointsIn(pointsInImage);
+                            }
+                        }
+                        try {
+                            Thread.sleep(10);
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
                     }
+                });
+                if (firstTime) {
+                    threadDisplay.start();
+                    firstTime = false;
                 }
-                if (image != null) {
-                    Graphics graphics = panelPicture.getGraphics();
-                    if (graphics != null) {
-                        graphics.drawImage(image, 0, 0, panelPicture.getWidth(), panelPicture.getHeight(), null);
-                        displayPointsIn(pointsInImage);
-                    }
-                }
-
-
                 if (pointsInImage != null && panelModelView != null && !pointsInImage.isEmpty()
                         && !pointsInModel.isEmpty() && model != null && image != null
                         && threadDistanceIsNotRunning && iTextureMorphMove != null && hasChangedAorB()) {
@@ -418,9 +430,10 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
                         threadDistanceIsNotRunning = false;
                         Logger.getAnonymousLogger().log(Level.INFO, "All loaded resources finished. Starts distance calculation");
 
-                        if (iTextureMorphMove.distanceAB == null)
+                        if (distanceABClass == null)
                             iTextureMorphMove.setDistanceABclass((Class<? extends DistanceAB>) DistanceProxLinear1.class);
-
+                        else
+                            iTextureMorphMove.setDistanceABclass(distanceABClass);
                         if (!iTextureMorphMove.distanceAB.isInvalidArray()) {
                             iTextureMorphMove.distanceAB.setModel(model);
                             // Display 3D scene
@@ -452,9 +465,12 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
             } catch (RuntimeException ex) {
                 ex.printStackTrace();
             }
-            if (testHumanHeadTexturing == null || !testHumanHeadTexturing.isRunning()) {
+            if (testHumanHeadTexturing == null || !testHumanHeadTexturing.isRunning()
+                    && image != null && model != null) {
+                //testHumanHeadTexturing = TestHumanHeadTexturing.startAll(this, image, model);
                 Logger.getAnonymousLogger().log(Level.INFO, "Le thead :TestObjet est arrêté ou non attribute");
                 Logger.getAnonymousLogger().log(Level.INFO, "Il y a (pas nécessairement exact) %d instances de classes dérivées de TsestObjet");
+                Logger.getAnonymousLogger().log(Level.INFO, "Une nouvelle instance a été démarrée");
             }
         }
     }

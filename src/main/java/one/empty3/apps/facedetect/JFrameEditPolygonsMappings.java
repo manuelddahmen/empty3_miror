@@ -29,6 +29,7 @@ package one.empty3.apps.facedetect;
 import net.miginfocom.swing.MigLayout;
 import one.empty3.feature.app.replace.javax.imageio.ImageIO;
 import one.empty3.library.Config;
+import one.empty3.library.Point3D;
 import one.empty3.library.Resolution;
 import one.empty3.library.objloader.E3Model;
 import org.jetbrains.annotations.NotNull;
@@ -53,6 +54,7 @@ public class JFrameEditPolygonsMappings extends JFrame {
     Thread threadDisplay;
     private int mode = 0;
     private int SELECT_POINT = 1;
+    private Resolution resolutionOut;
 
     public JFrameEditPolygonsMappings() {
         initComponents();
@@ -201,6 +203,9 @@ public class JFrameEditPolygonsMappings extends JFrame {
     }
 
     private void menuItemHD(ActionEvent e) {
+        if (resolutionOut == null) {
+            resolutionOut = Resolution.HD1080RESOLUTION;
+        }
         Runnable jpg = () -> {
             while (editPolygonsMappings2.image == null || editPolygonsMappings2.pointsInImage == null || editPolygonsMappings2.pointsInModel == null
                     || editPolygonsMappings2.model == null) {
@@ -222,18 +227,23 @@ public class JFrameEditPolygonsMappings extends JFrame {
             TextureMorphMove textureMorphMove = editPolygonsMappings2.iTextureMorphMove;
             E3Model model = editPolygonsMappings2.model;
             File defaultFileOutput = config.getDefaultFileOutput();
-            SaveTexture saveTexture = new SaveTexture(Resolution.HD1080RESOLUTION, editPolygonsMappings2.image, model);
+            SaveTexture saveTexture = new SaveTexture(resolutionOut, editPolygonsMappings2.image, model);
             BufferedImage bufferedImage = saveTexture.computeTexture();
             ImageIO.write(bufferedImage, "jpg", new File(config.getDefaultFileOutput()
                     + File.separator + "output-face-on-model-texture" + UUID.randomUUID() + ".jpg"));
-            Logger.getAnonymousLogger().log(Level.INFO, "Smart generated HD image");
+            if (resolutionOut.equals(Resolution.HD1080RESOLUTION))
+                Logger.getAnonymousLogger().log(Level.INFO, "Smart generated HD image");
+            else
+                Logger.getAnonymousLogger().log(Level.INFO, "Smart generated 4K image");
+            resolutionOut = null;
         };
         Thread thread = new Thread(jpg);
         thread.start();
     }
 
     private void menuItem4K(ActionEvent e) {
-        // TODO add your code here
+        this.resolutionOut = Resolution.K4RESOLUTION;
+        menuItemHD(e);
     }
 
 
@@ -359,6 +369,16 @@ public class JFrameEditPolygonsMappings extends JFrame {
         // TODO add your code here
     }
 
+    private void addPoint(ActionEvent e) {
+        if (editPolygonsMappings2.pointsInImage != null && editPolygonsMappings2.pointsInModel != null) {
+            UUID num = UUID.randomUUID();
+            editPolygonsMappings2.pointsInImage.put("LANDMARK_" + num, Point3D.O0);
+            editPolygonsMappings2.pointsInModel.put("LANDMARK_" + num, Point3D.O0);
+        } else {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Map of points image/model is null");
+        }
+    }
+
 
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
@@ -373,7 +393,7 @@ public class JFrameEditPolygonsMappings extends JFrame {
         menuItem8 = new JMenuItem();
         menuItem2 = new JMenuItem();
         menu1 = new JMenu();
-        menuItemMoveLinesUp = new JMenuItem();
+        menuItemAddPoint = new JMenuItem();
         menuItemMoveLinesDown = new JMenuItem();
         menuItemMoveLinesLeft = new JMenuItem();
         menuItemMoveColumnsRight = new JMenuItem();
@@ -474,9 +494,13 @@ public class JFrameEditPolygonsMappings extends JFrame {
             {
                 menu1.setText(bundle.getString("JFrameEditPolygonsMappings.menu1.text"));
 
-                //---- menuItemMoveLinesUp ----
-                menuItemMoveLinesUp.setText(bundle.getString("JFrameEditPolygonsMappings.menuItemMoveLinesUp.text"));
-                menu1.add(menuItemMoveLinesUp);
+                //---- menuItemAddPoint ----
+                menuItemAddPoint.setText(bundle.getString("JFrameEditPolygonsMappings.menuItemAddPoint.text"));
+                menuItemAddPoint.addActionListener(e -> {
+			addPoint(e);
+			addPoint(e);
+		});
+                menu1.add(menuItemAddPoint);
 
                 //---- menuItemMoveLinesDown ----
                 menuItemMoveLinesDown.setText(bundle.getString("JFrameEditPolygonsMappings.menuItemMoveLinesDown.text"));
@@ -629,7 +653,7 @@ public class JFrameEditPolygonsMappings extends JFrame {
     private JMenuItem menuItem8;
     private JMenuItem menuItem2;
     private JMenu menu1;
-    private JMenuItem menuItemMoveLinesUp;
+    private JMenuItem menuItemAddPoint;
     private JMenuItem menuItemMoveLinesDown;
     private JMenuItem menuItemMoveLinesLeft;
     private JMenuItem menuItemMoveColumnsRight;

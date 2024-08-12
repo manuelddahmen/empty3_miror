@@ -186,7 +186,7 @@ public class ZBufferImpl extends Representable implements ZBuffer {
 
         if (r instanceof Scene) {
             Scene scene = (Scene) r;
-            scene.getObjets().getData1d().forEach(representable -> draw(representable));
+            scene.getObjets().getData1d().forEach(this::draw);
             return;
         } else if (r instanceof RepresentableConteneur) {
             final Representable r1 = r;

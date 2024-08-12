@@ -94,12 +94,12 @@ public class DistanceBezier2 extends DistanceAB {
         super();
         this.opt1 = opt1;
         this.optimizeGrid = optmizeGrid;
-        System.out.println("\nStart properties\n\tOpt1 : " + opt1 + "\n\tOptimizeGrid: " + optimizeGrid + "\n\tTypeShape : " + typeShape + "\n");
+        System.out.println("\nStart properties\n\tOpt1 : " + opt1 + "\n\tOptimizeGrid: " + optimizeGrid + "\n\tTypeShape : " + typeShape + "\n\t" + getClass().getCanonicalName() + "\n");
 
         if (A != null && B != null && A.size() > 0 && B.size() > 0) {
 
         } else {
-            System.out.println("A and B are empty");
+            System.out.println("A or B are null or empty");
             return;
         }
 

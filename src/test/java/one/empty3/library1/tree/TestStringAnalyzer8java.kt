@@ -66,7 +66,7 @@ class TestStringAnalyzer8java {
                 println("------------------------------------------------------------------------")
                 println(stringAnalyzerJava2.construct.toLangStringJava(isDebug))
                 println("------------------------------------------------------------------------")
-                println("- " + "amount of code: " + (stringAnalyzerJava2.mPosition + 1) + "/" + readString.length)
+                println("- " + "amount of code: " + parse + "-" + (stringAnalyzerJava2.mPosition + 1) + "/" + readString.length)
                 println("------------------------------------------------------------------------")
                 //println("- " + "errors (characters remainers): ")
                 //println("------------------------------------------------------------------------")
@@ -121,7 +121,7 @@ class TestStringAnalyzer8java {
         throw RuntimeException("Not found or read fails")
     }
 
-    public fun getJavaToken8(
+    fun getJavaToken8(
         stringAnalyzer3: StringAnalyzerJava2,
     ): StringAnalyzer3.Token {
         val tokenPackage = stringAnalyzer3.TokenPackage()
@@ -173,13 +173,13 @@ class TestStringAnalyzer8java {
         val tokenCloseBracketClass = stringAnalyzer3.SingleTokenOptional(stringAnalyzer3.TokenCloseBracket())
 
         // Variables members declarations
-        val tokenMemberVarType1 = stringAnalyzer3.TokenName()
+        val tokenMemberVarType1 = stringAnalyzer3.TokenName1()
         val tokenMemberVarName1 = stringAnalyzer3.TokenName()
         val tokenMemberVarEquals1 = stringAnalyzer3.TokenEquals()
-        val tokenMemberExpression1 = stringAnalyzer3.TokenExpression2()
+        val tokenMemberExpression1 = stringAnalyzer3.TokenExpression1()
         val tokenMemberVarSemiColon1 = stringAnalyzer3.TokenSemiColon()
 
-        val tokenMemberVarType2 = stringAnalyzer3.TokenName()
+        val tokenMemberVarType2 = stringAnalyzer3.TokenName1()
         val tokenMemberVarName2 = stringAnalyzer3.TokenName()
         val tokenMemberVarSemiColon2 = stringAnalyzer3.TokenSemiColon()
 
@@ -192,40 +192,40 @@ class TestStringAnalyzer8java {
         tokenMemberVarName2.addToken(tokenMemberVarSemiColon2)
 
         // Method's instructions
-        val tokenMemberMethodVarType1 = stringAnalyzer3.TokenName()
+        val tokenMemberMethodVarType1 = stringAnalyzer3.TokenName1()
         val tokenMemberMethodVarName1 = stringAnalyzer3.TokenName()
         val tokenMethodSemiColonVar1 = stringAnalyzer3.TokenSemiColon()
 
-        val tokenMemberMethodVarType2 = stringAnalyzer3.TokenName2()
+        val tokenMemberMethodVarType2 = stringAnalyzer3.TokenName1()
         val tokenMemberMethodVarName2 = stringAnalyzer3.TokenName()
         val tokenMemberMethodVarEquals2 = stringAnalyzer3.TokenEquals()
-        val tokenMemberMethodExpression2 = stringAnalyzer3.TokenExpression2()
+        val tokenMemberMethodExpression2 = stringAnalyzer3.TokenExpression1()
         val tokenMethodSemiColonVar2 = stringAnalyzer3.TokenSemiColon()
 
-        val tokenMemberMethodExpression3 = stringAnalyzer3.TokenExpression2()
+        val tokenMemberMethodExpression3 = stringAnalyzer3.TokenExpression1()
         val tokenMethodSemiColonVar3 = stringAnalyzer3.TokenSemiColon()
 
         val tokenMemberMethodVarName4 = stringAnalyzer3.TokenName()
         val tokenMemberMethodVarEquals4 = stringAnalyzer3.TokenEquals()
-        val tokenMemberMethodExpression4 = stringAnalyzer3.TokenExpression2()
+        val tokenMemberMethodExpression4 = stringAnalyzer3.TokenExpression1()
         val tokenMethodSemiColonVar4 = stringAnalyzer3.TokenSemiColon()
 
-        val tokenType5 = stringAnalyzer3.TokenName()
+        val tokenType5 = stringAnalyzer3.TokenName1()
         val tokenName5 = stringAnalyzer3.TokenName()
         val tokenEquals5 = stringAnalyzer3.TokenEquals()
-        val tokenExpression5 = stringAnalyzer3.TokenExpression2()
+        val tokenExpression5 = stringAnalyzer3.TokenExpression1()
         val tokenSemiColon5 = stringAnalyzer3.TokenSemiColon()
 
-        val tokenType5woEquals = stringAnalyzer3.TokenName2()
+        val tokenType5woEquals = stringAnalyzer3.TokenName1()
         val tokenName5woEquals = stringAnalyzer3.TokenName()
         val tokenSemiColon5woEquals = stringAnalyzer3.TokenSemiColon()
 
         //Variant without end semicolon ";"
         // Method's instructions
-        val tokenMemberMethodVarType1wo = stringAnalyzer3.TokenName()
+        val tokenMemberMethodVarType1wo = stringAnalyzer3.TokenName1()
         val tokenMemberMethodVarName1wo = stringAnalyzer3.TokenName()
 
-        val tokenMemberMethodVarType2wo = stringAnalyzer3.TokenName()
+        val tokenMemberMethodVarType2wo = stringAnalyzer3.TokenName1()
         val tokenMemberMethodVarName2wo = stringAnalyzer3.TokenName()
         val tokenMemberMethodVarEquals2wo = stringAnalyzer3.TokenEquals()
         val tokenMemberMethodExpression2wo = stringAnalyzer3.TokenExpression2()
@@ -267,11 +267,11 @@ class TestStringAnalyzer8java {
                     instruction.name = tokenMemberMethodVarName4.name
                     instruction.expression.leftHand = tokenMemberMethodVarName2.name
                 }
-                if (tokenMemberMethodExpression2.name != null) {
-                    instruction.expression.expression = tokenMemberMethodExpression2.name
+                if (tokenMemberMethodExpression2.expression != null) {
+                    instruction.expression.expression = tokenMemberMethodExpression2.expression
                 }
-                if (tokenMemberMethodExpression4.name != null) {
-                    instruction.expression.expression = tokenMemberMethodExpression4.name
+                if (tokenMemberMethodExpression4.expression != null) {
+                    instruction.expression.expression = tokenMemberMethodExpression4.expression
                 }
                 instructions.instructionList.add(instruction)
                 return true

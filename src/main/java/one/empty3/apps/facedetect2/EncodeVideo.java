@@ -22,9 +22,10 @@
 
 package one.empty3.apps.facedetect2;
 
+import one.empty3.apps.facedetect.DistanceProxLinear2;
 import one.empty3.feature.app.replace.javax.imageio.ImageIO;
 import one.empty3.library.Config;
-import one.empty3.library.ITexture;
+import one.empty3.library.P;
 import one.empty3.library.Point3D;
 import one.empty3.library.Resolution;
 import org.jetbrains.annotations.NotNull;
@@ -37,6 +38,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Scanner;
+import java.util.function.BiConsumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -49,13 +51,13 @@ public class EncodeVideo {
     private HashMap<String, Point3D> a;
     private HashMap<String, Point3D> b;
 
-    public EncodeVideo(String subDirectory, String suffix) {
+    public EncodeVideo(String subDirectory, String suffix) throws IOException {
         this.subDirectory = subDirectory + suffix;
         this.suffix = suffix;
         init();
     }
 
-    public void init() {
+    public void init() throws IOException {
         Config config = new Config();
         String folderWorkingDirectoryFaceDetectApp = config.getMap().get("folderWorkingDirectoryFaceDetectApp");
 
@@ -166,10 +168,14 @@ public class EncodeVideo {
                     a = initX(txtIn1, a, bufferedImage1);
                     b = initX(txtIn2, b, bufferedImage2);
 
-                    ITexture texture = new TextureMorphMoveImageAimagesB(bufferedImage1, bufferedImage2, DistanceApproxLinear.class, new Resolution(bufferedImage2.getWidth(), bufferedImage2.getWidth()),
+
+                    bufferedImage1 = resizeImage(bufferedImage1, 150, a);
+                    bufferedImage2 = resizeImage(bufferedImage2, 150, b);
+
+                    TextureMorphMoveImageAimagesB texture = new TextureMorphMoveImageAimagesB(bufferedImage1, bufferedImage2, DistanceProxLinear2.class, new Resolution(bufferedImage2.getWidth(), bufferedImage2.getWidth()),
                             a.values().stream().toList(), b.values().stream().toList());
 
-                    FrameEncoding frameEncoding = new FrameEncoding(this, bufferedImage1, bufferedImage2, a, b, fOut, (TextureMorphMoveImageAimagesB) texture);
+                    FrameEncoding frameEncoding = new FrameEncoding(this, bufferedImage1, bufferedImage2, a, b, fOut, texture);
                     BufferedImage bufferedImage = frameEncoding.execute();
                     ImageIO.write(bufferedImage, "jpg", fOut);
                 }
@@ -231,13 +237,27 @@ public class EncodeVideo {
         if (args.length >= 1) {
             fileMp4originalName = args[0];
         }
-        EncodeVideo encodeVideo = new EncodeVideo(fileMp4originalName, suffix);
+        try {
+            EncodeVideo encodeVideo = new EncodeVideo(fileMp4originalName, suffix);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    BufferedImage resizeImage(BufferedImage originalImage, int targetWidth, int targetHeight) throws IOException {
-        BufferedImage resizedImage = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_RGB);
+    BufferedImage resizeImage(BufferedImage originalImage, int maxRes, HashMap<String, Point3D> a) throws IOException {
+        a.forEach(new BiConsumer<String, Point3D>() {
+            @Override
+            public void accept(String s, Point3D p) {
+                a.put(s, p.multDot(P.n((double) maxRes / originalImage.getWidth(),
+                        (double) maxRes / originalImage.getHeight(), 0.0)));
+            }
+        });
+        double targetWidth = 1.0 * maxRes / originalImage.getWidth();
+        double targetHeight = 1.0 * maxRes / originalImage.getHeight();
+        BufferedImage resizedImage = new BufferedImage((int) (originalImage.getWidth() * targetWidth), (int) (originalImage.getHeight() * targetHeight), BufferedImage.TYPE_INT_RGB);
         Graphics2D graphics2D = resizedImage.createGraphics();
-        graphics2D.drawImage(originalImage, 0, 0, targetWidth, targetHeight, null);
+        graphics2D.drawImage((Image) originalImage, 0,
+                0, (int) targetWidth, (int) targetHeight, null);
         graphics2D.dispose();
         return resizedImage;
     }

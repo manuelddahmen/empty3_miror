@@ -85,8 +85,10 @@ new FormModel {
 					name: "menu1"
 					"text": new FormMessage( null, "JFrameEditPolygonsMappings.menu1.text" )
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
-						name: "menuItemMoveLinesUp"
-						"text": new FormMessage( null, "JFrameEditPolygonsMappings.menuItemMoveLinesUp.text" )
+						name: "menuItemAddPoint"
+						"text": new FormMessage( null, "JFrameEditPolygonsMappings.menuItemAddPoint.text" )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "addPoint", true ) )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "addPoint", true ) )
 					} )
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
 						name: "menuItemMoveLinesDown"

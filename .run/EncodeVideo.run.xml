@@ -21,9 +21,9 @@
   -->
 
 <component name="ProjectRunConfigurationManager">
-    <configuration default="false" name="EncodeVideo" type="Application" factoryName="Application"
+    <configuration default="false" name="EncodeVideo" type="Application" factoryName="Application" singleton="false"
                    nameIsGenerated="true">
-        <option name="ALTERNATIVE_JRE_PATH" value="C:/Program Files/Java/jdk-21"/>
+        <option name="ALTERNATIVE_JRE_PATH" value="21"/>
         <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true"/>
         <option name="MAIN_CLASS_NAME" value="one.empty3.apps.facedetect2.EncodeVideo"/>
         <module name="empty3-library-3d.main"/>

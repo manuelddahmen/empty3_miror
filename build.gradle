@@ -404,7 +404,7 @@ sourcesJar {
 }
 
 tasks.register('copyTask', Copy) {
-    / / duplicateStrategy = DuplicatesStrategy.WARN
+    // duplicateStrategy = DuplicatesStrategy.WARN
     from 'src/main/java/'
     into 'build/classes/java/main'
 }
@@ -425,11 +425,16 @@ tasks.named('jar') {
     }
 }
 
+tasks.named("processTestResources") {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
 tasks.named("processResources") {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
-
+tasks.withType(Jar).configureEach {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
 tasks.register("publishAll") {
     dependsOn(getTasksByName("publishAllPublicationsToJetBrainsSpaceEmpty3Repository", true))
     dependsOn(getTasksByName("publishAllPublicationsToOSSRHRepository", true))

@@ -35,6 +35,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -44,7 +45,7 @@ public class TestHumanHeadTexturing extends TestObjetStub {
     private BufferedImage jpgFile;
     private E3Model objFile;
     private EditPolygonsMappings editPolygonsMappings;
-    protected BufferedImage zBufferImage;
+    protected ArrayList<BufferedImage> zBufferImages = new ArrayList<BufferedImage>();
 
     public TestHumanHeadTexturing() {
     }
@@ -127,8 +128,7 @@ public class TestHumanHeadTexturing extends TestObjetStub {
 
     @Override
     public void afterRender() {
-        editPolygonsMappings.zBufferImage = getPicture();
-        this.zBufferImage = editPolygonsMappings.zBufferImage;
+        zBufferImages.add(getPicture());
     }
 
 
@@ -166,7 +166,12 @@ public class TestHumanHeadTexturing extends TestObjetStub {
     }
 
     public BufferedImage getJpgFile() {
-        return zBufferImage == null ? getPicture() : zBufferImage;
+        int i = zBufferImages.size() - 1;
+        if (i < 0) return getPicture();
+        BufferedImage current = zBufferImages.get(i);
+        zBufferImages.clear();
+        return current;
+
     }
 
     void setObj(E3Model objFile) {
@@ -190,5 +195,9 @@ public class TestHumanHeadTexturing extends TestObjetStub {
 
     public void setTrueFace(BufferedImage trueFace) {
         this.trueFace = trueFace;
+    }
+
+    public BufferedImage zBufferImage() {
+        return getJpgFile();
     }
 }

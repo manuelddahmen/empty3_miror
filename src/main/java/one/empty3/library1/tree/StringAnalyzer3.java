@@ -1281,6 +1281,8 @@ public class StringAnalyzer3 {
         }
     }
 
+    class TokenName1 extends TokenQualifiedName {
+    }
 
     class TokenVariableMemberDefinitionClassName extends TokenName {
         public TokenVariableMemberDefinitionClassName() {

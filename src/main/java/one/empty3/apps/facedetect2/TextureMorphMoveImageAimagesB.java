@@ -23,6 +23,10 @@
 package one.empty3.apps.facedetect2;
 
 import javaAnd.awt.Color;
+import one.empty3.apps.facedetect.DistanceAB;
+import one.empty3.apps.facedetect.DistanceBezier2;
+import one.empty3.apps.facedetect.DistanceProxLinear1;
+import one.empty3.apps.facedetect.DistanceProxLinear2;
 import one.empty3.library.*;
 
 import java.util.List;
@@ -32,14 +36,17 @@ import java.util.HashMap;
 
 public class TextureMorphMoveImageAimagesB extends ITexture {
     private static final int WHITE = Color.WHITE.getRGB();
+    private final List<Point3D> aSet;
+    private final List<Point3D> bSet;
     public int selectedPointNo = -1;
     public HashMap<String, Point3D> pointsInA = new HashMap<>();
     public HashMap<String, Point3D> pointsInB = new HashMap<>();
-    protected DistanceAB distanceAB;
+    protected one.empty3.apps.facedetect.DistanceAB distanceAB;
     private int GRAY = Color.GRAY.getRGB();
     private Class<? extends DistanceAB> distanceABclass;
     private BufferedImage imageA;
     private BufferedImage imageB;
+    private ITexture textAlt;
 
     @Override
     public MatrixPropertiesObject copy() throws CopyRepresentableError, IllegalAccessException, InstantiationException {
@@ -47,55 +54,59 @@ public class TextureMorphMoveImageAimagesB extends ITexture {
     }
 
     public TextureMorphMoveImageAimagesB(BufferedImage imageA, BufferedImage imageB,
-                                         Class<? extends DistanceAB> distanceAB, Resolution dimensionB,
+                                         Class<? extends one.empty3.apps.facedetect.DistanceAB> distanceAB, Resolution dimensionB,
                                          List<Point3D> pointsInImageA, List<Point3D> pointsInImageB) {
         this.imageA = imageA;
         this.imageB = imageB;
+        this.aSet = pointsInImageA;
+        this.bSet = pointsInImageB;
         if (distanceAB != null)
             setDistanceABclass(distanceAB);
+        textAlt = new ImageTexture(new ECBufferedImage(imageB));
     }
 
     @Override
     public int getColorAt(double u, double v) {
-        if (distanceAB != null && !distanceAB.isInvalidArray() && imageA != null) {
+        if (distanceAB != null && !distanceAB.isInvalidArray() && imageA != null
+                && imageB != null) {
             try {
                 Point3D axPointInB = distanceAB.findAxPointInB(u, v);
-                Point3D point3D = new Point3D(axPointInB.getX() * imageA.getWidth(), axPointInB.getY() * imageA.getHeight(), 0.0);
-                int rgb = imageA.getRGB((int) (Math.max(0, Math.min(point3D.getX(), (double) imageA.getWidth() - 1)))
-                        , (int) (Math.max(0, Math.min((point3D.getY()), (double) imageA.getHeight() - 1))));
-                return rgb;
+                if (axPointInB != null) {
+
+                    Point3D point3D = new Point3D(axPointInB.getX() * imageA.getWidth(), axPointInB.getY() * imageA.getHeight(), 0.0);
+                    int rgb = imageA.getRGB((int) (Math.max(0, Math.min(point3D.getX(), (double) imageA.getWidth() - 1)))
+                            , (int) (Math.max(0, Math.min((point3D.getY()), (double) imageA.getHeight() - 1))));
+                    return rgb;
+                }
             } catch (RuntimeException e) {
-                return imageB.getRGB((int) (u * Math.max(0, Math.min(imageA.getWidth() - 1, imageB.getWidth()))),
-                        (int) (v * Math.max(0, Math.min(imageA.getHeight() - 1, imageB.getHeight()))));
+                //System.out.print("null/");
             }
-        } else {
-            return imageB.getRGB((int) (u * Math.max(0, Math.min(imageA.getWidth() - 1, imageB.getWidth()))),
-                    (int) (v * Math.max(0, Math.min(imageA.getHeight() - 1, imageB.getHeight()))));
         }
+        return textAlt.getColorAt(u, v);
     }
 
-    public void setDistanceABclass(Class<? extends DistanceAB> newDistanceAB) {
+    public void setDistanceABclass(Class<? extends one.empty3.apps.facedetect.DistanceAB> newDistanceAB) {
         Thread thread = new Thread(() -> {
             boolean isNotOk = true;
             while (isNotOk) {
                 try {
-                    if (newDistanceAB.isAssignableFrom(DistanceApproxLinear.class)) {
-                        distanceAB = new DistanceApproxLinear(pointsInA.values().stream().toList(),
-                                pointsInA.values().stream().toList(), new Dimension(imageA.getWidth(), imageA.getHeight()),
+                    if (newDistanceAB.isAssignableFrom(DistanceProxLinear2.class)) {
+                        distanceAB = new DistanceProxLinear2(aSet, bSet
+                                , new Dimension(imageA.getWidth(), imageA.getHeight()),
                                 new Dimension(imageB.getWidth(),
-                                        imageB.getHeight()));
+                                        imageB.getHeight()), false, false);
                         isNotOk = false;
-                    } else if (newDistanceAB.isAssignableFrom(DistanceApproxLinear2.class)) {
-                        distanceAB = new DistanceApproxLinear2(pointsInA.values().stream().toList(),
+                    } else if (newDistanceAB.isAssignableFrom(DistanceProxLinear1.class)) {
+                        distanceAB = new DistanceProxLinear1(pointsInA.values().stream().toList(),
                                 pointsInA.values().stream().toList(), new Dimension(imageA.getWidth(), imageA.getHeight()),
                                 new Dimension(imageB.getWidth(),
-                                        imageB.getHeight()));
+                                        imageB.getHeight()), false, false);
                         isNotOk = false;
-                    } else if (newDistanceAB.isAssignableFrom(DistanceBezier2.class)) {
-                        distanceAB = new DistanceBezier2(pointsInA.values().stream().toList(),
+                    } else if (newDistanceAB.isAssignableFrom(one.empty3.apps.facedetect.DistanceBezier2.class)) {
+                        distanceAB = new one.empty3.apps.facedetect.DistanceBezier2(pointsInA.values().stream().toList(),
                                 pointsInA.values().stream().toList(), new Dimension(imageA.getWidth(), imageA.getHeight()),
                                 new Dimension(imageB.getWidth(),
-                                        imageB.getHeight()));
+                                        imageB.getHeight()), false, false);
                         isNotOk = false;
                     }
                     try {

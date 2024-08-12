@@ -22,6 +22,8 @@
 
 package one.empty3.library;
 
+import java.util.Objects;
+
 /*__
  * @author Se7en
  */
@@ -65,5 +67,20 @@ public class Resolution extends one.empty3.library.core.testing.Resolution {
     protected Resolution makeFinal() {
         aFinal = true;
         return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Resolution that = (Resolution) o;
+        if (x() != that.x() || y() != that.y())
+            return false;
+        return nbits == that.nbits && aFinal == that.aFinal;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(nbits, aFinal);
     }
 }

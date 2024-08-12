@@ -24,6 +24,7 @@ package one.empty3.apps.facedetect2;
 
 
 import one.empty3.library.*;
+import one.empty3.library.core.tribase.Plan3D;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -54,21 +55,11 @@ public class FrameEncoding {
         //        DistanceApproxLinear.class, new Resolution(frame2.getWidth(), frame2.getHeight()), importA.values().stream().toList(), importB.values().stream().toList());
         BufferedImage bufferedImage = new BufferedImage(frame2.getWidth(), frame2.getHeight(), BufferedImage.TYPE_BYTE_GRAY);
         ZBufferImpl instance = ZBufferFactory.instance(frame2.getWidth(), frame2.getHeight());
-        instance.setDisplayType(ZBufferImpl.DISPLAY_ALL);
-        Plane plane = new Plane();
-        plane.setOrig(Point3D.O0);
-        StructureMatrix<Point3D> point3DStructureMatrix = new StructureMatrix<>(0, Point3D.class);
-        point3DStructureMatrix.setElem(Point3D.X.mult(frame2.getWidth()));
-        plane.setvX(point3DStructureMatrix);
-
-        point3DStructureMatrix = new StructureMatrix<>(0, Point3D.class);
-        point3DStructureMatrix.setElem(Point3D.Y.mult(frame2.getHeight()));
-        plane.setvY(point3DStructureMatrix);
+        instance.setDisplayType(ZBufferImpl.SURFACE_DISPLAY_TEXT_QUADS);
+        Plan3D plane = new Plan3D(Point3D.O0, Point3D.X.mult(frame2.getWidth()), Point3D.Y.mult(frame2.getHeight()));
 
         Point3D center = plane.getOrig().plus(plane.getvX().getElem().mult(0.5)).plus(plane.getvY().getElem()).mult(0.5);
-        Camera camera = new Camera(
-                center.plus(Point3D.Z.mult(Math.max(frame2.getHeight(), frame2.getWidth()))).mult(-1.0),
-                center);
+        Camera camera = new Camera(center.plus(Point3D.Z.mult(-Math.max(frame2.getHeight(), frame2.getWidth()) / 2.0)).mult(1.0), center, Point3D.Y);
 
         plane.texture(texture);
 
