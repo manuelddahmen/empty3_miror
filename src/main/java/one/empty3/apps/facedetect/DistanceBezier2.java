@@ -35,65 +35,10 @@ import java.util.List;
 public class DistanceBezier2 extends DistanceAB {
 
 
-    static class Rectangle2 {
-        public double getX1() {
-            return x1;
-        }
-
-        public void setX1(double x1) {
-            this.x1 = x1;
-        }
-
-        public double getY1() {
-            return y1;
-        }
-
-        public void setY1(double y1) {
-            this.y1 = y1;
-        }
-
-        public double getX2() {
-            return x2;
-        }
-
-        public void setX2(double x2) {
-            this.x2 = x2;
-        }
-
-        public double getY2() {
-            return y2;
-        }
-
-        public void setY2(double y2) {
-            this.y2 = y2;
-        }
-
-        private double x1;
-        private double y1;
-        private double x2;
-        private double y2;
-
-        public Rectangle2(double x1, double y1, double x2, double y2) {
-            this.x1 = x1;
-            this.y1 = y1;
-            this.x2 = x2;
-            this.y2 = y2;
-        }
-
-        public double getWidth() {
-            return x2 - x1;
-        }
-
-        public double getHeight() {
-            return y2 - y1;
-        }
-    }
-
-
-    public DistanceBezier2(List<Point3D> A, List<Point3D> B, Dimension2D aDimReal, Dimension2D bDimReal, boolean opt1, boolean optmizeGrid) {
+    public DistanceBezier2(List<Point3D> A, List<Point3D> B, Dimension2D aDimReal, Dimension2D bDimReal, boolean opt1, boolean optimizeGrid) {
         super();
         this.opt1 = opt1;
-        this.optimizeGrid = optmizeGrid;
+        this.optimizeGrid = optimizeGrid;
         System.out.println("\nStart properties\n\tOpt1 : " + opt1 + "\n\tOptimizeGrid: " + optimizeGrid + "\n\tTypeShape : " + typeShape + "\n\t" + getClass().getCanonicalName() + "\n");
 
         if (A != null && B != null && A.size() > 0 && B.size() > 0) {
@@ -177,18 +122,18 @@ public class DistanceBezier2 extends DistanceAB {
         }
 
         if (optimizeGrid) {
-            double listAXmin = listAX.get(0);
-            double listAXmax = listAX.get(listAX.size() - 1);
-            double listAYmin = listAY.get(0);
-            double listAYmax = listAY.get(listAY.size() - 1);
-            double listBXmin = listBX.get(0);
-            double listBXmax = listBX.get(listBX.size() - 1);
-            double listBYmin = listBY.get(0);
-            double listBYmax = listBY.get(listBY.size() - 1);
-            List<Double> listAXopt = new ArrayList<>();
-            List<Double> listAYopt = new ArrayList<>();
-            List<Double> listBXopt = new ArrayList<>();
-            List<Double> listBYopt = new ArrayList<>();
+            final double listAXmin = listAX.get(0);
+            final double listAXmax = listAX.get(listAX.size() - 1);
+            final double listAYmin = listAY.get(0);
+            final double listAYmax = listAY.get(listAY.size() - 1);
+            final double listBXmin = listBX.get(0);
+            final double listBXmax = listBX.get(listBX.size() - 1);
+            final double listBYmin = listBY.get(0);
+            final double listBYmax = listBY.get(listBY.size() - 1);
+            final List<Double> listAXopt = new ArrayList<>();
+            final List<Double> listAYopt = new ArrayList<>();
+            final List<Double> listBXopt = new ArrayList<>();
+            final List<Double> listBYopt = new ArrayList<>();
             for (int i = 0; i < OPTIMIZED_GRID_SIZE; i++) {
                 listAXopt.add(listAXmin + i * (listAXmax - listAXmin) / OPTIMIZED_GRID_SIZE);
                 listAYopt.add(listAYmin + i * (listAYmax - listAYmin) / OPTIMIZED_GRID_SIZE);
@@ -316,17 +261,18 @@ public class DistanceBezier2 extends DistanceAB {
             for (int j = 0; j < xDimReduced.getHeight(); j++) {
                 if (opt1) {
                     try {
+                        // CHECK : why reversed?
                         Point3D tried = new Point3D(rectX.getX1(), rectX.getY1(), 0.0)
                                 .plus(new Point3D((rectX.x2 - 1.0 * i / xDimReduced.getWidth()
                                         / rectX.getWidth()),
-                                        (rectX.x2 - 1.0 * j / xDimReduced.getWidth()
-                                                / rectX.getWidth()), 0.0));
+                                        (rectX.y2 - 1.0 * j / xDimReduced.getHeight()
+                                                / rectX.getHeight()), 0.0));
                         sXij[i][j] = surfaceX.calculerPoint3D(tried.getX(), tried.getY());
         /*                sXij[i][j] = surfaceX.calculerPoint3D(tried.getX(), tried.getY())
                                 .multDot(new Point3D(1. / xDimReal.getWidth(), 1. / xDimReal.getHeight(), 0.0));
          */
                     } catch (IndexOutOfBoundsException ex) {
-                        //x.printStackTrace();
+                        ex.printStackTrace();
                     }
 
                 } else {

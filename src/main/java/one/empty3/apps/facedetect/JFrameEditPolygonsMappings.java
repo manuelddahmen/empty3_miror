@@ -285,8 +285,8 @@ public class JFrameEditPolygonsMappings extends JFrame {
     }
 
     private void menuItemClassBezier2(ActionEvent e) {
-        editPolygonsMappings2.iTextureMorphMove.setDistanceABclass(DistanceBezier2.class);
-        editPolygonsMappings2.distanceABClass = DistanceBezier2.class;
+        editPolygonsMappings2.iTextureMorphMove.setDistanceABclass(DistanceBezier3.class);
+        editPolygonsMappings2.distanceABClass = DistanceBezier3.class;
         editPolygonsMappings2.hasChangedAorB = true;
     }
 
@@ -379,6 +379,32 @@ public class JFrameEditPolygonsMappings extends JFrame {
         }
     }
 
+    private void loadTxtOut(ActionEvent e) {
+        JFileChooser loadImageDeformed = new JFileChooser();
+        if (lastDirectory != null)
+            loadImageDeformed.setCurrentDirectory(lastDirectory);
+        if (loadImageDeformed.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+            editPolygonsMappings2.loadTxtOut(loadImageDeformed.getSelectedFile());
+        }
+        lastDirectory = loadImageDeformed.getCurrentDirectory();
+
+    }
+
+    private void stopRenderer(ActionEvent e) {
+        editPolygonsMappings2.testHumanHeadTexturing.stop();
+        editPolygonsMappings2.testHumanHeadTexturing = TestHumanHeadTexturing.startAll(editPolygonsMappings2,
+                editPolygonsMappings2.image, editPolygonsMappings2.model);
+        editPolygonsMappings2.hasChangedAorB = false;
+        editPolygonsMappings2.renderingStopped = true;
+    }
+
+    private void startRenderer(ActionEvent e) {
+
+        editPolygonsMappings2.hasChangedAorB = true;
+        editPolygonsMappings2.renderingStarted = true;
+        editPolygonsMappings2.iTextureMorphMove = new TextureMorphMove(editPolygonsMappings2, editPolygonsMappings2.distanceABClass);
+    }
+
 
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
@@ -388,7 +414,7 @@ public class JFrameEditPolygonsMappings extends JFrame {
         menuItem1 = new JMenuItem();
         menuItem4 = new JMenuItem();
         menuItem3 = new JMenuItem();
-        menuItem9 = new JMenuItem();
+        menuItemLoadTxtOut = new JMenuItem();
         menuItem12 = new JMenuItem();
         menuItem8 = new JMenuItem();
         menuItem2 = new JMenuItem();
@@ -404,6 +430,8 @@ public class JFrameEditPolygonsMappings extends JFrame {
         menu4 = new JMenu();
         menuItem10 = new JMenuItem();
         menuItem11 = new JMenuItem();
+        menuItemStartRenderer = new JMenuItem();
+        menuItemStopRenderer = new JMenuItem();
         menu5 = new JMenu();
         checkBoxMenuItemTypeShapePolyogns = new JCheckBoxMenuItem();
         checkBoxMenuItemTypeShapeBezier = new JCheckBoxMenuItem();
@@ -469,10 +497,10 @@ public class JFrameEditPolygonsMappings extends JFrame {
                 menuItem3.addActionListener(e -> menuItemLoadTxt(e));
                 menu2.add(menuItem3);
 
-                //---- menuItem9 ----
-                menuItem9.setText(bundle.getString("JFrameEditPolygonsMappings.menuItem9.text"));
-                menuItem9.addActionListener(e -> menuItemLoadModifiedVertex(e));
-                menu2.add(menuItem9);
+                //---- menuItemLoadTxtOut ----
+                menuItemLoadTxtOut.setText(bundle.getString("JFrameEditPolygonsMappings.menuItemLoadTxtOut.text"));
+                menuItemLoadTxtOut.addActionListener(e -> loadTxtOut(e));
+                menu2.add(menuItemLoadTxtOut);
 
                 //---- menuItem12 ----
                 menuItem12.setText(bundle.getString("JFrameEditPolygonsMappings.menuItem12.text"));
@@ -553,6 +581,18 @@ public class JFrameEditPolygonsMappings extends JFrame {
                 menuItem11.setText(bundle.getString("JFrameEditPolygonsMappings.menuItem11.text"));
                 menuItem11.addActionListener(e -> menuItem4K(e));
                 menu4.add(menuItem11);
+
+                //---- menuItemStartRenderer ----
+                menuItemStartRenderer.setText(bundle.getString("JFrameEditPolygonsMappings.menuItemStartRenderer.text"));
+                menuItemStartRenderer.setBackground(new Color(0x00ff66));
+                menuItemStartRenderer.addActionListener(e -> startRenderer(e));
+                menu4.add(menuItemStartRenderer);
+
+                //---- menuItemStopRenderer ----
+                menuItemStopRenderer.setText(bundle.getString("JFrameEditPolygonsMappings.menuItemStopRenderer.text"));
+                menuItemStopRenderer.setBackground(new Color(0xff3300));
+                menuItemStopRenderer.addActionListener(e -> stopRenderer(e));
+                menu4.add(menuItemStopRenderer);
             }
             menuBar1.add(menu4);
 
@@ -648,7 +688,7 @@ public class JFrameEditPolygonsMappings extends JFrame {
     private JMenuItem menuItem1;
     private JMenuItem menuItem4;
     private JMenuItem menuItem3;
-    private JMenuItem menuItem9;
+    private JMenuItem menuItemLoadTxtOut;
     private JMenuItem menuItem12;
     private JMenuItem menuItem8;
     private JMenuItem menuItem2;
@@ -664,6 +704,8 @@ public class JFrameEditPolygonsMappings extends JFrame {
     private JMenu menu4;
     private JMenuItem menuItem10;
     private JMenuItem menuItem11;
+    private JMenuItem menuItemStartRenderer;
+    private JMenuItem menuItemStopRenderer;
     private JMenu menu5;
     private JCheckBoxMenuItem checkBoxMenuItemTypeShapePolyogns;
     private JCheckBoxMenuItem checkBoxMenuItemTypeShapeBezier;

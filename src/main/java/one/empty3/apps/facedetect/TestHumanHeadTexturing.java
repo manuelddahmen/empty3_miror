@@ -117,10 +117,12 @@ public class TestHumanHeadTexturing extends TestObjetStub {
         }
         if (editPolygonsMappings.model != null
                 && !scene().getObjets().getData1d().contains(editPolygonsMappings.model)) {
-            scene().add(editPolygonsMappings.model);
+            scene.add(editPolygonsMappings.model);
         }
-        if (editPolygonsMappings.model != null) {
+        if (editPolygonsMappings.model != null && editPolygonsMappings.iTextureMorphMove!=null) {
             editPolygonsMappings.model.texture(editPolygonsMappings.iTextureMorphMove);
+        } else {
+            Logger.getAnonymousLogger().log(Level.WARNING, "model or texture null on render thread");
         }
         z().scene(scene);
         z().camera(c);
