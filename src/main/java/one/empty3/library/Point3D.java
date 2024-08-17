@@ -239,8 +239,20 @@
          */
         public static Double distance(one.empty3.library.Point3D p1, one.empty3.library.Point3D p2) {
             double d = 0.0;
-            for (int i = 0; i < p1.getCoordArr().getData1d().size(); i++)
+            for (int i = 0; i < 3; i++)
                 d += (p1.get(i) - p2.get(i)) * (p1.get(i) - p2.get(i));
+            return Math.sqrt(d);
+        }
+        /**
+         * Calculates the Euclidean distance between two 3D points.
+         *
+         * @param p1 The first 3D point.
+         * @return The Euclidean distance between p1 and p2.
+         */
+        public Double distance(one.empty3.library.Point3D p1) {
+            double d = 0.0;
+            for (int i = 0; i < 3; i++)
+                d += (p1.get(i) - get(i)) * (p1.get(i) - get(i));
             return Math.sqrt(d);
         }
 

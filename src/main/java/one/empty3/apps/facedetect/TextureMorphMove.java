@@ -56,11 +56,13 @@ public class TextureMorphMove extends ITexture {
 
     @Override
     public int getColorAt(double u, double v) {
-        if((distanceAB.sAij==null || distanceAB.sBij==null)&&!distanceAB.getClass().isAssignableFrom(DistanceBezier3.class)) {
-            Logger.getAnonymousLogger().log(Level.SEVERE, "DistanceAB .sAij or DistanceAB . sBij is null");
-            return 0;
-        }
         if (distanceAB != null && !distanceAB.isInvalidArray() && editPanel.image != null) {
+            if (distanceAB.getClass().isAssignableFrom(DistanceBezier3.class))
+                ;
+            else if ((distanceAB.sAij == null || distanceAB.sBij == null) && !distanceAB.getClass().isAssignableFrom(DistanceBezier3.class)) {
+                //Logger.getAnonymousLogger().log(Level.SEVERE, "DistanceAB .sAij or DistanceAB . sBij is null");
+                return 0;
+            }
             try {
                 Point3D axPointInB = distanceAB.findAxPointInB(u, v);
                 if (axPointInB != null) {
@@ -132,7 +134,7 @@ public class TextureMorphMove extends ITexture {
             ex.printStackTrace();
         }
         long nanoElapsed = System.nanoTime() - timeStarted;
-        Logger.getAnonymousLogger().log(Level.INFO, "Temps écoulé à produire l'object DistanceAB ("+distanceMap.getCanonicalName()+
-                        ") à : "+10E-9*nanoElapsed);
+        Logger.getAnonymousLogger().log(Level.INFO, "Temps écoulé à produire l'object DistanceAB (" + distanceMap.getCanonicalName() +
+                ") à : " + 10E-9 * nanoElapsed);
     }
 }

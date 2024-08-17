@@ -942,7 +942,7 @@ public abstract class TestObjet implements Test, Runnable {
 
                     Logger.getAnonymousLogger().log(Level.INFO, "Starts rendering");
                     z.draw(scene());
-                    Logger.getAnonymousLogger().log(Level.INFO, "Finishes rendering");
+                    Logger.getAnonymousLogger().log(Level.INFO, "Rendering Finished");
                 } catch (Exception ex) {
                     ex.printStackTrace();
                     reportException(ex);
@@ -1204,6 +1204,7 @@ public abstract class TestObjet implements Test, Runnable {
     public void stop() {
         stop = true;
         setGenerate(GENERATE_NOTHING);
+        setRunning(false);
         try {
             Thread.sleep(1000);
         } catch (InterruptedException ex) {

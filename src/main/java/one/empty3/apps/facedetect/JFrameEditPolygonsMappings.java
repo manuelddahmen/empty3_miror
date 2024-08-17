@@ -53,7 +53,7 @@ public class JFrameEditPolygonsMappings extends JFrame {
     private final Config config;
     Thread threadDisplay;
     private int mode = 0;
-    private int SELECT_POINT = 1;
+    private final int SELECT_POINT = 1;
     private Resolution resolutionOut;
 
     public JFrameEditPolygonsMappings() {
@@ -134,9 +134,13 @@ public class JFrameEditPolygonsMappings extends JFrame {
         config.getMap().put("D3ModelFaceTexturing", lastDirectory.getAbsolutePath());
         config.save();
         try {
+
             editPolygonsMappings2.testHumanHeadTexturing.setMaxFrames(0);
             editPolygonsMappings2.isRunning = false;
-            editPolygonsMappings2.testHumanHeadTexturing.stop();
+            if(TestHumanHeadTexturing.threadTest!=null) {
+                editPolygonsMappings2.testHumanHeadTexturing.stop(); // TestObjet stop method
+                TestHumanHeadTexturing.threadTest.join(); // join thread as it's dying
+            }
             Thread.sleep(1000);
         } catch (InterruptedException | RuntimeException ex) {
             ex.printStackTrace();
@@ -187,7 +191,7 @@ public class JFrameEditPolygonsMappings extends JFrame {
 
         public BufferedImage computeTexture() {
             image = editPolygonsMappings2.image;
-            TextureMorphMove iTextureMorphMoveImage = new TextureMorphMove(editPolygonsMappings2, (Class<? extends DistanceAB>) editPolygonsMappings2.distanceABClass);
+            TextureMorphMove iTextureMorphMoveImage = new TextureMorphMove(editPolygonsMappings2, editPolygonsMappings2.distanceABClass);
             BufferedImage imageOut = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_RGB);
             model.texture(iTextureMorphMoveImage);
             for (double u = 0; u < 1.0; u += 1.0 / image.getWidth()) {
@@ -285,31 +289,31 @@ public class JFrameEditPolygonsMappings extends JFrame {
     }
 
     private void menuItemClassBezier2(ActionEvent e) {
-        editPolygonsMappings2.iTextureMorphMove.setDistanceABclass(DistanceBezier3.class);
+        //editPolygonsMappings2.iTextureMorphMove.setDistanceABclass(DistanceBezier3.class);
         editPolygonsMappings2.distanceABClass = DistanceBezier3.class;
         editPolygonsMappings2.hasChangedAorB = true;
     }
 
     private void menuItem1DistanceBB(ActionEvent e) {
-        editPolygonsMappings2.iTextureMorphMove.setDistanceABclass(DistanceBB.class);
+        ///editPolygonsMappings2.iTextureMorphMove.setDistanceABclass(DistanceBB.class);
         editPolygonsMappings2.distanceABClass = DistanceBB.class;
         editPolygonsMappings2.hasChangedAorB = true;
     }
 
     private void menuItemLinearProx1(ActionEvent e) {
-        editPolygonsMappings2.iTextureMorphMove.setDistanceABclass(DistanceProxLinear1.class);
+        //editPolygonsMappings2.iTextureMorphMove.setDistanceABclass(DistanceProxLinear1.class);
         editPolygonsMappings2.distanceABClass = DistanceProxLinear1.class;
         editPolygonsMappings2.hasChangedAorB = true;
     }
 
     private void menuItemLinearProx2(ActionEvent e) {
-        editPolygonsMappings2.iTextureMorphMove.setDistanceABclass(DistanceProxLinear2.class);
+        //editPolygonsMappings2.iTextureMorphMove.setDistanceABclass(DistanceProxLinear2.class);
         editPolygonsMappings2.distanceABClass = DistanceProxLinear2.class;
         editPolygonsMappings2.hasChangedAorB = true;
     }
 
     private void menuItemLinearProx3(ActionEvent e) {
-        editPolygonsMappings2.iTextureMorphMove.setDistanceABclass(DistanceProxLinear3.class);
+        //editPolygonsMappings2.iTextureMorphMove.setDistanceABclass(DistanceProxLinear3.class);
         editPolygonsMappings2.distanceABClass = DistanceProxLinear3.class;
         editPolygonsMappings2.hasChangedAorB = true;
     }
@@ -396,6 +400,14 @@ public class JFrameEditPolygonsMappings extends JFrame {
                 editPolygonsMappings2.image, editPolygonsMappings2.model);
         editPolygonsMappings2.hasChangedAorB = false;
         editPolygonsMappings2.renderingStopped = true;
+        if(TestHumanHeadTexturing.threadTest!=null) {
+            editPolygonsMappings2.testHumanHeadTexturing.stop(); // TestObjet stop method
+            try {
+                TestHumanHeadTexturing.threadTest.join(); // join thread as it's dying
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
     }
 
     private void startRenderer(ActionEvent e) {

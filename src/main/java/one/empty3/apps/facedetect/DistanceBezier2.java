@@ -32,7 +32,7 @@ import java.awt.geom.Dimension2D;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DistanceBezier2 extends DistanceAB {
+public abstract class DistanceBezier2 extends DistanceAB {
 
 
     public DistanceBezier2(List<Point3D> A, List<Point3D> B, Dimension2D aDimReal, Dimension2D bDimReal, boolean opt1, boolean optimizeGrid) {
@@ -201,9 +201,7 @@ public class DistanceBezier2 extends DistanceAB {
         return found;
     }
 
-    public Point3D findAxPointInB(double u, double v) {
-        return findAxPointInB2a1(u, v);
-    }
+    public abstract Point3D findAxPointInB(double u, double v);
 
     // Assez-good version
     public Point3D findAxPointInB2a(double u, double v) {

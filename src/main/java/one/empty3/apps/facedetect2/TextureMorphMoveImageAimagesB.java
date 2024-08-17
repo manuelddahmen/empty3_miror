@@ -103,7 +103,7 @@ public class TextureMorphMoveImageAimagesB extends ITexture {
                                         imageB.getHeight()), false, false);
                         isNotOk = false;
                     } else if (newDistanceAB.isAssignableFrom(one.empty3.apps.facedetect.DistanceBezier2.class)) {
-                        distanceAB = new one.empty3.apps.facedetect.DistanceBezier2(pointsInA.values().stream().toList(),
+                        distanceAB = new one.empty3.apps.facedetect.DistanceBezier3(pointsInA.values().stream().toList(),
                                 pointsInA.values().stream().toList(), new Dimension(imageA.getWidth(), imageA.getHeight()),
                                 new Dimension(imageB.getWidth(),
                                         imageB.getHeight()), false, false);
@@ -114,7 +114,7 @@ public class TextureMorphMoveImageAimagesB extends ITexture {
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
-                    this.distanceABclass = (Class<? extends DistanceBezier2>) newDistanceAB;
+                    this.distanceABclass = newDistanceAB;
                 } catch (RuntimeException ex) {
                     ex.printStackTrace();
                     try {

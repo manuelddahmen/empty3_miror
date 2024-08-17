@@ -40,6 +40,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class TestHumanHeadTexturing extends TestObjetStub {
+    public static Thread threadTest;
     private Rectangle rectangleFace;
     private BufferedImage trueFace;
     private BufferedImage jpgFile;
@@ -124,13 +125,17 @@ public class TestHumanHeadTexturing extends TestObjetStub {
         } else {
             Logger.getAnonymousLogger().log(Level.WARNING, "model or texture null on render thread");
         }
-        z().scene(scene);
-        z().camera(c);
+        if(!scene().getObjets().getData1d().isEmpty()) {
+            z().scene(scene);
+            z().camera(c);
+        }
     }
 
     @Override
     public void afterRender() {
-        zBufferImages.add(getPicture());
+        if(getPicture()!=null) {
+            zBufferImages.add(getPicture());
+        }
     }
 
 
@@ -151,7 +156,8 @@ public class TestHumanHeadTexturing extends TestObjetStub {
         testHumanHeadTexturing.setPublish(false);
         testHumanHeadTexturing.setDimension(new Resolution(editPolygonsMappings.panelModelView.getWidth(), editPolygonsMappings.panelModelView.getHeight()));
 
-        new Thread(testHumanHeadTexturing).start();
+        threadTest = new Thread(testHumanHeadTexturing);
+        threadTest.start();
 
         try {
             Thread.sleep(10);
