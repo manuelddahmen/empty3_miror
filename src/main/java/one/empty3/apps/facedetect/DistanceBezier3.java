@@ -15,7 +15,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class DistanceBezier3 extends DistanceBezier2 {
-    double[][][] doubles;
+    float[][][] doubles;
     final double DIM_MAX = Double.MAX_VALUE;
     final int dim = 1000;
 
@@ -26,7 +26,7 @@ public class DistanceBezier3 extends DistanceBezier2 {
             return;
         }
         Logger.getAnonymousLogger().log(Level.INFO, "DistanceBezier3() constructor started");
-        doubles = new double[5][dim][dim];
+        float [][][] doubles= new float[7][dim][dim];
         for (int u = 0; u < dim; u++) {
             // Closer A point
             for (int v = 0; v < dim; v++) {
@@ -38,15 +38,15 @@ public class DistanceBezier3 extends DistanceBezier2 {
 
                 double[] dist_current_min = new double[A.size()];
                 Arrays.fill(dist_current_min, DIM_MAX);
-                Double distMin = DIM_MAX;
+                double distMin = DIM_MAX;
                 for (int i = 0; i < B.size(); i++) {
                     Point3D b = B.get(i);
                     distMin = Point3D.distance(b, pab);
                     if (distMin < dist_current_min[i]) {
                         dist_current_min[i] = distMin;
                         // closer b point for B(u,v)
-                        doubles[0][u][v] = b.getX();
-                        doubles[1][u][v] = b.getY();
+                        doubles[0][u][v] = (float) (double) b.getX();
+                        doubles[1][u][v] = (float) (double) b.getY();
                         doubles[2][u][v] = i;
                     }
                 }
@@ -57,11 +57,18 @@ public class DistanceBezier3 extends DistanceBezier2 {
                 for (int i = 0; i < A.size(); i++) {
                     Point3D a = A.get(i);
                     distMin = Point3D.distance(paa, a);
-                    if(distMin<distance) {
-                        doubles[3][u][v] = a.getX();
-                        doubles[4][u][v] = a.getY();
+                    if (distMin < distance) {
+                        doubles[3][u][v] = (float) (double) a.getX();
+                        doubles[4][u][v] = (float) (double) a.getY();
                         distance = distMin;
                     }
+                }
+                for (int i = 0; i < A.size(); i++) {
+                    Point3D b = new Point3D((double) doubles[0][(int) (u * dim)][(int) (v * dim)], (double) doubles[1][(int) (u * dim)][(int) (v * dim)], 0.0);
+                    Point3D a = new Point3D((double) doubles[3][(int) (u * dim)][(int) (v * dim)], (double) doubles[4][(int) (u * dim)][(int) (v * dim)], 0.0);
+                    Point3D bMoved = a.moins(b);
+                    doubles[5][u][v] = (float) (double) a.getX();
+                    doubles[6][u][v] = (float) (double) a.getY();
                 }
             }
         }
@@ -76,10 +83,10 @@ public class DistanceBezier3 extends DistanceBezier2 {
         if(iX >= dim) System.exit(1);
         if(iY>= dim) System.exit(1);
         Point3D a  = A.get((int) doubles[2][iX][iY]);
-        Point3D b  = new Point3D(doubles[0][(int) (u * dim)][(int) (v * dim)], doubles[1][(int) (u * dim)][(int) (v * dim)], 0.0);
-        Point3D a2 = new Point3D(doubles[3][(int) (u * dim)][(int) (v * dim)], doubles[4][(int) (u * dim)][(int) (v * dim)], 0.0);
-        System.out.println(b);
-        return a;
+        Point3D b  = new Point3D((double)doubles[0][(int) (u * dim)][(int) (v * dim)], (double)doubles[1][(int) (u * dim)][(int) (v * dim)], 0.0);
+        Point3D a2 = new Point3D((double)doubles[3][(int) (u * dim)][(int) (v * dim)], (double)doubles[4][(int) (u * dim)][(int) (v * dim)], 0.0);
+        Point3D ba = new Point3D((double)doubles[5][(int) (u * dim)][(int) (v * dim)], (double)doubles[5][(int) (u * dim)][(int) (v * dim)], 0.0);
+        return ba;
     }
 
 

@@ -439,6 +439,9 @@ public class JFrameEditPolygonsMappings extends JFrame {
         menuItem5 = new JMenuItem();
         menuItem6 = new JMenuItem();
         menuItem7 = new JMenuItem();
+        menu6 = new JMenu();
+        menuItemLoadedModel = new JMenuItem();
+        menuItemPhotoPlaneRepresentable = new JMenuItem();
         menu4 = new JMenu();
         menuItem10 = new JMenuItem();
         menuItem11 = new JMenuItem();
@@ -580,6 +583,20 @@ public class JFrameEditPolygonsMappings extends JFrame {
             }
             menuBar1.add(menu1);
 
+            //======== menu6 ========
+            {
+                menu6.setText(bundle.getString("JFrameEditPolygonsMappings.menu6.text"));
+
+                //---- menuItemLoadedModel ----
+                menuItemLoadedModel.setText(bundle.getString("JFrameEditPolygonsMappings.menuItemLoadedModel.text"));
+                menu6.add(menuItemLoadedModel);
+
+                //---- menuItemPhotoPlaneRepresentable ----
+                menuItemPhotoPlaneRepresentable.setText(bundle.getString("JFrameEditPolygonsMappings.menuItemPhotoPlaneRepresentable.text"));
+                menu6.add(menuItemPhotoPlaneRepresentable);
+            }
+            menuBar1.add(menu6);
+
             //======== menu4 ========
             {
                 menu4.setText(bundle.getString("JFrameEditPolygonsMappings.menu4.text"));
@@ -713,6 +730,9 @@ public class JFrameEditPolygonsMappings extends JFrame {
     private JMenuItem menuItem5;
     private JMenuItem menuItem6;
     private JMenuItem menuItem7;
+    private JMenu menu6;
+    private JMenuItem menuItemLoadedModel;
+    private JMenuItem menuItemPhotoPlaneRepresentable;
     private JMenu menu4;
     private JMenuItem menuItem10;
     private JMenuItem menuItem11;

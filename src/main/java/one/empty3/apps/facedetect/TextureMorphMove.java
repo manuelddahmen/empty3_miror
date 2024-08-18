@@ -22,7 +22,7 @@
 
 package one.empty3.apps.facedetect;
 
-import javaAnd.awt.Color;
+import java.awt.Color;
 import one.empty3.library.CopyRepresentableError;
 import one.empty3.library.ITexture;
 import one.empty3.library.MatrixPropertiesObject;
@@ -102,11 +102,6 @@ public class TextureMorphMove extends ITexture {
                         editPanel.pointsInModel.values().stream().toList(), new Dimension(editPanel.panelPicture.getWidth(), editPanel.panelPicture.getHeight()),
                         new Dimension(editPanel.panelModelView.getWidth(),
                                 editPanel.panelModelView.getHeight()), false, true);
-            } else if (distanceMap.isAssignableFrom(DistanceBezier2.class)) {
-                distanceAB = new DistanceBezier2(editPanel.pointsInImage.values().stream().toList(),
-                        editPanel.pointsInModel.values().stream().toList(), new Dimension(editPanel.panelPicture.getWidth(), editPanel.panelPicture.getHeight()),
-                        new Dimension(editPanel.panelModelView.getWidth(),
-                                editPanel.panelModelView.getHeight()), false, false);
             } else if (distanceMap.isAssignableFrom(DistanceBezier3.class)) {
                 distanceAB = new DistanceBezier3(editPanel.pointsInImage.values().stream().toList(),
                         editPanel.pointsInModel.values().stream().toList(), new Dimension(editPanel.panelPicture.getWidth(), editPanel.panelPicture.getHeight()),
