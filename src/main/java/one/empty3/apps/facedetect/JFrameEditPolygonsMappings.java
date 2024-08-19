@@ -417,6 +417,9 @@ public class JFrameEditPolygonsMappings extends JFrame {
         editPolygonsMappings2.iTextureMorphMove = new TextureMorphMove(editPolygonsMappings2, editPolygonsMappings2.distanceABClass);
     }
 
+    private void photoPlaneRepresentable(ActionEvent e) {
+    }
+
 
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
@@ -593,6 +596,7 @@ public class JFrameEditPolygonsMappings extends JFrame {
 
                 //---- menuItemPhotoPlaneRepresentable ----
                 menuItemPhotoPlaneRepresentable.setText(bundle.getString("JFrameEditPolygonsMappings.menuItemPhotoPlaneRepresentable.text"));
+                menuItemPhotoPlaneRepresentable.addActionListener(e -> photoPlaneRepresentable(e));
                 menu6.add(menuItemPhotoPlaneRepresentable);
             }
             menuBar1.add(menu6);

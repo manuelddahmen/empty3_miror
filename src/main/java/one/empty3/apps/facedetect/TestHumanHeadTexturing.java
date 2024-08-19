@@ -77,7 +77,7 @@ public class TestHumanHeadTexturing extends TestObjetStub {
             setJpg(editPolygonsMappings.image);
         }
 
-        z().setDisplayType(ZBufferImpl.DISPLAY_ALL);
+        z().setDisplayType(ZBufferImpl.SURFACE_DISPLAY_TEXT_QUADS);
         File intPart = new File("faceSkin.txt");
         PrintWriter printWriter;
         try {
