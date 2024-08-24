@@ -33,37 +33,13 @@ public class DistanceProxLinear3 extends DistanceBezier2 {
 
     public DistanceProxLinear3(List<Point3D> A, List<Point3D> B, Dimension2D aDimReal, Dimension2D bDimReal,
                                boolean opt1, boolean optimizeGrid) {
-        super(A, B, aDimReal, bDimReal, true, optimizeGrid);
+        super(A, B, aDimReal, bDimReal, opt1, optimizeGrid);
     }
 
 
     @Override
     public Point3D findAxPointInB(double u, double v) {
-        return findAxPointInBal5(u, v);
-    }
-
-    private Point3D findAxPointInBal5(double u, double v) {
-        u = u - rectB.getX1();
-        v = v - rectB.getY1();
-        u = u / rectB.getWidth();
-        v = v / rectB.getHeight();
-        if (u < 0 || u >= 1 || v < 0 || v >= 1) {
-            return null;
-        }
-        Point3D pb = nearLandmark(u, v);
-        if (pb == null) {
-            return null;
-        }
-        Point3D pa;
-        pa = pb;
-        pa = new Point3D(rectA.getX1() + (pa.getX() - rectA.getX1()) / rectA.getWidth(),
-                rectA.getY1() + (pa.getY() - rectA.getY1()) / rectA.getHeight(), 0.0);
-        double u2 = (pa.getX() - rectB.getX1()) / (rectB.getWidth());
-        double v2 = (pa.getY() - rectB.getY1()) / (rectB.getHeight());
-        if (u2 < 0 || u2 > 1 || v2 < 0 || v2 > 1) {
-            return null;
-        }
-        return surfaceA.calculerPoint3D(pa.getX(), pa.getY());
+        return findAxPointInBal1(u, v);
     }
 
     private Point3D findAxPointInBal1(double u, double v) {
@@ -82,7 +58,7 @@ public class DistanceProxLinear3 extends DistanceBezier2 {
 
     private Point3D findAxPointInBal3(double u, double v) {
         Point3D pb = nearLandmark3(u, v);
-        //pb = new Point3D(Math.max(0, Math.min(pb.get(0), listBX.size() - 1)), Math.max(0, Math.min(pb.get(1), listBY.size() - 1)), 0.0);
+        pb = new Point3D(Math.max(0, Math.min(pb.get(0), listBX.size() - 1)), Math.max(0, Math.min(pb.get(1), listBY.size() - 1)), 0.0);
         Point3D pa = surfaceA.getCoefficients().getElem((int) (double) pb.getX(), (int) (double) pb.get(1));
         return pa;
     }
@@ -96,26 +72,18 @@ public class DistanceProxLinear3 extends DistanceBezier2 {
     private Point3D nearLandmark(double u, double v) {
         Point3D uv = new Point3D(u, v, 0.0);
         double distance = Double.MAX_VALUE;
-        double indexI = -1;
-        double indexJ = -1;
-        for (double i = 0.0; i < 1.0; i += 0.02) {
-            for (double j = 0.0; j < 1.0; j += 0.02) {
-                int u1 = (int) (i * bDimReduced.getWidth());
-                int v1 = (int) (j * bDimReduced.getHeight());
-                if (u1 < 0 || u1 >= bDimReduced.getWidth() | v < 0 || v >= bDimReduced.getHeight()) {
-                    //return null;
-                } else if (Point3D.distance(sBij[u1][v1], uv) < distance) {
+        int indexI = -1, indexJ = -1;
+        for (int i = 0; i < listBX.size(); i++) {
+            for (int j = 0; j < listBY.size(); j++) {
+                if (Point3D.distance(surfaceB.getCoefficients().getElem(i, j), uv) < distance) {
                     indexI = i;
                     indexJ = j;
-                    distance = Point3D.distance(sBij[u1][v1], uv);
+                    distance = Point3D.distance(surfaceB.getCoefficients().getElem(i, j), uv);
                 }
             }
         }
-        if (indexI < 0 || indexI >= surfaceB.getCoefficients().getData2d().get(0).size() ||
-                indexJ < 0 || indexJ >= surfaceB.getCoefficients().getData2d().size())
-            return null;
-        //return surfaceB.calculerPoint3D(indexI, indexJ);//precision(point3Dij, u, v);//point3Dij
-        return new Point3D(indexI /*/ bDimReduced.getWidth()*/, indexJ /** bDimReduced.getHeight()*/, 0.0);
+        Point3D point3Dij = new Point3D((double) indexI, (double) indexJ, 0.0);
+        return precision(point3Dij, u, v);//point3Dij
     }
 
     /***
@@ -164,7 +132,7 @@ public class DistanceProxLinear3 extends DistanceBezier2 {
             for (int j = 0; j < listBY.size(); j++) {
                 double sizeXb = i > 0 ? (listAX.get(i) - listBX.get(i - 1)) : (listBX.get(1) - listBX.get(0));
                 double sizeYb = j > 0 ? (listBY.get(j) - listBY.get(j - 1)) : (listBY.get(1) - listBY.get(0));
-                Point3D p = proxima(uv, sizeXb / listBX.size(), sizeYb / listBX.size(), 0.05);
+                Point3D p = proxima(uv, sizeXb / listBX.size(), sizeYb / listBX.size(), 0.01);
                 p = surfaceB.calculerPoint3D(p.getX(), p.getY());
                 Double dist = Point3D.distance(p, uv);
                 if (dist < distance) {

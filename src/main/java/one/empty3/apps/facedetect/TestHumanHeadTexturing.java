@@ -41,6 +41,9 @@ import java.util.logging.Logger;
 
 public class TestHumanHeadTexturing extends TestObjetStub {
     public static Thread threadTest;
+    private static TestHumanHeadTexturing instance = null;
+    public double defautZheight = 0;
+    public double defautZwidth = 0;
     private Rectangle rectangleFace;
     private BufferedImage trueFace;
     private BufferedImage jpgFile;
@@ -49,6 +52,7 @@ public class TestHumanHeadTexturing extends TestObjetStub {
     protected ArrayList<BufferedImage> zBufferImages = new ArrayList<BufferedImage>();
 
     public TestHumanHeadTexturing() {
+        instance = this;
     }
 
 
@@ -87,10 +91,19 @@ public class TestHumanHeadTexturing extends TestObjetStub {
         }
 
         Camera c = new Camera();
-        c.getEye().setZ(c.getEye().getX() / 8);
-        c.getEye().setX(0.0);
-        c.calculerMatrice(Point3D.Y.mult(-1));
-        c.setAngleYr(60, 1.0 * z().la() / z().ha());
+
+        if(defautZheight==0) {
+            c.getEye().setZ(c.getEye().getX() / 8);
+            c.getEye().setX(0.0);
+            c.calculerMatrice(Point3D.Y.mult(-1));
+            //c.setAngleYr(60, 1.0 * z().ha() / z().la());
+        } else {
+            c.getEye().setZ(-Math.max(defautZheight, defautZwidth));
+            c.getEye().setX(0.0);
+            c.setLookat(Point3D.O0);
+            c.calculerMatrice(Point3D.Y.mult(-1));
+            //c.setAngleYr(60, 1.0 * z().ha() / z().la());
+        }
         camera(c);
         scene().cameraActive(c);
 
@@ -141,8 +154,10 @@ public class TestHumanHeadTexturing extends TestObjetStub {
 
     public static TestHumanHeadTexturing startAll(EditPolygonsMappings editPolygonsMappings, BufferedImage jpg, E3Model obj) {
         Logger.getAnonymousLogger().log(Level.INFO, "Jpg Obj Mapping...");
-
+        if(instance!=null)
+            instance.stop();
         TestHumanHeadTexturing testHumanHeadTexturing = new TestHumanHeadTexturing();
+        TestHumanHeadTexturing.instance = testHumanHeadTexturing;
         testHumanHeadTexturing.editPolygonsMappings = editPolygonsMappings;
         editPolygonsMappings.iTextureMorphMove.setDistanceABclass(editPolygonsMappings.distanceABClass);
         editPolygonsMappings.iTextureMorphMove.distanceAB.opt1 = editPolygonsMappings.opt1;

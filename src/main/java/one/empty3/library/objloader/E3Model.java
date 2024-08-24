@@ -72,6 +72,10 @@ public class E3Model extends RepresentableConteneur {
     private double[] knotU;
     private final RepresentableConteneur objects = new RepresentableConteneur();
 
+    public RepresentableConteneur getObjects() {
+        return objects;
+    }
+
     /***
      * a = (x1, y1, z1, u1, v1)+u*((x2, y2, z2, u2, v2)- (x1, y1, z1, u1, v1))
      * b = (x4, y4, z4, u4, v4)+u*((x3, y3, z3, u3, v3)- (x4, y4, z4, u4, v4))

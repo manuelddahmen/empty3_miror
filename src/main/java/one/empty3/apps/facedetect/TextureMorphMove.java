@@ -23,12 +23,15 @@
 package one.empty3.apps.facedetect;
 
 import java.awt.Color;
+
+import one.empty3.feature.ConvHull;
 import one.empty3.library.CopyRepresentableError;
 import one.empty3.library.ITexture;
 import one.empty3.library.MatrixPropertiesObject;
 import one.empty3.library.Point3D;
 
 import java.awt.*;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -39,6 +42,8 @@ public class TextureMorphMove extends ITexture {
     protected DistanceAB distanceAB;
     private int GRAY = Color.GRAY.getRGB();
     private Class<? extends DistanceBezier2> distanceABclass;
+    private Vector<Point3D> polyConvA;
+    private Vector<Point3D> polyConvB;
 
     @Override
     public MatrixPropertiesObject copy() throws CopyRepresentableError, IllegalAccessException, InstantiationException {
@@ -68,9 +73,17 @@ public class TextureMorphMove extends ITexture {
                 if (axPointInB != null) {
 
                     Point3D point3D = new Point3D(axPointInB.getX() * editPanel.image.getWidth(), axPointInB.getY() * editPanel.image.getHeight(), 0.0);
-                    int rgb = editPanel.image.getRGB((int) (Math.max(0, Math.min(point3D.getX(), (double) editPanel.image.getWidth() - 1)))
-                            , (int) (Math.max(0, Math.min((point3D.getY()), (double) editPanel.image.getHeight() - 1))));
-                    return rgb;
+
+
+                    int x = (int) (Math.max(0, Math.min(point3D.getX(), (double) editPanel.image.getWidth() - 1)));
+                    int y = (int) (Math.max(0, Math.min((point3D.getY()), (double) editPanel.image.getHeight() - 1)));
+                    if (polyConvB == null || polyConvB.isEmpty() || ConvHull.convexHullTestPointIsInside(polyConvB, new Point3D((double) x, (double) y, 0.0))) {
+                        int rgb = editPanel.image.getRGB(x, y);
+                        return rgb;
+                    } else {
+                        int rgb = editPanel.image.getRGB(x, y);
+                        return rgb;
+                    }
                 }
             } catch (RuntimeException e) {
                 throw new RuntimeException(e);
@@ -92,7 +105,11 @@ public class TextureMorphMove extends ITexture {
                         editPanel.pointsInModel.values().stream().toList(), new Dimension(editPanel.panelPicture.getWidth(), editPanel.panelPicture.getHeight()),
                         new Dimension(editPanel.panelModelView.getWidth(),
                                 editPanel.panelModelView.getHeight()), false, false);
-            } else if (distanceMap.isAssignableFrom(DistanceProxLinear2.class)) {
+            } else if (distanceMap.isAssignableFrom(DistanceProxLinear3.class)) {
+                distanceAB = new DistanceProxLinear2(editPanel.pointsInImage.values().stream().toList(),
+                        editPanel.pointsInModel.values().stream().toList(), new Dimension(editPanel.panelPicture.getWidth(), editPanel.panelPicture.getHeight()),
+                        new Dimension(1920, 1080), false, false);
+            } else if (distanceMap.isAssignableFrom(DistanceProxLinear3.class)) {
                 distanceAB = new DistanceProxLinear2(editPanel.pointsInImage.values().stream().toList(),
                         editPanel.pointsInModel.values().stream().toList(), new Dimension(editPanel.panelPicture.getWidth(), editPanel.panelPicture.getHeight()),
                         new Dimension(editPanel.panelModelView.getWidth(),
@@ -131,5 +148,13 @@ public class TextureMorphMove extends ITexture {
         long nanoElapsed = System.nanoTime() - timeStarted;
         Logger.getAnonymousLogger().log(Level.INFO, "Temps écoulé à produire l'object DistanceAB (" + distanceMap.getCanonicalName() +
                 ") à : " + 10E-9 * nanoElapsed);
+    }
+
+    public void setConvHullB(Vector<Point3D> point3DS) {
+        this.polyConvA = point3DS;
+    }
+
+    public void setConvHullA(Vector<Point3D> point3DS) {
+        this.polyConvB = point3DS;
     }
 }

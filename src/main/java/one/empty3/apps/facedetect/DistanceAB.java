@@ -91,8 +91,8 @@ public abstract class DistanceAB {
     protected int OPTIMIZED_GRID_SIZE = 5;
     SurfaceParametriquePolynomiale surfaceA;
     SurfaceParametriquePolynomiale surfaceB;
-    Dimension2D aDimReduced = new Dimension(20, 20);
-    Dimension2D bDimReduced = new Dimension(20, 20);
+    Dimension2D aDimReduced = new Dimension(60, 60);
+    Dimension2D bDimReduced = new Dimension(60, 60);
     static final int TYPE_SHAPE_BEZIER = 1;
     static final int TYPE_SHAPE_QUADR = 2;
     int typeShape = TYPE_SHAPE_QUADR;

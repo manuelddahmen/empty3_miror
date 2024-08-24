@@ -400,10 +400,10 @@
         /**
          * Sets the Y coordinate of the point.
          *
-         * @param x0 the new Y coordinate value
+         * @param y the new Y coordinate value
          */
-        public void setY(Double x0) {
-            y = x0;
+        public void setY(Double y) {
+            this.y = y;
 
         }
 
@@ -420,10 +420,10 @@
          * Sets the Z-coordinate value of the coordinate array.
          * The Z-coordinate value is stored at index 2 of the coordinate array.
          *
-         * @param x0 the new Z-coordinate value to set
+         * @param z the new Z-coordinate value to set
          */
-        public void setZ(Double x0) {
-            z = x0;
+        public void setZ(Double z) {
+            this.z = z;
 
         }
 
@@ -504,11 +504,22 @@
         }
 
         /**
-         * Multiplies the coordinates of the current Point3D object by the given scaling factor.
+         * divides the coordinates of the current Point3D object by the given
+         * Point3D scaling factor.
          *
-         * @param d The scaling factor to multiply the coordinates by.
+         * @param p The scaling factor to divide the coordinates by.
          * @return A new Point3D object with the scaled coordinates.
          */
+
+        public Point3D div(Point3D p) {
+            Point3D p1 = new Point3D();
+            for (int i = 0; i < 3; i++)
+                p1.set(i, get(i) / p.get(i));
+
+            return p1;
+        }
+
+
         public Point3D mult(Double d) {
             return mult((double) d);
         }
@@ -776,6 +787,7 @@
         public double getLength() {
             return norme();
         }
+
 
 
         /**

@@ -29,6 +29,7 @@ package one.empty3.apps.facedetect;
 import com.google.common.util.concurrent.AtomicDouble;
 import net.miginfocom.swing.MigLayout;
 import one.empty3.apps.morph.Main;
+import one.empty3.feature.ConvHull;
 import one.empty3.library.*;
 import one.empty3.library.objloader.E3Model;
 
@@ -38,9 +39,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.util.ConcurrentModificationException;
-import java.util.HashMap;
-import java.util.Scanner;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
@@ -422,11 +421,11 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
                     firstTime = false;
                 }
                 if (pointsInImage != null && panelModelView != null && !pointsInImage.isEmpty()
-                        && !pointsInModel.isEmpty() && model != null && image != null && distanceABClass!=null
-                        && threadDistanceIsNotRunning && iTextureMorphMove != null &&(renderingStarted)) {
-                    if (oneMore.get() || hasChangedAorB() ) {
+                        && !pointsInModel.isEmpty() && model != null && image != null && distanceABClass != null
+                        && threadDistanceIsNotRunning && iTextureMorphMove != null && (renderingStarted)) {
+                    if (oneMore.get() || hasChangedAorB()) {
                         Thread thread = new Thread(() -> {
-                            if(hasChangedAorB())
+                            if (hasChangedAorB())
                                 oneMore.set(true);
                             else
                                 oneMore.set(false);
@@ -445,20 +444,32 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
 //                                throw new RuntimeException(e);
 //                            }
 //                        }
-                            if (!iTextureMorphMove.distanceAB.isInvalidArray()) {
-                                // Display 3D scene
-                                if (model != null) {
-                                    iTextureMorphMove.distanceAB.setModel(model);
-                                    model.texture(iTextureMorphMove);
+                            if (pointsInModel != null && pointsInImage != null && !pointsInImage.isEmpty() && !pointsInModel.isEmpty()) {
+                                Point3D[] aConv = new Point3D[pointsInImage.size()];
+                                Point3D[] bConv = new Point3D[pointsInModel.size()];
+                                for (int i = 0; i < pointsInImage.size(); i++) {
+                                    aConv[i] = pointsInImage.get(i);
                                 }
-                            } else {
-                                Logger.getAnonymousLogger().log(Level.INFO, "Invalid array in DistanceAB");
+                                for (int i = 0; i < pointsInModel.size(); i++) {
+                                    bConv[i] = pointsInModel.get(i);
+                                }
+                                iTextureMorphMove.setConvHullA(ConvHull.convexHull(aConv, aConv.length));
+                                iTextureMorphMove.setConvHullB(ConvHull.convexHull(bConv, bConv.length));
+                                if (!iTextureMorphMove.distanceAB.isInvalidArray()) {
+                                    // Display 3D scene
+                                    if (model != null) {
+                                        iTextureMorphMove.distanceAB.setModel(model);
+                                        model.texture(iTextureMorphMove);
+                                    }
+                                } else {
+                                    Logger.getAnonymousLogger().log(Level.INFO, "Invalid array in DistanceAB");
+                                }
+
+                                l = System.nanoTime() - l;
+                                Logger.getAnonymousLogger().log(Level.INFO, "Distance calculation finished" + (l / 1000000.0));
+                                threadDistanceIsNotRunning = true;
+                                //System.gc();///!!!
                             }
-
-                            l = System.nanoTime() - l;
-                            Logger.getAnonymousLogger().log(Level.INFO, "Distance calculation finished" + (l / 1000000.0));
-                            threadDistanceIsNotRunning = true;
-
                         });
                         thread.start();
                         Logger.getAnonymousLogger().log(Level.INFO, "Thread texture creation started");
@@ -474,11 +485,10 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
             if (testHumanHeadTexturing == null || !testHumanHeadTexturing.isRunning()
                     && image != null && model != null) {
                 //testHumanHeadTexturing = TestHumanHeadTexturing.startAll(this, image, model);
-                Logger.getAnonymousLogger().log(Level.INFO, "Le thead :TestObjet est arrêté ou non attribute");
+                Logger.getAnonymousLogger().log(Level.INFO, "Le thread :TestObjet est arrêté ou non attribute");
                 Logger.getAnonymousLogger().log(Level.INFO, "Il y a (pas nécessairement exact) %d instances de classes dérivées de TsestObjet");
                 Logger.getAnonymousLogger().log(Level.INFO, "Une nouvelle instance a été démarrée");
             }
-
 
         }
     }
@@ -599,11 +609,61 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
 
     public void add3DModel(File selectedFile) {
         try {
+            testHumanHeadTexturing.defautZheight = 0;
+            testHumanHeadTexturing.defautZwidth = 0;
             BufferedReader bufferedReader = new BufferedReader(new FileReader(selectedFile));
             model = new E3Model(bufferedReader, true, selectedFile.getAbsolutePath());
             model.texture(iTextureMorphMove);
             testHumanHeadTexturing.setObj(model);
             Logger.getAnonymousLogger().log(Level.INFO, "Loaded model");
+            testHumanHeadTexturing.defautZheight = 0;
+
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void add3DModelFillPanel(File selectedFile) {
+        try {
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(selectedFile));
+            model = new E3Model(bufferedReader, true, selectedFile.getAbsolutePath());
+            model.texture(iTextureMorphMove);
+            testHumanHeadTexturing.setObj(model);
+            Logger.getAnonymousLogger().log(Level.INFO, "Loaded model");
+
+            testHumanHeadTexturing.defautZwidth = (panelModelView.getWidth() * Math.sqrt(2) / 2) * 2;
+            testHumanHeadTexturing.defautZheight = (panelModelView.getHeight() * Math.sqrt(2) / 2) * 2;
+
+            Point3D minWidthPanel = new Point3D((double) panelModelView.getWidth(),
+                    (double) panelModelView.getHeight()*(1.0*panelModelView.getWidth()/panelModelView.getHeight()), 0.0).mult(Math.sqrt(2));
+            Point3D[] plane;
+
+
+            plane = new Point3D[]{
+                    new Point3D(-minWidthPanel.getX() / 2, -minWidthPanel.getY() / 2, 0.0),
+                    new Point3D(minWidthPanel.getX() / 2, -minWidthPanel.getY() / 2, 0.0),
+                    new Point3D(minWidthPanel.getX()/2, minWidthPanel.getY() / 2, 0.0),
+                    new Point3D(-minWidthPanel.getX()/2, minWidthPanel.getY() / 2, 0.0)
+            };
+            boolean a = false;
+            for (Representable representable : model.getListRepresentable()) {
+                if (representable instanceof E3Model.FaceWithUv face) {
+                    if (!a)
+                        face.getPolygon().setPoints(plane);
+                    a = true;
+                } else if (representable instanceof RepresentableConteneur rc) {
+                    for (Representable representable1 : rc.getListRepresentable()) {
+                        if (representable1 instanceof E3Model.FaceWithUv face1) {
+                            if (!a)
+                                face1.getPolygon().setPoints(plane);
+                            a = true;
+                        }
+                    }
+                }
+
+            }
+
+
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
@@ -746,4 +806,5 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
             throw new RuntimeException(e);
         }
     }
+
 }

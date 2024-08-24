@@ -27,6 +27,7 @@
 package one.empty3.apps.facedetect;
 
 import net.miginfocom.swing.MigLayout;
+import one.empty3.apps.manul.ModelIO;
 import one.empty3.feature.app.replace.javax.imageio.ImageIO;
 import one.empty3.library.Config;
 import one.empty3.library.Point3D;
@@ -420,6 +421,10 @@ public class JFrameEditPolygonsMappings extends JFrame {
     private void photoPlaneRepresentable(ActionEvent e) {
     }
 
+    private void addPlane(ActionEvent e) {
+        editPolygonsMappings2.add3DModelFillPanel(new File("resources/models/plane blender2.obj"));
+    }
+
 
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
@@ -444,7 +449,7 @@ public class JFrameEditPolygonsMappings extends JFrame {
         menuItem7 = new JMenuItem();
         menu6 = new JMenu();
         menuItemLoadedModel = new JMenuItem();
-        menuItemPhotoPlaneRepresentable = new JMenuItem();
+        menuItemAddPlane = new JMenuItem();
         menu4 = new JMenu();
         menuItem10 = new JMenuItem();
         menuItem11 = new JMenuItem();
@@ -594,10 +599,13 @@ public class JFrameEditPolygonsMappings extends JFrame {
                 menuItemLoadedModel.setText(bundle.getString("JFrameEditPolygonsMappings.menuItemLoadedModel.text"));
                 menu6.add(menuItemLoadedModel);
 
-                //---- menuItemPhotoPlaneRepresentable ----
-                menuItemPhotoPlaneRepresentable.setText(bundle.getString("JFrameEditPolygonsMappings.menuItemPhotoPlaneRepresentable.text"));
-                menuItemPhotoPlaneRepresentable.addActionListener(e -> photoPlaneRepresentable(e));
-                menu6.add(menuItemPhotoPlaneRepresentable);
+                //---- menuItemAddPlane ----
+                menuItemAddPlane.setText(bundle.getString("JFrameEditPolygonsMappings.menuItemAddPlane.text"));
+                menuItemAddPlane.addActionListener(e -> {
+			photoPlaneRepresentable(e);
+			addPlane(e);
+		});
+                menu6.add(menuItemAddPlane);
             }
             menuBar1.add(menu6);
 
@@ -736,7 +744,7 @@ public class JFrameEditPolygonsMappings extends JFrame {
     private JMenuItem menuItem7;
     private JMenu menu6;
     private JMenuItem menuItemLoadedModel;
-    private JMenuItem menuItemPhotoPlaneRepresentable;
+    private JMenuItem menuItemAddPlane;
     private JMenu menu4;
     private JMenuItem menuItem10;
     private JMenuItem menuItem11;
