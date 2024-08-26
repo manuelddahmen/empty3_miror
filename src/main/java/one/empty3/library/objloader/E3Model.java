@@ -170,6 +170,10 @@ public class E3Model extends RepresentableConteneur {
         public double[] getTextUv() {
             return textUv;
         }
+
+        public void setTextUv(double[] textUv ) {
+            this.textUv = textUv;
+        }
     }
 
     //THIS CLASS LOADS THE MODELS

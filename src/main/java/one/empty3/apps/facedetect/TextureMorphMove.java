@@ -29,6 +29,7 @@ import one.empty3.library.CopyRepresentableError;
 import one.empty3.library.ITexture;
 import one.empty3.library.MatrixPropertiesObject;
 import one.empty3.library.Point3D;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.util.Vector;
@@ -77,13 +78,13 @@ public class TextureMorphMove extends ITexture {
 
                     int x = (int) (Math.max(0, Math.min(point3D.getX(), (double) editPanel.image.getWidth() - 1)));
                     int y = (int) (Math.max(0, Math.min((point3D.getY()), (double) editPanel.image.getHeight() - 1)));
-                    if (polyConvB == null || polyConvB.isEmpty() || ConvHull.convexHullTestPointIsInside(polyConvB, new Point3D((double) x, (double) y, 0.0))) {
+                    //if (polyConvB == null || polyConvB.isEmpty() || ConvHull.convexHullTestPointIsInside(polyConvB, new Point3D((double) x, (double) y, 0.0))) {
                         int rgb = editPanel.image.getRGB(x, y);
                         return rgb;
-                    } else {
-                        int rgb = editPanel.image.getRGB(x, y);
-                        return rgb;
-                    }
+                    //} else {
+                    //    int rgb = editPanel.image.getRGB(x, y);
+                    //    return rgb;
+                    //}
                 }
             } catch (RuntimeException e) {
                 throw new RuntimeException(e);
@@ -150,11 +151,11 @@ public class TextureMorphMove extends ITexture {
                 ") à : " + 10E-9 * nanoElapsed);
     }
 
-    public void setConvHullB(Vector<Point3D> point3DS) {
+    public void setConvHullB(@NotNull Vector<Point3D> point3DS) {
         this.polyConvA = point3DS;
     }
 
-    public void setConvHullA(Vector<Point3D> point3DS) {
+    public void setConvHullA(@NotNull  Vector<Point3D> point3DS) {
         this.polyConvB = point3DS;
     }
 }

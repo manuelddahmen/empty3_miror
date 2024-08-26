@@ -445,16 +445,20 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
 //                            }
 //                        }
                             if (pointsInModel != null && pointsInImage != null && !pointsInImage.isEmpty() && !pointsInModel.isEmpty()) {
-                                Point3D[] aConv = new Point3D[pointsInImage.size()];
-                                Point3D[] bConv = new Point3D[pointsInModel.size()];
-                                for (int i = 0; i < pointsInImage.size(); i++) {
-                                    aConv[i] = pointsInImage.get(i);
+
+                                if(pointsInImage!=null && pointsInImage.size()>=3 && pointsInModel!=null && pointsInModel.size()>=3) {
+                                    Point3D[] aConv = new Point3D[pointsInImage.size()];
+                                    Point3D[] bConv = new Point3D[pointsInModel.size()];
+                                    for (int i = 0; i < pointsInImage.size(); i++) {
+                                        aConv[i] = pointsInImage.get(i);
+                                    }
+                                    for (int i = 0; i < pointsInModel.size(); i++) {
+                                        bConv[i] = pointsInModel.get(i);
+                                    }
+
+                                    iTextureMorphMove.setConvHullA(ConvHull.convexHull(aConv, aConv.length));
+                                    iTextureMorphMove.setConvHullB(ConvHull.convexHull(bConv, bConv.length));
                                 }
-                                for (int i = 0; i < pointsInModel.size(); i++) {
-                                    bConv[i] = pointsInModel.get(i);
-                                }
-                                iTextureMorphMove.setConvHullA(ConvHull.convexHull(aConv, aConv.length));
-                                iTextureMorphMove.setConvHullB(ConvHull.convexHull(bConv, bConv.length));
                                 if (!iTextureMorphMove.distanceAB.isInvalidArray()) {
                                     // Display 3D scene
                                     if (model != null) {
@@ -546,33 +550,34 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
                                     uvCoordinates.getY());
                             if (uvFace != null) {
                                 Point point = testHumanHeadTexturing.scene().cameraActive().coordonneesPoint2D(uvFace, testHumanHeadTexturing.getZ());
-                                point.setLocation(point.getX() / testHumanHeadTexturing.getZ().la() * panelDraw.getWidth(),
-                                        point.getY() / testHumanHeadTexturing.getZ().ha() * panelDraw.getHeight());
-                                Graphics graphics = panelDraw.getGraphics();
-                                if (selectedPointNo == i[0])
-                                    graphics.setColor(Color.ORANGE);
-                                else
-                                    graphics.setColor(Color.GREEN);
+                                if (point != null) {
+                                    point.setLocation(point.getX() / testHumanHeadTexturing.getZ().la() * panelDraw.getWidth(),
+                                            point.getY() / testHumanHeadTexturing.getZ().ha() * panelDraw.getHeight());
+                                    Graphics graphics = panelDraw.getGraphics();
+                                    if (selectedPointNo == i[0])
+                                        graphics.setColor(Color.ORANGE);
+                                    else
+                                        graphics.setColor(Color.GREEN);
 
-                                // point.setLocation(point.getX(), point.getY());
+                                    // point.setLocation(point.getX(), point.getY());
 
-                                if (testHumanHeadTexturing.getZ().checkScreen(point)) {
-                                    graphics.fillOval((int) (point.getX() - 3),
-                                            (int) ((point.getY()) - 3),
-                                            7, 7);
+                                    if (testHumanHeadTexturing.getZ().checkScreen(point)) {
+                                        graphics.fillOval((int) (point.getX() - 3),
+                                                (int) ((point.getY()) - 3),
+                                                7, 7);
+                                    } else {
+                                        graphics = panelDraw.getGraphics();
+                                        graphics.setColor(Color.YELLOW);
+                                        graphics.fillRect(0, 0, 10, 10);
+
+                                    }
                                 } else {
-                                    graphics = panelDraw.getGraphics();
-                                    graphics.setColor(Color.YELLOW);
+                                    Graphics graphics = panelDraw.getGraphics();
+                                    graphics.setColor(Color.GREEN);
                                     graphics.fillRect(0, 0, 10, 10);
 
                                 }
-                            } else {
-                                Graphics graphics = panelDraw.getGraphics();
-                                graphics.setColor(Color.GREEN);
-                                graphics.fillRect(0, 0, 10, 10);
-
                             }
-
                         }
 
                         i[0]++;
@@ -645,17 +650,29 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
                     new Point3D(minWidthPanel.getX()/2, minWidthPanel.getY() / 2, 0.0),
                     new Point3D(-minWidthPanel.getX()/2, minWidthPanel.getY() / 2, 0.0)
             };
+            // Adapt uv textures
+            double[] textUv = new double[]{0, 0, 1, 0, 1, 1, 0, 1};
+
+            for (int i = 0; i < textUv.length; i+=2) {
+                textUv[i] = textUv[i] * minWidthPanel.getX();
+                textUv[i+1] = textUv[i] * minWidthPanel.getY();
+            }
+
             boolean a = false;
             for (Representable representable : model.getListRepresentable()) {
                 if (representable instanceof E3Model.FaceWithUv face) {
-                    if (!a)
+                    if (!a) {
                         face.getPolygon().setPoints(plane);
+                        face.setTextUv(textUv);
+                    }
                     a = true;
                 } else if (representable instanceof RepresentableConteneur rc) {
                     for (Representable representable1 : rc.getListRepresentable()) {
                         if (representable1 instanceof E3Model.FaceWithUv face1) {
-                            if (!a)
+                            if (!a) {
                                 face1.getPolygon().setPoints(plane);
+                                face1.setTextUv(textUv);
+                            }
                             a = true;
                         }
                     }

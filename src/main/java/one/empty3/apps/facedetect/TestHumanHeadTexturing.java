@@ -81,7 +81,7 @@ public class TestHumanHeadTexturing extends TestObjetStub {
             setJpg(editPolygonsMappings.image);
         }
 
-        z().setDisplayType(ZBufferImpl.SURFACE_DISPLAY_TEXT_QUADS);
+        z().setDisplayType(ZBufferImpl.DISPLAY_ALL);
         File intPart = new File("faceSkin.txt");
         PrintWriter printWriter;
         try {
@@ -154,8 +154,12 @@ public class TestHumanHeadTexturing extends TestObjetStub {
 
     public static TestHumanHeadTexturing startAll(EditPolygonsMappings editPolygonsMappings, BufferedImage jpg, E3Model obj) {
         Logger.getAnonymousLogger().log(Level.INFO, "Jpg Obj Mapping...");
-        if(instance!=null)
+        if(instance!=null) {
+            instance.editPolygonsMappings = null;
+            instance.editPolygonsMappings.iTextureMorphMove = null;
+            editPolygonsMappings.iTextureMorphMove.distanceAB = null;
             instance.stop();
+        }
         TestHumanHeadTexturing testHumanHeadTexturing = new TestHumanHeadTexturing();
         TestHumanHeadTexturing.instance = testHumanHeadTexturing;
         testHumanHeadTexturing.editPolygonsMappings = editPolygonsMappings;

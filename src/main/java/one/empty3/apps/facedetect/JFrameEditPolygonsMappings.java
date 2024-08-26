@@ -425,6 +425,10 @@ public class JFrameEditPolygonsMappings extends JFrame {
         editPolygonsMappings2.add3DModelFillPanel(new File("resources/models/plane blender2.obj"));
     }
 
+    private void menuItemDistBezier2(ActionEvent e) {
+        // TODO add your code here
+    }
+
 
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
@@ -675,7 +679,10 @@ public class JFrameEditPolygonsMappings extends JFrame {
 
                 //---- menuItemDistBezier2 ----
                 menuItemDistBezier2.setText(bundle.getString("JFrameEditPolygonsMappings.menuItemDistBezier2.text"));
-                menuItemDistBezier2.addActionListener(e -> menuItemClassBezier2(e));
+                menuItemDistBezier2.addActionListener(e -> {
+			menuItemClassBezier2(e);
+			menuItemDistBezier2(e);
+		});
                 menu5.add(menuItemDistBezier2);
 
                 //---- menuItemDistLinearProx1 ----

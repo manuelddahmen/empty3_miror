@@ -3,6 +3,7 @@ package one.empty3.feature;// Java program to find convex hull of a set of Point
 // for explanation of orientation()
 
 import one.empty3.library.Point3D;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
@@ -26,7 +27,8 @@ public class ConvHull {
     }
 
     // Prints convex hull of a set of n Point3Ds.
-    public static Vector<Point3D> convexHull(Point3D[] Point3Ds, int n) {
+    @NotNull
+    public static Vector<Point3D> convexHull(@NotNull Point3D[] Point3Ds, int n) {
         // There must be at least 3 Point3Ds
         if (n < 3) return null;
 
@@ -71,6 +73,7 @@ public class ConvHull {
 
         } while (p != l); // While we don't come to first
         // Point3D
+
 
         // Print Result
         Vector<Point3D> listRet = hull;
