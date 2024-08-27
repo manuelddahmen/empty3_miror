@@ -93,8 +93,8 @@ public class TextureMorphMoveImageAimagesB extends ITexture {
                     if (newDistanceAB.isAssignableFrom(DistanceProxLinear2.class)) {
                         distanceAB = new DistanceProxLinear2(aSet, bSet
                                 , new Dimension(imageA.getWidth(), imageA.getHeight()),
-                                new Dimension(imageB.getWidth(),
-                                        imageB.getHeight()), false, false);
+                                new Dimension(/*imageB.getWidth(),
+                                        imageB.getHeight()*/), false, false);
                         isNotOk = false;
                     } else if (newDistanceAB.isAssignableFrom(DistanceProxLinear1.class)) {
                         distanceAB = new DistanceProxLinear1(pointsInA.values().stream().toList(),

@@ -155,12 +155,14 @@ public class TestHumanHeadTexturing extends TestObjetStub {
     public static TestHumanHeadTexturing startAll(EditPolygonsMappings editPolygonsMappings, BufferedImage jpg, E3Model obj) {
         Logger.getAnonymousLogger().log(Level.INFO, "Jpg Obj Mapping...");
         if(instance!=null) {
-            instance.editPolygonsMappings = null;
-            instance.editPolygonsMappings.iTextureMorphMove = null;
-            editPolygonsMappings.iTextureMorphMove.distanceAB = null;
             instance.stop();
+            editPolygonsMappings.iTextureMorphMove.distanceAB = null;
+            instance.editPolygonsMappings.iTextureMorphMove = null;
+            instance.editPolygonsMappings = null;
+
         }
         TestHumanHeadTexturing testHumanHeadTexturing = new TestHumanHeadTexturing();
+        testHumanHeadTexturing.setDimension(new Resolution(editPolygonsMappings.panelModelView.getWidth(), editPolygonsMappings.panelModelView.getHeight()));
         TestHumanHeadTexturing.instance = testHumanHeadTexturing;
         testHumanHeadTexturing.editPolygonsMappings = editPolygonsMappings;
         editPolygonsMappings.iTextureMorphMove.setDistanceABclass(editPolygonsMappings.distanceABClass);

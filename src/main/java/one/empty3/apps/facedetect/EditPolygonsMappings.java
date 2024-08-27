@@ -645,17 +645,17 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
 
 
             plane = new Point3D[]{
-                    new Point3D(-minWidthPanel.getX() / 2, -minWidthPanel.getY() / 2, 0.0),
-                    new Point3D(minWidthPanel.getX() / 2, -minWidthPanel.getY() / 2, 0.0),
-                    new Point3D(minWidthPanel.getX()/2, minWidthPanel.getY() / 2, 0.0),
-                    new Point3D(-minWidthPanel.getX()/2, minWidthPanel.getY() / 2, 0.0)
+                    new Point3D(-minWidthPanel.getX() / 2, -minWidthPanel.getY() / 2, 0.0).mult(-1),
+                    new Point3D(minWidthPanel.getX() / 2, -minWidthPanel.getY() / 2, 0.0).mult(-1),
+                    new Point3D(minWidthPanel.getX()/2, minWidthPanel.getY() / 2, 0.0).mult(-1),
+                    new Point3D(-minWidthPanel.getX()/2, minWidthPanel.getY() / 2, 0.0).mult(-1)
             };
             // Adapt uv textures
             double[] textUv = new double[]{0, 0, 1, 0, 1, 1, 0, 1};
 
             for (int i = 0; i < textUv.length; i+=2) {
-                textUv[i] = textUv[i] * minWidthPanel.getX();
-                textUv[i+1] = textUv[i] * minWidthPanel.getY();
+                textUv[i] = textUv[i] /* * minWidthPanel.getX()*/;
+                textUv[i+1] = textUv[i+1] /* * minWidthPanel.getY()*/;
             }
 
             boolean a = false;
@@ -710,7 +710,7 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
                             // Blank line
                             line = bufferedReader.nextLine();
 
-                            pointsInImage.put(landmarkType, new Point3D(x / image.getWidth(), y / image.getHeight(), 0.0));
+                            pointsInImage.put(landmarkType, new Point3D(x, y, 0.0));
                         }
                     }
                 }

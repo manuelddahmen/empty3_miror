@@ -78,13 +78,18 @@ public class TextureMorphMove extends ITexture {
 
                     int x = (int) (Math.max(0, Math.min(point3D.getX(), (double) editPanel.image.getWidth() - 1)));
                     int y = (int) (Math.max(0, Math.min((point3D.getY()), (double) editPanel.image.getHeight() - 1)));
-                    //if (polyConvB == null || polyConvB.isEmpty() || ConvHull.convexHullTestPointIsInside(polyConvB, new Point3D((double) x, (double) y, 0.0))) {
+                    if (polyConvB == null || polyConvB.isEmpty()||polyConvA == null || polyConvA.isEmpty()) {
+                        return 0xFFFFFFFF;
+                    } else if(ConvHull.convexHullTestPointIsInside(polyConvB, new Point3D((double) x, (double) y, 0.0))) {
                         int rgb = editPanel.image.getRGB(x, y);
                         return rgb;
-                    //} else {
-                    //    int rgb = editPanel.image.getRGB(x, y);
-                    //    return rgb;
-                    //}
+                    } else {
+                        x = (int) (Math.max(0, Math.min(point3D.getX(),u* (double) editPanel.image.getWidth() - 1)));
+                        y = (int) (Math.max(0, Math.min((point3D.getY()),v * (double) editPanel.image.getHeight() - 1)));
+                        int rgb = editPanel.image.getRGB(x, y);
+                        return rgb;
+                    }
+
                 }
             } catch (RuntimeException e) {
                 throw new RuntimeException(e);
@@ -106,16 +111,17 @@ public class TextureMorphMove extends ITexture {
                         editPanel.pointsInModel.values().stream().toList(), new Dimension(editPanel.panelPicture.getWidth(), editPanel.panelPicture.getHeight()),
                         new Dimension(editPanel.panelModelView.getWidth(),
                                 editPanel.panelModelView.getHeight()), false, false);
-            } else if (distanceMap.isAssignableFrom(DistanceProxLinear3.class)) {
-                distanceAB = new DistanceProxLinear2(editPanel.pointsInImage.values().stream().toList(),
-                        editPanel.pointsInModel.values().stream().toList(), new Dimension(editPanel.panelPicture.getWidth(), editPanel.panelPicture.getHeight()),
-                        new Dimension(1920, 1080), false, false);
-            } else if (distanceMap.isAssignableFrom(DistanceProxLinear3.class)) {
+            } else if (distanceMap.isAssignableFrom(DistanceProxLinear2.class)) {
                 distanceAB = new DistanceProxLinear2(editPanel.pointsInImage.values().stream().toList(),
                         editPanel.pointsInModel.values().stream().toList(), new Dimension(editPanel.panelPicture.getWidth(), editPanel.panelPicture.getHeight()),
                         new Dimension(editPanel.panelModelView.getWidth(),
                                 editPanel.panelModelView.getHeight()), false, false);
             } else if (distanceMap.isAssignableFrom(DistanceProxLinear3.class)) {
+                distanceAB = new DistanceProxLinear3(editPanel.pointsInImage.values().stream().toList(),
+                        editPanel.pointsInModel.values().stream().toList(), new Dimension(editPanel.panelPicture.getWidth(), editPanel.panelPicture.getHeight()),
+                        new Dimension(editPanel.panelModelView.getWidth(),
+                                editPanel.panelModelView.getHeight()), false, false);
+            } else if (distanceMap.isAssignableFrom(DistanceProxLinear1.class)) {
                 distanceAB = new DistanceProxLinear3(editPanel.pointsInImage.values().stream().toList(),
                         editPanel.pointsInModel.values().stream().toList(), new Dimension(editPanel.panelPicture.getWidth(), editPanel.panelPicture.getHeight()),
                         new Dimension(editPanel.panelModelView.getWidth(),

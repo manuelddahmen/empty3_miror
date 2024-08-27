@@ -66,11 +66,7 @@ public class JFrameEditPolygonsMappings extends JFrame {
         File fileDirectoryDefault = config.getDefaultFileOutput();
         if (fileDirectoryDefault == null)
             config.setDefaultFileOutput(new File("."));
-        String lastDirectoryTmpStr = config.getMap().get("D3ModelFaceTexturing");
-        if (lastDirectoryTmpStr == null) {
-            lastDirectoryTmpStr = ".";
-            config.getMap().put("D3ModelFaceTexturing", lastDirectoryTmpStr);
-        }
+        String lastDirectoryTmpStr = config.getMap().computeIfAbsent("D3ModelFaceTexturing", k -> ".");
         config.save();
         lastDirectory = new File(lastDirectoryTmpStr);
         if (!lastDirectory.exists())
@@ -82,13 +78,15 @@ public class JFrameEditPolygonsMappings extends JFrame {
         initParameters();
         threadDisplay = new Thread(editPolygonsMappings2);
         threadDisplay.start();
+        Logger.getAnonymousLogger().setLevel(Level.OFF);
+
     }
 
     public void initParameters() {
         if (editPolygonsMappings2 != null) {
             editPolygonsMappings2.opt1 = false;
             editPolygonsMappings2.hasChangedAorB = true;
-            editPolygonsMappings2.distanceABClass = DistanceProxLinear1.class;
+            editPolygonsMappings2.distanceABClass = DistanceProxLinear2.class;
             //editPolygonsMappings2.iTextureMorphMoveImage = new TextureMorphMove();
             editPolygonsMappings2.optimizeGrid = false;
             editPolygonsMappings2.typeShape = DistanceAB.TYPE_SHAPE_QUADR;
