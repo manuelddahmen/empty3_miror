@@ -447,17 +447,7 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
                             if (pointsInModel != null && pointsInImage != null && !pointsInImage.isEmpty() && !pointsInModel.isEmpty()) {
 
                                 if(pointsInImage!=null && pointsInImage.size()>=3 && pointsInModel!=null && pointsInModel.size()>=3) {
-                                    Point3D[] aConv = new Point3D[pointsInImage.size()];
-                                    Point3D[] bConv = new Point3D[pointsInModel.size()];
-                                    for (int i = 0; i < pointsInImage.size(); i++) {
-                                        aConv[i] = pointsInImage.get(i);
-                                    }
-                                    for (int i = 0; i < pointsInModel.size(); i++) {
-                                        bConv[i] = pointsInModel.get(i);
-                                    }
-
-                                    iTextureMorphMove.setConvHullA(ConvHull.convexHull(aConv, aConv.length));
-                                    iTextureMorphMove.setConvHullB(ConvHull.convexHull(bConv, bConv.length));
+                                    iTextureMorphMove.setConvHullAB();
                                 }
                                 if (!iTextureMorphMove.distanceAB.isInvalidArray()) {
                                     // Display 3D scene
@@ -477,7 +467,7 @@ public class EditPolygonsMappings extends JPanel implements Runnable {
                         });
                         thread.start();
                         Logger.getAnonymousLogger().log(Level.INFO, "Thread texture creation started");
-                        Logger.getAnonymousLogger().log(Level.INFO, "Pause because no changes, and texture updated");
+                        //Logger.getAnonymousLogger().log(Level.INFO, "Pause because no changes, and texture updated");
                     }
                 }
                 if (!threadDistanceIsNotRunning)

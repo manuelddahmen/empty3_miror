@@ -3,7 +3,6 @@ package one.empty3.feature;// Java program to find convex hull of a set of Point
 // for explanation of orientation()
 
 import one.empty3.library.Point3D;
-import org.jetbrains.annotations.NotNull;
 
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
@@ -26,33 +25,32 @@ public class ConvHull {
         return (val > 0) ? 1 : 2; // clock or counterclock wise
     }
 
-    // Prints convex hull of a set of n Point3Ds.
-    @NotNull
-    public static Vector<Point3D> convexHull(@NotNull Point3D[] Point3Ds, int n) {
-        // There must be at least 3 Point3Ds
+    // Prints convex hull of a set of n hull0.
+    public static Vector<Point3D> convexHull(Point3D[] hull0, int n) {
+        // There must be at least 3 hull0
         if (n < 3) return null;
 
         // Initialize Result
-        Vector<Point3D> hull = new Vector<Point3D>();
+        Vector<Point3D> hull = new Vector<>();
 
         // Find the leftmost Point3D
         int l = 0;
         for (int i = 1; i < n; i++)
-            if (Point3Ds[i].getX() < Point3Ds[l].getX())
+            if (hull0[i].getX() < hull0[l].getX())
                 l = i;
 
         // Start from leftmost Point3D, keep moving
         // counterclockwise until reach the start Point3D
         // again. This loop runs O(h) times where h is
-        // number of Point3Ds in result or output.
+        // number of hull0 in result or output.
         int p = l, q;
         do {
             // Add current Point3D to result
-            hull.add(Point3Ds[p]);
+            hull.add(hull0[p]);
 
             // Search for a Point3D 'q' such that
             // orientation(p, q, x) is counterclockwise
-            // for all Point3Ds 'x'. The idea is to keep
+            // for all hull0 'x'. The idea is to keep
             // track of last visited most counterclock-
             // wise Point3D in q. If any Point3D 'i' is more
             // counterclock-wise than q, then update q.
@@ -61,7 +59,7 @@ public class ConvHull {
             for (int i = 0; i < n; i++) {
                 // If i is more counterclockwise than
                 // current q, then update q
-                if (orientation(Point3Ds[p], Point3Ds[i], Point3Ds[q])
+                if (orientation(hull0[p], hull0[i], hull0[q])
                         == 2)
                     q = i;
             }
@@ -73,7 +71,6 @@ public class ConvHull {
 
         } while (p != l); // While we don't come to first
         // Point3D
-
 
         // Print Result
         Vector<Point3D> listRet = hull;

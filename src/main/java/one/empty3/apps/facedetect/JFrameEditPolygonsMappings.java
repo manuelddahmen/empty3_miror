@@ -28,6 +28,7 @@ package one.empty3.apps.facedetect;
 
 import net.miginfocom.swing.MigLayout;
 import one.empty3.apps.manul.ModelIO;
+import one.empty3.feature.ConvHull;
 import one.empty3.feature.app.replace.javax.imageio.ImageIO;
 import one.empty3.library.Config;
 import one.empty3.library.Point3D;
@@ -40,8 +41,12 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.UUID;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -411,9 +416,15 @@ public class JFrameEditPolygonsMappings extends JFrame {
 
     private void startRenderer(ActionEvent e) {
 
+        editPolygonsMappings2.iTextureMorphMove = new TextureMorphMove(editPolygonsMappings2, editPolygonsMappings2.distanceABClass);
+
+        if(editPolygonsMappings2.pointsInImage.size()>=3&&editPolygonsMappings2.pointsInModel.size()>=3) {
+            editPolygonsMappings2.iTextureMorphMove.setConvHullAB();
+        }
+
         editPolygonsMappings2.hasChangedAorB = true;
         editPolygonsMappings2.renderingStarted = true;
-        editPolygonsMappings2.iTextureMorphMove = new TextureMorphMove(editPolygonsMappings2, editPolygonsMappings2.distanceABClass);
+
     }
 
     private void photoPlaneRepresentable(ActionEvent e) {
