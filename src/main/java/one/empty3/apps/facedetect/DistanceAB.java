@@ -33,6 +33,9 @@ import java.util.List;
 
 public abstract class DistanceAB {
 
+    public boolean refineMatrix = false;
+    int REFINE_MATRIX_FACTOR = 5;
+
     static class Rectangle2 {
         public double getX1() {
             return x1;

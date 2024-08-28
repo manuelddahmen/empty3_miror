@@ -129,6 +129,7 @@ public class TestHumanHeadTexturing extends TestObjetStub {
             printWriter.close();
 
         }
+        scene().getObjets().getData1d().clear();
         if (editPolygonsMappings.model != null
                 && !scene().getObjets().getData1d().contains(editPolygonsMappings.model)) {
             scene.add(editPolygonsMappings.model);

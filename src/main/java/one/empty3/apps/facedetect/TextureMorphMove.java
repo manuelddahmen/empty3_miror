@@ -93,10 +93,9 @@ public class TextureMorphMove extends ITexture {
                     } else if (ConvHull.convexHullTestPointIsInside(polyConvB, new Point3D((double) x, (double) y, 0.0))) {
                         int rgb = editPanel.image.getRGB(x, y);
                         return rgb;
-                    } else {
-                        int rgb = editPanel.image.getRGB(x, y);
-                        return rgb;
                     }
+                    int rgb = editPanel.image.getRGB(x, y);
+                    return rgb;
                 }
             } catch (RuntimeException e) {
                 throw new RuntimeException(e);

@@ -152,9 +152,24 @@ public abstract class DistanceBezier2 extends DistanceAB {
                 for (int j = 0; j < B.size(); j++) {
 //                int i1 = (int) Math.min((double) (i % ((int) Math.sqrt(A.size() )+ 1)) * (Math.sqrt(A.size() )+ 1), A.size() - 1);
 //                int j1 = (int) Math.min((double) (j / ((int) Math.sqrt(B.size() )+ 1)) * (Math.sqrt(A.size() )+ 1), B.size() - 1);
+                    if(refineMatrix) {
+                        if(i+1<A.size()&&i+1<B.size()&&j+1<A.size()&&j+1<B.size()) {
+                            double uA = listAX.get(i + 1) - listAX.get(i) / 5;
+                            double uB = listBX.get(i + 1) - listBX.get(i) / 5;
+                            double vA = listAY.get(j + 1) - listAY.get(j) / 5;
+                            double vB = listBY.get(j + 1) - listBY.get(j) / 5;
+                            for (int k = 0; k < REFINE_MATRIX_FACTOR; k++) {
+                                for (int l = 0; l < REFINE_MATRIX_FACTOR; l++) {
+                                    ((SurfaceParametriquePolynomiale) surfaceA).getCoefficients().setElem(new Point3D(listAX.get(i) + uA * k, listAY.get(j)+vA*l, 0.0), i*REFINE_MATRIX_FACTOR+k, j*REFINE_MATRIX_FACTOR+l);
+                                    ((SurfaceParametriquePolynomiale) surfaceB).getCoefficients().setElem(new Point3D(listBX.get(i)+ uA * k, listBY.get(j)*vB*l, 0.0), i*REFINE_MATRIX_FACTOR+k, j*REFINE_MATRIX_FACTOR+l);
 
-                    ((SurfaceParametriquePolynomiale) surfaceA).getCoefficients().setElem(new Point3D(listAX.get(i), listAY.get(j), 0.0), i, j);
-                    ((SurfaceParametriquePolynomiale) surfaceB).getCoefficients().setElem(new Point3D(listBX.get(i), listBY.get(j), 0.0), i, j);
+                                }
+                            }
+                        }
+                    } else {
+                        ((SurfaceParametriquePolynomiale) surfaceA).getCoefficients().setElem(new Point3D(listAX.get(i), listAY.get(j), 0.0), i, j);
+                        ((SurfaceParametriquePolynomiale) surfaceB).getCoefficients().setElem(new Point3D(listBX.get(i), listBY.get(j), 0.0), i, j);
+                    }
                 }
             }
         } else {

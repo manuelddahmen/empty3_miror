@@ -141,7 +141,7 @@ public class JFrameEditPolygonsMappings extends JFrame {
 
             editPolygonsMappings2.testHumanHeadTexturing.setMaxFrames(0);
             editPolygonsMappings2.isRunning = false;
-            if(TestHumanHeadTexturing.threadTest!=null) {
+            if (TestHumanHeadTexturing.threadTest != null) {
                 editPolygonsMappings2.testHumanHeadTexturing.stop(); // TestObjet stop method
                 TestHumanHeadTexturing.threadTest.join(); // join thread as it's dying
             }
@@ -323,8 +323,10 @@ public class JFrameEditPolygonsMappings extends JFrame {
     }
 
     private void optimizeGrid(ActionEvent e) {
-        editPolygonsMappings2.iTextureMorphMove.distanceAB.optimizeGrid = ((JCheckBoxMenuItem) (e.getSource())).getSelectedObjects() != null;
-        editPolygonsMappings2.optimizeGrid = ((JCheckBoxMenuItem) (e.getSource())).getSelectedObjects() != null;
+        if (e.getSource() instanceof JCheckBoxMenuItem r) {
+
+            editPolygonsMappings2.iTextureMorphMove.distanceAB.optimizeGrid = (r.isSelected());
+        }
         editPolygonsMappings2.hasChangedAorB = true;
     }
 
@@ -404,7 +406,7 @@ public class JFrameEditPolygonsMappings extends JFrame {
                 editPolygonsMappings2.image, editPolygonsMappings2.model);
         editPolygonsMappings2.hasChangedAorB = false;
         editPolygonsMappings2.renderingStopped = true;
-        if(TestHumanHeadTexturing.threadTest!=null) {
+        if (TestHumanHeadTexturing.threadTest != null) {
             editPolygonsMappings2.testHumanHeadTexturing.stop(); // TestObjet stop method
             try {
                 TestHumanHeadTexturing.threadTest.join(); // join thread as it's dying
@@ -418,7 +420,7 @@ public class JFrameEditPolygonsMappings extends JFrame {
 
         editPolygonsMappings2.iTextureMorphMove = new TextureMorphMove(editPolygonsMappings2, editPolygonsMappings2.distanceABClass);
 
-        if(editPolygonsMappings2.pointsInImage.size()>=3&&editPolygonsMappings2.pointsInModel.size()>=3) {
+        if (editPolygonsMappings2.pointsInImage.size() >= 3 && editPolygonsMappings2.pointsInModel.size() >= 3) {
             editPolygonsMappings2.iTextureMorphMove.setConvHullAB();
         }
 
@@ -436,6 +438,17 @@ public class JFrameEditPolygonsMappings extends JFrame {
 
     private void menuItemDistBezier2(ActionEvent e) {
         // TODO add your code here
+    }
+
+    private void checkBoxRefiineMatric(ActionEvent e) {
+        if (e.getSource() instanceof JCheckBoxMenuItem r) {
+            if (r.isSelected()) {
+                editPolygonsMappings2.iTextureMorphMove.distanceAB.refineMatrix = true;
+            } else {
+                editPolygonsMappings2.iTextureMorphMove.distanceAB.refineMatrix = false;
+            }
+        }
+        editPolygonsMappings2.hasChangedAorB = true;
     }
 
 
@@ -473,6 +486,7 @@ public class JFrameEditPolygonsMappings extends JFrame {
         checkBoxMenuItemTypeShapeBezier = new JCheckBoxMenuItem();
         checkBoxMenuItem1 = new JCheckBoxMenuItem();
         checkBoxMenuItemOptimizeGrid = new JCheckBoxMenuItem();
+        checkBoxRefiineMatric = new JCheckBoxMenuItem();
         menuItemDistanceBB = new JMenuItem();
         menuItemDistBezier2 = new JRadioButtonMenuItem();
         menuItemDistLinearProx1 = new JRadioButtonMenuItem();
@@ -681,6 +695,11 @@ public class JFrameEditPolygonsMappings extends JFrame {
                 checkBoxMenuItemOptimizeGrid.addActionListener(e -> optimizeGrid(e));
                 menu5.add(checkBoxMenuItemOptimizeGrid);
 
+                //---- checkBoxRefiineMatric ----
+                checkBoxRefiineMatric.setText(bundle.getString("JFrameEditPolygonsMappings.checkBoxRefiineMatric.text"));
+                checkBoxRefiineMatric.addActionListener(e -> checkBoxRefiineMatric(e));
+                menu5.add(checkBoxRefiineMatric);
+
                 //---- menuItemDistanceBB ----
                 menuItemDistanceBB.setText(bundle.getString("JFrameEditPolygonsMappings.menuItemDistanceBB.text"));
                 menuItemDistanceBB.addActionListener(e -> menuItem1DistanceBB(e));
@@ -771,6 +790,7 @@ public class JFrameEditPolygonsMappings extends JFrame {
     private JCheckBoxMenuItem checkBoxMenuItemTypeShapeBezier;
     private JCheckBoxMenuItem checkBoxMenuItem1;
     private JCheckBoxMenuItem checkBoxMenuItemOptimizeGrid;
+    private JCheckBoxMenuItem checkBoxRefiineMatric;
     private JMenuItem menuItemDistanceBB;
     private JRadioButtonMenuItem menuItemDistBezier2;
     private JRadioButtonMenuItem menuItemDistLinearProx1;
