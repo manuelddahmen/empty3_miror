@@ -1,19 +1,64 @@
 package one.empty3.library1.tree;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Functions {
-    public static double search(String call, double... vec) {
-        if (call.equals("sum")) {
-            return sum(vec);
-        }
-        return 0;
+    private static List<String> listOfFunctions = new ArrayList<>();
+    private static boolean isInitialized = false;
+
+    public static void init() {
+        listOfFunctions.add("sum");
+        listOfFunctions.add("product");
+        listOfFunctions.add("avg");
     }
 
-    public static double sum(double... args) {
+
+    public static List<String> getListOfFunctions() {
+        if (listOfFunctions.size() == 0) {
+            init();
+            isInitialized = true;
+        }
+        return listOfFunctions;
+    }
+
+    public static double search(String call, Double[] vec) {
+        if (!isInitialized) {
+            init();
+            isInitialized = true;
+        }
+        return switch (call) {
+            case "sum" -> sum(vec);
+            case "product" -> product(vec);
+            case "avg" -> avg(vec);
+            default -> 0;
+        };
+    }
+
+    public static double sum(Double... args) {
         double sum = 0;
         for (int i = 0; i < args.length; i++) {
             sum += args[i];
         }
 
         return sum;
+    }
+
+    public static double product(Double... args) {
+        double sum = 1.0;
+        for (int i = 0; i < args.length; i++) {
+            sum *= args[i];
+        }
+        return sum;
+    }
+
+    public static double avg(Double... args) {
+        double sum = 1.0;
+        int count = 0;
+        for (int i = 0; i < args.length; i++) {
+            sum *= args[i];
+            count++;
+        }
+        return sum / count;
     }
 }

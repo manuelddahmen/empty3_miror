@@ -177,7 +177,7 @@ public class AlgebraicTree extends Tree {
 
         int i = 1;
         boolean added = false;
-        int last = 14;
+        int last = 15;
         subformula = addSkipComments(subformula);
         while (i <= last && !added) {
             boolean exception = false;
@@ -224,17 +224,17 @@ public class AlgebraicTree extends Tree {
                         added = addDouble(src, subformula);
                         if (added) caseChoice = 8;
                         break;
-
                     case 9:
-                        added = addFunction(src, subformula);
+                        added = addVectorFunction(src, subformula);
                         if (added) caseChoice = 9;
                         break;
                     case 10:
-                        added = addVectorFunction(src, subformula);
+                        added = addFunction(src, subformula);
                         if (added) caseChoice = 10;
-                        break; case 11:
-                        added = addUserFunction(src, subformula);
-                        if (added) caseChoice = 11;
+                        break;
+                    case 11:
+                        //added = false;//addUserFunction(src, subformula);
+                        //if (added) caseChoice = 11;
                         break;
                     case 12:
                         added = addBracedExpression(src, subformula);
@@ -312,14 +312,20 @@ public class AlgebraicTree extends Tree {
                 i++;
 
             }
+            if (count == 0 && values.charAt(i - 1) == ',') {
+
+            }
             if (count == 0 && values.charAt(i - 1) == ')') {
 
 
                 String fName = values.substring(functionNameStart, argumentStart - 1);
                 String fParamString = values.substring(argumentStart, argumentEnd);
 
+                if (!Functions.getListOfFunctions().contains(fName)) {
+                    return false;
+                }
 
-                TreeTreeNodeType mathFunctionTreeNodeType = new TreeTreeNodeType(
+                TreeTreeNodeTypeVector mathFunctionTreeNodeType = new TreeTreeNodeTypeVector(
                         fParamString, parametersValues
                 );
 
@@ -1051,6 +1057,9 @@ public class AlgebraicTree extends Tree {
                 String fName = values.substring(functionNameStart, argumentStart - 1);
                 String fParamString = values.substring(argumentStart, argumentEnd);
 
+                if (Math.class.getMethod(fName, new java.lang.Class<?>[]{double.class}) == null) {
+                    return false;
+                }
 
                 TreeTreeNodeType mathFunctionTreeNodeType = new TreeTreeNodeType(
                         fParamString, parametersValues
@@ -1080,7 +1089,7 @@ public class AlgebraicTree extends Tree {
      */
 
     public boolean addMethodCall(TreeNode t, String values) throws AlgebraicFormulaSyntaxException {
-        int i = 1;
+        int i = 0;
         boolean isNewFactor = false;
         int count = 0;
         int newFactorPos = 0;
@@ -1134,7 +1143,7 @@ public class AlgebraicTree extends Tree {
 
     public boolean addFunctionDefinition(TreeNode t, String values)
             throws AlgebraicFormulaSyntaxException {
-        int i = 1;
+        int i = 0;
         boolean isNewFactor = false;
         int count = 0;
         int newFactorPos = 0;

@@ -40,12 +40,12 @@ public class TreeTreeNodeVector extends TreeNode {
             tree.construct();
             if (objects[2] instanceof String && !((String) objects[2]).isEmpty()) {
                 String call = (String) objects[2];
-                if (call.length() > 1) {
+                if (call.length() >= 1) {
                     functionName = call;
-                        //throw new NotImplementedException("Custom functions not implemented yet");
-                    }
+                    //throw new NotImplementedException("Custom functions not implemented yet");
                 }
-            } catch (AlgebraicFormulaSyntaxException e) {
+            }
+        } catch (AlgebraicFormulaSyntaxException e) {
             throw new RuntimeException(e);
         }
 
@@ -53,12 +53,18 @@ public class TreeTreeNodeVector extends TreeNode {
 
     @Override
     public StructureMatrix<Double> eval() throws TreeNodeEvalException, AlgebraicFormulaSyntaxException {
-        StructureMatrix<Double> res = new StructureMatrix<>(0, Double.class);
-        double r;
-        r = Functions.search(getFunctionName(), tree.eval().getElem());
-
-        return res.setElem(r);
-
+        StructureMatrix<Double> res = new StructureMatrix<>(1, Double.class);
+        double r = 0.0;
+        //System.err.println("TreeTreeNodeVector:eval()");
+        StructureMatrix<Double> eval = tree.eval();
+        if (eval.getDim() == 1) {
+            Double[] array = eval.getData1d().toArray(new Double[]{0.0});
+            r = Functions.search(functionName, array);
+        } else if (eval.getDim() == 0) {
+            r = eval.getElem();
+        }
+        res.setElem(r, 0);
+        return res;
     }
 
     public String getFunctionName() {

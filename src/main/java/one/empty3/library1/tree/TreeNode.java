@@ -456,6 +456,48 @@ public class TreeNode {
                 }
             }
             return evalRes;
+        } else if (cType instanceof TreeTreeNodeTypeVector) {
+            if (!getChildren().isEmpty()) {
+                if (!getChildren().get(0).getChildren().isEmpty() && getChildren().get(0).getChildren().get(0).type instanceof VectorTreeNodeType) {
+                    evalRes = new StructureMatrix<>(1, Double.class);
+                    switch (evalRes.getDim()) {
+                        case 0:
+                            for (int i = 0; i < getChildren().get(0).getChildren().size(); i++) {
+                                StructureMatrix<Double> eval = getChildren().get(0).getChildren().get(i).eval();
+                                evalRes.setElem(eval.getElem(i), i);
+                            }
+                            break;
+                        case 1:
+                            int k = 0;
+                            for (int i = 0; i < getChildren().get(0).getChildren().size(); i++) {
+                                StructureMatrix<Double> eval = getChildren().get(0).getChildren().get(i).eval();
+                                if (eval.getDim() == 1) {
+                                    for (int j = 0; j < eval.data1d.size(); j++) {
+                                        evalRes.setElem(eval.getElem(j), k++);
+                                    }
+                                } else if (eval.getDim() == 0) {
+                                    evalRes.setElem(eval.getElem(), k++);
+                                }
+                            }
+                            break;
+                    }
+                    return evalRes;
+                } else {
+
+                    StructureMatrix<Double> eval = getChildren().get(0).eval();
+                    if (evalRes.getDim() == 1) {
+                        evalRes = new StructureMatrix<>(1, Double.class);
+                        for (int i = 0; i < eval.data1d.size(); i++) {
+                            evalRes.setElem(eval.getElem(i), i);
+                        }
+                    } else if (evalRes.getDim() == 0) {
+                        evalRes = new StructureMatrix<>(0, Double.class);
+                        evalRes.setElem(eval.getElem());
+                    }
+                }
+                return evalRes;
+            }
+            return null;
         } else if (cType instanceof TreeTreeNodeType) {
             if (!getChildren().isEmpty()) {
                 if (!getChildren().get(0).getChildren().isEmpty() && getChildren().get(0).getChildren().get(0).type instanceof VectorTreeNodeType) {
@@ -485,10 +527,58 @@ public class TreeNode {
                 } else {
                     StructureMatrix<Double> eval = getChildren().get(0).eval();
                     if (eval.getDim() == 1) {
+                        evalRes = new StructureMatrix<>(1, Double.class);
                         for (int i = 0; i < eval.data1d.size(); i++) {
                             evalRes.setElem(eval.getElem(i), i);
                         }
                     } else if (eval.getDim() == 0) {
+                        evalRes = new StructureMatrix<>(0, Double.class);
+                        evalRes.setElem(eval.getElem());
+                    }
+                }
+                return evalRes;
+            }
+            return null;
+        } else if (cType instanceof TreeTreeNodeTypeVector) {
+            if (!getChildren().isEmpty()) {
+                if (!getChildren().get(0).getChildren().isEmpty() && getChildren().get(0).getChildren().get(0).type instanceof VectorTreeNodeType) {
+                    evalRes = new StructureMatrix<>(1, Double.class);
+                    switch (evalRes.getDim()) {
+                        case 0:
+                            for (int i = 0; i < getChildren().get(0).getChildren().size(); i++) {
+                                StructureMatrix<Double> eval = getChildren().get(0).getChildren().get(i).eval();
+                                evalRes.setElem(eval.getElem(i), i);
+                            }
+                            break;
+                        case 1:
+                            int k = 0;
+                            for (int i = 0; i < getChildren().get(0).getChildren().size(); i++) {
+                                StructureMatrix<Double> eval = getChildren().get(0).getChildren().get(i).eval();
+                                if (eval.getDim() == 1) {
+                                    for (int j = 0; j < eval.data1d.size(); j++) {
+                                        evalRes.setElem(eval.getElem(j), k++);
+                                    }
+                                } else if (eval.getDim() == 0) {
+                                    evalRes.setElem(eval.getElem(), k++);
+                                }
+                            }
+                            break;
+                    }
+                    return evalRes;
+                } else {
+                    StructureMatrix<Double> eval = getChildren().get(0).eval();
+                    if (eval.getDim() == 1) {
+                        int j = 0;
+                        evalRes = new StructureMatrix<>(1, Double.class);
+                        for (int i = 0; i < eval.data1d.size(); i++) {
+                            if (eval.getElem(i) != null)
+                                j++;
+                            else
+                                continue;
+                            evalRes.setElem(eval.getElem(i), j);
+                        }
+                    } else if (eval.getDim() == 0) {
+                        evalRes = new StructureMatrix<>(1, Double.class);
                         evalRes.setElem(eval.getElem());
                     }
                 }
