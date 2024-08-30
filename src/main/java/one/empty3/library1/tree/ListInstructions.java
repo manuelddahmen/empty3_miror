@@ -29,6 +29,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ListInstructions {
     private HashMap<String, Double> currentParamsValues = new HashMap<>();
@@ -44,11 +46,13 @@ public class ListInstructions {
         private String leftHand;
         private String expression;
         StringAnalyzerJava1.TokenExpression2 tokenExpression2;
+        private String originalString;
 
-        public Instruction(int id, String leftHand, String expression) {
+        public Instruction(int id, String leftHand, String expression, String originalString) {
             this.id = id;
             this.leftHand = leftHand;
             setExpression(expression);
+            this.originalString = originalString;
         }
 
         public int getId() {
@@ -92,6 +96,14 @@ public class ListInstructions {
 
         public void setTokenExpression2(StringAnalyzerJava1.TokenExpression2 expression) {
             this.tokenExpression2 = expression;
+        }
+
+        public String getOriginalString() {
+            return originalString;
+        }
+
+        public void setOriginalString(String originalString) {
+            this.originalString = originalString;
         }
 
         @Override
@@ -159,21 +171,24 @@ public class ListInstructions {
                             j++;
                         }
                         if (j == variable.length()) {
-                            assignations.add(new Instruction(i, variable, value));
+                            assignations.add(new Instruction(i, variable, value, line));
+                            assigned = true;
+                        } else {
+                            assignations.add(new Instruction(i, null, value, line));
                             assigned = true;
                         }
                     } else {
-                        assignations.add(new Instruction(i, null, value));
+                        assignations.add(new Instruction(i, null, value, line));
                         assigned = true;
                     }
                 }
-                /*if (!assigned) {
+                if (!assigned) {
                     if (splitInstructionEquals.length == 1) {
                         if (!value.startsWith("#")) {
-                            assignations.add(new Instruction(i, "", splitInstructionEquals[0]));
+                            assignations.add(new Instruction(i, null, splitInstructionEquals[0], line));
                         }
                     }
-                }*/
+                }
             }
         }
     }
@@ -184,17 +199,18 @@ public class ListInstructions {
 
         assignations.toArray(instructions);
 
+
         if (currentParamsValues == null)
             currentParamsValues = new HashMap<>();
         if (currentParamsValuesVec == null)
             currentParamsValuesVec = new HashMap<>();
         if (currentParamsValuesVecComputed == null)
             currentParamsValuesVecComputed = new HashMap<>();
-        int i = 0;
         int countInstructions = 0;
         for (Instruction instruction : instructions) {
             String key = instruction.getLeftHand();
             String value = instruction.getExpressionAlgebraicTree();
+
 
             if (key != null)
                 key = key.trim();
@@ -206,10 +222,10 @@ public class ListInstructions {
 
             if (key != null) {
                 try {
-                    if (value.startsWith("#")) {
+                    /*/if (value.startsWith("#")) {
                         i++;
                         continue;
-                    }
+                    }*/
                     AlgebraicTree tree = new AlgebraicTree(value);
                     tree.setParametersValues(currentParamsValues);
                     tree.setParametersValuesVec(currentParamsValuesVec);
@@ -221,43 +237,46 @@ public class ListInstructions {
                     resultVec = tree.eval();
 
                     if (resultVec != null) {
-                        //Logger.getAnonymousLogger().log(Level.INFO, "key: " + key + " value: " + value + " computed: " + resultVec);
+                        Logger.getAnonymousLogger().log(Level.INFO, "key: " + key + " value: " + value + " computed: " + resultVec);
                         if (resultVec.getDim() == 1) {
                             currentParamsValuesVecComputed.put(key, resultVec);
                             currentParamsValuesVec.put(key, value);
+
+                            String errors1 = String.format(Locale.getDefault(),
+                                    "\n##line : (%d)%s=%s ", countInstructions, value, resultVec.toStringLine());
+                            returnedCode.add(instruction.originalString + errors1);
+
+
                         } else if (resultVec.getDim() == 0) {
                             currentParamsValuesVecComputed.put(key, resultVec);
                             currentParamsValuesVec.put(key, value);
                             currentParamsValues.put(key, resultVec.getElem());
+
+
+                            String errors1 = String.format(Locale.getDefault(),
+                                    "\n##line : (%d)%s=%s ", countInstructions, value, resultVec.toStringLine());
+                            returnedCode.add(instruction.originalString + errors1);
+
                         }
+                    } else if (instruction.originalString.startsWith("##")) {
+                    } else if (!instruction.originalString.startsWith("##") &&
+                            instruction.originalString.startsWith("#")) {
+                        returnedCode.add(instruction.originalString);
+                    } else if (getCurrentParamsValuesVecComputed().get(key) != null) {
+                        String errors1 = String.format(Locale.getDefault(),
+                                "\n##line : (%d)%s=%s ", countInstructions, value, resultVec.toStringLine());
+                        returnedCode.add(instruction.originalString + errors1);
                     } else {
-                        if (getCurrentParamsValuesVecComputed().get(key) != null)
-                            resultVec = getCurrentParamsValuesVecComputed().get(key);
-                        else
-                            ;//throw new AlgebraicFormulaSyntaxException("Result was null");
+                        returnedCode.add(instruction.originalString);
                     }
-                    //System.err.println("AlgebraicTree result : " + tree);
                 } catch (AlgebraicFormulaSyntaxException | TreeNodeEvalException |
                          NullPointerException e) {
-                    //e.printStackTrace();
-                    //i++;
-                    //continue;
+                    returnedCode.add(instruction.originalString);
                 }
-                String errors1 = "";
-                boolean b = !value.startsWith("##") && !key.startsWith("##");
-                if (b) {
-                    errors1 += "\n" + (key.isBlank() ? "" : key + "=") + value;
-                    countInstructions++;
-                }
-                if (resultVec != null && b && !value.isBlank() && !value.equals("null")) {
-                    errors1 += String.format(Locale.getDefault(),
-                            "\n#line : (%d)%s=%s ", countInstructions, value, resultVec.toStringLine());
-                }
-                if (!(errors1.isBlank() || errors1.equals("null"))) {
-                    returnedCode.add(errors1);
-                }
+            } else if (instruction.originalString.startsWith("##")) {
+            } else {
+                returnedCode.add(instruction.originalString);
             }
-            i++;
         }
 
         return returnedCode;

@@ -311,7 +311,9 @@ public class StructureMatrix<T> implements Serializable, Serialisable {
         switch (dim) {
             case 0:
                 if (data0d != null)
-                    s.append(" data : ").append(data0d.toString());
+                    s.append(" data : ").append(data0d);
+                else
+                    s.append(" data : null");
                 break;
             case 1:
                 s.append(" data : ( ");

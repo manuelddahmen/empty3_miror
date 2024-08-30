@@ -483,14 +483,13 @@ public class TreeNode {
                     }
                     return evalRes;
                 } else {
-
                     StructureMatrix<Double> eval = getChildren().get(0).eval();
-                    if (evalRes.getDim() == 1) {
+                    if (eval.getDim() == 1) {
                         evalRes = new StructureMatrix<>(1, Double.class);
                         for (int i = 0; i < eval.data1d.size(); i++) {
                             evalRes.setElem(eval.getElem(i), i);
                         }
-                    } else if (evalRes.getDim() == 0) {
+                    } else if (eval.getDim() == 0) {
                         evalRes = new StructureMatrix<>(0, Double.class);
                         evalRes.setElem(eval.getElem());
                     }
@@ -568,17 +567,10 @@ public class TreeNode {
                 } else {
                     StructureMatrix<Double> eval = getChildren().get(0).eval();
                     if (eval.getDim() == 1) {
-                        int j = 0;
-                        evalRes = new StructureMatrix<>(1, Double.class);
                         for (int i = 0; i < eval.data1d.size(); i++) {
-                            if (eval.getElem(i) != null)
-                                j++;
-                            else
-                                continue;
-                            evalRes.setElem(eval.getElem(i), j);
+                            evalRes.setElem(eval.getElem(i), i);
                         }
                     } else if (eval.getDim() == 0) {
-                        evalRes = new StructureMatrix<>(1, Double.class);
                         evalRes.setElem(eval.getElem());
                     }
                 }

@@ -1185,7 +1185,7 @@ class TestStringAnalyzer7 {
                         val instruction1 = Instruction()
                         instruction1.type = type
                         instruction1.name = name
-                        instruction1.expression = ListInstructions.Instruction(0, name, expression)
+                        instruction1.expression = ListInstructions.Instruction(0, name, expression, expression)
                         val value: ControlledInstructions.For =
                             ControlledInstructions.For(instruction1, expression)
                         stringAnalyzer3.construct.currentInstructions.instructionList.add(value)

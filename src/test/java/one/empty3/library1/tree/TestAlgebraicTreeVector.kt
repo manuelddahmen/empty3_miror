@@ -792,8 +792,8 @@ class TestAlgebraicTreeVector() {
         } catch (ex: RuntimeException) {
             ex.printStackTrace()
         }
-        println("" + parse + "/" + input.length)
-        assertTrue(parse + 2 >= input.length)
+        println("" + stringAnalyzer3.mPosition + "/" + input.length)
+        assertTrue(stringAnalyzer3.mPosition + 2 >= input.length)
     }
 
     @Test
@@ -887,9 +887,21 @@ class TestAlgebraicTreeVector() {
         listInstructions.addInstructions(
             "x=(1,2,3)\n"
                     + "y=(5,6,7)\n"
-                    + "z=x+y"
+                    + "z=x+y\n"
+                    + "1=\n"
+                    + "2*2\n"
+                    + "4*4\n" +
+                    "#comment to keep\n" +
+                    "## Comment to renew or erase if no instruction generates it\n"
         )
-        println(listInstructions.runInstructions())
+        val list = listInstructions.runInstructions()
+        System.out.println()
+        System.out.println()
+        System.out.println("((((((((((((((((((((((((((((((((((((((((")
+        list.forEach(System.out::println)
+        System.out.println("))))))))))))))))))))))))))))))))))))))))")
+        System.out.println()
+        System.out.println()
 
         println("x: " + listInstructions.getCurrentParamsValuesVecComputed()!!["x"]!!)
         println("y: " + listInstructions.getCurrentParamsValuesVecComputed()!!["y"]!!)
